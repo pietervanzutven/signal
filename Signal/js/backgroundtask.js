@@ -34,13 +34,13 @@ function updateBadge(type, value) {
     Notifications.ToastNotificationManager.history.clear();
     updateBadge(Notifications.BadgeTemplateType.badgeNumber, 0);
 
-    var url = 'https://textsecure-service-ca.whispersystems.org';
+    var url = 'https://textsecure-service.whispersystems.org';
     var number_id = Windows.Storage.ApplicationData.current.localSettings.values['number_id'];
     var password = Windows.Storage.ApplicationData.current.localSettings.values['password'];
 
     var socket = new WebSocket(
     url.replace('https://', 'wss://').replace('http://', 'ws://')
-        + ':80/v1/websocket/?login=' + encodeURIComponent(number_id)
+        + '/v1/websocket/?login=' + encodeURIComponent(number_id)
         + '&password=' + encodeURIComponent(password)
         + '&agent=OWD');
 

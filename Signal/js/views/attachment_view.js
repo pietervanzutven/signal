@@ -178,7 +178,7 @@
         var fileName = this.model.fileName;
         var picker = Windows.Storage.Pickers.FileSavePicker();
         picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
-        picker.fileTypeChoices.insert(this.model.contentType, [fileName.slice(-4)]);
+        picker.fileTypeChoices.insert(this.model.contentType, ['.' + fileName.split('.').pop()]);
         picker.suggestedFileName = fileName;
         picker.pickSaveFileAsync().then(
             function (fileTo) {

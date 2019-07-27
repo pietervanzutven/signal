@@ -37597,7 +37597,8 @@ var TextSecureServer = (function() {
     function promise_ajax(url, options) {
         return new Promise(function (resolve, reject) {
             if (!url) {
-                url = options.host + ':' + options.port + '/' + options.path;
+                //url = options.host + ':' + options.port + '/' + options.path;
+                url = options.host + '/' + options.path;
             }
             console.log(options.type, url);
             var xhr = new XMLHttpRequest();
@@ -37708,7 +37709,7 @@ var TextSecureServer = (function() {
     TextSecureServer.prototype = {
         constructor: TextSecureServer,
         getUrl: function() {
-            return this.url + ':' + this.portManager.getPort();
+            return this.url;// + ':' + this.portManager.getPort();
         },
         ajax: function(param) {
             if (!param.urlParameters) {
