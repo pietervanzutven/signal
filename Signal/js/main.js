@@ -273,16 +273,6 @@ function stringifyJSON(object) {
 
 function parseJSON(string) {
     return JSON.parse(string, function (key, value) {
-        if (key === 'attachments') {
-            for (var i = 0; i < value.length; i++) {
-                if (value[i].data instanceof ArrayBuffer) {
-                    value[i].data = saveMediaItem(value[i].data);
-                }
-            }
-        }
-        if (key === 'avatar' && value && value.data instanceof ArrayBuffer) {
-            value.data = saveMediaItem(value.data);
-        }
         if (typeof value === 'string') {
             if (value.substring(0, 17) === 'ArrayBufferString') {
                 var str = atob(value.replace('ArrayBufferString', ''));
@@ -292,6 +282,16 @@ function parseJSON(string) {
                     array[i] = str.charCodeAt(i);
                 }
             }
+        }
+        if (key === 'attachments') {
+            for (var i = 0; i < value.length; i++) {
+                if (value[i].data instanceof ArrayBuffer) {
+                    value[i].data = saveMediaItem(value[i].data);
+                }
+            }
+        }
+        if (key === 'avatar' && value && value.data instanceof ArrayBuffer) {
+            value.data = saveMediaItem(value.data);
         }
         return value;
     });
