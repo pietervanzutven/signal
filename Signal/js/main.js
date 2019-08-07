@@ -34,6 +34,12 @@ background.BackgroundExecutionManager.requestAccessAsync().then(result => {
     backGroundTask.register();
 });
 
+Windows.UI.WebUI.WebUIApplication.addEventListener('activated', event => {
+    if (event.detail[0].kind === Windows.ApplicationModel.Activation.ActivationKind.protocol) {
+        window.fileToken = Windows.Foundation.WwwFormUrlDecoder(event.detail[0].uri.query).getFirstValueByName("file");
+    }
+});
+
 window.onload = function () {
     console.log('extension launched');
     storage.onready(function () {

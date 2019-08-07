@@ -1847,6 +1847,7 @@
     <Content Include="js\registration.js" />
     <Content Include="js\reliable_trigger.js" />
     <Content Include="js\rotate_signed_prekey_listener.js" />
+    <Content Include="js\share.js" />
     <Content Include="js\signal_protocol_store.js" />
     <Content Include="js\storage.js" />
     <Content Include="js\views\attachment_preview_view.js" />
@@ -1896,6 +1897,7 @@
     <Content Include="protos\SubProtocol.proto" />
     <Content Include="protos\WhisperTextProtocol.proto" />
     <Content Include="register.html" />
+    <Content Include="share.html" />
     <Content Include="stylesheets\android-dark.scss" />
     <Content Include="stylesheets\manifest.css" />
     <Content Include="stylesheets\manifest.scss" />

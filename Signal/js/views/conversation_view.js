@@ -424,6 +424,13 @@
                 this.loadingScreen = null;
                 view.remove();
             }
+            if (window.fileToken) {
+                Windows.ApplicationModel.DataTransfer.SharedStorageAccessManager.redeemTokenForFileAsync(window.fileToken).then(file => {
+                    this.fileInput.file = file;
+                    this.fileInput.previewImages();
+                    window.fileToken = null;
+                });
+            }
         },
 
         onOpened: function() {
