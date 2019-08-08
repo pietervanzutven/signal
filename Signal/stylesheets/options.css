@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 @font-face {
   font-family: 'Roboto-Light';
   src: url("/fonts/Roboto-Light.ttf") format("truetype"); }
@@ -16,7 +16,7 @@
 .iti-flag {
   width: 16px;
   height: 11px;
-  background: url("../img/flags.png"); }
+  background: url("../images/flags.png"); }
 
 .iti-flag.ad {
   background-position: -16px 0; }
