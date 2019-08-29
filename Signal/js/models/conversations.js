@@ -590,7 +590,7 @@
                 sendFunc = textsecure.messaging.sendMessageToGroup;
             }
             message.send(sendFunc(this.get('id'), body, attachments, now, this.get('expireTimer'))).then(() => {
-                message.save()
+                message.save();
                 this.messageCollection._byId[message.id] = message;
             });
         }.bind(this));
