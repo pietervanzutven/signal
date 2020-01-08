@@ -185,7 +185,7 @@ Backbone.sync = function (method, object, options) {
         case "create":
         case "update":
             if (!object.id && object.id !== 0) {
-                object.id = new Date().getTime();
+                object.id = Date.now();
                 object.attributes.id = object.id;
             }
             resp = object.toJSON();
@@ -240,7 +240,7 @@ Backbone.sync = function (method, object, options) {
 };
 
 function saveMediaItem(dataArray) {
-    var fileName = new Date().getTime() + '.dat';
+    var fileName = Date.now() + Math.random() + '.dat';
     console.log('Saving media item ' + fileName + '...');
     var data = new Uint8Array(dataArray);
     Windows.Storage.ApplicationData.current.localFolder.createFileAsync(fileName, Windows.Storage.CreationCollisionOption.failIfExists).then(
