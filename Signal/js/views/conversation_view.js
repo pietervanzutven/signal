@@ -796,7 +796,9 @@
 
             var currentView = Windows.UI.Core.SystemNavigationManager.getForCurrentView();
             currentView.appViewBackButtonVisibility = Windows.UI.Core.AppViewBackButtonVisibility.visible;
-            window.onbackrequested = currentView.onbackrequested;
+            if (!window.onbackrequested) {
+                window.onbackrequested = currentView.onbackrequested;
+            }
             currentView.onbackrequested = function (event) {
                 this.resetPanel();
                 event && (event.detail[0].handled = true);

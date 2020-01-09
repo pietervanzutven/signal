@@ -39,7 +39,9 @@
             this.$el.trigger('select', this.model);
             var gutter = $('#container').contents().find('.gutter');
             var conversation = $('#container').contents().find('.conversation-stack');
-            window.onbackrequested && Windows.UI.Core.SystemNavigationManager.getForCurrentView().onbackrequested.call();
+            while (window.onbackrequested) {
+                Windows.UI.Core.SystemNavigationManager.getForCurrentView().onbackrequested.call();
+            }
             if (window.innerWidth < 600) {
                 gutter.hide();
                 conversation.show();
