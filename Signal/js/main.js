@@ -7,8 +7,11 @@ var debugLog = [];
 console.log = function () {
     consoleLog.apply(console, arguments);
     var currentdate = new Date();
-    debugLog.push(('0' + currentdate.getHours()).slice(-2) + ':' + ('0' + currentdate.getMinutes()).slice(-2) + ':' + ('0' + currentdate.getSeconds()).slice(-2) + ' - ' + arguments[0]);
+    debugLog.push(('0' + currentdate.getHours()).slice(-2) + ':' + ('0' + currentdate.getMinutes()).slice(-2) + ':' + ('0' + currentdate.getSeconds()).slice(-2) + ' - ' + Array.from(arguments).join(' '));
 }
+console.info = console.log;
+console.warn = console.log;
+console.error = console.log;
 
 background.BackgroundExecutionManager.removeAccess();
 for (var iter = background.BackgroundTaskRegistration.allTasks.first(); iter.hasCurrent; iter.moveNext()) {
