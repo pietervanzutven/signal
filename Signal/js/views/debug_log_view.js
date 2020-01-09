@@ -22,7 +22,7 @@
         className: 'debug-log modal',
         initialize: function() {
             this.render();
-            this.$('textarea').val(debugLog);
+            this.$('textarea').val(debugLog.reverse().join('\n'));
         },
         events: {
             'click .submit': 'submit',

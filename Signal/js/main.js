@@ -3,11 +3,11 @@
 var background = Windows.ApplicationModel.Background;
 
 var consoleLog = console.log;
-var debugLog = '';
+var debugLog = [];
 console.log = function () {
     consoleLog.apply(console, arguments);
     var currentdate = new Date();
-    debugLog += currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds() + ' - ' + arguments[0] + '\n'
+    debugLog.push(('0' + currentdate.getHours()).slice(-2) + ':' + ('0' + currentdate.getMinutes()).slice(-2) + ':' + ('0' + currentdate.getSeconds()).slice(-2) + ' - ' + arguments[0]);
 }
 
 background.BackgroundExecutionManager.removeAccess();
@@ -129,7 +129,7 @@ setInterval(function () {
 }, 5000);
 
 Backbone.sync = function (method, object, options) {
-    console.log('Backbone sync requested with method: ' + method + ' on store: ' + object.storeName);
+    console.log('BB ' + method + ' on store: ' + object.storeName);
 
     var store = {};
     var storeName = object.storeName;
@@ -143,12 +143,13 @@ Backbone.sync = function (method, object, options) {
     switch (method) {
         case "read":
             if (object.id) {
-                console.log('Query requested with id: ' + object.id);
+                console.log('BB query id: ' + object.id);
                 resp = store[object.id];
             } else if (options.conditions) {
-                console.log('Query requested with conditions: ' + options.conditions + ', but not yet implemented.');
+                console.log('BB query conditions: ' + options.conditions);
+                console.log('BB QUERY NOT IMPLEMENTED!');
             } else if (options.index) {
-                console.log('Query requested with index: ' + options.index.name);
+                console.log('BB query index: ' + options.index.name);
                 switch (options.index.name) {
                     case 'conversation':
                         resp = Object.values(store).filter(element => element.conversationId === options.index.lower[0]);
@@ -169,13 +170,13 @@ Backbone.sync = function (method, object, options) {
                         resp = Object.values(store).filter(element => element.expires_at);
                         break;
                     default:
-                        console.log('Unknown query index requested: ' + options.index.name);
+                        console.log('BB QUERY NOT IMPLEMENTED!');
                 }
             } else if (options.range) {
-                console.log('Query requested with range: ' + options.range);
+                console.log('BB query range: ' + options.range);
                 resp = Object.values(store).filter(element => element.id >= options.range[0] && element.id <= options.range[1]);
             } else {
-                console.log('Query requested for all elements');
+                console.log('BB query all elements');
                 resp = Object.values(store);
             }
             if (Array.isArray(resp) && resp.length > 1 && options.limit) {
