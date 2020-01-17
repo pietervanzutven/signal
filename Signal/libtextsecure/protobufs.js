@@ -5,14 +5,23 @@
 
     function loadProtoBufs(filename) {
         return dcodeIO.ProtoBuf.loadProtoFile({root: '/protos', file: filename}, function(error, result) {
-           var protos = result.build('textsecure');
+           var protos = result.build('signalservice');
            for (var protoName in protos) {
               textsecure.protobuf[protoName] = protos[protoName];
            }
         });
     };
 
-    loadProtoBufs('IncomingPushMessageSignal.proto');
     loadProtoBufs('SubProtocol.proto');
     loadProtoBufs('DeviceMessages.proto');
+    loadProtoBufs('SignalService.proto');
+    loadProtoBufs('SubProtocol.proto');
+    loadProtoBufs('DeviceMessages.proto');
+    loadProtoBufs('Stickers.proto');
+
+    // Just for encrypting device names
+    loadProtoBufs('DeviceName.proto');
+
+    // Metadata-specific protos
+    loadProtoBufs('UnidentifiedDelivery.proto');
 })();

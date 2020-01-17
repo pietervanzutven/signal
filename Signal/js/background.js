@@ -148,9 +148,13 @@
         var PASSWORD = storage.get('password');
         var mySignalingKey = storage.get('signaling_key');
 
+        const options = {
+            serverTrustRoot: 'BXu6QIKVz5MA8gstzfOgRQGqyLqOwNKHL6INkv3IHWMF',
+        };
+
         // initialize the socket and start listening for messages
         messageReceiver = new textsecure.MessageReceiver(
-            SERVER_URL, SERVER_PORTS, USERNAME, PASSWORD, mySignalingKey
+            SERVER_URL, SERVER_PORTS, USERNAME, PASSWORD, mySignalingKey, options
         );
         messageReceiver.addEventListener('message', onMessageReceived);
         messageReceiver.addEventListener('receipt', onDeliveryReceipt);

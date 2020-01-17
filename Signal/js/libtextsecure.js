@@ -35318,6 +35318,7 @@ Curve25519Worker.prototype = {
         };
     }
 
+    Internal.wrapCurve25519 = wrapCurve25519;
     Internal.Curve       = wrapCurve25519(Internal.curve25519);
     Internal.Curve.async = wrapCurve25519(Internal.curve25519_async);
 
@@ -35338,13 +35339,27 @@ Curve25519Worker.prototype = {
             },
             calculateSignature: function(privKey, message) {
                 return curve.Ed25519Sign(privKey, message);
-            }
+            },
+            validatePubKeyFormat: function(buffer) {
+                return validatePubKeyFormat(buffer);
+            },
         };
     }
 
-    libsignal.Curve       = wrapCurve(Internal.Curve);
-    libsignal.Curve.async = wrapCurve(Internal.Curve.async);
+    Internal.wrapCurve = wrapCurve;
+    if (libsignal.externalCurve) {
+      libsignal.Curve = libsignal.externalCurve;
+      Internal.Curve = libsignal.externalCurve;
+    } else {
+      libsignal.Curve = wrapCurve(Internal.Curve);
+    }
 
+    if (libsignal.externalCurveAsync) {
+      libsignal.Curve.async = libsignal.externalCurveAsync;
+      Internal.Curve.async = libsignal.externalCurveAsync;
+    } else {
+      libsignal.Curve.async = wrapCurve(Internal.Curve.async);
+    }
 })();
 
 /*
@@ -35431,10 +35446,6 @@ var Internal = Internal || {};
 
     // HKDF for TextSecure has a bit of additional handling - salts always end up being 32 bytes
     Internal.HKDF = function(input, salt, info) {
-        if (salt.byteLength != 32) {
-            throw new Error("Got salt of incorrect length");
-        }
-
         return Internal.crypto.HKDF(input, salt,  util.toArrayBuffer(info));
     };
 
@@ -37096,16 +37107,25 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
 
     function loadProtoBufs(filename) {
         return dcodeIO.ProtoBuf.loadProtoFile({root: '/protos', file: filename}, function(error, result) {
-           var protos = result.build('textsecure');
+           var protos = result.build('signalservice');
            for (var protoName in protos) {
               textsecure.protobuf[protoName] = protos[protoName];
            }
         });
     };
 
-    loadProtoBufs('IncomingPushMessageSignal.proto');
     loadProtoBufs('SubProtocol.proto');
     loadProtoBufs('DeviceMessages.proto');
+    loadProtoBufs('SignalService.proto');
+    loadProtoBufs('SubProtocol.proto');
+    loadProtoBufs('DeviceMessages.proto');
+    loadProtoBufs('Stickers.proto');
+
+    // Just for encrypting device names
+    loadProtoBufs('DeviceName.proto');
+
+    // Metadata-specific protos
+    loadProtoBufs('UnidentifiedDelivery.proto');
 })();
 
 /*
@@ -38254,7 +38274,7 @@ var TextSecureServer = (function() {
  * vim: ts=4:sw=4:expandtab
  */
 
-function MessageReceiver(url, ports, username, password, signalingKey) {
+function MessageReceiver(url, ports, username, password, signalingKey, options = {}) {
     this.count = 0;
 
     this.url = url;
@@ -38262,6 +38282,8 @@ function MessageReceiver(url, ports, username, password, signalingKey) {
     this.username = username;
     this.password = password;
     this.server = new TextSecureServer(url, ports, username, password);
+
+    this.serverTrustRoot = window.Signal.Crypto.base64ToArrayBuffer(options.serverTrustRoot);
 
     var address = libsignal.SignalProtocolAddress.fromString(username);
     this.number = address.getName();
@@ -38593,6 +38615,8 @@ MessageReceiver.prototype.extend({
         return plaintext;
     },
     decrypt: function(envelope, ciphertext) {
+        const { serverTrustRoot } = this;
+
         var promise;
         var address = new libsignal.SignalProtocolAddress(envelope.source, envelope.sourceDevice);
 
@@ -38605,7 +38629,20 @@ MessageReceiver.prototype.extend({
             options.messageKeysLimit = false;
         }
 
-        var sessionCipher = new libsignal.SessionCipher(textsecure.storage.protocol, address, options);
+        const sessionCipher = new libsignal.SessionCipher(
+            textsecure.storage.protocol,
+            address,
+            options
+        );
+        const secretSessionCipher = new window.Signal.Metadata.SecretSessionCipher(
+            textsecure.storage.protocol
+        );
+
+        const me = {
+            number: ourNumber,
+            deviceId: parseInt(textsecure.storage.user.getDeviceId(), 10),
+        };
+
         switch(envelope.type) {
             case textsecure.protobuf.Envelope.Type.CIPHERTEXT:
                 console.log('message from', this.getEnvelopeId(envelope));
@@ -38614,6 +38651,64 @@ MessageReceiver.prototype.extend({
             case textsecure.protobuf.Envelope.Type.PREKEY_BUNDLE:
                 console.log('prekey message from', this.getEnvelopeId(envelope));
                 promise = this.decryptPreKeyWhisperMessage(ciphertext, sessionCipher, address);
+                break;
+            case textsecure.protobuf.Envelope.Type.UNIDENTIFIED_SENDER:
+                console.info('received unidentified sender message');
+                promise = secretSessionCipher
+                .decrypt(
+                    window.Signal.Metadata.createCertificateValidator(serverTrustRoot),
+                    ciphertext.toArrayBuffer(),
+                    Math.min(
+                    envelope.serverTimestamp
+                        ? envelope.serverTimestamp.toNumber()
+                        : Date.now(),
+                    Date.now()
+                    ),
+                    me
+                )
+                .then(
+                    result => {
+                    const { isMe, sender, content } = result;
+
+                    // We need to drop incoming messages from ourself since server can't
+                    //   do it for us
+                    if (isMe) {
+                        return { isMe: true };
+                    }
+
+                    // Here we take this sender information and attach it back to the envelope
+                    //   to make the rest of the app work properly.
+
+                    // eslint-disable-next-line no-param-reassign
+                    envelope.source = sender.getName();
+                    // eslint-disable-next-line no-param-reassign
+                    envelope.sourceDevice = sender.getDeviceId();
+                    // eslint-disable-next-line no-param-reassign
+                    envelope.unidentifiedDeliveryReceived = true;
+        
+                    // Return just the content because that matches the signature of the other
+                    //   decrypt methods used above.
+                    return this.unpad(content);
+                    },
+                    error => {
+                    const { sender } = error || {};
+        
+                    if (sender) {
+                        // eslint-disable-next-line no-param-reassign
+                        envelope.source = sender.getName();
+                        // eslint-disable-next-line no-param-reassign
+                        envelope.sourceDevice = sender.getDeviceId();
+                        // eslint-disable-next-line no-param-reassign
+                        envelope.unidentifiedDeliveryReceived = true;
+
+                        throw error;
+                    }
+                            
+                    return this.removeFromCache().then(() => {
+                        throw error;
+                    });
+                    }
+                );
                 break;
             default:
                 promise = Promise.reject(new Error("Unknown message type"));
@@ -38725,17 +38820,94 @@ MessageReceiver.prototype.extend({
         }.bind(this));
     },
     innerHandleContentMessage: function(envelope, plaintext) {
-        var content = textsecure.protobuf.Content.decode(plaintext);
+        const content = textsecure.protobuf.Content.decode(plaintext);
         if (content.syncMessage) {
             return this.handleSyncMessage(envelope, content.syncMessage);
         } else if (content.dataMessage) {
             return this.handleDataMessage(envelope, content.dataMessage);
         } else if (content.nullMessage) {
             return this.handleNullMessage(envelope, content.nullMessage);
-        } else {
-            this.removeFromCache(envelope);
-            throw new Error('Unsupported content message');
+        } else if (content.callMessage) {
+            return this.handleCallMessage(envelope, content.callMessage);
+        } else if (content.receiptMessage) {
+            return this.handleReceiptMessage(envelope, content.receiptMessage);
+        } else if (content.typingMessage) {
+            return this.handleTypingMessage(envelope, content.typingMessage);
         }
+        this.removeFromCache(envelope);
+        throw new Error('Unsupported content message');
+    },
+    handleCallMessage(envelope) {
+        console.info('call message from', this.getEnvelopeId(envelope));
+        this.removeFromCache(envelope);
+    },
+    handleReceiptMessage(envelope, receiptMessage) {
+        const results = [];
+        if (
+            receiptMessage.type === textsecure.protobuf.ReceiptMessage.Type.DELIVERY
+        ) {
+            for (let i = 0; i < receiptMessage.timestamp.length; i += 1) {
+                const ev = new Event('delivery');
+                ev.confirm = this.removeFromCache.bind(this, envelope);
+                ev.deliveryReceipt = {
+                    timestamp: receiptMessage.timestamp[i].toNumber(),
+                    source: envelope.source,
+                    sourceDevice: envelope.sourceDevice,
+                };
+                results.push(this.dispatchAndWait(ev));
+            }
+        } else if (
+            receiptMessage.type === textsecure.protobuf.ReceiptMessage.Type.READ
+        ) {
+            for (let i = 0; i < receiptMessage.timestamp.length; i += 1) {
+                const ev = new Event('read');
+                ev.confirm = this.removeFromCache.bind(this, envelope);
+                ev.timestamp = envelope.timestamp.toNumber();
+                ev.read = {
+                    timestamp: receiptMessage.timestamp[i].toNumber(),
+                    reader: envelope.source,
+                };
+                results.push(this.dispatchAndWait(ev));
+            }
+        }
+        return Promise.all(results);
+    },
+    handleTypingMessage(envelope, typingMessage) {
+        const ev = new Event('typing');
+
+        this.removeFromCache(envelope);
+
+        if (envelope.timestamp && typingMessage.timestamp) {
+            const envelopeTimestamp = envelope.timestamp.toNumber();
+            const typingTimestamp = typingMessage.timestamp.toNumber();
+
+            if (typingTimestamp !== envelopeTimestamp) {
+                console.warn(
+                    `Typing message envelope timestamp (${envelopeTimestamp}) did not match typing timestamp (${typingTimestamp})`
+                );
+                return null;
+            }
+        }
+
+        ev.sender = envelope.source;
+        ev.senderDevice = envelope.sourceDevice;
+        ev.typing = {
+            typingMessage,
+            timestamp: typingMessage.timestamp
+                ? typingMessage.timestamp.toNumber()
+                : Date.now(),
+            groupId: typingMessage.groupId
+                ? typingMessage.groupId.toString('binary')
+                : null,
+            started:
+                typingMessage.action ===
+                textsecure.protobuf.TypingMessage.Action.STARTED,
+            stopped:
+                typingMessage.action ===
+                textsecure.protobuf.TypingMessage.Action.STOPPED,
+        };
+
+        return this.dispatchEvent(ev);
     },
     handleNullMessage: function(envelope, nullMessage) {
         console.log('null message from', this.getEnvelopeId(envelope));
@@ -39086,8 +39258,8 @@ MessageReceiver.prototype.extend({
 
 window.textsecure = window.textsecure || {};
 
-textsecure.MessageReceiver = function(url, ports, username, password, signalingKey) {
-    var messageReceiver = new MessageReceiver(url, ports, username, password, signalingKey);
+textsecure.MessageReceiver = function(url, ports, username, password, signalingKey, options) {
+    var messageReceiver = new MessageReceiver(url, ports, username, password, signalingKey, options);
     this.addEventListener    = messageReceiver.addEventListener.bind(messageReceiver);
     this.removeEventListener = messageReceiver.removeEventListener.bind(messageReceiver);
     this.getStatus           = messageReceiver.getStatus.bind(messageReceiver);

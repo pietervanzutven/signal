@@ -74,6 +74,7 @@ window.matchMedia('(max-width: 600px)').addListener(() => {
     }
 });
 
+var Signal = {};
 var BBDB = {};
 var BBDBchanged = false;
 

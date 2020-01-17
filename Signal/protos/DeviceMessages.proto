@@ -1,4 +1,4 @@
-package textsecure;
+package signalservice;
 
 message ProvisioningUuid {
  optional string uuid = 1;
@@ -15,4 +15,6 @@ message ProvisionMessage {
   optional string number             = 3;
   optional string provisioningCode   = 4;
   optional string userAgent          = 5;
+  optional bytes profileKey          = 6;
+  optional bool  readReceipts        = 7;
 }

@@ -1838,6 +1838,10 @@
     <Content Include="js\models\blockedNumbers.js" />
     <Content Include="js\models\conversations.js" />
     <Content Include="js\models\messages.js" />
+    <Content Include="js\modules\crypto.js" />
+    <Content Include="js\modules\aes.js" />
+    <Content Include="js\modules\metadata\CiphertextMessage.js" />
+    <Content Include="js\modules\metadata\SecretSessionCipher.js" />
     <Content Include="js\Mp3LameEncoder.min.js" />
     <Content Include="js\notifications.js" />
     <Content Include="js\options.js" />
@@ -1893,9 +1897,11 @@
     <Content Include="libtextsecure\websocket-resources.js" />
     <Content Include="options.html" />
     <Content Include="protos\DeviceMessages.proto" />
-    <Content Include="protos\IncomingPushMessageSignal.proto" />
+    <Content Include="protos\DeviceName.proto" />
+    <Content Include="protos\SignalService.proto" />
+    <Content Include="protos\Stickers.proto" />
     <Content Include="protos\SubProtocol.proto" />
-    <Content Include="protos\WhisperTextProtocol.proto" />
+    <Content Include="protos\UnidentifiedDelivery.proto" />
     <Content Include="register.html" />
     <Content Include="share.html" />
     <Content Include="stylesheets\android-dark.scss" />
