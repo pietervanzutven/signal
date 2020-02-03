@@ -173,6 +173,9 @@ Backbone.sync = function (method, object, options) {
                     case 'expires_at':
                         resp = Object.values(store).filter(element => element.expires_at);
                         break;
+                    case 'group':
+                        resp = Object.values(store).filter(element => element.members && element.members.indexOf(options.index.only) !== -1);
+                        break;
                     default:
                         console.log('BB QUERY NOT IMPLEMENTED!');
                 }
