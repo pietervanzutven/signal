@@ -38458,9 +38458,13 @@ MessageReceiver.prototype.extend({
             // Up until 0.42.6 we stored envelope and decrypted as strings in IndexedDB,
             //   so we need to be ready for them.
             if (typeof envelopePlaintext === 'string') {
-              envelopePlaintext = this.stringToArrayBuffer(envelopePlaintext);
+                envelopePlaintext = this.stringToArrayBuffer(envelopePlaintext);
             }
             var envelope = textsecure.protobuf.Envelope.decode(envelopePlaintext);
+            envelope.id = envelope.serverGuid || item.id;
+            envelope.source = envelope.source || item.source;
+            envelope.sourceDevice = envelope.sourceDevice || item.sourceDevice;
+            envelope.serverTimestamp = envelope.serverTimestamp || item.serverTimestamp;
 
             var decrypted = item.decrypted;
             if (decrypted) {
@@ -38478,7 +38482,10 @@ MessageReceiver.prototype.extend({
         }
     },
     getEnvelopeId: function(envelope) {
-        return envelope.source + '.' + envelope.sourceDevice + ' ' + envelope.timestamp.toNumber();
+        if (envelope.source) {
+            return `${envelope.source}.${envelope.sourceDevice} ${envelope.timestamp.toNumber()} (${envelope.id})`;
+        }
+        return envelope.id;
     },
     stringToArrayBuffer: function(string) {
         return new dcodeIO.ByteBuffer.wrap(string, 'binary').toArrayBuffer();
@@ -38508,7 +38515,7 @@ MessageReceiver.prototype.extend({
         }.bind(this));
     },
     addToCache: function(envelope, plaintext) {
-        var id = this.getEnvelopeId(envelope);
+        const { id } = envelope;
         var data = {
             id: id,
             envelope: plaintext,
@@ -38518,14 +38525,17 @@ MessageReceiver.prototype.extend({
         return textsecure.storage.unprocessed.add(data);
     },
     updateCache: function(envelope, plaintext) {
-        var id = this.getEnvelopeId(envelope);
+        const { id } = envelope;
         var data = {
+            source: envelope.source,
+            sourceDevice: envelope.sourceDevice,
+            serverTimestamp: envelope.serverTimestamp,
             decrypted: plaintext
         };
         return textsecure.storage.unprocessed.update(id, data);
     },
     removeFromCache: function(envelope) {
-        var id = this.getEnvelopeId(envelope);
+        const { id } = envelope;
         return textsecure.storage.unprocessed.remove(id);
     },
     queueDecryptedEnvelope: function(envelope, plaintext) {
