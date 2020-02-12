@@ -38365,6 +38365,9 @@ MessageReceiver.prototype.extend({
                 return request.respond(200, 'OK');
             }
 
+            envelope.id = envelope.serverGuid || window.getGuid();
+            envelope.serverTimestamp = envelope.serverTimestamp ? envelope.serverTimestamp.toNumber() : null;
+
             return this.addToCache(envelope, plaintext).then(function() {
                 request.respond(200, 'OK');
                 this.queueEnvelope(envelope);

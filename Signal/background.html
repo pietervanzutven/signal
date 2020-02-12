@@ -290,8 +290,8 @@
     <span>{{ name }}</span><span class='remove'>x</span>
   </script>
   <script type='text/x-tmpl-mustache' id='contact_name_and_number'>
-      <h3 class='name' dir='auto'> {{ title }} </h3>
-      <div class='number'>{{ #isVerified }}<span class='verified-icon'></span> {{ verified }} &middot;{{ /isVerified }} {{ number }}</div>
+    <h3 class='name' dir='auto'> {{ title }} </h3>
+    <div class='number'>{{ #isVerified }}<span class='verified-icon'></span> {{ verified }} &middot;{{ /isVerified }} {{ number }}</div>
   </script>
   <script type='text/x-tmpl-mustache' id='contact'>
       {{> avatar }}
@@ -812,6 +812,7 @@ sudo apt update && sudo apt install signal-desktop
   <!--<script type='text/javascript' src='js/debugLog.js'></script>-->
   <script type='text/javascript' src='js/storage.js'></script>
   <script type='text/javascript' src='js/signal_protocol_store.js'></script>
+  <script type='text/javascript' src='js/modules/uuidv4.js'></script>
   <script type='text/javascript' src='js/modules/aes.js'></script>
   <script type='text/javascript' src='js/modules/crypto.js'></script>
   <script type='text/javascript' src='js/modules/metadata/CiphertextMessage.js'></script>
