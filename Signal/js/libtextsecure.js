@@ -38670,12 +38670,7 @@ MessageReceiver.prototype.extend({
                 .decrypt(
                     window.Signal.Metadata.createCertificateValidator(serverTrustRoot),
                     ciphertext.toArrayBuffer(),
-                    Math.min(
-                    envelope.serverTimestamp
-                        ? envelope.serverTimestamp.toNumber()
-                        : Date.now(),
-                    Date.now()
-                    ),
+                    Math.min(envelope.serverTimestamp || Date.now(), Date.now()),
                     me
                 )
                 .then(
@@ -38716,7 +38711,7 @@ MessageReceiver.prototype.extend({
                         throw error;
                     }
                             
-                    return this.removeFromCache().then(() => {
+                    return this.removeFromCache(envelope).then(() => {
                         throw error;
                     });
                     }
