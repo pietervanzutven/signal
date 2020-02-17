@@ -145,14 +145,14 @@
 
             var type = file.contentType.split('/')[0];
             switch (type) {
-                case 'audio': this.addThumb('/images/audio.svg'); break;
-                case 'video': this.addThumb('/images/video.svg'); break;
+                case 'audio': this.addThumb('images/audio.svg'); break;
+                case 'video': this.addThumb('images/video.svg'); break;
                 case 'image':
                     this.oUrl = URL.createObjectURL(file);
                     this.addThumb(this.oUrl);
                     break;
                 default:
-                    this.addThumb('/images/file.svg'); break;
+                    this.addThumb('images/file.svg'); break;
             }
 
             this.autoScale(file).then(function(blob) {

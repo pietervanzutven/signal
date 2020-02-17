@@ -1,16 +1,16 @@
 @font-face {
   font-family: 'Roboto-Light';
-  src: url("/fonts/Roboto-Light.ttf") format("truetype"); }
+  src: url("../fonts/Roboto-Light.ttf") format("truetype"); }
 @font-face {
   font-family: 'Roboto';
-  src: url("/fonts/Roboto-Regular.ttf") format("truetype"); }
+  src: url("../fonts/Roboto-Regular.ttf") format("truetype"); }
 @font-face {
   font-family: 'Roboto';
-  src: url("/fonts/Roboto-Italic.ttf") format("truetype");
+  src: url("../fonts/Roboto-Italic.ttf") format("truetype");
   font-style: italic; }
 @font-face {
   font-family: 'Roboto';
-  src: url("/fonts/Roboto-Bold.ttf") format("truetype");
+  src: url("../fonts/Roboto-Bold.ttf") format("truetype");
   font-weight: bold; }
 * {
   box-sizing: border-box; }
@@ -77,39 +77,39 @@ a {
   color: #2090ea; }
 
 button.back {
-  background-image: url("/images/back.svg");
+  background-image: url("../images/back.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
   /*background-color: rgba(0, 0, 0, 0.5);*/ }
   button.back:focus, button.back:hover {
-    background-image: url("/images/back.svg");
+    background-image: url("../images/back.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: black;*/ }
 
 button.clock {
-  background-image: url("/images/clock.svg");
+  background-image: url("../images/clock.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
   /*background-color: rgba(0, 0, 0, 0.5);*/ }
   button.clock:focus, button.clock:hover {
-    background-image: url("/images/clock.svg");
+    background-image: url("../images/clock.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: black;*/ }
 
 button.hamburger {
-  background-image: url("/images/menu.svg");
+  background-image: url("../images/menu.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
   /*background-color: rgba(0, 0, 0, 0.5);*/ }
   button.hamburger:focus, button.hamburger:hover {
-    background-image: url("/images/menu.svg");
+    background-image: url("../images/menu.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -198,7 +198,7 @@ button.hamburger {
       display: inline-block;
       width: 24px;
       height: 24px;
-      background-image: url("/images/paperclip.svg");
+      background-image: url("../images/paperclip.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
@@ -361,7 +361,7 @@ button.hamburger {
     height: 18px;
     display: inline-block;
     vertical-align: text-bottom;
-    background-image: url("/images/warning.svg");
+    background-image: url("../images/warning.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -372,7 +372,7 @@ button.hamburger {
     top: 3px;
     height: 23px;
     width: 23px;
-    background-image: url("/images/x.svg");
+    background-image: url("../images/x.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -401,7 +401,7 @@ button.hamburger {
   .contact-details.not-clickable {
     cursor: default; }
   .contact-details .verified-icon {
-    background-image: url("/images/verified-check.svg");
+    background-image: url("../images/verified-check.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -483,7 +483,7 @@ button.hamburger {
     display: block;
     width: 100%;
     height: 100%;
-    background-image: url("/images/x.svg");
+    background-image: url("../images/x.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -773,19 +773,19 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
         margin-left: 2em;
         margin-right: 2em; } }
     .migration-flow .install-icon.apple {
-      background-image: url("/images/apple.svg");
+      background-image: url("../images/apple.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
       /*background-color: #2090ea;*/ }
     .migration-flow .install-icon.windows {
-      background-image: url("/images/windows.svg");
+      background-image: url("../images/windows.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
       /*background-color: #2090ea;*/ }
     .migration-flow .install-icon.linux {
-      background-image: url("/images/linux.svg");
+      background-image: url("../images/linux.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
@@ -888,13 +888,13 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
       display: block;
       width: 24px;
       height: 24px;
-      background-image: url("/images/open_link.svg");
+      background-image: url("../images/open_link.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
       /*background-color: rgba(0, 0, 0, 0.5);*/ }
       .debug-log .result .open:before:focus, .debug-log .result .open:before:hover {
-        background-image: url("/images/open_link.svg");
+        background-image: url("../images/open_link.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center;
@@ -948,7 +948,7 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
     .lightbox.modal a:hover {
       background: #616161; }
   .lightbox.modal .save:before {
-    background-image: url("/images/save.svg");
+    background-image: url("../images/save.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -971,7 +971,7 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
       display: inline-block;
       height: 24px;
       width: 24px;
-      background-image: url("/images/microphone.svg");
+      background-image: url("../images/microphone.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
@@ -998,7 +998,7 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
     background: #9ae99a;
     border: 1px solid #47D647; }
     .recorder .finish .icon {
-      background-image: url("/images/check.svg");
+      background-image: url("../images/check.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
@@ -1007,7 +1007,7 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
     background: #fbe3e3;
     border: 1px solid #EF8989; }
     .recorder .close .icon {
-      background-image: url("/images/x.svg");
+      background-image: url("../images/x.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
@@ -1153,7 +1153,7 @@ img.emoji.jumbo {
     overflow-y: auto; }
 
 .network-status-container .network-status {
-  background: url("/images/error_red.svg") no-repeat left 10px center;
+  background: url("../images/error_red.svg") no-repeat left 10px center;
   background-size: 25px 25px;
   background-color: #fcd156;
   padding: 10px;
@@ -1204,7 +1204,7 @@ img.emoji.jumbo {
   color: #454545;
   border-color: rgba(0, 0, 0, 0.05); }
   .inactive .conversation-header .verified-icon {
-    background-image: url("/images/verified-check.svg");
+    background-image: url("../images/verified-check.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -1218,7 +1218,7 @@ img.emoji.jumbo {
     float: left;
     width: 24px;
     height: 100%;
-    background-image: url("/images/search_white.svg");
+    background-image: url("../images/search_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -1241,7 +1241,7 @@ input.search {
   position: relative; }
   input.search.active {
     outline: solid 1px #2090ea;
-    background-image: url("/images/x.svg");
+    background-image: url("../images/x.svg");
     background-repeat: no-repeat;
     background-size: 16px; }
     input.search.active.ltr {
@@ -1373,7 +1373,7 @@ input.search {
   padding: 0 5px 0 4px; }
 
 .conversation-title .verified-icon {
-  background-image: url("/images/verified-check.svg");
+  background-image: url("../images/verified-check.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -1461,13 +1461,13 @@ input.search {
   vertical-align: text-bottom;
   display: inline-block; }
   .key-verification .icon.verified {
-    background-image: url("/images/verified-check.svg");
+    background-image: url("../images/verified-check.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: #454545;*/ }
   .key-verification .icon.shield {
-    background-image: url("/images/shield.svg");
+    background-image: url("../images/shield.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -1559,7 +1559,7 @@ input.search {
         height: 1.25em;
         position: relative;
         vertical-align: middle;
-        background-image: url("/images/warning.svg");
+        background-image: url("../images/warning.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center;
@@ -1628,7 +1628,7 @@ li.entry .error-icon-container {
   width: 24px;
   height: 24px;
   position: relative;
-  background-image: url("/images/warning.svg");
+  background-image: url("../images/warning.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -1741,7 +1741,7 @@ li.entry .error-icon-container {
   .message-container .sent .status,
   .message-list .sent .status {
     display: inline-block;
-    background-image: url("/images/check.svg");
+    background-image: url("../images/check.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -1749,7 +1749,7 @@ li.entry .error-icon-container {
   .message-container .delivered .status,
   .message-list .delivered .status {
     display: inline-block;
-    background-image: url("/images/double-check.svg");
+    background-image: url("../images/double-check.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -1861,28 +1861,28 @@ li.entry .error-icon-container {
       vertical-align: middle;
       width: 48px;
       height: 48px;
-      background-image: url("/images/file.svg");
+      background-image: url("../images/file.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
       /*background-color: #454545;*/ }
       .message-container .attachments .fileView .icon.audio,
       .message-list .attachments .fileView .icon.audio {
-        background-image: url("/images/audio.svg");
+        background-image: url("../images/audio.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center;
         /*background-color: #454545;*/ }
       .message-container .attachments .fileView .icon.video,
       .message-list .attachments .fileView .icon.video {
-        background-image: url("/images/video.svg");
+        background-image: url("../images/video.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center;
         /*background-color: #454545;*/ }
       .message-container .attachments .fileView .icon.voice,
       .message-list .attachments .fileView .icon.voice {
-        background-image: url("/images/voice.svg");
+        background-image: url("../images/voice.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center;
@@ -1992,19 +1992,19 @@ li.entry .error-icon-container {
   vertical-align: text-bottom;
   display: inline-block; }
   .advisory .icon.verified {
-    background-image: url("/images/verified-check.svg");
+    background-image: url("../images/verified-check.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: #454545;*/ }
   .advisory .icon.shield {
-    background-image: url("/images/shield.svg");
+    background-image: url("../images/shield.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: #454545;*/ }
   .advisory .icon.clock {
-    background-image: url("/images/clock.svg");
+    background-image: url("../images/clock.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -2060,7 +2060,7 @@ li.entry .error-icon-container {
     border: none;
     box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2); }
     .discussion-container .scroll-down-button-view button .icon {
-      background-image: url("/images/down.svg");
+      background-image: url("../images/down.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
@@ -2072,7 +2072,7 @@ li.entry .error-icon-container {
     .discussion-container .scroll-down-button-view button.new-messages {
       background-color: #2090ea; }
       .discussion-container .scroll-down-button-view button.new-messages .icon {
-        background-image: url("/images/down.svg");
+        background-image: url("../images/down.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center;
@@ -2131,7 +2131,7 @@ li.entry .error-icon-container {
   .ios .conversation-header .conversation-title {
     line-height: 64px; }
     .ios .conversation-header .conversation-title .verified-icon {
-      background-image: url("/images/verified-check.svg");
+      background-image: url("../images/verified-check.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
@@ -2232,25 +2232,25 @@ li.entry .error-icon-container {
       background: white;
       color: #454545; }
 .ios .outgoing .attachments .fileView .icon {
-  background-image: url("/images/file.svg");
+  background-image: url("../images/file.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
   /*background-color: white;*/ }
   .ios .outgoing .attachments .fileView .icon.audio {
-    background-image: url("/images/audio.svg");
+    background-image: url("../images/audio.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: white;*/ }
   .ios .outgoing .attachments .fileView .icon.video {
-    background-image: url("/images/video.svg");
+    background-image: url("../images/video.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: white;*/ }
   .ios .outgoing .attachments .fileView .icon.voice {
-    background-image: url("/images/voice.svg");
+    background-image: url("../images/voice.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -2262,7 +2262,7 @@ li.entry .error-icon-container {
 .ios .hourglass {
   display: inline-block;
   position: relative;
-  background-image: url("/images/hourglass_full.svg");
+  background-image: url("../images/hourglass_full.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -2280,7 +2280,7 @@ li.entry .error-icon-container {
   .ios .hourglass .sand {
     background: #999; }
   .ios .hourglass:after {
-    background-image: url("/images/hourglass_empty.svg");
+    background-image: url("../images/hourglass_empty.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -2342,7 +2342,7 @@ li.entry .error-icon-container {
 .android .outgoing .hourglass {
   display: inline-block;
   position: relative;
-  background-image: url("/images/hourglass_full.svg");
+  background-image: url("../images/hourglass_full.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -2360,7 +2360,7 @@ li.entry .error-icon-container {
   .android .outgoing .hourglass .sand {
     background: #999; }
   .android .outgoing .hourglass:after {
-    background-image: url("/images/hourglass_empty.svg");
+    background-image: url("../images/hourglass_empty.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -2368,7 +2368,7 @@ li.entry .error-icon-container {
 .android .incoming .hourglass {
   display: inline-block;
   position: relative;
-  background-image: url("/images/hourglass_full.svg");
+  background-image: url("../images/hourglass_full.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -2386,7 +2386,7 @@ li.entry .error-icon-container {
   .android .incoming .hourglass .sand {
     background: #fff; }
   .android .incoming .hourglass:after {
-    background-image: url("/images/hourglass_empty.svg");
+    background-image: url("../images/hourglass_empty.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -2399,79 +2399,79 @@ li.entry .error-icon-container {
 .android .incoming .bubble .attachments a, .android .incoming .bubble .content a {
   color: #f3f3f3; }
 .android .incoming .bubble .fileView .icon {
-  background-image: url("/images/file.svg");
+  background-image: url("../images/file.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
   /*background-color: white;*/ }
 .android button.clock {
-  background-image: url("/images/clock.svg");
+  background-image: url("../images/clock.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
   /*background-color: rgba(255, 255, 255, 0.8);*/ }
   .android button.clock:focus, .android button.clock:hover {
-    background-image: url("/images/clock.svg");
+    background-image: url("../images/clock.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: white;*/ }
 .android .inactive button.clock {
-  background-image: url("/images/clock.svg");
+  background-image: url("../images/clock.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
   /*background-color: rgba(0, 0, 0, 0.5);*/ }
   .android .inactive button.clock:focus, .android .inactive button.clock:hover {
-    background-image: url("/images/clock.svg");
+    background-image: url("../images/clock.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: black;*/ }
 .android button.hamburger {
-  background-image: url("/images/menu_white.svg");
+  background-image: url("../images/menu_white.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
   /*background-color: rgba(255, 255, 255, 0.8);*/ }
   .android button.hamburger:focus, .android button.hamburger:hover {
-    background-image: url("/images/menu_white.svg");
+    background-image: url("../images/menu_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: white;*/ }
 .android .inactive button.hamburger {
-  background-image: url("/images/menu_white.svg");
+  background-image: url("../images/menu_white.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
   /*background-color: rgba(0, 0, 0, 0.5);*/ }
   .android .inactive button.hamburger:focus, .android .inactive button.hamburger:hover {
-    background-image: url("/images/menu_white.svg");
+    background-image: url("../images/menu_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: black;*/ }
 .android button.back {
-  background-image: url("/images/back.svg");
+  background-image: url("../images/back.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
   background-color: rgba(255, 255, 255, 0.8); }
   .android button.back:focus, .android button.back:hover {
-    background-image: url("/images/back.svg");
+    background-image: url("../images/back.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: white;*/ }
 .android .inactive button.back {
-  background-image: url("/images/back.svg");
+  background-image: url("../images/back.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
   /*background-color: rgba(0, 0, 0, 0.5);*/ }
   .android .inactive button.back:focus, .android .inactive button.back:hover {
-    background-image: url("/images/back.svg");
+    background-image: url("../images/back.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -2526,13 +2526,13 @@ li.entry .error-icon-container {
     background-color: #030303;
     border-color: #292929; }
   .android-dark .key-verification .icon.verified {
-    background-image: url("/images/verified-check_white.svg");
+    background-image: url("../images/verified-check_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: #CCCCCC;*/ }
   .android-dark .key-verification .icon.shield {
-    background-image: url("/images/shield_white.svg");
+    background-image: url("../images/shield_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -2559,7 +2559,7 @@ li.entry .error-icon-container {
   .android-dark .contact-details .number {
     color: gray; }
     .android-dark .contact-details .number .verified-icon {
-      background-image: url("/images/verified-check_white.svg");
+      background-image: url("../images/verified-check_white.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
@@ -2608,19 +2608,19 @@ li.entry .error-icon-container {
   .android-dark .message-list .advisory .content {
     background-color: #333333; }
   .android-dark .message-list .advisory .shield {
-    background-image: url("/images/shield_white.svg");
+    background-image: url("../images/shield_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: #CCCCCC;*/ }
   .android-dark .message-list .advisory .verified {
-    background-image: url("/images/verified-check_white.svg");
+    background-image: url("../images/verified-check_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: #CCCCCC;*/ }
   .android-dark .message-list .advisory .clock {
-    background-image: url("/images/clock_white.svg");
+    background-image: url("../images/clock_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -2629,21 +2629,21 @@ li.entry .error-icon-container {
     background-color: #333333 !important;
     color: #CCCCCC; }
     .android-dark .inactive .conversation-header .verified-icon {
-      background-image: url("/images/verified-check_white.svg");
+      background-image: url("../images/verified-check_white.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
       /*background-color: #CCCCCC;*/ }
   .android-dark .sent .status {
     display: inline-block;
-    background-image: url("/images/check_white.svg");
+    background-image: url("../images/check_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: white;*/ }
   .android-dark .delivered .status {
     display: inline-block;
-    background-image: url("/images/double-check_white.svg");
+    background-image: url("../images/double-check_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -2653,14 +2653,14 @@ li.entry .error-icon-container {
     display: inline-block;
     width: 24px;
     height: 24px;
-    background-image: url("/images/paperclip_white.svg");
+    background-image: url("../images/paperclip_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: white;*/
     transform: rotateZ(-45deg); }
   .android-dark .capture-audio .microphone:before {
-    background-image: url("/images/microphone_white.svg");
+    background-image: url("../images/microphone_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -2683,7 +2683,7 @@ li.entry .error-icon-container {
       background: white;
       color: #454545; }
     .android-dark .search.active.ltr, .android-dark .search.active.rtl {
-      background-image: url("/images/x_white.svg"); }
+      background-image: url("../images/x_white.svg"); }
   .android-dark .bubble {
     padding: 9px 12px;
     border-radius: 5px;
@@ -2698,7 +2698,7 @@ li.entry .error-icon-container {
   .android-dark .outgoing .hourglass {
     display: inline-block;
     position: relative;
-    background-image: url("/images/hourglass_full_white.svg");
+    background-image: url("../images/hourglass_full_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -2715,7 +2715,7 @@ li.entry .error-icon-container {
     .android-dark .outgoing .hourglass .sand {
       background: #999; }
     .android-dark .outgoing .hourglass:after {
-      background-image: url("/images/hourglass_empty_white.svg");
+      background-image: url("../images/hourglass_empty_white.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
@@ -2723,7 +2723,7 @@ li.entry .error-icon-container {
   .android-dark .incoming .hourglass {
     display: inline-block;
     position: relative;
-    background-image: url("/images/hourglass_full_white.svg");
+    background-image: url("../images/hourglass_full_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -2740,7 +2740,7 @@ li.entry .error-icon-container {
     .android-dark .incoming .hourglass .sand {
       background: #fff; }
     .android-dark .incoming .hourglass:after {
-      background-image: url("/images/hourglass_empty_white.svg");
+      background-image: url("../images/hourglass_empty_white.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
@@ -2753,85 +2753,85 @@ li.entry .error-icon-container {
   .android-dark .incoming .bubble .content a {
     color: #f3f3f3; }
   .android-dark .incoming .bubble .fileView .icon {
-    background-image: url("/images/file_white.svg");
+    background-image: url("../images/file_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: white;*/ }
     .android-dark .incoming .bubble .fileView .icon.audio {
-      background-image: url("/images/audio_white.svg");
+      background-image: url("../images/audio_white.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
       /*background-color: white;*/ }
     .android-dark .incoming .bubble .fileView .icon.video {
-      background-image: url("/images/video_white.svg");
+      background-image: url("../images/video_white.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
       /*background-color: white;*/ }
     .android-dark .incoming .bubble .fileView .icon.voice {
-      background-image: url("/images/voice_white.svg");
+      background-image: url("../images/voice_white.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
       /*background-color: white;*/ }
   .android-dark .outgoing .bubble .fileView .icon {
-    background-image: url("/images/file_white.svg");
+    background-image: url("../images/file_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: #CCCCCC;*/ }
     .android-dark .outgoing .bubble .fileView .icon.audio {
-      background-image: url("/images/audio_white.svg");
+      background-image: url("../images/audio_white.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
       /*background-color: #CCCCCC;*/ }
     .android-dark .outgoing .bubble .fileView .icon.video {
-      background-image: url("/images/video_white.svg");
+      background-image: url("../images/video_white.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
       /*background-color: #CCCCCC;*/ }
     .android-dark .outgoing .bubble .fileView .icon.voice {
-      background-image: url("/images/voice_white.svg");
+      background-image: url("../images/voice_white.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
       /*background-color: #CCCCCC;*/ }
   .android-dark button.clock {
-    background-image: url("/images/clock_white.svg");
+    background-image: url("../images/clock_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: rgba(255, 255, 255, 0.8);*/ }
     .android-dark button.clock:focus, .android-dark button.clock:hover {
-      background-image: url("/images/clock_white.svg");
+      background-image: url("../images/clock_white.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
       /*background-color: white;*/ }
   .android-dark button.hamburger {
-    background-image: url("/images/menu_white.svg");
+    background-image: url("../images/menu_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: rgba(255, 255, 255, 0.8);*/ }
     .android-dark button.hamburger:focus, .android-dark button.hamburger:hover {
-      background-image: url("/images/menu_white.svg");
+      background-image: url("../images/menu_white.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
       /*background-color: white;*/ }
   .android-dark button.back {
-    background-image: url("/images/back_white.svg");
+    background-image: url("../images/back_white.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     /*background-color: rgba(255, 255, 255, 0.8);*/ }
     .android-dark button.back:focus, .android-dark button.back:hover {
-      background-image: url("/images/back_white.svg");
+      background-image: url("../images/back_white.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
@@ -2853,7 +2853,7 @@ li.entry .error-icon-container {
   .android-dark .discussion-container .scroll-down-button-view button {
     background-color: #8d8d8d; }
     .android-dark .discussion-container .scroll-down-button-view button .icon {
-      background-image: url("/images/down_white.svg");
+      background-image: url("../images/down_white.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
@@ -2863,7 +2863,7 @@ li.entry .error-icon-container {
     .android-dark .discussion-container .scroll-down-button-view button.new-messages {
       background-color: #2090ea; }
       .android-dark .discussion-container .scroll-down-button-view button.new-messages .icon {
-        background-image: url("/images/down_white.svg");
+        background-image: url("../images/down_white.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center;
