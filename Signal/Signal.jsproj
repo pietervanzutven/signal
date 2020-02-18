@@ -1834,7 +1834,7 @@
     <Content Include="js\libphonenumber-util.js" />
     <Content Include="js\libsignal-protocol-worker.js" />
     <Content Include="js\libtextsecure.js" />
-    <Content Include="js\main.js" />
+    <Content Include="main.js" />
     <Content Include="js\models\blockedNumbers.js" />
     <Content Include="js\models\conversations.js" />
     <Content Include="js\models\messages.js" />
@@ -1852,6 +1852,7 @@
     <Content Include="js\registration.js" />
     <Content Include="js\reliable_trigger.js" />
     <Content Include="js\rotate_signed_prekey_listener.js" />
+    <Content Include="preload.js" />
     <Content Include="js\share.js" />
     <Content Include="js\signal_protocol_store.js" />
     <Content Include="js\storage.js" />

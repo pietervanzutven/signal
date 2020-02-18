@@ -3,7 +3,7 @@
 var Notifications = Windows.UI.Notifications;
 
 var window = this;
-importScripts('ms-appx:///libtextsecure/components.js', 'ms-appx:///libtextsecure/protobufs.js', 'ms-appx:///libtextsecure/websocket-resources.js');
+importScripts('ms-appx:///preload.js', 'ms-appx:///libtextsecure/components.js', 'ms-appx:///libtextsecure/protobufs.js', 'ms-appx:///libtextsecure/websocket-resources.js');
 
 var debugLog = '';
 function log(message)
