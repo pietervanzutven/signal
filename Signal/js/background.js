@@ -89,14 +89,14 @@
 
         if (Whisper.Registration.isDone()) {
             extension.keepAwake();
-            init();
+            connect();
         }
 
         console.log("listening for registration events");
         Whisper.events.on('registration_done', function() {
             console.log("handling registration event");
             extension.keepAwake();
-            init(true);
+            connect(true);
         });
 
         if (open) {
@@ -116,16 +116,17 @@
 
       if (messageReceiver) {
         messageReceiver.close().then(function() {
-          messageReceiver = null;
           Whisper.events.trigger('shutdown-complete');
         });
+        messageReceiver = null;
       } else {
         Whisper.events.trigger('shutdown-complete');
       }
     });
 
-    function init(firstRun) {
-        window.removeEventListener('online', init);
+    function connect(firstRun) {
+        window.removeEventListener('online', connect);
+        window.addEventListener('offline', disconnect);
 
         // End of day, November 15th, 2018, Pacific Time (midnight the next day)
         window.EXPIRATION_TIME = new Date('2018-11-16T08:00:00.000Z');
@@ -140,7 +141,10 @@
         if (!Whisper.Registration.isDone()) { return; }
         if (Whisper.Migration.inProgress()) { return; }
 
-        if (messageReceiver) { messageReceiver.close(); }
+        if (messageReceiver) {
+            messageReceiver.close();
+            messageReceiver = null;
+        }
 
         Whisper.RotateSignedPreKeyListener.init(Whisper.events);
 
@@ -397,6 +401,17 @@
         return message;
     }
 
+    function disconnect() {
+        window.removeEventListener('offline', disconnect);
+        window.addEventListener('online', connect);
+
+        console.log('offline');
+        if (messageReceiver) {
+            messageReceiver.close();
+            messageReceiver = null;
+        }
+    }
+
     function onError(ev) {
         var error = ev.error;
         console.log(error);
@@ -413,13 +428,9 @@
             // Failed to connect to server
             if (navigator.onLine) {
                 console.log('retrying in 1 minute');
-                setTimeout(init, 60000);
+                setTimeout(connect, 60000);
 
                 Whisper.events.trigger('reconnectTimer');
-            } else {
-                console.log('offline');
-                if (messageReceiver) { messageReceiver.close(); }
-                window.addEventListener('online', init);
             }
             return;
         }
