@@ -37106,10 +37106,13 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
 
     function loadProtoBufs(filename) {
         return dcodeIO.ProtoBuf.loadProtoFile({root: '/protos', file: filename}, function(error, result) {
-           var protos = result.build('signalservice');
-           for (var protoName in protos) {
-              textsecure.protobuf[protoName] = protos[protoName];
-           }
+            if (error) {
+              throw error;
+            }
+            var protos = result.build('signalservice');
+            for (var protoName in protos) {
+               textsecure.protobuf[protoName] = protos[protoName];
+            }
         });
     };
 
