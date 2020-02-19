@@ -80,6 +80,7 @@
         return roll <= percentage;
     }
 
+    var connectCount = 0;
     storage.fetch();
     storage.onready(function() {
         ConversationController.load();
@@ -152,7 +153,9 @@
         var PASSWORD = storage.get('password');
         var mySignalingKey = storage.get('signaling_key');
 
-        const options = {
+        connectCount += 1;
+        var options = {
+            retryCached: connectCount === 1,
             serverTrustRoot: 'BXu6QIKVz5MA8gstzfOgRQGqyLqOwNKHL6INkv3IHWMF',
         };
 

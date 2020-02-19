@@ -38299,6 +38299,12 @@ function MessageReceiver(url, ports, username, password, signalingKey, options =
     var address = libsignal.SignalProtocolAddress.fromString(username);
     this.number = address.getName();
     this.deviceId = address.getDeviceId();
+
+    this.pending = Promise.resolve();
+
+    if (options.retryCached) {
+        this.pending = this.queueAllCached();
+    }
 }
 
 MessageReceiver.prototype = new textsecure.EventTarget();
@@ -38317,8 +38323,6 @@ MessageReceiver.prototype.extend({
             handleRequest: this.handleRequest.bind(this),
             keepalive: { path: '/v1/keepalive', disconnect: true }
         });
-
-        this.pending = this.queueAllCached();
 
         // Ensures that an immediate 'empty' event from the websocket will fire only after
         //   all cached envelopes are processed.
