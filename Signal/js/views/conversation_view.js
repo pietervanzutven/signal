@@ -963,7 +963,7 @@
             }
 
             var input = this.$messageField;
-            var message = this.replace_colons(input.val()).trim().replace(/ *\| */g, '\n');
+            var message = input.val().trim().replace(/ *\| */g, '\n');
 
             if (message.length > 0 || this.fileInput.hasFiles()) {
                 this.fileInput.getFiles().then(function(attachments) {
@@ -981,18 +981,6 @@
             } else {
                 this.focusMessageField();
             }
-        },
-
-        replace_colons: function(str) {
-            return str.replace(emoji.rx_colons, function(m) {
-                var idx = m.substr(1, m.length-2);
-                var val = emoji.map.colons[idx];
-                if (val) {
-                    return emoji.data[val][0][0];
-                } else {
-                    return m;
-                }
-            });
         },
 
         updateColor: function(model, color) {
