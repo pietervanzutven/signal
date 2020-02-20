@@ -75,9 +75,6 @@
             this.timeStampView.setElement(this.$('.last-timestamp'));
             this.timeStampView.update();
 
-            emoji_util.parse(this.$('.name'));
-            emoji_util.parse(this.$('.last-message'));
-
             var unread = this.model.get('unreadCount');
             if (unread > 0) {
                 this.$el.addClass('unread');

@@ -129,8 +129,6 @@
 
             this.timerMenu = new TimerMenuView({ el: this.$('.timer-menu'), model: this.model });
 
-            emoji_util.parse(this.$('.conversation-name'));
-
             this.window = options.window;
             this.fileInput = new Whisper.FileInputView({
                 el: this.$('form.send'),

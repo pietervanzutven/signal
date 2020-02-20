@@ -328,7 +328,6 @@
                 this.$el.addClass('control');
                 var content = this.$('.content');
                 content.text(this.model.getDescription());
-                emoji_util.parse(content);
             } else {
                 this.$el.removeClass('control');
             }
@@ -356,8 +355,6 @@
             this.renderControl();
 
             var body = this.$('.body');
-
-            emoji_util.parse(body);
 
             if (body.length > 0) {
                 var escaped = body.html();
