@@ -36725,7 +36725,7 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
     var decrypt      = libsignal.crypto.decrypt;
     var calculateMAC = libsignal.crypto.calculateMAC;
     var verifyMAC    = libsignal.crypto.verifyMAC;
-
+    
     function verifyDigest(data, theirDigest) {
         return crypto.subtle.digest({name: 'SHA-256'}, data).then(function(ourDigest) {
             var a = new Uint8Array(ourDigest);
@@ -37653,11 +37653,10 @@ var TextSecureServer = (function() {
                 if (options.dataType === 'json') {
                     try { result = JSON.parse(xhr.responseText + ''); } catch(e) {}
                     if (options.validateResponse) {
-                        if (!validateResponse(result, options.validateResponse)) {
-                            console.log(options.type, url, xhr.status, 'Error');
-                            console.log(xhr.statusText);
-                            reject(HTTPError(xhr.status, xhr.statusText, options.stack));
-                        }
+                      if (!validateResponse(result, options.validateResponse)) {
+                        console.log(options.type, url, xhr.status, 'Error');
+                        reject(HTTPError(xhr.status, result, options.stack));
+                      }
                     }
                 }
                 if ( 0 <= xhr.status && xhr.status < 400) {
@@ -37670,7 +37669,8 @@ var TextSecureServer = (function() {
             };
             xhr.onerror = function() {
                 console.log(options.type, url, xhr.status, 'Error');
-                reject(HTTPError(xhr.status, null, options.stack));
+                console.log(xhr.statusText);
+                reject(HTTPError(xhr.status, xhr.statusText, options.stack));
             };
             xhr.send( options.data || null );
         });
