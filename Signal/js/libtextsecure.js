@@ -37234,9 +37234,8 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
 
         socket.onmessage = function(socketMessage) {
             var blob = socketMessage.data;
-            var reader = new FileReader();
-            reader.onload = function() {
-                var message = textsecure.protobuf.WebSocketMessage.decode(reader.result);
+            var handleArrayBuffer = function(buffer) {
+                var message = textsecure.protobuf.WebSocketMessage.decode(buffer);
                 if (message.type === textsecure.protobuf.WebSocketMessage.Type.REQUEST ) {
                     handleRequest(
                         new IncomingWebSocketRequest({
@@ -37266,7 +37265,16 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
                     }
                 }
             };
-            reader.readAsArrayBuffer(blob);
+
+            if (blob instanceof ArrayBuffer) {
+              handleArrayBuffer(blob);
+            } else {
+              var reader = new FileReader();
+              reader.onload = function() {
+                handleArrayBuffer(reader.result);
+              };
+              reader.readAsArrayBuffer(blob);
+            }
         };
 
         if (opts.keepalive) {
@@ -37588,20 +37596,6 @@ window.textsecure.utils = function() {
  * vim: ts=4:sw=4:expandtab
  */
 
-function PortManager(ports) {
-    this.ports = ports;
-    this.idx = 0;
-}
-
-PortManager.prototype = {
-    constructor: PortManager,
-    getPort: function() {
-        var port = this.ports[this.idx];
-        this.idx = (this.idx + 1) % this.ports.length;
-        return port;
-    }
-};
-
 var TextSecureServer = (function() {
     'use strict';
 
@@ -37624,11 +37618,14 @@ var TextSecureServer = (function() {
         return true;
     }
 
+    function createSocket(url) {
+        return new WebSocket(url);
+    }
+
     // Promise-based async xhr routine
     function promise_ajax(url, options) {
         return new Promise(function (resolve, reject) {
             if (!url) {
-                //url = options.host + ':' + options.port + '/' + options.path;
                 url = options.host + '/' + options.path;
             }
             console.log(options.type, url);
@@ -37658,7 +37655,8 @@ var TextSecureServer = (function() {
                     if (options.validateResponse) {
                         if (!validateResponse(result, options.validateResponse)) {
                             console.log(options.type, url, xhr.status, 'Error');
-                            reject(HTTPError(xhr.status, result, options.stack));
+                            console.log(xhr.statusText);
+                            reject(HTTPError(xhr.status, xhr.statusText, options.stack));
                         }
                     }
                 }
@@ -37681,9 +37679,6 @@ var TextSecureServer = (function() {
     function retry_ajax(url, options, limit, count) {
         count = count || 0;
         limit = limit || 3;
-        if (options.ports) {
-            options.port = options.ports[count % options.ports.length];
-        }
         count++;
         return promise_ajax(url, options).catch(function(e) {
             if (e.name === 'HTTPError' && e.code === -1 && count < limit) {
@@ -37727,11 +37722,10 @@ var TextSecureServer = (function() {
         profile    : "v1/profile"
     };
 
-    function TextSecureServer(url, ports, username, password) {
+    function TextSecureServer(url, username, password) {
         if (typeof url !== 'string') {
             throw new Error('Invalid server url');
         }
-        this.portManager = new PortManager(ports);
         this.url = url;
         this.username = username;
         this.password = password;
@@ -37739,16 +37733,12 @@ var TextSecureServer = (function() {
 
     TextSecureServer.prototype = {
         constructor: TextSecureServer,
-        getUrl: function() {
-            return this.url;// + ':' + this.portManager.getPort();
-        },
         ajax: function(param) {
             if (!param.urlParameters) {
                 param.urlParameters = '';
             }
             return ajax(null, {
                     host        : this.url,
-                    ports       : this.portManager.ports,
                     path        : URL_CALLS[param.call] + param.urlParameters,
                     type        : param.httpType,
                     data        : param.jsonData && textsecure.utils.jsonThing(param.jsonData),
@@ -37756,7 +37746,8 @@ var TextSecureServer = (function() {
                     dataType    : 'json',
                     user        : this.username,
                     password    : this.password,
-                    validateResponse: param.validateResponse
+                    validateResponse: param.validateResponse,
+                    certificateAuthorities: window.config.certificateAuthorities
             }).catch(function(e) {
                 var code = e.code;
                 if (code === 200) {
@@ -37968,22 +37959,16 @@ var TextSecureServer = (function() {
             }.bind(this));
         },
         getMessageSocket: function() {
-            var url = this.getUrl();
-            console.log('opening message socket', url);
-            return new WebSocket(
-                url.replace('https://', 'wss://').replace('http://', 'ws://')
+            console.log('opening message socket', this.url);
+            return createSocket(this.url.replace('https://', 'wss://').replace('http://', 'ws://')
                     + '/v1/websocket/?login=' + encodeURIComponent(this.username)
                     + '&password=' + encodeURIComponent(this.password)
-                    + '&agent=OWD'
-            );
+                    + '&agent=OWD');
         },
         getProvisioningSocket: function () {
-            var url = this.getUrl();
-            console.log('opening provisioning socket', url);
-            return new WebSocket(
-                url.replace('https://', 'wss://').replace('http://', 'ws://')
-                    + '/v1/websocket/provisioning/?agent=OWD'
-            );
+            console.log('opening provisioning socket', this.url);
+            return createSocket(this.url.replace('https://', 'wss://').replace('http://', 'ws://')
+                    + '/v1/websocket/provisioning/?agent=OWD');
         }
     };
 
@@ -38001,8 +37986,8 @@ var TextSecureServer = (function() {
 
     var ARCHIVE_AGE = 7 * 24 * 60 * 60 * 1000;
 
-    function AccountManager(url, ports, username, password) {
-        this.server = new TextSecureServer(url, ports, username, password);
+    function AccountManager(url, username, password) {
+        this.server = new TextSecureServer(url, username, password);
         this.pending = Promise.resolve();
     }
 
@@ -38285,14 +38270,14 @@ var TextSecureServer = (function() {
  * vim: ts=4:sw=4:expandtab
  */
 
-function MessageReceiver(url, ports, username, password, signalingKey, options = {}) {
+function MessageReceiver(url, username, password, signalingKey, options = {}) {
     this.count = 0;
 
     this.url = url;
     this.signalingKey = signalingKey;
     this.username = username;
     this.password = password;
-    this.server = new TextSecureServer(url, ports, username, password);
+    this.server = new TextSecureServer(url, username, password);
 
     this.serverTrustRoot = window.Signal.Crypto.base64ToArrayBuffer(options.serverTrustRoot);
 
@@ -39295,8 +39280,8 @@ MessageReceiver.prototype.extend({
 
 window.textsecure = window.textsecure || {};
 
-textsecure.MessageReceiver = function(url, ports, username, password, signalingKey, options) {
-    var messageReceiver = new MessageReceiver(url, ports, username, password, signalingKey, options);
+textsecure.MessageReceiver = function(url, username, password, signalingKey, options) {
+    var messageReceiver = new MessageReceiver(url, username, password, signalingKey, options);
     this.addEventListener    = messageReceiver.addEventListener.bind(messageReceiver);
     this.removeEventListener = messageReceiver.removeEventListener.bind(messageReceiver);
     this.getStatus           = messageReceiver.getStatus.bind(messageReceiver);
@@ -39661,8 +39646,8 @@ Message.prototype = {
     }
 };
 
-function MessageSender(url, ports, username, password) {
-    this.server = new TextSecureServer(url, ports, username, password);
+function MessageSender(url, username, password) {
+    this.server = new TextSecureServer(url, username, password);
     this.pendingMessages = {};
 }
 
@@ -40188,8 +40173,8 @@ MessageSender.prototype = {
 
 window.textsecure = window.textsecure || {};
 
-textsecure.MessageSender = function(url, ports, username, password) {
-    var sender = new MessageSender(url, ports, username, password);
+textsecure.MessageSender = function(url, username, password) {
+    var sender = new MessageSender(url, username, password);
     textsecure.replay.registerFunction(sender.tryMessageAgain.bind(sender), textsecure.replay.Type.ENCRYPT_MESSAGE);
     textsecure.replay.registerFunction(sender.retransmitMessage.bind(sender), textsecure.replay.Type.TRANSMIT_MESSAGE);
     textsecure.replay.registerFunction(sender.sendMessage.bind(sender), textsecure.replay.Type.REBUILD_MESSAGE);

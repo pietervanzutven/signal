@@ -287,6 +287,8 @@
     <Content Include="share.html" />
     <Content Include="stylesheets\manifest.css" />
     <Content Include="stylesheets\options.css" />
+    <Content Include="TextSecure.crt" />
+    <Content Include="textsecureservicewhispersystemsorg.crt" />
     <Content Include="_locales\ar\messages.json" />
     <Content Include="_locales\bg\messages.json" />
     <Content Include="_locales\cs\messages.json" />

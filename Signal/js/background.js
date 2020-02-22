@@ -39,7 +39,6 @@
     });
 
     var SERVER_URL = window.config.serverUrl;
-    var SERVER_PORTS = [80, 4433, 8443];
     var messageReceiver;
     window.getSocketStatus = function() {
         if (messageReceiver) {
@@ -55,7 +54,7 @@
             var USERNAME = storage.get('number_id');
             var PASSWORD = storage.get('password');
             accountManager = new textsecure.AccountManager(
-                SERVER_URL, SERVER_PORTS, USERNAME, PASSWORD
+                SERVER_URL, USERNAME, PASSWORD
             );
             accountManager.addEventListener('registration', function() {
                 if (!Whisper.Registration.everDone()) {
@@ -161,7 +160,7 @@
 
         // initialize the socket and start listening for messages
         messageReceiver = new textsecure.MessageReceiver(
-            SERVER_URL, SERVER_PORTS, USERNAME, PASSWORD, mySignalingKey, options
+            SERVER_URL, USERNAME, PASSWORD, mySignalingKey, options
         );
         messageReceiver.addEventListener('message', onMessageReceived);
         messageReceiver.addEventListener('receipt', onDeliveryReceipt);
@@ -175,7 +174,7 @@
         messageReceiver.addEventListener('progress', onProgress);
 
         window.textsecure.messaging = new textsecure.MessageSender(
-            SERVER_URL, SERVER_PORTS, USERNAME, PASSWORD
+            SERVER_URL, USERNAME, PASSWORD
         );
 
         // Because v0.43.2 introduced a bug that lost contact details, v0.43.4 introduces
