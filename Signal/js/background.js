@@ -38,7 +38,7 @@
         });
     });
 
-    var SERVER_URL = 'https://textsecure-service.whispersystems.org';
+    var SERVER_URL = window.config.serverUrl;
     var SERVER_PORTS = [80, 4433, 8443];
     var messageReceiver;
     window.getSocketStatus = function() {
@@ -156,7 +156,7 @@
         connectCount += 1;
         var options = {
             retryCached: connectCount === 1,
-            serverTrustRoot: 'BXu6QIKVz5MA8gstzfOgRQGqyLqOwNKHL6INkv3IHWMF',
+            serverTrustRoot: window.config.serverTrustRoot,
         };
 
         // initialize the socket and start listening for messages
