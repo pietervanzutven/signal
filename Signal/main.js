@@ -43,19 +43,6 @@ Windows.UI.WebUI.WebUIApplication.addEventListener('activated', event => {
     }
 });
 
-window.onload = function () {
-    console.log('extension launched');
-    storage.onready(function () {
-        if (Whisper.Registration.everDone()) {
-            openInbox();
-        }
-        if (!Whisper.Registration.isDone()) {
-            //extension.install('standalone');
-            extension.install('');
-        }
-    });
-};
-
 window.matchMedia('(max-width: 600px)').addListener(() => {
     var gutter = $('#container').contents().find('.gutter');
     var conversation = $('#container').contents().find('.conversation-stack');

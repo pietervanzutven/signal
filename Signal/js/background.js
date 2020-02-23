@@ -26,7 +26,7 @@
         getAccountManager().refreshPreKeys();
     });
 
-    extension.onLaunched(function() {
+    window.onload = function() {
         console.log('extension launched');
         storage.onready(function() {
             if (Whisper.Registration.everDone()) {
@@ -36,7 +36,7 @@
                 extension.install();
             }
         });
-    });
+    };
 
     var SERVER_URL = window.config.serverUrl;
     var CDN_URL = window.config.cdnUrl;
