@@ -10,7 +10,7 @@
             window.parent.locales = data;
         });
     }
-    
+
     window.extension = window.extension || {};
 
     window.extension.navigator = (function () {
@@ -26,7 +26,7 @@
         self.tabs = tabs;
 
         self.setBadgeText = function (text) {
-            if (chrome.browserAction && chrome.browserAction.setBadgeText) {
+            if (window.chrome && chrome.browserAction && chrome.browserAction.setBadgeText) {
                 chrome.browserAction.setBadgeText({text: String(text)});
             }
         };
@@ -42,17 +42,18 @@
                 var url = options.url;
                 delete options.url;
                 chrome.app.window.create(url, options, callback);
+            } else {
+                var element = window.parent.document.getElementById('container');
+                element.src = options.url;
             }
-            var element = window.parent.document.getElementById('container');
-            element.src = options.url;
         },
 
         focus: function(id, callback) {
-            if (chrome.windows) {
+            if (window.chrome && chrome.windows) {
                 chrome.windows.update(id, { focused: true }, function() {
                     callback(chrome.runtime.lastError);
                 });
-            } else if (chrome.app.window) {
+            } else if (window.chrome && chrome.app.window) {
                 var appWindow = chrome.app.window.get(id);
                 if (appWindow) {
                     appWindow.show();
@@ -82,25 +83,32 @@
 
         getBackground: function(callback) {
             var getBackground;
-            //if (chrome.extension) {
-                //var bg = chrome.extension.getBackgroundPage();
-                var bg = window.parent;
+            if (window.chrome && chrome.extension) {
+                var bg = chrome.extension.getBackgroundPage();
                 bg.storage.onready(function() {
                     callback(bg);
-                    //resolve();
+                    resolve();
                 });
-            //} else if (chrome.runtime) {
-            //    chrome.runtime.getBackgroundPage(function(bg) {
-            //        bg.storage.onready(function() {
-            //            callback(bg);
-            //        });
-            //    });
-            //}
+            } else if (window.chrome && chrome.runtime) {
+                chrome.runtime.getBackgroundPage(function(bg) {
+                    bg.storage.onready(function() {
+                        callback(bg);
+                    });
+                });
+            } else {
+                var bg = window.parent;
+                bg.storage.onready(function () {
+                    callback(bg);
+                })
+            }
         },
 
         getAll: function() {
-            //return chrome.app.window.getAll();
-            return [];
+                  if (window.chrome.app.window) {
+                    return chrome.app.window.getAll();
+                  } else {
+                    return [];
+                  }
         },
 
         getViews: function() {
@@ -130,7 +138,7 @@
         },
 
         drawAttention: function(window_id) {
-            if (chrome.app.window) {
+            if (window.chrome && chrome.app.window) {
                 var w = chrome.app.window.get(window_id);
                 if (w) {
                     w.clearAttention();
@@ -140,7 +148,7 @@
         },
 
         clearAttention: function(window_id) {
-            if (chrome.app.window) {
+            if (window.chrome && chrome.app.window) {
                 var w = chrome.app.window.get(window_id);
                 if (w) {
                     w.clearAttention();
@@ -151,10 +159,10 @@
     };
 
     extension.onLaunched = function(callback) {
-        if (chrome.browserAction && chrome.browserAction.onClicked) {
+        if (window.chrome && chrome.browserAction && chrome.browserAction.onClicked) {
             chrome.browserAction.onClicked.addListener(callback);
         }
-        if (chrome.app && chrome.app.runtime) {
+        if (window.chrome && chrome.app && chrome.app.runtime) {
             chrome.app.runtime.onLaunched.addListener(callback);
         }
     };
@@ -166,7 +174,6 @@
         }
         if (window.parent.locales) {
             var i18nmessage = window.parent.locales[message].message;
-            //if (substitutions) {
             if ($.isArray(substitutions)) {
                 for (var i = 0; i < substitutions.length; i++) {
                     i18nmessage = i18nmessage.replace(/\$.*\$/, substitutions[i]);
@@ -174,7 +181,6 @@
             } else if (typeof substitutions === 'string') {
                 i18nmessage = i18nmessage.replace(/\$.*\$/, substitutions);
             }
-            //}
             return i18nmessage;
         }
     };
@@ -192,7 +198,7 @@
             id = 'standalone-installer';
             url = 'register.html';
         }
-        //if (!chrome.app.window.get(id)) {
+        if (!chrome.app.window.get(id)) {
             extension.windows.open({
                 id: id,
                 url: url,
@@ -200,15 +206,14 @@
                 minWidth: 800,
                 minHeight: 666
             });
-        //}
+        }
     };
 
     var notification_pending = Promise.resolve();
     extension.notification = {
         init: function() {
-            return;
             // register some chrome listeners
-            if (chrome.notifications) {
+            if (window.chrome && chrome.notifications) {
                 chrome.notifications.onClicked.addListener(function() {
                     extension.notification.clear();
                     Whisper.Notifications.onclick();
@@ -228,16 +233,16 @@
             }
         },
         clear: function() {
-            return;
             notification_pending = notification_pending.then(function() {
                 return new Promise(function(resolve) {
-                    chrome.notifications.clear('signal',  resolve);
+                    if (window.chrome) {
+                      chrome.notifications.clear('signal',  resolve);
+                    }
                 });
             });
         },
         update: function(options) {
-            return;
-            if (chrome) {
+            if (window.chrome) {
                 var chromeOpts = {
                     type     : options.type,
                     title    : options.title,
@@ -272,7 +277,7 @@
     };
 
     extension.keepAwake = function() {
-        if (chrome && chrome.alarms) {
+        if (window.chrome && chrome && chrome.alarms) {
             chrome.alarms.onAlarm.addListener(function() {
                 // nothing to do.
             });
@@ -280,18 +285,16 @@
         }
     };
 
-    //if (chrome.runtime.onInstalled) {
-    //    chrome.runtime.onInstalled.addListener(function(options) {
-    //        var version = chrome.runtime.getManifest().version;
-    //
-    //        if (options.reason === 'install') {
-    //            console.log('new install:', version);
-    //            extension.install();
-    //        } else if (options.reason === 'update') {
-    //            console.log('new update:', version, '- previous version:', options.previousVersion);
-    //        } else {
-    //            console.log('onInstalled', options.reason, 'version:', version);
-    //        }
-    //    });
-    //}
+    if (window.chrome && chrome.runtime && chrome.runtime.onInstalled) {
+        chrome.runtime.onInstalled.addListener(function(options) {
+            if (options.reason === 'install') {
+                console.log('new install');
+                extension.install();
+            } else if (options.reason === 'update') {
+                console.log('new update. previous version:', options.previousVersion);
+            } else {
+                console.log('onInstalled', options.reason);
+            }
+        });
+    }
 }());
