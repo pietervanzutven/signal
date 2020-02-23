@@ -62,6 +62,7 @@
     </AppxManifest>
     <Content Include="audio\NewMessage.mp3" />
     <Content Include="background.html" />
+    <Content Include="cdnsignalorg.cer" />
     <Content Include="fonts\Roboto-Black.ttf" />
     <Content Include="fonts\Roboto-BlackItalic.ttf" />
     <Content Include="fonts\Roboto-Bold.ttf" />

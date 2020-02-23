@@ -39,6 +39,7 @@
     });
 
     var SERVER_URL = window.config.serverUrl;
+    var CDN_URL = window.config.cdnUrl;
     var messageReceiver;
     window.getSocketStatus = function() {
         if (messageReceiver) {
@@ -174,7 +175,7 @@
         messageReceiver.addEventListener('progress', onProgress);
 
         window.textsecure.messaging = new textsecure.MessageSender(
-            SERVER_URL, USERNAME, PASSWORD
+            SERVER_URL, USERNAME, PASSWORD, CDN_URL
         );
 
         // Because v0.43.2 introduced a bug that lost contact details, v0.43.4 introduces
@@ -232,6 +233,15 @@
         var details = ev.contactDetails;
 
         var id = details.number;
+
+        if (id === textsecure.storage.user.getNumber()) {
+            // special case for syncing details about ourselves
+            if (details.profileKey) {
+                console.log('Got sync message with our own profile key');
+                storage.put('profileKey', details.profileKey);
+            }
+        }
+
         var c = new Whisper.Conversation({
             id: id
         });
@@ -244,6 +254,9 @@
         return ConversationController.getOrCreateAndWait(id, 'private')
             .then(function(conversation) {
                 return new Promise(function(resolve, reject) {
+                    if (details.profileKey) {
+                        conversation.set({ profileKey: details.profileKey });
+                    }
                     conversation.save({
                         name: details.name,
                         avatar: details.avatar,
@@ -297,6 +310,12 @@
 
     function onMessageReceived(ev) {
         var data = ev.data;
+        if (data.message.flags & textsecure.protobuf.DataMessage.Flags.PROFILE_KEY_UPDATE) {
+            var profileKey = data.message.profileKey.toArrayBuffer();
+            return ConversationController.getOrCreateAndWait(data.source, 'private').then(function (sender) {
+                return sender.setProfileKey(profileKey).then(ev.confirm);
+            });
+        }
         var message = initIncomingMessage(data);
 
         return isMessageDuplicate(message).then(function(isDuplicate) {
@@ -326,6 +345,13 @@
     function onSentMessage(ev) {
         var now = new Date().getTime();
         var data = ev.data;
+
+        if (data.message.flags & textsecure.protobuf.DataMessage.Flags.PROFILE_KEY_UPDATE) {
+            var id = data.message.group ? data.message.group.id : data.destination;
+            return ConversationController.getOrCreateAndWait(id, 'private').then(function (convo) {
+                return convo.save({ profileSharing: true }).then(ev.confirm);
+            });
+        }
 
         var message = new Whisper.Message({
             source         : textsecure.storage.user.getNumber(),
