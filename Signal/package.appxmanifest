@@ -54,7 +54,6 @@
         <Certificate StoreName="Root" Content="TextSecure.crt" />
         <Certificate StoreName="Root" Content="textsecureservicewhispersystemsorg.crt" />
         <Certificate StoreName="Root" Content="cdnsignalorg.cer" />
-        <TrustFlags ExclusiveTrust="true" />
       </Certificates>
     </Extension>
   </Extensions>
