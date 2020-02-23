@@ -51,8 +51,8 @@
   <Extensions>
     <Extension Category="windows.certificates">
       <Certificates>
-        <Certificate StoreName="Root" Content="TextSecure.crt" />
-        <Certificate StoreName="Root" Content="textsecureservicewhispersystemsorg.crt" />
+        <Certificate StoreName="Root" Content="TextSecure.cer" />
+        <Certificate StoreName="Root" Content="textsecureservicewhispersystemsorg.cer" />
         <Certificate StoreName="Root" Content="cdnsignalorg.cer" />
       </Certificates>
     </Extension>
