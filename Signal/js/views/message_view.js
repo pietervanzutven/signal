@@ -183,6 +183,7 @@
             this.listenTo(this.model, 'change:errors', this.onErrorsChanged);
             this.listenTo(this.model, 'change:body', this.render);
             this.listenTo(this.model, 'change:delivered', this.renderDelivered);
+            this.listenTo(this.model, 'change:read_by', this.renderRead);
             this.listenTo(this.model, 'change:expirationStartTimestamp', this.renderExpiring);
             this.listenTo(this.model, 'change', this.renderSent);
             this.listenTo(this.model, 'change:flags change:group_update', this.renderControl);
@@ -279,6 +280,11 @@
         renderDelivered: function() {
             if (this.model.get('delivered')) { this.$el.addClass('delivered'); }
         },
+        renderRead: function() {
+            if (!_.isEmpty(this.model.get('read_by'))) {
+              this.$el.addClass('read');
+            }
+        },
         onErrorsChanged: function() {
             if (this.model.isIncoming()) {
                 this.render();
@@ -364,6 +370,7 @@
 
             this.renderSent();
             this.renderDelivered();
+            this.renderRead();
             this.renderErrors();
             this.renderExpiring();
 

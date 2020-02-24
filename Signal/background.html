@@ -308,7 +308,7 @@
   </script>
   <script type='text/x-tmpl-mustache' id='contact'>
       {{> avatar }}
-      <div class='contact-details {{ #class }} {{ class }} {{ /class}}'> {{> contact_name_and_number }} </div>
+      <div class='contact-details {{ class }}'> {{> contact_name_and_number }} </div>
   </script>
   <script type='text/x-tmpl-mustache' id='new-contact'>
       {{> avatar }}
@@ -469,28 +469,35 @@
   </script>
   <script type='text/x-tmpl-mustache' id='contact-detail'>
       <div class='clearfix'>
-        {{> avatar }}
-        <div class='contact-details'>
-          {{ #errors }}
+          {{> avatar }}
+          <div class='contact-details'>
+              {{ #errors }}
               <div class='error-icon-container'>
-                {{ #showErrorButton }}
+                  {{ #showErrorButton }}
                   <button class='error'>
-                    <span class='icon error'></span>
-                    {{ errorButtonLabel }}
+                      <span class='icon error'></span>
+                      {{ errorButtonLabel }}
                   </button>
-                {{ /showErrorButton }}
-                {{ ^showErrorButton }}
+                  {{ /showErrorButton }}
+                  {{ ^showErrorButton }}
                   <span class='error-icon'></span>
-                {{ /showErrorButton }}
+                  {{ /showErrorButton }}
               </div>
-          {{ /errors }}
-          <span class='name' dir='auto'>{{ name }}</span>
-          {{ #errors }}
-            {{ #message }}
+              {{ /errors }}
+
+              {{ ^errors }}
+              <div class='status-icon-container {{ status }}'>
+                  <span class='status'></span>
+              </div>
+              {{ /errors }}
+
+              <span class='name' dir='auto'>{{ name }}</span>
+              {{ #errors }}
+              {{ #message }}
               <p class='error-message'>{{message}}</p>
-            {{ /message }}
-          {{ /errors }}
-        </div>
+              {{ /message }}
+              {{ /errors }}
+          </div>
       </div>
   </script>
   <script type='text/x-tmpl-mustache' id='link_to_support'>
@@ -839,6 +846,7 @@ sudo apt update && sudo apt install signal-desktop
   <script type='text/javascript' src='js/notifications.js'></script>
   <script type='text/javascript' src='js/delivery_receipts.js'></script>
   <script type='text/javascript' src='js/read_receipts.js'></script>
+  <script type='text/javascript' src='js/read_syncs.js'></script>
   <script type='text/javascript' src='js/libphonenumber-util.js'></script>
   <script type='text/javascript' src='js/models/messages.js'></script>
   <script type='text/javascript' src='js/models/conversations.js'></script>

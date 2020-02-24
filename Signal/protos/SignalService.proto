@@ -288,7 +288,7 @@ message SyncMessage {
     optional uint64 timestamp = 2;
   }
 
-  message Configuration {
+  message Settings {
     optional bool readReceipts                   = 1;
     optional bool unidentifiedDeliveryIndicators = 2;
     optional bool typingIndicators               = 3;
@@ -317,8 +317,8 @@ message SyncMessage {
   repeated Read                 read                 = 5;
   optional Blocked              blocked              = 6;
   optional Verified             verified             = 7;
-  optional Configuration        configuration        = 9;
   optional bytes                padding              = 8;
+  optional Settings             settings             = 9;
   repeated StickerPackOperation stickerPackOperation = 10;
   optional ViewOnceOpen         viewOnceOpen         = 11;
 }

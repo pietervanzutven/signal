@@ -97,6 +97,7 @@
     <Content Include="images\clock.svg" />
     <Content Include="images\clock_white.svg" />
     <Content Include="images\double-check.svg" />
+    <Content Include="images\double-check_blue.svg" />
     <Content Include="images\double-check_white.svg" />
     <Content Include="images\down.svg" />
     <Content Include="images\down_white.svg" />
@@ -233,6 +234,7 @@
     <Content Include="js\reliable_trigger.js" />
     <Content Include="js\rotate_signed_prekey_listener.js" />
     <Content Include="preload.js" />
+    <Content Include="js\read_syncs.js" />
     <Content Include="js\share.js" />
     <Content Include="js\signal_protocol_store.js" />
     <Content Include="js\storage.js" />
