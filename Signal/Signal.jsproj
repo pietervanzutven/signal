@@ -62,6 +62,7 @@
     </AppxManifest>
     <Content Include="audio\NewMessage.mp3" />
     <Content Include="background.html" />
+    <Content Include="cdnsignalorg.cer" />
     <Content Include="fonts\Roboto-Black.ttf" />
     <Content Include="fonts\Roboto-BlackItalic.ttf" />
     <Content Include="fonts\Roboto-Bold.ttf" />
@@ -287,6 +288,8 @@
     <Content Include="share.html" />
     <Content Include="stylesheets\manifest.css" />
     <Content Include="stylesheets\options.css" />
+    <Content Include="TextSecure.cer" />
+    <Content Include="textsecureservicewhispersystemsorg.cer" />
     <Content Include="_locales\ar\messages.json" />
     <Content Include="_locales\bg\messages.json" />
     <Content Include="_locales\cs\messages.json" />

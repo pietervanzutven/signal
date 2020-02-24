@@ -111,6 +111,9 @@
     {{ #number }}
       <span class='conversation-number'>{{ number }}</span>
     {{ /number }}
+    {{ #profileName }}
+      <span class='profileName'>{{ profileName }} </span>
+    {{ /profileName }}
     {{ #isVerified }}
       <span class='verified'><span class='verified-icon'></span> {{ verified }}</span>
     {{ /isVerified }}
@@ -236,7 +239,12 @@
   <script type='text/x-tmpl-mustache' id='message'>
       {{> avatar }}
       <div class='bubble {{ avatar.color }}'>
-          <div class='sender' dir='auto'>{{ sender }}</div>
+          <div class='sender' dir='auto'>
+            {{ sender }}
+            {{ #profileName }}
+              <span class='profileName'>{{ profileName }} </span>
+            {{ /profileName }}
+          </div>
           <div class='attachments'></div>
           <p class='content' dir='auto'>
             {{ #message }}<span class='body'>{{ message }}</span>{{ /message }}
@@ -290,7 +298,12 @@
     <span>{{ name }}</span><span class='remove'>x</span>
   </script>
   <script type='text/x-tmpl-mustache' id='contact_name_and_number'>
-    <h3 class='name' dir='auto'> {{ title }} </h3>
+    <h3 class='name' dir='auto'>
+      {{ title }}
+      {{ #profileName }}
+        <span class='profileName'>{{ profileName }} </span>
+      {{ /profileName }}
+    </h3>
     <div class='number'>{{ #isVerified }}<span class='verified-icon'></span> {{ verified }} &middot;{{ /isVerified }} {{ number }}</div>
   </script>
   <script type='text/x-tmpl-mustache' id='contact'>
@@ -819,6 +832,8 @@ sudo apt update && sudo apt install signal-desktop
   <script type='text/javascript' src='js/modules/crypto.js'></script>
   <script type='text/javascript' src='js/modules/metadata/CiphertextMessage.js'></script>
   <script type='text/javascript' src='js/modules/metadata/SecretSessionCipher.js'></script>
+    <script type='text/javascript' src='js/w3cwebsocket.js'></script>
+  <script type='text/javascript' src='js/XMLHttpRequest.js'></script>
   <script type='text/javascript' src='js/libtextsecure.js'></script>
 
   <script type='text/javascript' src='js/notifications.js'></script>
