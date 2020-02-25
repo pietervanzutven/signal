@@ -26,7 +26,7 @@
         getAccountManager().refreshPreKeys();
     });
 
-    window.onload = function() {
+    extension.onLaunched(function () {
         console.log('extension launched');
         storage.onready(function() {
             if (Whisper.Registration.everDone()) {
@@ -36,7 +36,7 @@
                 extension.install();
             }
         });
-    };
+    });
 
     var SERVER_URL = window.config.serverUrl;
     var CDN_URL = window.config.cdnUrl;
@@ -80,33 +80,41 @@
         return roll <= percentage;
     }
 
-    var connectCount = 0;
     storage.fetch();
-    storage.onready(function() {
-        ConversationController.load();
+    window.onload = function() {
+        storage.onready(function() {
+            ConversationController.load();
 
-        window.dispatchEvent(new Event('storage_ready'));
-        setUnreadCount(storage.get("unreadCount", 0));
+            window.dispatchEvent(new Event('storage_ready'));
+            setUnreadCount(storage.get("unreadCount", 0));
 
-        if (Whisper.Registration.isDone()) {
-            extension.keepAwake();
-            connect();
-        }
+            if (Whisper.Registration.isDone()) {
+                extension.keepAwake();
+                connect();
+            }
 
-        console.log("listening for registration events");
-        Whisper.events.on('registration_done', function() {
-            console.log("handling registration event");
-            extension.keepAwake();
-            connect(true);
+            console.log("listening for registration events");
+            Whisper.events.on('registration_done', function() {
+                console.log("handling registration event");
+                extension.keepAwake();
+                connect(true);
+            });
+
+            if (open) {
+                openInbox();
+            }
+
+            Whisper.WallClockListener.init(Whisper.events);
+            Whisper.ExpiringMessagesListener.init(Whisper.events);
+
+            if (Whisper.Registration.everDone()) {
+                openInbox();
+            }
+            if (!Whisper.Registration.isDone()) {
+                extension.install();
+            }
         });
-
-        if (open) {
-            openInbox();
-        }
-
-        Whisper.WallClockListener.init(Whisper.events);
-        Whisper.ExpiringMessagesListener.init(Whisper.events);
-    });
+    }
 
     window.getSyncRequest = function() {
         return new textsecure.SyncRequest(textsecure.messaging, messageReceiver);
@@ -125,6 +133,7 @@
       }
     });
 
+    var connectCount = 0;
     function connect(firstRun) {
         window.removeEventListener('online', connect);
         window.addEventListener('offline', disconnect);
