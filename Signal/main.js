@@ -44,8 +44,8 @@ Windows.UI.WebUI.WebUIApplication.addEventListener('activated', event => {
 });
 
 window.matchMedia('(max-width: 600px)').addListener(() => {
-    var gutter = $('#container').contents().find('.gutter');
-    var conversation = $('#container').contents().find('.conversation-stack');
+    var gutter = $('.gutter');
+    var conversation = $('.conversation-stack');
     if (window.innerWidth > 600) {
         gutter.show();
         conversation.show();

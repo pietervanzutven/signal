@@ -37,8 +37,8 @@
         select: function(e) {
             this.markSelected();
             this.$el.trigger('select', this.model);
-            var gutter = $('#container').contents().find('.gutter');
-            var conversation = $('#container').contents().find('.conversation-stack');
+            var gutter = $('.gutter');
+            var conversation = $('.conversation-stack');
             while (window.onbackrequested) {
                 Windows.UI.Core.SystemNavigationManager.getForCurrentView().onbackrequested.call();
             }
@@ -50,7 +50,7 @@
             currentView.appViewBackButtonVisibility = Windows.UI.Core.AppViewBackButtonVisibility.visible;
             currentView.onbackrequested = function (event) {
                 if (currentView.appViewBackButtonVisibility === Windows.UI.Core.AppViewBackButtonVisibility.visible) {
-                    $('#container').contents().find('.conversation.placeholder').prependTo(conversation);
+                    $('.conversation.placeholder').prependTo(conversation);
                     if (window.innerWidth < 600) {
                         gutter.show();
                         conversation.hide();
