@@ -1,5 +1,7 @@
 ﻿'use strict';
 
+console.log('preload');
+
 var PROTO_ROOT = '/protos';
 
 var config = {
