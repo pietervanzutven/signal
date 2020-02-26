@@ -26,18 +26,6 @@
         getAccountManager().refreshPreKeys();
     });
 
-    extension.onLaunched(function () {
-        console.log('extension launched');
-        storage.onready(function() {
-            if (Whisper.Registration.everDone()) {
-                openInbox();
-            }
-            if (!Whisper.Registration.isDone()) {
-                extension.install();
-            }
-        });
-    });
-
     var SERVER_URL = window.config.serverUrl;
     var CDN_URL = window.config.cdnUrl;
     var messageReceiver;
