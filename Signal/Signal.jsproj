@@ -215,6 +215,7 @@
     <Content Include="js\libphonenumber-util.js" />
     <Content Include="js\libsignal-protocol-worker.js" />
     <Content Include="js\libtextsecure.js" />
+    <Content Include="js\i18n.js" />
     <Content Include="main.js" />
     <Content Include="js\models\blockedNumbers.js" />
     <Content Include="js\models\conversations.js" />

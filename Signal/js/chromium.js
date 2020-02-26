@@ -5,12 +5,6 @@
     'use strict';
     // Browser specific functions for Chrom*
 
-    if (!window.parent.locales) {
-        $.getJSON('_locales/en/messages.json', function (data) {
-            window.parent.locales = data;
-        });
-    }
-
     window.extension = window.extension || {};
 
     window.extension.navigator = (function () {
@@ -168,28 +162,18 @@
     };
 
     // Translate
-    window.i18n = function(message, substitutions) {
-        if (window.chrome && chrome.i18n) {
-            return chrome.i18n.getMessage(message, substitutions);
-        }
-        if (window.parent.locales) {
-            var i18nmessage = window.parent.locales[message].message;
-            if ($.isArray(substitutions)) {
-                for (var i = 0; i < substitutions.length; i++) {
-                    i18nmessage = i18nmessage.replace(/\$.*\$/, substitutions[i]);
-                }
-            } else if (typeof substitutions === 'string') {
-                i18nmessage = i18nmessage.replace(/\$.*\$/, substitutions);
-            }
-            return i18nmessage;
-        }
-    };
-    i18n.getLocale = function() {
-        if (window.chrome && chrome.i18n) {
-            return chrome.i18n.getUILanguage();
-        }
-        return 'en';
-    };
+    if (window.chrome && window.chrome.i18n) {
+      window.i18n = function(message, substitutions) {
+          return chrome.i18n.getMessage(message, substitutions);
+      };
+
+      i18n.getLocale = function() {
+          if (window.chrome && chrome.i18n) {
+              return chrome.i18n.getUILanguage();
+          }
+          return 'en';
+      };
+    }
 
     extension.install = function(mode) {
         if (mode === 'standalone') {
