@@ -40340,6 +40340,7 @@ textsecure.MessageSender = function(url, username, password, cdn_url) {
     this.leaveGroup                          = sender.leaveGroup                         .bind(sender);
     this.sendSyncMessage                     = sender.sendSyncMessage                    .bind(sender);
     this.getProfile                          = sender.getProfile                         .bind(sender);
+    this.getAvatar                           = sender.getAvatar                          .bind(sender);
     this.syncReadMessages                    = sender.syncReadMessages                   .bind(sender);
     this.syncVerification                    = sender.syncVerification                   .bind(sender);
     this.sendReadReceipts                    = sender.sendReadReceipts                   .bind(sender);
