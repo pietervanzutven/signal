@@ -11,13 +11,7 @@
     console.log('background page reloaded');
     extension.notification.init();
 
-    // Close and reopen existing windows
-    var open = false;
     var initialLoadComplete = false;
-    extension.windows.getAll().forEach(function(appWindow) {
-        open = true;
-        appWindow.close();
-    });
 
     // start a background worker for ecc
     textsecure.startWorker('js/libsignal-protocol-worker.js');
@@ -87,10 +81,6 @@
                 extension.keepAwake();
                 connect(true);
             });
-
-            if (open) {
-                openInbox();
-            }
 
             Whisper.WallClockListener.init(Whisper.events);
             Whisper.ExpiringMessagesListener.init(Whisper.events);
