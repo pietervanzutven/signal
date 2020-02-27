@@ -5,6 +5,7 @@ console.log('preload');
 var PROTO_ROOT = '/protos';
 
 var config = {
+    environment: 'production',
     serverUrl: 'https://textsecure-service.whispersystems.org',
     cdnUrl: 'https://cdn.signal.org',
     disableAutoUpdate: false,
