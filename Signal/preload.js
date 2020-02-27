@@ -14,4 +14,9 @@ var config = {
     serverTrustRoot: 'BXu6QIKVz5MA8gstzfOgRQGqyLqOwNKHL6INkv3IHWMF'
 }
 
+// Load locale
+$.getJSON('_locales/en/messages.json',function(localeData) {
+    window.config.locale_json = localeData;
+});
+
 var Signal = {};

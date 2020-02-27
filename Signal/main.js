@@ -61,11 +61,6 @@ window.matchMedia('(max-width: 600px)').addListener(() => {
     }
 });
 
-// Load locale
-$.getJSON('_locales/en/messages.json',function(localeData) {
-    window.env = { locale_json: localeData }
-});
-
 var BBDB = {};
 var BBDBchanged = false;
 
