@@ -78,43 +78,37 @@ a {
   color: #2090ea; }
 
 button.back {
-  background-image: url("../images/back.svg");
+  background-image: url("../images/back_00000005.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  /*background-color: rgba(0, 0, 0, 0.5);*/ }
+  background-position: center center; }
   button.back:focus, button.back:hover {
-    background-image: url("../images/back.svg");
+    background-image: url("../images/back_back_00000010.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: black;*/ }
+    background-position: center center; }
 
 button.clock {
-  background-image: url("../images/clock.svg");
+  background-image: url("../images/clock_00000005.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  /*background-color: rgba(0, 0, 0, 0.5);*/ }
+  background-position: center center; }
   button.clock:focus, button.clock:hover {
-    background-image: url("../images/clock.svg");
+    background-image: url("../images/clock_00000010.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: black;*/ }
+    background-position: center center; }
 
 button.hamburger {
-  background-image: url("../images/menu.svg");
+  background-image: url("../images/menu_00000005.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  /*background-color: rgba(0, 0, 0, 0.5);*/ }
+  background-position: center center; }
   button.hamburger:focus, button.hamburger:hover {
-    background-image: url("../images/menu.svg");
+    background-image: url("../images/menu_00000010.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: black;*/ }
+    background-position: center center; }
 
 ::-webkit-scrollbar {
   width: 10px; }
@@ -199,11 +193,10 @@ button.hamburger {
       display: inline-block;
       width: 24px;
       height: 24px;
-      background-image: url("../images/paperclip.svg");
+      background-image: url("../images/paperclip_61616110.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
-      /*background-color: #616161;*/
       transform: rotateZ(-45deg); }
     .file-input .paperclip:focus, .file-input .paperclip:hover {
       opacity: 1.0; }
@@ -367,22 +360,20 @@ button.hamburger {
     height: 18px;
     display: inline-block;
     vertical-align: text-bottom;
-    background-image: url("../images/warning.svg");
+    background-image: url("../images/warning_00000010.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: black;*/ }
+    background-position: center center; }
   .banner .dismiss {
     position: absolute;
     right: 3px;
     top: 3px;
     height: 23px;
     width: 23px;
-    background-image: url("../images/x.svg");
+    background-image: url("../images/x_00000010.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: black;*/ }
+    background-position: center center; }
 
 .contact-details {
   vertical-align: middle;
@@ -406,11 +397,10 @@ button.hamburger {
   .contact-details.clickable {
     cursor: pointer; }
   .contact-details .verified-icon {
-    background-image: url("../images/verified-check.svg");
+    background-image: url("../images/verified-check_61616110.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
-    /*background-color: #616161;*/
     display: inline-block;
     width: 1.25em;
     height: 1.25em;
@@ -488,11 +478,10 @@ button.hamburger {
     display: block;
     width: 100%;
     height: 100%;
-    background-image: url("../images/x.svg");
+    background-image: url("../images/x_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: white;*/ }
+    background-position: center center; }
 
 input[type=text]:active, input[type=text]:focus, input[type=search]:active, input[type=search]:focus, textarea:active, textarea:focus {
   outline: 1px solid #2090ea; }
@@ -621,29 +610,25 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
         height: 10em;
         width: 10em; } }
     .migration-flow .banner-icon.folder-outline {
-      background-image: url("../images/folder-outline.svg");
+      background-image: url("../images/folder-outline_DEDEDE10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #DEDEDE;*/ }
+      background-position: center center; }
     .migration-flow .banner-icon.export {
-      background-image: url("../images/export.svg");
+      background-image: url("../images/export_DEDEDE10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #DEDEDE;*/ }
+      background-position: center center; }
     .migration-flow .banner-icon.check-circle-outline {
-      background-image: url("../images/check-circle-outline.svg");
+      background-image: url("../images/check-circle-outline_DEDEDE10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #DEDEDE;*/ }
+      background-position: center center; }
     .migration-flow .banner-icon.alert-outline {
-      background-image: url("../images/alert-outline.svg");
+      background-image: url("../images/alert-outline_DEDEDE10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #DEDEDE;*/ }
+      background-position: center center; }
   .migration-flow .header {
     font-weight: normal;
     margin-bottom: 1.5em;
@@ -778,23 +763,20 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
         margin-left: 2em;
         margin-right: 2em; } }
     .migration-flow .install-icon.apple {
-      background-image: url("../images/apple.svg");
+      background-image: url("../images/apple_2090EA10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #2090ea;*/ }
+      background-position: center center; }
     .migration-flow .install-icon.windows {
-      background-image: url("../images/windows.svg");
+      background-image: url("../images/windows_2090EA10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #2090ea;*/ }
+      background-position: center center; }
     .migration-flow .install-icon.linux {
-      background-image: url("../images/linux.svg");
+      background-image: url("../images/linux_2090EA10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #2090ea;*/ }
+      background-position: center center; }
   .migration-flow .nav {
     width: 100%;
     bottom: 50px;
@@ -893,17 +875,15 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
       display: block;
       width: 24px;
       height: 24px;
-      background-image: url("../images/open_link.svg");
+      background-image: url("../images/open_link_00000005.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: rgba(0, 0, 0, 0.5);*/ }
+      background-position: center center; }
       .debug-log .result .open:before:focus, .debug-log .result .open:before:hover {
-        background-image: url("../images/open_link.svg");
+        background-image: url("../images/open_link_00000010.svg");
         background-size: 100%;
         background-repeat: no-repeat;
-        background-position: center center;
-        /*background-color: black;*/ }
+        background-position: center center; }
   .debug-log .result .link {
     border-radius: 5px 0 0 5px;
     float: left;
@@ -953,11 +933,10 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
     .lightbox.modal a:hover {
       background: #616161; }
   .lightbox.modal .save:before {
-    background-image: url("../images/save.svg");
+    background-image: url("../images/save_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: white;*/ }
+    background-position: center center; }
 
 .capture-audio {
   text-align: center; }
@@ -976,11 +955,10 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
       display: inline-block;
       height: 24px;
       width: 24px;
-      background-image: url("../images/microphone.svg");
+      background-image: url("../images/microphone_61616110.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #616161;*/ }
+      background-position: center center; }
 
 .recorder {
   background: #f3f3f3; }
@@ -1003,20 +981,18 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
     background: #9ae99a;
     border: 1px solid #47D647; }
     .recorder .finish .icon {
-      background-image: url("../images/check.svg");
+      background-image: url("../images/check_47D64710.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #47D647;*/ }
+      background-position: center center; }
   .recorder .close {
     background: #fbe3e3;
     border: 1px solid #EF8989; }
     .recorder .close .icon {
-      background-image: url("../images/x.svg");
+      background-image: url("../images/x_EF898910.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #EF8989;*/ }
+      background-position: center center; }
   .recorder .time {
     color: #616161;
     float: right;
@@ -1209,11 +1185,10 @@ img.emoji.jumbo {
   color: #454545;
   border-color: rgba(0, 0, 0, 0.05); }
   .inactive .conversation-header .verified-icon {
-    background-image: url("../images/verified-check.svg");
+    background-image: url("../images/verified-check_45454510.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #454545;*/ }
+    background-position: center center; }
 
 .tool-bar {
   position: relative; }
@@ -1223,11 +1198,10 @@ img.emoji.jumbo {
     float: left;
     width: 24px;
     height: 100%;
-    background-image: url("../images/search_white.svg");
+    background-image: url("../images/search_CCCCCC10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
-    /*background-color: #ccc;*/
     position: absolute;
     left: 20px;
     top: 0; }
@@ -1246,7 +1220,7 @@ input.search {
   position: relative; }
   input.search.active {
     outline: solid 1px #2090ea;
-    background-image: url("../images/x.svg");
+    background-image: url("../images/x_2090EA10.svg");
     background-repeat: no-repeat;
     background-size: 16px; }
     input.search.active.ltr {
@@ -1378,11 +1352,10 @@ input.search {
   padding: 0 5px 0 4px; }
 
 .conversation-title .verified-icon {
-  background-image: url("../images/verified-check.svg");
+  background-image: url("../images/verified-check_FFFFFF10.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
-  /*background-color: white;*/
   display: inline-block;
   width: 1.25em;
   height: 1.25em;
@@ -1466,17 +1439,15 @@ input.search {
   vertical-align: text-bottom;
   display: inline-block; }
   .key-verification .icon.verified {
-    background-image: url("../images/verified-check.svg");
+    background-image: url("../images/verified-check_45454510.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #454545;*/ }
+    background-position: center center; }
   .key-verification .icon.shield {
-    background-image: url("../images/shield.svg");
+    background-image: url("../images/shield_45454510.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #454545;*/ }
+    background-position: center center; }
 .key-verification .key, .key-verification .placeholder {
   padding: 0 1em;
   -webkit-user-select: text; }
@@ -1565,11 +1536,10 @@ input.search {
         height: 1.25em;
         position: relative;
         vertical-align: middle;
-        background-image: url("../images/warning.svg");
+        background-image: url("../images/warning_FFFFFF10.svg");
         background-size: 100%;
         background-repeat: no-repeat;
-        background-position: center center;
-        /*background-color: white;*/ }
+        background-position: center center; }
     .message-detail .contacts .contact-detail .error-message {
       margin: 6px 0 0;
       font-size: 0.9285714286em;
@@ -1634,11 +1604,10 @@ li.entry .error-icon-container {
   width: 24px;
   height: 24px;
   position: relative;
-  background-image: url("../images/warning.svg");
+  background-image: url("../images/warning_FF000010.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  /*background-color: red;*/ }
+  background-position: center center; }
 
 .group li.entry .unregistered-user-error {
   display: none; }
@@ -1667,27 +1636,24 @@ li.entry .error-icon-container {
 
 .sent .status {
   display: inline-block;
-  background-image: url("../images/check.svg");
+  background-image: url("../images/check_00000010.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  /*background-color: black;*/ }
+  background-position: center center; }
 
 .delivered .status {
   display: inline-block;
-  background-image: url("../images/double-check.svg");
+  background-image: url("../images/double-check_00000010.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  /*background-color: black;*/ }
+  background-position: center center; }
 
 .read .status {
   display: inline-block;
-  background-image: url("../images/double-check_blue.svg");
+  background-image: url("../images/double-check_2090EA10.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  /*background-color: #2090ea;*/ }
+  background-position: center center; }
 
 .pending .status {
   display: inline-block;
@@ -1874,32 +1840,28 @@ li.entry .error-icon-container {
       vertical-align: middle;
       width: 48px;
       height: 48px;
-      background-image: url("../images/file.svg");
+      background-image: url("../images/file_45454510.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #454545;*/ }
+      background-position: center center; }
       .message-container .attachments .fileView .icon.audio,
       .message-list .attachments .fileView .icon.audio {
-        background-image: url("../images/audio.svg");
+        background-image: url("../images/audio_45454510.svg");
         background-size: 100%;
         background-repeat: no-repeat;
-        background-position: center center;
-        /*background-color: #454545;*/ }
+        background-position: center center; }
       .message-container .attachments .fileView .icon.video,
       .message-list .attachments .fileView .icon.video {
-        background-image: url("../images/video.svg");
+        background-image: url("../images/video_45454510.svg");
         background-size: 100%;
         background-repeat: no-repeat;
-        background-position: center center;
-        /*background-color: #454545;*/ }
+        background-position: center center; }
       .message-container .attachments .fileView .icon.voice,
       .message-list .attachments .fileView .icon.voice {
-        background-image: url("../images/voice.svg");
+        background-image: url("../images/voice_45454510.svg");
         background-size: 100%;
         background-repeat: no-repeat;
-        background-position: center center;
-        /*background-color: #454545;*/ }
+        background-position: center center; }
   .message-container .outgoing .avatar,
   .message-list .outgoing .avatar {
     display: none; }
@@ -2005,23 +1967,20 @@ li.entry .error-icon-container {
   vertical-align: text-bottom;
   display: inline-block; }
   .advisory .icon.verified {
-    background-image: url("../images/verified-check.svg");
+    background-image: url("../images/verified-check_45454510.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #454545;*/ }
+    background-position: center center; }
   .advisory .icon.shield {
-    background-image: url("../images/shield.svg");
+    background-image: url("../images/shield_45454510.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #454545;*/ }
+    background-position: center center; }
   .advisory .icon.clock {
-    background-image: url("../images/clock.svg");
+    background-image: url("../images/clock_45454510.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #454545;*/ }
+    background-position: center center; }
 
 .keychange {
   text-align: center; }
@@ -2073,25 +2032,23 @@ li.entry .error-icon-container {
     border: none;
     box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2); }
     .discussion-container .scroll-down-button-view button .icon {
-      background-image: url("../images/down.svg");
+      background-image: url("../images/down_C0C0C010.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
-      /*background-color: silver;*/
       height: 100%;
       width: 100%; }
     .discussion-container .scroll-down-button-view button .icon:hover {
-      /*background-color: #616161;*/ }
+      background-image: url("../images/down_61616110.svg"); }
     .discussion-container .scroll-down-button-view button.new-messages {
-      background-color: #2090ea; }
+      background-image: url("../images/down_2090EA10.svg"); }
       .discussion-container .scroll-down-button-view button.new-messages .icon {
-        background-image: url("../images/down.svg");
+        background-image: url("../images/down_FFFFFF10.svg");
         background-size: 100%;
         background-repeat: no-repeat;
-        background-position: center center;
-        /*background-color: white;*/ }
+        background-position: center center; }
       .discussion-container .scroll-down-button-view button.new-messages:hover {
-        background-color: #1472bd; }
+        background-image: url("../images/down_1472BD10.svg"); }
 
 .ios #header {
   height: 64px;
@@ -2144,11 +2101,10 @@ li.entry .error-icon-container {
   .ios .conversation-header .conversation-title {
     line-height: 64px; }
     .ios .conversation-header .conversation-title .verified-icon {
-      background-image: url("../images/verified-check.svg");
+      background-image: url("../images/verified-check_45454510.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #454545;*/ }
+      background-position: center center; }
   .ios .conversation-header .avatar {
     display: none; }
 .ios .settings h3,
@@ -2245,29 +2201,25 @@ li.entry .error-icon-container {
       background: white;
       color: #454545; }
 .ios .outgoing .attachments .fileView .icon {
-  background-image: url("../images/file.svg");
+  background-image: url("../images/file_FFFFFF10.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  /*background-color: white;*/ }
+  background-position: center center; }
   .ios .outgoing .attachments .fileView .icon.audio {
-    background-image: url("../images/audio.svg");
+    background-image: url("../images/audio_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: white;*/ }
+    background-position: center center; }
   .ios .outgoing .attachments .fileView .icon.video {
-    background-image: url("../images/video.svg");
+    background-image: url("../images/video_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: white;*/ }
+    background-position: center center; }
   .ios .outgoing .attachments .fileView .icon.voice {
-    background-image: url("../images/voice.svg");
+    background-image: url("../images/voice_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: white;*/ }
+    background-position: center center; }
 .ios .attachment {
   margin-bottom: 1px; }
   .ios .attachment a {
@@ -2275,11 +2227,10 @@ li.entry .error-icon-container {
 .ios .hourglass {
   display: inline-block;
   position: relative;
-  background-image: url("../images/hourglass_full.svg");
+  background-image: url("../images/hourglass_full_99999910.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
-  /*background-color: transparent;*/
   background-size: 100%; }
   .ios .hourglass, .ios .hourglass .sand, .ios .hourglass:before, .ios .hourglass:after {
     width: 13px;
@@ -2293,11 +2244,10 @@ li.entry .error-icon-container {
   .ios .hourglass .sand {
     background: #999; }
   .ios .hourglass:after {
-    background-image: url("../images/hourglass_empty.svg");
+    background-image: url("../images/hourglass_empty_99999910.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #999;*/ }
+    background-position: center center; }
 
 .android #header {
   background-color: #2090ea;
@@ -2355,11 +2305,10 @@ li.entry .error-icon-container {
 .android .outgoing .hourglass {
   display: inline-block;
   position: relative;
-  background-image: url("../images/hourglass_full.svg");
+  background-image: url("../images/hourglass_full_99999910.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
-  /*background-color: transparent;*/
   background-size: 100%; }
   .android .outgoing .hourglass, .android .outgoing .hourglass .sand, .android .outgoing .hourglass:before, .android .outgoing .hourglass:after {
     width: 13px;
@@ -2373,19 +2322,17 @@ li.entry .error-icon-container {
   .android .outgoing .hourglass .sand {
     background: #999; }
   .android .outgoing .hourglass:after {
-    background-image: url("../images/hourglass_empty.svg");
+    background-image: url("../images/hourglass_empty_99999910.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #999;*/ }
+    background-position: center center; }
 .android .incoming .hourglass {
   display: inline-block;
   position: relative;
-  background-image: url("../images/hourglass_full.svg");
+  background-image: url("../images/hourglass_full_FFFFFF10.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
-  /*background-color: transparent;*/
   background-size: 100%; }
   .android .incoming .hourglass, .android .incoming .hourglass .sand, .android .incoming .hourglass:before, .android .incoming .hourglass:after {
     width: 13px;
@@ -2399,11 +2346,10 @@ li.entry .error-icon-container {
   .android .incoming .hourglass .sand {
     background: #fff; }
   .android .incoming .hourglass:after {
-    background-image: url("../images/hourglass_empty.svg");
+    background-image: url("../images/hourglass_empty_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #fff;*/ }
+    background-position: center center; }
 .android .incoming .bubble .sender, .android .incoming .bubble .content, .android .incoming .bubble .body, .android .incoming .bubble .meta, .android .incoming .bubble a, .android .incoming .bubble .fileView {
   color: white; }
   .android .incoming .bubble .sender::selection, .android .incoming .bubble .content::selection, .android .incoming .bubble .body::selection, .android .incoming .bubble .meta::selection, .android .incoming .bubble a::selection, .android .incoming .bubble .fileView::selection {
@@ -2412,83 +2358,70 @@ li.entry .error-icon-container {
 .android .incoming .bubble .attachments a, .android .incoming .bubble .content a {
   color: #f3f3f3; }
 .android .incoming .bubble .fileView .icon {
-  background-image: url("../images/file.svg");
+  background-image: url("../images/file_FFFFFF10.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  /*background-color: white;*/ }
+  background-position: center center; }
 .android button.clock {
-  background-image: url("../images/clock.svg");
+  background-image: url("../images/clock_FFFFFF08.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  /*background-color: rgba(255, 255, 255, 0.8);*/ }
+  background-position: center center; }
   .android button.clock:focus, .android button.clock:hover {
-    background-image: url("../images/clock.svg");
+    background-image: url("../images/clock_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: white;*/ }
+    background-position: center center; }
 .android .inactive button.clock {
-  background-image: url("../images/clock.svg");
+  background-image: url("../images/clock_00000005.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  /*background-color: rgba(0, 0, 0, 0.5);*/ }
+  background-position: center center; }
   .android .inactive button.clock:focus, .android .inactive button.clock:hover {
-    background-image: url("../images/clock.svg");
+    background-image: url("../images/clock_00000010.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: black;*/ }
+    background-position: center center; }
 .android button.hamburger {
-  background-image: url("../images/menu_white.svg");
+  background-image: url("../images/menu_FFFFFF08.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  /*background-color: rgba(255, 255, 255, 0.8);*/ }
+  background-position: center center; }
   .android button.hamburger:focus, .android button.hamburger:hover {
-    background-image: url("../images/menu_white.svg");
+    background-image: url("../images/menu_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: white;*/ }
+    background-position: center center; }
 .android .inactive button.hamburger {
-  background-image: url("../images/menu_white.svg");
+  background-image: url("../images/menu_00000005.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  /*background-color: rgba(0, 0, 0, 0.5);*/ }
+  background-position: center center; }
   .android .inactive button.hamburger:focus, .android .inactive button.hamburger:hover {
-    background-image: url("../images/menu_white.svg");
+    background-image: url("../images/menu_00000010.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: black;*/ }
+    background-position: center center; }
 .android button.back {
-  background-image: url("../images/back.svg");
+  background-image: url("../images/back_FFFFFF08.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  background-color: rgba(255, 255, 255, 0.8); }
+  background-position: center center; }
   .android button.back:focus, .android button.back:hover {
-    background-image: url("../images/back.svg");
+    background-image: url("../images/back_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: white;*/ }
+    background-position: center center; }
 .android .inactive button.back {
-  background-image: url("../images/back.svg");
+  background-image: url("../images/back_00000005.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  /*background-color: rgba(0, 0, 0, 0.5);*/ }
+  background-position: center center; }
   .android .inactive button.back:focus, .android .inactive button.back:hover {
-    background-image: url("../images/back.svg");
+    background-image: url("../images/back_00000010.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: black;*/ }
+    background-position: center center; }
 
 .android-dark {
   color: #CCCCCC; }
@@ -2539,17 +2472,15 @@ li.entry .error-icon-container {
     background-color: #030303;
     border-color: #292929; }
   .android-dark .key-verification .icon.verified {
-    background-image: url("../images/verified-check_white.svg");
+    background-image: url("../images/verified-check_CCCCCC10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #CCCCCC;*/ }
+    background-position: center center; }
   .android-dark .key-verification .icon.shield {
-    background-image: url("../images/shield_white.svg");
+    background-image: url("../images/shield_CCCCCC10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #CCCCCC;*/ }
+    background-position: center center; }
   .android-dark .menu-list {
     background-color: #292929;
     color: #CCCCCC; }
@@ -2572,11 +2503,10 @@ li.entry .error-icon-container {
   .android-dark .contact-details .number {
     color: gray; }
     .android-dark .contact-details .number .verified-icon {
-      background-image: url("../images/verified-check_white.svg");
+      background-image: url("../images/verified-check_80808010.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: gray;*/ }
+      background-position: center center; }
   .android-dark .group-member-list .members .contact, .android-dark .new-group-update .members .contact, .android-dark .attachment-previews img {
     background-color: #171717;
     border-color: #333333; }
@@ -2621,70 +2551,61 @@ li.entry .error-icon-container {
   .android-dark .message-list .advisory .content {
     background-color: #333333; }
   .android-dark .message-list .advisory .shield {
-    background-image: url("../images/shield_white.svg");
+    background-image: url("../images/shield_CCCCCC10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #CCCCCC;*/ }
+    background-position: center center; }
   .android-dark .message-list .advisory .verified {
-    background-image: url("../images/verified-check_white.svg");
+    background-image: url("../images/verified-check_CCCCCC10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #CCCCCC;*/ }
+    background-position: center center; }
   .android-dark .message-list .advisory .clock {
-    background-image: url("../images/clock_white.svg");
+    background-image: url("../images/clock_CCCCCC10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #CCCCCC;*/ }
+    background-position: center center; }
   .android-dark .inactive .conversation-header {
     background-color: #333333 !important;
     color: #CCCCCC; }
     .android-dark .inactive .conversation-header .verified-icon {
-      background-image: url("../images/verified-check_white.svg");
+      background-image: url("../images/verified-check_CCCCCC10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #CCCCCC;*/ }
+      background-position: center center; }
   .android-dark .sent .status {
     display: inline-block;
-    background-image: url("../images/check_white.svg");
+    background-image: url("../images/check_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: white;*/ }
+    background-position: center center; }
   .android-dark .delivered .status {
     display: inline-block;
-    background-image: url("../images/double-check_white.svg");
+    background-image: url("../images/double-check_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: white;*/ }
+    background-position: center center; }
   .android-dark .read .status {
     display: inline-block;
-    background-image: url("../images/double-check_blue.svg");
+    background-image: url("../images/double-check_2090EA10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #2090ea;*/ }
+    background-position: center center; }
   .android-dark .file-input .paperclip:before {
     content: '';
     display: inline-block;
     width: 24px;
     height: 24px;
-    background-image: url("../images/paperclip_white.svg");
+    background-image: url("../images/paperclip_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
-    /*background-color: white;*/
     transform: rotateZ(-45deg); }
   .android-dark .capture-audio .microphone:before {
-    background-image: url("../images/microphone_white.svg");
+    background-image: url("../images/microphone_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: white;*/ }
+    background-position: center center; }
   .android-dark .conversations {
     background-color: #292929; }
     .android-dark .conversations .conversation-list-item {
@@ -2703,7 +2624,7 @@ li.entry .error-icon-container {
       background: white;
       color: #454545; }
     .android-dark .search.active.ltr, .android-dark .search.active.rtl {
-      background-image: url("../images/x_white.svg"); }
+      background-image: url("../images/x_17171710.svg"); }
   .android-dark .bubble {
     padding: 9px 12px;
     border-radius: 5px;
@@ -2718,11 +2639,10 @@ li.entry .error-icon-container {
   .android-dark .outgoing .hourglass {
     display: inline-block;
     position: relative;
-    background-image: url("../images/hourglass_full_white.svg");
+    background-image: url("../images/hourglass_full_99999910.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: transparent;*/ }
+    background-position: center center; }
     .android-dark .outgoing .hourglass, .android-dark .outgoing .hourglass .sand, .android-dark .outgoing .hourglass:before, .android-dark .outgoing .hourglass:after {
       width: 13px;
       height: 11px; }
@@ -2735,19 +2655,17 @@ li.entry .error-icon-container {
     .android-dark .outgoing .hourglass .sand {
       background: #999; }
     .android-dark .outgoing .hourglass:after {
-      background-image: url("../images/hourglass_empty_white.svg");
+      background-image: url("../images/hourglass_empty_99999910.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #999;*/ }
+      background-position: center center; }
   .android-dark .incoming .hourglass {
     display: inline-block;
     position: relative;
-    background-image: url("../images/hourglass_full_white.svg");
+    background-image: url("../images/hourglass_full_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: transparent;*/ }
+    background-position: center center; }
     .android-dark .incoming .hourglass, .android-dark .incoming .hourglass .sand, .android-dark .incoming .hourglass:before, .android-dark .incoming .hourglass:after {
       width: 13px;
       height: 11px; }
@@ -2760,11 +2678,10 @@ li.entry .error-icon-container {
     .android-dark .incoming .hourglass .sand {
       background: #fff; }
     .android-dark .incoming .hourglass:after {
-      background-image: url("../images/hourglass_empty_white.svg");
+      background-image: url("../images/hourglass_empty_FFFFFF10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #fff;*/ }
+      background-position: center center; }
   .android-dark .incoming .bubble .sender, .android-dark .incoming .bubble .content, .android-dark .incoming .bubble .body, .android-dark .incoming .bubble .meta, .android-dark .incoming .bubble a, .android-dark .incoming .bubble .fileView {
     color: white; }
     .android-dark .incoming .bubble .sender::selection, .android-dark .incoming .bubble .content::selection, .android-dark .incoming .bubble .body::selection, .android-dark .incoming .bubble .meta::selection, .android-dark .incoming .bubble a::selection, .android-dark .incoming .bubble .fileView::selection {
@@ -2773,89 +2690,72 @@ li.entry .error-icon-container {
   .android-dark .incoming .bubble .content a {
     color: #f3f3f3; }
   .android-dark .incoming .bubble .fileView .icon {
-    background-image: url("../images/file_white.svg");
+    background-image: url("../images/file_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: white;*/ }
+    background-position: center center; }
     .android-dark .incoming .bubble .fileView .icon.audio {
-      background-image: url("../images/audio_white.svg");
+      background-image: url("../images/audio_FFFFFF10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: white;*/ }
+      background-position: center center; }
     .android-dark .incoming .bubble .fileView .icon.video {
-      background-image: url("../images/video_white.svg");
+      background-image: url("../images/video_FFFFFF10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: white;*/ }
+      background-position: center center; }
     .android-dark .incoming .bubble .fileView .icon.voice {
-      background-image: url("../images/voice_white.svg");
+      background-image: url("../images/voice_FFFFFF10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: white;*/ }
+      background-position: center center; }
   .android-dark .outgoing .bubble .fileView .icon {
-    background-image: url("../images/file_white.svg");
+    background-image: url("../images/file_CCCCCC10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: #CCCCCC;*/ }
+    background-position: center center; }
     .android-dark .outgoing .bubble .fileView .icon.audio {
-      background-image: url("../images/audio_white.svg");
+      background-image: url("../images/audio_CCCCCC10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #CCCCCC;*/ }
+      background-position: center center; }
     .android-dark .outgoing .bubble .fileView .icon.video {
-      background-image: url("../images/video_white.svg");
+      background-image: url("../images/video_CCCCCC10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #CCCCCC;*/ }
+      background-position: center center; }
     .android-dark .outgoing .bubble .fileView .icon.voice {
-      background-image: url("../images/voice_white.svg");
+      background-image: url("../images/voice_CCCCCC10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: #CCCCCC;*/ }
+      background-position: center center; }
   .android-dark button.clock {
-    background-image: url("../images/clock_white.svg");
+    background-image: url("../images/clock_FFFFFF08.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: rgba(255, 255, 255, 0.8);*/ }
+    background-position: center center; }
     .android-dark button.clock:focus, .android-dark button.clock:hover {
-      background-image: url("../images/clock_white.svg");
+      background-image: url("../images/clock_FFFFFF10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: white;*/ }
+      background-position: center center; }
   .android-dark button.hamburger {
-    background-image: url("../images/menu_white.svg");
+    background-image: url("../images/menu_FFFFFF08.svg");
     background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: rgba(255, 255, 255, 0.8);*/ }
+    background-repeat: no-repeat; }
     .android-dark button.hamburger:focus, .android-dark button.hamburger:hover {
-      background-image: url("../images/menu_white.svg");
+      background-image: url("../images/menu_FFFFFF10.svg");
       background-size: 100%;
-      background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: white;*/ }
+      background-repeat: no-repeat; }
   .android-dark button.back {
-    background-image: url("../images/back_white.svg");
+    background-image: url("../images/back_FFFFFF08.svg");
     background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: center center;
-    /*background-color: rgba(255, 255, 255, 0.8);*/ }
+    background-repeat: no-repeat; }
     .android-dark button.back:focus, .android-dark button.back:hover {
-      background-image: url("../images/back_white.svg");
+      background-image: url("../images/back_FFFFFF10.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: white;*/ }
+      background-position: center center; }
   .android-dark ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.15); }
     .android-dark ::-webkit-scrollbar-thumb:hover {
@@ -2873,27 +2773,23 @@ li.entry .error-icon-container {
   .android-dark .discussion-container .scroll-down-button-view button {
     background-color: #8d8d8d; }
     .android-dark .discussion-container .scroll-down-button-view button .icon {
-      background-image: url("../images/down_white.svg");
+      background-image: url("../images/down_00000010.svg");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: center center;
-      /*background-color: black;*/ }
+      background-position: center center; }
     .android-dark .discussion-container .scroll-down-button-view button .icon:hover {
-      /*background-color: white;*/ }
+      background-image: url("../images/down_FFFFFF10.svg"); }
     .android-dark .discussion-container .scroll-down-button-view button.new-messages {
-      background-color: #2090ea; }
+      background-image: url("../images/down_2090EA10.svg"); }
       .android-dark .discussion-container .scroll-down-button-view button.new-messages .icon {
-        background-image: url("../images/down_white.svg");
+        background-image: url("../images/down_FFFFFF10.svg");
         background-size: 100%;
         background-repeat: no-repeat;
-        background-position: center center;
-        /*background-color: white;*/ }
+        background-position: center center; }
       .android-dark .discussion-container .scroll-down-button-view button.new-messages:hover {
-        background-color: #1472bd; }
-  .android-dark .choose-file button:hover {
-    background-color: #333333; }
-  .android-dark .capture-audio button:hover {
-    background-color: #333333; }
+        background-image: url("../images/down_1472BD10.svg"); }
+  .android-dark .choose-file button:hover { }
+  .android-dark .capture-audio button:hover { }
 
   @font-face {
   font-family: 'Roboto-Light';
