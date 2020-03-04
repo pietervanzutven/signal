@@ -16,8 +16,10 @@ var config = {
 }
 
 // Load locale
-$.getJSON('_locales/en/messages.json',function(localeData) {
-    window.config.locale_json = localeData;
-});
+if ($) {
+    $.getJSON('_locales/en/messages.json', function (localeData) {
+        window.config.locale_json = localeData;
+    });
+}
 
 var Signal = {};
