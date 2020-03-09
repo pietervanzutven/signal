@@ -16,7 +16,7 @@ var config = {
 }
 
 // Load locale
-if ($) {
+if (window.$) {
     $.getJSON('_locales/en/messages.json', function (localeData) {
         window.config.locale_json = localeData;
     });
