@@ -22,17 +22,10 @@ function updateToast(message)
     Notifications.ToastNotificationManager.createToastNotifier().show(toast);
 }
 
-function updateBadge(type, value) {
-    var badgeXml = Notifications.BadgeUpdateManager.getTemplateContent(type);
-    badgeXml.firstChild.setAttribute('value', value);
-    var badge = Notifications.BadgeNotification(badgeXml);
-    Notifications.BadgeUpdateManager.createBadgeUpdaterForApplication().update(badge);
-}
-
 (function () {
     log('Timer triggered');
     Notifications.ToastNotificationManager.history.clear();
-    updateBadge(Notifications.BadgeTemplateType.badgeNumber, 0);
+    window.setBadgeCount(0);
 
     var url = 'https://textsecure-service.whispersystems.org';
     var number_id = Windows.Storage.ApplicationData.current.localSettings.values['number_id'];
@@ -61,7 +54,7 @@ function updateBadge(type, value) {
             if (request.path === '/api/v1/message' && Notifications.ToastNotificationManager.history.getHistory().length < 1) {
                 log('New message(s) received');
                 updateToast('New message(s) received');
-                updateBadge(Notifications.BadgeTemplateType.badgeGlyph, 'newMessage');
+                window.setBadgeCount('newMessage');
             } else {
                 request.respond(200, 'OK');
                 if (request.verb === 'PUT' && request.path === '/api/v1/queue/empty') {

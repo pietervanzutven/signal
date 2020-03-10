@@ -746,11 +746,7 @@
         var Notifications = Windows.UI.Notifications;
 
         Notifications.ToastNotificationManager.history.clear();
-
-        var badgeXml = Notifications.BadgeUpdateManager.getTemplateContent(Notifications.BadgeTemplateType.badgeNumber);
-        badgeXml.firstChild.setAttribute("value", 0);
-        var badge = Notifications.BadgeNotification(badgeXml);
-        Notifications.BadgeUpdateManager.createBadgeUpdaterForApplication().update(badge);
+        window.setBatchCount(0);
 
         options = options || {};
         _.defaults(options, {sendReadReceipts: true});

@@ -116,7 +116,6 @@
             });
 
             var Notifications = Windows.UI.Notifications;
-
             var toastXml = Notifications.ToastNotificationManager.getTemplateContent(Notifications.ToastTemplateType.toastText02);
             var toastNodeList = toastXml.getElementsByTagName('text');
             toastNodeList[0].appendChild(toastXml.createTextNode(title));
@@ -124,12 +123,7 @@
             toastXml.createElement('audio').setAttribute('src', 'ms-winsoundevent:Notification.SMS');
             var toast = Notifications.ToastNotification(toastXml);
             Notifications.ToastNotificationManager.createToastNotifier().show(toast);
-
-            var badgeXml = Notifications.BadgeUpdateManager.getTemplateContent(Notifications.BadgeTemplateType.badgeNumber);
-            badgeXml.firstChild.setAttribute("value", this.length);
-            var badge = Notifications.BadgeNotification(badgeXml);
-            Notifications.BadgeUpdateManager.createBadgeUpdaterForApplication().update(badge);
-
+            window.setBadgeCount(this.length);
             //}
         },
         getSetting: function() {

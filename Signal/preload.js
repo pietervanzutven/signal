@@ -22,4 +22,13 @@ if (window.$) {
     });
 }
 
+var Notifications = Windows.UI.Notifications;
+window.setBadgeCount = function (count) {
+    var type = typeof(count) === 'string' ? Notifications.BadgeTemplateType.badgeGlyph : Notifications.BadgeTemplateType.badgeNumber;
+    var badgeXml = Notifications.BadgeUpdateManager.getTemplateContent(type);
+    badgeXml.firstChild.setAttribute('value', count);
+    var badge = Notifications.BadgeNotification(badgeXml);
+    Notifications.BadgeUpdateManager.createBadgeUpdaterForApplication().update(badge);
+};
+
 var Signal = {};
