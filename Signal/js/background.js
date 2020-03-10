@@ -106,7 +106,6 @@
         messageReceiver.close().then(function() {
           Whisper.events.trigger('shutdown-complete');
         });
-        messageReceiver = null;
       } else {
         Whisper.events.trigger('shutdown-complete');
       }
@@ -114,6 +113,7 @@
 
     var connectCount = 0;
     function connect(firstRun) {
+        console.log('connect');
         window.removeEventListener('online', connect);
         window.addEventListener('offline', disconnect);
 
@@ -132,7 +132,6 @@
 
         if (messageReceiver) {
             messageReceiver.close();
-            messageReceiver = null;
         }
 
         Whisper.RotateSignedPreKeyListener.init(Whisper.events);
@@ -453,7 +452,6 @@
         console.log('offline');
         if (messageReceiver) {
             messageReceiver.close();
-            messageReceiver = null;
         }
     }
 
