@@ -232,6 +232,7 @@
     <Content Include="js\libtextsecure.js" />
     <Content Include="js\i18n.js" />
     <Content Include="libtextsecure\event_target.js" />
+    <Content Include="js\views\app_view.js" />
     <Content Include="main.js" />
     <Content Include="js\models\blockedNumbers.js" />
     <Content Include="js\models\conversations.js" />
