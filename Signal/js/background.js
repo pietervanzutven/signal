@@ -79,6 +79,7 @@
             console.log("listening for registration events");
             Whisper.events.on('registration_done', function() {
                 console.log("handling registration event");
+                Whisper.RotateSignedPreKeyListener.init(Whisper.events);
                 extension.keepAwake();
                 connect(true);
             });
@@ -87,6 +88,7 @@
             Whisper.ExpiringMessagesListener.init(Whisper.events);
 
             if (Whisper.Registration.everDone()) {
+                Whisper.RotateSignedPreKeyListener.init(Whisper.events);
                 openInbox();
             }
             if (!Whisper.Registration.isDone()) {
