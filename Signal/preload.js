@@ -30,5 +30,8 @@ window.setBadgeCount = function (count) {
     var badge = Notifications.BadgeNotification(badgeXml);
     Notifications.BadgeUpdateManager.createBadgeUpdaterForApplication().update(badge);
 };
+window.drawAttention = function () {
+    console.log('draw attention');
+}
 
 var Signal = {};
