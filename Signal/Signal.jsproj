@@ -245,10 +245,8 @@
     <Content Include="js\modules\uuidv4.js" />
     <Content Include="js\Mp3LameEncoder.min.js" />
     <Content Include="js\notifications.js" />
-    <Content Include="js\options.js" />
     <Content Include="js\panel_controller.js" />
     <Content Include="js\read_receipts.js" />
-    <Content Include="js\register.js" />
     <Content Include="js\registration.js" />
     <Content Include="js\reliable_trigger.js" />
     <Content Include="js\rotate_signed_prekey_listener.js" />
@@ -298,14 +296,12 @@
     <Content Include="libtextsecure\components.js" />
     <Content Include="libtextsecure\protobufs.js" />
     <Content Include="libtextsecure\websocket-resources.js" />
-    <Content Include="options.html" />
     <Content Include="protos\DeviceMessages.proto" />
     <Content Include="protos\DeviceName.proto" />
     <Content Include="protos\SignalService.proto" />
     <Content Include="protos\Stickers.proto" />
     <Content Include="protos\SubProtocol.proto" />
     <Content Include="protos\UnidentifiedDelivery.proto" />
-    <Content Include="register.html" />
     <Content Include="share.html" />
     <Content Include="stylesheets\manifest.css" />
     <Content Include="stylesheets\options.css" />
