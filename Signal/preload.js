@@ -33,5 +33,8 @@ window.setBadgeCount = function (count) {
 window.drawAttention = function () {
     console.log('draw attention');
 }
+window.showWindow = function () {
+    console.log('show window');
+};
 
 var Signal = {};
