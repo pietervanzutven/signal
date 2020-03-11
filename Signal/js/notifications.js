@@ -16,7 +16,7 @@
 
     Whisper.Notifications = new (Backbone.Collection.extend({
         initialize: function() {
-            this.on('add', _.debounce(this.update.bind(this), 1000));
+            this.on('add', this.update);
             this.on('remove', this.onRemove);
         },
         onclick: function() {
@@ -59,39 +59,7 @@
                 return;
             }
 
-            //if (this.length > 1) {
-            //    var conversationIds = _.uniq(this.map(function(m) {
-            //        return m.get('conversationId');
-            //    }));
-            //    if (conversationIds.length === 1 && this.showSender()) {
-            //        iconUrl = this.at(0).get('iconUrl');
-            //    }
-            //    extension.notification.update({
-            //        type    : 'list',
-            //        iconUrl : iconUrl,
-            //        title   : title,
-            //        message : 'Most recent from ' + this.last().get('title'),
-            //        items   : this.map(function(m) {
-            //            var message, title;
-            //            if (this.showMessage()) {
-            //                return {
-            //                    title   : m.get('title'),
-            //                    message : m.get('message')
-            //                };
-            //            } else if (this.showSender()) {
-            //                return {
-            //                    title   : m.get('title'),
-            //                    message : i18n('newMessage')
-            //                };
-            //            }
-            //        }.bind(this)),
-            //        buttons : [{
-            //            title   : 'Mark all as read',
-            //            iconUrl : 'images/check.svg'
-            //        }]
-            //    });
-            //} else {
-            var m = this.at(this.length - 1);
+            var m = this.last();
             var type = 'basic';
             var message = i18n('newMessage');
             var imageUrl;
@@ -107,11 +75,11 @@
                 iconUrl = m.get('iconUrl');
             }
             extension.notification.update({
-                type: type,
-                title: title,
-                message: message,
-                iconUrl: iconUrl,
-                imageUrl: imageUrl
+                type     : type,
+                title    : title,
+                message  : message,
+                iconUrl  : iconUrl,
+                imageUrl : imageUrl
             });
 
             var Notifications = Windows.UI.Notifications;
@@ -123,7 +91,6 @@
             var toast = Notifications.ToastNotification(toastXml);
             Notifications.ToastNotificationManager.createToastNotifier().show(toast);
             window.setBadgeCount(this.length);
-            //}
         },
         getSetting: function() {
             return storage.get('notification-setting') || 'message';
