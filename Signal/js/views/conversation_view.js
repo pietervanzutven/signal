@@ -201,7 +201,13 @@
             'close .menu': 'closeMenu',
             'select .message-list .entry': 'messageDetail',
             'force-resize': 'forceUpdateMessageFieldSize',
-            'show-identity': 'showSafetyNumber'
+            'show-identity': 'showSafetyNumber',
+            'dragover': 'sendToFileInput',
+            'drop': 'sendToFileInput',
+            'dragleave': 'sendToFileInput'
+        },
+        sendToFileInput: function(e) {
+            this.fileInput.$el.trigger(e);
         },
 
         onPrune: function() {
