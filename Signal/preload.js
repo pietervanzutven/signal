@@ -2,7 +2,7 @@
 
 console.log('preload');
 
-var PROTO_ROOT = '/protos';
+window.PROTO_ROOT = '/protos';
 
 var config = {
     environment: 'production',
