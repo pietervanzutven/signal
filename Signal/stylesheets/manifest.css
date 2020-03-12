@@ -2436,6 +2436,21 @@ li.entry .error-icon-container {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
+  .android .incoming .bubble .fileView .icon.audio {
+    background-image: url("../images/audio_FFFFFF10.svg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center; }
+  .android .incoming .bubble .fileView .icon.video {
+    background-image: url("../images/video_FFFFFF10.svg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center; }
+  .android .incoming .bubble .fileView .icon.voice {
+    background-image: url("../images/voice_FFFFFF10.svg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center; }
 
 .android button.clock {
   background-image: url("../images/clock_FFFFFF08.svg");
