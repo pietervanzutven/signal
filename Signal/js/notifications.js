@@ -74,6 +74,12 @@
                 message  : message,
                 iconUrl  : iconUrl
             });
+            var notification = new Notification(title, {
+                body : message,
+                icon : iconUrl,
+                tag  : 'signal'
+            });
+            notification.onclick = this.onclick.bind(this);
 
             var Notifications = Windows.UI.Notifications;
             var toastXml = Notifications.ToastNotificationManager.getTemplateContent(Notifications.ToastTemplateType.toastText02);
