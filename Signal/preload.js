@@ -36,5 +36,8 @@ window.drawAttention = function () {
 window.showWindow = function () {
     console.log('show window');
 };
+window.restart = function() {
+    console.log('restart');
+};
 
 var Signal = {};
