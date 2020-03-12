@@ -15,11 +15,37 @@ var config = {
     serverTrustRoot: 'BXu6QIKVz5MA8gstzfOgRQGqyLqOwNKHL6INkv3IHWMF'
 }
 
-// Load locale
-if (window.$) {
-    $.getJSON('_locales/en/messages.json', function (localeData) {
-        window.config.locale_json = localeData;
-    });
+function loadLocale() {
+    // possible locales: https://github.com/electron/electron/blob/master/docs/api/locales.md
+    const locale = app.getLocale();
+
+    if (/^en-/.test(locale)) {
+        return 'en';
+    }
+
+    return locale;
+}
+
+function loadLocaleMessages(locale) {
+    const onDiskLocale = locale.replace('-', '_');
+    const targetFile = '_locales/' + onDiskLocale + '/messages.json';
+
+    if (window.$) {
+        $.getJSON(targetFile, function (localeData) {
+            window.config.localeMessages = localeData;
+        });
+    }
+}
+
+// Load locale - if we can't load messages for the current locale, we default to 'en'
+var locale = loadLocale();
+try {
+    loadLocaleMessages(locale);
+}
+catch (e) {
+    console.log('Problem loading messages for locale ', locale, e.stack);
+    locale = 'en';
+    loadLocaleMessages(locale);
 }
 
 var Notifications = Windows.UI.Notifications;
