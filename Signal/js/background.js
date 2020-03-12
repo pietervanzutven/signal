@@ -10,7 +10,6 @@
 
     console.log('background page reloaded');
     console.log('environment:', window.config.environment);
-    extension.notification.init();
 
     var initialLoadComplete = false;
 
@@ -74,7 +73,6 @@
             Whisper.events.on('registration_done', function() {
                 console.log("handling registration event");
                 Whisper.RotateSignedPreKeyListener.init(Whisper.events);
-                extension.keepAwake();
                 connect(true);
             });
 

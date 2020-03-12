@@ -218,14 +218,12 @@
     <Content Include="js\chromium.js" />
     <Content Include="js\components.js" />
     <Content Include="js\conversation_controller.js" />
-    <Content Include="js\conversation_panel.js" />
     <Content Include="js\database.js" />
     <Content Include="js\debugLog.js" />
     <Content Include="js\delivery_receipts.js" />
     <Content Include="js\expire.js" />
     <Content Include="js\expiring_messages.js" />
     <Content Include="js\focus_listener.js" />
-    <Content Include="js\index.js" />
     <Content Include="js\keychange_listener.js" />
     <Content Include="js\libphonenumber-util.js" />
     <Content Include="js\libsignal-protocol-worker.js" />
@@ -245,7 +243,6 @@
     <Content Include="js\modules\uuidv4.js" />
     <Content Include="js\Mp3LameEncoder.min.js" />
     <Content Include="js\notifications.js" />
-    <Content Include="js\panel_controller.js" />
     <Content Include="js\read_receipts.js" />
     <Content Include="js\registration.js" />
     <Content Include="js\reliable_trigger.js" />
