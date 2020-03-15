@@ -4,6 +4,10 @@ console.log('preload');
 
 window.PROTO_ROOT = '/protos';
 
+let locale;
+if (!locale) {
+    locale = loadLocale();
+}
 window.config.localeMessages = locale.messages;
 
 var Notifications = Windows.UI.Notifications;
