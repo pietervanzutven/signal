@@ -8,7 +8,7 @@
     },
 
     getLocaleMessages: function (locale) {
-        const onDiskLocale = locale.replace('-','_');
+        const onDiskLocale = locale.replace('-', '_');
         const targetFile = '_locales/' + onDiskLocale + '/messages.json';
 
         var xhr = new XMLHttpRequest();

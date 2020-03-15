@@ -13,12 +13,13 @@ let localeName = locale.normalizeLocaleName(Windows.Globalization.ApplicationLan
 let messages;
 
 try {
-  messages = locale.getLocaleMessages(localeName);
+    messages = locale.getLocaleMessages(localeName);
 } catch (e) {
-  console.log('Problem loading messages for locale ', localeName, e.stack);
+    console.log('Problem loading messages for locale ', localeName, e.stack);
+    console.log('Falling back to en locale');
 
-  localeName = 'en';
-  messages = locale.getLocaleMessages(localeName);
+    localeName = 'en';
+    messages = locale.getLocaleMessages(localeName);
 }
 
 var config = {
