@@ -229,6 +229,7 @@
     <Content Include="js\libsignal-protocol-worker.js" />
     <Content Include="js\libtextsecure.js" />
     <Content Include="js\i18n.js" />
+    <Content Include="locale.js" />
     <Content Include="js\views\standalone_registration_view.js" />
     <Content Include="libtextsecure\event_target.js" />
     <Content Include="js\views\app_view.js" />

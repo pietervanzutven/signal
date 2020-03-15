@@ -887,12 +887,27 @@
       "description": "When a person inputs a number that is invalid"
     },
     "unlinkedWarning": {
-        "message": "Relink Signal Desktop to your mobile device to continue messaging."
+      "message": "Relink Signal Desktop to your mobile device to continue messaging."
     },
     "unlinked": {
-        "message": "Unlinked"
+      "message": "Unlinked"
     },
     "relink": {
-        "message": "Relink"
+      "message": "Relink"
+    },
+    "autoUpdateNewVersionTitle": {
+      "message": "Signal update available"
+    },
+    "autoUpdateNewVersionMessage": {
+      "message": "There is a new version of Signal available."
+    },
+    "autoUpdateNewVersionInstructions": {
+      "message": "Press Restart to apply the updates."
+    },
+    "autoUpdateRestartButtonLabel": {
+      "message": "Restart"
+    },
+    "autoUpdateLaterButtonLabel": {
+      "message": "Later"
     }
 }
