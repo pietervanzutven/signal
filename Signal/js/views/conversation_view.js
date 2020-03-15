@@ -867,9 +867,9 @@
                 }
             } else {
                 if (isUnverified) {
-                    message = i18n('changedSinceVerified', contacts.at(0).getTitle());
+                    message = i18n('changedSinceVerified', [contactName, contactName]);
                 } else {
-                    message = i18n('changedRecently', contacts.at(0).getTitle());
+                    message = i18n('changedRecently', [contactName, contactName]);
                 }
             }
 
