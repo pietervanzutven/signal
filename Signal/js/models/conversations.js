@@ -746,7 +746,7 @@
         var Notifications = Windows.UI.Notifications;
 
         Notifications.ToastNotificationManager.history.clear();
-        window.setBatchCount(0);
+        window.setBadgeCount(0);
 
         options = options || {};
         _.defaults(options, {sendReadReceipts: true});
