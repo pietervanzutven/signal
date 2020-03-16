@@ -15,7 +15,7 @@
         },
         openView: function (view) {
           this.el.innerHTML = "";
-          this.el.append(view.el);
+          this.$el.append(view.el);
           this.delegateEvents();
         },
         openDebugLog: function () {
