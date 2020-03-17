@@ -25,7 +25,7 @@
         model: LogEntry,
         comparator: 'time',
         initialize: function() {
-            this.fetch({ remove: false }).then(function () {
+            this.fetch({remove: false}).then(function() {
                 console.log('Debug log: after fetch have', this.length, 'entries');
             }.bind(this));
         },
@@ -55,7 +55,6 @@
 
     var MAX_MESSAGES = 2000;
     var PHONE_REGEX = /\+\d{7,12}(\d{3})/g;
-    var DEBUGLOGS_BASE_URL = 'https://debuglogs.org';
     var log = new DebugLog();
     if (window.console) {
         console._log = console.log;
@@ -67,63 +66,25 @@
         };
         console.get = function() {
             return window.navigator.userAgent +
-                ' Signal-Desktop/' + chrome.runtime.getManifest().version +
+                ' uwp/' + window.config.uwp_version +
                 '\n' + log.print();
         };
         console.post = function(log) {
             if (log === undefined) {
                 log = console.get();
             }
-
-            return new Promise(function(resolve, reject) {
-                $.get(DEBUGLOGS_BASE_URL).then(function (signedForm) {
-                    var url = signedForm.url;
-                    var fields = signedForm.fields;
-
-                    var formData = new FormData();
-
-                    // NOTE: Service expects `key` to come first:
-                    formData.append('key', fields.key);
-                    formData.append('Content-Type', 'text/plain');
-                    for (var key in fields) {
-                        if (key === 'key') {
-                            continue;
-                        }
-                        var value = fields[key];
-                        formData.append(key, value);
-                    }
-
-                    var contentBlob = new Blob([log], { type: 'text/plain' });
-                    formData.append('file', contentBlob);
-
-                    var publishedLogURL = DEBUGLOGS_BASE_URL + '/' + fields.key;
-
-                    var request = new XMLHttpRequest();
-                    request.open('POST', url);
-                    request.onreadystatechange = function (event) {
-                        if (request.readyState !== XMLHttpRequest.DONE) {
-                            return;
-                        }
-
-                        if (request.status !== 204) {
-                            return reject(
-                                new Error('Failed to publish debug log. Status: ' +
-                                    request.statusText + ' (' + request.status + ')'
-                                )
-                            );
-                        }
-
-                        return resolve(publishedLogURL);
-                    };
-                    request.send(formData);
-                }).fail(function () {
-                    reject(new Error('Failed to publish logs'));
-                });
+            return new Promise(function(resolve) {
+                $.post('https://api.github.com/gists', textsecure.utils.jsonThing({
+                    "files": { "debugLog.txt": { "content": log } }
+                })).then(function(response) {
+                    console._log('Posted debug log to ', response.html_url);
+                    resolve(response.html_url);
+                }).fail(resolve);
             });
         };
 
         window.onerror = function(message, script, line, col, error) {
-            console.log(error && error.stack ? error.stack : error);
+            console.log(error.stack);
         };
     }
 })();

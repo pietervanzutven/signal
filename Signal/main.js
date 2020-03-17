@@ -2,13 +2,6 @@
 
 var background = Windows.ApplicationModel.Background;
 
-var consoleLog = console.log;
-var debugLog = [];
-console.log = function () {
-    consoleLog.apply(console, arguments);
-    var currentdate = new Date();
-    debugLog.push(('0' + currentdate.getHours()).slice(-2) + ':' + ('0' + currentdate.getMinutes()).slice(-2) + ':' + ('0' + currentdate.getSeconds()).slice(-2) + ' - ' + Array.from(arguments).join(' '));
-}
 console.info = console.log;
 console.warn = console.log;
 console.error = console.log;
@@ -119,8 +112,6 @@ setInterval(function () {
 }, 5000);
 
 Backbone.sync = function (method, object, options) {
-    console.log('BB ' + method + ' on store: ' + object.storeName);
-
     var store = {};
     var storeName = object.storeName;
     if (BBDB[storeName]) {
