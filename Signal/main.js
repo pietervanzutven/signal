@@ -98,14 +98,9 @@ Windows.Storage.ApplicationData.current.localFolder.createFileAsync('BBDB.json',
 setInterval(function () {
     if (BBDBchanged) {
         BBDBchanged = false;
-        console.log('Saving database...');
         Windows.Storage.ApplicationData.current.localFolder.createFileAsync('BBDB.json', Windows.Storage.CreationCollisionOption.openIfExists).then(
             function (file) {
-                Windows.Storage.FileIO.writeTextAsync(file, stringifyJSON(BBDB)).then(
-                    function () {
-                        console.log('Database saved.');
-                    }
-                );
+                Windows.Storage.FileIO.writeTextAsync(file, stringifyJSON(BBDB));
             }
         );
     }
