@@ -64,64 +64,95 @@
     }
 
     storage.fetch();
+
+    // We need this 'first' check because we don't want to start the app up any other time
+    //   than the first time. And storage.fetch() will cause onready() to fire.
+    var first = true;
     window.onload = function() {
         storage.onready(function() {
-            ConversationController.load();
+            if (!first) {
+                return;
+            }
+            first = false;
 
-            window.dispatchEvent(new Event('storage_ready'));
+            start();
+        });
+    }
 
-            console.log("listening for registration events");
-            Whisper.events.on('registration_done', function() {
-                console.log("handling registration event");
-                Whisper.RotateSignedPreKeyListener.init(Whisper.events);
-                connect(true);
+    window.getSyncRequest = function() {
+        return new textsecure.SyncRequest(textsecure.messaging, messageReceiver);
+    };
+
+    Whisper.events.on('shutdown', function() {
+        if (messageReceiver) {
+            messageReceiver.close().then(function() {
+                messageReceiver = null;
+                Whisper.events.trigger('shutdown-complete');
             });
+        } else {
+            Whisper.events.trigger('shutdown-complete');
+        }
+    });
 
-            var appView = window.owsDesktopApp.appView = new Whisper.AppView({ el: $('body') });
+    function start() {
+        ConversationController.load();
 
-            Whisper.WallClockListener.init(Whisper.events);
-            Whisper.ExpiringMessagesListener.init(Whisper.events);
+        window.dispatchEvent(new Event('storage_ready'));
 
-            if (Whisper.Registration.everDone()) {
-                Whisper.RotateSignedPreKeyListener.init(Whisper.events);
-                connect();
+        console.log("listening for registration events");
+        Whisper.events.on('registration_done', function() {
+            console.log("handling registration event");
+            Whisper.RotateSignedPreKeyListener.init(Whisper.events);
+            connect(true);
+        });
+
+        var appView = window.owsDesktopApp.appView = new Whisper.AppView({ el: $('body') });
+
+        Whisper.WallClockListener.init(Whisper.events);
+        Whisper.ExpiringMessagesListener.init(Whisper.events);
+
+        if (Whisper.Import.isIncomplete()) {
+            console.log('Import was interrupted, showing import error screen');
+            appView.openImporter();
+        } else if (Whisper.Registration.everDone()) {
+            Whisper.RotateSignedPreKeyListener.init(Whisper.events);
+            connect();
+            appView.openInbox({
+                initialLoadComplete: initialLoadComplete
+            });
+        } else {
+            appView.openInstallChoice();
+        }
+
+        Whisper.events.on('showDebugLog', function () {
+            appView.openDebugLog();
+        });
+        Whisper.events.on('unauthorized', function () {
+            appView.inboxView.networkStatusView.update();
+        });
+        Whisper.events.on('reconnectTimer', function () {
+            appView.inboxView.networkStatusView.setSocketReconnectInterval(60000);
+        });
+        Whisper.events.on('contactsync', function() {
+            if (appView.installView) {
+                appView.openInbox();
+            }
+        });
+        Whisper.events.on('contactsync:begin', function() {
+            if (appView.installView && appView.installView.showSync) {
+                appView.installView.showSync();
+            }
+        });
+
+        Whisper.Notifications.on('click', function(conversation) {
+            showWindow();
+            if (conversation) {
+                appView.openConversation(conversation);
+            } else {
                 appView.openInbox({
                     initialLoadComplete: initialLoadComplete
                 });
-            } else {
-                appView.openInstaller();
             }
-
-            Whisper.events.on('showDebugLog', function () {
-                appView.openDebugLog();
-            });
-            Whisper.events.on('unauthorized', function () {
-                appView.inboxView.networkStatusView.update();
-            });
-            Whisper.events.on('reconnectTimer', function () {
-                appView.inboxView.networkStatusView.setSocketReconnectInterval(60000);
-            });
-            Whisper.events.on('contactsync', function() {
-              if (appView.installView) {
-                  appView.openInbox();
-              }
-            });
-            Whisper.events.on('contactsync:begin', function() {
-              if (appView.installView && appView.installView.showSync) {
-                  appView.installView.showSync();
-              }
-            });
-
-            Whisper.Notifications.on('click', function(conversation) {
-                showWindow();
-                if (conversation) {
-                    appView.openConversation(conversation);
-                } else {
-                    appView.openInbox({
-                        initialLoadComplete: initialLoadComplete
-                    });
-                }
-            });
         });
     }
 
@@ -130,15 +161,15 @@
     };
 
     Whisper.events.on('start-shutdown', function() {
-      Whisper.RotateSignedPreKeyListener.stop();
+        Whisper.RotateSignedPreKeyListener.stop();
 
-      if (messageReceiver) {
-        messageReceiver.close().then(function() {
-          Whisper.events.trigger('shutdown-complete');
-        });
-      } else {
-        Whisper.events.trigger('shutdown-complete');
-      }
+        if (messageReceiver) {
+            messageReceiver.close().then(function() {
+                Whisper.events.trigger('shutdown-complete');
+            });
+        } else {
+            Whisper.events.trigger('shutdown-complete');
+        }
     });
 
     var connectCount = 0;
@@ -159,6 +190,7 @@
 
         if (!Whisper.Registration.isDone()) { return; }
         if (Whisper.Migration.inProgress()) { return; }
+        if (Whisper.Import.isIncomplete()) { return; }
 
         if (messageReceiver) {
             messageReceiver.close();
@@ -241,9 +273,9 @@
             });
             
             if (Whisper.Import.isComplete()) {
-              textsecure.messaging.sendRequestConfigurationSyncMessage().catch(function(e) {
-                console.log(e);
-              });
+                textsecure.messaging.sendRequestConfigurationSyncMessage().catch(function(e) {
+                    console.log(e);
+                });
             }
         }
     }
@@ -404,7 +436,7 @@
 
         if (data.message.flags & textsecure.protobuf.DataMessage.Flags.PROFILE_KEY_UPDATE) {
             return ConversationController.getOrCreateAndWait(id, type).then(function(convo) {
-              return convo.save({profileSharing: true}).then(ev.confirm);
+                return convo.save({profileSharing: true}).then(ev.confirm);
             });
         }
 
@@ -558,7 +590,7 @@
         console.log('read receipt', reader, timestamp);
 
         if (!storage.get('read-receipt-setting')) {
-          return ev.confirm();
+            return ev.confirm();
         }
 
         var receipt = Whisper.ReadReceipts.add({
