@@ -3,17 +3,18 @@
 var Notifications = Windows.UI.Notifications;
 
 var window = this;
+window.config = {};
+var loadLocale = function () { return { messages: {} } };
+
 importScripts('ms-appx:///libtextsecure/components.js', 'ms-appx:///preload.js', 'ms-appx:///libtextsecure/event_target.js', 'ms-appx:///libtextsecure/protobufs.js', 'ms-appx:///libtextsecure/websocket-resources.js');
 
 var debugLog = '';
-function log(message)
-{
+function log(message) {
     var currentDate = new Date();
     debugLog += ('0' + currentDate.getHours()).slice(-2) + ':' + ('0' + currentDate.getMinutes()).slice(-2) + ':' + ('0' + currentDate.getSeconds()).slice(-2) + ' - ' + message + '\n';
 }
 
-function updateToast(message)
-{
+function updateToast(message) {
     var toastXml = Notifications.ToastNotificationManager.getTemplateContent(Notifications.ToastTemplateType.toastText02);
     var toastNodeList = toastXml.getElementsByTagName('text');
     toastNodeList[0].appendChild(toastXml.createTextNode(message));
