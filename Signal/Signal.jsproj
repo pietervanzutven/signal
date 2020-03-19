@@ -61,7 +61,6 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="app\config.js" />
-    <Content Include="audio\NewMessage.mp3" />
     <Content Include="background.html" />
     <Content Include="cdnsignalorg.cer" />
     <Content Include="config\production.json" />
