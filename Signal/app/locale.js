@@ -19,6 +19,8 @@
     }
 
     function load() {
+        var english = getLocaleMessages('en');
+
         // Load locale - if we can't load messages for the current locale, we
         // default to 'en'
         //
@@ -29,12 +31,15 @@
 
         try {
             messages = getLocaleMessages(localeName);
+
+            // We start with english, then overwrite that with anything present in locale
+            messages = Object.assign(english, messages);
         } catch (e) {
             console.log('Problem loading messages for locale ', localeName, e.stack);
             console.log('Falling back to en locale');
 
             localeName = 'en';
-            messages = getLocaleMessages(localeName);
+            messages = english;
         }
 
         return {
