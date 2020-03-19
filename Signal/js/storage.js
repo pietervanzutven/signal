@@ -29,7 +29,9 @@
                 console.log('Called storage.put before storage is ready. key:', key);
             }
             var item = items.add({id: key, value: value}, {merge: true});
-            item.save();
+            return new Promise(function (resolve, reject) {
+                item.save().then(resolve, reject);
+            });
         },
 
         get: function(key, defaultValue) {
@@ -48,7 +50,6 @@
                     item.destroy().then(resolve, reject);
                 });
             }
-
             return Promise.resolve();
         },
 
