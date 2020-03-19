@@ -57,7 +57,6 @@ window.matchMedia('(max-width: 600px)').addListener(() => {
 var BBDB = {};
 var BBDBchanged = false;
 
-console.log('Loading database...');
 Windows.Storage.ApplicationData.current.localFolder.createFileAsync('BBDB.json', Windows.Storage.CreationCollisionOption.openIfExists).then(
     function (file) {
         Windows.Storage.FileIO.readTextAsync(file).then(
@@ -71,7 +70,6 @@ Windows.Storage.ApplicationData.current.localFolder.createFileAsync('BBDB.json',
                     BBDB.debug = {};
                 }
 
-                console.log('Cleanup media items...');
                 Windows.Storage.ApplicationData.current.localFolder.getFilesAsync().then(
                     function (files) {
                         text = stringifyJSON(BBDB);
@@ -79,12 +77,7 @@ Windows.Storage.ApplicationData.current.localFolder.createFileAsync('BBDB.json',
                             function (file) {
                                 var fileName = file.name;
                                 if (file.fileType === '.dat' && !text.includes(fileName)) {
-                                    console.log('Media item ' + fileName + ' not in database, deleting...');
-                                    file.deleteAsync().then(
-                                        function () {
-                                            console.log('Media item ' + fileName + ' deleted.');
-                                        }
-                                    );
+                                    file.deleteAsync();
                                 }
                             }
                         );
@@ -119,13 +112,10 @@ Backbone.sync = function (method, object, options) {
     switch (method) {
         case "read":
             if (object.id) {
-                console.log('BB query id: ' + object.id);
                 resp = store[object.id];
             } else if (options.conditions) {
-                console.log('BB query conditions: ' + options.conditions);
-                console.log('BB QUERY NOT IMPLEMENTED!');
+                console.log('BB conditions query not implemented');
             } else if (options.index) {
-                console.log('BB query index: ' + options.index.name);
                 switch (options.index.name) {
                     case 'conversation':
                         resp = Object.values(store).filter(element => element.conversationId === options.index.lower[0]);
@@ -149,13 +139,11 @@ Backbone.sync = function (method, object, options) {
                         resp = Object.values(store).filter(element => element.members && element.members.indexOf(options.index.only) !== -1);
                         break;
                     default:
-                        console.log('BB QUERY NOT IMPLEMENTED!');
+                        console.log('BB index query not implemented: ' + options.index.name);
                 }
             } else if (options.range) {
-                console.log('BB query range: ' + options.range);
                 resp = Object.values(store).filter(element => element.id >= options.range[0] && element.id <= options.range[1]);
             } else {
-                console.log('BB query all elements');
                 resp = Object.values(store);
             }
             if (Array.isArray(resp) && resp.length > 1 && options.limit) {
@@ -221,29 +209,19 @@ Backbone.sync = function (method, object, options) {
 
 function saveMediaItem(dataArray) {
     var fileName = Date.now() + Math.random() + '.dat';
-    console.log('Saving media item ' + fileName + '...');
     var data = new Uint8Array(dataArray);
     Windows.Storage.ApplicationData.current.localFolder.createFileAsync(fileName, Windows.Storage.CreationCollisionOption.failIfExists).then(
         function (file) {
-            Windows.Storage.FileIO.writeBytesAsync(file, data).then(
-                function () {
-                    console.log('Media item ' + fileName + ' saved.');
-                }
-            );
+            Windows.Storage.FileIO.writeBytesAsync(file, data);
         }
     );
     return fileName;
 }
 
 function deleteMediaItem(fileName) {
-    console.log('Deleting media item ' + fileName + '.');
     Windows.Storage.ApplicationData.current.localFolder.getFileAsync(fileName).then(
         function (file) {
-            file.deleteAsync().then(
-                function () {
-                    console.log('Media item ' + fileName + ' deleted.');
-                }
-            );
+            file.deleteAsync();
         }
     );
 }
