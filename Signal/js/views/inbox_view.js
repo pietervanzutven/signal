@@ -145,15 +145,10 @@
                 this.inboxListView.stopListening();
             }.bind(this));
 
-            if (Whisper.Migration.inProgress()) {
-                if (this.appLoadingScreen) {
-                    this.appLoadingScreen.remove();
-                    this.appLoadingScreen = null;
-                }
-                //this.showUpgradeScreen();
-            }
-            else {
-                //this.showUpgradeBanner();
+            if (extension.expired()) {
+                var banner = new Whisper.ExpiredAlertBanner().render();
+                banner.$el.prependTo(this.$el);
+                this.$el.addClass('expired');
             }
         },
         render_attributes: {
@@ -161,7 +156,6 @@
             selectAContact          : i18n('selectAContact'),
             searchForPeopleOrGroups : i18n('searchForPeopleOrGroups'),
             submitDebugLog          : i18n('submitDebugLog'),
-            migrate                 : i18n('migrateToStandalone'),
             settings                : i18n('settings'),
             restartSignal           : i18n('restartSignal'),
         },
@@ -176,35 +170,6 @@
             'input input.search': 'filterContacts',
             'click .restart-signal': window.restart,
             'show .lightbox': 'showLightbox',
-            'click .migrate': 'showUpgradeScreen',
-            'click .banner-close': 'removeUpgradeBanner'
-        },
-        showUpgradeBanner: function() {
-            this.removeUpgradeBanner();
-
-            this.upgradeBanner = new Whisper.UpgradeBanner().render();
-            this.upgradeBanner.$el.prependTo(this.$el);
-
-            // This class makes AppView have a height of 100% - 62px, so it doesn't push
-            //   our banner off-screen.
-            this.$el.addClass('expired');
-        },
-        removeUpgradeBanner: function() {
-            if (this.upgradeBanner) {
-                this.upgradeBanner.remove();
-                this.upgradeBanner = null;
-                this.$el.removeClass('expired');
-            }
-        },
-        showUpgradeScreen: function() {
-            if (this.migrationScreen) {
-                this.migrationScreen.remove();
-                this.migrationScreen = null;
-            }
-
-            this.migrationScreen = new Whisper.MigrationView();
-            this.migrationScreen.render();
-            this.migrationScreen.$el.prependTo(this.el);
         },
         startConnectionListener: function() {
             this.interval = setInterval(function() {
@@ -320,42 +285,6 @@
             return {
                 expiredWarning: i18n('expiredWarning'),
                 upgrade: i18n('upgrade'),
-            };
-        }
-    });
-
-    Whisper.UpgradeBanner = Whisper.View.extend({
-        templateName: 'upgrade_banner',
-        className: 'expiredAlert upgrade-banner clearfix',
-        initializer: function() {
-            var HOUR = 1000 * 60 * 60;
-            this.interval = setInterval(this.render.bind(this), HOUR);
-        },
-        remove: function() {
-            if (this.interval) {
-                clearInterval(this.interval);
-                this.interval = null;
-            }
-
-            Backbone.View.prototype.remove.call(this);
-        },
-        render_attributes: function() {
-            var DAY = 1000 * 60 * 60 * 24;
-            var timeLeft = window.EXPIRATION_TIME.getTime() - Date.now();
-
-            if (timeLeft <= 0) {
-                return {
-                    upgradeMessage: i18n('upgradeBannerExpired'),
-                    upgradeNow: i18n('upgradeNow'),
-                };
-            }
-
-            var daysLeft = Math.floor(timeLeft / DAY);
-
-            return {
-                upgradeMessage: i18n('upgradeBanner'),
-                highlight: i18n('upgradeBannerTimespan', [daysLeft]),
-                upgradeNow: i18n('upgradeNow'),
             };
         }
     });
