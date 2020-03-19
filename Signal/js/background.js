@@ -168,7 +168,7 @@
         window.removeEventListener('online', connect);
         window.addEventListener('offline', disconnect);
 
-        if (!Whisper.Registration.isDone()) { return; }
+        if (!Whisper.Registration.everDone()) { return; }
         if (Whisper.Import.isIncomplete()) { return; }
 
         if (messageReceiver) {
