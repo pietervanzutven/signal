@@ -27,7 +27,7 @@
         <uap:SplashScreen Image="images\splashscreen.png" />
       </uap:VisualElements>
       <Extensions>
-        <Extension Category="windows.backgroundTasks" StartPage="js\backgroundtask.js">
+        <Extension Category="windows.backgroundTasks" StartPage="js\background_task.js">
           <BackgroundTasks>
             <Task Type="timer" />
           </BackgroundTasks>

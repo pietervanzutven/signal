@@ -23,7 +23,7 @@ background.BackgroundExecutionManager.requestAccessAsync().then(result => {
     var timeTrigger = background.TimeTrigger(15, false);
     var backGroundTask = background.BackgroundTaskBuilder();
     backGroundTask.name = 'SignalTimeTrigger';
-    backGroundTask.taskEntryPoint = 'js\\backgroundtask.js';
+    backGroundTask.taskEntryPoint = 'js\\background_task.js';
     backGroundTask.isNetworkRequested = true;
     backGroundTask.setTrigger(timeTrigger);
     backGroundTask.addCondition(background.SystemCondition(background.SystemConditionType.internetAvailable));

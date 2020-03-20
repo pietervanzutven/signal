@@ -215,7 +215,7 @@
     <Content Include="images\x_FFFFFF10.svg" />
     <Content Include="index.html" />
     <Content Include="js\background.js" />
-    <Content Include="js\backgroundtask.js" />
+    <Content Include="js\background_task.js" />
     <Content Include="js\backup.js" />
     <Content Include="js\chromium.js" />
     <Content Include="js\components.js" />
