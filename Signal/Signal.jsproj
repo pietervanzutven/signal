@@ -214,6 +214,7 @@
     <Content Include="images\x_EF898910.svg" />
     <Content Include="images\x_FFFFFF10.svg" />
     <Content Include="index.html" />
+    <Content Include="js\backbone_database.js" />
     <Content Include="js\background.js" />
     <Content Include="js\background_task.js" />
     <Content Include="js\backup.js" />
