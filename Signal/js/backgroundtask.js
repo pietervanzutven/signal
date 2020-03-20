@@ -8,12 +8,6 @@ var loadLocale = function () { return { messages: {} } };
 
 importScripts('ms-appx:///libtextsecure/components.js', 'ms-appx:///preload.js', 'ms-appx:///libtextsecure/event_target.js', 'ms-appx:///libtextsecure/protobufs.js', 'ms-appx:///libtextsecure/websocket-resources.js');
 
-var debugLog = '';
-function log(message) {
-    var currentDate = new Date();
-    debugLog += ('0' + currentDate.getHours()).slice(-2) + ':' + ('0' + currentDate.getMinutes()).slice(-2) + ':' + ('0' + currentDate.getSeconds()).slice(-2) + ' - ' + message + '\n';
-}
-
 function updateToast(message) {
     var toastXml = Notifications.ToastNotificationManager.getTemplateContent(Notifications.ToastTemplateType.toastText02);
     var toastNodeList = toastXml.getElementsByTagName('text');
@@ -24,7 +18,6 @@ function updateToast(message) {
 }
 
 (function () {
-    log('Timer triggered');
     Notifications.ToastNotificationManager.history.clear();
     window.setBadgeCount(0);
 
@@ -38,29 +31,15 @@ function updateToast(message) {
         + '&password=' + encodeURIComponent(password)
         + '&agent=OWD');
 
-    socket.onclose = () => {
-        log('Socket closed');
-        close();
-    };
-    socket.onerror = () => {
-        log('Socket error');
-    };
-    socket.onopen = () => {
-        log('Socket opened');
-    };
+    socket.onclose = () => close();
 
     var wsr = new WebSocketResource(socket, {
         handleRequest: request => {
-            log('Request received\npath: ' + request.path);
             if (request.path === '/api/v1/message' && Notifications.ToastNotificationManager.history.getHistory().length < 1) {
-                log('New message(s) received');
                 updateToast('New message(s) received');
                 window.setBadgeCount('newMessage');
             } else {
                 request.respond(200, 'OK');
-                if (request.verb === 'PUT' && request.path === '/api/v1/queue/empty') {
-                    log('No new messages');
-                }
             }
             socket.close();
         },
