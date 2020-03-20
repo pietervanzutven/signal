@@ -32,7 +32,7 @@ background.BackgroundExecutionManager.requestAccessAsync().then(result => {
 
 Windows.UI.WebUI.WebUIApplication.addEventListener('activated', event => {
     if (event.detail[0].kind === Windows.ApplicationModel.Activation.ActivationKind.protocol) {
-        window.fileToken = Windows.Foundation.WwwFormUrlDecoder(event.detail[0].uri.query).getFirstValueByName("file");
+        window.fileToken = event.detail[0].uri.query !== '' ? Windows.Foundation.WwwFormUrlDecoder(event.detail[0].uri.query).getFirstValueByName("file") : null;
     }
 });
 
