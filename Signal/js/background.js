@@ -69,10 +69,6 @@
         });
     }
 
-    window.getSyncRequest = function() {
-        return new textsecure.SyncRequest(textsecure.messaging, messageReceiver);
-    };
-
     Whisper.events.on('shutdown', function() {
         if (messageReceiver) {
             messageReceiver.close().then(function() {
