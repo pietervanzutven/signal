@@ -4,7 +4,7 @@ var window = this;
 window.config = {};
 var loadLocale = function () { return { messages: {} } };
 
-importScripts('ms-appx:///libtextsecure/components.js', 'ms-appx:///preload.js', 'ms-appx:///libtextsecure/event_target.js', 'ms-appx:///libtextsecure/protobufs.js', 'ms-appx:///libtextsecure/websocket-resources.js');
+importScripts('ms-appx:///libtextsecure/components.js', 'ms-appx:///main.js', 'ms-appx:///preload.js', 'ms-appx:///libtextsecure/event_target.js', 'ms-appx:///libtextsecure/protobufs.js', 'ms-appx:///libtextsecure/websocket-resources.js');
 
 var Notifications = Windows.UI.Notifications;
 Notifications.ToastNotificationManager.history.clear();
