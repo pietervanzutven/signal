@@ -35,8 +35,8 @@
             // We start with english, then overwrite that with anything present in locale
             messages = Object.assign(english, messages);
         } catch (e) {
-            console.log('Problem loading messages for locale ', localeName, e.stack);
-            console.log('Falling back to en locale');
+            logger.error('Problem loading messages for locale ' + localeName + ' ' + e.stack);
+            logger.error('Falling back to en locale');
 
             localeName = 'en';
             messages = english;

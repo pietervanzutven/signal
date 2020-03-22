@@ -1,11 +1,6 @@
 ﻿'use strict';
 
 var background = Windows.ApplicationModel.Background;
-
-console.info = console.log;
-console.warn = console.log;
-console.error = console.log;
-
 background.BackgroundExecutionManager.removeAccess();
 for (var iter = background.BackgroundTaskRegistration.allTasks.first() ; iter.hasCurrent; iter.moveNext()) {
     var task = iter.current.value;
@@ -91,6 +86,9 @@ ipc.on('draw-attention', function () {
 ipc.on('restart', function () {
     Windows.UI.WebUI.WebUIApplication.requestRestartAsync('');
 });
+
+logging.initialize();
+const logger = logging.getLogger();
 
 var version = Windows.System.Profile.AnalyticsInfo.versionInfo.deviceFamilyVersion;
 window.config.uwp_version = ((version & 0x00000000FFFF0000) >> 16) + '.' + (version & 0x000000000000FFFF);

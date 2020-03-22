@@ -166,43 +166,9 @@
             version: "16.0",
             migrate: function(transaction, next) {
                 console.log('migration 16.0');
-                console.log('Cleaning up dirty attachment data');
-
-                var messages = transaction.objectStore('messages');
-                var queryRequest = messages.openCursor();
-                var promises = [];
-
-                queryRequest.onsuccess = function(event) {
-                    var cursor = event.target.result;
-                    if (!cursor) {
-                        return Promise.all(promises).then(function() {
-                            console.log('Fixed', promises.length, 'messages with unexpected attachment structure');
-                            next();
-                        });
-                    }
-
-                    var message = cursor.value;
-                    var changed = window.Whisper.Database.cleanMessageAttachments(message);
-
-                    if (!changed) {
-                        return cursor.continue();
-                    }
-
-                    promises.push(new Promise(function(resolve, reject) {
-                        var putRequest = messages.put(message, message.id);
-                        putRequest.onsuccess = resolve;
-                        putRequest.onerror = function(e) {
-                            console.log(e);
-                            reject(e);
-                        };
-                    }));
-
-                    return cursor.continue();
-                };
-
-                queryRequest.onerror = function(event) {
-                    console.log(event);
-                };
+                console.log('Dropping log table, since we now log to disk');
+                var messages = transaction.db.deleteObjectStore('debug');
+                next();
             }
         },
         {

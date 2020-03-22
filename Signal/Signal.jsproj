@@ -60,6 +60,7 @@
     <AppxManifest Include="package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="app\logging.js" />
     <Content Include="app\config.js" />
     <Content Include="background.html" />
     <Content Include="cdnsignalorg.cer" />
@@ -214,6 +215,7 @@
     <Content Include="images\x_EF898910.svg" />
     <Content Include="images\x_FFFFFF10.svg" />
     <Content Include="index.html" />
+    <Content Include="js\logging.js" />
     <Content Include="js\backbone_database.js" />
     <Content Include="js\background.js" />
     <Content Include="js\background_task.js" />
@@ -222,7 +224,6 @@
     <Content Include="js\components.js" />
     <Content Include="js\conversation_controller.js" />
     <Content Include="js\database.js" />
-    <Content Include="js\debugLog.js" />
     <Content Include="js\delivery_receipts.js" />
     <Content Include="js\expire.js" />
     <Content Include="js\expiring_messages.js" />
