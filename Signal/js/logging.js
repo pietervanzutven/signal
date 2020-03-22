@@ -1,5 +1,6 @@
 ﻿(function () {
     const PHONE_REGEX = /\+\d{7,12}(\d{3})/g;
+    const GROUP_REGEX = /(group\()([^)]+)(\))/g;
 
     // Default Bunyan levels: https://github.com/trentm/node-bunyan#levels
     // To make it easier to visually scan logs, we make all levels the same length
@@ -16,6 +17,16 @@
 
     // Backwards-compatible logging, simple strings and no level (defaulted to INFO)
 
+    function redactPhone(text) {
+        return text.replace(PHONE_REGEX, "+[REDACTED]$1");
+    }
+
+    function redactGroup(text) {
+        return text.replace(GROUP_REGEX, function (match, before, id, after) {
+            return before + '[REDACTED]' + id.slice(-3) + after;
+        });
+    }
+
     function now() {
         const date = new Date();
         return date.toJSON();
@@ -27,7 +38,7 @@
         const consoleArgs = ['INFO ', now()].concat(args);
         console._log.apply(console, consoleArgs);
 
-        const str = args.join(' ').replace(PHONE_REGEX, "+[REDACTED]$1");
+        const str = redactGroup(redactPhone(args.join(' ')));
         ipc.send('log-info', str);
     }
 
@@ -57,7 +68,7 @@
     }
 
     function format(entries) {
-        return entries.map(formatLine).join('\n');
+        return redactGroup(redactPhone(entries.map(formatLine).join('\n')));
     }
 
     function fetch() {
