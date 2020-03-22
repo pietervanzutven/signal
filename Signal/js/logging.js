@@ -1,6 +1,4 @@
 ﻿(function () {
-    'use strict';
-
     const PHONE_REGEX = /\+\d{7,12}(\d{3})/g;
 
     // Default Bunyan levels: https://github.com/trentm/node-bunyan#levels
@@ -30,13 +28,13 @@
         console._log.apply(console, consoleArgs);
 
         const str = args.join(' ').replace(PHONE_REGEX, "+[REDACTED]$1");
-        ipc.send('log-info', str)
+        ipc.send('log-info', str);
     }
 
     if (window.console) {
         console._log = console.log;
         console.log = log;
-    };
+    }
 
 
     // The mechanics of preparing a log for publish
@@ -64,7 +62,7 @@
 
     function fetch() {
         return getHeader() + '\n' + format(ipc.sendSync('fetch-log'));
-    };
+    }
 
     function publish(log) {
         log = log || fetch();
@@ -85,7 +83,7 @@
               })
               .fail(resolve);
         });
-    };
+    }
 
 
     // A modern logging interface for the browser
@@ -101,7 +99,7 @@
         info: msg => logger.add(30, msg),
         debug: msg => logger.add(20, msg),
         trace: msg => logger.add(10, msg),
-    };
+    }
 
     // The Bunyan API: https://github.com/trentm/node-bunyan#log-method-api
     function logAtLevel() {
