@@ -25,14 +25,15 @@
     }
 
     function load() {
-        var english = getLocaleMessages('en');
+        let english = getLocaleMessages('en');
+        let appLocale = Windows.Globalization.ApplicationLanguages.languages[0];
 
         // Load locale - if we can't load messages for the current locale, we
         // default to 'en'
         //
         // possible locales:
         // https://github.com/electron/electron/blob/master/docs/api/locales.md
-        let localeName = normalizeLocaleName(Windows.Globalization.ApplicationLanguages.languages[0]);
+        let localeName = normalizeLocaleName(appLocale);
         let messages;
 
         try {
