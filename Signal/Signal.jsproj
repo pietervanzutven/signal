@@ -299,6 +299,8 @@
     <Content Include="libtextsecure\components.js" />
     <Content Include="libtextsecure\protobufs.js" />
     <Content Include="libtextsecure\websocket-resources.js" />
+    <None Include="priconfig.default.xml" />
+    <None Include="priconfig.packaging.xml" />
     <Content Include="protos\DeviceMessages.proto" />
     <Content Include="protos\DeviceName.proto" />
     <Content Include="protos\SignalService.proto" />

@@ -1,10 +1,16 @@
 ﻿(function () {
     function normalizeLocaleName(locale) {
-        if (/^en-/.test(locale)) {
-            return 'en';
+        if (/^es-/.test(locale)) {
+            return /419/.test(locale) ? locale : 'es';
+        }
+        if (/^pt-/.test(locale)) {
+            return /(BR|PT)/.test(locale) ? locale : 'pt-PT';
+        }
+        if (/^zh-/.test(locale)) {
+            return /(CN|TW)/.test(locale) ? locale : 'zh-CN';
         }
 
-        return locale;
+        return locale.substring(0, 2);
     }
 
     function getLocaleMessages(locale) {
