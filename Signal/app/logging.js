@@ -33,7 +33,11 @@
         });
 
         ipc.on('fetch-log', function (event) {
-            event.returnValue = fetch();
+            fetch().then(function (data) {
+                event.sender.send('fetched-log', data);
+            }, function (error) {
+                logger.error('Problem loading log from disk: ' + error.stack);
+            });
         });
     }
 
@@ -45,9 +49,25 @@
         return logger;
     }
 
+    function fetchLog() {
+        return new Promise(function (resolve, reject) {
+            setTimeout(function () {
+                const data = _.compact(logger.log.map(function (line) {
+                    try {
+                        return _.pick(line, ['level', 'time', 'msg']);
+                    }
+                    catch (e) { }
+                }));
+                return resolve(data);
+            }, 1);
+        });
+    }
+
     function fetch() {
-        const data = logger.log;
-        return _.sortBy(data, 'time');
+        return Promise.all([fetchLog()]).then(function (results) {
+            const data = _.flatten(results);
+            return _.sortBy(data, 'time');
+        });
     }
 
 
