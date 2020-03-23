@@ -8570,3 +8570,21 @@
         (global["dcodeIO"] = global["dcodeIO"] || {})["ProtoBuf"] = init(global["dcodeIO"]["ByteBuffer"]);
 
 })(this);
+
+// Partially apply a function by creating a version that has had some of its
+// arguments pre-filled, without changing its dynamic `this` context. _ acts
+// as a placeholder, allowing any combination of arguments to be pre-filled.
+var _ = {
+    partial: function (func) {
+        var boundArgs = Array.prototype.slice.call(arguments, 1);
+        return function () {
+            var position = 0;
+            var args = boundArgs.slice();
+            for (var i = 0, length = args.length; i < length; i++) {
+                if (args[i] === _) args[i] = arguments[position++];
+            }
+            while (position < arguments.length) args.push(arguments[position++]);
+            return func.apply(this, args);
+        };
+    }
+};
