@@ -51,15 +51,15 @@ window.matchMedia && window.matchMedia('(max-width: 600px)').addListener(() => {
 var ipc = {
     events: {},
     on: function (name, callback) {
-        this.events[name] = callback;
+        ipc.events[name] = callback;
     },
     send: function (name, args) {
-        var event = { name: name, returnValue: null };
-        this.events[name](event, args);
+        var event = { name: name, returnValue: null, sender: {send: ipc.send} };
+        ipc.events[name](event, args);
         return event.returnValue;
     },
     sendSync: function (name, args) {
-        return this.send(name, args);
+        return ipc.send(name, args);
     }
 }
 
