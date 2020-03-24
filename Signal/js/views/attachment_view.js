@@ -176,19 +176,21 @@
     },
     saveFile: function() {
         var fileName = this.model.fileName;
-        var picker = Windows.Storage.Pickers.FileSavePicker();
-        picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
-        picker.fileTypeChoices.insert(this.model.contentType, ['.' + fileName.split('.').pop()]);
-        picker.suggestedFileName = fileName;
-        picker.pickSaveFileAsync().then(
-            function (fileTo) {
-                Windows.Storage.ApplicationData.current.localFolder.getFileAsync(this.model.data).then(
-                    function (fileFrom) {
-                        fileFrom.copyAndReplaceAsync(fileTo);
-                    }
-                );
-            }.bind(this)
-        );
+        if (fileName) {
+            var picker = Windows.Storage.Pickers.FileSavePicker();
+            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.documentsLibrary;
+            picker.fileTypeChoices.insert(this.model.contentType, ['.' + fileName.split('.').pop()]);
+            picker.suggestedFileName = fileName;
+            picker.pickSaveFileAsync().then(
+                function (fileTo) {
+                    Windows.Storage.ApplicationData.current.localFolder.getFileAsync(this.model.data).then(
+                        function (fileFrom) {
+                            fileFrom.copyAndReplaceAsync(fileTo);
+                        }
+                    );
+                }.bind(this)
+            );
+        }
     },
     render: function() {
         if (!this.isImage()) {
