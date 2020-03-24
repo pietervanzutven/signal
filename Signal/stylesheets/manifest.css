@@ -1630,35 +1630,35 @@ li.entry .error-icon-container {
   margin-right: 3px;
   white-space: nowrap; }
 
-.status {
+span.status {
   width: 18px;
   height: 18px; }
 
-.sent .status {
+.sent span.status {
   display: inline-block;
   background-image: url("../images/check_00000010.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
-.delivered .status {
+.delivered span.status {
   display: inline-block;
   background-image: url("../images/double-check_00000010.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
-.read .status {
+.read span.status {
   display: inline-block;
   background-image: url("../images/double-check_2090EA10.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
-.pending .status {
+.pending span.status {
   display: inline-block;
   background: none; }
-  .pending .status:before {
+  .pending span.status:before {
     content: '...'; }
 
 .message-container,
@@ -2630,19 +2630,19 @@ li.entry .error-icon-container {
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-  .android-dark .sent .status {
+  .android-dark .sent span.status {
     display: inline-block;
     background-image: url("../images/check_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-  .android-dark .delivered .status {
+  .android-dark .delivered span.status {
     display: inline-block;
     background-image: url("../images/double-check_FFFFFF10.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-  .android-dark .read .status {
+  .android-dark .read span.status {
     display: inline-block;
     background-image: url("../images/double-check_2090EA10.svg");
     background-size: 100%;
