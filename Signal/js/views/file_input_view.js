@@ -44,19 +44,12 @@
 
         open: function(e) {
             e.preventDefault();
-            // hack
-            //if (this.window && this.window.chrome && this.window.chrome.fileSystem) {
+
             var picker = Windows.Storage.Pickers.FileOpenPicker();
             picker.viewMode = Windows.Storage.Pickers.PickerViewMode.thumbnail;
             picker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.picturesLibrary;
             picker.fileTypeFilter.append("*");
-
-            //  this.window.chrome.fileSystem.chooseEntry({type: 'openFile'}, function(entry) {
             var file = picker.pickSingleFileAsync().then(
-                // if (!entry) {
-                //     return;
-                // }
-                // entry.file(function(file) {
                 function (file) {
                     if (file != null) {
                         // Application now has read/write access to the picked file
@@ -67,21 +60,8 @@
                     else {
                         console.log("Operation cancelled.");
                     }
-                }.bind(this));
-
-
-            //    this.window.chrome.fileSystem.chooseEntry({type: 'openFile'}, function(entry) {
-            //        if (!entry) {
-            //            return;
-            //        }
-            //        entry.file(function(file) {
-            //            this.file = file;
-            //            this.previewImages();
-            //        }.bind(this));
-            //    }.bind(this));
-            //} else {
-            //    this.$input.click();
-            //}
+                }.bind(this)
+            );
         },
 
         addThumb: function(src) {
