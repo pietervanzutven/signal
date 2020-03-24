@@ -1,14 +1,9 @@
 ﻿'use strict';
 
 var window = this;
-window.config = {};
-var loadLocale = function () { return { messages: {} } };
+window.PROTO_ROOT = '/protos';
+importScripts('ms-appx:///libtextsecure/components.js', 'ms-appx:///libtextsecure/event_target.js', 'ms-appx:///libtextsecure/protobufs.js', 'ms-appx:///libtextsecure/websocket-resources.js');
 
-importScripts('ms-appx:///libtextsecure/components.js', 'ms-appx:///app/logging.js', 'ms-appx:///main.js', 'ms-appx:///preload.js', 'ms-appx:///libtextsecure/event_target.js', 'ms-appx:///libtextsecure/protobufs.js', 'ms-appx:///libtextsecure/websocket-resources.js');
-
-var Notifications = Windows.UI.Notifications;
-Notifications.ToastNotificationManager.history.clear();
-window.setBadgeCount(0);
 function updateToast(message) {
     var toastXml = Notifications.ToastNotificationManager.getTemplateContent(Notifications.ToastTemplateType.toastText02);
     var toastNodeList = toastXml.getElementsByTagName('text');
@@ -17,6 +12,18 @@ function updateToast(message) {
     var toast = Notifications.ToastNotification(toastXml);
     Notifications.ToastNotificationManager.createToastNotifier().show(toast);
 }
+var Notifications = Windows.UI.Notifications;
+Notifications.ToastNotificationManager.history.clear();
+
+function updateBadge(count) {
+    var Notifications = Windows.UI.Notifications;
+    var type = typeof (count) === 'string' ? Notifications.BadgeTemplateType.badgeGlyph : Notifications.BadgeTemplateType.badgeNumber;
+    var badgeXml = Notifications.BadgeUpdateManager.getTemplateContent(type);
+    badgeXml.firstChild.setAttribute('value', count);
+    var badge = Notifications.BadgeNotification(badgeXml);
+    Notifications.BadgeUpdateManager.createBadgeUpdaterForApplication().update(badge);
+}
+updateBadge(0);
 
 var url = 'https://textsecure-service.whispersystems.org';
 var number_id = Windows.Storage.ApplicationData.current.localSettings.values['number_id'];
@@ -34,7 +41,7 @@ var wsr = new WebSocketResource(socket, {
     handleRequest: request => {
         if (request.path === '/api/v1/message' && Notifications.ToastNotificationManager.history.getHistory().length < 1) {
             updateToast('New message(s) received');
-            window.setBadgeCount('newMessage');
+            updateBadge('newMessage');
         } else {
             request.respond(200, 'OK');
         }
