@@ -54,7 +54,7 @@ var ipc = {
         ipc.events[name] = callback;
     },
     send: function (name, args) {
-        var event = { name: name, returnValue: null, sender: {send: ipc.send} };
+        var event = { name: name, returnValue: null, sender: { send: ipc.send } };
         ipc.events[name](event, args);
         return event.returnValue;
     },
@@ -72,7 +72,7 @@ ipc.on('show-window', function () { });
 
 ipc.on('set-badge-count', function (event, count) {
     var Notifications = Windows.UI.Notifications;
-    var type = typeof(count) === 'string' ? Notifications.BadgeTemplateType.badgeGlyph : Notifications.BadgeTemplateType.badgeNumber;
+    var type = typeof (count) === 'string' ? Notifications.BadgeTemplateType.badgeGlyph : Notifications.BadgeTemplateType.badgeNumber;
     var badgeXml = Notifications.BadgeUpdateManager.getTemplateContent(type);
     badgeXml.firstChild.setAttribute('value', count);
     var badge = Notifications.BadgeNotification(badgeXml);
@@ -97,3 +97,7 @@ let locale;
 if (!locale) {
     locale = loadLocale();
 }
+
+ipc.on("set-auto-hide-menu-bar", function (event, autoHide) { });
+
+ipc.on("set-menu-bar-visibility", function (event, visibility) { });
