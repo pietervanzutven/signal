@@ -149,6 +149,11 @@
             searchForPeopleOrGroups : i18n('searchForPeopleOrGroups'),
             submitDebugLog          : i18n('submitDebugLog'),
             settings                : i18n('settings'),
+            openReleaseNotes        : i18n('goToReleaseNotes'),
+            openForums              : i18n('goToForums'),
+            openSupportPage         : i18n('goToSupportPage'),
+            openNewBugForm          : i18n('fileABug'),
+            showAbout               : i18n('aboutSignalDesktop'),
             restartSignal           : i18n('restartSignal'),
         },
         events: {
@@ -157,7 +162,12 @@
             'click .conversation': 'focusConversation',
             'click .global-menu .hamburger': 'toggleMenu',
             'click .show-debug-log': 'showDebugLog',
-            'click .showSettings': 'showSettings',
+            'click .show-settings': 'showSettings',
+            'click .open-release-notes': 'openReleaseNotes',
+            'click .open-forums': 'openForums',
+            'click .open-support-page': 'openSupportPage',
+            'click .open-new-bug-form': 'openNewBugForm',
+            'click .show-about': 'showAbout',
             'select .gutter .conversation-list-item': 'openConversation',
             'input input.search': 'filterContacts',
             'click .restart-signal': window.restart,
@@ -246,6 +256,22 @@
         showDebugLog: function() {
             this.$('.debug-log').remove();
             new Whisper.DebugLogView().$el.appendTo(this.el);
+        },
+        openReleaseNotes: function () {
+            Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/WhisperSystems/Signal-Desktop/releases/tag/v' + app.getVersion()));
+        },
+        openForums: function () {
+            Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://whispersystems.discoursehosting.net/'));
+        },
+        openSupportPage: function () {
+            Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://support.signal.org/'));
+        },
+        openNewBugForm: function () {
+            Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/WhisperSystems/Signal-Desktop/issues/new'));
+        },
+        showAbout: function () {
+            this.$('.about').remove();
+            new Whisper.AboutView().$el.appendTo(this.el);
         },
         showLightbox: function(e) {
             this.$el.append(e.target);

@@ -48,6 +48,13 @@ window.matchMedia && window.matchMedia('(max-width: 600px)').addListener(() => {
     }
 });
 
+var app = { 
+    getVersion: function () {
+        var version = Windows.ApplicationModel.Package.current.id.version;
+        return version.major + '.' + version.minor + '.' + version.build
+    }
+};
+
 var ipc = {
     events: {},
     on: function (name, callback) {
@@ -90,8 +97,12 @@ ipc.on('restart', function () {
 logging.initialize();
 const logger = logging.getLogger();
 
+window.config.version = app.getVersion();
+
 var version = Windows.System.Profile.AnalyticsInfo.versionInfo.deviceFamilyVersion;
 window.config.uwp_version = ((version & 0x00000000FFFF0000) >> 16) + '.' + (version & 0x000000000000FFFF);
+
+window.config.hostname = 'Windows';
 
 let locale;
 if (!locale) {

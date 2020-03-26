@@ -237,6 +237,7 @@
     <Content Include="app\locale.js" />
     <Content Include="js\Mp3LameEncoder.min.js" />
     <Content Include="js\views\app_view.js" />
+    <Content Include="js\views\debug_log_view.js" />
     <Content Include="js\views\import_view.js" />
     <Content Include="js\views\standalone_registration_view.js" />
     <Content Include="libtextsecure\event_target.js" />
@@ -269,7 +270,7 @@
     <Content Include="js\views\conversation_list_view.js" />
     <Content Include="js\views\conversation_search_view.js" />
     <Content Include="js\views\conversation_view.js" />
-    <Content Include="js\views\debug_log_view.js" />
+    <Content Include="js\views\about_view.js" />
     <Content Include="js\views\error_view.js" />
     <Content Include="js\views\file_input_view.js" />
     <Content Include="js\views\group_member_list_view.js" />

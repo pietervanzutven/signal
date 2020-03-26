@@ -74,8 +74,13 @@
               <div class='global-menu menu'>
                 <button class='hamburger' alt='signal menu'></button>
                 <ul class='menu-list'>
-                    <li class='showSettings'>{{ settings }}</li>
+                    <li class='show-settings'>{{ settings }}</li>
                     <li class='show-debug-log'>{{ submitDebugLog }}</li>
+                    <li class='open-release-notes'>{{ openReleaseNotes }}</li>
+                    <li class='open-forums'>{{ openForums }}</li>
+                    <li class='open-support-page'>{{ openSupportPage }}</li>
+                    <li class='open-new-bug-form'>{{ openNewBugForm }}</li>
+                    <li class='show-about'>{{ showAbout }}</li>
                     <li class='restart-signal'>{{ restartSignal }}</li>
                 </ul>
               </div>
@@ -543,7 +548,8 @@
     <div class='content'>
       <div>
         <a class='x close' alt='close debug log' href='#'></a>
-        <h1> {{ title }} </h1>
+        <h2> {{ title }} </h2>
+        <hr>
         <p> {{ debugLogExplanation }}</p>
       </div>
       <textarea spellcheck='false' rows='5'></textarea>
@@ -620,18 +626,36 @@
     </div>
   </script>
   <script type='text/x-tmpl-mustache' id='syncSettings'>
-      <hr>
-      <h3>{{ sync }}</h3>
+    <hr>
+    <h3>{{ sync }}</h3>
+    <div>
+      <button class='grey sync'>{{ syncNow }}</button>
+      <p>
+        {{ syncExplanation }}
+        <div class='synced_at'>
+            {{ lastSynced }} {{ syncDate }} {{ syncTime }}
+        </div>
+        <div class='sync_failed'>{{ syncFailed }}</div>
+      </p>
+    </div>
+  </script>
+  <script type='text/x-tmpl-mustache' id='about'>
+    <div class="content">
       <div>
-        <button class='grey sync'>{{ syncNow }}</button>
-        <p>
-          {{ syncExplanation }}
-          <div class='synced_at'>
-              {{ lastSynced }} {{ syncDate }} {{ syncTime }}
-          </div>
-          <div class='sync_failed'>{{ syncFailed }}</div>
-        </p>
+        <a class='x close' alt='close settings' href='#'></a>
+        <h2>{{ about }}</h2>
+        <hr>
       </div>
+      <div class="page">
+        <img src='images/icon_250.png'>
+        <div>
+          v{{ version }}
+        </div>
+        <div>
+          <a href="https://signal.org">signal.org</a>
+        </div>
+      </div>
+    </div>
   </script>
 
   <script type='text/x-tmpl-mustache' id='networkStatus'>
@@ -838,6 +862,7 @@
   <script type='text/javascript' src='js/views/last_seen_indicator_view.js'></script>
   <script type='text/javascript' src='js/views/scroll_down_button_view.js'></script>
   <script type='text/javascript' src='js/views/debug_log_view.js'></script>
+  <script type='text/javascript' src='js/views/about_view.js'></script>
   <script type='text/javascript' src='js/views/toast_view.js'></script>
   <script type='text/javascript' src='js/views/attachment_preview_view.js'></script>
   <script type='text/javascript' src='js/views/file_input_view.js'></script>
