@@ -53,7 +53,8 @@
         orange      : '#FF9800',
         deep_orange : '#FF5722',
         amber       : '#FFB300',
-        blue_grey   : '#607D8B'
+        blue_grey   : '#607D8B',
+        brown       : '#746C53'
     };
 
 })();

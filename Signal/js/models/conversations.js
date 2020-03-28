@@ -23,6 +23,7 @@
         'deep_orange',
         'amber',
         'blue_grey',
+        'brown'
     ];
 
     function constantTimeEqualArrayBuffers(ab1, ab2) {
