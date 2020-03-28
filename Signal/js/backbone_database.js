@@ -13,7 +13,7 @@
                         BBDB = parseJSON(text);
                         Windows.Storage.ApplicationData.current.localSettings.values['number_id'] = BBDB.items.number_id.value;
                         Windows.Storage.ApplicationData.current.localSettings.values['password'] = BBDB.items.password.value;
-                        BBDB.debug = {};
+                        BBDB.debug && delete BBDB['debug'];
                     }
 
                     Windows.Storage.ApplicationData.current.localFolder.getFilesAsync().then(
