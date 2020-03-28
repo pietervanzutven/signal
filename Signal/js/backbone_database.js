@@ -111,8 +111,9 @@
                         }
                     }
                 }
-                if (resp.avatar && resp.avatar.data instanceof ArrayBuffer) {
-                    resp.avatar.data = saveMediaItem(resp.avatar.data);
+                var avatar = resp.avatar || resp.profileAvatar;
+                if (avatar && avatar.data instanceof ArrayBuffer) {
+                    avatar.data = saveMediaItem(avatar.data);
                 }
 
                 store[object.id] = resp;
@@ -129,8 +130,9 @@
                             }
                         }
                     }
-                    if (object.attributes.avatar && !(object.attributes.avatar.data instanceof ArrayBuffer)) {
-                        deleteMediaItem(object.attributes.avatar.data);
+                    var avatar = object.attributes.avatar || object.attributes.profileAvatar;
+                    if (avatar && !(avatar.data instanceof ArrayBuffer)) {
+                        deleteMediaItem(avatar.data);
                     }
 
                     delete store[object.id];
@@ -200,7 +202,7 @@
                     }
                 }
             }
-            if (key === 'avatar' && value && value.data instanceof ArrayBuffer) {
+            if ((key === 'avatar' || key === 'profileAvatar') && value && value.data instanceof ArrayBuffer) {
                 value.data = saveMediaItem(value.data);
             }
             return value;
