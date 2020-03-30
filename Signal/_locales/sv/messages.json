@@ -173,6 +173,10 @@
         "message": "Radera meddelanden",
         "description": "Menu item for deleting messages, title case."
     },
+    "confirmMigration": {
+        "message": "Påbörja migrationsprocessen? Du kommer inte kunna skicka eller ta emot Signalmeddelanden från detta program tills migrationen är klar.",
+        "description": "Confirmation dialogue when beginning migration"
+    },
     "incomingError": {
         "message": "Kunde inte ta emot meddelande.",
         "description": ""
@@ -226,6 +230,14 @@
     "sent": {
         "message": "Skickat",
         "description": "Label for the time a message was sent"
+    },
+    "migrationWarning": {
+        "message": "Signals Chrome-app har blivit föråldrad. Vill du migrera till den nya Signalappen nu?",
+        "description": "Warning notification that this version of the app has been deprecated and the user must migrate"
+    },
+    "migrate": {
+        "message": "Migrera",
+        "description": "Button label to begin migrating this client to Electron"
     },
     "theyChangedTheTimer": {
         "message": "$name$ satte timern på $time$.",
@@ -593,6 +605,10 @@
         "message": "Öppna Signal-appen på din telefon och gå till Settings > Linked devices. Tryck på knappen för att lägga en ny enhet och skanna sedan kodan ovan.",
         "description": ""
     },
+    "migrationDisconnecting": {
+        "message": "Kopplar ner...",
+        "description": "Displayed while we wait for pending incoming messages to process"
+    },
     "invalidNumberError": {
         "message": "Felaktigt nummer",
         "description": "When a person inputs a number that is invalid"
@@ -824,6 +840,10 @@
     "changedSinceVerifiedMultiple": {
         "message": "Dina säkerhetsnummer med flera gruppmedlemmar har ändrats sen du sist verifierade dem. Detta kan betyda att någon försöker lyssna av din kommunikation eller att de bara installerat om Signal.",
         "description": "Shown on confirmation dialog when user attempts to send a message"
+    },
+    "export": {
+        "message": "Välj mapp",
+        "description": "Button to allow the user to export all data from app as part of migration process"
     },
     "submitDebugLog": {
         "message": "Skicka felsökningslogg",

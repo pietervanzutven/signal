@@ -173,6 +173,10 @@
         "message": "Mesajları sil",
         "description": "Menu item for deleting messages, title case."
     },
+    "confirmMigration": {
+        "message": "Start migration process? You will not be able to send or receive Signal messages from this application while the migration is in progress.",
+        "description": "Confirmation dialogue when beginning migration"
+    },
     "incomingError": {
         "message": "Gelen mesajda hata oluştu.",
         "description": ""
@@ -226,6 +230,14 @@
     "sent": {
         "message": "Gönderildi",
         "description": "Label for the time a message was sent"
+    },
+    "migrationWarning": {
+        "message": "The Signal Desktop Chrome app has been deprecated. Would you like to migrate to the new Signal Desktop now?",
+        "description": "Warning notification that this version of the app has been deprecated and the user must migrate"
+    },
+    "migrate": {
+        "message": "Migrate",
+        "description": "Button label to begin migrating this client to Electron"
     },
     "theyChangedTheTimer": {
         "message": "$name$ zamanı $time$ olarak ayarladı.",
@@ -593,6 +605,10 @@
         "message": "Telefonunuzda Sinyal'i açın ve Ayarlar> Bağlantılı cihazlar'a gidin. Yeni bir cihaz eklemek için düğmesine dokunun, ardından yukarıdaki kodu tarayın.",
         "description": ""
     },
+    "migrationDisconnecting": {
+        "message": "Disconnecting...",
+        "description": "Displayed while we wait for pending incoming messages to process"
+    },
     "invalidNumberError": {
         "message": "Geçersiz numara",
         "description": "When a person inputs a number that is invalid"
@@ -824,6 +840,10 @@
     "changedSinceVerifiedMultiple": {
         "message": "Your safety numbers with multiple group members have changed since you last verified. This could mean that someone is trying to intercept your communication or that they have simply reinstalled Signal.",
         "description": "Shown on confirmation dialog when user attempts to send a message"
+    },
+    "export": {
+        "message": "Choose directory",
+        "description": "Button to allow the user to export all data from app as part of migration process"
     },
     "submitDebugLog": {
         "message": "Hata ayıklama günlüğünü gönder",

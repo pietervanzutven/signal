@@ -605,6 +605,10 @@
         "message": "Откройте Signal на вашем телефоне и перейдите в Настройки > Привязанные устройства. Коснитесь кнопки добавления нового устройства и отсканируйте QR-код указанный выше.",
         "description": ""
     },
+    "migrationDisconnecting": {
+        "message": "Разъединение...",
+        "description": "Displayed while we wait for pending incoming messages to process"
+    },
     "invalidNumberError": {
         "message": "Неверный номер",
         "description": "When a person inputs a number that is invalid"
@@ -836,6 +840,10 @@
     "changedSinceVerifiedMultiple": {
         "message": "Ваши коды безопасности с несколькими участниками группы изменились со времени Вашего последнего подтверждения. Это может означать, что кто-то пытается перехватить ваши сообщения, или попросту кто-то из участников переустановил Signal.",
         "description": "Shown on confirmation dialog when user attempts to send a message"
+    },
+    "export": {
+        "message": "Выбрать каталог",
+        "description": "Button to allow the user to export all data from app as part of migration process"
     },
     "submitDebugLog": {
         "message": "Отправить журнал отладки",

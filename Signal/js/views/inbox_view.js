@@ -148,6 +148,7 @@
             selectAContact          : i18n('selectAContact'),
             searchForPeopleOrGroups : i18n('searchForPeopleOrGroups'),
             submitDebugLog          : i18n('submitDebugLog'),
+            migrate                 : i18n('migrate'),
             settings                : i18n('settings'),
             openReleaseNotes        : i18n('goToReleaseNotes'),
             openForums              : i18n('goToForums'),
@@ -162,6 +163,7 @@
             'click .conversation': 'focusConversation',
             'click .global-menu .hamburger': 'toggleMenu',
             'click .show-debug-log': 'showDebugLog',
+            'click .migrate': 'showUpgradeScreen',
             'click .show-settings': 'showSettings',
             'click .open-release-notes': 'openReleaseNotes',
             'click .open-forums': 'openForums',
@@ -172,6 +174,16 @@
             'input input.search': 'filterContacts',
             'click .restart-signal': window.restart,
             'show .lightbox': 'showLightbox',
+        },
+        showUpgradeScreen: function() {
+            if (this.migrationScreen) {
+                this.migrationScreen.remove();
+                this.migrationScreen = null;
+            }
+
+            this.migrationScreen = new Whisper.MigrationView();
+            this.migrationScreen.render();
+            this.migrationScreen.$el.prependTo(this.el);
         },
         startConnectionListener: function() {
             this.interval = setInterval(function() {

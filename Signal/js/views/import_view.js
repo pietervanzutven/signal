@@ -138,7 +138,7 @@
           storage.remove('migrationEverCompleted'),
           storage.remove('migrationStorageLocation'),
 
-          Whisper.Import.saveLocation(directory),
+          Whisper.Import.saveLocation(directory.folder.path),
           Whisper.Import.complete()
         ]);
       }).then(function() {
