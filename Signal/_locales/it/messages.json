@@ -173,6 +173,10 @@
         "message": "Elimina messaggi",
         "description": "Menu item for deleting messages, title case."
     },
+    "confirmMigration": {
+        "message": "Start migration process? You will not be able to send or receive Signal messages from this application while the migration is in progress.",
+        "description": "Confirmation dialogue when beginning migration"
+    },
     "incomingError": {
         "message": "Errore in gestione messaggio in arrivo.",
         "description": ""
@@ -226,6 +230,14 @@
     "sent": {
         "message": "Inviato",
         "description": "Label for the time a message was sent"
+    },
+    "migrationWarning": {
+        "message": "The Signal Desktop Chrome app has been deprecated. Would you like to migrate to the new Signal Desktop now?",
+        "description": "Warning notification that this version of the app has been deprecated and the user must migrate"
+    },
+    "migrate": {
+        "message": "Migrate",
+        "description": "Button label to begin migrating this client to Electron"
     },
     "theyChangedTheTimer": {
         "message": "$name$ ha settato il timer a $time$.",
@@ -828,6 +840,10 @@
     "changedSinceVerifiedMultiple": {
         "message": "Il codice di sicurezza con più membri del gruppo è cambiato. Questo può voler dire che qualcuno sta cercando d'intercettare la tua comunicazione, oppure che hanno semplicemente reinstallato Signal.",
         "description": "Shown on confirmation dialog when user attempts to send a message"
+    },
+    "export": {
+        "message": "Choose directory",
+        "description": "Button to allow the user to export all data from app as part of migration process"
     },
     "submitDebugLog": {
         "message": "Invia log di debug",

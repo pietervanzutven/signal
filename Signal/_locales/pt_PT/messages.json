@@ -173,6 +173,10 @@
         "message": "Apagar mensagens",
         "description": "Menu item for deleting messages, title case."
     },
+    "confirmMigration": {
+        "message": "Iniciar processo de migração? Não vai poder enviar ou receber mensagens do Signal através desta aplicação enquanto a migração estiver a ser efectuada.",
+        "description": "Confirmation dialogue when beginning migration"
+    },
     "incomingError": {
         "message": "Erro a receber mensagem.",
         "description": ""
@@ -226,6 +230,14 @@
     "sent": {
         "message": "Enviada",
         "description": "Label for the time a message was sent"
+    },
+    "migrationWarning": {
+        "message": "O Signal Desktop para o Chrome foi descontinuado. Pretende migrar para o novo Signal Desktop agora?",
+        "description": "Warning notification that this version of the app has been deprecated and the user must migrate"
+    },
+    "migrate": {
+        "message": "Migrar",
+        "description": "Button label to begin migrating this client to Electron"
     },
     "theyChangedTheTimer": {
         "message": "$name$ definiu o temporizador para $time$",
@@ -593,6 +605,10 @@
         "message": "Abra o Signal no seu telemóvel e vá até Definições > Dispositivos associados. Pressione o botão para adicionar um novo dispositivo, de seguida scaneie o código QR apresentado.",
         "description": ""
     },
+    "migrationDisconnecting": {
+        "message": "A desconectar...",
+        "description": "Displayed while we wait for pending incoming messages to process"
+    },
     "invalidNumberError": {
         "message": "Número inválido",
         "description": "When a person inputs a number that is invalid"
@@ -824,6 +840,10 @@
     "changedSinceVerifiedMultiple": {
         "message": "Os números de segurança com vários membros do grupo mudaram desde a última vez que os verificou. Is poderá querer dizer que alguém está a tentar interceptar as suas comunicações ou simplesmente os membros do grupo reinstalaram o Signal.",
         "description": "Shown on confirmation dialog when user attempts to send a message"
+    },
+    "export": {
+        "message": "Escolher pasta",
+        "description": "Button to allow the user to export all data from app as part of migration process"
     },
     "submitDebugLog": {
         "message": "Enviar relatório de erros",

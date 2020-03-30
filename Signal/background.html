@@ -67,37 +67,38 @@
   </script>
   <script type='text/x-tmpl-mustache' id='two-column'>
     <div class='gutter'>
-        <div class='network-status-container'></div>
-        <div class='title-bar active' id='header'>
-          <div class='header-buttons right'>
-            <div class='vertical-align'>
-              <div class='global-menu menu'>
-                <button class='hamburger' alt='signal menu'></button>
-                <ul class='menu-list'>
-                    <li class='show-settings'>{{ settings }}</li>
-                    <li class='show-debug-log'>{{ submitDebugLog }}</li>
-                    <li class='open-release-notes'>{{ openReleaseNotes }}</li>
-                    <li class='open-forums'>{{ openForums }}</li>
-                    <li class='open-support-page'>{{ openSupportPage }}</li>
-                    <li class='open-new-bug-form'>{{ openNewBugForm }}</li>
-                    <li class='show-about'>{{ showAbout }}</li>
-                    <li class='restart-signal'>{{ restartSignal }}</li>
-                </ul>
-              </div>
+      <div class='network-status-container'></div>
+      <div class='title-bar active' id='header'>
+        <div class='header-buttons right'>
+          <div class='vertical-align'>
+            <div class='global-menu menu'>
+              <button class='hamburger' alt='signal menu'></button>
+              <ul class='menu-list'>
+                <li class='show-settings'>{{ settings }}</li>
+                <li class='show-debug-log'>{{ submitDebugLog }}</li>
+                <li class='migrate'>{{ migrate }}</li>
+                <li class='open-release-notes'>{{ openReleaseNotes }}</li>
+                <li class='open-forums'>{{ openForums }}</li>
+                <li class='open-support-page'>{{ openSupportPage }}</li>
+                <li class='open-new-bug-form'>{{ openNewBugForm }}</li>
+                <li class='show-about'>{{ showAbout }}</li>
+                <li class='restart-signal'>{{ restartSignal }}</li>
+              </ul>
             </div>
           </div>
-          <h1>Signal</h1>
-          <div class='tool-bar clearfix'>
-            <input type='search' class='search' placeholder='{{ searchForPeopleOrGroups }}' dir='auto'>
-            <span class='search-icon'></span>
-          </div>
         </div>
-        <div class='content'>
-          <div class='conversations inbox'></div>
-          <div class='conversations search-results hide'>
-            <div class='new-contact contact hide'></div>
-          </div>
+        <h1>Signal</h1>
+        <div class='tool-bar clearfix'>
+          <input type='search' class='search' placeholder='{{ searchForPeopleOrGroups }}' dir='auto'>
+          <span class='search-icon'></span>
         </div>
+      </div>
+      <div class='content'>
+        <div class='conversations inbox'></div>
+        <div class='conversations search-results hide'>
+          <div class='new-contact contact hide'></div>
+        </div>
+      </div>
     </div>
     <div class='conversation-stack'>
       <div class='conversation placeholder'>
@@ -675,6 +676,137 @@
     {{/action }}
   </script>
 
+  <script type='text/x-tmpl-mustache' id='migration-flow-template'>
+    {{#isStep1}}
+    <div id='step1' class='step'>
+      <div class='inner'>
+        <div class='step-body'>
+          <img class='banner-image' src='/images/icon_128.png'>
+          <div class='header'>{{ startHeader }}</div>
+          <div class='body-text-wide'>{{ startParagraph1 }}</div>
+          <div class='body-text-wide'>{{ startParagraph2 }}</div>
+          <div class='body-text-wide red-text'>{{ startParagraph3 }} </div>
+        </div>
+        <div class='nav'>
+          <div>
+            <a class='button start'>{{ startButton }}</a>
+          </div>
+          <div>
+            <a class='link cancel'>{{ cancelButton }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/isStep1}}
+    {{#isStep2}}
+    <div id='step2' class='step'>
+      <div class='inner'>
+        <div class='step-body'>
+          <span class='banner-icon folder-outline'></span>
+          <div class='header'>{{ chooseHeader }}</div>
+          <div class='body-text-wide'>{{ choose }}</div>
+        </div>
+        <div class='nav'>
+          <div>
+            <a class='button choose'>{{ chooseButton }}</a>
+          </div>
+          <div>
+            <a class='link cancel'>{{ cancelButton }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/isStep2}}
+    {{#isStep3}}
+    <div id='step3' class='step'>
+      <div class='inner'>
+        <div class='step-body'>
+          <span class='banner-icon export'></span>
+          <div class='header'>{{ exportHeader }}</div>
+        </div>
+        <div class='progress'>
+          <div class='bar-container'>
+            <div class='bar progress-bar progress-bar-striped active'></div>
+          </div>
+        </div>
+        <div class='nav'>
+          <div>
+            <a class='link submit-debug-log'>{{ debugLogButton }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/isStep3}}
+    {{#isStep4}}
+    <div id='step4' class='step'>
+      <div class='inner'>
+        <div class='step-body'>
+          <span class='banner-icon check-circle-outline'></span>
+          <div class='header'>{{ completeHeader }}</div>
+          <div class='body-text-wide center'>{{ completeIntro }}</div>
+          <div class='export-location'>{{ completeLocation }}</div>
+          <div class='body-text-wide'>{{ completeNextSteps }}</div>
+          <div class='body-text-wide'>{{ completeSignoff }}</div>
+        </div>
+        <div class='nav'>
+          <div>
+            <a class='button get-new-version' target='_blank' href='{{ downloadLocation }}'>{{ installButton }}</a>
+          </div>
+          <div>
+            <a class='link submit-debug-log'>{{ debugLogButton }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/isStep4}}
+    {{#isStep5}}
+    <div id='step5' class='step'>
+      <div class='inner'>
+        <div class='step-body'>
+          <span class='banner-icon check-circle-outline'></span>
+          <div class='header'>{{ uninstallHeader }}</div>
+          <div class='body-text-wide center'>
+            <ol class='uninstall-steps'>
+              <li>{{ uninstallStep5 }}</li>
+              <div class='export-location'>{{ completeLocation }}</div>
+              {{ #uninstallStep6 }}
+                <li><a href="https://support.signal.org/hc/en-us/articles/360007320191" target="_blank">{{ uninstallStep6 }}</a></li>
+              {{ /uninstallStep6 }}
+              <li>{{ uninstallStep1 }} <div class='url'>chrome://extensions/</div></li>
+              <li>{{ uninstallStep2 }}</li>
+              <li>{{ uninstallStep3 }}</li>
+              <li>{{ uninstallStep4 }}</li>
+            </ol>
+        </div>
+        <div class='nav'>
+          <div>
+            <a class='link submit-debug-log'>{{ debugLogButton }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/isStep5}}
+    {{#isError}}
+    <div id='error' class='step'>
+      <div class='inner error-dialog clearfix'>
+        <div class='step-body'>
+          <span class='banner-icon alert-outline'></span>
+          <div class='header'>{{ errorHeader }}</div>
+          <div class='body-text-wide'>{{ error }}</div>
+        </div>
+        <div class='nav'>
+          <div>
+            <a class='button choose'>{{ tryAgain }}</a>
+          </div>
+          <div>
+            <a class='link submit-debug-log'>{{ debugLogButton }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/isError}}
+  </script>
+
   <script type='text/x-tmpl-mustache' id='install-choice'>
     <div class='step'>
       <div class='inner'>
@@ -891,6 +1023,7 @@
   <script type='text/javascript' src='js/views/install_view.js'></script>
   <script type='text/javascript' src='js/views/banner_view.js'></script>
   <script type='text/javascript' src='js/views/identity_key_send_error_view.js'></script>
+  <script type='text/javascript' src='js/views/migration_view.js'></script>
   <script type="text/javascript" src="js/views/phone-input-view.js"></script>
   <script type='text/javascript' src='js/views/standalone_registration_view.js'></script>
   <script type='text/javascript' src='js/views/app_view.js'></script>

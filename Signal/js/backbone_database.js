@@ -3,36 +3,36 @@
     var BBDB = {};
     var BBDBchanged = false;
 
-    Windows.Storage.ApplicationData.current.localFolder.createFileAsync('BBDB.json', Windows.Storage.CreationCollisionOption.openIfExists).then(
-        function (file) {
-            Windows.Storage.FileIO.readTextAsync(file).then(
-                function (text) {
-                    if (text === '') {
-                        BBDB = {};
-                    } else {
-                        BBDB = parseJSON(text);
-                        Windows.Storage.ApplicationData.current.localSettings.values['number_id'] = BBDB.items.number_id.value;
-                        Windows.Storage.ApplicationData.current.localSettings.values['password'] = BBDB.items.password.value;
-                        BBDB.debug && delete BBDB['debug'];
-                    }
-
-                    Windows.Storage.ApplicationData.current.localFolder.getFilesAsync().then(
-                        function (files) {
-                            text = stringifyJSON(BBDB);
-                            files.forEach(
-                                function (file) {
-                                    var fileName = file.name;
-                                    if (file.fileType === '.dat' && !text.includes(fileName)) {
-                                        file.deleteAsync();
-                                    }
-                                }
-                            );
-                        }
-                    );
+    Windows.Storage.ApplicationData.current.localFolder.getFileAsync('BBDB_import.json').then(function (file) {
+        return readDatabase(file).then(() => file.deleteAsync());
+    }, () => { }).then(function () {
+        return Windows.Storage.ApplicationData.current.localFolder.createFileAsync('BBDB.json', Windows.Storage.CreationCollisionOption.openIfExists)
+    }).then(function (file) {
+        return readDatabase(file);
+    }).then(function () {
+        return Windows.Storage.ApplicationData.current.localFolder.getFilesAsync();
+    }).then(function (files) {
+        text = stringifyJSON(BBDB);
+        files.forEach(
+            function (file) {
+                var fileName = file.name;
+                if (file.fileType === '.dat' && !text.includes(fileName)) {
+                    file.deleteAsync();
                 }
-            );
-        }
-    );
+            }
+        );
+    });
+
+    function readDatabase(file) {
+        return Windows.Storage.FileIO.readTextAsync(file).then(function (text) {
+            if (text !== '') {
+                jQuery.extend(true, BBDB, parseJSON(text));
+                Windows.Storage.ApplicationData.current.localSettings.values['number_id'] = BBDB.items.number_id && BBDB.items.number_id.value;
+                Windows.Storage.ApplicationData.current.localSettings.values['password'] = BBDB.items.password && BBDB.items.password.value;
+                BBDB.debug && delete BBDB['debug'];
+            }
+        });
+    }
 
     setInterval(function () {
         if (BBDBchanged) {

@@ -173,6 +173,10 @@
         "message": "Üzenetek törlése",
         "description": "Menu item for deleting messages, title case."
     },
+    "confirmMigration": {
+        "message": "Kezdődhet a migrálási folyamat? Amíg tart, nem fogsz tudni Signal üzeneteket küldeni és fogadni az alkalmazással.",
+        "description": "Confirmation dialogue when beginning migration"
+    },
     "incomingError": {
         "message": "Nem sikerült kezelni a bejövő üzenetet.",
         "description": ""
@@ -226,6 +230,14 @@
     "sent": {
         "message": "Elküldve",
         "description": "Label for the time a message was sent"
+    },
+    "migrationWarning": {
+        "message": "A Signal Desktop Chrome alkalmazás fejlesztése leállt. Szeretnél migrálni az új Signal Desktop-ra?",
+        "description": "Warning notification that this version of the app has been deprecated and the user must migrate"
+    },
+    "migrate": {
+        "message": "Migrálás",
+        "description": "Button label to begin migrating this client to Electron"
     },
     "theyChangedTheTimer": {
         "message": "$name$ az időzítő értékét a következőre módosította: $time$.",
@@ -593,6 +605,10 @@
         "message": "Nyisd meg a Signal-t a telefonodon, majd menj a Beállítások > Párosított készülékek menüpontba! Koppints az eszköz hozzáadására, majd olvasd be a fenti kódot!",
         "description": ""
     },
+    "migrationDisconnecting": {
+        "message": "Lecsatlakozás...",
+        "description": "Displayed while we wait for pending incoming messages to process"
+    },
     "invalidNumberError": {
         "message": "Érvénytelen telefonszám",
         "description": "When a person inputs a number that is invalid"
@@ -824,6 +840,10 @@
     "changedSinceVerifiedMultiple": {
         "message": "Biztonsági azonosítód a csoport több tagjával is megváltozott az utolsó hitelesítés óta. Ez arra utalhat, hogy valaki megpróbálja lehallgatni a beszélgetéseteket, vagy valaki egyszerűen csak újratelepítette a Signal-t.",
         "description": "Shown on confirmation dialog when user attempts to send a message"
+    },
+    "export": {
+        "message": "Könyvtár kiválasztása",
+        "description": "Button to allow the user to export all data from app as part of migration process"
     },
     "submitDebugLog": {
         "message": "Fejlesztői naplófájl elküldése",

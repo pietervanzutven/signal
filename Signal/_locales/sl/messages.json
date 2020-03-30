@@ -173,6 +173,10 @@
         "message": "Izbriši sporočila",
         "description": "Menu item for deleting messages, title case."
     },
+    "confirmMigration": {
+        "message": "Začnem s selitvijo podatkov? Med postopkom ne boste mogli prejemati ali pošiljati sporočil Signal na tej napravi.",
+        "description": "Confirmation dialogue when beginning migration"
+    },
     "incomingError": {
         "message": "Napaka pri obdelavi dohodnega sporočila.",
         "description": ""
@@ -226,6 +230,14 @@
     "sent": {
         "message": "Poslano",
         "description": "Label for the time a message was sent"
+    },
+    "migrationWarning": {
+        "message": "Aplikacija Signal Desktop Chrome je opuščena. Bi se želeli preseliti na novi Signal Desktop?",
+        "description": "Warning notification that this version of the app has been deprecated and the user must migrate"
+    },
+    "migrate": {
+        "message": "Selitev podatkov",
+        "description": "Button label to begin migrating this client to Electron"
     },
     "theyChangedTheTimer": {
         "message": "Uporabnik $name$ je nastavil odštevanje na $time$.",
@@ -593,6 +605,10 @@
         "message": "Odprite aplikacijo Signal na svojem telefonu in pojdite na Nastavitve > Povezane naprave. Tapnite gumb za dodajanje nove naprave, nato skenirajte gornjo kodo.",
         "description": ""
     },
+    "migrationDisconnecting": {
+        "message": "Prekinjam...",
+        "description": "Displayed while we wait for pending incoming messages to process"
+    },
     "invalidNumberError": {
         "message": "Neveljavna številka",
         "description": "When a person inputs a number that is invalid"
@@ -824,6 +840,10 @@
     "changedSinceVerifiedMultiple": {
         "message": "Varnostna števila z večimi člani skupine so bila nedavno spremenjena. To lahko pomeni, da skuša nekdo prestrezati vašo komunikacijo ali pa, da so te osebe zgolj ponovno namestile aplikacijo Signal.",
         "description": "Shown on confirmation dialog when user attempts to send a message"
+    },
+    "export": {
+        "message": "Izberi mapo",
+        "description": "Button to allow the user to export all data from app as part of migration process"
     },
     "submitDebugLog": {
         "message": "Pošlji sistemsko zabeležbo",

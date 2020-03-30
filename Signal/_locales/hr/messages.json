@@ -605,6 +605,10 @@
         "message": "Otvorite Signal na svom telefonu i navigirajte do Postavke > Povezani uređaji. Dodirnite gumb za dodavanje novog uređaja, a zatim skenirajte gornji kod.",
         "description": ""
     },
+    "migrationDisconnecting": {
+        "message": "Disconnecting...",
+        "description": "Displayed while we wait for pending incoming messages to process"
+    },
     "invalidNumberError": {
         "message": "Invalid number",
         "description": "When a person inputs a number that is invalid"
@@ -836,6 +840,10 @@
     "changedSinceVerifiedMultiple": {
         "message": "Sigurnosni su se brojevi s više članova ove grupe promijenili od zadnje potvrde. Moguće je da netko pokušava presresti vašu komunikaciju ili su neki članovi grupe reinstalirali Signal.",
         "description": "Shown on confirmation dialog when user attempts to send a message"
+    },
+    "export": {
+        "message": "Odaberi direktorij",
+        "description": "Button to allow the user to export all data from app as part of migration process"
     },
     "submitDebugLog": {
         "message": "Podnesi zapis o neispravnosti",
