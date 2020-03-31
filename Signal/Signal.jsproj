@@ -55,6 +55,12 @@
     <DefaultLanguage>en</DefaultLanguage>
     <PackageCertificateKeyFile>Signal_TemporaryKey.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>A40EBB387EB3D56E4AD7CC948C738835E44A76B2</PackageCertificateThumbprint>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
+    <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="package.appxmanifest">
