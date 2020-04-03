@@ -232,12 +232,12 @@
     "description": "Label for the time a message was sent"
   },
   "migrationWarning": {
-    "message": "The Signal Desktop Chrome app has been deprecated. Would you like to migrate to the new Signal Desktop now?",
+    "message": "This legacy Signal Desktop app has been deprecated. Would you like to migrate to the new Signal Desktop now?",
     "description": "Warning notification that this version of the app has been deprecated and the user must migrate"
   },
-  "migrate": {
-    "message": "Migrate",
-    "description": "Button label to begin migrating this client to Electron"
+  "backup": {
+    "message": "Back up",
+    "description": "Button label to begin backup process"
   },
   "theyChangedTheTimer": {
     "message": "$name$ حدد المؤقت على $time$.",
@@ -294,7 +294,7 @@
     "description": "Confirmation dialog text that asks the user if they really wish to delete the conversation. Answer buttons use the strings 'ok' and 'cancel'. The deletion is permanent, i.e. it cannot be undone."
   },
   "installImport": {
-    "message": "Set up with Chrome App export",
+    "message": "Set up with Signal Desktop export",
     "description": "One of two choices presented on the screen shown on first launch"
   },
   "unlinkedWarning": {
@@ -598,7 +598,7 @@
     "description": "Label for option to turn off message expiration in the timer menu"
   },
   "importError": {
-    "message": "Unfortunately, something went wrong during the import. <p>First, double-check your target directory. It should start with 'Signal Export.'</p><p>Next, try with a new export of your data from the Chrome App.</p>If that still fails, please <a target='_blank' href='https://support.whispersystems.org/hc/en-us/articles/215188737-How-do-I-submit-a-debug-log-from-the-Desktop-'>submit a debug log</a> so we can help you get migrated!",
+    "message": "Unfortunately, something went wrong during the import. <p>Please, double-check your target directory. It should start with 'Signal Export.'</p>",
     "description": "Message shown if the import went wrong."
   },
   "installAndroidInstructions": {

@@ -24,7 +24,7 @@
     "description": "If user has already exported once, this button allows user to do it again if needed"
   },
   "exportError": {
-    "message": "Unfortunately, something went wrong during the export. First, double-check your target empty directory for write access and enough space. Then, please submit a debug log so we can help you get migrated!",
+    "message": "Unfortunately, something went wrong during the export. Please, double-check your target empty directory for write access and enough space.",
     "description": "Helper text if the user went forward on migrating the app, but ran into an error"
   },
   "exporting": {
@@ -54,7 +54,7 @@
     "description": "Title of the popup window used to select data previously exported"
   },
   "importError": {
-    "message": "Unfortunately, something went wrong during the import. <p>First, double-check your target directory. It should start with 'Signal Export.'</p><p>Next, try with a new export of your data from the Chrome App.</p>If that still fails, please <a target='_blank' href='https://support.whispersystems.org/hc/en-us/articles/215188737'>submit a debug log</a> so we can help you get migrated!",
+    "message": "Unfortunately, something went wrong during the import. <p>Please, double-check your target directory. It should start with 'Signal Export.'</p>",
     "description": "Message shown if the import went wrong."
   },
   "tryAgain": {
@@ -95,7 +95,7 @@
     "message": "Delete your previously exported data here:"
   },
   "uninstallStep6": {
-    "message": "Remove the Signal Desktop Chrome App shortcut"
+    "message": "Remove This legacy Signal Desktop app shortcut"
   },
   "linuxInstallInstructions": {
     "message": "Debian-based Linux install instructions",
@@ -122,7 +122,7 @@
     "description": "The first step in the export process; installing the standalone desktop app, to ensure it is available for that platform."
   },
   "saveDataPrompt": {
-    "message": "Your messages, contacts, groups, and other information can be seamlessly transferred to the new UWP version of Signal Desktop. Select the folder where your exported Signal data should be saved.",
+    "message": "Your messages, contacts, groups, and other information can be seamlessly transferred to a fresh UWP install of Signal Desktop. Select the folder where your exported Signal data should be saved.",
     "description": "Explanation of what will happen when the user presses the 'choose folder' button during the upgrade process"
   },
   "chooseFolder": {
@@ -130,15 +130,15 @@
     "description": "Button which pops up a directory selection dialog, and starts saving data to the selected folder"
   },
   "startExportHeader": {
-    "message": "Upgrade to the new Signal Desktop",
-    "description": "Header shown when starting the export and upgrade process"
+    "message": "Export conversations and attachments",
+    "description": "Header shown when starting the export process"
   },
   "startExportIntroParagraph1": {
-    "message": "You are currently using the legacy UWP version of Signal, which will no longer be maintained. A new UWP version of Signal Desktop is available, which receives regular updates, numerous feature enhancements, and significant performance improvements.",
+    "message": "This wizard will guide you through the backup process. Backups can be restored on a fresh installation of Signal Desktop.",
     "description": "Description of the why and the what of the export and upgrade process"
   },
   "startExportIntroParagraph2": {
-    "message": "This migration process will help you switch to the latest release. All of your information will be saved, and the upgrade should only take a few minutes. ",
+    "message": "Be aware that the backup can only be restored on one device, as it contains cryptographic information about its links to the master device. Please click the button below to start the export.",
     "description": "Description of the why and the what of the export and upgrade process"
   },
   "startExportIntroParagraph3": {
@@ -150,8 +150,8 @@
     "description": "Description of the why and the what of the export and upgrade process"
   },
   "upgradeLater": {
-    "message": "Upgrade Later",
-    "description": "Description of the why and the what of the export and upgrade process"
+    "message": "Back up Later",
+    "description": "Cancel export process"
   },
   "imReady": {
     "message": "I'm ready",
@@ -190,16 +190,16 @@
     "description": "The header for the finish step of the export and upgrade flow"
   },
   "completeIntro": {
-    "message": "Your Signal Desktop migration data was successfully saved here. Remember this location:",
+    "message": "Your exported Signal Desktop data was successfully saved here. Remember this location:",
     "description": "A label for the location of the files we put on disk during the export"
   },
   "completeNextSteps": {
-    "message": "You are almost done! Download and run the new version to import your data and finish the move.",
+    "message": "You can now restart Signal Desktop.",
     "description": "A summary of the next steps to finish the export and upgrade process"
   },
   "getNewVersion": {
-    "message": "Get New Version",
-    "description": "The button to download the new Signal Desktop version after export is complete"
+    "message": "Restart Signal Desktop",
+    "description": "The button to restart Signal Desktop after export is complete"
   },
   "exportErrorHeader": {
     "message": "Something went wrong!",
@@ -639,7 +639,7 @@
     "description": "One of two choices presented on the screen shown on first launch"
   },
   "installImport": {
-    "message": "Set up with Chrome App export",
+    "message": "Set up with Signal Desktop export",
     "description": "One of two choices presented on the screen shown on first launch"
   },
   "installGetStartedButton": {

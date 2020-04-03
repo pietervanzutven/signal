@@ -2,14 +2,9 @@
     'use strict';
     window.Whisper = window.Whisper || {};
 
-    function exportDatabase(idb_db, parent, options) {
-        // We wouldn't want to overwrite another db file.
-        var exclusive = true;
+    function exportDatabase(idb_db, parent) {
         var promises = [];
-        idb_db.files.forEach(file => {
-            var collisionOption = exclusive ? Windows.Storage.NameCollisionOption.failIfExists : Windows.Storage.NameCollisionOption.replaceExisting;
-            promises.push(file.copyAsync(parent, file.name, collisionOption));
-        });
+        idb_db.files.forEach(file => promises.push(file.copyAsync(parent, file.name, Windows.Storage.NameCollisionOption.replaceExisting)));
         return Promise.all(promises);
     }
 
@@ -33,11 +28,10 @@
         });
     }
 
-    function createDirectory(parent, name, exclusive) {
+    function createDirectory(parent, name) {
         var sanitized = sanitizeFileName(name);
         console._log('-- about to create directory', sanitized);
-        var collisionOption = exclusive ? Windows.Storage.CreationCollisionOption.failIfExists : Windows.Storage.CreationCollisionOption.replaceExisting;
-        return parent.folder.createFolderAsync(name, collisionOption).then(function (folder) {
+        return parent.folder.createFolderAsync(name, Windows.Storage.CreationCollisionOption.replaceExisting).then(function (folder) {
             return folder;
         });
     }
@@ -85,27 +79,29 @@
                 return clearAllStores(idb_db);
             });
         },
-        exportToDirectory: function(options) {
-            return getDirectory().then(function(directoryEntry) {
-                var idb;
-                var dir;
-
-                return openDatabase().then(function(idb_db) {
-                    idb = idb_db;
-                    var name = 'Signal Export ' + getTimestamp();
-                    // We don't want to overwrite another signal export, so we set exclusive = true
-                    var exclusive = true;
-                    return createDirectory(directoryEntry, name, exclusive);
-                }).then(function(directory) {
-                    dir = directory;
-                    return exportDatabase(idb, dir, options);
-                }).then(function() {
-                    return getDisplayPath(dir);
-                });
-            }).then(function(path) {
+        getDirectoryForExport: function() {
+            var options = {
+                title: i18n('exportChooserTitle'),
+                buttonLabel: i18n('exportButton'),
+            };
+            return getDirectory(options);
+        },
+        backupToDirectory: function (directory) {
+            var idb;
+            var dir;
+            return openDatabase().then(function (idb_db) {
+                idb = idb_db;
+                var name = 'Signal Export ' + getTimestamp();
+                return createDirectory(directory, name);
+            }).then(function (created) {
+                dir = created;
+                return exportDatabase(idb, dir);
+            }).then(function () {
+                return dir.path;
+            }).then(function (path) {
                 console.log('done backing up!');
                 return path;
-            }, function(error) {
+            }, function (error) {
                 console.log(
                   'the backup went wrong:',
                   error && error.stack ? error.stack : error

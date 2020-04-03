@@ -20,7 +20,7 @@
   <title>Signal</title>
   <link href='images/icon_128.png' rel='shortcut icon'>
   <link href="stylesheets/manifest.css" rel="stylesheet" type="text/css" />
-  <script type='text/x-tmpl-mustache' id='app-migration-screen'>
+  <script type='text/x-tmpl-mustache' id='app-import-screen'>
     <div class='content'>
       <img src='images/icon_128.png'>
       {{ ^hideProgress }}
@@ -76,7 +76,7 @@
               <ul class='menu-list'>
                 <li class='show-settings'>{{ settings }}</li>
                 <li class='show-debug-log'>{{ submitDebugLog }}</li>
-                <li class='migrate'>{{ migrate }}</li>
+                <li class='backup'>{{ backup }}</li>
                 <li class='open-release-notes'>{{ openReleaseNotes }}</li>
                 <li class='open-forums'>{{ openForums }}</li>
                 <li class='open-support-page'>{{ openSupportPage }}</li>
@@ -676,7 +676,7 @@
     {{/action }}
   </script>
 
-  <script type='text/x-tmpl-mustache' id='migration-flow-template'>
+  <script type='text/x-tmpl-mustache' id='export-flow-template'>
     {{#isStep1}}
     <div id='step1' class='step'>
       <div class='inner'>
@@ -750,7 +750,7 @@
         </div>
         <div class='nav'>
           <div>
-            <a class='button get-new-version' target='_blank' href='{{ downloadLocation }}'>{{ installButton }}</a>
+            <a class='button restart' href='#'>{{ installButton }}</a>
           </div>
           <div>
             <a class='link submit-debug-log'>{{ debugLogButton }}</a>
@@ -759,33 +759,6 @@
       </div>
     </div>
     {{/isStep4}}
-    {{#isStep5}}
-    <div id='step5' class='step'>
-      <div class='inner'>
-        <div class='step-body'>
-          <span class='banner-icon check-circle-outline'></span>
-          <div class='header'>{{ uninstallHeader }}</div>
-          <div class='body-text-wide center'>
-            <ol class='uninstall-steps'>
-              <li>{{ uninstallStep5 }}</li>
-              <div class='export-location'>{{ completeLocation }}</div>
-              {{ #uninstallStep6 }}
-                <li><a href="https://support.signal.org/hc/en-us/articles/360007320191" target="_blank">{{ uninstallStep6 }}</a></li>
-              {{ /uninstallStep6 }}
-              <li>{{ uninstallStep1 }} <div class='url'>chrome://extensions/</div></li>
-              <li>{{ uninstallStep2 }}</li>
-              <li>{{ uninstallStep3 }}</li>
-              <li>{{ uninstallStep4 }}</li>
-            </ol>
-        </div>
-        <div class='nav'>
-          <div>
-            <a class='link submit-debug-log'>{{ debugLogButton }}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/isStep5}}
     {{#isError}}
     <div id='error' class='step'>
       <div class='inner error-dialog clearfix'>
@@ -1023,7 +996,7 @@
   <script type='text/javascript' src='js/views/install_view.js'></script>
   <script type='text/javascript' src='js/views/banner_view.js'></script>
   <script type='text/javascript' src='js/views/identity_key_send_error_view.js'></script>
-  <script type='text/javascript' src='js/views/migration_view.js'></script>
+  <script type='text/javascript' src='js/views/export_view.js'></script>
   <script type="text/javascript" src="js/views/phone-input-view.js"></script>
   <script type='text/javascript' src='js/views/standalone_registration_view.js'></script>
   <script type='text/javascript' src='js/views/app_view.js'></script>

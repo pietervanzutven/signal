@@ -148,7 +148,7 @@
             selectAContact          : i18n('selectAContact'),
             searchForPeopleOrGroups : i18n('searchForPeopleOrGroups'),
             submitDebugLog          : i18n('submitDebugLog'),
-            migrate                 : i18n('migrate'),
+            backup                  : i18n('backup'),
             settings                : i18n('settings'),
             openReleaseNotes        : i18n('goToReleaseNotes'),
             openForums              : i18n('goToForums'),
@@ -163,7 +163,7 @@
             'click .conversation': 'focusConversation',
             'click .global-menu .hamburger': 'toggleMenu',
             'click .show-debug-log': 'showDebugLog',
-            'click .migrate': 'showUpgradeScreen',
+            'click .backup': 'showBackupScreen',
             'click .show-settings': 'showSettings',
             'click .open-release-notes': 'openReleaseNotes',
             'click .open-forums': 'openForums',
@@ -175,15 +175,15 @@
             'click .restart-signal': window.restart,
             'show .lightbox': 'showLightbox',
         },
-        showUpgradeScreen: function() {
-            if (this.migrationScreen) {
-                this.migrationScreen.remove();
-                this.migrationScreen = null;
+        showBackupScreen: function() {
+            if (this.backupScreen) {
+                this.backupScreen.remove();
+                this.backupScreen = null;
             }
 
-            this.migrationScreen = new Whisper.MigrationView();
-            this.migrationScreen.render();
-            this.migrationScreen.$el.prependTo(this.el);
+            this.backupScreen = new Whisper.ExportView();
+            this.backupScreen.render();
+            this.backupScreen.$el.prependTo(this.el);
         },
         startConnectionListener: function() {
             this.interval = setInterval(function() {

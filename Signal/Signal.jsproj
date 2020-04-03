@@ -292,7 +292,7 @@
     <Content Include="js\views\message_detail_view.js" />
     <Content Include="js\views\message_list_view.js" />
     <Content Include="js\views\message_view.js" />
-    <Content Include="js\views\migration_view.js" />
+    <Content Include="js\views\export_view.js" />
     <Content Include="js\views\network_status_view.js" />
     <Content Include="js\views\new_group_update_view.js" />
     <Content Include="js\views\phone-input-view.js" />

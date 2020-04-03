@@ -18,8 +18,7 @@
     },
     render_attributes: function() {
       var attributes = this._super.render_attributes.call(this);
-      // TODO: i18n
-      attributes.header = 'Debian-based Linux install instructions';
+      attributes.header = i18n('linuxInstallInstructions');
       return attributes;
     },
     ok: function(event) {
@@ -45,41 +44,39 @@
     CHOOSE: 2,
     EXPORTING: 3,
     COMPLETE: 4,
-  };
-
-  var GET_YAML_PATH = /^path: (.+)$/m;
-  var BASE_PATH = 'https://updates.signal.org/desktop/';
+    UNINSTALL: 5,
+  };    
 
   function getCacheBuster() {
     return Math.random().toString(36).substring(7);
   }
 
-  Whisper.Migration = {
+  Whisper.Export = {
     isComplete: function() {
-      return storage.get('migrationState') === State.COMPLETE;
+      return storage.get('backupState') === State.COMPLETE;
     },
     inProgress: function() {
-      return storage.get('migrationState') > 0 || this.everComplete();
+      return storage.get('backupState') > 0 || this.everComplete();
     },
     markComplete: function(target) {
-      storage.put('migrationState', State.COMPLETE);
-      storage.put('migrationEverCompleted', true);
+      storage.put('backupState', State.COMPLETE);
+      storage.put('backupEverCompleted', true);
       if (target) {
-        storage.put('migrationStorageLocation', target);
+        storage.put('backupStorageLocation', target);
       }
     },
     cancel: function() {
       return Promise.all([
-        storage.remove('migrationState'),
-        storage.remove('migrationEverCompleted'),
-        storage.remove('migrationStorageLocation')
+        storage.remove('backupState'),
+        storage.remove('backupEverCompleted'),
+        storage.remove('backupStorageLocation')
       ]);
     },
     beginExport: function() {
-      storage.put('migrationState', State.EXPORTING);
+      storage.put('backupState', State.EXPORTING);
 
       var everAttempted = this.everAttempted();
-      storage.put('migrationEverAttempted', true);
+      storage.put('backupEverAttempted', true);
 
       // If this is the second time the user is attempting to export, we'll exclude
       //   client-specific encryption configuration. Yes, this will fire if the user
@@ -87,34 +84,34 @@
       //   it will prevent the horrible encryption errors which result from import to the
       //   same client config more than once. They can import the same message history
       //   more than once, so we preserve that.
-      return Whisper.Backup.exportToDirectory({
-        excludeClientConfig: everAttempted,
+      return Whisper.Backup.getDirectoryForExport().then(function(directory) {
+          return Whisper.Backup.backupToDirectory(directory);
       });
     },
     init: function() {
-      storage.put('migrationState', State.DISCONNECTING);
+      storage.put('backupState', State.DISCONNECTING);
       Whisper.events.trigger('start-shutdown');
     },
     everAttempted: function() {
-      return Boolean(storage.get('migrationEverAttempted'));
+      return Boolean(storage.get('backupEverAttempted'));
     },
     everComplete: function() {
-      return Boolean(storage.get('migrationEverCompleted'));
+      return Boolean(storage.get('backupEverCompleted'));
     },
     getExportLocation: function() {
-      return storage.get('migrationStorageLocation');
+      return storage.get('backupStorageLocation');
     }
   };
 
-  Whisper.MigrationView = Whisper.View.extend({
-    templateName: 'migration-flow-template',
-    className: 'migration-flow',
+  Whisper.ExportView = Whisper.View.extend({
+    templateName: 'export-flow-template',
+    className: 'export-flow',
     events: {
       'click .start': 'onClickStart',
       'click .choose': 'onClickChoose',
       'click .submit-debug-log': 'onClickDebugLog',
       'click .cancel': 'onClickCancel',
-      'click .get-new-version': 'onGetNewVersion',
+      'click .restart': window.restart
     },
     initialize: function() {
       this.step = STEPS.INTRODUCTION;
@@ -125,20 +122,11 @@
       Whisper.events.once('shutdown-complete', function() {
         this.shutdownComplete = true;
       }.bind(this));
-      Whisper.Migration.init();
+      Whisper.Export.init();
 
-      if (!Whisper.Migration.inProgress()) {
+      if (!Whisper.Export.inProgress()) {
         this.render();
         return;
-      }
-
-      // We could be wedged in an 'in progress' state, the migration was started then the
-      //   app restarted in the middle.
-      if (Whisper.Migration.everComplete()) {
-        // If the user has ever successfully exported before, we'll show the 'finished'
-        //   screen with the 'Export again' button.
-        this.step = STEPS.COMPLETE;
-        Whisper.Migration.markComplete();
       }
 
       this.render();
@@ -154,8 +142,7 @@
         };
       }
 
-      var location = Whisper.Migration.getExportLocation() || i18n('selectedLocation');
-
+      var location = Whisper.Export.getExportLocation() || i18n('selectedLocation');
       var downloadLocation = 'https://github.com/pietervanzutven/signal/releases';
 
       return {
@@ -187,16 +174,6 @@
         installButton: i18n('getNewVersion'),
       };
     },
-    onGetNewVersion: function(e) {
-      var userAgent = navigator.userAgent.toLowerCase();
-      if (userAgent.indexOf('linux') !== -1) {
-        e.preventDefault();
-
-        var dialog = this.linuxInstructionsView = new LinuxInstructionsView({});
-        this.$el.prepend(dialog.el);
-        dialog.focusOk();
-      }
-    },
     onClickStart: function() {
       this.selectStep(STEPS.CHOOSE);
     },
@@ -210,23 +187,8 @@
         return;
       }
 
-      if (!Whisper.Migration.everComplete()) {
-        return this.beginMigration();
-      }
+      return this.beginExport();
 
-      // Different behavior for the user's second time through
-      this.selectStep(STEPS.EXPORTING);
-      Whisper.Migration.beginExport()
-        .then(this.completeMigration.bind(this))
-        .catch(function(error) {
-          if (!error || error.name !== 'ChooseError') {
-            this.error = error || new Error('in case we reject() null!');
-          }
-          // Even if we run into an error, we call this complete because the user has
-          //   completed the process once before.
-          Whisper.Migration.markComplete();
-          this.selectStep(STEPS.COMPLETE);
-        }.bind(this));
       this.render();
     },
     onClickCancel: function() {
@@ -237,7 +199,7 @@
     },
 
     cancel: function() {
-      Whisper.Migration.cancel().then(function() {
+      Whisper.Export.cancel().then(function() {
         console.log('Restarting now');
         window.location.reload();
       });
@@ -259,15 +221,15 @@
       }
     },
 
-    beginMigration: function() {
+    beginExport: function() {
       this.selectStep(STEPS.EXPORTING);
 
-      Whisper.Migration.beginExport()
-        .then(this.completeMigration.bind(this))
+      Whisper.Export.beginExport()
+        .then(this.completeExport.bind(this))
         .catch(function(error) {
           // We ensure that a restart of the app acts as if the user never tried
           //   to export.
-          Whisper.Migration.cancel();
+          Whisper.Export.cancel();
 
           // We special-case the error we get when the user cancels out of the
           //   filesystem choice dialog: it's not shown an error.
@@ -280,9 +242,9 @@
           this.selectStep(STEPS.CHOOSE);
         }.bind(this));
     },
-    completeMigration: function(target) {
+    completeExport: function(target) {
       // This will prevent connection to the server on future app launches
-      Whisper.Migration.markComplete(target);
+      Whisper.Export.markComplete(target);
       this.selectStep(STEPS.COMPLETE);
     },
   });

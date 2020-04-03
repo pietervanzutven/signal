@@ -235,9 +235,9 @@
     "message": "Signal Desktop für Chrome wird nicht mehr unterstützt. Möchtest du jetzt auf das neue Signal Desktop migrieren?",
     "description": "Warning notification that this version of the app has been deprecated and the user must migrate"
   },
-  "migrate": {
-    "message": "Migrieren",
-    "description": "Button label to begin migrating this client to Electron"
+  "backup": {
+    "message": "Back up",
+    "description": "Button label to begin backup process"
   },
   "theyChangedTheTimer": {
     "message": "$name$ hat die Zeitbegrenzung auf $time$ festgelegt.",

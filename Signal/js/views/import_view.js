@@ -39,7 +39,7 @@
   };
 
   Whisper.ImportView = Whisper.View.extend({
-    templateName: 'app-migration-screen',
+    templateName: 'app-import-screen',
     className: 'app-loading-screen',
     events: {
       'click .import': 'onImport',
@@ -132,11 +132,11 @@
         return storage.fetch();
       }).then(function() {
         return Promise.all([
-          // Clearing any migration-related state inherited from the Chrome App
-          storage.remove('migrationState'),
-          storage.remove('migrationEnabled'),
-          storage.remove('migrationEverCompleted'),
-          storage.remove('migrationStorageLocation'),
+          // Clearing any backup-related state inherited from the Chrome App
+          storage.remove('backupState'),
+          storage.remove('backupEnabled'),
+          storage.remove('backupEverCompleted'),
+          storage.remove('backupStorageLocation'),
 
           Whisper.Import.saveLocation(directory.folder.path),
           Whisper.Import.complete()
