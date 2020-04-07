@@ -2356,6 +2356,9 @@ span.status {
 .android .conversation-header.grey, .android .bubble.grey {
   background-color: #999999; }
 
+.android .conversation-header.brown, .android .bubble.brown {
+  background-color: #746C53; }
+
 .android .conversation-header.default, .android .bubble.default {
   background-color: #2090ea; }
 
@@ -2627,6 +2630,8 @@ span.status {
     background-color: #455A64; }
   .android-dark .avatar.grey, .android-dark .conversation-header.grey, .android-dark .bubble.grey {
     background-color: #666666; }
+  .android-dark .avatar.brown, .android-dark .conversation-header.brown, .android-dark .bubble.brown {
+    background-color: #58513C; }
   .android-dark .avatar.default, .android-dark .conversation-header.default, .android-dark .bubble.default {
     background-color: #2090ea; }
   .android-dark .message-list .advisory .content {
