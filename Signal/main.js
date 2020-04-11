@@ -87,7 +87,7 @@ ipc.on('set-badge-count', function (event, count) {
 });
 
 ipc.on('draw-attention', function () {
-    Windows.System.Launcher.launchUriAsync(new Uri('signal://'));
+    Windows.System.Launcher.launchUriAsync(new Windows.Foundation.Uri('signal://'));
 });
 
 ipc.on('restart', function () {
