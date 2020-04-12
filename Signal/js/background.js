@@ -640,7 +640,7 @@
             read_at   : read_at
         });
 
-        receipt.on('remove', ev.confirm);
+        ev.confirm();
 
         // Calling this directly so we can wait for completion
         return Whisper.ReadReceipts.onReceipt(receipt);
