@@ -38395,7 +38395,7 @@ var TextSecureServer = (function() {
                 ev.code = code;
                 ev.reason = reason;
                 this.dispatchEvent(ev);
-            }.bind(this), 10000);
+            }.bind(this), 1000);
         };
     };
     window.WebSocketResource.prototype = new textsecure.EventTarget();
@@ -38479,6 +38479,10 @@ MessageReceiver.prototype = new textsecure.EventTarget();
 MessageReceiver.prototype.extend({
     constructor: MessageReceiver,
     connect: function() {
+        if (this.calledClose) {
+            return;
+        }
+
         this.hasConnected = true;
 
         if (this.socket && this.socket.readyState !== WebSocket.CLOSED) {
@@ -38528,8 +38532,6 @@ MessageReceiver.prototype.extend({
         if (this.wsr) {
             this.wsr.close(3000, 'called close');
         }
-
-        this.shutdown();
 
         return this.drain();
     },

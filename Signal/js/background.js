@@ -192,6 +192,10 @@
             disconnectTimer = null;
             return;
         }
+        if (disconnectTimer) {
+            clearTimeout(disconnectTimer);
+            disconnectTimer = null;
+        }
 
         connect();
     }
