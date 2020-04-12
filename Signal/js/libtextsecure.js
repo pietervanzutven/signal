@@ -37857,9 +37857,9 @@ var TextSecureServer = (function() {
                 urlParameters       : '/' + id,
                 responseType        : 'json',
                 validateResponse    : {location: 'string'},
-                timeout             : 0
             }).then(function(response) {
                 return ajax(response.location, {
+                    timeout     : 0,
                     type        : "GET",
                     responseType: "arraybuffer",
                     contentType : "application/octet-stream"
@@ -37871,9 +37871,9 @@ var TextSecureServer = (function() {
                 call         : 'attachment',
                 httpType     : 'GET',
                 responseType : 'json',
-                timeout      : 0
             }).then(function(response) {
                 return ajax(response.location, {
+                    timeout     : 0,
                     type        : "PUT",
                     contentType : "application/octet-stream",
                     data        : encryptedBin,
