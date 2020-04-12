@@ -49,6 +49,16 @@
     "message": "Os dispositivos Android receberão apenas os primeiros 2000 caracteres desta mensagem.",
     "description": "Warning that long messages could not get received completely by Android clients."
   },
+  "leftTheGroup": {
+    "message": "$name$ deixou o grupo.",
+    "description": "Shown in the conversation history when someone leaves the group",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Bob"
+      }
+    }
+  },
   "youChangedTheTimer": {
     "message": "Definiu o temporizador para $time$",
     "description": "Message displayed when you change the message expiration timer in a conversation.",
@@ -74,6 +84,10 @@
   "timestamp_m": {
     "message": "1 minuto",
     "description": "Brief timestamp for messages sent about one minute ago. Displayed in the conversation list and message bubble."
+  },
+  "debugLog": {
+    "message": "Relatório de Erros",
+    "description": "View menu item to open the debug log, capitalized"
   },
   "gotIt": {
     "message": "Ok!",
@@ -121,6 +135,10 @@
     "message": "Clique para guardar",
     "description": "Hover text for attachment filenames"
   },
+  "fileABug": {
+    "message": "Enviar um bug",
+    "description": "Item under the Help menu, takes you to GitHub new issue form"
+  },
   "messagesBelow": {
     "message": "Novas mensagens abaixo",
     "description": "Alt text for button to take user down to bottom of conversation with more than one message out of screen"
@@ -136,6 +154,10 @@
   "offline": {
     "message": "Desligado",
     "description": "Displayed when the desktop client has no network connection."
+  },
+  "hideMenuBar": {
+    "message": "Ocultar menu",
+    "description": "Label text for menu bar visibility setting"
   },
   "welcomeToSignal": {
     "message": "Bem-vindo ao Signal",
@@ -173,10 +195,6 @@
     "message": "Apagar mensagens",
     "description": "Menu item for deleting messages, title case."
   },
-  "confirmMigration": {
-    "message": "Iniciar processo de migração? Não vai poder enviar ou receber mensagens do Signal através desta aplicação enquanto a migração estiver a ser efectuada.",
-    "description": "Confirmation dialogue when beginning migration"
-  },
   "incomingError": {
     "message": "Erro a receber mensagem.",
     "description": ""
@@ -196,6 +214,10 @@
   "exportError": {
     "message": "Infelizmente, algo falhou durante a exportação. Primeiro, verifique que a pasta de destino tem acesso de escrita e espaço suficiente. Depois, por favor envie um debug log para que o(a) possamos ajudar a migrar!",
     "description": "Helper text if the user went forward on migrating the app, but ran into an error"
+  },
+  "aboutSignalDesktop": {
+    "message": "Acerca de Signal Desktop",
+    "description": "Item under the Help menu, which opens a small about window"
   },
   "installConnecting": {
     "message": "A ligar...",
@@ -230,10 +252,6 @@
   "sent": {
     "message": "Enviada",
     "description": "Label for the time a message was sent"
-  },
-  "migrationWarning": {
-    "message": "O Signal Desktop para o Chrome foi descontinuado. Pretende migrar para o novo Signal Desktop agora?",
-    "description": "Warning notification that this version of the app has been deprecated and the user must migrate"
   },
   "backup": {
     "message": "Back up",
@@ -294,11 +312,11 @@
     "description": "Confirmation dialog text that asks the user if they really wish to delete the conversation. Answer buttons use the strings 'ok' and 'cancel'. The deletion is permanent, i.e. it cannot be undone."
   },
   "installImport": {
-    "message": "Configurar com dados exportados da Chrome App. ",
+    "message": "Configurar com dados exportados",
     "description": "One of two choices presented on the screen shown on first launch"
   },
   "unlinkedWarning": {
-    "message": "Para continuar a comunicar volte a associar o Signal Desktop ao seu telemóvel.",
+    "message": "Para continuar a comunicar, volte a associar o Signal Desktop ao seu telemóvel.",
     "description": ""
   },
   "debugLogExplanation": {
@@ -344,7 +362,7 @@
     "description": ""
   },
   "installFollowUs": {
-    "message": "<a $a_params$> Siga-nos </a> para actualizações sobre o suporte multi-dispositivo para iOS.",
+    "message": "<a $a_params$> Siga-nos </a> para receber notícias sobre o suporte multi-dispositivo para iOS.",
     "description": "",
     "placeholders": {
       "a_params": {
@@ -393,6 +411,20 @@
       }
     }
   },
+  "joinedTheGroup": {
+    "message": "$names$ juntou-se ao grupo.",
+    "description": "Shown in the conversation history when people join the group",
+    "placeholders": {
+      "names": {
+        "content": "$1",
+        "example": "Alice, Bob"
+      }
+    }
+  },
+  "goToForums": {
+    "message": "Ir aos fóruns",
+    "description": "Item under the Help menu, takes you to the forums"
+  },
   "installSyncingGroupsAndContacts": {
     "message": "A sincronizar grupos e contactos",
     "description": ""
@@ -418,6 +450,10 @@
         "example": "5"
       }
     }
+  },
+  "speech": {
+    "message": "Fala",
+    "description": "Item under the Edit menu, with 'start/stop speaking' items below it"
   },
   "changedSinceVerified": {
     "message": "O número de segurança com $name$ mudou desde que o verificou. Isto poderá querer dizer que alguém está a tentar interceptar as suas comunicações ou que $name$ simplesmente reinstalou o Signal.",
@@ -458,6 +494,10 @@
   "installTagline": {
     "message": "A privacidade é possível. O Signal torna-a fácil.",
     "description": "Tagline displayed under 'installWelcome' string on the install page"
+  },
+  "show": {
+    "message": "Mostrar",
+    "description": "Command under Window menu, to show the window"
   },
   "audioNotificationDescription": {
     "message": "Reproduzir notificação áudio",
@@ -598,23 +638,19 @@
     "description": "Label for option to turn off message expiration in the timer menu"
   },
   "importError": {
-    "message": "Infelizmente algo correu mal durante ao importar. <p>Verifique a sua pasta de destino. Esta deverá começar por \"Signal Export\"</p>",
+    "message": "Infelizmente algo correu mal enquanto se procedia à importação. <p>Por favor, verifique a sua pasta de destino. Deverá começar por 'Signal Export'</p>",
     "description": "Message shown if the import went wrong."
   },
   "installAndroidInstructions": {
     "message": "Abra o Signal no seu telemóvel e vá até Definições > Dispositivos associados. Pressione o botão para adicionar um novo dispositivo, de seguida scaneie o código QR apresentado.",
     "description": ""
   },
-  "migrationDisconnecting": {
-    "message": "A desconectar...",
-    "description": "Displayed while we wait for pending incoming messages to process"
-  },
   "invalidNumberError": {
     "message": "Número inválido",
     "description": "When a person inputs a number that is invalid"
   },
   "importComplete": {
-    "message": "Os seus dados foram carregados com sucesso. O próximo passo é reiniciar a aplicação.",
+    "message": "Os seus dados foram carregados com sucesso. O próximo passo é reiniciar a aplicação!",
     "description": "Shown when the import is complete."
   },
   "installWelcome": {
@@ -664,7 +700,7 @@
     "description": "Brief message shown when trying to message a blocked number"
   },
   "installIHaveSignalButton": {
-    "message": "Eu tenho o Signal para o Android.",
+    "message": "Tenho o Signal para Android",
     "description": "Button for the user to confirm that they have Signal for Android"
   },
   "unnamedFile": {
@@ -698,7 +734,7 @@
     "description": ""
   },
   "relink": {
-    "message": "Voltar a Associar",
+    "message": "Voltar a associar",
     "description": ""
   },
   "timerOption_1_week_abbreviated": {
@@ -736,6 +772,10 @@
   "installLinkingWithNumber": {
     "message": "Associado com ",
     "description": "Text displayed before the phone number that the user is in the process of linking with"
+  },
+  "goToSupportPage": {
+    "message": "Ir à página de apoio",
+    "description": "Item under the Help menu, takes you to the support page"
   },
   "groupMembers": {
     "message": "Membros do grupo",
@@ -775,6 +815,10 @@
       }
     }
   },
+  "updatedTheGroup": {
+    "message": "Actualizou o grupo.",
+    "description": "Shown in the conversation history when someone updates the group"
+  },
   "identityKeyErrorOnSend": {
     "message": "O número de segurança com $name$ mudou. Isto poderá querer dizer que alguém está a tentar interceptar as suas comunicações ou que $name$ simplesmente reinstalou o Signal. Poderá querer verificar os seus números de segurança com o seu contacto.",
     "description": "Shown when user clicks on a failed recipient in the message detail view after an identity key change",
@@ -794,8 +838,12 @@
     "description": "Very short format indicating current timer setting in the conversation header"
   },
   "installFinalButton": {
-    "message": "Parece correcto",
+    "message": "Parece tudo bem",
     "description": "The final button for the install process, after the user has entered a name for their device"
+  },
+  "goToReleaseNotes": {
+    "message": "Ir para as notas de lançamento.",
+    "description": ""
   },
   "messageDetail": {
     "message": "Detalhes da mensagem",
@@ -841,10 +889,6 @@
     "message": "Os números de segurança com vários membros do grupo mudaram desde a última vez que os verificou. Is poderá querer dizer que alguém está a tentar interceptar as suas comunicações ou simplesmente os membros do grupo reinstalaram o Signal.",
     "description": "Shown on confirmation dialog when user attempts to send a message"
   },
-  "export": {
-    "message": "Escolher pasta",
-    "description": "Button to allow the user to export all data from app as part of migration process"
-  },
   "submitDebugLog": {
     "message": "Enviar relatório de erros",
     "description": "Menu item and header text for debug log modal, title case."
@@ -852,6 +896,16 @@
   "error": {
     "message": "Erro",
     "description": ""
+  },
+  "titleIsNow": {
+    "message": "O título agora é '$name$'.",
+    "description": "Shown in the conversation history when someone changes the title of the group",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Book Club"
+      }
+    }
   },
   "changedRightAfterVerify": {
     "message": "O número de segurança que está a tentar verificar mudou. Por favor, reveja o seu novo número de segurança com $name$. Lembre-se, esta alteração poderá significar que alguém está a tentar interceptar as suas comunicações ou que $name$ simplesmente reinstalou o Signal.",

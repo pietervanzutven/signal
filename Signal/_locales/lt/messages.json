@@ -173,10 +173,6 @@
     "message": "Ištrinti žinutes",
     "description": "Menu item for deleting messages, title case."
   },
-  "confirmMigration": {
-    "message": "Pradėti perkėlimo procesą? Perkėlimo eigoje jūs negalėsite iš šios programos siųsti ar gauti Signal žinučių.",
-    "description": "Confirmation dialogue when beginning migration"
-  },
   "incomingError": {
     "message": "Klaida, apdorojant gaunamą žinutę.",
     "description": ""
@@ -230,10 +226,6 @@
   "sent": {
     "message": "Išsiųsta",
     "description": "Label for the time a message was sent"
-  },
-  "migrationWarning": {
-    "message": "Signal darbalaukiui Chrome programa buvo panaikinta. Ar norėtumėte dabar persikelti į naująją Signal programą darbalaukiui?",
-    "description": "Warning notification that this version of the app has been deprecated and the user must migrate"
   },
   "backup": {
     "message": "Back up",
@@ -294,7 +286,7 @@
     "description": "Confirmation dialog text that asks the user if they really wish to delete the conversation. Answer buttons use the strings 'ok' and 'cancel'. The deletion is permanent, i.e. it cannot be undone."
   },
   "installImport": {
-    "message": "Set up with UWP Signal Desktop export",
+    "message": "Set up with exported data",
     "description": "One of two choices presented on the screen shown on first launch"
   },
   "unlinkedWarning": {
@@ -605,10 +597,6 @@
     "message": "Atverkite Signal savo telefone ir naršykite į Nustatymai > Susieti įrenginiai. Bakstelėkite mygtuką, kad pridėtumėte naują įrenginį, o tuomet nuskenuokite aukščiau esantį kodą.",
     "description": ""
   },
-  "migrationDisconnecting": {
-    "message": "Atsijungiama...",
-    "description": "Displayed while we wait for pending incoming messages to process"
-  },
   "invalidNumberError": {
     "message": "Neteisingas numeris",
     "description": "When a person inputs a number that is invalid"
@@ -840,10 +828,6 @@
   "changedSinceVerifiedMultiple": {
     "message": "Jūsų saugumo numeriai su keliais grupės dalyviais nuo paskutinio patvirtinimo pasikeitė. Tai gali reikšti, kad kažkas bando perimti jūsų susirašinėjimą arba, kad šie asmenys, tiesiog, iš naujo įdiegė Signal.",
     "description": "Shown on confirmation dialog when user attempts to send a message"
-  },
-  "export": {
-    "message": "Pasirinkti katalogą",
-    "description": "Button to allow the user to export all data from app as part of migration process"
   },
   "submitDebugLog": {
     "message": "Pateikti derinimo žurnalą",

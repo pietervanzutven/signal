@@ -173,10 +173,6 @@
     "message": "Berichten verwijderen",
     "description": "Menu item for deleting messages, title case."
   },
-  "confirmMigration": {
-    "message": "Migratieprocedure beginnen? Tijdens de procedure zal je geen Signal-berichten kunnen verzenden of ontvangen in deze toepassing.",
-    "description": "Confirmation dialogue when beginning migration"
-  },
   "incomingError": {
     "message": "Fout bij verwerken van inkomend bericht.",
     "description": ""
@@ -230,10 +226,6 @@
   "sent": {
     "message": "Verzonden",
     "description": "Label for the time a message was sent"
-  },
-  "migrationWarning": {
-    "message": "De Chrome-app voor Signal Desktop is verouderd. Wil je nu migreren naar de nieuwe Signal Desktop?",
-    "description": "Warning notification that this version of the app has been deprecated and the user must migrate"
   },
   "backup": {
     "message": "Back up",
@@ -294,7 +286,7 @@
     "description": "Confirmation dialog text that asks the user if they really wish to delete the conversation. Answer buttons use the strings 'ok' and 'cancel'. The deletion is permanent, i.e. it cannot be undone."
   },
   "installImport": {
-    "message": "Instellen met geëxporteerde gegevens van UWP Signal Desktop",
+    "message": "Instellen met geëxporteerde gegevens.",
     "description": "One of two choices presented on the screen shown on first launch"
   },
   "unlinkedWarning": {
@@ -605,10 +597,6 @@
     "message": "Open Signal op je telefoon en ga naar Instellingen > Gekoppelde apparaten. Tik op de knop om een nieuw apparaat toe te voegen en scan daarna de code hierboven.",
     "description": ""
   },
-  "migrationDisconnecting": {
-    "message": "Verbinding verbreken...",
-    "description": "Displayed while we wait for pending incoming messages to process"
-  },
   "invalidNumberError": {
     "message": "Ongeldig nummer",
     "description": "When a person inputs a number that is invalid"
@@ -840,10 +828,6 @@
   "changedSinceVerifiedMultiple": {
     "message": "Je veiligheidsnummers met meerdere groepsleden zijn veranderd sinds de laatste verificatie. Dit kan betekenen dat iemand je gesprekken probeert te onderscheppen, of gewoonweg dat ze Signal opnieuw hebben geïnstalleerd.",
     "description": "Shown on confirmation dialog when user attempts to send a message"
-  },
-  "export": {
-    "message": "Map kiezen",
-    "description": "Button to allow the user to export all data from app as part of migration process"
   },
   "submitDebugLog": {
     "message": "Debug log indienen",

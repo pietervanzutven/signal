@@ -194,7 +194,7 @@
     "description": ""
   },
   "exportError": {
-    "message": "Unfortunately, something went wrong during the export. First, double-check your target empty directory for write access and enough space. Then, please submit a debug log so we can help you get migrated!",
+    "message": "Unfortunately, something went wrong during the export. Please, double-check your target empty directory for write access and enough space.",
     "description": "Helper text if the user went forward on migrating the app, but ran into an error"
   },
   "installConnecting": {
@@ -294,7 +294,7 @@
     "description": "Confirmation dialog text that asks the user if they really wish to delete the conversation. Answer buttons use the strings 'ok' and 'cancel'. The deletion is permanent, i.e. it cannot be undone."
   },
   "installImport": {
-    "message": "Set up with UWP Signal Desktop export",
+    "message": "Set up with exported data",
     "description": "One of two choices presented on the screen shown on first launch"
   },
   "unlinkedWarning": {
@@ -605,10 +605,6 @@
     "message": "Otvorite Signal na svom telefonu i navigirajte do Postavke > Povezani uređaji. Dodirnite gumb za dodavanje novog uređaja, a zatim skenirajte gornji kod.",
     "description": ""
   },
-  "migrationDisconnecting": {
-    "message": "Disconnecting...",
-    "description": "Displayed while we wait for pending incoming messages to process"
-  },
   "invalidNumberError": {
     "message": "Invalid number",
     "description": "When a person inputs a number that is invalid"
@@ -840,10 +836,6 @@
   "changedSinceVerifiedMultiple": {
     "message": "Sigurnosni su se brojevi s više članova ove grupe promijenili od zadnje potvrde. Moguće je da netko pokušava presresti vašu komunikaciju ili su neki članovi grupe reinstalirali Signal.",
     "description": "Shown on confirmation dialog when user attempts to send a message"
-  },
-  "export": {
-    "message": "Odaberi direktorij",
-    "description": "Button to allow the user to export all data from app as part of migration process"
   },
   "submitDebugLog": {
     "message": "Podnesi zapis o neispravnosti",
