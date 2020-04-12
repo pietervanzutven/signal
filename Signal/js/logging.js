@@ -64,7 +64,12 @@
     // The mechanics of preparing a log for publish
 
     function getHeader() {
-        return window.navigator.userAgent + ' uwp/' + window.config.uwp_version;
+        let header = window.navigator.userAgent;
+
+        header += ' uwp/' + window.config.uwp_version;
+        header += ' env/' + window.config.environment;
+
+        return header;
     }
 
     function getLevel(level) {

@@ -97,12 +97,16 @@ ipc.on('restart', function () {
 logging.initialize();
 const logger = logging.getLogger();
 
+window.config.name = Windows.ApplicationModel.Package.current.id.name;
+
 window.config.version = app.getVersion();
 
 var version = Windows.System.Profile.AnalyticsInfo.versionInfo.deviceFamilyVersion;
 window.config.uwp_version = ((version & 0x00000000FFFF0000) >> 16) + '.' + (version & 0x000000000000FFFF);
 
 window.config.hostname = 'Windows';
+
+window.config.appInstance = Windows.System.Diagnostics.ProcessDiagnosticInfo.getForCurrentProcess().processId;
 
 let locale;
 if (!locale) {
