@@ -241,6 +241,7 @@
     <Content Include="js\libtextsecure.js" />
     <Content Include="js\i18n.js" />
     <Content Include="app\locale.js" />
+    <Content Include="js\modules\google-libphonenumber\libphonenumber.js" />
     <Content Include="js\Mp3LameEncoder.min.js" />
     <Content Include="js\views\app_view.js" />
     <Content Include="js\views\debug_log_view.js" />
