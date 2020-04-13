@@ -2064,16 +2064,25 @@ span.status {
       height: 100%;
       width: 100%; }
     .discussion-container .scroll-down-button-view button .icon:hover {
-      background-image: url("../images/down_61616110.svg"); }
+      background-image: url("../images/down_61616110.svg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
     .discussion-container .scroll-down-button-view button.new-messages {
-      background-image: url("../images/down_2090EA10.svg"); }
+      background-image: url("../images/down_2090EA10.svg"); 
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
       .discussion-container .scroll-down-button-view button.new-messages .icon {
         background-image: url("../images/down_FFFFFF10.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
       .discussion-container .scroll-down-button-view button.new-messages:hover {
-        background-image: url("../images/down_1472BD10.svg"); }
+        background-image: url("../images/down_1472BD10.svg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
 
 .ios #header {
   height: 64px;
