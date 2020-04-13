@@ -729,7 +729,7 @@
                 recipients     : this.getRecipients(),
                 flags          : textsecure.protobuf.DataMessage.Flags.END_SESSION
             });
-            message.send(textsecure.messaging.closeSession(this.id, now));
+            message.send(textsecure.messaging.resetSession(this.id, now));
         }
 
     },

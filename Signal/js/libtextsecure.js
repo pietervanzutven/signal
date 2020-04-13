@@ -25569,21 +25569,18 @@ Curve25519Worker.prototype = {
         /**
          * The low 32 bits as a signed value.
          * @type {number}
-         * @expose
          */
         this.low = low | 0;
 
         /**
          * The high 32 bits as a signed value.
          * @type {number}
-         * @expose
          */
         this.high = high | 0;
 
         /**
          * Whether unsigned or not.
          * @type {boolean}
-         * @expose
          */
         this.unsigned = !!unsigned;
     }
@@ -25609,10 +25606,9 @@ Curve25519Worker.prototype = {
      * An indicator used to reliably determine if an object is a Long or not.
      * @type {boolean}
      * @const
-     * @expose
      * @private
      */
-    Long.__isLong__;
+    Long.prototype.__isLong__;
 
     Object.defineProperty(Long.prototype, "__isLong__", {
         value: true,
@@ -25635,7 +25631,6 @@ Curve25519Worker.prototype = {
      * @function
      * @param {*} obj Object
      * @returns {boolean}
-     * @expose
      */
     Long.isLong = isLong;
 
@@ -25692,7 +25687,6 @@ Curve25519Worker.prototype = {
      * @param {number} value The 32 bit integer in question
      * @param {boolean=} unsigned Whether unsigned or not, defaults to `false` for signed
      * @returns {!Long} The corresponding Long value
-     * @expose
      */
     Long.fromInt = fromInt;
 
@@ -25727,7 +25721,6 @@ Curve25519Worker.prototype = {
      * @param {number} value The number in question
      * @param {boolean=} unsigned Whether unsigned or not, defaults to `false` for signed
      * @returns {!Long} The corresponding Long value
-     * @expose
      */
     Long.fromNumber = fromNumber;
 
@@ -25750,7 +25743,6 @@ Curve25519Worker.prototype = {
      * @param {number} highBits The high 32 bits
      * @param {boolean=} unsigned Whether unsigned or not, defaults to `false` for signed
      * @returns {!Long} The corresponding Long value
-     * @expose
      */
     Long.fromBits = fromBits;
 
@@ -25820,7 +25812,6 @@ Curve25519Worker.prototype = {
      * @param {(boolean|number)=} unsigned Whether unsigned or not, defaults to `false` for signed
      * @param {number=} radix The radix in which the text is written (2-36), defaults to 10
      * @returns {!Long} The corresponding Long value
-     * @expose
      */
     Long.fromString = fromString;
 
@@ -25846,7 +25837,6 @@ Curve25519Worker.prototype = {
      * @function
      * @param {!Long|number|string|!{low: number, high: number, unsigned: boolean}} val Value
      * @returns {!Long}
-     * @expose
      */
     Long.fromValue = fromValue;
 
@@ -25904,7 +25894,6 @@ Curve25519Worker.prototype = {
     /**
      * Signed zero.
      * @type {!Long}
-     * @expose
      */
     Long.ZERO = ZERO;
 
@@ -25917,7 +25906,6 @@ Curve25519Worker.prototype = {
     /**
      * Unsigned zero.
      * @type {!Long}
-     * @expose
      */
     Long.UZERO = UZERO;
 
@@ -25930,7 +25918,6 @@ Curve25519Worker.prototype = {
     /**
      * Signed one.
      * @type {!Long}
-     * @expose
      */
     Long.ONE = ONE;
 
@@ -25943,7 +25930,6 @@ Curve25519Worker.prototype = {
     /**
      * Unsigned one.
      * @type {!Long}
-     * @expose
      */
     Long.UONE = UONE;
 
@@ -25956,7 +25942,6 @@ Curve25519Worker.prototype = {
     /**
      * Signed negative one.
      * @type {!Long}
-     * @expose
      */
     Long.NEG_ONE = NEG_ONE;
 
@@ -25969,7 +25954,6 @@ Curve25519Worker.prototype = {
     /**
      * Maximum signed value.
      * @type {!Long}
-     * @expose
      */
     Long.MAX_VALUE = MAX_VALUE;
 
@@ -25982,7 +25966,6 @@ Curve25519Worker.prototype = {
     /**
      * Maximum unsigned value.
      * @type {!Long}
-     * @expose
      */
     Long.MAX_UNSIGNED_VALUE = MAX_UNSIGNED_VALUE;
 
@@ -25995,7 +25978,6 @@ Curve25519Worker.prototype = {
     /**
      * Minimum signed value.
      * @type {!Long}
-     * @expose
      */
     Long.MIN_VALUE = MIN_VALUE;
 
@@ -26008,7 +25990,6 @@ Curve25519Worker.prototype = {
     /**
      * Converts the Long to a 32 bit integer, assuming it is a 32 bit integer.
      * @returns {number}
-     * @expose
      */
     LongPrototype.toInt = function toInt() {
         return this.unsigned ? this.low >>> 0 : this.low;
@@ -26017,7 +25998,6 @@ Curve25519Worker.prototype = {
     /**
      * Converts the Long to a the nearest floating-point representation of this value (double, 53 bit mantissa).
      * @returns {number}
-     * @expose
      */
     LongPrototype.toNumber = function toNumber() {
         if (this.unsigned)
@@ -26031,7 +26011,6 @@ Curve25519Worker.prototype = {
      * @returns {string}
      * @override
      * @throws {RangeError} If `radix` is out of range
-     * @expose
      */
     LongPrototype.toString = function toString(radix) {
         radix = radix || 10;
@@ -26074,7 +26053,6 @@ Curve25519Worker.prototype = {
     /**
      * Gets the high 32 bits as a signed integer.
      * @returns {number} Signed high bits
-     * @expose
      */
     LongPrototype.getHighBits = function getHighBits() {
         return this.high;
@@ -26083,7 +26061,6 @@ Curve25519Worker.prototype = {
     /**
      * Gets the high 32 bits as an unsigned integer.
      * @returns {number} Unsigned high bits
-     * @expose
      */
     LongPrototype.getHighBitsUnsigned = function getHighBitsUnsigned() {
         return this.high >>> 0;
@@ -26092,7 +26069,6 @@ Curve25519Worker.prototype = {
     /**
      * Gets the low 32 bits as a signed integer.
      * @returns {number} Signed low bits
-     * @expose
      */
     LongPrototype.getLowBits = function getLowBits() {
         return this.low;
@@ -26101,7 +26077,6 @@ Curve25519Worker.prototype = {
     /**
      * Gets the low 32 bits as an unsigned integer.
      * @returns {number} Unsigned low bits
-     * @expose
      */
     LongPrototype.getLowBitsUnsigned = function getLowBitsUnsigned() {
         return this.low >>> 0;
@@ -26110,7 +26085,6 @@ Curve25519Worker.prototype = {
     /**
      * Gets the number of bits needed to represent the absolute value of this Long.
      * @returns {number}
-     * @expose
      */
     LongPrototype.getNumBitsAbs = function getNumBitsAbs() {
         if (this.isNegative()) // Unsigned Longs are never negative
@@ -26125,7 +26099,6 @@ Curve25519Worker.prototype = {
     /**
      * Tests if this Long's value equals zero.
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.isZero = function isZero() {
         return this.high === 0 && this.low === 0;
@@ -26134,7 +26107,6 @@ Curve25519Worker.prototype = {
     /**
      * Tests if this Long's value is negative.
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.isNegative = function isNegative() {
         return !this.unsigned && this.high < 0;
@@ -26143,7 +26115,6 @@ Curve25519Worker.prototype = {
     /**
      * Tests if this Long's value is positive.
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.isPositive = function isPositive() {
         return this.unsigned || this.high >= 0;
@@ -26152,7 +26123,6 @@ Curve25519Worker.prototype = {
     /**
      * Tests if this Long's value is odd.
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.isOdd = function isOdd() {
         return (this.low & 1) === 1;
@@ -26161,7 +26131,6 @@ Curve25519Worker.prototype = {
     /**
      * Tests if this Long's value is even.
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.isEven = function isEven() {
         return (this.low & 1) === 0;
@@ -26171,7 +26140,6 @@ Curve25519Worker.prototype = {
      * Tests if this Long's value equals the specified's.
      * @param {!Long|number|string} other Other value
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.equals = function equals(other) {
         if (!isLong(other))
@@ -26186,7 +26154,6 @@ Curve25519Worker.prototype = {
      * @function
      * @param {!Long|number|string} other Other value
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.eq = LongPrototype.equals;
 
@@ -26194,7 +26161,6 @@ Curve25519Worker.prototype = {
      * Tests if this Long's value differs from the specified's.
      * @param {!Long|number|string} other Other value
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.notEquals = function notEquals(other) {
         return !this.eq(/* validates */ other);
@@ -26205,7 +26171,6 @@ Curve25519Worker.prototype = {
      * @function
      * @param {!Long|number|string} other Other value
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.neq = LongPrototype.notEquals;
 
@@ -26213,7 +26178,6 @@ Curve25519Worker.prototype = {
      * Tests if this Long's value is less than the specified's.
      * @param {!Long|number|string} other Other value
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.lessThan = function lessThan(other) {
         return this.comp(/* validates */ other) < 0;
@@ -26224,7 +26188,6 @@ Curve25519Worker.prototype = {
      * @function
      * @param {!Long|number|string} other Other value
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.lt = LongPrototype.lessThan;
 
@@ -26232,7 +26195,6 @@ Curve25519Worker.prototype = {
      * Tests if this Long's value is less than or equal the specified's.
      * @param {!Long|number|string} other Other value
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.lessThanOrEqual = function lessThanOrEqual(other) {
         return this.comp(/* validates */ other) <= 0;
@@ -26243,7 +26205,6 @@ Curve25519Worker.prototype = {
      * @function
      * @param {!Long|number|string} other Other value
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.lte = LongPrototype.lessThanOrEqual;
 
@@ -26251,7 +26212,6 @@ Curve25519Worker.prototype = {
      * Tests if this Long's value is greater than the specified's.
      * @param {!Long|number|string} other Other value
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.greaterThan = function greaterThan(other) {
         return this.comp(/* validates */ other) > 0;
@@ -26262,7 +26222,6 @@ Curve25519Worker.prototype = {
      * @function
      * @param {!Long|number|string} other Other value
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.gt = LongPrototype.greaterThan;
 
@@ -26270,7 +26229,6 @@ Curve25519Worker.prototype = {
      * Tests if this Long's value is greater than or equal the specified's.
      * @param {!Long|number|string} other Other value
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.greaterThanOrEqual = function greaterThanOrEqual(other) {
         return this.comp(/* validates */ other) >= 0;
@@ -26281,7 +26239,6 @@ Curve25519Worker.prototype = {
      * @function
      * @param {!Long|number|string} other Other value
      * @returns {boolean}
-     * @expose
      */
     LongPrototype.gte = LongPrototype.greaterThanOrEqual;
 
@@ -26290,7 +26247,6 @@ Curve25519Worker.prototype = {
      * @param {!Long|number|string} other Other value
      * @returns {number} 0 if they are the same, 1 if the this is greater and -1
      *  if the given one is greater
-     * @expose
      */
     LongPrototype.compare = function compare(other) {
         if (!isLong(other))
@@ -26316,14 +26272,12 @@ Curve25519Worker.prototype = {
      * @param {!Long|number|string} other Other value
      * @returns {number} 0 if they are the same, 1 if the this is greater and -1
      *  if the given one is greater
-     * @expose
      */
     LongPrototype.comp = LongPrototype.compare;
 
     /**
      * Negates this Long's value.
      * @returns {!Long} Negated Long
-     * @expose
      */
     LongPrototype.negate = function negate() {
         if (!this.unsigned && this.eq(MIN_VALUE))
@@ -26335,7 +26289,6 @@ Curve25519Worker.prototype = {
      * Negates this Long's value. This is an alias of {@link Long#negate}.
      * @function
      * @returns {!Long} Negated Long
-     * @expose
      */
     LongPrototype.neg = LongPrototype.negate;
 
@@ -26343,7 +26296,6 @@ Curve25519Worker.prototype = {
      * Returns the sum of this and the specified Long.
      * @param {!Long|number|string} addend Addend
      * @returns {!Long} Sum
-     * @expose
      */
     LongPrototype.add = function add(addend) {
         if (!isLong(addend))
@@ -26380,7 +26332,6 @@ Curve25519Worker.prototype = {
      * Returns the difference of this and the specified Long.
      * @param {!Long|number|string} subtrahend Subtrahend
      * @returns {!Long} Difference
-     * @expose
      */
     LongPrototype.subtract = function subtract(subtrahend) {
         if (!isLong(subtrahend))
@@ -26393,7 +26344,6 @@ Curve25519Worker.prototype = {
      * @function
      * @param {!Long|number|string} subtrahend Subtrahend
      * @returns {!Long} Difference
-     * @expose
      */
     LongPrototype.sub = LongPrototype.subtract;
 
@@ -26401,7 +26351,6 @@ Curve25519Worker.prototype = {
      * Returns the product of this and the specified Long.
      * @param {!Long|number|string} multiplier Multiplier
      * @returns {!Long} Product
-     * @expose
      */
     LongPrototype.multiply = function multiply(multiplier) {
         if (this.isZero())
@@ -26469,7 +26418,6 @@ Curve25519Worker.prototype = {
      * @function
      * @param {!Long|number|string} multiplier Multiplier
      * @returns {!Long} Product
-     * @expose
      */
     LongPrototype.mul = LongPrototype.multiply;
 
@@ -26478,7 +26426,6 @@ Curve25519Worker.prototype = {
      *  unsigned if this Long is unsigned.
      * @param {!Long|number|string} divisor Divisor
      * @returns {!Long} Quotient
-     * @expose
      */
     LongPrototype.divide = function divide(divisor) {
         if (!isLong(divisor))
@@ -26489,6 +26436,8 @@ Curve25519Worker.prototype = {
             return this.unsigned ? UZERO : ZERO;
         var approx, rem, res;
         if (!this.unsigned) {
+            // This section is only relevant for signed longs and is derived from the
+            // closure library as a whole.
             if (this.eq(MIN_VALUE)) {
                 if (divisor.eq(ONE) || divisor.eq(NEG_ONE))
                     return MIN_VALUE;  // recall that -MIN_VALUE == MIN_VALUE
@@ -26514,19 +26463,18 @@ Curve25519Worker.prototype = {
                 return this.neg().div(divisor).neg();
             } else if (divisor.isNegative())
                 return this.div(divisor.neg()).neg();
-        } else if (!divisor.unsigned)
-            divisor = divisor.toUnsigned();
-
-        // The algorithm below has not been made for unsigned longs. It's therefore
-        // required to take special care of the MSB prior to running it.
-        if (this.unsigned) {
+            res = ZERO;
+        } else {
+            // The algorithm below has not been made for unsigned longs. It's therefore
+            // required to take special care of the MSB prior to running it.
+            if (!divisor.unsigned)
+                divisor = divisor.toUnsigned();
             if (divisor.gt(this))
                 return UZERO;
             if (divisor.gt(this.shru(1))) // 15 >>> 1 = 7 ; with divisor = 8 ; true
                 return UONE;
             res = UZERO;
-        } else
-            res = ZERO;
+        }
 
         // Repeat the following until the remainder is less than other:  find a
         // floating-point that approximates remainder / other *from below*, add this
@@ -26570,7 +26518,6 @@ Curve25519Worker.prototype = {
      * @function
      * @param {!Long|number|string} divisor Divisor
      * @returns {!Long} Quotient
-     * @expose
      */
     LongPrototype.div = LongPrototype.divide;
 
@@ -26578,7 +26525,6 @@ Curve25519Worker.prototype = {
      * Returns this Long modulo the specified.
      * @param {!Long|number|string} divisor Divisor
      * @returns {!Long} Remainder
-     * @expose
      */
     LongPrototype.modulo = function modulo(divisor) {
         if (!isLong(divisor))
@@ -26591,14 +26537,12 @@ Curve25519Worker.prototype = {
      * @function
      * @param {!Long|number|string} divisor Divisor
      * @returns {!Long} Remainder
-     * @expose
      */
     LongPrototype.mod = LongPrototype.modulo;
 
     /**
      * Returns the bitwise NOT of this Long.
      * @returns {!Long}
-     * @expose
      */
     LongPrototype.not = function not() {
         return fromBits(~this.low, ~this.high, this.unsigned);
@@ -26608,7 +26552,6 @@ Curve25519Worker.prototype = {
      * Returns the bitwise AND of this Long and the specified.
      * @param {!Long|number|string} other Other Long
      * @returns {!Long}
-     * @expose
      */
     LongPrototype.and = function and(other) {
         if (!isLong(other))
@@ -26620,7 +26563,6 @@ Curve25519Worker.prototype = {
      * Returns the bitwise OR of this Long and the specified.
      * @param {!Long|number|string} other Other Long
      * @returns {!Long}
-     * @expose
      */
     LongPrototype.or = function or(other) {
         if (!isLong(other))
@@ -26632,7 +26574,6 @@ Curve25519Worker.prototype = {
      * Returns the bitwise XOR of this Long and the given one.
      * @param {!Long|number|string} other Other Long
      * @returns {!Long}
-     * @expose
      */
     LongPrototype.xor = function xor(other) {
         if (!isLong(other))
@@ -26644,7 +26585,6 @@ Curve25519Worker.prototype = {
      * Returns this Long with bits shifted to the left by the given amount.
      * @param {number|!Long} numBits Number of bits
      * @returns {!Long} Shifted Long
-     * @expose
      */
     LongPrototype.shiftLeft = function shiftLeft(numBits) {
         if (isLong(numBits))
@@ -26662,7 +26602,6 @@ Curve25519Worker.prototype = {
      * @function
      * @param {number|!Long} numBits Number of bits
      * @returns {!Long} Shifted Long
-     * @expose
      */
     LongPrototype.shl = LongPrototype.shiftLeft;
 
@@ -26670,7 +26609,6 @@ Curve25519Worker.prototype = {
      * Returns this Long with bits arithmetically shifted to the right by the given amount.
      * @param {number|!Long} numBits Number of bits
      * @returns {!Long} Shifted Long
-     * @expose
      */
     LongPrototype.shiftRight = function shiftRight(numBits) {
         if (isLong(numBits))
@@ -26688,7 +26626,6 @@ Curve25519Worker.prototype = {
      * @function
      * @param {number|!Long} numBits Number of bits
      * @returns {!Long} Shifted Long
-     * @expose
      */
     LongPrototype.shr = LongPrototype.shiftRight;
 
@@ -26696,7 +26633,6 @@ Curve25519Worker.prototype = {
      * Returns this Long with bits logically shifted to the right by the given amount.
      * @param {number|!Long} numBits Number of bits
      * @returns {!Long} Shifted Long
-     * @expose
      */
     LongPrototype.shiftRightUnsigned = function shiftRightUnsigned(numBits) {
         if (isLong(numBits))
@@ -26721,14 +26657,12 @@ Curve25519Worker.prototype = {
      * @function
      * @param {number|!Long} numBits Number of bits
      * @returns {!Long} Shifted Long
-     * @expose
      */
     LongPrototype.shru = LongPrototype.shiftRightUnsigned;
 
     /**
      * Converts this Long to signed.
      * @returns {!Long} Signed long
-     * @expose
      */
     LongPrototype.toSigned = function toSigned() {
         if (!this.unsigned)
@@ -26739,13 +26673,59 @@ Curve25519Worker.prototype = {
     /**
      * Converts this Long to unsigned.
      * @returns {!Long} Unsigned long
-     * @expose
      */
     LongPrototype.toUnsigned = function toUnsigned() {
         if (this.unsigned)
             return this;
         return fromBits(this.low, this.high, true);
     };
+
+    /**
+     * Converts this Long to its byte representation.
+     * @param {boolean=} le Whether little or big endian, defaults to big endian
+     * @returns {!Array.<number>} Byte representation
+     */
+    LongPrototype.toBytes = function(le) {
+        return le ? this.toBytesLE() : this.toBytesBE();
+    }
+
+    /**
+     * Converts this Long to its little endian byte representation.
+     * @returns {!Array.<number>} Little endian byte representation
+     */
+    LongPrototype.toBytesLE = function() {
+        var hi = this.high,
+            lo = this.low;
+        return [
+             lo         & 0xff,
+            (lo >>>  8) & 0xff,
+            (lo >>> 16) & 0xff,
+            (lo >>> 24) & 0xff,
+             hi         & 0xff,
+            (hi >>>  8) & 0xff,
+            (hi >>> 16) & 0xff,
+            (hi >>> 24) & 0xff
+        ];
+    }
+
+    /**
+     * Converts this Long to its big endian byte representation.
+     * @returns {!Array.<number>} Big endian byte representation
+     */
+    LongPrototype.toBytesBE = function() {
+        var hi = this.high,
+            lo = this.low;
+        return [
+            (hi >>> 24) & 0xff,
+            (hi >>> 16) & 0xff,
+            (hi >>>  8) & 0xff,
+             hi         & 0xff,
+            (lo >>> 24) & 0xff,
+            (lo >>> 16) & 0xff,
+            (lo >>>  8) & 0xff,
+             lo         & 0xff
+        ];
+    }
 
     return Long;
 });
@@ -35942,6 +35922,10 @@ Internal.SessionRecord = function() {
                 delete sessions[util.toString(oldestBaseKey)];
             }
         },
+        deleteAllSessions: function() {
+            // Used primarily in session reset scenarios, where we really delete sessions
+            this.sessions = {};
+        }
     };
 
     return SessionRecord;
@@ -36437,7 +36421,7 @@ SessionCipher.prototype = {
       }.bind(this));
   },
   doDecryptWhisperMessage: function(messageBytes, session) {
-    if (!messageBytes instanceof ArrayBuffer) {
+    if (!(messageBytes instanceof ArrayBuffer)) {
         throw new Error("Expected messageBytes to be an ArrayBuffer");
     }
     var version = (new Uint8Array(messageBytes))[0];
@@ -36612,6 +36596,20 @@ SessionCipher.prototype = {
         return this.storage.storeSession(address, record.serialize());
       }.bind(this));
     }.bind(this));
+  },
+  deleteAllSessionsForDevice: function() {
+    // Used in session reset scenarios, where we really need to delete
+    var address = this.remoteAddress.toString();
+    return Internal.SessionLock.queueJobForNumber(address, function() {
+      return this.getRecord(address).then(function(record) {
+        if (record === undefined) {
+            return;
+        }
+
+        record.deleteAllSessions();
+        return this.storage.storeSession(address, record.serialize());
+      }.bind(this));
+    }.bind(this));
   }
 };
 
@@ -36631,6 +36629,7 @@ libsignal.SessionCipher = function(storage, remoteAddress, options) {
     this.getRemoteRegistrationId = cipher.getRemoteRegistrationId.bind(cipher);
     this.hasOpenSession = cipher.hasOpenSession.bind(cipher);
     this.closeOpenSessionForDevice = cipher.closeOpenSessionForDevice.bind(cipher);
+    this.deleteAllSessionsForDevice = cipher.deleteAllSessionsForDevice.bind(cipher);
 };
 
  /*
@@ -37545,7 +37544,16 @@ var TextSecureServer = (function() {
           var resultPromise;
           if (options.responseType === 'json'
               && response.headers.get('Content-Type') === 'application/json') {
-            resultPromise = response.json();
+            resultPromise = response.json().catch(function(error) {
+                // If the response was otherwise successful, a JSON.parse() failure really
+                //   is a problem. But the Signal server does return HTML in error cases
+                //   when we requested JSON, sadly.
+                if (0 <= response.status && response.status < 400) {
+                    throw error;
+                }
+
+                return null;
+            })
           } else if (options.responseType === 'arraybuffer') {
             resultPromise = response.arrayBuffer();
           } else {
@@ -39415,8 +39423,8 @@ MessageReceiver.prototype.extend({
                 var address = new libsignal.SignalProtocolAddress(number, deviceId);
                 var sessionCipher = new libsignal.SessionCipher(textsecure.storage.protocol, address);
 
-                console.log('closing session for', address.toString());
-                return sessionCipher.closeOpenSessionForDevice();
+                console.log('deleting sessions for', address.toString());
+                return sessionCipher.deleteAllSessionsForDevice();
             }));
         });
     },
@@ -40053,12 +40061,14 @@ MessageSender.prototype = {
 
     sendIndividualProto: function(number, proto, timestamp, silent) {
         return new Promise(function(resolve, reject) {
-            this.sendMessageProto(timestamp, [number], proto, function(res) {
-                if (res.errors.length > 0)
+            var callback = function(res) {
+                if (res.errors.length > 0) {
                     reject(res);
-                else
+                } else {
                     resolve(res);
-            }, silent);
+                }
+            };
+            this.sendMessageProto(timestamp, [number], proto, callback, silent);
         }.bind(this));
     },
 
@@ -40233,10 +40243,11 @@ MessageSender.prototype = {
         return new Promise(function(resolve, reject) {
             this.sendMessageProto(timestamp, numbers, proto, function(res) {
                 res.dataMessage = proto.toArrayBuffer();
-                if (res.errors.length > 0)
+                if (res.errors.length > 0) {
                     reject(res);
-                else
+                } else {
                     resolve(res);
+                }
             }.bind(this));
         }.bind(this));
     },
@@ -40253,25 +40264,56 @@ MessageSender.prototype = {
         });
     },
 
-    closeSession: function(number, timestamp) {
-        console.log('sending end session');
+    resetSession: function(number, timestamp) {
+        console.log('resetting secure session');
         var proto = new textsecure.protobuf.DataMessage();
         proto.body = "TERMINATE";
         proto.flags = textsecure.protobuf.DataMessage.Flags.END_SESSION;
-        return this.sendIndividualProto(number, proto, timestamp).then(function(res) {
-            return this.sendSyncMessage(proto.toArrayBuffer(), timestamp, number).then(function() {
-                return textsecure.storage.protocol.getDeviceIds(number).then(function(deviceIds) {
+
+        var logError = function(prefix) {
+            return function(error) {
+                console.log(
+                    prefix,
+                    error && error.stack ? error.stack : error
+                );
+                throw error;
+            };
+        };
+        var deleteAllSessions = function(number) {
+            return textsecure.storage.protocol.getDeviceIds(number)
+                .then(function(deviceIds) {
                     return Promise.all(deviceIds.map(function(deviceId) {
                         var address = new libsignal.SignalProtocolAddress(number, deviceId);
-                        console.log('closing session for', address.toString());
-                        var sessionCipher = new libsignal.SessionCipher(textsecure.storage.protocol, address);
-                        return sessionCipher.closeOpenSessionForDevice();
-                    })).then(function() {
-                        return res;
-                    });
+                        console.log('deleting sessions for', address.toString());
+                        var sessionCipher = new libsignal.SessionCipher(
+                            textsecure.storage.protocol,
+                            address
+                        );
+                        return sessionCipher.deleteAllSessionsForDevice();
+                    }));
                 });
+        };
+
+        var sendToContact = deleteAllSessions(number)
+            .catch(logError('resetSession/deleteAllSessions1 error:'))
+            .then(function() {
+                console.log('finished closing local sessions, now sending to contact');
+                return this.sendIndividualProto(number, proto, timestamp)
+                    .catch(logError('resetSession/sendToContact error:'))
+            }.bind(this))
+            .then(function() {
+                return deleteAllSessions(number)
+                    .catch(logError('resetSession/deleteAllSessions2 error:'));
             });
-        }.bind(this));
+
+        var buffer = proto.toArrayBuffer();
+        var sendSync = this.sendSyncMessage(buffer, timestamp, number)
+            .catch(logError('resetSession/sendSync error:'));
+
+        return Promise.all([
+            sendToContact,
+            sendSync
+        ]);
     },
 
     sendMessageToGroup: function(groupId, messageText, attachments, timestamp, expireTimer, profileKey) {
@@ -40460,7 +40502,7 @@ textsecure.MessageSender = function(url, username, password, cdn_url) {
     this.sendRequestContactSyncMessage       = sender.sendRequestContactSyncMessage      .bind(sender);
     this.sendRequestConfigurationSyncMessage = sender.sendRequestConfigurationSyncMessage.bind(sender);
     this.sendMessageToNumber                 = sender.sendMessageToNumber                .bind(sender);
-    this.closeSession                        = sender.closeSession                       .bind(sender);
+    this.resetSession                        = sender.resetSession                       .bind(sender);
     this.sendMessageToGroup                  = sender.sendMessageToGroup                 .bind(sender);
     this.createGroup                         = sender.createGroup                        .bind(sender);
     this.updateGroup                         = sender.updateGroup                        .bind(sender);
