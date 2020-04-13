@@ -1001,8 +1001,14 @@
         }).then(function() {
             var models = this.messageCollection.models;
             this.messageCollection.reset([]);
-            _.each(models, function(message) { message.destroy(); });
-            this.save({lastMessage: null, timestamp: null}); // archive
+            _.each(models, function(message) {
+                message.destroy();
+            });
+            this.save({
+                lastMessage: null,
+                timestamp: null,
+                active_at: null,
+            });
         }.bind(this));
     },
 
