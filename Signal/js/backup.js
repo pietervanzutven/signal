@@ -18,10 +18,6 @@
     }
 
     function openDatabase() {
-        var migrations = Whisper.Database.migrations;
-        var version = migrations[migrations.length - 1].version;
-        var DBOpenRequest = window.indexedDB.open('signal', version);
-
         var folder = Windows.Storage.ApplicationData.current.localFolder;
         return folder.getFilesAsync().then(function (files) {
             return { folder: folder, files: files }
