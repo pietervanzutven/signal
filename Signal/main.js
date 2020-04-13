@@ -27,6 +27,11 @@ background.BackgroundExecutionManager.requestAccessAsync().then(result => {
 Windows.UI.WebUI.WebUIApplication.addEventListener('activated', event => {
     if (event.detail[0].kind === Windows.ApplicationModel.Activation.ActivationKind.protocol) {
         window.fileToken = event.detail[0].uri.query !== '' ? Windows.Foundation.WwwFormUrlDecoder(event.detail[0].uri.query).getFirstValueByName("file") : null;
+    } else if (event.detail[0].kind === Windows.ApplicationModel.Activation.ActivationKind.launch) {
+        if (event.detail[0].arguments !== '') {
+            var conversation = ConversationController.get(event.detail[0].arguments);
+            Whisper.Notifications.trigger('click', conversation);
+        }
     }
 });
 

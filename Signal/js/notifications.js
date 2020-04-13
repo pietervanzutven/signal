@@ -84,27 +84,19 @@
                 iconUrl = last.get('iconUrl');
                 break;
             }
-            var notification = new Notification(title, {
-                body   : message,
-                icon   : iconUrl,
-                tag    : 'signal',
-                silent : true
-            });
-
-            notification.onclick = this.onClick.bind(this, last.get('conversationId'));
-
-            // We don't want to notify the user about these same messages again
-            this.clear();
-
             var Notifications = Windows.UI.Notifications;
             var toastXml = Notifications.ToastNotificationManager.getTemplateContent(Notifications.ToastTemplateType.toastText02);
             var toastNodeList = toastXml.getElementsByTagName('text');
             toastNodeList[0].appendChild(toastXml.createTextNode(title));
             toastNodeList[1].appendChild(toastXml.createTextNode(message));
             toastXml.createElement('audio').setAttribute('src', 'ms-winsoundevent:Notification.SMS');
+            toastXml.selectSingleNode("/toast").setAttribute("launch", last.get('conversationId'));
             var toast = Notifications.ToastNotification(toastXml);
             Notifications.ToastNotificationManager.createToastNotifier().show(toast);
             window.setBadgeCount(this.length);
+
+            // We don't want to notify the user about these same messages again
+            this.clear();
         },
         getSetting: function() {
             return storage.get('notification-setting') || SETTINGS.MESSAGE;
