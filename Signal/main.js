@@ -118,6 +118,14 @@ if (!locale) {
     locale = loadLocale();
 }
 
-ipc.on("set-auto-hide-menu-bar", function (event, autoHide) { });
+ipc.on("set-auto-hide-menu-bar", function (event, autoHide) {
+    if (window.mainWindow) {
+        window.mainWindow.setAutoHideMenuBar(autoHide);
+    }
+});
 
-ipc.on("set-menu-bar-visibility", function (event, visibility) { });
+ipc.on("set-menu-bar-visibility", function (event, visibility) {
+    if (window.mainWindow) {
+        window.mainWindow.setMenuBarVisibility(visibility);
+    }
+});
