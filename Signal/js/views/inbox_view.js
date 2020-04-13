@@ -25,6 +25,29 @@
                 $el.prependTo(this.el);
                 conversation.trigger('opened');
             }
+
+            var gutter = $('.gutter');
+            var stack = $('.conversation-stack');
+            while (window.onbackrequested) {
+                Windows.UI.Core.SystemNavigationManager.getForCurrentView().onbackrequested.call();
+            }
+            if (window.innerWidth < 600) {
+                gutter.hide();
+                stack.show();
+            }
+            var currentView = Windows.UI.Core.SystemNavigationManager.getForCurrentView();
+            currentView.appViewBackButtonVisibility = Windows.UI.Core.AppViewBackButtonVisibility.visible;
+            currentView.onbackrequested = function (event) {
+                if (currentView.appViewBackButtonVisibility === Windows.UI.Core.AppViewBackButtonVisibility.visible) {
+                    $('.conversation.placeholder').prependTo(stack);
+                    if (window.innerWidth < 600) {
+                        gutter.show();
+                        stack.hide();
+                    }
+                    currentView.appViewBackButtonVisibility = Windows.UI.Core.AppViewBackButtonVisibility.collapsed;
+                    event.detail[0].handled = true;
+                }
+            };
         }
     });
 

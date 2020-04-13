@@ -39,28 +39,6 @@
         select: function(e) {
             this.markSelected();
             this.$el.trigger('select', this.model);
-            var gutter = $('.gutter');
-            var conversation = $('.conversation-stack');
-            while (window.onbackrequested) {
-                Windows.UI.Core.SystemNavigationManager.getForCurrentView().onbackrequested.call();
-            }
-            if (window.innerWidth < 600) {
-                gutter.hide();
-                conversation.show();
-            }
-            var currentView = Windows.UI.Core.SystemNavigationManager.getForCurrentView();
-            currentView.appViewBackButtonVisibility = Windows.UI.Core.AppViewBackButtonVisibility.visible;
-            currentView.onbackrequested = function (event) {
-                if (currentView.appViewBackButtonVisibility === Windows.UI.Core.AppViewBackButtonVisibility.visible) {
-                    $('.conversation.placeholder').prependTo(conversation);
-                    if (window.innerWidth < 600) {
-                        gutter.show();
-                        conversation.hide();
-                    }
-                    currentView.appViewBackButtonVisibility = Windows.UI.Core.AppViewBackButtonVisibility.collapsed;
-                    event.detail[0].handled = true;
-                }
-            };
         },
 
         render: function() {
