@@ -38068,9 +38068,9 @@ var TextSecureServer = (function() {
                         var rejections = 1 + textsecure.storage.get('signedKeyRotationRejected', 0);
                         textsecure.storage.put('signedKeyRotationRejected', rejections);
                         console.log('Signed key rotation rejected count:', rejections);
+                    } else {
+                        throw e;
                     }
-
-                    throw e;
                 });
             }.bind(this));
         },
@@ -38080,7 +38080,6 @@ var TextSecureServer = (function() {
         },
         cleanSignedPreKeys: function() {
             var MINIMUM_KEYS = 3;
-
             var store = textsecure.storage.protocol;
             return store.loadSignedPreKeys().then(function(allKeys) {
                 allKeys.sort(function(a, b) {
