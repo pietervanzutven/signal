@@ -263,6 +263,10 @@
     "message": "You left the group",
     "description": "Displayed when a user can't send a message because they have left the group"
   },
+  "backup": {
+    "message": "Back up",
+    "description": "Button label to begin backup process"
+  },
   "scrollDown": {
     "message": "Scroll to bottom of conversation",
     "description": "Alt text for button to take user down to bottom of conversation, shown when user scrolls up"
@@ -551,6 +555,18 @@
   "show": {
     "message": "Show",
     "description": "Command under Window menu, to show the window"
+  },
+  "hide": {
+    "message": "Hide",
+    "description": "Command in the tray icon menu, to hide the window"
+  },
+  "quit": {
+    "message": "Quit",
+    "description": "Command in the tray icon menu, to quit the application"
+  },
+  "trayTooltip": {
+    "message": "Signal Desktop",
+    "description": "Tooltip for the tray icon"
   },
   "searchForPeopleOrGroups": {
     "message": "Search...",

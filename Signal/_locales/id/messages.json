@@ -1,4 +1,8 @@
 {
+    "backup": {
+        "message": "Back up",
+        "description": "Button label to begin backup process"
+    },
     "scrollDown": {
         "message": "Gulir ke bawah pembicaraan",
         "description": "Alt text for button to take user down to bottom of conversation, shown when user scrolls up"
@@ -34,7 +38,7 @@
         }
     },
     "importInstructions": {
-        "message": "The first step is to tell us where you previously exported your Signal data. It will be a directory whose name starts with 'Signal Export.'",
+        "message": "The first step is to tell us where you previously <a href='https://support.signal.org/hc/en-us/articles/115002502511'>exported your Signal data</a>. It will be a directory whose name starts with 'Signal Export.'<br><br><b>NOTE</b>: You must only import a set of exported data <b>once</b>. Import makes a copy of the exported client, and duplicate clients interfere with each other.",
         "description": "Description of the export process"
     },
     "unsupportedAttachment": {
@@ -48,6 +52,16 @@
     "androidMessageLengthWarning": {
         "message": "Klien Android hanya akan menerima 2000 karakter pertama dari pesan ini.",
         "description": "Warning that long messages could not get received completely by Android clients."
+    },
+    "leftTheGroup": {
+        "message": "$name$ left the group.",
+        "description": "Shown in the conversation history when a single person leaves the group",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Bob"
+            }
+        }
     },
     "youChangedTheTimer": {
         "message": "Anda memasang pewaktu ke $time$",
@@ -74,6 +88,10 @@
     "timestamp_m": {
         "message": "1 menit",
         "description": "Brief timestamp for messages sent about one minute ago. Displayed in the conversation list and message bubble."
+    },
+    "debugLog": {
+        "message": "Debug Log",
+        "description": "View menu item to open the debug log, capitalized"
     },
     "gotIt": {
         "message": "Saya mengerti!",
@@ -117,9 +135,17 @@
         "message": "Export again",
         "description": "If user has already exported once, this button allows user to do it again if needed"
     },
+    "quit": {
+        "message": "Quit",
+        "description": "Command in the tray icon menu, to quit the application"
+    },
     "clickToSave": {
         "message": "Klik untuk simpan",
         "description": "Hover text for attachment filenames"
+    },
+    "fileABug": {
+        "message": "File a bug",
+        "description": "Item under the Help menu, takes you to GitHub new issue form"
     },
     "messagesBelow": {
         "message": "Pesan baru dibawah",
@@ -136,6 +162,10 @@
     "offline": {
         "message": "Luring",
         "description": "Displayed when the desktop client has no network connection."
+    },
+    "hideMenuBar": {
+        "message": "Hide menu bar",
+        "description": "Label text for menu bar visibility setting"
     },
     "welcomeToSignal": {
         "message": "Selamat datang di Signal",
@@ -185,13 +215,21 @@
         "message": "Terverifikasi",
         "description": ""
     },
+    "trayTooltip": {
+        "message": "Signal Desktop",
+        "description": "Tooltip for the tray icon"
+    },
     "selectAContact": {
         "message": "Pilih kontak atau grup untuk mulai mengobrol",
         "description": ""
     },
     "exportError": {
-        "message": "Unfortunately, something went wrong during the export. Please, double-check your target empty directory for write access and enough space.",
+        "message": "Unfortunately, something went wrong during the export. First, double-check your target empty directory for write access and enough space. Then, please submit a debug log so we can help you get migrated!",
         "description": "Helper text if the user went forward on migrating the app, but ran into an error"
+    },
+    "aboutSignalDesktop": {
+        "message": "About Signal Desktop",
+        "description": "Item under the Help menu, which opens a small about window"
     },
     "installConnecting": {
         "message": "Menyambungkan...",
@@ -223,672 +261,746 @@
             }
         }
     },
-  "sent": {
-    "message": "Terkirim",
-    "description": "Label for the time a message was sent",
-
-    "backup": {
-      "message": "Back up",
-      "description": "Button label to begin backup process"
+    "sent": {
+        "message": "Terkirim",
+        "description": "Label for the time a message was sent"
     },
     "theyChangedTheTimer": {
-      "message": "$name$ mengubah pewaktu ke $time$.",
-      "description": "Message displayed when someone else changes the message expiration timer in a conversation.",
-      "placeholders": {
-        "name": {
-          "content": "$1",
-          "example": "Bob"
-        },
-        "time": {
-          "content": "$2",
-          "example": "10m"
+        "message": "$name$ mengubah pewaktu ke $time$.",
+        "description": "Message displayed when someone else changes the message expiration timer in a conversation.",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Bob"
+            },
+            "time": {
+                "content": "$2",
+                "example": "10m"
+            }
         }
-      }
     },
     "timestamp_s": {
-      "message": "sekarang",
-      "description": "Brief timestamp for messages sent less than a minute ago. Displayed in the conversation list and message bubble."
+        "message": "sekarang",
+        "description": "Brief timestamp for messages sent less than a minute ago. Displayed in the conversation list and message bubble."
     },
     "changedRecentlyMultiple": {
-      "message": "Nomor keamanan Anda dengan beberapa anggota grup telah berubah baru-baru ini. Ini bisa berarti seseorang mencoba mencegat komunikasi Anda atau bahwa mereka hanya memasang ulang Sinyal.",
-      "description": "Shown on confirmation dialog when user attempts to send a message"
+        "message": "Nomor keamanan Anda dengan beberapa anggota grup telah berubah baru-baru ini. Ini bisa berarti seseorang mencoba mencegat komunikasi Anda atau bahwa mereka hanya memasang ulang Sinyal.",
+        "description": "Shown on confirmation dialog when user attempts to send a message"
     },
     "timerOption_1_day": {
-      "message": "1 hari",
-      "description": "Label for a selectable option in the message expiration timer menu"
+        "message": "1 hari",
+        "description": "Label for a selectable option in the message expiration timer menu"
     },
     "exporting": {
-      "message": "Please wait while we export your data. It may take several minutes. You can still use Signal on your phone and other devices during this time.",
-      "description": "Message shown on the migration screen while we export data"
+        "message": "Please wait while we export your data. It may take several minutes. You can still use Signal on your phone and other devices during this time.",
+        "description": "Message shown on the migration screen while we export data"
     },
     "reportIssue": {
-      "message": "Laporkan isu",
-      "description": "Link to open the issue tracker"
+        "message": "Laporkan isu",
+        "description": "Link to open the issue tracker"
     },
     "newMessage": {
-      "message": "Pesan Baru",
-      "description": "Displayed in notifications for only 1 message"
+        "message": "Pesan Baru",
+        "description": "Displayed in notifications for only 1 message"
     },
     "nameOnly": {
-      "message": "Nama pengirim saja",
-      "description": "Label for setting notifications to display sender name only"
+        "message": "Nama pengirim saja",
+        "description": "Label for setting notifications to display sender name only"
     },
     "autoUpdateLaterButtonLabel": {
-      "message": "Later",
-      "description": ""
+        "message": "Later",
+        "description": ""
     },
     "from": {
-      "message": "Dari",
-      "description": "Label for the sender of a message"
+        "message": "Dari",
+        "description": "Label for the sender of a message"
     },
     "deleteConversationConfirmation": {
-      "message": "Hapus obrolan ini selamanya?",
-      "description": "Confirmation dialog text that asks the user if they really wish to delete the conversation. Answer buttons use the strings 'ok' and 'cancel'. The deletion is permanent, i.e. it cannot be undone."
+        "message": "Hapus obrolan ini selamanya?",
+        "description": "Confirmation dialog text that asks the user if they really wish to delete the conversation. Answer buttons use the strings 'ok' and 'cancel'. The deletion is permanent, i.e. it cannot be undone."
+    },
+    "mainMenuWindow": {
+        "message": "&Window",
+        "description": "The label that is used for the Window menu in the program main menu. The '&' indicates that the following letter will be used as the keyboard 'shortcut letter' for accessing the menu with the Alt-<letter> combination."
     },
     "installImport": {
-      "message": "Set up with exported data",
-      "description": "One of two choices presented on the screen shown on first launch"
+        "message": "Set up with exported data",
+        "description": "One of two choices presented on the screen shown on first launch"
     },
     "unlinkedWarning": {
-      "message": "Sambungkan kembali Signal Desktop ke perangkat mobile Anda untuk melanjutkan pesan.",
-      "description": ""
+        "message": "Sambungkan kembali Signal Desktop ke perangkat mobile Anda untuk melanjutkan pesan.",
+        "description": ""
     },
     "debugLogExplanation": {
-      "message": "Catatan ini akan diunggah secara publik agar kontributor dapat melihat. Anda dapat memeriksa kembali dan menyunting ini sebelum mengunggahnya.",
-      "description": ""
+        "message": "Catatan ini akan diunggah secara publik agar kontributor dapat melihat. Anda dapat memeriksa kembali dan menyunting ini sebelum mengunggahnya.",
+        "description": ""
     },
     "newPhoneNumber": {
-      "message": "Masukkan nomor telepon untuk menambahkan kontak.",
-      "description": "Placeholder for adding a new number to a contact"
+        "message": "Masukkan nomor telepon untuk menambahkan kontak.",
+        "description": "Placeholder for adding a new number to a contact"
     },
     "noLongerVerified": {
-      "message": "Nomor keamanan Anda dengan $name$ telah berubah dan tidak lagi diverifikasi. Klik untuk menampilkan.",
-      "description": "Shown in converation banner when user's safety number has changed, but they were previously verified.",
-      "placeholders": {
-        "name": {
-          "content": "$1",
-          "example": "Bob"
+        "message": "Nomor keamanan Anda dengan $name$ telah berubah dan tidak lagi diverifikasi. Klik untuk menampilkan.",
+        "description": "Shown in converation banner when user's safety number has changed, but they were previously verified.",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Bob"
+            }
         }
-      }
     },
     "searchForPeopleOrGroups": {
-      "message": "Cari...",
-      "description": "Placeholder text in the search input"
+        "message": "Cari...",
+        "description": "Placeholder text in the search input"
     },
     "someRecipientsFailed": {
-      "message": "Beberapa penerima gagal.",
-      "description": "When you send to multiple recipients via a group, and the message went to some recipients but not others."
+        "message": "Beberapa penerima gagal.",
+        "description": "When you send to multiple recipients via a group, and the message went to some recipients but not others."
     },
     "noNameOrMessage": {
-      "message": "Nama atau pesan saja",
-      "description": "Label for setting notifications to display no name and no message text"
+        "message": "Nama atau pesan saja",
+        "description": "Label for setting notifications to display no name and no message text"
     },
     "syncNow": {
-      "message": "Impor sekarang",
-      "description": "Label for a button that syncs contacts and groups from your phone"
+        "message": "Impor sekarang",
+        "description": "Label for a button that syncs contacts and groups from your phone"
     },
     "syncFailed": {
-      "message": "Impor gagal. Pastikan komputer dan perangkat anda tersambung ke jaringan internet.",
-      "description": "Informational text displayed if a sync operation times out."
+        "message": "Impor gagal. Pastikan komputer dan perangkat anda tersambung ke jaringan internet.",
+        "description": "Informational text displayed if a sync operation times out."
     },
     "unlinked": {
-      "message": "Tidak tersambung",
-      "description": ""
+        "message": "Tidak tersambung",
+        "description": ""
     },
     "installFollowUs": {
-      "message": "<a $a_params$>Ikuti kami</a> untuk pemutakhiran dukungan banyak perangkat di iOS",
-      "description": "",
-      "placeholders": {
-        "a_params": {
-          "content": "$1",
-          "example": "href='http://example.com'"
+        "message": "<a $a_params$>Ikuti kami</a> untuk pemutakhiran dukungan banyak perangkat di iOS",
+        "description": "",
+        "placeholders": {
+            "a_params": {
+                "content": "$1",
+                "example": "href='http://example.com'"
+            }
         }
-      }
     },
     "learnMore": {
-      "message": "Pelajari lebih jauh tentang verifikasi nomor keamanan",
-      "description": "Text that links to a support article on verifying safety numbers"
+        "message": "Pelajari lebih jauh tentang verifikasi nomor keamanan",
+        "description": "Text that links to a support article on verifying safety numbers"
     },
     "installNew": {
-      "message": "Set up as new install",
-      "description": "One of two choices presented on the screen shown on first launch"
+        "message": "Set up as new install",
+        "description": "One of two choices presented on the screen shown on first launch"
     },
     "importing": {
-      "message": "Please wait while we import your data...",
-      "description": "Shown as we are loading the user's data from disk"
+        "message": "Please wait while we import your data...",
+        "description": "Shown as we are loading the user's data from disk"
     },
     "unreadMessages": {
-      "message": "$count$ Pesan Belum Dibaca",
-      "description": "Text for unread message separator, with count",
-      "placeholders": {
-        "count": {
-          "content": "$1",
-          "example": "5"
+        "message": "$count$ Pesan Belum Dibaca",
+        "description": "Text for unread message separator, with count",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "5"
+            }
         }
-      }
     },
     "installTooManyDevices": {
-      "message": "Maaf, Anda menautkan perangkat terlalu banyak. Coba hapus beberapa.",
-      "description": ""
+        "message": "Maaf, Anda menautkan perangkat terlalu banyak. Coba hapus beberapa.",
+        "description": ""
     },
     "installSignalLinks": {
-      "message": "Pertama, pasang Signal pada <a $play_store$>Android atau <a $app_store$>iPhone</a> anda. <br /> Kami akan menyambungkan perangat anda dan menyelaraskan pesan anda selalu.",
-      "description": "Prompt the user to install Signal on their phone before linking",
-      "placeholders": {
-        "play_store": {
-          "content": "$1",
-          "example": "href='http://example.com'"
-        },
-        "app_store": {
-          "content": "$2",
-          "example": "href='http://example.com'"
+        "message": "Pertama, pasang Signal pada <a $play_store$>Android atau <a $app_store$>iPhone</a> anda. <br /> Kami akan menyambungkan perangat anda dan menyelaraskan pesan anda selalu.",
+        "description": "Prompt the user to install Signal on their phone before linking",
+        "placeholders": {
+            "play_store": {
+                "content": "$1",
+                "example": "href='http://example.com'"
+            },
+            "app_store": {
+                "content": "$2",
+                "example": "href='http://example.com'"
+            }
         }
-      }
+    },
+    "joinedTheGroup": {
+        "message": "$name$ joined the group.",
+        "description": "Shown in the conversation history when a single person joins the group",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Alice"
+            }
+        }
+    },
+    "goToForums": {
+        "message": "Go to forums",
+        "description": "Item under the Help menu, takes you to the forums"
     },
     "installSyncingGroupsAndContacts": {
-      "message": "Sinkronasi grup dan kontak",
-      "description": ""
+        "message": "Sinkronasi grup dan kontak",
+        "description": ""
     },
     "timerOption_30_minutes_abbreviated": {
-      "message": "30m",
-      "description": "Very short format indicating current timer setting in the conversation header"
+        "message": "30m",
+        "description": "Very short format indicating current timer setting in the conversation header"
     },
     "themeAndroidDark": {
-      "message": "Android (gelap)",
-      "description": "Label text for dark Android theme"
+        "message": "Android (gelap)",
+        "description": "Label text for dark Android theme"
     },
     "timerOption_1_minute_abbreviated": {
-      "message": "1m",
-      "description": "Very short format indicating current timer setting in the conversation header"
+        "message": "1m",
+        "description": "Very short format indicating current timer setting in the conversation header"
     },
     "loadingMessages": {
-      "message": "Memuat pesan $count$ sejauh ini...",
-      "description": "Message shown on the loading screen when we're catching up on the backlog of messages",
-      "placeholders": {
-        "count": {
-          "content": "$1",
-          "example": "5"
+        "message": "Memuat pesan $count$ sejauh ini...",
+        "description": "Message shown on the loading screen when we're catching up on the backlog of messages",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "5"
+            }
         }
-      }
+    },
+    "speech": {
+        "message": "Speech",
+        "description": "Item under the Edit menu, with 'start/stop speaking' items below it"
     },
     "changedSinceVerified": {
-      "message": "Nomor keamanan Anda dengan $name$ telah berubah sejak Anda terakhir diverifikasi. Ini bisa berarti seseorang mencoba mencegat komunikasi Anda atau bahwa $name$ hanya memasang ulang Sinyal.",
-      "description": "Shown on confirmation dialog when user attempts to send a message",
-      "placeholders": {
-        "name": {
-          "content": "$1",
-          "example": "Bob"
+        "message": "Nomor keamanan Anda dengan $name$ telah berubah sejak Anda terakhir diverifikasi. Ini bisa berarti seseorang mencoba mencegat komunikasi Anda atau bahwa $name$ hanya memasang ulang Sinyal.",
+        "description": "Shown on confirmation dialog when user attempts to send a message",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Bob"
+            }
         }
-      }
     },
     "upgrade": {
-      "message": "Pemutahiran",
-      "description": "Label text for button to upgrade the app to the latest version"
+        "message": "Pemutahiran",
+        "description": "Label text for button to upgrade the app to the latest version"
     },
     "yourSafetyNumberWith": {
-      "message": "Nomor keamanan Anda dengan $name$:",
-      "description": "Heading for safety number view",
-      "placeholders": {
-        "name": {
-          "content": "$1",
-          "example": "John"
+        "message": "Nomor keamanan Anda dengan $name$:",
+        "description": "Heading for safety number view",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "John"
+            }
         }
-      }
     },
     "showLess": {
-      "message": "Sembunyikan detail",
-      "description": "Hides the details of a key change"
+        "message": "Sembunyikan detail",
+        "description": "Hides the details of a key change"
     },
     "theme": {
-      "message": "Tema",
-      "description": "Header for theme settings"
+        "message": "Tema",
+        "description": "Header for theme settings"
     },
     "newIdentity": {
-      "message": "Nomor keamanan baru",
-      "description": "Header for a key change dialog"
+        "message": "Nomor keamanan baru",
+        "description": "Header for a key change dialog"
     },
     "installTagline": {
-      "message": "Privasi itu mungkin. Signal membuatnya lebih mudah.",
-      "description": "Tagline displayed under 'installWelcome' string on the install page"
+        "message": "Privasi itu mungkin. Signal membuatnya lebih mudah.",
+        "description": "Tagline displayed under 'installWelcome' string on the install page"
+    },
+    "show": {
+        "message": "Show",
+        "description": "Command under Window menu, to show the window"
     },
     "audioNotificationDescription": {
-      "message": "Mainkan suara notifikasi",
-      "description": "Description for audio notification setting"
+        "message": "Mainkan suara notifikasi",
+        "description": "Description for audio notification setting"
     },
     "isNotVerified": {
-      "message": "Anda belum memverifikasi nomor keamanan Anda dengan $name$.",
-      "description": "Summary state shown at top of the safety number screen if user has not verified contact.",
-      "placeholders": {
-        "name": {
-          "content": "$1",
-          "example": "Bob"
+        "message": "Anda belum memverifikasi nomor keamanan Anda dengan $name$.",
+        "description": "Summary state shown at top of the safety number screen if user has not verified contact.",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Bob"
+            }
         }
-      }
     },
     "disconnected": {
-      "message": "Luring",
-      "description": "Displayed when the desktop client cannot connect to the server."
+        "message": "Luring",
+        "description": "Displayed when the desktop client cannot connect to the server."
     },
     "syncing": {
-      "message": "Impor ...",
-      "description": "Label for a disabled sync button while sync is in progress."
+        "message": "Impor ...",
+        "description": "Label for a disabled sync button while sync is in progress."
     },
     "multipleNoLongerVerified": {
-      "message": "Nomor keamanan Anda dengan beberapa anggota grup ini telah berubah dan tidak lagi diverifikasi. Klik untuk menampilkan.",
-      "description": "Shown in conversation banner when more than one group member's safety number has changed, but they were previously verified."
+        "message": "Nomor keamanan Anda dengan beberapa anggota grup ini telah berubah dan tidak lagi diverifikasi. Klik untuk menampilkan.",
+        "description": "Shown in conversation banner when more than one group member's safety number has changed, but they were previously verified."
     },
     "acceptNewKey": {
-      "message": "Terima",
-      "description": "Label for a button to accept a new safety number"
+        "message": "Terima",
+        "description": "Label for a button to accept a new safety number"
     },
     "timerOption_12_hours_abbreviated": {
-      "message": "12j",
-      "description": "Very short format indicating current timer setting in the conversation header"
+        "message": "12j",
+        "description": "Very short format indicating current timer setting in the conversation header"
     },
     "timestampFormat_M": {
-      "message": "MMM D",
-      "description": "Timestamp format string for displaying month and day (but not the year) of a date within the current year, ex: use 'MMM D' for 'Aug 8', or 'D MMM' for '8 Aug'."
+        "message": "MMM D",
+        "description": "Timestamp format string for displaying month and day (but not the year) of a date within the current year, ex: use 'MMM D' for 'Aug 8', or 'D MMM' for '8 Aug'."
     },
     "chooseDirectory": {
-      "message": "Choose directory",
-      "description": "Button to allow the user to export all data from app as part of migration process"
+        "message": "Choose directory",
+        "description": "Button to allow the user to export all data from app as part of migration process"
+    },
+    "mainMenuEdit": {
+        "message": "&Edit",
+        "description": "The label that is used for the Edit menu in the program main menu. The '&' indicates that the following letter will be used as the keyboard 'shortcut letter' for accessing the menu with the Alt-<letter> combination."
     },
     "timerOption_6_hours_abbreviated": {
-      "message": "6j",
-      "description": "Very short format indicating current timer setting in the conversation header"
+        "message": "6j",
+        "description": "Very short format indicating current timer setting in the conversation header"
     },
     "unregisteredUser": {
-      "message": "Nomor tidak terdaftarkan",
-      "description": "Error message displayed when sending to an unregistered user."
+        "message": "Nomor tidak terdaftarkan",
+        "description": "Error message displayed when sending to an unregistered user."
     },
     "timerOption_1_day_abbreviated": {
-      "message": "1h",
-      "description": "Very short format indicating current timer setting in the conversation header"
+        "message": "1h",
+        "description": "Very short format indicating current timer setting in the conversation header"
     },
     "autoUpdateRestartButtonLabel": {
-      "message": "Restart Signal",
-      "description": ""
+        "message": "Restart Signal",
+        "description": ""
     },
     "importButton": {
-      "message": "Import",
-      "description": ""
+        "message": "Import",
+        "description": ""
     },
     "sync": {
-      "message": "Kontak",
-      "description": "Label for contact and group sync settings"
+        "message": "Kontak",
+        "description": "Label for contact and group sync settings"
     },
     "timerOption_1_week": {
-      "message": "1 minggu",
-      "description": "Label for a selectable option in the message expiration timer menu"
+        "message": "1 minggu",
+        "description": "Label for a selectable option in the message expiration timer menu"
     },
     "installGotIt": {
-      "message": "Dimengerti",
-      "description": "Button for the user to confirm that they have Signal installed."
+        "message": "Dimengerti",
+        "description": "Button for the user to confirm that they have Signal installed."
     },
     "received": {
-      "message": "Menerima",
-      "description": "Label for the time a message was received"
+        "message": "Menerima",
+        "description": "Label for the time a message was received"
     },
     "youMarkedAsNotVerified": {
-      "message": "Anda menandai nomor keamanan Anda dengan $name$ sebagai tidak terverifikasi.",
-      "description": "Shown in the conversation history when the user marks a contact as not verified, whether on the safety number screen or by dismissing a banner or dialog.",
-      "placeholders": {
-        "name": {
-          "content": "$1",
-          "example": "Bob"
+        "message": "Anda menandai nomor keamanan Anda dengan $name$ sebagai tidak terverifikasi.",
+        "description": "Shown in the conversation history when the user marks a contact as not verified, whether on the safety number screen or by dismissing a banner or dialog.",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Bob"
+            }
         }
-      }
     },
     "isVerified": {
-      "message": "Anda telah memverifikasi nomor keamanan Anda dengan $name$.",
-      "description": "Summary state shown at top of the safety number screen if user has verified contact.",
-      "placeholders": {
-        "name": {
-          "content": "$1",
-          "example": "Bob"
+        "message": "Anda telah memverifikasi nomor keamanan Anda dengan $name$.",
+        "description": "Summary state shown at top of the safety number screen if user has verified contact.",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Bob"
+            }
         }
-      }
     },
     "timerOption_30_seconds": {
-      "message": "30 detik",
-      "description": "Label for a selectable option in the message expiration timer menu"
+        "message": "30 detik",
+        "description": "Label for a selectable option in the message expiration timer menu"
     },
     "sendMessage": {
-      "message": "Mengirim pesan",
-      "description": "Placeholder text in the message entry field"
+        "message": "Mengirim pesan",
+        "description": "Placeholder text in the message entry field"
     },
     "me": {
-      "message": "Saya",
-      "description": "The label for yourself when shown in a group member list"
+        "message": "Saya",
+        "description": "The label for yourself when shown in a group member list"
     },
     "mediaMessage": {
-      "message": "Pesan berisi media",
-      "description": "Description of a message that has an attachment and no text, displayed in the conversation list as a preview."
+        "message": "Pesan berisi media",
+        "description": "Description of a message that has an attachment and no text, displayed in the conversation list as a preview."
     },
     "unreadMessage": {
-      "message": "1 Pesan Belum Dibaca",
-      "description": "Text for unread message separator, just one message"
+        "message": "1 Pesan Belum Dibaca",
+        "description": "Text for unread message separator, just one message"
     },
     "expiredWarning": {
-      "message": "Versi dari Signal Desktop ini telah kadaluarsa. Mohom memutahirkan ke versi terbaru untuk melanjutkan pengiriman pesan.",
-      "description": "Warning notification that this version of the app has expired"
+        "message": "Versi dari Signal Desktop ini telah kadaluarsa. Mohom memutahirkan ke versi terbaru untuk melanjutkan pengiriman pesan.",
+        "description": "Warning notification that this version of the app has expired"
     },
     "fileSizeWarning": {
-      "message": "Maaf, berkas tersebut melebihi batas ukuran pesan.",
-      "description": ""
+        "message": "Maaf, berkas tersebut melebihi batas ukuran pesan.",
+        "description": ""
     },
     "deleteMessage": {
-      "message": "Hapus pesan ini",
-      "description": ""
+        "message": "Hapus pesan ini",
+        "description": ""
     },
     "autoUpdateNewVersionInstructions": {
-      "message": "Press Restart to apply the updates.",
-      "description": ""
+        "message": "Press Restart to apply the updates.",
+        "description": ""
     },
     "timerOption_0_seconds": {
-      "message": "padam",
-      "description": "Label for option to turn off message expiration in the timer menu"
+        "message": "padam",
+        "description": "Label for option to turn off message expiration in the timer menu"
     },
     "importError": {
-      "message": "Unfortunately, something went wrong during the import. <p>Please, double-check your target directory. It should start with 'Signal Export.'</p>",
-      "description": "Message shown if the import went wrong."
+        "message": "Unfortunately, something went wrong during the import. <p>Please, double-check your target directory. It should start with 'Signal Export.'</p>",
+        "description": "Message shown if the import went wrong."
     },
     "installAndroidInstructions": {
-      "message": "Buka Signal di telepon anda dan arahkan ke Pengaturan -> perangkan tersambung. Tekan tombol untuk menambahkan perangkat baru, lalu pindai kode diatas.",
-      "description": ""
+        "message": "Buka Signal di telepon anda dan arahkan ke Pengaturan -> perangkan tersambung. Tekan tombol untuk menambahkan perangkat baru, lalu pindai kode diatas.",
+        "description": ""
     },
     "invalidNumberError": {
-      "message": "Nomor salah",
-      "description": "When a person inputs a number that is invalid"
+        "message": "Nomor salah",
+        "description": "When a person inputs a number that is invalid"
     },
     "importComplete": {
-      "message": "We've successfully loaded your data. The next step is to restart the application!",
-      "description": "Shown when the import is complete."
+        "message": "We've successfully loaded your data. The next step is to restart the application!",
+        "description": "Shown when the import is complete."
     },
     "installWelcome": {
-      "message": "Selamat datang di Signal Desktop",
-      "description": "Welcome title on the install page"
+        "message": "Selamat datang di Signal Desktop",
+        "description": "Welcome title on the install page"
     },
     "messageBelow": {
-      "message": "Pesan baru dibawah",
-      "description": "Alt text for button to take user down to bottom of conversation with a new message out of screen"
+        "message": "Pesan baru dibawah",
+        "description": "Alt text for button to take user down to bottom of conversation with a new message out of screen"
     },
     "exportComplete": {
-      "message": "Your data has been exported to: <p><b>$location$</b></p> You'll be able to import this data as you set up <a target='_blank' href='https://support.whispersystems.org/hc/en-us/articles/214507138'>the new Signal Desktop</a>.",
-      "description": "Message shown on the migration screen when we are done exporting data",
-      "placeholders": {
-        "location": {
-          "content": "$1",
-          "example": "/Users/someone/somewhere"
+        "message": "Your data has been exported to: <p><b>$location$</b></p> You'll be able to import this data as you set up <a target='_blank' href='https://support.whispersystems.org/hc/en-us/articles/214507138'>the new Signal Desktop</a>.",
+        "description": "Message shown on the migration screen when we are done exporting data",
+        "placeholders": {
+            "location": {
+                "content": "$1",
+                "example": "/Users/someone/somewhere"
+            }
         }
-      }
     },
     "installConnectionFailed": {
-      "message": "Gagal menyambungkan ke server.",
-      "description": "Displayed when we can't connect to the server."
+        "message": "Gagal menyambungkan ke server.",
+        "description": "Displayed when we can't connect to the server."
     },
     "unverify": {
-      "message": "Tandai tidak terverifikasi",
-      "description": ""
+        "message": "Tandai tidak terverifikasi",
+        "description": ""
     },
     "messageNotSent": {
-      "message": "Pesan tidak terkirim.",
-      "description": "Informational label, appears on messages that failed to send"
+        "message": "Pesan tidak terkirim.",
+        "description": "Informational label, appears on messages that failed to send"
+    },
+    "mainMenuView": {
+        "message": "&View",
+        "description": "The label that is used for the View menu in the program main menu. The '&' indicates that the following letter will be used as the keyboard 'shortcut letter' for accessing the menu with the Alt-<letter> combination."
     },
     "autoUpdateNewVersionMessage": {
-      "message": "There is a new version of Signal available.",
-      "description": ""
+        "message": "There is a new version of Signal available.",
+        "description": ""
     },
     "disableNotifications": {
-      "message": "Matikan pemberitahuan",
-      "description": "Label for disabling notifications"
+        "message": "Matikan pemberitahuan",
+        "description": "Label for disabling notifications"
     },
     "cancel": {
-      "message": "Batal",
-      "description": ""
+        "message": "Batal",
+        "description": ""
     },
     "unblockToSend": {
-      "message": "Lepaskan blokir kontak ini untuk mengirim pesan",
-      "description": "Brief message shown when trying to message a blocked number"
+        "message": "Lepaskan blokir kontak ini untuk mengirim pesan",
+        "description": "Brief message shown when trying to message a blocked number"
     },
     "installIHaveSignalButton": {
-      "message": "Saya memiliki Signal for Android",
-      "description": "Button for the user to confirm that they have Signal for Android"
+        "message": "Saya memiliki Signal for Android",
+        "description": "Button for the user to confirm that they have Signal for Android"
+    },
+    "mainMenuHelp": {
+        "message": "&Help",
+        "description": "The label that is used for the Help menu in the program main menu. The '&' indicates that the following letter will be used as the keyboard 'shortcut letter' for accessing the menu with the Alt-<letter> combination."
     },
     "unnamedFile": {
-      "message": "File yang tidak memiliki nama",
-      "description": "Hover text for attachment filenames"
+        "message": "File yang tidak memiliki nama",
+        "description": "Hover text for attachment filenames"
     },
     "sendAnyway": {
-      "message": "Kirim Apapun",
-      "description": "Used on a warning dialog to make it clear that it might be risky to send the message."
+        "message": "Kirim Apapun",
+        "description": "Used on a warning dialog to make it clear that it might be risky to send the message."
     },
     "youMarkedAsVerified": {
-      "message": "Anda menandai nomor keamanan Anda dengan $name$ sebagai yang telah diverifikasi.",
-      "description": "Shown in the conversation history when the user marks a contact as verified.",
-      "placeholders": {
-        "name": {
-          "content": "$1",
-          "example": "Bob"
+        "message": "Anda menandai nomor keamanan Anda dengan $name$ sebagai yang telah diverifikasi.",
+        "description": "Shown in the conversation history when the user marks a contact as verified.",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Bob"
+            }
         }
-      }
     },
     "connecting": {
-      "message": "Menyambungi",
-      "description": "Displayed when the desktop client is currently connecting to the server."
+        "message": "Menyambungi",
+        "description": "Displayed when the desktop client is currently connecting to the server."
     },
     "sessionEnded": {
-      "message": "Sesi aman berakhir",
-      "description": "This is a past tense, informational message. In other words, your secure session has been reset."
+        "message": "Sesi aman berakhir",
+        "description": "This is a past tense, informational message. In other words, your secure session has been reset."
     },
     "installGetStartedButton": {
-      "message": "Memulai",
-      "description": ""
+        "message": "Memulai",
+        "description": ""
     },
     "relink": {
-      "message": "Sambungkan kembali",
-      "description": ""
+        "message": "Sambungkan kembali",
+        "description": ""
     },
     "timerOption_1_week_abbreviated": {
-      "message": "1mg",
-      "description": "Very short format indicating current timer setting in the conversation header"
+        "message": "1mg",
+        "description": "Very short format indicating current timer setting in the conversation header"
     },
     "timerOption_5_seconds": {
-      "message": "5 detik",
-      "description": "Label for a selectable option in the message expiration timer menu"
+        "message": "5 detik",
+        "description": "Label for a selectable option in the message expiration timer menu"
     },
     "showMembers": {
-      "message": "Tampilkan anggota",
-      "description": ""
+        "message": "Tampilkan anggota",
+        "description": ""
     },
     "youMarkedAsNotVerifiedOtherDevice": {
-      "message": "Anda menandai nomor keamanan Anda dengan $name$ yang tidak diverifikasi dari perangkat lain.",
-      "description": "Shown in the conversation history when we discover that the user marked a contact as not verified on another device.",
-      "placeholders": {
-        "name": {
-          "content": "$1",
-          "example": "Bob"
+        "message": "Anda menandai nomor keamanan Anda dengan $name$ yang tidak diverifikasi dari perangkat lain.",
+        "description": "Shown in the conversation history when we discover that the user marked a contact as not verified on another device.",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Bob"
+            }
         }
-      }
     },
     "installSignalLink": {
-      "message": "First, install <a $a_params$>Signal</a> on your mobile phone. We'll link your devices and keep your messages in sync.",
-      "description": "Prompt the user to install Signal on their phone before linking",
-      "placeholders": {
-        "a_params": {
-          "content": "$1",
-          "example": "href='http://example.com'"
+        "message": "First, install <a $a_params$>Signal</a> on your mobile phone. We'll link your devices and keep your messages in sync.",
+        "description": "Prompt the user to install Signal on their phone before linking",
+        "placeholders": {
+            "a_params": {
+                "content": "$1",
+                "example": "href='http://example.com'"
+            }
         }
-      }
     },
     "installLinkingWithNumber": {
-      "message": "Tautkan dengan",
-      "description": "Text displayed before the phone number that the user is in the process of linking with"
+        "message": "Tautkan dengan",
+        "description": "Text displayed before the phone number that the user is in the process of linking with"
+    },
+    "goToSupportPage": {
+        "message": "Go to support page",
+        "description": "Item under the Help menu, takes you to the support page"
+    },
+    "multipleJoinedTheGroup": {
+        "message": "$names$ joined the group.",
+        "description": "Shown in the conversation history when more than one person joins the group",
+        "placeholders": {
+            "names": {
+                "content": "$1",
+                "example": "Alice, Bob"
+            }
+        }
     },
     "groupMembers": {
-      "message": "Anggota Grup",
-      "description": ""
+        "message": "Anggota Grup",
+        "description": ""
     },
     "loading": {
-      "message": "Memuat...",
-      "description": "Message shown on the loading screen before we've loaded any messages"
+        "message": "Memuat...",
+        "description": "Message shown on the loading screen before we've loaded any messages"
     },
     "newMessages": {
-      "message": "Pesan Baru",
-      "description": "Displayed in notifications for multiple messages"
+        "message": "Pesan Baru",
+        "description": "Displayed in notifications for multiple messages"
     },
     "newContact": {
-      "message": "Klik untuk membuat kontak baru",
-      "description": ""
+        "message": "Klik untuk membuat kontak baru",
+        "description": ""
     },
     "theirIdentityUnknown": {
-      "message": "Anda belum mengirim pesan apapun dengan kontak ini. Nomor keamanan anda dengan kontak ini akan tersedia sesaat setelah pesan pertama.",
-      "description": ""
+        "message": "Anda belum mengirim pesan apapun dengan kontak ini. Nomor keamanan anda dengan kontak ini akan tersedia sesaat setelah pesan pertama.",
+        "description": ""
     },
     "voiceMessage": {
-      "message": "Pesan Suara",
-      "description": "Name for a voice message attachment"
+        "message": "Pesan Suara",
+        "description": "Name for a voice message attachment"
     },
     "submit": {
-      "message": "Kirim",
-      "description": ""
+        "message": "Kirim",
+        "description": ""
     },
     "keychanged": {
-      "message": "Nomor keamanan Anda dengan $name$ telah berubah. Klik untuk menampilkan.",
-      "description": "",
-      "placeholders": {
-        "name": {
-          "content": "$1",
-          "example": "John"
+        "message": "Nomor keamanan Anda dengan $name$ telah berubah. Klik untuk menampilkan.",
+        "description": "",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "John"
+            }
         }
-      }
+    },
+    "updatedTheGroup": {
+        "message": "Updated the group.",
+        "description": "Shown in the conversation history when someone updates the group"
     },
     "identityKeyErrorOnSend": {
-      "message": "Nomor keamanan Anda dengan $name$ telah berubah. Ini bisa berarti seseorang mencoba mencegat komunikasi Anda atau bahwa $name$ hanya menginstal ulang Sinyal. Anda mungkin ingin memverifikasi nomor keamanan Anda dengan kontak ini.",
-      "description": "Shown when user clicks on a failed recipient in the message detail view after an identity key change",
-      "placeholders": {
-        "name": {
-          "content": "$1",
-          "example": "Bob"
+        "message": "Nomor keamanan Anda dengan $name$ telah berubah. Ini bisa berarti seseorang mencoba mencegat komunikasi Anda atau bahwa $name$ hanya menginstal ulang Sinyal. Anda mungkin ingin memverifikasi nomor keamanan Anda dengan kontak ini.",
+        "description": "Shown when user clicks on a failed recipient in the message detail view after an identity key change",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Bob"
+            }
         }
-      }
     },
     "to": {
-      "message": "Kepada",
-      "description": "Label for the receiver of a message"
+        "message": "Kepada",
+        "description": "Label for the receiver of a message"
     },
     "timerOption_1_hour_abbreviated": {
-      "message": "1j",
-      "description": "Very short format indicating current timer setting in the conversation header"
+        "message": "1j",
+        "description": "Very short format indicating current timer setting in the conversation header"
     },
     "installFinalButton": {
-      "message": "Terlihat baik",
-      "description": "The final button for the install process, after the user has entered a name for their device"
+        "message": "Terlihat baik",
+        "description": "The final button for the install process, after the user has entered a name for their device"
+    },
+    "goToReleaseNotes": {
+        "message": "Go to release notes",
+        "description": ""
     },
     "messageDetail": {
-      "message": "Detail Pesan",
-      "description": ""
+        "message": "Detail Pesan",
+        "description": ""
     },
     "installNewSignal": {
-      "message": "Install new Signal Desktop",
-      "description": "When export is complete, a button shows which sends user to Signal Desktop install instructions"
+        "message": "Install new Signal Desktop",
+        "description": "When export is complete, a button shows which sends user to Signal Desktop install instructions"
     },
     "exportChooserTitle": {
-      "message": "Choose target directory for data",
-      "description": "Title of the popup window used to select data storage location"
+        "message": "Choose target directory for data",
+        "description": "Title of the popup window used to select data storage location"
+    },
+    "mainMenuFile": {
+        "message": "&File",
+        "description": "The label that is used for the File menu in the program main menu. The '&' indicates that the following letter will be used as the keyboard 'shortcut letter' for accessing the menu with the Alt-<letter> combination."
     },
     "verify": {
-      "message": "Tandai terverifikasi",
-      "description": ""
+        "message": "Tandai terverifikasi",
+        "description": ""
     },
     "exportButton": {
-      "message": "Export",
-      "description": ""
+        "message": "Export",
+        "description": ""
     },
     "timerOption_10_seconds_abbreviated": {
-      "message": "10d",
-      "description": "Very short format indicating current timer setting in the conversation header"
+        "message": "10d",
+        "description": "Very short format indicating current timer setting in the conversation header"
     },
     "nameAndMessage": {
-      "message": "nama pengirim dan pesannya",
-      "description": "Label for setting notifications to display name and message text"
+        "message": "nama pengirim dan pesannya",
+        "description": "Label for setting notifications to display name and message text"
     },
     "failedToSend": {
-      "message": "Gagal mengirim. Cek sambungan jaringan Anda.",
-      "description": ""
+        "message": "Gagal mengirim. Cek sambungan jaringan Anda.",
+        "description": ""
     },
     "ok": {
-      "message": "OK",
-      "description": ""
+        "message": "OK",
+        "description": ""
     },
     "identityChanged": {
-      "message": "Nomor keamanan anda dengan kontak ini telah berubah. Ini bisa berarti ada seseorang mencoba menyadap komunikasi anda, atau kontak telah menghapus aplikasi Signal. Anda mungkin ingin memverifikasi nomor keamanan baru dibawah.",
-      "description": ""
+        "message": "Nomor keamanan anda dengan kontak ini telah berubah. Ini bisa berarti ada seseorang mencoba menyadap komunikasi anda, atau kontak telah menghapus aplikasi Signal. Anda mungkin ingin memverifikasi nomor keamanan baru dibawah.",
+        "description": ""
     },
     "changedSinceVerifiedMultiple": {
-      "message": "Nomor keamanan Anda dengan beberapa anggota grup telah berubah sejak terakhir Anda diverifikasi. Ini bisa berarti seseorang mencoba mencegat komunikasi Anda atau bahwa mereka hanya memasang ulang Sinyal.",
-      "description": "Shown on confirmation dialog when user attempts to send a message"
+        "message": "Nomor keamanan Anda dengan beberapa anggota grup telah berubah sejak terakhir Anda diverifikasi. Ini bisa berarti seseorang mencoba mencegat komunikasi Anda atau bahwa mereka hanya memasang ulang Sinyal.",
+        "description": "Shown on confirmation dialog when user attempts to send a message"
     },
     "submitDebugLog": {
-      "message": "Kirim log debug",
-      "description": "Menu item and header text for debug log modal, title case."
+        "message": "Kirim log debug",
+        "description": "Menu item and header text for debug log modal, title case."
     },
     "error": {
-      "message": "Galat",
-      "description": ""
+        "message": "Galat",
+        "description": ""
+    },
+    "titleIsNow": {
+        "message": "Title is now '$name$'.",
+        "description": "Shown in the conversation history when someone changes the title of the group",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Book Club"
+            }
+        }
     },
     "changedRightAfterVerify": {
-      "message": "Nomor keamanan yang ingin Anda verifikasi telah berubah. Harap tinjau nomor keamanan baru Anda dengan $name$. Ingat, perubahan ini bisa berarti seseorang mencoba mencegat komunikasi Anda atau bahwa $name$ hanya memasang ulang Sinyal.",
-      "description": "Shown on the safety number screen when the user has selected to verify/unverify a contact's safety number, and we immediately discover a safety number change",
-      "placeholders": {
-        "name": {
-          "content": "$1",
-          "example": "Bob"
+        "message": "Nomor keamanan yang ingin Anda verifikasi telah berubah. Harap tinjau nomor keamanan baru Anda dengan $name$. Ingat, perubahan ini bisa berarti seseorang mencoba mencegat komunikasi Anda atau bahwa $name$ hanya memasang ulang Sinyal.",
+        "description": "Shown on the safety number screen when the user has selected to verify/unverify a contact's safety number, and we immediately discover a safety number change",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Bob"
+            }
         }
-      }
     },
     "timerSetTo": {
-      "message": "Pewaktu set ke $time$",
-      "description": "Displayed in the conversation list when the timer is updated.",
-      "placeholders": {
-        "time": {
-          "content": "$1",
-          "example": "1w"
+        "message": "Pewaktu set ke $time$",
+        "description": "Displayed in the conversation list when the timer is updated.",
+        "placeholders": {
+            "time": {
+                "content": "$1",
+                "example": "1w"
+            }
         }
-      }
     },
     "autoUpdateNewVersionTitle": {
-      "message": "Signal update available",
-      "description": ""
+        "message": "Signal update available",
+        "description": ""
     },
     "timerOption_30_seconds_abbreviated": {
-      "message": "30d",
-      "description": "Very short format indicating current timer setting in the conversation header"
+        "message": "30d",
+        "description": "Very short format indicating current timer setting in the conversation header"
     },
     "exportInstructions": {
-      "message": "The first step is to choose a directory to store this application's exported data. It will contain your message history and sensitive cryptographic data, so be sure to save it somewhere private.",
-      "description": "Description of the export process"
+        "message": "The first step is to choose a directory to store this application's exported data. It will contain your message history and sensitive cryptographic data, so be sure to save it somewhere private.",
+        "description": "Description of the export process"
     },
     "notifications": {
-      "message": "Pemberitahuan",
-      "description": "Header for notification settings"
+        "message": "Pemberitahuan",
+        "description": "Header for notification settings"
     },
     "tryAgain": {
-      "message": "Try again",
-      "description": "Button shown if the user runs into an error during import, allowing them to start over"
+        "message": "Try again",
+        "description": "Button shown if the user runs into an error during import, allowing them to start over"
     },
     "resend": {
-      "message": "Kirim ulang",
-      "description": ""
+        "message": "Kirim ulang",
+        "description": ""
     },
     "youMarkedAsVerifiedOtherDevice": {
-      "message": "Anda menandai nomor keamanan Anda dengan $name$seperti yang diverifikasi dari perangkat lain.",
-      "description": "Shown in the conversation history when we discover that the user marked a contact as verified on another device.",
-      "placeholders": {
-        "name": {
-          "content": "$1",
-          "example": "Bob"
+        "message": "Anda menandai nomor keamanan Anda dengan $name$seperti yang diverifikasi dari perangkat lain.",
+        "description": "Shown in the conversation history when we discover that the user marked a contact as verified on another device.",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Bob"
+            }
         }
-      }
+    },
+    "hide": {
+        "message": "Hide",
+        "description": "Command in the tray icon menu, to hide the window"
     }
-  }
+}
