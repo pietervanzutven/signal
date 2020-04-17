@@ -49,17 +49,14 @@
             picker.viewMode = Windows.Storage.Pickers.PickerViewMode.thumbnail;
             picker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.picturesLibrary;
             picker.fileTypeFilter.append("*");
-            var file = picker.pickSingleFileAsync().then(
+            picker.pickSingleFileAsync().then(
                 function (file) {
-                    if (file != null) {
-                        // Application now has read/write access to the picked file
-                        console.log("Picked photo: " + file.name);
-                        this.file = file;
-                        this.previewImages();
+                    if (!file) {
+                        return;
                     }
-                    else {
-                        console.log("Operation cancelled.");
-                    }
+
+                    this.file = file;
+                    this.previewImages();
                 }.bind(this)
             );
         },
@@ -74,9 +71,10 @@
         },
 
         autoScale: function(file) {
-            if (file.contentType.split('/')[0] !== 'image'
-                || file.contentType === 'image/gif'
-                || file.contentType === 'image/tiff') {
+            var contentType = file.contentType || file.type;
+            if (contentType.split('/')[0] !== 'image'
+                || contentType === 'image/gif'
+                || contentType === 'image/tiff') {
                 // nothing to do
                 return Promise.resolve(file);
             }
@@ -128,8 +126,9 @@
             var file = this.file || this.$input.prop('files')[0];
             if (!file) { return; }
 
-            var type = file.contentType.split('/')[0];
-            if (file.contentType === 'image/tiff') {
+            var contentType = file.contentType || file.type;
+            var type = contentType.split('/')[0];
+            if (contentType === 'image/tiff') {
                 type = 'file';
             }
             switch (type) {
@@ -145,7 +144,7 @@
 
             this.autoScale(file).then(function(blob) {
                 var limitKb = 1000000;
-                var blobType = file.type === 'image/gif' ? 'gif' : type;
+                var blobType = contentType === 'image/gif' ? 'gif' : type;
                 switch (blobType) {
                     case 'image':
                         limitKb = 6000; break;
