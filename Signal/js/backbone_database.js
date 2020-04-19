@@ -54,103 +54,113 @@
 
         var syncDfd = Backbone.$ ? Backbone.$.Deferred && Backbone.$.Deferred() : Backbone.Deferred && Backbone.Deferred();
 
-        var resp = [];
-        switch (method) {
-            case "read":
-                if (object.id) {
-                    resp = store[object.id];
-                } else if (options.conditions) {
-                    console.log('BB conditions query not implemented');
-                } else if (options.index) {
-                    switch (options.index.name) {
-                        case 'conversation':
-                            resp = Object.values(store).filter(element => element.conversationId === options.index.lower[0]);
-                            break;
-                        case 'unread':
-                            resp = Object.values(store).filter(element => element.conversationId === options.index.lower[0] && element.unread);
-                            break;
-                        case 'search':
-                            resp = Object.values(store).filter(element => element.id.includes(options.index.lower) || (element.name && element.name.toLowerCase().includes(options.index.lower)));
-                            break;
-                        case 'receipt':
-                            resp = Object.values(store).filter(element => element.sent_at === options.index.only);
-                            break;
-                        case 'unique':
-                            resp = Object.values(store).filter(element => element.source === options.index.value[0] && element.sourceDevice === options.index.value[1] && element.sent_at === options.index.value[2]);
-                            break;
-                        case 'expires_at':
-                            resp = Object.values(store).filter(element => element.expires_at);
-                            break;
-                        case 'group':
-                            resp = Object.values(store).filter(element => element.members && element.members.indexOf(options.index.only) !== -1);
-                            break;
-                        default:
-                            console.log('BB index query not implemented: ' + options.index.name);
-                    }
-                } else if (options.range) {
-                    resp = Object.values(store).filter(element => element.id >= options.range[0] && element.id <= options.range[1]);
-                } else {
-                    resp = Object.values(store);
-                }
-                if (Array.isArray(resp) && resp.length > 1 && options.limit) {
-                    resp = resp.slice(-options.limit);
-                }
-                break;
-            case "create":
-            case "update":
-                if (!object.id && object.id !== 0) {
-                    object.id = Date.now();
-                    object.attributes.id = object.id;
-                }
-                resp = object.toJSON();
-
-                if (resp.attachments) {
-                    for (var i = 0; i < resp.attachments.length; i++) {
-                        if (resp.attachments[i].data instanceof ArrayBuffer) {
-                            resp.attachments[i].data = saveMediaItem(resp.attachments[i].data);
+        new Promise((resolve, reject) => {
+            var resp = [];
+            switch (method) {
+                case "read":
+                    if (object.id) {
+                        resp = store[object.id];
+                    } else if (options.conditions) {
+                        console.log('BB conditions query not implemented');
+                    } else if (options.index) {
+                        switch (options.index.name) {
+                            case 'conversation':
+                                resp = Object.values(store).filter(element => element.conversationId === options.index.lower[0]);
+                                break;
+                            case 'unread':
+                                resp = Object.values(store).filter(element => element.conversationId === options.index.lower[0] && element.unread);
+                                break;
+                            case 'search':
+                                resp = Object.values(store).filter(element => element.id.includes(options.index.lower) || (element.name && element.name.toLowerCase().includes(options.index.lower)));
+                                break;
+                            case 'receipt':
+                                resp = Object.values(store).filter(element => element.sent_at === options.index.only);
+                                break;
+                            case 'unique':
+                                resp = Object.values(store).filter(element => element.source === options.index.value[0] && element.sourceDevice === options.index.value[1] && element.sent_at === options.index.value[2]);
+                                break;
+                            case 'expires_at':
+                                resp = Object.values(store).filter(element => element.expires_at);
+                                break;
+                            case 'group':
+                                resp = Object.values(store).filter(element => element.members && element.members.indexOf(options.index.only) !== -1);
+                                break;
+                            default:
+                                console.log('BB index query not implemented: ' + options.index.name);
                         }
+                    } else if (options.range) {
+                        resp = Object.values(store).filter(element => element.id >= options.range[0] && element.id <= options.range[1]);
+                    } else {
+                        resp = Object.values(store);
                     }
-                }
-                var avatar = resp.avatar || resp.profileAvatar;
-                if (avatar && avatar.data instanceof ArrayBuffer) {
-                    avatar.data = saveMediaItem(avatar.data);
-                }
+                    if (Array.isArray(resp) && resp.length > 1 && options.limit) {
+                        resp = resp.slice(-options.limit);
+                    }
 
-                store[object.id] = resp;
-                BBDBchanged = true;
-                break;
-            case "delete":
-                resp = null;
+                    resolve(resp);
+                    break;
+                case "create":
+                case "update":
+                    if (!object.id && object.id !== 0) {
+                        object.id = Date.now();
+                        object.attributes.id = object.id;
+                    }
+                    resp = object.toJSON();
 
-                if (object.id || object.cid) {
-                    if (object.attributes.attachments) {
-                        for (var i = 0; i < object.attributes.attachments.length; i++) {
-                            if (!(object.attributes.attachments[i].data instanceof ArrayBuffer)) {
-                                deleteMediaItem(object.attributes.attachments[i].data);
+                    var promises = [];
+                    if (resp.attachments) {
+                        resp.attachments.forEach(attachment => {
+                            if (attachment.data instanceof ArrayBuffer) {
+                                promises.push(saveMediaItem(attachment.data).then(fileName => attachment.data = fileName));
+                            }
+                        });
+                    }
+                    var avatar = resp.avatar || resp.profileAvatar;
+                    if (avatar && avatar.data instanceof ArrayBuffer) {
+                        promises.push(saveMediaItem(avatar.data).then(fileName => avatar.data = fileName));
+                    }
+
+                    Promise.all(promises).then(() => {
+                        store[object.id] = resp;
+                        BBDBchanged = true;
+                        resolve(resp);
+                    });
+                    break;
+                case "delete":
+                    resp = null;
+
+                    if (object.id || object.cid) {
+                        if (object.attributes.attachments) {
+                            for (var i = 0; i < object.attributes.attachments.length; i++) {
+                                if (!(object.attributes.attachments[i].data instanceof ArrayBuffer)) {
+                                    deleteMediaItem(object.attributes.attachments[i].data);
+                                }
                             }
                         }
+                        var avatar = object.attributes.avatar || object.attributes.profileAvatar;
+                        if (avatar && !(avatar.data instanceof ArrayBuffer)) {
+                            deleteMediaItem(avatar.data);
+                        }
+
+                        delete store[object.id];
+                    } else {
+                        store = {};
                     }
-                    var avatar = object.attributes.avatar || object.attributes.profileAvatar;
-                    if (avatar && !(avatar.data instanceof ArrayBuffer)) {
-                        deleteMediaItem(avatar.data);
-                    }
 
-                    delete store[object.id];
-                } else {
-                    store = {};
-                }
+                    BBDBchanged = true;
+                    resolve(resp);
+                    break;
+            }
+        }).then(resp => {
+            BBDB[storeName] = store;
 
-                BBDBchanged = true;
-                break;
-        }
-        BBDB[storeName] = store;
-
-        if (options && options.success) {
-            options.success(resp);
-        }
-        if (syncDfd) {
-            syncDfd.resolve(resp);
-        }
+            if (options && options.success) {
+                options.success(resp);
+            }
+            if (syncDfd) {
+                syncDfd.resolve(resp);
+            }
+        });
 
         return syncDfd && syncDfd.promise();
     };
@@ -158,12 +168,13 @@
     function saveMediaItem(dataArray) {
         var fileName = Date.now() + Math.random() + '.dat';
         var data = new Uint8Array(dataArray);
-        Windows.Storage.ApplicationData.current.localFolder.createFileAsync(fileName, Windows.Storage.CreationCollisionOption.failIfExists).then(
+        return Windows.Storage.ApplicationData.current.localFolder.createFileAsync(fileName, Windows.Storage.CreationCollisionOption.failIfExists).then(
             function (file) {
-                Windows.Storage.FileIO.writeBytesAsync(file, data);
-            }
-        );
-        return fileName;
+                return Windows.Storage.FileIO.writeBytesAsync(file, data);
+            }).then(
+            function () {
+                return fileName;
+            });
     }
 
     function deleteMediaItem(fileName) {
