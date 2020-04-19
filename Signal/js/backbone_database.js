@@ -70,7 +70,7 @@
                             resp = Object.values(store).filter(element => element.conversationId === options.index.lower[0] && element.unread);
                             break;
                         case 'search':
-                            resp = Object.values(store).filter(element => element.id.includes(options.index.lower) || element.name.toLowerCase().includes(options.index.lower));
+                            resp = Object.values(store).filter(element => element.id.includes(options.index.lower) || (element.name && element.name.toLowerCase().includes(options.index.lower)));
                             break;
                         case 'receipt':
                             resp = Object.values(store).filter(element => element.sent_at === options.index.only);
