@@ -178,11 +178,7 @@
     }
 
     function deleteMediaItem(fileName) {
-        Windows.Storage.ApplicationData.current.localFolder.getFileAsync(fileName).then(
-            function (file) {
-                file.deleteAsync();
-            }
-        );
+        Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync(fileName).then(file => file && file.deleteAsync());
     }
 
     function stringifyJSON(object) {
