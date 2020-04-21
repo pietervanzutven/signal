@@ -37523,10 +37523,12 @@ var TextSecureServer = (function() {
 
         var fetchOptions = {
           method: options.type,
-          body: options.data || null,
           headers: { 'X-Signal-Agent': 'OWD' },
           timeout: timeout
         };
+        if (options.data) {
+            fetchOptions.body = options.data;
+        }
 
         if (fetchOptions.body instanceof ArrayBuffer) {
           var contentLength = fetchOptions.body.byteLength;
