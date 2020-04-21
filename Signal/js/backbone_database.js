@@ -58,6 +58,7 @@
             var resp = [];
             switch (method) {
                 case "read":
+                    store = jQuery.extend(true, {}, store);
                     if (object.id) {
                         resp = store[object.id];
                     } else if (options.conditions) {
@@ -93,11 +94,28 @@
                     } else {
                         resp = Object.values(store);
                     }
-                    if (Array.isArray(resp) && resp.length > 1 && options.limit) {
-                        resp = resp.slice(-options.limit);
+
+                    var promises = [];
+                    if (Array.isArray(resp)) {
+                        if (resp.length > 1 && options.limit) {
+                            resp = resp.slice(-options.limit);
+                        }
+                        resp.forEach(model => {
+                            if (model.attachments) {
+                                model.attachments.forEach(attachment => promises.push(loadMediaItem(attachment.data).then(value => attachment.data = value)));
+                            }
+                            if (model.avatar) {
+                                promises.push(loadMediaItem(model.avatar.data).then(value => model.avatar.data = value));
+                            }
+                            if (model.profileAvatar) {
+                                promises.push(loadMediaItem(model.profileAvatar.data).then(value => model.profileAvatar.data = value));
+                            }
+                        });
                     }
 
-                    resolve(resp);
+                    Promise.all(promises).then(() => {
+                        resolve(resp);
+                    });
                     break;
                 case "create":
                 case "update":
@@ -108,20 +126,19 @@
                     resp = object.toJSON();
 
                     var promises = [];
-                    if (resp.attachments) {
-                        resp.attachments.forEach(attachment => {
-                            if (attachment.data instanceof ArrayBuffer) {
-                                promises.push(saveMediaItem(attachment.data).then(fileName => attachment.data = fileName));
-                            }
-                        });
+                    var model = jQuery.extend(true, {}, object.attributes);
+                    if (model.attachments) {
+                        model.attachments.forEach(attachment => promises.push(saveMediaItem(attachment.data).then(fileName => attachment.data = fileName)));
                     }
-                    var avatar = resp.avatar || resp.profileAvatar;
-                    if (avatar && avatar.data instanceof ArrayBuffer) {
-                        promises.push(saveMediaItem(avatar.data).then(fileName => avatar.data = fileName));
+                    if (model.avatar) {
+                        promises.push(saveMediaItem(model.avatar.data).then(fileName => model.avatar.data = fileName));
                     }
-
+                    if (model.profileAvatar) {
+                        promises.push(saveMediaItem(model.profileAvatar.data).then(fileName => model.avatar.data = fileName));
+                    }
+                    
                     Promise.all(promises).then(() => {
-                        store[object.id] = resp;
+                        store[object.id] = model;
                         BBDBchanged = true;
                         resolve(resp);
                     });
@@ -130,16 +147,15 @@
                     resp = null;
 
                     if (object.id || object.cid) {
-                        if (object.attributes.attachments) {
-                            for (var i = 0; i < object.attributes.attachments.length; i++) {
-                                if (!(object.attributes.attachments[i].data instanceof ArrayBuffer)) {
-                                    deleteMediaItem(object.attributes.attachments[i].data);
-                                }
-                            }
+                        var model = store[object.id];
+                        if (model.attachments) {
+                            model.attachments.forEach(attachment => deleteMediaItem(attachment.data));
                         }
-                        var avatar = object.attributes.avatar || object.attributes.profileAvatar;
-                        if (avatar && !(avatar.data instanceof ArrayBuffer)) {
-                            deleteMediaItem(avatar.data);
+                        if (model.avatar) {
+                            deleteMediaItem(model.avatar.data);
+                        }
+                        if (model.profileAvatar) {
+                            deleteMediaItem(model.profileAvatar.data);
                         }
 
                         delete store[object.id];
@@ -152,8 +168,6 @@
                     break;
             }
         }).then(resp => {
-            BBDB[storeName] = store;
-
             if (options && options.success) {
                 options.success(resp);
             }
@@ -164,6 +178,24 @@
 
         return syncDfd && syncDfd.promise();
     };
+
+    function loadMediaItem(fileName) {
+        return Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync(fileName).then(
+            function (file) {
+                if (file) {
+                    return file.openReadAsync().then(stream => {
+                        var reader = Windows.Storage.Streams.DataReader(stream);
+                        var value = new ArrayBuffer(stream.size);
+                        var data = new Uint8Array(value);
+                        return reader.loadAsync(stream.size).then(
+                        function () {
+                            reader.readBytes(data);
+                            return value;
+                        });
+                    });
+                }
+            });
+    }
 
     function saveMediaItem(dataArray) {
         var fileName = Date.now() + Math.random() + '.dat';
@@ -201,16 +233,6 @@
                         array[i] = str.charCodeAt(i);
                     }
                 }
-            }
-            if (key === 'attachments') {
-                for (var i = 0; i < value.length; i++) {
-                    if (value[i].data instanceof ArrayBuffer) {
-                        value[i].data = saveMediaItem(value[i].data);
-                    }
-                }
-            }
-            if ((key === 'avatar' || key === 'profileAvatar') && value && value.data instanceof ArrayBuffer) {
-                value.data = saveMediaItem(value.data);
             }
             return value;
         });
