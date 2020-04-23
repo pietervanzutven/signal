@@ -1091,11 +1091,9 @@
         this.revokeAvatarUrl();
         var avatar = this.get('avatar') || this.get('profileAvatar');
         if (avatar) {
-            if (avatar.data instanceof ArrayBuffer) {
-                this.avatarUrl = URL.createObjectURL(new Blob([avatar.data], { type: avatar.contentType }));
-            } else {
-                this.avatarUrl = "ms-appdata:///local/" + avatar.data;
-            }
+            this.avatarUrl = URL.createObjectURL(
+                new Blob([avatar.data], { type: avatar.contentType })
+            );
         } else {
             this.avatarUrl = null;
         }

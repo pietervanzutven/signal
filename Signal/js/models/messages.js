@@ -140,14 +140,10 @@
             this.revokeImageUrl();
             var attachment = this.get('attachments')[0];
             if (attachment) {
-                if (attachment.data instanceof ArrayBuffer) {
-                    var blob = new Blob([attachment.data], {
-                        type: attachment.contentType
-                    });
-                    this.imageUrl = URL.createObjectURL(blob);
-                } else {
-                    this.imageUrl = "ms-appdata:///local/" + attachment.data;
-                }
+                var blob = new Blob([attachment.data], {
+                    type: attachment.contentType
+                });
+                this.imageUrl = URL.createObjectURL(blob);
             } else {
                 this.imageUrl = null;
             }
