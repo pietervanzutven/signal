@@ -76,7 +76,7 @@
             });
             this.recorder.onComplete = this.handleBlob.bind(this);
             this.recorder.onError = this.onError.bind(this);
-            navigator.webkitGetUserMedia({ audio: true }, function(stream) {
+            navigator.mediaDevices.getUserMedia({ audio: true }, function(stream) {
                 this.source = this.context.createMediaStreamSource(stream);
                 this.source.connect(this.input);
             }.bind(this), this.onError.bind(this));

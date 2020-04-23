@@ -47,6 +47,8 @@
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
+    <DeviceCapability Name="microphone" />
+    <DeviceCapability Name="webcam" />
   </Capabilities>
   <Extensions>
     <Extension Category="windows.certificates">
