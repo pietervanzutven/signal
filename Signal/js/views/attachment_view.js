@@ -212,11 +212,7 @@
         }
 
         if (!this.objectUrl) {
-            if (this.blob) {
-                this.objectUrl = window.URL.createObjectURL(this.blob);
-            } else {
-                this.objectUrl = "ms-appdata:///local/" + this.model.data;
-            }
+            this.objectUrl = window.URL.createObjectURL(this.blob);
         }
         this.view = new View(this.objectUrl, this.model.contentType);
         this.view.$el.appendTo(this.$el);
