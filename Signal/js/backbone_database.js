@@ -134,7 +134,7 @@
                         promises.push(saveMediaItem(model.avatar.data).then(fileName => model.avatar.data = fileName));
                     }
                     if (model.profileAvatar) {
-                        promises.push(saveMediaItem(model.profileAvatar.data).then(fileName => model.avatar.data = fileName));
+                        promises.push(saveMediaItem(model.profileAvatar.data).then(fileName => model.profileAvatar.data = fileName));
                     }
                     
                     Promise.all(promises).then(() => {
@@ -144,8 +144,6 @@
                     });
                     break;
                 case "delete":
-                    resp = null;
-
                     if (object.id || object.cid) {
                         var model = store[object.id];
                         if (model.attachments) {
@@ -164,7 +162,7 @@
                     }
 
                     BBDBchanged = true;
-                    resolve(resp);
+                    resolve(null);
                     break;
             }
         }).then(resp => {
@@ -172,8 +170,9 @@
                 options.success(resp);
             }
             if (syncDfd) {
-                syncDfd.resolve(resp);
+                syncDfd.resolve();
             }
+            object.trigger('sync', object, resp, options);
         });
 
         return syncDfd && syncDfd.promise();
