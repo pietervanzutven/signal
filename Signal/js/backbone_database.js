@@ -136,7 +136,7 @@
                     if (model.profileAvatar) {
                         promises.push(saveMediaItem(model.profileAvatar.data).then(fileName => model.profileAvatar.data = fileName));
                     }
-                    
+
                     Promise.all(promises).then(() => {
                         store[object.id] = model;
                         BBDBchanged = true;
@@ -179,33 +179,33 @@
     };
 
     function loadMediaItem(fileName) {
-        return Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync(fileName).then(
-            function (file) {
-                if (file) {
-                    return file.openReadAsync().then(stream => {
-                        var reader = Windows.Storage.Streams.DataReader(stream);
-                        var value = new ArrayBuffer(stream.size);
-                        var data = new Uint8Array(value);
-                        return reader.loadAsync(stream.size).then(
-                        function () {
-                            reader.readBytes(data);
-                            return value;
-                        });
-                    });
-                }
-            });
+        var reader, value, data;
+        return Windows.Storage.ApplicationData.current.localFolder.getItemAsync(fileName).then(
+        function (file) {
+            return file.openReadAsync();
+        }).then(
+        function (stream) {
+            reader = Windows.Storage.Streams.DataReader(stream);
+            value = new ArrayBuffer(stream.size);
+            data = new Uint8Array(value);
+            return reader.loadAsync(stream.size);
+        }).then(
+        function () {
+            reader.readBytes(data);
+            return value;
+        });
     }
 
     function saveMediaItem(dataArray) {
         var fileName = Date.now() + Math.random() + '.dat';
         var data = new Uint8Array(dataArray);
         return Windows.Storage.ApplicationData.current.localFolder.createFileAsync(fileName, Windows.Storage.CreationCollisionOption.failIfExists).then(
-            function (file) {
-                return Windows.Storage.FileIO.writeBytesAsync(file, data);
-            }).then(
-            function () {
-                return fileName;
-            });
+        function (file) {
+            return Windows.Storage.FileIO.writeBytesAsync(file, data);
+        }).then(
+        function () {
+            return fileName;
+        })
     }
 
     function deleteMediaItem(fileName) {
