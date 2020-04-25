@@ -58,64 +58,64 @@
             var resp = [];
             switch (method) {
                 case "read":
-                    store = jQuery.extend(true, {}, store);
+                    var models;
                     if (object.id) {
-                        resp = store[object.id];
+                        models = store[object.id];
                     } else if (options.conditions) {
                         console.log('BB conditions query not implemented');
                     } else if (options.index) {
                         switch (options.index.name) {
                             case 'conversation':
-                                resp = Object.values(store).filter(element => element.conversationId === options.index.lower[0]);
+                                models = Object.values(store).filter(element => element.conversationId === options.index.lower[0]);
                                 break;
                             case 'unread':
-                                resp = Object.values(store).filter(element => element.conversationId === options.index.lower[0] && element.unread);
+                                models = Object.values(store).filter(element => element.conversationId === options.index.lower[0] && element.unread);
                                 break;
                             case 'search':
-                                resp = Object.values(store).filter(element => element.id.includes(options.index.lower) || (element.name && element.name.toLowerCase().includes(options.index.lower)));
+                                models = Object.values(store).filter(element => element.id.includes(options.index.lower) || (element.name && element.name.toLowerCase().includes(options.index.lower)));
                                 break;
                             case 'receipt':
-                                resp = Object.values(store).filter(element => element.sent_at === options.index.only);
+                                models = Object.values(store).filter(element => element.sent_at === options.index.only);
                                 break;
                             case 'unique':
-                                resp = Object.values(store).filter(element => element.source === options.index.value[0] && element.sourceDevice === options.index.value[1] && element.sent_at === options.index.value[2]);
+                                models = Object.values(store).filter(element => element.source === options.index.value[0] && element.sourceDevice === options.index.value[1] && element.sent_at === options.index.value[2]);
                                 break;
                             case 'expires_at':
-                                resp = Object.values(store).filter(element => element.expires_at);
+                                models = Object.values(store).filter(element => element.expires_at);
                                 break;
                             case 'group':
-                                resp = Object.values(store).filter(element => element.members && element.members.indexOf(options.index.only) !== -1);
+                                models = Object.values(store).filter(element => element.members && element.members.indexOf(options.index.only) !== -1);
                                 break;
                             default:
                                 console.log('BB index query not implemented: ' + options.index.name);
                         }
                     } else if (options.range) {
-                        resp = Object.values(store).filter(element => element.id >= options.range[0] && element.id <= options.range[1]);
+                        models = Object.values(store).filter(element => element.id >= options.range[0] && element.id <= options.range[1]);
                     } else {
-                        resp = Object.values(store);
+                        models = Object.values(store);
                     }
 
                     var promises = [];
-                    if (Array.isArray(resp)) {
-                        if (resp.length > 1 && options.limit) {
-                            resp = resp.slice(-options.limit);
+                    if (Array.isArray(models)) {
+                        if (models.length > 1 && options.limit) {
+                            models = models.slice(-options.limit);
                         }
-                        resp.forEach(model => {
-                            if (model.attachments) {
-                                model.attachments.forEach(attachment => promises.push(loadMediaItem(attachment.data).then(value => attachment.data = value)));
+                        models.forEach(model => {
+                            var item = jQuery.extend(true, {}, model);
+                            if (item.attachments) {
+                                item.attachments.forEach(attachment => promises.push(loadMediaItem(attachment.data).then(value => attachment.data = value)));
                             }
-                            if (model.avatar) {
-                                promises.push(loadMediaItem(model.avatar.data).then(value => model.avatar.data = value));
+                            if (item.avatar) {
+                                promises.push(loadMediaItem(item.avatar.data).then(value => item.avatar.data = value));
                             }
-                            if (model.profileAvatar) {
-                                promises.push(loadMediaItem(model.profileAvatar.data).then(value => model.profileAvatar.data = value));
+                            if (item.profileAvatar) {
+                                promises.push(loadMediaItem(item.profileAvatar.data).then(value => item.profileAvatar.data = value));
                             }
+                            resp.push(item);
                         });
                     }
 
-                    Promise.all(promises).then(() => {
-                        resolve(resp);
-                    });
+                    Promise.all(promises).then(() => resolve(resp));
                     break;
                 case "create":
                 case "update":
