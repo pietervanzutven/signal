@@ -188,19 +188,27 @@
 
     function loadMediaItem(fileName) {
         var reader, value, data;
-        return Windows.Storage.ApplicationData.current.localFolder.getItemAsync(fileName).then(
+        return Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync(fileName).then(
         function (file) {
-            return file.openReadAsync();
+            if (file) {
+                return file.openReadAsync();
+            } else {
+                throw 'File not found: ' + fileName;
+            }
         }).then(
         function (stream) {
             reader = Windows.Storage.Streams.DataReader(stream);
             value = new ArrayBuffer(stream.size);
             data = new Uint8Array(value);
             return reader.loadAsync(stream.size);
-        }).then(
-        function () {
-            reader.readBytes(data);
-            return value;
+        }, () => null).then(
+        function (arg) {
+            if (arg) {
+                reader.readBytes(data);
+                return value;
+            } else {
+                return null;
+            }
         });
     }
 
