@@ -115,7 +115,7 @@
                         });
                     }
 
-                    Promise.all(promises).then(() => resolve(resp));
+                    Promise.all(promises).then(() => resolve(resp), () => reject(resp));
                     break;
                 case "create":
                 case "update":
@@ -126,7 +126,7 @@
                     resp = object.toJSON();
 
                     var promises = [];
-                    var model = jQuery.extend(true, {}, object.attributes);
+                    var model = jQuery.extend(true, {}, resp);
                     if (model.attachments) {
                         model.attachments.forEach(attachment => promises.push(saveMediaItem(attachment.data).then(fileName => attachment.data = fileName)));
                     }
@@ -173,6 +173,14 @@
                 syncDfd.resolve();
             }
             object.trigger('sync', object, resp, options);
+        }, resp => {
+            if (options && options.error) {
+                options.error(resp);
+            }
+            if (syncDfd) {
+                syncDfd.reject();
+            }
+            object.trigger('error', object, resp, options);
         });
 
         return syncDfd && syncDfd.promise();
