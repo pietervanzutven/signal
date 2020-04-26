@@ -15,8 +15,7 @@
         text = stringifyJSON(BBDB);
         files.forEach(
             function (file) {
-                var fileName = file.name;
-                if (file.fileType === '.dat' && !text.includes(fileName)) {
+                if (file.fileType !== '.json' && !text.includes(file.displayName)) {
                     file.deleteAsync();
                 }
             }
@@ -103,13 +102,13 @@
                         models.forEach(model => {
                             var item = jQuery.extend(true, {}, model);
                             if (item.attachments) {
-                                item.attachments.forEach(attachment => promises.push(loadMediaItem(attachment.data).then(value => attachment.data = value)));
+                                item.attachments.forEach(attachment => promises.push(loadMediaItem(attachment.fileName).then(value => attachment.data = value)));
                             }
                             if (item.avatar) {
-                                promises.push(loadMediaItem(item.avatar.data).then(value => item.avatar.data = value));
+                                promises.push(loadMediaItem(item.name + '.jpg').then(value => item.avatar.data = value));
                             }
                             if (item.profileAvatar) {
-                                promises.push(loadMediaItem(item.profileAvatar.data).then(value => item.profileAvatar.data = value));
+                                promises.push(loadMediaItem(item.name + '.jpg').then(value => item.profileAvatar.data = value));
                             }
                             resp.push(item);
                         });
@@ -128,13 +127,13 @@
                     var promises = [];
                     var model = jQuery.extend(true, {}, resp);
                     if (model.attachments) {
-                        model.attachments.forEach(attachment => promises.push(saveMediaItem(attachment.data).then(fileName => attachment.data = fileName)));
+                        model.attachments.forEach(attachment => attachment.data && promises.push(saveMediaItem(attachment.fileName, attachment.data).then(() => attachment.data = null)));
                     }
-                    if (model.avatar) {
-                        promises.push(saveMediaItem(model.avatar.data).then(fileName => model.avatar.data = fileName));
+                    if (model.avatar && model.avatar.data) {
+                        promises.push(saveMediaItem(model.name + '.jpg', model.avatar.data).then(() => model.avatar.data = null));
                     }
-                    if (model.profileAvatar) {
-                        promises.push(saveMediaItem(model.profileAvatar.data).then(fileName => model.profileAvatar.data = fileName));
+                    if (model.profileAvatar && model.profileAvatar.data) {
+                        promises.push(saveMediaItem(model.name + '.jpg', model.profileAvatar.data).then(() => model.profileAvatar.data = null));
                     }
 
                     Promise.all(promises).then(() => {
@@ -147,13 +146,13 @@
                     if (object.id || object.cid) {
                         var model = store[object.id];
                         if (model.attachments) {
-                            model.attachments.forEach(attachment => deleteMediaItem(attachment.data));
+                            model.attachments.forEach(attachment => deleteMediaItem(attachment.fileName));
                         }
                         if (model.avatar) {
-                            deleteMediaItem(model.avatar.data);
+                            deleteMediaItem(model.name + '.jpg');
                         }
                         if (model.profileAvatar) {
-                            deleteMediaItem(model.profileAvatar.data);
+                            deleteMediaItem(model.name + '.jpg');
                         }
 
                         delete store[object.id];
@@ -212,16 +211,12 @@
         });
     }
 
-    function saveMediaItem(dataArray) {
-        var fileName = Date.now() + Math.random() + '.dat';
+    function saveMediaItem(fileName, dataArray) {
         var data = new Uint8Array(dataArray);
-        return Windows.Storage.ApplicationData.current.localFolder.createFileAsync(fileName, Windows.Storage.CreationCollisionOption.failIfExists).then(
+        return Windows.Storage.ApplicationData.current.localFolder.createFileAsync(fileName, Windows.Storage.CreationCollisionOption.replaceExisting).then(
         function (file) {
-            return Windows.Storage.FileIO.writeBytesAsync(file, data);
-        }).then(
-        function () {
-            return fileName;
-        })
+            Windows.Storage.FileIO.writeBytesAsync(file, data);
+        });
     }
 
     function deleteMediaItem(fileName) {
