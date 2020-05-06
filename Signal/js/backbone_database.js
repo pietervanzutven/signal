@@ -102,13 +102,13 @@
                         models.forEach(model => {
                             var item = jQuery.extend(true, {}, model);
                             if (item.attachments) {
-                                item.attachments.forEach(attachment => promises.push(loadMediaItem(attachment.fileName).then(value => attachment.data = value)));
+                                item.attachments.forEach(attachment => promises.push(loadMediaItem(attachment.fileName || attachment.data).then(value => attachment.data = value)));
                             }
                             if (item.avatar) {
-                                promises.push(loadMediaItem(item.name + '.jpg').then(value => item.avatar.data = value));
+                                promises.push(loadMediaItem(item.name + '.jpg' || item.avatar.data).then(value => item.avatar.data = value));
                             }
                             if (item.profileAvatar) {
-                                promises.push(loadMediaItem(item.name + '.jpg').then(value => item.profileAvatar.data = value));
+                                promises.push(loadMediaItem(item.name + '.jpg' || item.profileAvatar.data).then(value => item.profileAvatar.data = value));
                             }
                             resp.push(item);
                         });
