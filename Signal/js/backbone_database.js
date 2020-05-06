@@ -206,7 +206,7 @@
                 reader.readBytes(data);
                 return value;
             } else {
-                return null;
+                return new ArrayBuffer(0);
             }
         });
     }
