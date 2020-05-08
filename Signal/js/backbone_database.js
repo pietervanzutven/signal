@@ -59,7 +59,7 @@
                 case "read":
                     var models;
                     if (object.id) {
-                        models = store[object.id];
+                        models = [store[object.id]];
                     } else if (options.conditions) {
                         console.log('BB conditions query not implemented');
                     } else if (options.index) {
@@ -95,23 +95,24 @@
                     }
 
                     var promises = [];
-                    if (Array.isArray(models)) {
-                        if (models.length > 1 && options.limit) {
-                            models = models.slice(-options.limit);
+                    if (models.length > 1 && options.limit) {
+                        models = models.slice(-options.limit);
+                    }
+                    models.forEach(model => {
+                        var item = jQuery.extend(true, {}, model);
+                        if (item.attachments) {
+                            item.attachments.forEach(attachment => promises.push(loadMediaItem(attachment.fileName || attachment.data).then(value => attachment.data = value)));
                         }
-                        models.forEach(model => {
-                            var item = jQuery.extend(true, {}, model);
-                            if (item.attachments) {
-                                item.attachments.forEach(attachment => promises.push(loadMediaItem(attachment.fileName || attachment.data).then(value => attachment.data = value)));
-                            }
-                            if (item.avatar) {
-                                promises.push(loadMediaItem(item.name + '.jpg' || item.avatar.data).then(value => item.avatar.data = value));
-                            }
-                            if (item.profileAvatar) {
-                                promises.push(loadMediaItem(item.name + '.jpg' || item.profileAvatar.data).then(value => item.profileAvatar.data = value));
-                            }
-                            resp.push(item);
-                        });
+                        if (item.avatar) {
+                            promises.push(loadMediaItem(item.name + '.jpg' || item.avatar.data).then(value => item.avatar.data = value));
+                        }
+                        if (item.profileAvatar) {
+                            promises.push(loadMediaItem(item.name + '.jpg' || item.profileAvatar.data).then(value => item.profileAvatar.data = value));
+                        }
+                        resp.push(item);
+                    });
+                    if (object.id) {
+                        resp = resp[0];
                     }
 
                     Promise.all(promises).then(() => resolve(resp), () => reject(resp));
