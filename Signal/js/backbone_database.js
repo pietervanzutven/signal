@@ -128,7 +128,10 @@
                     var promises = [];
                     var model = jQuery.extend(true, {}, resp);
                     if (model.attachments) {
-                        model.attachments.forEach(attachment => attachment.data && promises.push(saveMediaItem(attachment.fileName, attachment.data).then(() => attachment.data = null)));
+                        model.attachments.forEach(attachment => {
+                            attachment.fileName = attachment.fileName || window.getGuid();
+                            attachment.data && promises.push(saveMediaItem(attachment.fileName, attachment.data).then(attachment.data = null));
+                        });
                     }
                     if (model.avatar && model.avatar.data) {
                         promises.push(saveMediaItem(model.name + '.jpg', model.avatar.data).then(() => model.avatar.data = null));
