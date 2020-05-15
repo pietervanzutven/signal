@@ -70,10 +70,7 @@
       }
     },
     initialize: function (options) {
-      this.blob = null;
-      if (this.model.data instanceof ArrayBuffer) {
-        this.blob = new Blob([this.model.data], { type: this.model.contentType });
-      }
+      this.blob = new Blob([this.model.data], { type: this.model.contentType });
       if (!this.model.size) {
         this.model.size = this.model.data.byteLength;
       }
