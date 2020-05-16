@@ -29,7 +29,7 @@
     }).then(function () {
         return Windows.Storage.ApplicationData.current.localFolder.getFilesAsync();
     }).then(function (files) {
-        text = stringifyJSON(BBDB);
+        text = JSON.stringify(BBDB, stringifyJSON);
         files.forEach(
             function (file) {
                 if (file.fileType !== '.json' && !text.includes(file.name)) {
@@ -42,7 +42,7 @@
     function readDatabase(file) {
         return Windows.Storage.FileIO.readTextAsync(file).then(function (text) {
             if (text !== '') {
-                jQuery.extend(true, BBDB, parseJSON(text));
+                jQuery.extend(true, BBDB, JSON.parse(text, parseJSON));
                 Windows.Storage.ApplicationData.current.localSettings.values['number_id'] = BBDB.items.number_id && BBDB.items.number_id.value;
                 Windows.Storage.ApplicationData.current.localSettings.values['password'] = BBDB.items.password && BBDB.items.password.value;
                 BBDB.debug && delete BBDB['debug'];
@@ -56,7 +56,7 @@
         timeout = setTimeout(() => {
             Windows.Storage.ApplicationData.current.localFolder.createFileAsync('BBDB.json', Windows.Storage.CreationCollisionOption.openIfExists).then(
                 function (file) {
-                    Windows.Storage.FileIO.writeTextAsync(file, stringifyJSON(BBDB));
+                    Windows.Storage.FileIO.writeTextAsync(file, JSON.stringify(BBDB, stringifyJSON));
                 });
         }, 5000);
     }
@@ -153,42 +153,38 @@
         );
         return fileName;
     }
-
-    function stringifyJSON(object) {
-        return JSON.stringify(object, function (key, value) {
-                if (this.attachments) {
-                    this.attachments.forEach(attachment => {
-                        if (attachment.data instanceof ArrayBuffer) {
-                            attachment.data = saveMediaItem((attachment.fileName || window.getGuid()) + '.' + attachment.contentType.split('/')[1], attachment.data);
-                        }
-                    });
+    
+    function stringifyJSON(key, value) {
+        if (this.attachments) {
+            this.attachments.forEach(attachment => {
+                if (attachment.data instanceof ArrayBuffer) {
+                    attachment.data = saveMediaItem((attachment.fileName || window.getGuid()) + '.' + attachment.contentType.split('/')[1], attachment.data);
                 }
-                if (this.avatar && this.avatar.data instanceof ArrayBuffer) {
-                    this.avatar.data = saveMediaItem(this.name + '.' + this.avatar.contentType.split('/')[1], this.avatar.data);
-                }
-                if (this.profileAvatar && this.profileAvatar.data instanceof ArrayBuffer) {
-                    this.profileAvatar.data = saveMediaItem(this.name + '.' + this.profileAvatar.contentType.split('/')[1], this.profileAvatar.data);
-                }
-                if (value instanceof ArrayBuffer) {
-                    value = 'ArrayBufferString' + btoa(String.fromCharCode.apply(null, new Uint8Array(value)));
-                }
-            return value;
-        });
+            });
+        }
+        if (this.avatar && this.avatar.data instanceof ArrayBuffer) {
+            this.avatar.data = saveMediaItem(this.name + '.' + this.avatar.contentType.split('/')[1], this.avatar.data);
+        }
+        if (this.profileAvatar && this.profileAvatar.data instanceof ArrayBuffer) {
+            this.profileAvatar.data = saveMediaItem(this.name + '.' + this.profileAvatar.contentType.split('/')[1], this.profileAvatar.data);
+        }
+        if (value instanceof ArrayBuffer) {
+            value = 'ArrayBufferString' + btoa(String.fromCharCode.apply(null, new Uint8Array(value)));
+        }
+        return value;
     }
-
-    function parseJSON(string) {
-        return JSON.parse(string, function (key, value) {
-            if (typeof value === 'string') {
-                if (value.substring(0, 17) === 'ArrayBufferString') {
-                    var str = atob(value.replace('ArrayBufferString', ''));
-                    value = new ArrayBuffer(str.length);
-                    var array = new Uint8Array(value);
-                    for (var i = 0; i < str.length; i++) {
-                        array[i] = str.charCodeAt(i);
-                    }
+    
+    function parseJSON(key, value) {
+        if (typeof value === 'string') {
+            if (value.substring(0, 17) === 'ArrayBufferString') {
+                var str = atob(value.replace('ArrayBufferString', ''));
+                value = new ArrayBuffer(str.length);
+                var array = new Uint8Array(value);
+                for (var i = 0; i < str.length; i++) {
+                    array[i] = str.charCodeAt(i);
                 }
             }
-            return value;
-        });
+        }
+        return value;
     }
 })()
