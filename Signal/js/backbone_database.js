@@ -1,7 +1,6 @@
 ﻿(function () {
     var Backbone = window.Backbone;
     var BBDB = {};
-    var BBDBchanged = false;
 
     var Blob = window.Blob;
     window.Blob = function (array, options) {
@@ -51,16 +50,16 @@
         });
     }
 
-    setInterval(function () {
-        if (BBDBchanged) {
-            BBDBchanged = false;
+    var timeout;
+    function writeDatabase() {
+        timeout && clearTimeout(timeout);
+        timeout = setTimeout(() => {
             Windows.Storage.ApplicationData.current.localFolder.createFileAsync('BBDB.json', Windows.Storage.CreationCollisionOption.openIfExists).then(
                 function (file) {
                     Windows.Storage.FileIO.writeTextAsync(file, stringifyJSON(BBDB));
-                }
-            );
-        }
-    }, 5000);
+                });
+        }, 5000);
+    }
 
     Backbone.sync = function (method, object, options) {
         var store = {};
@@ -121,7 +120,7 @@
                 }
                 resp = object.toJSON();
                 store[object.id] = resp;
-                BBDBchanged = true;
+                writeDatabase();
                 break;
             case "delete":
                 resp = null;
@@ -132,7 +131,7 @@
                     store = {};
                 }
 
-                BBDBchanged = true;
+                writeDatabase();
                 break;
         }
         if (options && options.success) {
