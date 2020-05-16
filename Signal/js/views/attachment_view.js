@@ -214,8 +214,7 @@
         this.view = new View(this.objectUrl, this.model.contentType);
         this.view.$el.appendTo(this.$el);
         this.listenTo(this.view, 'update', this.update);
-        //this.view.render();
-        this.interval = setInterval(this.view.render.bind(this.view), 1000);
+        this.view.render();
         if (View !== ImageView) {
           this.timeout = setTimeout(this.onTimeout.bind(this), 5000);
         }
