@@ -120,21 +120,6 @@
                     object.attributes.id = object.id;
                 }
                 resp = object.toJSON();
-
-                if (resp.attachments) {
-                    resp.attachments.forEach(attachment => {
-                        if (attachment.data instanceof ArrayBuffer) {
-                            attachment.data = saveMediaItem((attachment.fileName || window.getGuid()) + '.' + attachment.contentType.split('/')[1], attachment.data);
-                        }
-                    });
-                }
-                if (resp.avatar && resp.avatar.data instanceof ArrayBuffer) {
-                    resp.avatar.data = saveMediaItem(resp.name + '.' + resp.avatar.contentType.split('/')[1], resp.avatar.data);
-                }
-                if (resp.profileAvatar && resp.profileAvatar.data instanceof ArrayBuffer) {
-                    resp.profileAvatar.data = saveMediaItem(resp.name + '.' + resp.profileAvatar.contentType.split('/')[1], resp.profileAvatar.data);
-                }
-
                 store[object.id] = resp;
                 BBDBchanged = true;
                 break;
@@ -186,9 +171,22 @@
 
     function stringifyJSON(object) {
         return JSON.stringify(object, function (key, value) {
-            if (value instanceof ArrayBuffer) {
-                value = 'ArrayBufferString' + btoa(String.fromCharCode.apply(null, new Uint8Array(value)));
-            }
+                if (this.attachments) {
+                    this.attachments.forEach(attachment => {
+                        if (attachment.data instanceof ArrayBuffer) {
+                            attachment.data = saveMediaItem((attachment.fileName || window.getGuid()) + '.' + attachment.contentType.split('/')[1], attachment.data);
+                        }
+                    });
+                }
+                if (this.avatar && this.avatar.data instanceof ArrayBuffer) {
+                    this.avatar.data = saveMediaItem(this.name + '.' + this.avatar.contentType.split('/')[1], this.avatar.data);
+                }
+                if (this.profileAvatar && this.profileAvatar.data instanceof ArrayBuffer) {
+                    this.profileAvatar.data = saveMediaItem(this.name + '.' + this.profileAvatar.contentType.split('/')[1], this.profileAvatar.data);
+                }
+                if (value instanceof ArrayBuffer) {
+                    value = 'ArrayBufferString' + btoa(String.fromCharCode.apply(null, new Uint8Array(value)));
+                }
             return value;
         });
     }
