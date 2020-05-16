@@ -127,16 +127,6 @@
                 resp = null;
 
                 if (object.id || object.cid) {
-                    if (object.attributes.attachments) {
-                        object.attributes.attachments.forEach(attachment => deleteMediaItem(attachment.data));
-                    }
-                    if (object.attributes.avatar) {
-                        deleteMediaItem(object.attributes.avatar.data);
-                    }
-                    if (object.attributes.profileAvatar) {
-                        deleteMediaItem(object.attributes.profileAvatar.data);
-                    }
-
                     delete store[object.id];
                 } else {
                     store = {};
@@ -163,10 +153,6 @@
             }
         );
         return fileName;
-    }
-
-    function deleteMediaItem(fileName) {
-        Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync(fileName).then(file => file && file.deleteAsync());
     }
 
     function stringifyJSON(object) {
