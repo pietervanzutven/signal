@@ -56,7 +56,7 @@
         timeout = setTimeout(() => {
             Windows.Storage.ApplicationData.current.localFolder.createFileAsync('BBDB.json', Windows.Storage.CreationCollisionOption.openIfExists).then(
                 function (file) {
-                    Windows.Storage.FileIO.writeTextAsync(file, JSON.stringify(BBDB, stringifyJSON));
+                    Windows.Storage.FileIO.writeTextAsync(file, JSON.stringify(BBDB, stringifyJSON, '\t'));
                 });
         }, 5000);
     }
