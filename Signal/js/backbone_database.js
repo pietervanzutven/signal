@@ -3,6 +3,24 @@
     var BBDB = {};
     var BBDBchanged = false;
 
+    var Blob = window.Blob;
+    window.Blob = function (array, options) {
+        if (typeof array[0] === 'string') {
+            this.data = array[0];
+        } else {
+            return new Blob(array, options);
+        }
+    }
+
+    var createObjectURL = window.URL.createObjectURL;
+    window.URL.createObjectURL = function (blob) {
+        if (blob.data) {
+            return "ms-appdata:///local/" + blob.data;
+        } else {
+            return createObjectURL(blob); 
+        }
+    }
+
     Windows.Storage.ApplicationData.current.localFolder.getFileAsync('BBDB_import.json').then(function (file) {
         return readDatabase(file).then(() => file.deleteAsync());
     }, () => { }).then(function () {
@@ -15,7 +33,7 @@
         text = stringifyJSON(BBDB);
         files.forEach(
             function (file) {
-                if (file.fileType !== '.json' && !text.includes(file.displayName)) {
+                if (file.fileType !== '.json' && !text.includes(file.name)) {
                     file.deleteAsync();
                 }
             }
@@ -53,174 +71,113 @@
 
         var syncDfd = Backbone.$ ? Backbone.$.Deferred && Backbone.$.Deferred() : Backbone.Deferred && Backbone.Deferred();
 
-        new Promise((resolve, reject) => {
-            var resp = [];
-            switch (method) {
-                case "read":
-                    var models;
-                    if (object.id) {
-                        models = [store[object.id]];
-                    } else if (options.conditions) {
-                        console.log('BB conditions query not implemented');
-                    } else if (options.index) {
-                        switch (options.index.name) {
-                            case 'conversation':
-                                models = Object.values(store).filter(element => element.conversationId === options.index.lower[0]);
-                                break;
-                            case 'unread':
-                                models = Object.values(store).filter(element => element.conversationId === options.index.lower[0] && element.unread);
-                                break;
-                            case 'search':
-                                models = Object.values(store).filter(element => element.id.includes(options.index.lower) || (element.name && element.name.toLowerCase().includes(options.index.lower)));
-                                break;
-                            case 'receipt':
-                                models = Object.values(store).filter(element => element.sent_at === options.index.only);
-                                break;
-                            case 'unique':
-                                models = Object.values(store).filter(element => element.source === options.index.value[0] && element.sourceDevice === options.index.value[1] && element.sent_at === options.index.value[2]);
-                                break;
-                            case 'expires_at':
-                                models = Object.values(store).filter(element => element.expires_at);
-                                break;
-                            case 'group':
-                                models = Object.values(store).filter(element => element.members && element.members.indexOf(options.index.only) !== -1);
-                                break;
-                            default:
-                                console.log('BB index query not implemented: ' + options.index.name);
-                        }
-                    } else if (options.range) {
-                        models = Object.values(store).filter(element => element.id >= options.range[0] && element.id <= options.range[1]);
-                    } else {
-                        models = Object.values(store);
+        var resp = [];
+        switch (method) {
+            case "read":
+                if (object.id) {
+                    resp = store[object.id];
+                } else if (options.conditions) {
+                    console.log('BB conditions query not implemented');
+                } else if (options.index) {
+                    switch (options.index.name) {
+                        case 'conversation':
+                            resp = Object.values(store).filter(element => element.conversationId === options.index.lower[0]);
+                            break;
+                        case 'unread':
+                            resp = Object.values(store).filter(element => element.conversationId === options.index.lower[0] && element.unread);
+                            break;
+                        case 'search':
+                            resp = Object.values(store).filter(element => element.id.includes(options.index.lower) || (element.name && element.name.toLowerCase().includes(options.index.lower)));
+                            break;
+                        case 'receipt':
+                            resp = Object.values(store).filter(element => element.sent_at === options.index.only);
+                            break;
+                        case 'unique':
+                            resp = Object.values(store).filter(element => element.source === options.index.value[0] && element.sourceDevice === options.index.value[1] && element.sent_at === options.index.value[2]);
+                            break;
+                        case 'expires_at':
+                            resp = Object.values(store).filter(element => element.expires_at);
+                            break;
+                        case 'group':
+                            resp = Object.values(store).filter(element => element.members && element.members.indexOf(options.index.only) !== -1);
+                            break;
+                        default:
+                            console.log('BB index query not implemented: ' + options.index.name);
                     }
+                } else if (options.range) {
+                    resp = Object.values(store).filter(element => element.id >= options.range[0] && element.id <= options.range[1]);
+                } else {
+                    resp = Object.values(store);
+                }
+                if (Array.isArray(resp) && resp.length > 1 && options.limit) {
+                    resp = resp.slice(-options.limit);
+                }
+                break;
+            case "create":
+            case "update":
+                if (!object.id && object.id !== 0) {
+                    object.id = Date.now();
+                    object.attributes.id = object.id;
+                }
+                resp = object.toJSON();
 
-                    var promises = [];
-                    if (models.length > 1 && options.limit) {
-                        models = models.slice(-options.limit);
-                    }
-                    models.forEach(model => {
-                        var item = jQuery.extend(true, {}, model);
-                        if (item.attachments) {
-                            item.attachments.forEach(attachment => promises.push(loadMediaItem(attachment.fileName || attachment.data).then(value => attachment.data = value)));
+                if (resp.attachments) {
+                    resp.attachments.forEach(attachment => {
+                        if (attachment.data instanceof ArrayBuffer) {
+                            attachment.data = saveMediaItem((attachment.fileName || window.getGuid()) + '.' + attachment.contentType.split('/')[1], attachment.data);
                         }
-                        if (item.avatar) {
-                            promises.push(loadMediaItem(item.name + '.jpg' || item.avatar.data).then(value => item.avatar.data = value));
-                        }
-                        if (item.profileAvatar) {
-                            promises.push(loadMediaItem(item.name + '.jpg' || item.profileAvatar.data).then(value => item.profileAvatar.data = value));
-                        }
-                        resp.push(item);
                     });
-                    if (object.id) {
-                        resp = resp[0];
+                }
+                if (resp.avatar && resp.avatar.data instanceof ArrayBuffer) {
+                    resp.avatar.data = saveMediaItem(resp.name + '.' + resp.avatar.contentType.split('/')[1], resp.avatar.data);
+                }
+                if (resp.profileAvatar && resp.profileAvatar.data instanceof ArrayBuffer) {
+                    resp.profileAvatar.data = saveMediaItem(resp.name + '.' + resp.profileAvatar.contentType.split('/')[1], resp.profileAvatar.data);
+                }
+
+                store[object.id] = resp;
+                BBDBchanged = true;
+                break;
+            case "delete":
+                resp = null;
+
+                if (object.id || object.cid) {
+                    if (object.attributes.attachments) {
+                        object.attributes.attachments.forEach(attachment => deleteMediaItem(attachment.data));
+                    }
+                    if (object.attributes.avatar) {
+                        deleteMediaItem(object.attributes.avatar.data);
+                    }
+                    if (object.attributes.profileAvatar) {
+                        deleteMediaItem(object.attributes.profileAvatar.data);
                     }
 
-                    Promise.all(promises).then(() => resolve(resp), () => reject(resp));
-                    break;
-                case "create":
-                case "update":
-                    if (!object.id && object.id !== 0) {
-                        object.id = Date.now();
-                        object.attributes.id = object.id;
-                    }
-                    resp = object.toJSON();
+                    delete store[object.id];
+                } else {
+                    store = {};
+                }
 
-                    var promises = [];
-                    var model = jQuery.extend(true, {}, resp);
-                    if (model.attachments) {
-                        model.attachments.forEach(attachment => {
-                            attachment.fileName = attachment.fileName || window.getGuid();
-                            attachment.data && promises.push(saveMediaItem(attachment.fileName, attachment.data).then(attachment.data = null));
-                        });
-                    }
-                    if (model.avatar && model.avatar.data) {
-                        promises.push(saveMediaItem(model.name + '.jpg', model.avatar.data).then(() => model.avatar.data = null));
-                    }
-                    if (model.profileAvatar && model.profileAvatar.data) {
-                        promises.push(saveMediaItem(model.name + '.jpg', model.profileAvatar.data).then(() => model.profileAvatar.data = null));
-                    }
-
-                    Promise.all(promises).then(() => {
-                        store[object.id] = model;
-                        BBDBchanged = true;
-                        resolve(resp);
-                    });
-                    break;
-                case "delete":
-                    if (object.id || object.cid) {
-                        var model = store[object.id];
-                        if (model.attachments) {
-                            model.attachments.forEach(attachment => deleteMediaItem(attachment.fileName));
-                        }
-                        if (model.avatar) {
-                            deleteMediaItem(model.name + '.jpg');
-                        }
-                        if (model.profileAvatar) {
-                            deleteMediaItem(model.name + '.jpg');
-                        }
-
-                        delete store[object.id];
-                    } else {
-                        store = {};
-                    }
-
-                    BBDBchanged = true;
-                    resolve(null);
-                    break;
-            }
-        }).then(resp => {
-            if (options && options.success) {
-                options.success(resp);
-            }
-            if (syncDfd) {
-                syncDfd.resolve();
-            }
-            object.trigger('sync', object, resp, options);
-        }, resp => {
-            if (options && options.error) {
-                options.error(resp);
-            }
-            if (syncDfd) {
-                syncDfd.reject();
-            }
-            object.trigger('error', object, resp, options);
-        });
+                BBDBchanged = true;
+                break;
+        }
+        if (options && options.success) {
+            options.success(resp);
+        }
+        if (syncDfd) {
+            syncDfd.resolve();
+        }
 
         return syncDfd && syncDfd.promise();
     };
 
-    function loadMediaItem(fileName) {
-        var reader, value, data;
-        return Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync(fileName).then(
-        function (file) {
-            if (file) {
-                return file.openReadAsync();
-            } else {
-                throw 'File not found: ' + fileName;
-            }
-        }).then(
-        function (stream) {
-            reader = Windows.Storage.Streams.DataReader(stream);
-            value = new ArrayBuffer(stream.size);
-            data = new Uint8Array(value);
-            return reader.loadAsync(stream.size);
-        }, () => null).then(
-        function (arg) {
-            if (arg) {
-                reader.readBytes(data);
-                return value;
-            } else {
-                return new ArrayBuffer(0);
-            }
-        });
-    }
-
     function saveMediaItem(fileName, dataArray) {
         var data = new Uint8Array(dataArray);
-        return Windows.Storage.ApplicationData.current.localFolder.createFileAsync(fileName, Windows.Storage.CreationCollisionOption.replaceExisting).then(
-        function (file) {
-            Windows.Storage.FileIO.writeBytesAsync(file, data);
-        });
+        Windows.Storage.ApplicationData.current.localFolder.createFileAsync(fileName, Windows.Storage.CreationCollisionOption.replaceExisting).then(
+            function (file) {
+                Windows.Storage.FileIO.writeBytesAsync(file, data);
+            }
+        );
+        return fileName;
     }
 
     function deleteMediaItem(fileName) {
