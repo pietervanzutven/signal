@@ -1,4 +1,6 @@
 ﻿(function () {
+    const logging = window.logging;
+
     function normalizeLocaleName(locale) {
         if (/^es-/.test(locale)) {
             return /419/.test(locale) ? locale : 'es';
@@ -25,7 +27,8 @@
     }
 
     function load() {
-        let english = getLocaleMessages('en');
+        const logger = logging.getLogger();
+        const english = getLocaleMessages('en');
         let appLocale = Windows.Globalization.ApplicationLanguages.languages[0];
 
         // Load locale - if we can't load messages for the current locale, we
@@ -42,7 +45,7 @@
             // We start with english, then overwrite that with anything present in locale
             messages = Object.assign(english, messages);
         } catch (e) {
-            logger.error('Problem loading messages for locale ' + localeName + ' ' + e.stack);
+            logger.error(`Problem loading messages for locale ${localeName} ${e.stack}`);
             logger.error('Falling back to en locale');
 
             localeName = 'en';
@@ -51,7 +54,7 @@
 
         return {
             name: localeName,
-            messages
+            messages,
         };
     }
 

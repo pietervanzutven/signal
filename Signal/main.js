@@ -75,32 +75,16 @@ var ipc = {
     }
 }
 
+// Both of these will be set after app fires the 'ready' event
+let logger;
+let locale;
+
 // Ingested in preload.js via a sendSync call
-ipc.on('locale-data', function (event, arg) {
+ipc.on('locale-data', (event, arg) => {
     event.returnValue = locale.messages;
 });
 
-ipc.on('show-window', function () { });
-
-ipc.on('set-badge-count', function (event, count) {
-    var Notifications = Windows.UI.Notifications;
-    var type = typeof (count) === 'string' ? Notifications.BadgeTemplateType.badgeGlyph : Notifications.BadgeTemplateType.badgeNumber;
-    var badgeXml = Notifications.BadgeUpdateManager.getTemplateContent(type);
-    badgeXml.firstChild.setAttribute('value', count);
-    var badge = Notifications.BadgeNotification(badgeXml);
-    Notifications.BadgeUpdateManager.createBadgeUpdaterForApplication().update(badge);
-});
-
-ipc.on('draw-attention', function () {
-    Windows.System.Launcher.launchUriAsync(new Windows.Foundation.Uri('signal://'));
-});
-
-ipc.on('restart', function () {
-    Windows.UI.WebUI.WebUIApplication.requestRestartAsync('');
-});
-
-logging.initialize();
-const logger = logging.getLogger();
+ipc.on('show-window', () => { });
 
 window.config.name = Windows.ApplicationModel.Package.current.id.name;
 
@@ -113,19 +97,53 @@ window.config.hostname = 'Windows';
 
 window.config.appInstance = Windows.System.Diagnostics.ProcessDiagnosticInfo.getForCurrentProcess().processId;
 
-let locale;
-if (!locale) {
-    locale = loadLocale();
-}
+let loggingSetupError;
+logging.initialize().catch((error) => {
+    loggingSetupError = error;
+}).then(() => {
+    logger = logging.getLogger();
+    logger.info('app ready');
 
-ipc.on("set-auto-hide-menu-bar", function (event, autoHide) {
+    if (loggingSetupError) {
+        logger.error('Problem setting up logging', loggingSetupError.stack);
+    }
+
+    if (!locale) {
+        locale = loadLocale();
+    }
+});
+
+ipc.on('set-badge-count', (event, count) => {
+    var Notifications = Windows.UI.Notifications;
+    var type = typeof (count) === 'string' ? Notifications.BadgeTemplateType.badgeGlyph : Notifications.BadgeTemplateType.badgeNumber;
+    var badgeXml = Notifications.BadgeUpdateManager.getTemplateContent(type);
+    badgeXml.firstChild.setAttribute('value', count);
+    var badge = Notifications.BadgeNotification(badgeXml);
+    Notifications.BadgeUpdateManager.createBadgeUpdaterForApplication().update(badge);
+});
+
+ipc.on('draw-attention', () => {
+    Windows.System.Launcher.launchUriAsync(new Windows.Foundation.Uri('signal://'));
+});
+
+ipc.on('restart', () => {
+    Windows.UI.WebUI.WebUIApplication.requestRestartAsync('');
+});
+
+ipc.on('set-auto-hide-menu-bar', (event, autoHide) => {
     if (window.mainWindow) {
         window.mainWindow.setAutoHideMenuBar(autoHide);
     }
 });
 
-ipc.on("set-menu-bar-visibility", function (event, visibility) {
+ipc.on('set-menu-bar-visibility', (event, visibility) => {
     if (window.mainWindow) {
         window.mainWindow.setMenuBarVisibility(visibility);
+    }
+});
+
+ipc.on('close-about', () => {
+    if (aboutWindow) {
+        aboutWindow.close();
     }
 });
