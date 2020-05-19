@@ -37537,7 +37537,8 @@ var TextSecureServer = (function() {
         }
 
         if (options.user && options.password) {
-          fetchOptions.headers["Authorization"] = "Basic " + btoa(getString(options.user) + ":" + getString(options.password));
+            fetchOptions.headers["Authorization"] = 
+              "Basic " + btoa(getString(options.user) + ":" + getString(options.password));
         }
         if (options.contentType) {
           fetchOptions.headers["Content-Type"] = options.contentType;
@@ -37566,7 +37567,12 @@ var TextSecureServer = (function() {
               if (options.validateResponse) {
                 if (!validateResponse(result, options.validateResponse)) {
                   console.log(options.type, url, response.status, 'Error');
-                  reject(HTTPError(response.status, result, options.stack));
+                  reject(HTTPError(
+                    'promise_ajax: invalid response',
+                    response.status,
+                    result,
+                    options.stack
+                  ));
                 }
               }
             }
@@ -37575,13 +37581,18 @@ var TextSecureServer = (function() {
               resolve(result, response.status);
             } else {
               console.log(options.type, url, response.status, 'Error');
-              reject(HTTPError(response.status, result, options.stack));
+              reject(HTTPError(
+                'promise_ajax: error response',
+                response.status,
+                result,
+                options.stack
+              ));
             }
           });
         }).catch(function(e) {
           console.log(options.type, url, 0, 'Error');
-          console.log(e);
-          reject(HTTPError(0, e.toString(), options.stack));
+          var stack = e.stack + '\nInitial stack:\n' + options.stack;
+          reject(HTTPError('promise_ajax catch', 0, e.toString(), stack));
         });
       });
     }
@@ -37608,14 +37619,15 @@ var TextSecureServer = (function() {
         return retry_ajax(url, options);
     }
 
-    function HTTPError(code, response, stack) {
+    function HTTPError(message, code, response, stack) {
         if (code > 999 || code < 100) {
             code = -1;
         }
-        var e = new Error();
+        var e = new Error(message + '; code: ' + code);
         e.name     = 'HTTPError';
         e.code     = code;
         e.stack    = stack;
+        e.stack   += '\nOriginal stack:\n' + stack;
         if (response) {
             e.response = response;
         }
