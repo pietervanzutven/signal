@@ -75,6 +75,8 @@ var ipc = {
     }
 }
 
+let tray = null;
+
 // Both of these will be set after app fires the 'ready' event
 let logger;
 let locale;
@@ -145,5 +147,11 @@ ipc.on('set-menu-bar-visibility', (event, visibility) => {
 ipc.on('close-about', () => {
     if (aboutWindow) {
         aboutWindow.close();
+    }
+});
+
+ipc.on('update-tray-icon', (event, unreadCount) => {
+    if (tray) {
+        tray.updateIcon(unreadCount);
     }
 });
