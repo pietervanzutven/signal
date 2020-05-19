@@ -40255,7 +40255,7 @@ MessageSender.prototype = {
         var myDevice = textsecure.storage.user.getDeviceId();
         var now = Date.now();
 
-        if (myDevice === 1) {
+        if (myDevice == 1) {
             return Promise.resolve();
         }
 
