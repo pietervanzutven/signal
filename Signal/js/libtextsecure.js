@@ -37210,8 +37210,6 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
         });
     };
 
-    loadProtoBufs('SubProtocol.proto');
-    loadProtoBufs('DeviceMessages.proto');
     loadProtoBufs('SignalService.proto');
     loadProtoBufs('SubProtocol.proto');
     loadProtoBufs('DeviceMessages.proto');
@@ -39288,17 +39286,17 @@ MessageReceiver.prototype.extend({
             return this.handleRead(envelope, syncMessage.read);
         } else if (syncMessage.verified) {
             return this.handleVerified(envelope, syncMessage.verified);
-        } else if (syncMessage.settings) {
-            return this.handleSettings(envelope, syncMessage.settings);
+        } else if (syncMessage.configuration) {
+            return this.handleConfiguration(envelope, syncMessage.configuration);
         } else {
             throw new Error('Got empty SyncMessage');
         }
     },
-    handleSettings: function(envelope, settings) {
-        var ev = new Event('settings');
+    handleConfiguration: function(envelope, configuration) {
+        var ev = new Event('configuration');
         ev.confirm = this.removeFromCache.bind(this, envelope);
-        ev.settings = {
-            readReceipts: settings.readReceipts
+        ev.configuration = {
+            readReceipts: configuration.readReceipts
         };
         return this.dispatchAndWait(ev);
     },
@@ -40261,7 +40259,7 @@ MessageSender.prototype = {
     sendReadReceipts: function(sender, timestamps) {
         var receiptMessage = new textsecure.protobuf.ReceiptMessage();
         receiptMessage.type = textsecure.protobuf.ReceiptMessage.Type.READ;
-        receiptMessage.timestamps = timestamps;
+        receiptMessage.timestamp = timestamps;
 
         var contentMessage = new textsecure.protobuf.Content();
         contentMessage.receiptMessage = receiptMessage;

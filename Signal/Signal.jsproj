@@ -222,7 +222,6 @@
     <Content Include="images\x_EF898910.svg" />
     <Content Include="images\x_FFFFFF10.svg" />
     <Content Include="index.html" />
-    <Content Include="js\logging.js" />
     <Content Include="js\backbone_database.js" />
     <Content Include="js\background.js" />
     <Content Include="js\background_task.js" />
@@ -241,6 +240,7 @@
     <Content Include="js\libtextsecure.js" />
     <Content Include="js\i18n.js" />
     <Content Include="app\locale.js" />
+    <Content Include="js\logging.js" />
     <Content Include="js\modules\google-libphonenumber\libphonenumber.js" />
     <Content Include="js\Mp3LameEncoder.min.js" />
     <Content Include="js\views\app_view.js" />
@@ -317,6 +317,7 @@
     <Content Include="protos\Stickers.proto" />
     <Content Include="protos\SubProtocol.proto" />
     <Content Include="protos\UnidentifiedDelivery.proto" />
+    <Content Include="protos\WhisperTextProtocol.proto" />
     <Content Include="share.html" />
     <Content Include="stylesheets\manifest.css" />
     <Content Include="stylesheets\options.css" />
