@@ -35471,8 +35471,6 @@ var Internal = Internal || {};
                 result = result | (a[i] ^ b[i]);
             }
             if (result !== 0) {
-                console.log('Our MAC  ', dcodeIO.ByteBuffer.wrap(calculated_mac).toHex());
-                console.log('Their MAC', dcodeIO.ByteBuffer.wrap(mac).toHex());
                 throw new Error("Bad MAC");
             }
         });
@@ -36196,14 +36194,7 @@ libsignal.SessionBuilder = function (storage, remoteAddress) {
   this.processV3 = builder.processV3.bind(builder);
 };
 
-function SessionCipher(storage, remoteAddress, options) {
-  options = options || {};
-
-  if (typeof options.messageKeysLimit === 'undefined') {
-    options.messageKeysLimit = 1000;
-  }
-
-  this.messageKeysLimit = options.messageKeysLimit;
+function SessionCipher(storage, remoteAddress) {
   this.remoteAddress = remoteAddress;
   this.storage = storage;
 }
@@ -36476,13 +36467,12 @@ SessionCipher.prototype = {
     });
   },
   fillMessageKeys: function(chain, counter) {
-      if (this.messageKeysLimit && Object.keys(chain.messageKeys).length >= this.messageKeysLimit) {
-          console.log("Too many message keys for chain");
-          return Promise.resolve(); // Stalker, much?
-      }
-
       if (chain.chainKey.counter >= counter) {
           return Promise.resolve(); // Already calculated
+      }
+
+      if (counter - chain.chainKey.counter > 2000) {
+          throw new Error('Over 2000 messages into the future!');
       }
 
       if (chain.chainKey.key === undefined) {
@@ -36613,8 +36603,8 @@ SessionCipher.prototype = {
   }
 };
 
-libsignal.SessionCipher = function(storage, remoteAddress, options) {
-    var cipher = new SessionCipher(storage, remoteAddress, options);
+libsignal.SessionCipher = function(storage, remoteAddress) {
+    var cipher = new SessionCipher(storage, remoteAddress);
 
     // returns a Promise that resolves to a ciphertext object
     this.encrypt = cipher.encrypt.bind(cipher);
