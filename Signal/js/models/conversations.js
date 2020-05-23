@@ -669,13 +669,28 @@
         }.bind(this));
     },
 
-    updateExpirationTimer: function(expireTimer, source, received_at) {
-        if (!expireTimer) { expireTimer = null; }
+    updateExpirationTimer: function(expireTimer, source, received_at, options) {
+        options = options || {};
+        _.defaults(options, {fromSync: false});
+
+        if (!expireTimer) {
+            expireTimer = null;
+        }
+        if (this.get('expireTimer') === expireTimer
+            || (!expireTimer && !this.get('expireTimer'))) {
+
+            return;
+        }
+
+        console.log(
+            'Updating expireTimer for conversation',
+            this.idForLogging(),
+            'via',
+            source
+        );
         source = source || textsecure.storage.user.getNumber();
-        // When we add a disappearing messages notification to the conversation, we want it
-        //   to be above the message that initiated that change, hence the subtraction.
-        var timestamp = (received_at || Date.now()) - 1;
-        this.save({ expireTimer: expireTimer });
+        var timestamp = (received_at || Date.now());
+
         var message = this.messageCollection.add({
             // Even though this isn't reflected to the user, we want to place the last seen
             //   indicator above it. We set it to 'unread' to trigger that placement.
@@ -687,7 +702,8 @@
             flags                 : textsecure.protobuf.DataMessage.Flags.EXPIRATION_TIMER_UPDATE,
             expirationTimerUpdate : {
               expireTimer    : expireTimer,
-              source         : source
+              source         : source,
+              fromSync       : options.fromSync,
             }
         });
         if (this.isPrivate()) {
@@ -696,27 +712,37 @@
         if (message.isOutgoing()) {
             message.set({recipients: this.getRecipients() });
         }
-        message.save();
 
-        // if change was made remotely, don't send it to the number/group
-        if (received_at) {
-           return message;
-        }
+        return Promise.all([
+            wrapDeferred(message.save()),
+            wrapDeferred(this.save({ expireTimer: expireTimer })),
+        ]).then(function() {
+            if (message.isIncoming()) {
+                return message;
+            }
 
-        var sendFunc;
-        if (this.get('type') == 'private') {
-            sendFunc = textsecure.messaging.sendExpirationTimerUpdateToNumber;
-        }
-        else {
-            sendFunc = textsecure.messaging.sendExpirationTimerUpdateToGroup;
-        }
-        var profileKey;
-        if (this.get('profileSharing')) {
-            profileKey = storage.get('profileKey');
-        }
-        message.send(sendFunc(this.get('id'), this.get('expireTimer'), message.get('sent_at'), profileKey));
+            // change was made locally, send it to the number/group 
+            var sendFunc;
+            if (this.get('type') == 'private') {
+                sendFunc = textsecure.messaging.sendExpirationTimerUpdateToNumber;
+            }
+            else {
+                sendFunc = textsecure.messaging.sendExpirationTimerUpdateToGroup;
+            }
+            var profileKey;
+            if (this.get('profileSharing')) {
+                profileKey = storage.get('profileKey');
+            }
+            var promise = sendFunc(this.get('id'),
+                this.get('expireTimer'),
+                message.get('sent_at'),
+                profileKey
+            );
 
-        return message;
+            return message.send(promise).then(function() {
+                return message;
+            });
+        }.bind(this));
     },
 
     isSearchable: function() {
