@@ -678,7 +678,7 @@
         "description": "Alt text for button to take user down to bottom of conversation with a new message out of screen"
     },
     "exportComplete": {
-        "message": "Seus dados foram exportados para: <p><b>$location$</b></p>  Você poderá importá-los assim que tiver instalado <a target='_blank' href='https://support.whispersystems.org/hc/en-us/articles/214507138-How-do-I-install-Signal-Desktop-'>o novo Signal Desktop</a>.",
+        "message": "Seus dados foram exportados para: <p><b>$location$</b></p>  Você poderá importá-los assim que tiver instalado <a target='_blank' href='https://support.signal.org/hc/en-us/articles/214507138-How-do-I-install-Signal-Desktop-'>o novo Signal Desktop</a>.",
         "description": "Message shown on the migration screen when we are done exporting data",
         "placeholders": {
             "location": {

@@ -678,7 +678,7 @@
         "description": "Alt text for button to take user down to bottom of conversation with a new message out of screen"
     },
     "exportComplete": {
-        "message": "Vaši izvoženi podatki so bili shranjeni na: <p><b>$location$</b></p> Ko boste namestili <a target='_blank' href='https://support.whispersystems.org/hc/en-us/articles/214507138'>novo aplikacijo Signal Desktop</a>, jih boste lahko uvozili vanjo.",
+        "message": "Vaši izvoženi podatki so bili shranjeni na: <p><b>$location$</b></p> Ko boste namestili <a target='_blank' href='https://support.signal.org/hc/en-us/articles/214507138'>novo aplikacijo Signal Desktop</a>, jih boste lahko uvozili vanjo.",
         "description": "Message shown on the migration screen when we are done exporting data",
         "placeholders": {
             "location": {

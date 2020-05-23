@@ -678,7 +678,7 @@
         "description": "Alt text for button to take user down to bottom of conversation with a new message out of screen"
     },
     "exportComplete": {
-        "message": "Ваши данные экспортированы в: <p><b>$location$</b></p> Вы сможете импортировать эти данные при настройке <a target='_blank' href='https://support.whispersystems.org/hc/en-us/articles/214507138'>нового Signal Desktop</a>.",
+        "message": "Ваши данные экспортированы в: <p><b>$location$</b></p> Вы сможете импортировать эти данные при настройке <a target='_blank' href='https://support.signal.org/hc/en-us/articles/214507138'>нового Signal Desktop</a>.",
         "description": "Message shown on the migration screen when we are done exporting data",
         "placeholders": {
             "location": {

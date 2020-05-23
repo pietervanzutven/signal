@@ -678,7 +678,7 @@
         "description": "Alt text for button to take user down to bottom of conversation with a new message out of screen"
     },
     "exportComplete": {
-        "message": "आपका डेटा यहां निर्यात किया गया है:<p><b>$location$</b></p>आप सेट अप किए गए डेटा को आयात करने में सक्षम होंगे<a target='_blank' href='https://support.whispersystems.org/hc/en-us/articles/214507138'>नया सिग्नल डेस्कटॉप</a>",
+        "message": "आपका डेटा यहां निर्यात किया गया है:<p><b>$location$</b></p>आप सेट अप किए गए डेटा को आयात करने में सक्षम होंगे<a target='_blank' href='https://support.signal.org/hc/en-us/articles/214507138'>नया सिग्नल डेस्कटॉप</a>",
         "description": "Message shown on the migration screen when we are done exporting data",
         "placeholders": {
             "location": {

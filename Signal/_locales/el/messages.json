@@ -654,7 +654,7 @@
         "description": "Label for option to turn off message expiration in the timer menu"
     },
     "importError": {
-        "message": "Δυστυχώς, κάτι πήγε στραβά κατά την εισαγωγή. <p>Πρώτα, ξαναέλεγξε τον φάκελο. Το όνομά του θα πρέπει να ξεκινά με \"Signal Export\".</p><p>Μετά, δοκίμασε να κάνεις μια νέα εξαγωγή των δεδομένων σου από την εφαρμογή UWP.</p> Αν και αυτό αποτύχει, παρακαλώ <a target='_blank' href='https://support.whispersystems.org/hc/en-us/articles/215188737'>υπέβαλε ένα αρχείο καταγραφής αποσφαλμάτωσης</a> ώστε να μπορέσουμε να σε βοηθήσουμε να μεταφερθείς!",
+        "message": "Δυστυχώς, κάτι πήγε στραβά κατά την εισαγωγή. <p>Πρώτα, ξαναέλεγξε τον φάκελο. Το όνομά του θα πρέπει να ξεκινά με \"Signal Export\".</p><p>Μετά, δοκίμασε να κάνεις μια νέα εξαγωγή των δεδομένων σου από την εφαρμογή UWP.</p> Αν και αυτό αποτύχει, παρακαλώ <a target='_blank' href='https://support.signal.org/hc/en-us/articles/215188737'>υπέβαλε ένα αρχείο καταγραφής αποσφαλμάτωσης</a> ώστε να μπορέσουμε να σε βοηθήσουμε να μεταφερθείς!",
         "description": "Message shown if the import went wrong."
     },
     "installAndroidInstructions": {
@@ -678,7 +678,7 @@
         "description": "Alt text for button to take user down to bottom of conversation with a new message out of screen"
     },
     "exportComplete": {
-        "message": "Τα δεδομένα σου εξήχθησαν σε: <p><b>$location$</b></p> Θα μπορέσεις να εισάγεις αυτά τα δεδομένα κατά την εγκατάσταση του <a target='_blank' href='https://support.whispersystems.org/hc/en-us/articles/214507138'>νέου Signal Desktop</a>.",
+        "message": "Τα δεδομένα σου εξήχθησαν σε: <p><b>$location$</b></p> Θα μπορέσεις να εισάγεις αυτά τα δεδομένα κατά την εγκατάσταση του <a target='_blank' href='https://support.signal.org/hc/en-us/articles/214507138'>νέου Signal Desktop</a>.",
         "description": "Message shown on the migration screen when we are done exporting data",
         "placeholders": {
             "location": {

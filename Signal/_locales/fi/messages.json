@@ -678,7 +678,7 @@
         "description": "Alt text for button to take user down to bottom of conversation with a new message out of screen"
     },
     "exportComplete": {
-        "message": "Tietosi on tallennettu seuraavaan paikkaan: <p><b>$location$</b></p> Voit tuoda tietosi kun asennat <a target='_blank' href='https://support.whispersystems.org/hc/en-us/articles/214507138'>uuden Signal Desktopin</a>.",
+        "message": "Tietosi on tallennettu seuraavaan paikkaan: <p><b>$location$</b></p> Voit tuoda tietosi kun asennat <a target='_blank' href='https://support.signal.org/hc/en-us/articles/214507138'>uuden Signal Desktopin</a>.",
         "description": "Message shown on the migration screen when we are done exporting data",
         "placeholders": {
             "location": {

@@ -300,7 +300,7 @@
             new Whisper.DebugLogView().$el.appendTo(this.el);
         },
         openReleaseNotes: function () {
-            Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/WhisperSystems/Signal-Desktop/releases/tag/v' + app.getVersion()));
+            Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/releases/tag/v' + app.getVersion()));
         },
         openForums: function () {
             Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://whispersystems.discoursehosting.net/'));
@@ -309,7 +309,7 @@
             Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://support.signal.org/'));
         },
         openNewBugForm: function () {
-            Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/WhisperSystems/Signal-Desktop/issues/new'));
+            Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/issues/new'));
         },
         showAbout: function () {
             this.$('.about').remove();

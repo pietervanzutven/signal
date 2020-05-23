@@ -678,7 +678,7 @@
         "description": "Alt text for button to take user down to bottom of conversation with a new message out of screen"
     },
     "exportComplete": {
-        "message": "Dina data har blivit exporterade till: <p><b>$location$</b></p>. Du kommer kunna importera denna data när du ställer in <a target='_blank' href='https://support.whispersystems.org/hc/en-us/articles/214507138'>den nya Signal Desktop-appen</a>.",
+        "message": "Dina data har blivit exporterade till: <p><b>$location$</b></p>. Du kommer kunna importera denna data när du ställer in <a target='_blank' href='https://support.signal.org/hc/en-us/articles/214507138'>den nya Signal Desktop-appen</a>.",
         "description": "Message shown on the migration screen when we are done exporting data",
         "placeholders": {
             "location": {

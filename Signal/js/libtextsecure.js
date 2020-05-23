@@ -38337,7 +38337,7 @@ var TextSecureServer = (function() {
      *    error: function(message, status, request) {...}
      * });
      *
-     * 1. https://github.com/WhisperSystems/WebSocket-Resources
+     * 1. https://github.com/signalapp/WebSocket-Resources
      *
      */
 
@@ -39487,8 +39487,8 @@ MessageReceiver.prototype.extend({
 
             // Before June, all incoming messages were still DataMessage:
             //   - iOS: Michael Kirk says that they were sending Legacy messages until June
-            //   - Desktop: https://github.com/WhisperSystems/Signal-Desktop/commit/e8548879db405d9bcd78b82a456ad8d655592c0f
-            //   - Android: https://github.com/WhisperSystems/libsignal-service-java/commit/61a75d023fba950ff9b4c75a249d1a3408e12958
+            //   - Desktop: https://github.com/signalapp/Signal-Desktop/commit/e8548879db405d9bcd78b82a456ad8d655592c0f
+            //   - Android: https://github.com/signalapp/libsignal-service-java/commit/61a75d023fba950ff9b4c75a249d1a3408e12958
             //
             // var d = new Date('2017-06-01T07:00:00.000Z');
             // d.getTime();
