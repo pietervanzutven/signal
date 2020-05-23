@@ -56,7 +56,7 @@
     <PackageCertificateKeyFile>Signal_TemporaryKey.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>40E5434AE19909E4C664C1C85AC37B68A9A17155</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
