@@ -4,10 +4,14 @@
 
     var Blob = window.Blob;
     window.Blob = function (array, options) {
-        if (typeof array[0] === 'string') {
-            this.data = array[0];
+        if (Array.isArray(array)) {
+            if (typeof array[0] === 'string') {
+                this.data = array[0];
+            } else {
+                return new Blob(array, options);
+            }
         } else {
-            return new Blob(array, options);
+            return new Blob();
         }
     }
 
@@ -16,7 +20,7 @@
         if (blob.data) {
             return "ms-appdata:///local/" + blob.data;
         } else {
-            return createObjectURL(blob); 
+            return createObjectURL(blob);
         }
     }
 
