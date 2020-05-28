@@ -108,6 +108,9 @@
                                 break;
                             }
                         }
+                        if (i === elements.length) {
+                            view.$el.insertAfter(elements[elements.length-1]);
+                        }
                     } else {
                         this.$el.append(view.el);
                     }
