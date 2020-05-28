@@ -96,7 +96,7 @@
                             resp = Object.values(store).filter(element => element.sent_at === options.index.only);
                             break;
                         case 'unique':
-                            resp = Object.values(store).filter(element => element.source === options.index.value[0] && element.sourceDevice === options.index.value[1] && element.sent_at === options.index.value[2]);
+                            resp = Object.values(store).filter(element => element.source === options.index.value[0] && element.sourceDevice === options.index.value[1] && element.sent_at === options.index.value[2])[0] || [];
                             break;
                         case 'expires_at':
                             resp = Object.values(store).filter(element => element.expires_at);
