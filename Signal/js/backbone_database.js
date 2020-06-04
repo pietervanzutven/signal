@@ -5,7 +5,7 @@
     var Blob = window.Blob;
     window.Blob = function (array, options) {
         if (Array.isArray(array)) {
-            if (typeof array[0] === 'string') {
+            if (array[0].endsWith('.jpg') || array[0].endsWith('.jpeg') || array[0].endsWith('.png')) {
                 this.data = array[0];
             } else {
                 return new Blob(array, options);
