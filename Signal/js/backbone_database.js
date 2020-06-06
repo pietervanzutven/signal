@@ -33,6 +33,19 @@
     }).then(function () {
         return Windows.Storage.ApplicationData.current.localFolder.getFilesAsync();
     }).then(function (files) {
+        if (BBDB.version === undefined) {
+            BBDB.version = 0;
+            BBDB.name = '';
+            BBDB.stores = {};
+            ['conversations', 'groups', 'identityKeys', 'items', 'messages', 'preKeys', 'sessions', 'signedPreKeys', 'unprocessed'].forEach(storeName => {
+                BBDB.stores[storeName] = { items: BBDB[storeName], indices: {} };
+                delete BBDB[storeName];
+            });
+        }
+        Windows.Storage.ApplicationData.current.localSettings.values['number_id'] = BBDB.stores.items.items.number_id && BBDB.stores.items.items.number_id.value;
+        Windows.Storage.ApplicationData.current.localSettings.values['password'] = BBDB.stores.items.items.password && BBDB.stores.items.items.password.value;
+        BBDB.debug && delete BBDB['debug'];
+
         text = JSON.stringify(BBDB, stringifyJSON);
         files.forEach(
             function (file) {
@@ -47,9 +60,6 @@
         return Windows.Storage.FileIO.readTextAsync(file).then(function (text) {
             if (text !== '') {
                 jQuery.extend(true, BBDB, JSON.parse(text, parseJSON));
-                Windows.Storage.ApplicationData.current.localSettings.values['number_id'] = BBDB.items.number_id && BBDB.items.number_id.value;
-                Windows.Storage.ApplicationData.current.localSettings.values['password'] = BBDB.items.password && BBDB.items.password.value;
-                BBDB.debug && delete BBDB['debug'];
             }
         });
     }
@@ -68,8 +78,8 @@
     Backbone.sync = function (method, object, options) {
         var store = {};
         var storeName = object.storeName;
-        if (BBDB[storeName]) {
-            store = BBDB[storeName];
+        if (BBDB.stores[storeName]) {
+            store = BBDB.stores[storeName].items;
         }
 
         var syncDfd = Backbone.$ ? Backbone.$.Deferred && Backbone.$.Deferred() : Backbone.Deferred && Backbone.Deferred();
