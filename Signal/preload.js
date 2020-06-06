@@ -38,4 +38,15 @@ ipc.on('debug-log', function () {
     Whisper.events.trigger('showDebugLog');
 });
 
-var Signal = {};
+window.dataURLToBlobSync = window.blueimp_canvas_to_blob;
+window.loadImage = window.blueimp_load_image;
+
+const { autoOrientImage } = window.auto_orient_image;
+window.autoOrientImage = autoOrientImage;
+
+// ES2015+ modules
+window.Signal = window.Signal || {};
+window.Signal.Types = window.Signal.Types || {};
+window.Signal.Types.Attachment = window.attachment;
+window.Signal.Types.Message = window.message;
+window.Signal.Types.MIME = window.mime;

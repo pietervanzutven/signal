@@ -98,8 +98,8 @@
               const file = {
                   path: target,
                   start: isLineAfterDate(start, date),
-                  end: isLineAfterDate(end[end.length - 1], date)
-                    || isLineAfterDate(end[end.length - 2], date),
+                  end: isLineAfterDate(end[end.length - 1], date) ||
+                       isLineAfterDate(end[end.length - 2], date),
               };
 
               if (!file.start && !file.end) {

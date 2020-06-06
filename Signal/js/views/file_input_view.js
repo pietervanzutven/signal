@@ -1,9 +1,12 @@
-/*
- * vim: ts=4:sw=4:expandtab
- */
+/* eslint-disable */
+
+/* global textsecure: false */
+
 (function () {
     'use strict';
     window.Whisper = window.Whisper || {};
+
+    const { MIME } = window.Signal.Types;
 
     Whisper.FileSizeToast = Whisper.ToastView.extend({
         templateName: 'file-size-modal',
@@ -30,6 +33,7 @@
             this.thumb = new Whisper.AttachmentPreviewView();
             this.$el.addClass('file-input');
             this.window = options.window;
+            this.previewObjectUrl = null;
         },
 
         events: {
@@ -95,7 +99,6 @@
                         return;
                     }
 
-                    // loadImage.scale -> components/blueimp-load-image
                     var canvas = loadImage.scale(img, {
                         canvas: true, maxWidth: maxWidth, maxHeight: maxHeight
                     });
@@ -105,11 +108,13 @@
                     var blob;
                     do {
                         i = i - 1;
-                        // dataURLtoBlob -> components/blueimp-canvas-to-blob
-                        blob = dataURLtoBlob(
+                        blob = window.dataURLToBlobSync(
                             canvas.toDataURL('image/jpeg', quality)
                         );
                         quality = quality * maxSize / blob.size;
+                        // NOTE: During testing with a large image, we observed the
+                        // `quality` value being > 1. Should we clamp it to [0.5, 1.0]?
+                        // See: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob#Syntax
                         if (quality < 0.5) {
                             quality = 0.5;
                         }
@@ -135,8 +140,14 @@
                 case 'audio': this.addThumb('images/audio.svg'); break;
                 case 'video': this.addThumb('images/video.svg'); break;
                 case 'image':
-                    this.oUrl = URL.createObjectURL(file);
-                    this.addThumb(this.oUrl);
+                    if (!MIME.isJPEG(file.type)) {
+                        this.previewObjectUrl = URL.createObjectURL(file);
+                        this.addThumb(this.previewObjectUrl);
+                        break;
+                    }
+
+                    window.autoOrientImage(file)
+                        .then(dataURL => this.addThumb(dataURL));
                     break;
                 default:
                     this.addThumb('images/file.svg'); break;
@@ -180,30 +191,38 @@
             return files && files.length && files.length > 0;
         },
 
-        getFiles: function() {
-            var promises = [];
-            var files = this.file ? [this.file] : this.$input.prop('files');
-            for (var i = 0; i < files.length; i++) {
-                promises.push(this.getFile(files[i]));
-            }
+        /* eslint-enable */
+        /* jshint ignore:start */
+        getFiles() {
+            const files = this.file ? [this.file] : Array.from(this.$input.prop('files'));
+            const promise = Promise.all(files.map(file => this.getFile(file)));
             this.clearForm();
-            return Promise.all(promises);
+            return promise;
         },
 
-        getFile: function(file) {
-            file = file || this.file || this.$input.prop('files')[0];
-            if (file === undefined) { return Promise.resolve(); }
-            var flags;
-            if (this.isVoiceNote) {
-              flags = textsecure.protobuf.AttachmentPointer.Flags.VOICE_MESSAGE;
+        getFile(rawFile) {
+            const file = rawFile || this.file || this.$input.prop('files')[0];
+            if (file === undefined) {
+                return Promise.resolve();
             }
-            return this.autoScale(file).then(this.readFile).then(function(attachment) {
-              if (flags) {
-                attachment.flags = flags;
-              }
-              return attachment;
-            }.bind(this));
+            const attachmentFlags = this.isVoiceNote
+              ? textsecure.protobuf.AttachmentPointer.Flags.VOICE_MESSAGE
+              : null;
+
+            const setFlags = flags => (attachment) => {
+                const newAttachment = Object.assign({}, attachment);
+                if (flags) {
+                    newAttachment.flags = flags;
+                }
+                return newAttachment;
+            };
+
+            return this.autoScale(file)
+              .then(this.readFile)
+              .then(setFlags(attachmentFlags));
         },
+        /* jshint ignore:end */
+        /* eslint-disable */
 
         getThumbnail: function() {
             // Scale and crop an image to 256px square
@@ -232,7 +251,7 @@
                     });
 
                     // dataURLtoBlob -> components/blueimp-canvas-to-blob
-                    var blob = dataURLtoBlob(canvas.toDataURL('image/png'));
+                    var blob = window.dataURLToBlobSync(canvas.toDataURL('image/png'));
 
                     resolve(blob);
                 };
@@ -240,6 +259,7 @@
             }).then(this.readFile);
         },
 
+        // File -> Promise Attachment
         readFile: function(file) {
             return new Promise(function(resolve, reject) {
                 var FR = new FileReader();
@@ -258,9 +278,9 @@
         },
 
         clearForm: function() {
-            if (this.oUrl) {
-                URL.revokeObjectURL(this.oUrl);
-                this.oUrl = null;
+            if (this.previewObjectUrl) {
+                URL.revokeObjectURL(this.previewObjectUrl);
+                this.previewObjectUrl = null;
             }
             this.thumb.remove();
             this.$('.avatar').show();
