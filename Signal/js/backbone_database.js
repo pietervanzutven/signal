@@ -162,7 +162,7 @@
         if (this.attachments) {
             this.attachments.forEach(attachment => {
                 if (attachment.data instanceof ArrayBuffer) {
-                    attachment.data = saveMediaItem((attachment.fileName || window.getGuid()) + '.' + attachment.contentType.split('/')[1], attachment.data);
+                    attachment.data = saveMediaItem(window.getGuid() + '.' + attachment.contentType.split('/')[1], attachment.data);
                 }
             });
         }
