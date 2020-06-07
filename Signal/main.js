@@ -1,5 +1,8 @@
 ﻿'use strict';
 
+Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync('BBDB_import.json').then(file => file && file.renameAsync('signal_import.json'));
+Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync('BBDB.json').then(file => file && file.renameAsync('signal.json'));
+
 var background = Windows.ApplicationModel.Background;
 background.BackgroundExecutionManager.removeAccess();
 for (var iter = background.BackgroundTaskRegistration.allTasks.first() ; iter.hasCurrent; iter.moveNext()) {

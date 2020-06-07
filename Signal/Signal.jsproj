@@ -222,7 +222,6 @@
     <Content Include="images\x_EF898910.svg" />
     <Content Include="images\x_FFFFFF10.svg" />
     <Content Include="index.html" />
-    <Content Include="js\backbone_database.js" />
     <Content Include="js\background.js" />
     <Content Include="js\background_task.js" />
     <Content Include="js\backup.js" />
@@ -252,6 +251,7 @@
     <Content Include="js\modules\blueimp-load-image\load-image-scale.js" />
     <Content Include="js\modules\blueimp-load-image\load-image.js" />
     <Content Include="js\modules\google-libphonenumber\libphonenumber.js" />
+    <Content Include="js\modules\indexedDB.js" />
     <Content Include="js\modules\lodash\isFunction.js" />
     <Content Include="js\modules\lodash\isNumber.js" />
     <Content Include="js\modules\lodash\isString.js" />
