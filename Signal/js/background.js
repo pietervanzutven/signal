@@ -98,6 +98,9 @@
             first = false;
 
             ConversationController.load().then(start, start);
+
+            Windows.Storage.ApplicationData.current.localSettings.values['number_id'] = storage.get('number_id');
+            Windows.Storage.ApplicationData.current.localSettings.values['password'] = storage.get('password');
         });
     }
 

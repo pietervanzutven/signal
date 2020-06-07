@@ -46,8 +46,6 @@
             BBDB.version = 17;
             BBDB.name = 'signal';
         }
-        Windows.Storage.ApplicationData.current.localSettings.values['number_id'] = BBDB.stores.items.items.number_id && BBDB.stores.items.items.number_id.value;
-        Windows.Storage.ApplicationData.current.localSettings.values['password'] = BBDB.stores.items.items.password && BBDB.stores.items.items.password.value;
         BBDB.debug && delete BBDB['debug'];
 
         text = JSON.stringify(BBDB, stringifyJSON);
