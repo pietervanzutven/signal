@@ -90,19 +90,17 @@
     // We need this 'first' check because we don't want to start the app up any other time
     //   than the first time. And storage.fetch() will cause onready() to fire.
     var first = true;
-    window.onload = function() {
-        storage.onready(function() {
-            if (!first) {
-                return;
-            }
-            first = false;
+    storage.onready(function() {
+        if (!first) {
+            return;
+        }
+        first = false;
 
-            ConversationController.load().then(start, start);
+        ConversationController.load().then(start, start);
 
-            Windows.Storage.ApplicationData.current.localSettings.values['number_id'] = storage.get('number_id');
-            Windows.Storage.ApplicationData.current.localSettings.values['password'] = storage.get('password');
-        });
-    }
+        Windows.Storage.ApplicationData.current.localSettings.values['number_id'] = storage.get('number_id');
+        Windows.Storage.ApplicationData.current.localSettings.values['password'] = storage.get('password');
+    });
 
     Whisper.events.on('shutdown', function() {
         if (messageReceiver) {
