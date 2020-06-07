@@ -1,4 +1,7 @@
-﻿(function () {
+﻿// NOTE: Temporarily allow `then` until we convert the entire file to `async` / `await`:
+/* eslint-disable more/no-then */
+
+(function () {
     const LEVELS = ['fatal', 'error', 'warn', 'info', 'debug', 'trace'];
 
     let logger;

@@ -146,6 +146,9 @@
                         break;
                     }
 
+                    // NOTE: Temporarily allow `then` until we convert the entire file
+                    // to `async` / `await`:
+                    // eslint-disable-next-line more/no-then
                     window.autoOrientImage(file)
                         .then(dataURL => this.addThumb(dataURL));
                     break;
@@ -153,6 +156,9 @@
                     this.addThumb('images/file.svg'); break;
             }
 
+            // NOTE: Temporarily allow `then` until we convert the entire file
+            // to `async` / `await`:
+            // eslint-disable-next-line more/no-then
             this.autoScale(file).then(function(blob) {
                 var limitKb = 1000000;
                 var blobType = contentType === 'image/gif' ? 'gif' : type;
@@ -217,6 +223,9 @@
                 return newAttachment;
             };
 
+            // NOTE: Temporarily allow `then` until we convert the entire file
+            // to `async` / `await`:
+            // eslint-disable-next-line more/no-then
             return this.autoScale(file)
               .then(this.readFile)
               .then(setFlags(attachmentFlags));
