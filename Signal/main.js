@@ -1,7 +1,15 @@
 ﻿'use strict';
 
-Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync('BBDB_import.json').then(file => file && file.renameAsync('signal_import.json'));
-Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync('BBDB.json').then(file => file && file.renameAsync('signal.json'));
+Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync('BBDB_import.json').then(file => {
+    if (file) {
+        file.renameAsync('signal_import.json', Windows.Storage.NameCollisionOption.replaceExisting);
+    }
+});
+Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync('BBDB.json').then(file => {
+    if (file) {
+        file.renameAsync('signal.json', Windows.Storage.NameCollisionOption.replaceExisting);
+    }
+});
 
 var background = Windows.ApplicationModel.Background;
 background.BackgroundExecutionManager.removeAccess();
