@@ -11,7 +11,7 @@
     function importDatabase(idb_db, parent) {
         var promises = [];
         parent.files.forEach(file => {
-            var fileName = file.name === 'BBDB.json' ? 'BBDB_import.json' : file.name;
+            var fileName = file.name === 'signal.json' ? 'signal_import.json' : file.name;
             promises.push(file.copyAsync(idb_db.folder, fileName, Windows.Storage.NameCollisionOption.replaceExisting));
         });
         return Promise.all(promises);
