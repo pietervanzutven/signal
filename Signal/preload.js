@@ -25,7 +25,7 @@ window.setMenuBarVisibility = function (visibility) {
 };
 window.restart = function() {
     console.log('restart');
-    ipc.send('restart');    
+    ipc.send('restart');
 };
 window.closeAbout = function () {
     ipc.send('close-about');
@@ -37,6 +37,26 @@ window.updateTrayIcon = function (unreadCount) {
 ipc.on('debug-log', function () {
     Whisper.events.trigger('showDebugLog');
 });
+
+ipc.on('set-up-with-import', function() {
+    Whisper.events.trigger('setupWithImport');
+});
+
+ipc.on('set-up-as-new-device', function() {
+    Whisper.events.trigger('setupAsNewDevice');
+});
+
+ipc.on('set-up-as-standalone', function() {
+    Whisper.events.trigger('setupAsStandalone');
+});
+
+window.addSetupMenuItems = function() {
+    ipc.send('add-setup-menu-items');
+}
+
+window.removeSetupMenuItems = function() {
+    ipc.send('remove-setup-menu-items');
+}
 
 window.dataURLToBlobSync = window.blueimp_canvas_to_blob;
 window.loadImage = window.blueimp_load_image;

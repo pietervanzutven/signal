@@ -113,6 +113,27 @@
         }
     });
 
+    Whisper.events.on('setupWithImport', function() {
+        var appView = window.owsDesktopApp.appView;
+        if (appView) {
+            appView.openImporter();
+        }
+    });
+
+    Whisper.events.on('setupAsNewDevice', function() {
+        var appView = window.owsDesktopApp.appView;
+        if (appView) {
+            appView.openInstaller();
+        }
+    });
+
+    Whisper.events.on('setupAsStandalone', function() {
+        var appView = window.owsDesktopApp.appView;
+        if (appView) {
+            appView.openStandalone();
+        }
+    });
+
     function start() {
         var currentVersion = window.config.version;
         var lastVersion = storage.get('version');
@@ -146,17 +167,19 @@
             appView.openInbox({
                 initialLoadComplete: initialLoadComplete
             });
+        } else if (window.config.importMode) {
+            appView.openImporter();
         } else {
-            appView.openInstallChoice();
+            appView.openInstaller();
         }
 
-        Whisper.events.on('showDebugLog', function () {
+        Whisper.events.on('showDebugLog', function() {
             appView.openDebugLog();
         });
-        Whisper.events.on('unauthorized', function () {
+        Whisper.events.on('unauthorized', function() {
             appView.inboxView.networkStatusView.update();
         });
-        Whisper.events.on('reconnectTimer', function () {
+        Whisper.events.on('reconnectTimer', function() {
             appView.inboxView.networkStatusView.setSocketReconnectInterval(60000);
         });
         Whisper.events.on('contactsync', function() {
@@ -164,12 +187,6 @@
                 appView.openInbox();
             }
         });
-        Whisper.events.on('contactsync:begin', function() {
-            if (appView.installView && appView.installView.showSync) {
-                appView.installView.showSync();
-            }
-        });
-
         Whisper.Notifications.on('click', function(conversation) {
             showWindow();
             if (conversation) {

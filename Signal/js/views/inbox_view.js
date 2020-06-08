@@ -185,6 +185,9 @@
             openSupportPage         : i18n('goToSupportPage'),
             openNewBugForm          : i18n('fileABug'),
             showAbout               : i18n('aboutSignalDesktop'),
+            setupWithImport         : i18n('menuSetupWithImport'),
+            setupAsNewDevice        : i18n('menuSetupAsNewDevice'),
+            setupAsStandalone       : i18n('menuSetupAsStandalone'),
             restartSignal           : i18n('restartSignal'),
         },
         events: {
@@ -200,6 +203,9 @@
             'click .open-support-page': 'openSupportPage',
             'click .open-new-bug-form': 'openNewBugForm',
             'click .show-about': 'showAbout',
+            'click .setup-with-import': window.setupWithImport,
+            'click .setup-as-new-device': window.setupAsNewDevice,
+            'click .setup-as-standalone': window.setupAsStandalone,
             'select .gutter .conversation-list-item': 'openConversation',
             'input input.search': 'filterContacts',
             'click .restart-signal': window.restart,
@@ -299,19 +305,19 @@
             this.$('.debug-log').remove();
             new Whisper.DebugLogView().$el.appendTo(this.el);
         },
-        openReleaseNotes: function () {
+        openReleaseNotes: function() {
             Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/releases/tag/v' + app.getVersion()));
         },
-        openForums: function () {
+        openForums: function() {
             Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://whispersystems.discoursehosting.net/'));
         },
-        openSupportPage: function () {
+        openSupportPage: function() {
             Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://support.signal.org/'));
         },
-        openNewBugForm: function () {
+        openNewBugForm: function() {
             Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/issues/new'));
         },
-        showAbout: function () {
+        showAbout: function() {
             this.$('.about').remove();
             new Whisper.AboutView().$el.appendTo(this.el);
         },

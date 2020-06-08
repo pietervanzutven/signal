@@ -2,37 +2,6 @@
   'use strict';
   window.Whisper = window.Whisper || {};
 
-  var LinuxInstructionsView = Whisper.ConfirmationDialogView.extend({
-    className: 'linux-install-instructions',
-    templateName: 'linux-install-instructions',
-    _super: Whisper.ConfirmationDialogView.prototype,
-    initialize: function() {
-      this._super.initialize.call(this, {
-        okText: i18n('close'),
-      });
-    },
-    events: {
-      'keyup': 'onKeyup',
-      'click .ok': 'ok',
-      'click .modal': 'ok',
-    },
-    render_attributes: function() {
-      var attributes = this._super.render_attributes.call(this);
-      attributes.header = i18n('linuxInstallInstructions');
-      return attributes;
-    },
-    ok: function(event) {
-      // We have an event on .modal, which is the background div, darkening the screen.
-      //   This ensures that a click on the dialog will not fire that event, by checking
-      //   the actual thing clicked against the target.
-      if (event.target !== event.currentTarget) {
-        return;
-      }
-
-      this._super.ok.call(this);
-    }
-  });
-
   var State = {
     DISCONNECTING: 1,
     EXPORTING: 2,
@@ -105,7 +74,7 @@
 
   Whisper.ExportView = Whisper.View.extend({
     templateName: 'export-flow-template',
-    className: 'export-flow',
+    className: 'full-screen-flow',
     events: {
       'click .start': 'onClickStart',
       'click .choose': 'onClickChoose',
@@ -160,7 +129,7 @@
         isStep2: this.step === 2,
         chooseHeader: i18n('saveHeader'),
         choose: i18n('saveDataPrompt'),
-        chooseButton: i18n('chooseFolder'),
+        chooseButton: i18n('chooseDirectory'),
 
         isStep3: this.step === 3,
         exportHeader: i18n('savingData'),
@@ -249,4 +218,3 @@
     },
   });
 }());
-

@@ -126,6 +126,20 @@ logging.initialize().catch((error) => {
     }
 });
 
+function setupWithImport() {
+    ipc.send('set-up-with-import');
+}
+
+function setupAsNewDevice() {
+    ipc.send('set-up-as-new-device');
+}
+
+function setupAsStandalone() {
+    ipc.send('set-up-as-standalone');
+}
+
+function setupMenu(options) { }
+
 ipc.on('set-badge-count', (event, count) => {
     var Notifications = Windows.UI.Notifications;
     var type = typeof (count) === 'string' ? Notifications.BadgeTemplateType.badgeGlyph : Notifications.BadgeTemplateType.badgeNumber;
@@ -165,4 +179,14 @@ ipc.on('update-tray-icon', (event, unreadCount) => {
     if (tray) {
         tray.updateIcon(unreadCount);
     }
+});
+
+ipc.on('remove-setup-menu-items', () => {
+    setupMenu();
+});
+
+ipc.on('add-setup-menu-items', () => {
+    setupMenu({
+        includeSetup: true,
+    });
 });
