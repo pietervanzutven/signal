@@ -99,6 +99,48 @@ ipc.on('locale-data', (event, arg) => {
 
 ipc.on('show-window', () => { });
 
+function showDebugLog() {
+    ipc.send('debug-log');
+}
+
+function showBackupScreen() {
+    ipc.send('backup');
+}
+
+function openReleaseNotes() {
+    Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/releases/tag/v' + app.getVersion()));
+}
+
+function openNewBugForm() {
+    Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/issues/new'));
+}
+
+function openSupportPage() {
+    Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://support.signal.org/'));
+}
+
+function openForums() {
+    Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://whispersystems.discoursehosting.net/'));
+}
+
+function setupWithImport() {
+    ipc.send('set-up-with-import');
+}
+
+function setupAsNewDevice() {
+    ipc.send('set-up-as-new-device');
+}
+
+function setupAsStandalone() {
+    ipc.send('set-up-as-standalone');
+}
+
+function showAbout() {
+    ipc.send('about');
+}
+
+function setupMenu(options) { }
+
 window.config.name = Windows.ApplicationModel.Package.current.id.name;
 
 window.config.version = app.getVersion();
@@ -126,20 +168,6 @@ logging.initialize().catch((error) => {
     }
 });
 
-function setupWithImport() {
-    ipc.send('set-up-with-import');
-}
-
-function setupAsNewDevice() {
-    ipc.send('set-up-as-new-device');
-}
-
-function setupAsStandalone() {
-    ipc.send('set-up-as-standalone');
-}
-
-function setupMenu(options) { }
-
 ipc.on('set-badge-count', (event, count) => {
     var Notifications = Windows.UI.Notifications;
     var type = typeof (count) === 'string' ? Notifications.BadgeTemplateType.badgeGlyph : Notifications.BadgeTemplateType.badgeNumber;
@@ -147,6 +175,16 @@ ipc.on('set-badge-count', (event, count) => {
     badgeXml.firstChild.setAttribute('value', count);
     var badge = Notifications.BadgeNotification(badgeXml);
     Notifications.BadgeUpdateManager.createBadgeUpdaterForApplication().update(badge);
+});
+
+ipc.on('remove-setup-menu-items', () => {
+    setupMenu();
+});
+
+ipc.on('add-setup-menu-items', () => {
+    setupMenu({
+        includeSetup: true,
+    });
 });
 
 ipc.on('draw-attention', () => {
@@ -179,14 +217,4 @@ ipc.on('update-tray-icon', (event, unreadCount) => {
     if (tray) {
         tray.updateIcon(unreadCount);
     }
-});
-
-ipc.on('remove-setup-menu-items', () => {
-    setupMenu();
-});
-
-ipc.on('add-setup-menu-items', () => {
-    setupMenu({
-        includeSetup: true,
-    });
 });

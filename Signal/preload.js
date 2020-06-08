@@ -38,6 +38,10 @@ ipc.on('debug-log', function () {
     Whisper.events.trigger('showDebugLog');
 });
 
+ipc.on('backup', function () {
+    Whisper.events.trigger('showBackupScreen');
+    });
+
 ipc.on('set-up-with-import', function() {
     Whisper.events.trigger('setupWithImport');
 });
@@ -57,6 +61,10 @@ window.addSetupMenuItems = function() {
 window.removeSetupMenuItems = function() {
     ipc.send('remove-setup-menu-items');
 }
+
+ipc.on('about', function() {
+    Whisper.events.trigger('showAbout');
+});
 
 window.dataURLToBlobSync = window.blueimp_canvas_to_blob;
 window.loadImage = window.blueimp_load_image;

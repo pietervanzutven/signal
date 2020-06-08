@@ -176,6 +176,12 @@
         Whisper.events.on('showDebugLog', function() {
             appView.openDebugLog();
         });
+        Whisper.events.on('showBackupScreen', function() {
+            appView.openBackupScreen();
+        });
+        Whisper.events.on('showAbout', function() {
+            appView.openAbout();
+        });
         Whisper.events.on('unauthorized', function() {
             appView.inboxView.networkStatusView.update();
         });

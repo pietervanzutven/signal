@@ -195,14 +195,14 @@
             'click #header': 'focusHeader',
             'click .conversation': 'focusConversation',
             'click .global-menu .hamburger': 'toggleMenu',
-            'click .show-debug-log': 'showDebugLog',
-            'click .backup': 'showBackupScreen',
+            'click .show-debug-log': window.showDebugLog,
+            'click .backup': window.showBackupScreen,
             'click .show-settings': 'showSettings',
-            'click .open-release-notes': 'openReleaseNotes',
-            'click .open-forums': 'openForums',
-            'click .open-support-page': 'openSupportPage',
-            'click .open-new-bug-form': 'openNewBugForm',
-            'click .show-about': 'showAbout',
+            'click .open-release-notes': window.openReleaseNotes,
+            'click .open-forums': window.openForums,
+            'click .open-support-page': window.openSupportPage,
+            'click .open-new-bug-form': window.openNewBugForm,
+            'click .show-about': window.showAbout,
             'click .setup-with-import': window.setupWithImport,
             'click .setup-as-new-device': window.setupAsNewDevice,
             'click .setup-as-standalone': window.setupAsStandalone,
@@ -210,16 +210,6 @@
             'input input.search': 'filterContacts',
             'click .restart-signal': window.restart,
             'show .lightbox': 'showLightbox',
-        },
-        showBackupScreen: function() {
-            if (this.backupScreen) {
-                this.backupScreen.remove();
-                this.backupScreen = null;
-            }
-
-            this.backupScreen = new Whisper.ExportView();
-            this.backupScreen.render();
-            this.backupScreen.$el.prependTo(this.el);
         },
         startConnectionListener: function() {
             this.interval = setInterval(function() {
@@ -300,26 +290,6 @@
         },
         toggleMenu: function() {
             this.$('.global-menu .menu-list').toggle();
-        },
-        showDebugLog: function() {
-            this.$('.debug-log').remove();
-            new Whisper.DebugLogView().$el.appendTo(this.el);
-        },
-        openReleaseNotes: function() {
-            Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/releases/tag/v' + app.getVersion()));
-        },
-        openForums: function() {
-            Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://whispersystems.discoursehosting.net/'));
-        },
-        openSupportPage: function() {
-            Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://support.signal.org/'));
-        },
-        openNewBugForm: function() {
-            Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/issues/new'));
-        },
-        showAbout: function() {
-            this.$('.about').remove();
-            new Whisper.AboutView().$el.appendTo(this.el);
         },
         showLightbox: function(e) {
             this.$el.append(e.target);

@@ -34,15 +34,37 @@
           this.delegateEvents();
         },
         openDebugLog: function () {
-            this.closeDebugLog();
-            this.debugLogView = new Whisper.DebugLogView();
-            this.debugLogView.$el.appendTo(this.el);
+          this.closeDebugLog();
+          this.debugLogView = new Whisper.DebugLogView();
+          this.debugLogView.$el.appendTo(this.el);
         },
         closeDebugLog: function () {
-            if (this.debugLogView) {
-                this.debugLogView.remove();
-                this.debugLogView = null;
-            }
+          if (this.debugLogView) {
+            this.debugLogView.remove();
+            this.debugLogView = null;
+          }
+        },
+        openBackupScreen: function () {
+          this.closeBackupScreen();
+          this.backupView = new Whisper.ExportView();
+          this.backupView.$el.appendTo(this.el);
+        },
+        closeBackupScreen: function () {
+          if (this.backupView) {
+            this.backupView.remove();
+            this.backupView = null;
+          }
+        },
+        openAbout: function () {
+          this.closeAbout();
+          this.aboutView = new Whisper.AboutView();
+          this.aboutView.$el.appendTo(this.el);
+        },
+        closeAbout: function () {
+          if (this.aboutView) {
+            this.aboutView.remove();
+            this.aboutView = null;
+          }
         },
         openImporter: function () {
           window.addSetupMenuItems();
