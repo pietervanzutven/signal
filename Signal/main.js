@@ -120,7 +120,7 @@ function openSupportPage() {
 }
 
 function openForums() {
-    Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://whispersystems.discoursehosting.net/'));
+    Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://community.signalusers.org/'));
 }
 
 function setupWithImport() {
