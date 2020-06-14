@@ -708,6 +708,8 @@
         console.log(
             'Updating expireTimer for conversation',
             this.idForLogging(),
+            'to',
+            expireTimer,
             'via',
             source
         );
