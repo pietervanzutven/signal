@@ -134,7 +134,7 @@
             var condition;
             if (!option) {
                 condition = element => element.some(value => value);
-            } else if (option.lower || option.upper) {
+            } else if (option.lower[0] || option.upper[0]) {
                 var lower = [];
                 var upper = [];
                 for (var i = 0; i < length; i++) {
@@ -144,7 +144,7 @@
                 var conditionLower = option.lowerOpen ? (value, i) => value >= lower[i] : (value, i) => value > lower[i];
                 var conditionUpper = option.upperOpen ? (value, i) => value <= upper[i] : (value, i) => value < upper[i];
                 condition = (element, i) => element.some(value => conditionLower(value, i) && conditionUpper(value, i));
-            } else if (option.only) {
+            } else if (option.only[0]) {
                 condition = (element, i) => element.some(value => value === option.only[i]);
             }
             else {
