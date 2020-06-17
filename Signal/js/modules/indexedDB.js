@@ -74,8 +74,25 @@
         this.index = function (keyPath) {
             return new IDBIndex(this, keyPath);
         }
-        this.openCursor = function (direction) {
-            return new IDBCursor(this, direction);
+        this.openCursor = function (query, direction) {
+            if (query) {
+                var queried = {};
+                if (query.lower || query.upper) {
+                    var lower = query.lower || Number.MIN_VALUE;
+                    var upper = query.upper || Number.MAX_VALUE;
+                    Object.keys(this.items).forEach(function (key) {
+                        if ((query.lowerOpen ? key >= lower : key > lower) && (query.upperOpen ? key <= upper : key < upper)) {
+                            queried[key] = this.items[key];
+                        }
+                    }.bind(this));
+                    return new IDBCursor(new IDBStore(this.transaction, queried), direction);
+                } else {
+                    queried[query] = this.items[query];
+                    return new IDBCursor(new IDBStore(this.transaction, queried), direction);
+                }
+            } else {
+                return new IDBCursor(this, direction);
+            }
         }
         this.get = function (key) {
             return new IDBRead(this, key);
@@ -102,9 +119,9 @@
 
     function IDBIndex(store, keyPath) {
         IDBRequest.call(this);
-        this.openCursor = function (bounds, direction) {
-            var indexStore = new IDBStore(store.transaction, this.getItems(bounds));
-            return indexStore.openCursor(direction);
+        this.openCursor = function (range, direction) {
+            var indexStore = new IDBStore(store.transaction, this.getItems(range));
+            return indexStore.openCursor(null, direction);
         }
         this.get = function (value) {
             var indexStore = new IDBStore(store.transaction, this.getItems(value));
