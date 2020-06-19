@@ -1,6 +1,4 @@
 ﻿(function () {
-    const logging = window.logging;
-
     function normalizeLocaleName(locale) {
         if (/^es-/.test(locale)) {
             return /419/.test(locale) ? locale : 'es';
@@ -26,10 +24,16 @@
         return JSON.parse(xhr.response);
     }
 
-    function load() {
-        const logger = logging.getLogger();
+    function load({ appLocale, logger } = {}) {
+        if (!appLocale) {
+            throw new TypeError('`appLocale` is required');
+        }
+
+        if (!logger || !logger.error) {
+            throw new TypeError('`logger.error` is required');
+        }
+
         const english = getLocaleMessages('en');
-        let appLocale = Windows.Globalization.ApplicationLanguages.languages[0];
 
         // Load locale - if we can't load messages for the current locale, we
         // default to 'en'

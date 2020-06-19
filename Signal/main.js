@@ -99,6 +99,10 @@ ipc.on('locale-data', (event, arg) => {
 
 ipc.on('show-window', () => { });
 
+function showSettings() {
+    ipc.send('show-settings');
+}
+
 function showDebugLog() {
     ipc.send('debug-log');
 }
@@ -164,7 +168,8 @@ logging.initialize().catch((error) => {
     }
 
     if (!locale) {
-        locale = loadLocale();
+        const appLocale = Windows.Globalization.ApplicationLanguages.languages[0];
+        locale = loadLocale({ appLocale, logger });
     }
 });
 

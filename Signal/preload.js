@@ -34,6 +34,10 @@ window.updateTrayIcon = function (unreadCount) {
     ipc.send('update-tray-icon', unreadCount);
 };
 
+ipc.on('show-settings', function() {
+    Whisper.events.trigger('showSettings');
+});
+
 ipc.on('debug-log', function () {
     Whisper.events.trigger('showDebugLog');
 });

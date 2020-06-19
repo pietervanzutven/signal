@@ -176,6 +176,16 @@
         Whisper.events.on('showDebugLog', function() {
             appView.openDebugLog();
         });
+        Whisper.events.on('showSettings', () => {
+            if (!appView || !appView.inboxView) {
+                console.log(
+                    'background: Event: \'showSettings\':' +
+                    ' Expected `appView.inboxView` to exist.'
+                );
+                return;
+            }
+            appView.inboxView.showSettings();
+        });
         Whisper.events.on('showBackupScreen', function() {
             appView.openBackupScreen();
         });
