@@ -100,6 +100,8 @@
 
         Windows.Storage.ApplicationData.current.localSettings.values['number_id'] = storage.get('number_id');
         Windows.Storage.ApplicationData.current.localSettings.values['password'] = storage.get('password');
+        Windows.Storage.ApplicationData.current.localSettings.values['notification-setting'] = storage.get('notification-setting');
+        Windows.Storage.ApplicationData.current.localSettings.values['audio-notification'] = storage.get('audio-notification');
     });
 
     Whisper.events.on('shutdown', function() {

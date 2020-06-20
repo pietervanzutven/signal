@@ -5,12 +5,16 @@ window.PROTO_ROOT = '/protos';
 importScripts('ms-appx:///libtextsecure/components.js', 'ms-appx:///libtextsecure/event_target.js', 'ms-appx:///libtextsecure/protobufs.js', 'ms-appx:///libtextsecure/websocket-resources.js');
 
 function updateToast(message) {
-    var toastXml = Notifications.ToastNotificationManager.getTemplateContent(Notifications.ToastTemplateType.toastText02);
-    var toastNodeList = toastXml.getElementsByTagName('text');
-    toastNodeList[0].appendChild(toastXml.createTextNode(message));
-    toastXml.createElement('audio').setAttribute('src', 'ms-winsoundevent:Notification.SMS');
-    var toast = Notifications.ToastNotification(toastXml);
-    Notifications.ToastNotificationManager.createToastNotifier().show(toast);
+    var shouldShowNotification = Windows.Storage.ApplicationData.current.localSettings.values['notification-setting'] || 'message';
+    if (shouldShowNotification !== 'off') {
+        var shouldPlayNotificationSound = Windows.Storage.ApplicationData.current.localSettings.values['audio-notification'] || false;
+        var toastXml = Notifications.ToastNotificationManager.getTemplateContent(Notifications.ToastTemplateType.toastText02);
+        var toastNodeList = toastXml.getElementsByTagName('text');
+        toastNodeList[0].appendChild(toastXml.createTextNode(message));
+        shouldPlayNotificationSound && toastXml.createElement('audio').setAttribute('src', 'ms-winsoundevent:Notification.SMS');
+        var toast = Notifications.ToastNotification(toastXml);
+        Notifications.ToastNotificationManager.createToastNotifier().show(toast);
+    }
 }
 var Notifications = Windows.UI.Notifications;
 Notifications.ToastNotificationManager.history.clear();

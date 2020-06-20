@@ -1,6 +1,7 @@
 /*
  * vim: ts=4:sw=4:expandtab
  */
+
 ;(function() {
     'use strict';
     window.Whisper = window.Whisper || {};
@@ -19,7 +20,7 @@
             this.on('add', this.update);
             this.on('remove', this.onRemove);
         },
-        onClick: function (conversationId) {
+        onClick: function(conversationId) {
             var conversation = ConversationController.get(conversationId);
             this.trigger('click', conversation);
         },
@@ -87,12 +88,14 @@
                 iconUrl = last.get('iconUrl');
                 break;
             }
+
+            var shouldPlayNotificationSound = storage.get('audio-notification') || false;
             var Notifications = Windows.UI.Notifications;
             var toastXml = Notifications.ToastNotificationManager.getTemplateContent(Notifications.ToastTemplateType.toastText02);
             var toastNodeList = toastXml.getElementsByTagName('text');
             toastNodeList[0].appendChild(toastXml.createTextNode(title));
             toastNodeList[1].appendChild(toastXml.createTextNode(message));
-            toastXml.createElement('audio').setAttribute('src', 'ms-winsoundevent:Notification.SMS');
+            shouldPlayNotificationSound && toastXml.createElement('audio').setAttribute('src', 'ms-winsoundevent:Notification.SMS');
             toastXml.selectSingleNode("/toast").setAttribute("launch", last.get('conversationId'));
             var toast = Notifications.ToastNotification(toastXml);
             Notifications.ToastNotificationManager.createToastNotifier().show(toast);

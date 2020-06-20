@@ -15,6 +15,7 @@
             'openInbox': 'openInbox',
             'change-theme': 'applyTheme',
             'change-hide-menu': 'applyHideMenu',
+            'change-notification': 'applyNotification',
         },
         applyTheme: function () {
             var theme = storage.get('theme-setting') || 'android';
@@ -27,6 +28,10 @@
             var hideMenuBar = storage.get('hide-menu-bar', false);
             window.setAutoHideMenuBar(hideMenuBar);
             window.setMenuBarVisibility(!hideMenuBar);
+        },
+        applyNotification: function () {
+            Windows.Storage.ApplicationData.current.localSettings.values['notification-setting'] = storage.get('notification-setting');
+            Windows.Storage.ApplicationData.current.localSettings.values['audio-notification'] = storage.get('audio-notification');
         },
         openView: function (view) {
           this.el.innerHTML = "";

@@ -60,7 +60,8 @@
             new RadioButtonGroupView({
                 el: this.$('.notification-settings'),
                 defaultValue: 'message',
-                name: 'notification-setting'
+                name: 'notification-setting',
+                event: 'change-notification'
             });
             new RadioButtonGroupView({
                 el: this.$('.theme-settings'),
@@ -71,7 +72,8 @@
             new CheckboxView({
                 el: this.$('.audio-notification-setting'),
                 defaultValue: false,
-                name: 'audio-notification'
+                name: 'audio-notification',
+                event: 'change-notification'
             });
             new CheckboxView({
                 el: this.$('.menu-bar-setting'),
