@@ -26,6 +26,7 @@
       this.render();
       this.$('textarea').val(i18n('loading'));
 
+      // eslint-disable-next-line more/no-then
       window.log.fetch().then((text) => {
         this.$('textarea').val(text);
       });
@@ -51,7 +52,8 @@
       if (text.length === 0) {
         return;
       }
-      log.publish(text).then((url) => {
+      // eslint-disable-next-line more/no-then
+      window.log.publish(text).then((url) => {
         const view = new Whisper.DebugLogLinkView({
           url,
           el: this.$('.result'),
