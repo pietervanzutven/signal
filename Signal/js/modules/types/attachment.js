@@ -1,12 +1,13 @@
 (function () {
-    window.attachment = {};
+    window.types = window.types || {};
+    window.types.attachment = {};
 
     const isFunction = window.lodash.isFunction;
     const isNumber = window.lodash.isNumber;
     const isString = window.lodash.isString;
     const isUndefined = window.lodash.isUndefined;
 
-    const MIME = window.mime;
+    const MIME = window.types.mime;
     const { arrayBufferToBlob, blobToArrayBuffer, dataURLToBlob } = window.blob_util;
     const { autoOrientImage } = window.auto_orient_image;
 
@@ -14,7 +15,7 @@
     // will allow us to retroactively upgrade existing attachments. As we add more upgrade
     // steps, we could design a pipeline that does this incrementally, e.g. from
     // version 0 / unknown -> 1, 1 --> 2, etc., similar to how we do database migrations:
-    window.attachment.CURRENT_SCHEMA_VERSION = 2;
+    window.types.attachment.CURRENT_SCHEMA_VERSION = 2;
 
     // Schema version history
     //
@@ -49,7 +50,7 @@
 
     // Returns true if `rawAttachment` is a valid attachment based on our (limited)
     // criteria. Over time, we can expand this definition to become more narrow:
-    window.attachment.isValid = (rawAttachment) => {
+    window.types.attachment.isValid = (rawAttachment) => {
       // NOTE: We cannot use `_.isPlainObject` because `rawAttachment` is
       // deserialized by protobuf:
       if (!rawAttachment) {
@@ -64,7 +65,7 @@
     // type UpgradeStep = Attachment -> Promise Attachment
 
     // SchemaVersion -> UpgradeStep -> UpgradeStep
-    window.attachment.withSchemaVersion = (schemaVersion, upgrade) => {
+    window.types.attachment.withSchemaVersion = (schemaVersion, upgrade) => {
       if (!isNumber(schemaVersion)) {
         throw new TypeError('`schemaVersion` must be a number');
       }
@@ -73,7 +74,7 @@
       }
 
       return async (attachment) => {
-        if (!window.attachment.isValid(attachment)) {
+        if (!window.types.attachment.isValid(attachment)) {
           console.log('Attachment.withSchemaVersion: Invalid input attachment:', attachment);
           return attachment;
         }
@@ -108,7 +109,7 @@
           return attachment;
         }
 
-        if (!window.attachment.isValid(upgradedAttachment)) {
+        if (!window.types.attachment.isValid(upgradedAttachment)) {
           console.log(
             'Attachment.withSchemaVersion: Invalid upgraded attachment:',
             upgradedAttachment
@@ -160,7 +161,7 @@
     // NOTE: Expose synchronous version to do property-based testing using `testcheck`,
     // which currently doesn’t support async testing:
     // https://github.com/leebyron/testcheck-js/issues/45
-    window.attachment._replaceUnicodeOrderOverridesSync = (attachment) => {
+    window.types.attachment._replaceUnicodeOrderOverridesSync = (attachment) => {
       if (!isString(attachment.fileName)) {
         return attachment;
       }
@@ -176,14 +177,14 @@
       return newAttachment;
     };
 
-    window.attachment.replaceUnicodeOrderOverrides = async attachment =>
-      window.attachment._replaceUnicodeOrderOverridesSync(attachment);
+    window.types.attachment.replaceUnicodeOrderOverrides = async attachment =>
+      window.types.attachment._replaceUnicodeOrderOverridesSync(attachment);
 
     // Public API
-    const toVersion1 = window.attachment.withSchemaVersion(1, autoOrientJPEG);
-    const toVersion2 = window.attachment.withSchemaVersion(2, window.attachment.replaceUnicodeOrderOverrides);
+    const toVersion1 = window.types.attachment.withSchemaVersion(1, autoOrientJPEG);
+    const toVersion2 = window.types.attachment.withSchemaVersion(2, window.types.attachment.replaceUnicodeOrderOverrides);
 
     // UpgradeStep
-    window.attachment.upgradeSchema = async attachment =>
+    window.types.attachment.upgradeSchema = async attachment =>
       toVersion2(await toVersion1(attachment));
 })();
