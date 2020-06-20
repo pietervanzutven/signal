@@ -35,7 +35,9 @@
             if (!isEnabled) {
                 return;
             }
-            if (this.length === 0) {
+
+            const hasNotifications = this.length > 0
+            if (!hasNotifications) {
                 return;
             }
 
