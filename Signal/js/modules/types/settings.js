@@ -3,7 +3,7 @@
 
     window.types = window.types || {};
     window.types.settings = {
-        shouldShowAudioNotificationSetting: () =>
+        isAudioNotificationSupported: () =>
             !OS.isLinux()
     }
 })();
