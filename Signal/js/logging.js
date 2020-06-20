@@ -1,5 +1,7 @@
 ﻿/* eslint-env node */
 
+/* eslint strict: ['error', 'never'] */
+
 (function () {
     const PHONE_REGEX = /\+\d{7,12}(\d{3})/g;
     const GROUP_REGEX = /(group\()([^)]+)(\))/g;
