@@ -2,6 +2,9 @@
 
 /* eslint strict: ['error', 'never'] */
 
+/* global $: false */
+/* global textsecure: false */
+
 (function () {
     const PHONE_REGEX = /\+\d{7,12}(\d{3})/g;
     const GROUP_REGEX = /(group\()([^)]+)(\))/g;
