@@ -29,7 +29,10 @@
     }
 
     function redactGroup(text) {
-        return text.replace(GROUP_REGEX, (match, before, id, after) => `${before}[REDACTED]${id.slice(-3)}${after}`);
+        return text.replace(
+          GROUP_REGEX,
+          (match, before, id, after) => `${before}[REDACTED]${id.slice(-3)}${after}`
+        );
     }
 
     function now() {
@@ -48,7 +51,7 @@
             if (typeof item !== 'string') {
                 try {
                     return JSON.stringify(item);
-                } catch (e) {
+                } catch (error) {
                     return item;
                 }
             }
@@ -104,18 +107,19 @@
         }));
     }
 
-    function publish(log) {
-        log = log || fetch();
+    function publish(rawContent) {
+        const content = rawContent || fetch();
 
         return new Promise(((resolve) => {
             const payload = textsecure.utils.jsonThing({
                 files: {
                     'debugLog.txt': {
-                        content: log,
+                        content,
                     },
                 },
             });
 
+            // eslint-disable-next-line more/no-then
             $.post('https://api.github.com/gists', payload)
               .then((response) => {
                   console._log('Posted debug log to ', response.html_url);
@@ -163,7 +167,7 @@
         publish,
     };
 
-    window.onerror = function (message, script, line, col, error) {
+    window.onerror = (message, script, line, col, error) => {
         const errorInfo = error && error.stack ? error.stack : JSON.stringify(error);
         window.log.error(`Top-level unhandled error: ${errorInfo}`);
     };
