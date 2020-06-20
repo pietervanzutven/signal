@@ -78,6 +78,7 @@ window.autoOrientImage = autoOrientImage;
 
 // ES2015+ modules
 window.Signal = window.Signal || {};
+window.Signal.OS = window.os;
 window.Signal.Types = window.Signal.Types || {};
 window.Signal.Types.Attachment = window.attachment;
 window.Signal.Types.Message = window.message;

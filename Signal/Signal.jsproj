@@ -261,6 +261,7 @@
     <Content Include="js\modules\lodash\isNumber.js" />
     <Content Include="js\modules\lodash\isString.js" />
     <Content Include="js\modules\lodash\isUndefined.js" />
+    <Content Include="js\modules\os.js" />
     <Content Include="js\modules\types\attachment.js" />
     <Content Include="js\modules\types\message.js" />
     <Content Include="js\modules\types\mime.js" />
