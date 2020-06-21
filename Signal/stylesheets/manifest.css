@@ -841,7 +841,9 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
       flex-grow: 1;
       width: 100%;
       resize: none;
-      min-height: 100px; }
+      min-height: 100px;
+      font-family: Monaco, Consolas, 'Courier New', Courier, monospace;
+      font-size: 12px; }
 
 .debug-log .result {
   text-align: center; }
