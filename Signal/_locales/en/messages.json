@@ -20,8 +20,8 @@
     "description": "The label that is used for the Help menu in the program main menu. The '&' indicates that the following letter will be used as the keyboard 'shortcut letter' for accessing the menu with the Alt-<letter> combination."
   },
   "mainMenuSettings": {
-    "message": "Preferences…",
-    "description": "The label that is used for the Preferences menu in the program main menu. This should be consistent with the standard naming for ‘Preferences’ on the operating system."
+    "message": "Preferencesâ€¦",
+    "description": "The label that is used for the Preferences menu in the program main menu. This should be consistent with the standard naming for â€˜Preferencesâ€™ on the operating system."
   },
   "menuSetupWithImport": {
     "message": "Set Up with Import",
@@ -435,8 +435,8 @@
     }
   },
   "submitDebugLog": {
-    "message": "Submit debug log",
-    "description": "Menu item and header text for debug log modal, title case."
+    "message": "Debug log",
+    "description": "Menu item and header text for debug log modal (sentence case)"
   },
   "debugLog": {
     "message": "Debug Log",
