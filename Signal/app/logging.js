@@ -138,17 +138,15 @@
 
     function fetchLog() {
         return new Promise((resolve, reject) => {
-            //setTimeout(() => {
-                const data = _.compact(logger.log.map((line) => {
-                    try {
-                        return _.pick(line, ['level', 'time', 'msg']);
-                    } catch (e) {
-                        return null
-                    }
-                }));
+            const data = _.compact(logger.log.map((line) => {
+                try {
+                    return _.pick(line, ['level', 'time', 'msg']);
+                } catch (e) {
+                    return null
+                }
+            }));
 
-                return resolve(data);
-            //}, 1);
+            return resolve(data);
         });
     }
 
