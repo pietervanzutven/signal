@@ -255,6 +255,7 @@
     <Content Include="js\modules\blueimp-load-image\load-image-orientation.js" />
     <Content Include="js\modules\blueimp-load-image\load-image-scale.js" />
     <Content Include="js\modules\blueimp-load-image\load-image.js" />
+    <Content Include="js\modules\debuglogs.js" />
     <Content Include="js\modules\form-data\form-data.js" />
     <Content Include="js\modules\google-libphonenumber\libphonenumber.js" />
     <Content Include="js\modules\got\got.js" />
