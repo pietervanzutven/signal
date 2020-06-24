@@ -28,6 +28,7 @@
             const { fields, url } = signedForm.body;
 
             const form = new FormData();
+            // The API expects `key` to be the first field:
             form.append('key', fields.key);
 
             Object.entries(fields)
