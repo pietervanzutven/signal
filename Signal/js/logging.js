@@ -151,4 +151,4 @@
     window.addEventListener('unhandledrejection', (rejectionEvent) => {
         window.log.error(`Top-level unhandled promise rejection: ${rejectionEvent.reason}`);
     });
-})()
+})();

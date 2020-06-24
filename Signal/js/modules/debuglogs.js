@@ -10,7 +10,7 @@
     // Workaround: Submitting `FormData` using native `FormData::submit` procedure
     // as integration with `got` results in S3 error saying we haven’t set the
     // `Content-Length` header:
-        // https://github.com/sindresorhus/got/pull/466
+    // https://github.com/sindresorhus/got/pull/466
     const submitFormData = (form, url) =>
         new Promise((resolve, reject) => {
             form.submit(url, (error) => {
@@ -31,7 +31,6 @@
             const form = new FormData();
             // The API expects `key` to be the first field:
             form.append('key', fields.key);
-
             Object.entries(fields)
               .filter(([key]) => key !== 'key')
               .forEach(([key, value]) => {
