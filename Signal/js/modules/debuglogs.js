@@ -10,6 +10,7 @@
     // Workaround: Submitting `FormData` using native `FormData::submit` procedure
     // as integration with `got` results in S3 error saying we haven’t set the
     // `Content-Length` header:
+        // https://github.com/sindresorhus/got/pull/466
     const submitFormData = (form, url) =>
         new Promise((resolve, reject) => {
             form.submit(url, (error) => {
@@ -45,6 +46,8 @@
                 filename: 'signal-desktop-debug-log.txt',
             });
 
+            // WORKAROUND: See comment on `submitFormData`:
+            // await got.post(url, { body: form });
             await submitFormData(form, url);
 
             return `${BASE_URL}/${fields.key}`;
