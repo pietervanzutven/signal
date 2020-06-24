@@ -256,6 +256,7 @@
     <Content Include="js\modules\blueimp-load-image\load-image-scale.js" />
     <Content Include="js\modules\blueimp-load-image\load-image.js" />
     <Content Include="js\modules\google-libphonenumber\libphonenumber.js" />
+    <Content Include="js\modules\got\got.js" />
     <Content Include="js\modules\indexedDB.js" />
     <Content Include="js\modules\lodash\isFunction.js" />
     <Content Include="js\modules\lodash\isNumber.js" />
