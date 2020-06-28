@@ -1,4 +1,4 @@
-(function(){
+(function () {
     window.lodash = window.lodash || {};
 
     /**
@@ -52,12 +52,12 @@
      * @returns {string} Returns the `toStringTag`.
      */
     function baseGetTag(value) {
-      if (value == null) {
-        return value === undefined ? undefinedTag : nullTag;
-      }
-      return (symToStringTag && symToStringTag in Object(value))
-        ? getRawTag(value)
-        : objectToString(value);
+        if (value == null) {
+            return value === undefined ? undefinedTag : nullTag;
+        }
+        return (symToStringTag && symToStringTag in Object(value))
+          ? getRawTag(value)
+          : objectToString(value);
     }
 
     /**
@@ -68,23 +68,23 @@
      * @returns {string} Returns the raw `toStringTag`.
      */
     function getRawTag(value) {
-      var isOwn = hasOwnProperty.call(value, symToStringTag),
-          tag = value[symToStringTag];
+        var isOwn = hasOwnProperty.call(value, symToStringTag),
+            tag = value[symToStringTag];
 
-      try {
-        value[symToStringTag] = undefined;
-        var unmasked = true;
-      } catch (e) {}
+        try {
+            value[symToStringTag] = undefined;
+            var unmasked = true;
+        } catch (e) { }
 
-      var result = nativeObjectToString.call(value);
-      if (unmasked) {
-        if (isOwn) {
-          value[symToStringTag] = tag;
-        } else {
-          delete value[symToStringTag];
+        var result = nativeObjectToString.call(value);
+        if (unmasked) {
+            if (isOwn) {
+                value[symToStringTag] = tag;
+            } else {
+                delete value[symToStringTag];
+            }
         }
-      }
-      return result;
+        return result;
     }
 
     /**
@@ -95,7 +95,7 @@
      * @returns {string} Returns the converted string.
      */
     function objectToString(value) {
-      return nativeObjectToString.call(value);
+        return nativeObjectToString.call(value);
     }
 
     /**
@@ -116,13 +116,13 @@
      * // => false
      */
     function isFunction(value) {
-      if (!isObject(value)) {
-        return false;
-      }
-      // The use of `Object#toString` avoids issues with the `typeof` operator
-      // in Safari 9 which returns 'object' for typed arrays and other constructors.
-      var tag = baseGetTag(value);
-      return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+        if (!isObject(value)) {
+            return false;
+        }
+        // The use of `Object#toString` avoids issues with the `typeof` operator
+        // in Safari 9 which returns 'object' for typed arrays and other constructors.
+        var tag = baseGetTag(value);
+        return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
     }
 
     /**
@@ -151,9 +151,9 @@
      * // => false
      */
     function isObject(value) {
-      var type = typeof value;
-      return value != null && (type == 'object' || type == 'function');
+        var type = typeof value;
+        return value != null && (type == 'object' || type == 'function');
     }
 
     window.lodash.isFunction = isFunction;
-})()
+})();

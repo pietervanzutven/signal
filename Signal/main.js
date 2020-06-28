@@ -1,5 +1,3 @@
-﻿'use strict';
-
 Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync('BBDB_import.json').then(file => {
     if (file) {
         file.renameAsync('signal_import.json', Windows.Storage.NameCollisionOption.replaceExisting);
@@ -64,7 +62,7 @@ window.matchMedia && window.matchMedia('(max-width: 600px)').addListener(() => {
     }
 });
 
-var app = { 
+var app = {
     getVersion: function () {
         var version = Windows.ApplicationModel.Package.current.id.version;
         return version.major + '.' + version.minor + '.' + version.build
@@ -93,7 +91,8 @@ let logger;
 let locale;
 
 // Ingested in preload.js via a sendSync call
-ipc.on('locale-data', (event, arg) => {
+ipc.on('locale-data', (event) => {
+    // eslint-disable-next-line no-param-reassign
     event.returnValue = locale.messages;
 });
 
@@ -160,6 +159,7 @@ let loggingSetupError;
 logging.initialize().catch((error) => {
     loggingSetupError = error;
 }).then(() => {
+    /* eslint-enable more/no-then */
     logger = logging.getLogger();
     logger.info('app ready');
 

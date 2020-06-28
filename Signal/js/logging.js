@@ -3,8 +3,7 @@
 /* eslint strict: ['error', 'never'] */
 
 (function () {
-    const PHONE_REGEX = /\+\d{7,12}(\d{3})/g;
-    const GROUP_REGEX = /(group\()([^)]+)(\))/g;
+    Privacy = window.privacy;
 
     // Default Bunyan levels: https://github.com/trentm/node-bunyan#levels
     // To make it easier to visually scan logs, we make all levels the same length
@@ -18,20 +17,7 @@
         10: 'trace',
     };
 
-
     // Backwards-compatible logging, simple strings and no level (defaulted to INFO)
-
-    function redactPhone(text) {
-        return text.replace(PHONE_REGEX, '+[REDACTED]$1');
-    }
-
-    function redactGroup(text) {
-        return text.replace(
-          GROUP_REGEX,
-          (match, before, id, after) => `${before}[REDACTED]${id.slice(-3)}${after}`
-        );
-    }
-
     function now() {
         const date = new Date();
         return date.toJSON();
@@ -55,8 +41,9 @@
 
             return item;
         });
-        const toSend = redactGroup(redactPhone(str.join(' ')));
-        ipc.send('log-info', toSend);
+
+        const logText = Privacy.redactAll(str.join(' '));
+        ipc.send('log-info', logText);
     }
 
     if (window.console) {
@@ -90,7 +77,7 @@
     }
 
     function format(entries) {
-        return redactGroup(redactPhone(entries.map(formatLine).join('\n')));
+        return Privacy.redactAll(entries.map(formatLine).join('\n'));
     }
 
     function fetch() {
