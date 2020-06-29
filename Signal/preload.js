@@ -34,7 +34,10 @@
   window.updateTrayIcon = function(unreadCount) {
     ipc.send('update-tray-icon', unreadCount);
   };
-  
+
+  window.deleteAllLogs = function() {
+    ipc.send('delete-all-logs');
+  }
 
   ipc.on('debug-log', function() {
     Whisper.events.trigger('showDebugLog');
@@ -42,6 +45,10 @@
 
   ipc.on('backup', function() {
       Whisper.events.trigger('showBackupScreen');
+  });
+
+  ipc.on('delete-all-logs-complete', function() {
+    Whisper.events.trigger('deleteAllLogsComplete');
   });
 
   ipc.on('set-up-with-import', function() {
@@ -67,10 +74,13 @@
   window.removeSetupMenuItems = function() {
     ipc.send('remove-setup-menu-items');
   }
-
+  
   ipc.on('about', function() {
       Whisper.events.trigger('showAbout');
   });
+  
+
+  // We pull these dependencies in now, from here, because they have Node.js dependencies
 
   window.dataURLToBlobSync = window.blueimp_canvas_to_blob;
   window.loadImage = window.blueimp_load_image;
