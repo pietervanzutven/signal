@@ -54,6 +54,12 @@
     }
 
     function clearAllStores(idb_db) {
+        return clearStores(idb_db);
+    }
+
+    function clearStores(idb_db, names) {
+        var storeNames = names || idb_db.objectStoreNames;
+        console.log('Clearing these indexeddb stores:', storeNames);
         var promises = [];
         idb_db.files.forEach(file => promises.push(file.deleteAsync()));
         return Promise.all(promises);
@@ -73,6 +79,11 @@
         clearDatabase: function() {
             return openDatabase().then(function(idb_db) {
                 return clearAllStores(idb_db);
+            });
+        },
+        clearStores: function(storeNames) {
+            return openDatabase().then(function(idb_db) {
+                return clearStores(idb_db, storeNames);
             });
         },
         getDirectoryForExport: function() {

@@ -37926,6 +37926,19 @@ var TextSecureServer = (function() {
         this.pending = Promise.resolve();
     }
 
+    function getNumber(numberId) {
+        if (!numberId || !numberId.length) {
+            return numberId;
+        }
+
+        var parts = numberId.split('.');
+        if (!parts.length) {
+            return numberId;
+        }
+
+        return parts[1];
+    }
+
     AccountManager.prototype = new textsecure.EventTarget();
     AccountManager.prototype.extend({
         constructor: AccountManager,
@@ -38172,9 +38185,29 @@ var TextSecureServer = (function() {
             password = password.substring(0, password.length - 2);
             var registrationId = libsignal.KeyHelper.generateRegistrationId();
 
+            var previousNumber = getNumber(textsecure.storage.get('number_id'));
+
             return this.server.confirmCode(
                 number, verificationCode, password, signalingKey, registrationId, deviceName
             ).then(function(response) {
+                if (previousNumber && previousNumber !== number) {
+                    console.log('New number is different from old number; deleting all previous data');
+
+                    return textsecure.storage.protocol.removeAllData().then(function() {
+                        console.log('Successfully deleted previous data');
+                        return response;
+                    }, function(error) {
+                        console.log(
+                            'Something went wrong deleting data from previous number',
+                            error && error.stack ? error.stack : error
+                        );
+
+                        return response;
+                    });
+                }
+
+                return response;
+            }).then(function(response) {
                 textsecure.storage.remove('identityKey');
                 textsecure.storage.remove('signaling_key');
                 textsecure.storage.remove('password');

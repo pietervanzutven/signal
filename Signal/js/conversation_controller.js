@@ -160,8 +160,8 @@
         loadPromise: function() {
             return this._initialPromise;
         },
-        reset: function () {
-            this._initialPromise = null;
+        reset: function() {
+            this._initialPromise = Promise.resolve();
             conversations.reset([]);
         },
         load: function() {
