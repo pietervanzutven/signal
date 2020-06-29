@@ -85,6 +85,7 @@
     <Content Include="fonts\Roboto-Thin.ttf" />
     <Content Include="fonts\Roboto-ThinItalic.ttf" />
     <Content Include="images\alert-outline_DEDEDE10.svg" />
+    <Content Include="images\alert-outline_FF000010.svg" />
     <Content Include="images\android_00000010.svg" />
     <Content Include="images\apple_2090EA10.svg" />
     <Content Include="images\apple_00000010.svg" />
@@ -111,6 +112,7 @@
     <Content Include="images\clock_CCCCCC10.svg" />
     <Content Include="images\clock_FFFFFF08.svg" />
     <Content Include="images\clock_FFFFFF10.svg" />
+    <Content Include="images\delete_DEDEDE10.svg" />
     <Content Include="images\double-check_00000010.svg" />
     <Content Include="images\double-check_2090EA10.svg" />
     <Content Include="images\double-check_FFFFFF10.svg" />

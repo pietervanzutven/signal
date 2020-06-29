@@ -1,4 +1,4 @@
-﻿@font-face {
+@font-face {
   font-family: 'Roboto-Light';
   src: url("../fonts/Roboto-Light.ttf") format("truetype"); }
 
@@ -557,7 +557,6 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
       animation: loading 1500ms ease infinite 666ms; }
 
 .full-screen-flow {
-  z-index: 1000;
   position: absolute;
   left: 0;
   right: 0;
@@ -570,6 +569,8 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
   align-items: center;
   text-align: center;
   font-size: 10pt; }
+  .full-screen-flow.overlay {
+    z-index: 200; }
   .full-screen-flow a {
     color: #2090ea; }
   .full-screen-flow input {
@@ -611,12 +612,12 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
       .full-screen-flow #qr .dot:nth-child(3) {
         animation: loading 1500ms ease infinite 666ms; }
     .full-screen-flow #qr canvas {
-    display: none; }
+      display: none; }
   .full-screen-flow .os-icon {
     height: 3em;
     width: 3em;
     vertical-align: text-bottom;
-        display: inline-block;
+    display: inline-block;
     margin: 0.5em; }
     .full-screen-flow .os-icon.apple {
       background-image: url("../images/apple_00000010.svg");
@@ -645,10 +646,9 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
     text-align: left;
     margin-left: auto;
     margin-right: auto; }
-    .full-screen-flow .body-text-wide.red-text {
-      color: red; }
-      .full-screen-flow .body-text-wide.red-text a {
-        color: red; }
+  .full-screen-flow form {
+    height: 100%;
+    width: 100%; }
   .full-screen-flow .step {
     height: 100%;
     width: 100%;
@@ -714,6 +714,14 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
+    .full-screen-flow .banner-icon.alert-outline-red {
+      background-image: url("../images/alert-outline_FF000010.svg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+    .full-screen-flow .banner-icon.delete {
+      background-image: url("../images/delete_DEDEDE10.svg");
+      background-size: 100%; }
   .full-screen-flow .button {
     cursor: pointer;
     display: inline-block;
@@ -721,10 +729,17 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
     min-width: 300px;
     padding: 0.75em;
     margin-top: 1em;
+    margin-top: 1em;
+    margin-left: 0.5em;
     color: white;
     background: #2090ea;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     font-size: 12pt; }
+    .full-screen-flow .button.grey {
+      color: black;
+      background: #DEDEDE; }
+    .full-screen-flow .button.red {
+      background: red; }
     @media (min-height: 750px) and (min-width: 700px) {
       .full-screen-flow .button {
         font-size: 20pt; } }
@@ -1133,6 +1148,16 @@ img.emoji.jumbo {
   font-size: 0.9285714286em;
   color: red; }
 
+
+.settings .clear-data-settings button {
+  float: right;
+  line-height: 36px;
+  padding: 0 20px;
+  margin: 0 0 20px 20px; }
+
+.settings .clear-data-settings .red {
+  background-color: red;
+  color: white; }
 .conversation-stack,
 .new-conversation, .inbox, .gutter {
   height: 100%; }
