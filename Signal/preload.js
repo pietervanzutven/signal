@@ -4,6 +4,11 @@
   console.log('preload');
 
   window.PROTO_ROOT = '/protos';
+  window.wrapDeferred = function(deferred) {
+    return new Promise(function(resolve, reject) {
+      deferred.then(resolve, reject);
+    });
+  };
 
   window.config.localeMessages = ipc.sendSync('locale-data');
 
