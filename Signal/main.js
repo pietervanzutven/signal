@@ -71,16 +71,23 @@ var app = {
 
 var ipc = {
     events: {},
-    on: function (name, callback) {
-        ipc.events[name] = callback;
+    on: function (channel, listener) {
+        ipc.events[channel] = listener;
     },
-    send: function (name, args) {
-        var event = { name: name, returnValue: null, sender: { send: ipc.send } };
-        ipc.events[name](event, args);
+
+    once: function (channel, listener) {
+        ipc.events[channel] = (event, args) => {
+            listener(event, args);
+            delete ipc.events[channel];
+        }
+    },
+    send: function (channel, args) {
+        var event = { channel: channel, returnValue: null, sender: { send: ipc.send } };
+        ipc.events[channel](event, args);
         return event.returnValue;
     },
-    sendSync: function (name, args) {
-        return ipc.send(name, args);
+    sendSync: function (channel, args) {
+        return ipc.send(channel, args);
     }
 }
 
