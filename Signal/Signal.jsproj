@@ -270,6 +270,7 @@
     <Content Include="js\modules\lodash\isRegExp.js" />
     <Content Include="js\modules\lodash\isString.js" />
     <Content Include="js\modules\lodash\isUndefined.js" />
+    <Content Include="js\modules\logs.js" />
     <Content Include="js\modules\os.js" />
     <Content Include="js\modules\privacy.js" />
     <Content Include="js\modules\types\attachment.js" />

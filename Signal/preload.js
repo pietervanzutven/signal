@@ -40,10 +40,6 @@
     ipc.send('update-tray-icon', unreadCount);
   };
 
-  window.deleteAllLogs = function() {
-    ipc.send('delete-all-logs');
-  }
-
   ipc.on('debug-log', function() {
     Whisper.events.trigger('showDebugLog');
   });
@@ -51,11 +47,7 @@
   ipc.on('backup', function() {
       Whisper.events.trigger('showBackupScreen');
   });
-
-  ipc.on('delete-all-logs-complete', function() {
-    Whisper.events.trigger('deleteAllLogsComplete');
-  });
-
+  
   ipc.on('set-up-with-import', function() {
     Whisper.events.trigger('setupWithImport');
   });
@@ -96,6 +88,8 @@
   // ES2015+ modules
   window.Signal = window.Signal || {};
   window.Signal.OS = window.os;
+  window.Signal.Logs = window.logs;
+  
   window.Signal.Types = window.Signal.Types || {};
   window.Signal.Types.Attachment = window.types.attachment;
   window.Signal.Types.Errors = window.types.errors;
