@@ -618,18 +618,17 @@
           now
         );
 
-        const upgradedAttachments =
-          await Promise.all(attachments.map(Attachment.upgradeSchema));
-        const message = this.messageCollection.add({
-            body,
-            conversationId: this.id,
-            type: 'outgoing',
-            attachments: upgradedAttachments,
-            sent_at: now,
-            received_at: now,
-            expireTimer: this.get('expireTimer'),
-            recipients: this.getRecipients(),
+        const messageWithSchema = await Message.upgradeSchema({
+          type: 'outgoing',
+          body,
+          conversationId: this.id,
+          attachments,
+          sent_at: now,
+          received_at: now,
+          expireTimer: this.get('expireTimer'),
+          recipients: this.getRecipients(),
         });
+        const message = this.messageCollection.add(messageWithSchema);
         if (this.isPrivate()) {
             message.set({ destination: this.id });
         }
@@ -642,15 +641,15 @@
         });
 
         const conversationType = this.get('type');
-        const sendFunc = (() => {
-            switch (conversationType) {
-                case Message.PRIVATE:
-                    return textsecure.messaging.sendMessageToNumber;
-                case Message.GROUP:
-                    return textsecure.messaging.sendMessageToGroup;
-                default:
-                    throw new TypeError(`Invalid conversation type: '${conversationType}'`);
-            }
+        const sendFunction = (() => {
+          switch (conversationType) {
+            case Message.PRIVATE:
+              return textsecure.messaging.sendMessageToNumber;
+            case Message.GROUP:
+              return textsecure.messaging.sendMessageToGroup;
+            default:
+              throw new TypeError(`Invalid conversation type: '${conversationType}'`);
+          }
         })();
 
         let profileKey;
@@ -658,10 +657,10 @@
             profileKey = storage.get('profileKey');
         }
 
-        message.send(sendFunc(
+        message.send(sendFunction(
           this.get('id'),
           body,
-          upgradedAttachments,
+          messageWithSchema.attachments,
           now,
           this.get('expireTimer'),
           profileKey

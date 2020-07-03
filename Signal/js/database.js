@@ -8,6 +8,8 @@
 (function () {
   'use strict';
 
+  const { Migrations } = window.Signal;
+
   window.Whisper = window.Whisper || {};
   window.Whisper.Database = window.Whisper.Database || {};
   window.Whisper.Database.id = window.Whisper.Database.id || 'signal';
@@ -127,7 +129,7 @@
     {
       version: '12.0',
       migrate(transaction, next) {
-        console.log('migration 1.0');
+        console.log('migration 12.0');
         console.log('creating object stores');
         const messages = transaction.db.createObjectStore('messages');
         messages.createIndex('conversation', ['conversationId', 'received_at'], {
@@ -234,46 +236,20 @@
       },
     },
     {
-      version: '17.0',
-      migrate(transaction, next) {
-        console.log('migration 17.0');
-        console.log('Removing attachments with zero-length data');
+      version: 17,
+      async migrate(transaction, next) {
+        console.log('migration 17');
+        console.log('Start migration to database version 17');
 
-        var messages = transaction.objectStore('messages');
-        var queryRequest = messages.openCursor();
-        var promises = [];
+        const start = Date.now();
+        await Migrations.V17.run(transaction);
+        const duration = Date.now() - start;
 
-        queryRequest.onsuccess = function(event) {
-          var cursor = event.target.result;
-          if (!cursor) {
-            return Promise.all(promises).then(function() {
-              console.log('Fixed', promises.length, 'messages with unexpected attachment structure');
-              next();
-            });
-          }
-
-          var message = cursor.value;
-          var changed = window.Whisper.Database.dropZeroLengthAttachments(message);
-
-          if (!changed) {
-            return cursor.continue();
-          }
-
-          promises.push(new Promise(function(resolve, reject) {
-            var putRequest = messages.put(message, message.id);
-            putRequest.onsuccess = resolve;
-            putRequest.onerror = function(e) {
-              console.log(e);
-              reject(e);
-            };
-          }));
-
-          return cursor.continue();
-        };
-
-        queryRequest.onerror = function(event) {
-          console.log(event);
-        };
+        console.log(
+          'Complete migration to database version 17.',
+          `Duration: ${duration}ms`
+        );
+        next();
       },
     },
   ];

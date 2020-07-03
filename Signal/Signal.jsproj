@@ -271,12 +271,14 @@
     <Content Include="js\modules\lodash\isString.js" />
     <Content Include="js\modules\lodash\isUndefined.js" />
     <Content Include="js\modules\logs.js" />
+    <Content Include="js\modules\migrations\17\index.js" />
     <Content Include="js\modules\os.js" />
     <Content Include="js\modules\privacy.js" />
     <Content Include="js\modules\types\attachment.js" />
     <Content Include="js\modules\types\errors.js" />
     <Content Include="js\modules\types\message.js" />
     <Content Include="js\modules\types\mime.js" />
+    <Content Include="js\modules\types\schema_version.js" />
     <Content Include="js\modules\types\settings.js" />
     <Content Include="js\Mp3LameEncoder.min.js" />
     <Content Include="js\views\app_view.js" />

@@ -87,9 +87,10 @@
 
   // ES2015+ modules
   window.Signal = window.Signal || {};
-  window.Signal.OS = window.os;
   window.Signal.Logs = window.logs;
-  
+  window.Signal.OS = window.os;
+  window.Signal.Migrations = window.Signal.Migrations || {};
+  window.Signal.Migrations.V17 = window.migrations.V17;
   window.Signal.Types = window.Signal.Types || {};
   window.Signal.Types.Attachment = window.types.attachment;
   window.Signal.Types.Errors = window.types.errors;
