@@ -2186,6 +2186,9 @@ span.status {
   .ios .conversation-header .avatar {
     display: none; }
 
+.ios .conversation .panel {
+  height: 100%; }
+
 .ios .settings h3,
 .ios .menu-list li {
   text-transform: capitalize; }
