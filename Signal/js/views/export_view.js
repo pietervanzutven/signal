@@ -53,8 +53,8 @@
       //   it will prevent the horrible encryption errors which result from import to the
       //   same client config more than once. They can import the same message history
       //   more than once, so we preserve that.
-      return Whisper.Backup.getDirectoryForExport().then(function(directory) {
-          return Whisper.Backup.exportToDirectory(directory);
+      return window.Signal.Backup.getDirectoryForExport().then(function(directory) {
+          return window.Signal.Backup.exportToDirectory(directory);
       });
     },
     init: function() {

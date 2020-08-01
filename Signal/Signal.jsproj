@@ -231,7 +231,7 @@
     <Content Include="index.html" />
     <Content Include="js\background.js" />
     <Content Include="js\background_task.js" />
-    <Content Include="js\backup.js" />
+    <Content Include="js\modules\backup.js" />
     <Content Include="js\chromium.js" />
     <Content Include="js\components.js" />
     <Content Include="js\conversation_controller.js" />

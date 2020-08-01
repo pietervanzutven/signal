@@ -1,27 +1,31 @@
+/* global Whisper: false */
 /* global dcodeIO: false */
 /* global _: false */
-/* global Whisper: false */
 /* global textsecure: false */
 /* global moment: false */
 /* global i18n: false */
 
+/* eslint-env browser */
 /* eslint-env node */
 
 /* eslint-disable no-param-reassign, guard-for-in */
 
-'use strict';
+(function () {
 
-// eslint-disable-next-line func-names
-(function() {
-  window.Whisper = window.Whisper || {};
+  window.backup = {
+    getDirectoryForExport: getDirectoryForExport,
+    exportToDirectory: exportToDirectory,
+    getDirectoryForImport: getDirectoryForImport,
+    importFromDirectory: importFromDirectory,
+  };
 
-  async function exportDatabase(idb_db, parent) {
+  function exportDatabase(idb_db, parent) {
     const promises = [];
     idb_db.files.forEach(file => promises.push(file.copyAsync(parent, file.name, Windows.Storage.NameCollisionOption.replaceExisting)));
     return Promise.all(promises);
   }
 
-  async function importDatabase(idb_db, parent) {
+  function importDatabase(idb_db, parent) {
     const promises = [];
     parent.files.forEach(file => {
       var fileName = file.name === 'signal.json' ? 'signal_import.json' : file.name;
@@ -30,7 +34,7 @@
     return Promise.all(promises);
   }
 
-  async function openDatabase() {
+  function openDatabase() {
     const folder = Windows.Storage.ApplicationData.current.localFolder;
     return folder.getFilesAsync()
       .then(files => {
@@ -79,55 +83,55 @@
     return moment().format('YYYY MMM Do [at] h.mm.ss a');
   }
 
-  // directories returned and taken by backup/import are all string paths
-  Whisper.Backup = {
-    getDirectoryForExport() {
-      const options = {
-        title: i18n('exportChooserTitle'),
-        buttonLabel: i18n('exportButton'),
-      };
-      return getDirectory(options);
-    },
-    async exportToDirectory(directory, options) {
-      const name = `Signal Export ${getTimestamp()}`;
-      try {
-        const db = await openDatabase();
-        const dir = await createDirectory(directory, name);
-        await exportDatabase(db, dir, options);
+  function getDirectoryForExport() {
+    const options = {
+      title: i18n('exportChooserTitle'),
+      buttonLabel: i18n('exportButton'),
+    };
+    return getDirectory(options);
+  }
 
-        console.log('done backing up!');
-        return dir.path;
-      } catch (error) {
-        console.log(
-          'the backup went wrong:',
-          error && error.stack ? error.stack : error
-        );
-        throw error;
-      }
-    },
-    getDirectoryForImport() {
-      const options = {
-        title: i18n('importChooserTitle'),
-        buttonLabel: i18n('importButton'),
-      };
-      return getDirectory(options);
-    },
-    async importFromDirectory(directory, options) {
-      options = options || {};
+  async function exportToDirectory(directory, options) {
+    const name = `Signal Export ${getTimestamp()}`;
+    try {
+      const db = await openDatabase();
+      const dir = await createDirectory(directory, name);
+      await exportDatabase(db, dir, options);
 
-      try {
-        const db = await openDatabase();
+      console.log('done backing up!');
+      return dir.path;
+    } catch (error) {
+      console.log(
+        'the backup went wrong:',
+        error && error.stack ? error.stack : error
+      );
+      throw error;
+    }
+  }
 
-        const result = await importDatabase(db, directory, options);
-        console.log('done restoring from backup!');
-        return result;
-      } catch (error) {
-        console.log(
-          'the import went wrong:',
-          error && error.stack ? error.stack : error
-        );
-        throw error;
-      }
-    },
-  };
+  function getDirectoryForImport() {
+    const options = {
+      title: i18n('importChooserTitle'),
+      buttonLabel: i18n('importButton'),
+    };
+    return getDirectory(options);
+  }
+
+  async function importFromDirectory(directory, options) {
+    options = options || {};
+
+    try {
+      const db = await openDatabase();
+
+      const result = await importDatabase(db, directory, options);
+      console.log('done restoring from backup!');
+      return result;
+    } catch (error) {
+      console.log(
+        'the import went wrong:',
+        error && error.stack ? error.stack : error
+      );
+      throw error;
+    }
+  }
 }());

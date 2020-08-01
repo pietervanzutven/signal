@@ -89,8 +89,10 @@
   window.Signal = window.Signal || {};
   window.Signal.Logs = window.logs;
   window.Signal.OS = window.os;
+  window.Signal.Backup = window.backup;
   window.Signal.Migrations = window.Signal.Migrations || {};
   window.Signal.Migrations.V17 = window.migrations.V17;
+  
   window.Signal.Types = window.Signal.Types || {};
   window.Signal.Types.Attachment = window.types.attachment;
   window.Signal.Types.Errors = window.types.errors;
