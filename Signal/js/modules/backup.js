@@ -2,7 +2,6 @@
 /* global dcodeIO: false */
 /* global _: false */
 /* global textsecure: false */
-/* global moment: false */
 /* global i18n: false */
 
 /* eslint-env browser */
@@ -14,7 +13,7 @@
 
   window.backup = {
     getDirectoryForExport: getDirectoryForExport,
-    exportToDirectory: exportToDirectory,
+    backupToDirectory: backupToDirectory,
     getDirectoryForImport: getDirectoryForImport,
     importFromDirectory: importFromDirectory,
   };
@@ -91,7 +90,7 @@
     return getDirectory(options);
   }
 
-  async function exportToDirectory(directory) {
+  async function backupToDirectory(directory) {
     const name = `Signal Export ${getTimestamp()}`;
     try {
       const db = await openDatabase();
@@ -122,9 +121,9 @@
 
     try {
       const db = await openDatabase();
-
       const result = await importDatabase(db, directory, options);
-      console.log('done restoring from backup!');
+      
+      console.log('done importing!');
       return result;
     } catch (error) {
       console.log(

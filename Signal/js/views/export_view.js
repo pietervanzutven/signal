@@ -54,7 +54,7 @@
       //   same client config more than once. They can import the same message history
       //   more than once, so we preserve that.
       return window.Signal.Backup.getDirectoryForExport().then(function(directory) {
-          return window.Signal.Backup.exportToDirectory(directory);
+          return window.Signal.Backup.backupToDirectory(directory);
       });
     },
     init: function() {
