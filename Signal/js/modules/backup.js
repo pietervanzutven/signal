@@ -42,7 +42,7 @@
   }
 
   function createDirectory(parent, name) {
-    const sanitized = sanitizeFileName(name);
+    const sanitized = _sanitizeFileName(name);
     console._log('-- about to create directory', sanitized);
     return parent.folder.createFolderAsync(name, Windows.Storage.CreationCollisionOption.replaceExisting)
       .then(folder => {
@@ -50,7 +50,7 @@
       });
   }
 
-  function sanitizeFileName(filename) {
+  function _sanitizeFileName(filename) {
     return filename.toString().replace(/[^a-z0-9.,+()'#\- ]/gi, '_');
   }
 
@@ -101,7 +101,7 @@
       return dir.path;
     } catch (error) {
       console.log(
-        'the backup went wrong:',
+      'The backup went wrong!',
         error && error.stack ? error.stack : error
       );
       throw error;
@@ -123,11 +123,11 @@
       const db = await openDatabase();
       const result = await importDatabase(db, directory, options);
       
-      console.log('done importing!');
+    console.log('Done importing!');
       return result;
     } catch (error) {
       console.log(
-        'the import went wrong:',
+      'The import went wrong!',
         error && error.stack ? error.stack : error
       );
       throw error;

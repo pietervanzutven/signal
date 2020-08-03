@@ -90,6 +90,8 @@
   window.Signal.Logs = window.logs;
   window.Signal.OS = window.os;
   window.Signal.Backup = window.backup;
+  window.Signal.Crypto = window.crypto;
+
   window.Signal.Migrations = window.Signal.Migrations || {};
   window.Signal.Migrations.V17 = window.migrations.V17;
   
