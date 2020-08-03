@@ -91,12 +91,12 @@
     return getDirectory(options);
   }
 
-  async function exportToDirectory(directory, options) {
+  async function exportToDirectory(directory) {
     const name = `Signal Export ${getTimestamp()}`;
     try {
       const db = await openDatabase();
       const dir = await createDirectory(directory, name);
-      await exportDatabase(db, dir, options);
+      await exportDatabase(db, dir);
 
       console.log('done backing up!');
       return dir.path;
