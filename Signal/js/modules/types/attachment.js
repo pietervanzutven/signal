@@ -33,8 +33,9 @@
     //   schemaVersion: integer
     // }
 
-    // Returns true if `rawAttachment` is a valid attachment based on our (limited)
-    // criteria. Over time, we can expand this definition to become more narrow:
+    // Returns true if `rawAttachment` is a valid attachment based on our current schema.
+    // Over time, we can expand this definition to become more narrow, e.g. require certain
+    // fields, etc.
     window.types.attachment.isValid = (rawAttachment) => {
         // NOTE: We cannot use `_.isPlainObject` because `rawAttachment` is
         // deserialized by protobuf:
@@ -42,10 +43,7 @@
             return false;
         }
 
-        const hasValidContentType = isString(rawAttachment.contentType);
-        const hasValidFileName =
-            isString(rawAttachment.fileName) || rawAttachment.fileName === null;
-        return hasValidContentType && hasValidFileName;
+        return true;
     };
 
     // Upgrade steps

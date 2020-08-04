@@ -14,6 +14,7 @@
 ;(function() {
     'use strict';
 
+    const { IdleDetector, MessageDataMigrator } = Signal.Workflow;
     const { Errors, Message } = window.Signal.Types;
     const { upgradeMessageSchema } = window.Signal.Migrations;
 
@@ -77,6 +78,28 @@
 
     storage.fetch();
 
+
+  /* eslint-enable */
+  /* jshint ignore:start */
+  const NUM_MESSAGE_UPGRADES_PER_IDLE = 2;
+  const idleDetector = new IdleDetector();
+  idleDetector.on('idle', async () => {
+    const results = await MessageDataMigrator.processNext({
+      BackboneMessage: Whisper.Message,
+      BackboneMessageCollection: Whisper.MessageCollection,
+      count: NUM_MESSAGE_UPGRADES_PER_IDLE,
+      upgradeMessageSchema,
+      wrapDeferred,
+    });
+    console.log('Upgrade message schema:', results);
+
+    if (!results.hasMore) {
+      idleDetector.stop();
+    }
+  });
+  /* jshint ignore:end */
+  /* eslint-disable */
+
     // We need this 'first' check because we don't want to start the app up any other time
     //   than the first time. And storage.fetch() will cause onready() to fire.
     var first = true;
@@ -92,17 +115,20 @@
         Windows.Storage.ApplicationData.current.localSettings.values['password'] = storage.get('password');
         Windows.Storage.ApplicationData.current.localSettings.values['notification-setting'] = storage.get('notification-setting');
         Windows.Storage.ApplicationData.current.localSettings.values['audio-notification'] = storage.get('audio-notification');
+
+        idleDetector.start();
     });
 
     Whisper.events.on('shutdown', function() {
-        if (messageReceiver) {
-            messageReceiver.close().then(function() {
-                messageReceiver = null;
-                Whisper.events.trigger('shutdown-complete');
-            });
-        } else {
-            Whisper.events.trigger('shutdown-complete');
-        }
+      idleDetector.stop();
+
+      if (messageReceiver) {
+        messageReceiver.close().then(function() {
+          Whisper.events.trigger('shutdown-complete');
+        });
+      } else {
+        Whisper.events.trigger('shutdown-complete');
+      }
     });
 
     Whisper.events.on('setupWithImport', function() {

@@ -259,11 +259,13 @@
     <Content Include="js\modules\blueimp-load-image\load-image-scale.js" />
     <Content Include="js\modules\blueimp-load-image\load-image.js" />
     <Content Include="js\modules\debuglogs.js" />
+    <Content Include="js\modules\events.js" />
     <Content Include="js\modules\form-data\form-data.js" />
     <Content Include="js\modules\fs_extra.js" />
     <Content Include="js\modules\global_errors.js" />
     <Content Include="js\modules\google-libphonenumber\libphonenumber.js" />
     <Content Include="js\modules\got\got.js" />
+    <Content Include="js\modules\idle_detector.js" />
     <Content Include="js\modules\indexedDB.js" />
     <Content Include="js\modules\lodash\escapeRegExp.js" />
     <Content Include="js\modules\lodash\flowRight.js" />
@@ -274,6 +276,7 @@
     <Content Include="js\modules\lodash\isString.js" />
     <Content Include="js\modules\lodash\isUndefined.js" />
     <Content Include="js\modules\logs.js" />
+    <Content Include="js\modules\messages_data_migrator.js" />
     <Content Include="js\modules\migrations\17\index.js" />
     <Content Include="js\modules\os.js" />
     <Content Include="js\modules\path.js" />
