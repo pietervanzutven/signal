@@ -3,16 +3,18 @@
 
 
     window.migrations = window.migrations || {};
-    window.migrations.V17 = async (transaction) => {
-        const messagesStore = transaction.objectStore('messages');
+    window.migrations.V17 = {
+        run: async (transaction) => {
+            const messagesStore = transaction.objectStore('messages');
 
-        console.log('Initialize messages schema version');
-        const numUpgradedMessages = await _initializeMessageSchemaVersion(messagesStore);
-        console.log('Complete messages schema version initialization', { numUpgradedMessages });
+            console.log('Initialize messages schema version');
+            const numUpgradedMessages = await _initializeMessageSchemaVersion(messagesStore);
+            console.log('Complete messages schema version initialization', { numUpgradedMessages });
 
-        console.log('Create index from attachment schema version to attachment');
-        messagesStore.createIndex('schemaVersion', 'schemaVersion', { unique: false });
-    };
+            console.log('Create index from attachment schema version to attachment');
+            messagesStore.createIndex('schemaVersion', 'schemaVersion', { unique: false });
+        }
+    }
 
     const _initializeMessageSchemaVersion = messagesStore =>
         new Promise((resolve, reject) => {
