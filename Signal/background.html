@@ -1072,6 +1072,8 @@
   <script type='text/javascript' src='js/modules/idle_detector.js'></script>
   <script type='text/javascript' src='js/modules/messages_data_migrator.js'></script>
 
+  <script type='text/javascript' src='js/modules/views/initialization.js'></script>
+
   <script type='text/javascript' src='app/attachments.js'></script>
   <script type='text/javascript' src='app/logging.js'></script>
   <script type='text/javascript' src='app/config.js'></script>
@@ -1150,7 +1152,6 @@
   <script type='text/javascript' src='js/wall_clock_listener.js'></script>
   <script type='text/javascript' src='js/rotate_signed_prekey_listener.js'></script>
   <script type='text/javascript' src='js/keychange_listener.js'></script>
-  <script type='text/javascript' src='js/background.js'></script>
 </head>
 <body>
   <div class='app-loading-screen'>
@@ -1161,8 +1162,10 @@
         <span class='dot'></span>
         <span class='dot'></span>
       </div>
-      <div class='message'>Loading...</div>
+      <div class='message'></div>
     </div>
   </div>
+
+  <script type='text/javascript' src='js/background.js'></script>
 </body>
 </html>

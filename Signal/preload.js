@@ -105,7 +105,7 @@
 
   const { IdleDetector} = window.idle_detector;
 
-  window.Signal = window.Signal || {};
+  window.Signal = {};
   window.Signal.Backup = window.backup;
   window.Signal.Crypto = window.crypto;
   window.Signal.Logs = window.logs;
@@ -115,12 +115,14 @@
   window.Signal.Migrations.upgradeMessageSchema = upgradeMessageSchema;
   window.Signal.Migrations.V17 = window.migrations.V17;
   window.Signal.OS = window.os;
-  window.Signal.Types = window.Signal.Types || {};
+  window.Signal.Types = {};
   window.Signal.Types.Attachment = Attachment;
   window.Signal.Types.Errors = window.types.errors;
   window.Signal.Types.Message = Message;
   window.Signal.Types.MIME = window.types.mime;
   window.Signal.Types.Settings = window.types.settings;
+  window.Signal.Views = {};
+  window.Signal.Views.Initialization = window.views.initialization;
   window.Signal.Workflow = {};
   window.Signal.Workflow.IdleDetector = IdleDetector;
   window.Signal.Workflow.MessageDataMigrator =

@@ -17,6 +17,7 @@
     const { IdleDetector, MessageDataMigrator } = Signal.Workflow;
     const { Errors, Message } = window.Signal.Types;
     const { upgradeMessageSchema } = window.Signal.Migrations;
+    const { Views } = window.Signal;
 
     // Implicitly used in `indexeddb-backbonejs-adapter`:
     // https://github.com/signalapp/Signal-Desktop/blob/4033a9f8137e62ed286170ed5d4941982b1d3a64/components/indexeddb-backbonejs-adapter/backbone-indexeddb.js#L569
@@ -75,30 +76,31 @@
         return accountManager;
     };
 
-
+    const cancelInitializationMessage = Views.Initialization.setMessage();
+    console.log('Start IndexedDB migrations');
     storage.fetch();
 
 
-  /* eslint-enable */
-  /* jshint ignore:start */
-  const NUM_MESSAGE_UPGRADES_PER_IDLE = 2;
-  const idleDetector = new IdleDetector();
-  idleDetector.on('idle', async () => {
-    const results = await MessageDataMigrator.processNext({
-      BackboneMessage: Whisper.Message,
-      BackboneMessageCollection: Whisper.MessageCollection,
-      count: NUM_MESSAGE_UPGRADES_PER_IDLE,
-      upgradeMessageSchema,
-      wrapDeferred,
-    });
-    console.log('Upgrade message schema:', results);
+    /* eslint-enable */
+    /* jshint ignore:start */
+    const NUM_MESSAGE_UPGRADES_PER_IDLE = 2;
+    const idleDetector = new IdleDetector();
+    idleDetector.on('idle', async () => {
+        const results = await MessageDataMigrator.processNext({
+            BackboneMessage: Whisper.Message,
+            BackboneMessageCollection: Whisper.MessageCollection,
+            count: NUM_MESSAGE_UPGRADES_PER_IDLE,
+            upgradeMessageSchema,
+            wrapDeferred,
+        });
+        console.log('Upgrade message schema:', results);
 
-    if (!results.hasMore) {
-      idleDetector.stop();
-    }
-  });
-  /* jshint ignore:end */
-  /* eslint-disable */
+        if (!results.hasMore) {
+            idleDetector.stop();
+        }
+    });
+    /* jshint ignore:end */
+    /* eslint-disable */
 
     // We need this 'first' check because we don't want to start the app up any other time
     //   than the first time. And storage.fetch() will cause onready() to fire.
@@ -120,15 +122,15 @@
     });
 
     Whisper.events.on('shutdown', function() {
-      idleDetector.stop();
+        idleDetector.stop();
 
-      if (messageReceiver) {
-        messageReceiver.close().then(function() {
-          Whisper.events.trigger('shutdown-complete');
-        });
-      } else {
-        Whisper.events.trigger('shutdown-complete');
-      }
+        if (messageReceiver) {
+            messageReceiver.close().then(function() {
+                Whisper.events.trigger('shutdown-complete');
+            });
+        } else {
+            Whisper.events.trigger('shutdown-complete');
+        }
     });
 
     Whisper.events.on('setupWithImport', function() {
@@ -171,6 +173,7 @@
             connect(true);
         });
 
+        cancelInitializationMessage();
         var appView = window.owsDesktopApp.appView = new Whisper.AppView({ el: $('body') });
 
         Whisper.WallClockListener.init(Whisper.events);
@@ -398,7 +401,7 @@
                 console.log('sync timed out');
                 Whisper.events.trigger('contactsync');
             });
-            
+
             if (Whisper.Import.isComplete()) {
                 textsecure.messaging.sendRequestConfigurationSyncMessage().catch(function(e) {
                     console.log(e);
@@ -458,7 +461,7 @@
         return ConversationController.getOrCreateAndWait(id, 'private')
             .then(function(conversation) {
                 var activeAt = conversation.get('active_at');
-                
+
                 // The idea is to make any new contact show up in the left pane. If
                 //   activeAt is null, then this contact has been purposefully hidden.
                 if (activeAt !== null) {
@@ -476,7 +479,7 @@
                         storage.removeBlockedNumber(id);
                     }
                 }
-                
+
                 return wrapDeferred(conversation.save({
                     name: details.name,
                     avatar: details.avatar,
@@ -583,106 +586,106 @@
 
     // Matches event data from `libtextsecure` `MessageReceiver::handleSentMessage`:
     const getDescriptorForSent = ({ message, destination }) => (
-      message.group
-        ? getGroupDescriptor(message.group)
-        : { type: Message.PRIVATE, id: destination }
+        message.group
+            ? getGroupDescriptor(message.group)
+            : { type: Message.PRIVATE, id: destination }
     );
 
     // Matches event data from `libtextsecure` `MessageReceiver::handleDataMessage`:
     const getDescriptorForReceived = ({ message, source }) => (
-      message.group
-        ? getGroupDescriptor(message.group)
-        : { type: Message.PRIVATE, id: source }
+        message.group
+            ? getGroupDescriptor(message.group)
+            : { type: Message.PRIVATE, id: source }
     );
 
     function createMessageHandler({
-      createMessage,
-      getMessageDescriptor,
-      handleProfileUpdate,
+        createMessage,
+        getMessageDescriptor,
+        handleProfileUpdate,
     }) {
-      return async (event) => {
-        const { data, confirm } = event;
+        return async (event) => {
+            const { data, confirm } = event;
 
-        const messageDescriptor = getMessageDescriptor(data);
+            const messageDescriptor = getMessageDescriptor(data);
 
-        const { PROFILE_KEY_UPDATE } = textsecure.protobuf.DataMessage.Flags;
-        // eslint-disable-next-line no-bitwise
-        const isProfileUpdate = Boolean(data.message.flags & PROFILE_KEY_UPDATE);
-        if (isProfileUpdate) {
-            return handleProfileUpdate({ data, confirm, messageDescriptor });
-        }
-        const message = createMessage(data);
-        const isDuplicate = await isMessageDuplicate(message);
-        if (isDuplicate) {
-            console.log('Received duplicate message', message.idForLogging());
-            return event.confirm();
-        }
+            const { PROFILE_KEY_UPDATE } = textsecure.protobuf.DataMessage.Flags;
+            // eslint-disable-next-line no-bitwise
+            const isProfileUpdate = Boolean(data.message.flags & PROFILE_KEY_UPDATE);
+            if (isProfileUpdate) {
+                return handleProfileUpdate({ data, confirm, messageDescriptor });
+            }
+            const message = createMessage(data);
+            const isDuplicate = await isMessageDuplicate(message);
+            if (isDuplicate) {
+                console.log('Received duplicate message', message.idForLogging());
+                return event.confirm();
+            }
 
-      const upgradedMessage = await upgradeMessageSchema(data.message);
-      await ConversationController.getOrCreateAndWait(
-        messageDescriptor.id,
-        messageDescriptor.type
-      );
-      return message.handleDataMessage(
-        upgradedMessage,
-        event.confirm,
-        { initialLoadComplete }
-      );
-    };
-  }
+            const upgradedMessage = await upgradeMessageSchema(data.message);
+            await ConversationController.getOrCreateAndWait(
+                messageDescriptor.id,
+                messageDescriptor.type
+            );
+            return message.handleDataMessage(
+                upgradedMessage,
+                event.confirm,
+                { initialLoadComplete }
+            );
+        };
+    }
 
-  // Received:
-  async function handleMessageReceivedProfileUpdate({
-    data,
-    confirm,
-    messageDescriptor,
-  }) {
-    const profileKey = data.message.profileKey.toArrayBuffer();
-    const sender = await ConversationController.getOrCreateAndWait(
-      messageDescriptor.id,
-      'private'
-    );
-    await sender.setProfileKey(profileKey);
-    return confirm();
-  }
+    // Received:
+    async function handleMessageReceivedProfileUpdate({
+        data,
+        confirm,
+        messageDescriptor,
+    }) {
+        const profileKey = data.message.profileKey.toArrayBuffer();
+        const sender = await ConversationController.getOrCreateAndWait(
+            messageDescriptor.id,
+            'private'
+        );
+        await sender.setProfileKey(profileKey);
+        return confirm();
+    }
 
-  const onMessageReceived = createMessageHandler({
-    handleProfileUpdate: handleMessageReceivedProfileUpdate,
-    getMessageDescriptor: getDescriptorForReceived,
-    createMessage: initIncomingMessage,
-  });
-
-  // Sent:
-  async function handleMessageSentProfileUpdate({ confirm, messageDescriptor }) {
-    const conversation = await ConversationController.getOrCreateAndWait(
-      messageDescriptor.id,
-      messageDescriptor.type
-    );
-    await conversation.save({ profileSharing: true });
-    return confirm();
-  }
-
-  function createSentMessage(data) {
-    const now = Date.now();
-    return new Whisper.Message({
-      source: textsecure.storage.user.getNumber(),
-      sourceDevice: data.device,
-      sent_at: data.timestamp,
-      received_at: now,
-      conversationId: data.destination,
-      type: 'outgoing',
-      sent: true,
-      expirationStartTimestamp: data.expirationStartTimestamp,
+    const onMessageReceived = createMessageHandler({
+        handleProfileUpdate: handleMessageReceivedProfileUpdate,
+        getMessageDescriptor: getDescriptorForReceived,
+        createMessage: initIncomingMessage,
     });
-  }
 
-  const onSentMessage = createMessageHandler({
-    handleProfileUpdate: handleMessageSentProfileUpdate,
-    getMessageDescriptor: getDescriptorForSent,
-    createMessage: createSentMessage,
-  });
-  /* jshint ignore:end */
-  /* eslint-disable */
+    // Sent:
+    async function handleMessageSentProfileUpdate({ confirm, messageDescriptor }) {
+        const conversation = await ConversationController.getOrCreateAndWait(
+            messageDescriptor.id,
+            messageDescriptor.type
+        );
+        await conversation.save({ profileSharing: true });
+        return confirm();
+    }
+
+    function createSentMessage(data) {
+        const now = Date.now();
+        return new Whisper.Message({
+            source: textsecure.storage.user.getNumber(),
+            sourceDevice: data.device,
+            sent_at: data.timestamp,
+            received_at: now,
+            conversationId: data.destination,
+            type: 'outgoing',
+            sent: true,
+            expirationStartTimestamp: data.expirationStartTimestamp,
+        });
+    }
+
+    const onSentMessage = createMessageHandler({
+        handleProfileUpdate: handleMessageSentProfileUpdate,
+        getMessageDescriptor: getDescriptorForSent,
+        createMessage: createSentMessage,
+    });
+    /* jshint ignore:end */
+    /* eslint-disable */
 
     function isMessageDuplicate(message) {
         return new Promise(function(resolve) {
@@ -743,7 +746,7 @@
                 textsecure.storage.put('number_id', previousNumberId);
                 console.log('Successfully cleared local configuration');
             }, function(error) {
-               console.log(
+                console.log(
                     'Something went wrong clearing local configuration',
                     error && error.stack ? error.stack : error
                 );

@@ -288,6 +288,7 @@
     <Content Include="js\modules\types\mime.js" />
     <Content Include="js\modules\types\schema_version.js" />
     <Content Include="js\modules\types\settings.js" />
+    <Content Include="js\modules\views\initialization.js" />
     <Content Include="js\Mp3LameEncoder.min.js" />
     <Content Include="js\views\app_view.js" />
     <Content Include="js\views\debug_log_view.js" />
