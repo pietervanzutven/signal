@@ -63,10 +63,11 @@ window.matchMedia && window.matchMedia('(max-width: 600px)').addListener(() => {
 });
 
 var app = {
-    getVersion: function () {
+    getVersion: () => {
         var version = Windows.ApplicationModel.Package.current.id.version;
         return version.major + '.' + version.minor + '.' + version.build
-    }
+    },
+    getPath: () => '',
 };
 
 var ipc = {
@@ -90,6 +91,8 @@ var ipc = {
         return ipc.send(channel, args);
     }
 }
+
+const Attachments = window.attachments;
 
 let tray = null;
 
@@ -165,7 +168,7 @@ window.config.appInstance = Windows.System.Diagnostics.ProcessDiagnosticInfo.get
 let loggingSetupError;
 logging.initialize().catch((error) => {
     loggingSetupError = error;
-}).then(() => {
+}).then(async () => {
     /* eslint-enable more/no-then */
     logger = logging.getLogger();
     logger.info('app ready');
@@ -178,6 +181,10 @@ logging.initialize().catch((error) => {
         const appLocale = Windows.Globalization.ApplicationLanguages.languages[0];
         locale = loadLocale({ appLocale, logger });
     }
+
+    console.log('Ensure attachments directory exists');
+    const userDataPath = app.getPath('userData');
+    await Attachments.ensureDirectory(userDataPath);
 });
 
 ipc.on('set-badge-count', (event, count) => {

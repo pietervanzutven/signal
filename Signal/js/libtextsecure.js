@@ -36823,6 +36823,13 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
         },
 
         encryptAttachment: function(plaintext, keys, iv) {
+            if (!(plaintext instanceof ArrayBuffer) && !ArrayBuffer.isView(plaintext)) {
+                throw new TypeError(
+                    '`plaintext` must be an `ArrayBuffer` or `ArrayBufferView`; got: ' +
+                    typeof plaintext
+                );
+            }
+
             if (keys.byteLength != 64) {
                 throw new Error("Got invalid length attachment keys");
             }
@@ -40027,10 +40034,21 @@ function MessageSender(url, username, password, cdn_url) {
 
 MessageSender.prototype = {
     constructor: MessageSender,
+
+//  makeAttachmentPointer :: Attachment -> Promise AttachmentPointerProto
     makeAttachmentPointer: function(attachment) {
         if (typeof attachment !== 'object' || attachment == null) {
             return Promise.resolve(undefined);
         }
+
+        if (!(attachment.data instanceof ArrayBuffer) &&
+            !ArrayBuffer.isView(attachment.data)) {
+            return Promise.reject(new TypeError(
+                '`attachment.data` must be an `ArrayBuffer` or `ArrayBufferView`; got: ' +
+                typeof attachment.data
+            ));
+        }
+        
         var proto = new textsecure.protobuf.AttachmentPointer();
         proto.key = libsignal.crypto.getRandomBytes(64);
 

@@ -3,6 +3,11 @@
 
   console.log('preload');
 
+  const Attachment = window.types.attachment;
+  const Attachments = window.attachments;
+  const Message = window.types.message;
+
+
   window.PROTO_ROOT = '/protos';
   window.wrapDeferred = function(deferred) {
     return new Promise(function(resolve, reject) {
@@ -86,19 +91,32 @@
   window.autoOrientImage = autoOrientImage;
 
   // ES2015+ modules
+  const attachmentsPath = Attachments.getPath(app.getPath('userData'));
+  const deleteAttachmentData = Attachments.deleteData(attachmentsPath);
+  const readAttachmentData = Attachments.readData(attachmentsPath);
+  const writeAttachmentData = Attachments.writeData(attachmentsPath);
+
+  // Injected context functions to keep `Message` agnostic from Electron:
+  const upgradeSchemaContext = {
+    writeAttachmentData,
+  };
+  const upgradeMessageSchema = message =>
+    Message.upgradeSchema(message, upgradeSchemaContext);
+  
   window.Signal = window.Signal || {};
   window.Signal.Logs = window.logs;
   window.Signal.OS = window.os;
   window.Signal.Backup = window.backup;
   window.Signal.Crypto = window.crypto;
-
-  window.Signal.Migrations = window.Signal.Migrations || {};
+  window.Signal.Migrations = {};
+  window.Signal.Migrations.loadAttachmentData = Attachment.loadData(readAttachmentData);
+  window.Signal.Migrations.deleteAttachmentData = Attachment.deleteData(deleteAttachmentData);
+  window.Signal.Migrations.upgradeMessageSchema = upgradeMessageSchema;
   window.Signal.Migrations.V17 = window.migrations.V17;
-  
   window.Signal.Types = window.Signal.Types || {};
-  window.Signal.Types.Attachment = window.types.attachment;
+  window.Signal.Types.Attachment = Attachment;
   window.Signal.Types.Errors = window.types.errors;
-  window.Signal.Types.Message = window.types.message;
+  window.Signal.Types.Message = Message;
   window.Signal.Types.MIME = window.types.mime;
   window.Signal.Types.Settings = window.types.settings;
 })();

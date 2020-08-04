@@ -1,6 +1,8 @@
 /* eslint-env node */
 
 (function () {
+    window.privacy = {};
+
     const compose = window.lodash.flowRight;
     const escapeRegExp = window.lodash.escapeRegExp;
     const isRegExp = window.lodash.isRegExp;
@@ -23,47 +25,45 @@
 
     const REDACTION_PLACEHOLDER = '[REDACTED]';
 
-    window.privacy = {
-        //      redactPhoneNumbers :: String -> String
-        redactPhoneNumbers: (text) => {
-            if (!isString(text)) {
-                throw new TypeError('`text` must be a string');
-            }
+    //      redactPhoneNumbers :: String -> String
+    window.privacy.redactPhoneNumbers = (text) => {
+        if (!isString(text)) {
+            throw new TypeError('"text" must be a string');
+        }
 
-            return text.replace(PHONE_NUMBER_PATTERN, `+${REDACTION_PLACEHOLDER}$1`);
-        },
+        return text.replace(PHONE_NUMBER_PATTERN, `+${REDACTION_PLACEHOLDER}$1`);
+    };
 
-        //      redactGroupIds :: String -> String
-        redactGroupIds: (text) => {
-            if (!isString(text)) {
-                throw new TypeError('`text` must be a string');
-            }
+    //      redactGroupIds :: String -> String
+    window.privacy.redactGroupIds = (text) => {
+        if (!isString(text)) {
+            throw new TypeError('"text" must be a string');
+        }
 
-            return text.replace(
-              GROUP_ID_PATTERN,
-              (match, before, id, after) =>
-                  `${before}${REDACTION_PLACEHOLDER}${id.slice(-3)}${after}`
-            );
-        },
+        return text.replace(
+            GROUP_ID_PATTERN,
+            (match, before, id, after) =>
+                `${before}${REDACTION_PLACEHOLDER}${id.slice(-3)}${after}`
+        );
+    };
 
-        //      redactSensitivePaths :: String -> String
-        redactSensitivePaths: (text) => {
-            if (!isString(text)) {
-                throw new TypeError('`text` must be a string');
-            }
+    //      redactSensitivePaths :: String -> String
+    window.privacy.redactSensitivePaths = (text) => {
+        if (!isString(text)) {
+            throw new TypeError('"text" must be a string');
+        }
 
-            if (!isRegExp(APP_ROOT_PATH_PATTERN)) {
-                return text;
-            }
+        if (!isRegExp(APP_ROOT_PATH_PATTERN)) {
+            return text;
+        }
 
-            return text.replace(APP_ROOT_PATH_PATTERN, REDACTION_PLACEHOLDER);
-        },
-    }
+        return text.replace(APP_ROOT_PATH_PATTERN, REDACTION_PLACEHOLDER);
+    };
 
     //      redactAll :: String -> String
     window.privacy.redactAll = compose(
-          window.privacy.redactSensitivePaths,
-          window.privacy.redactGroupIds,
-          window.privacy.redactPhoneNumbers
-        )
+        window.privacy.redactSensitivePaths,
+        window.privacy.redactGroupIds,
+        window.privacy.redactPhoneNumbers
+    );
 })();

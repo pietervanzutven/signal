@@ -66,6 +66,7 @@
     <AppxManifest Include="package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="app\attachments.js" />
     <Content Include="app\logging.js" />
     <Content Include="app\config.js" />
     <Content Include="background.html" />
@@ -259,12 +260,14 @@
     <Content Include="js\modules\blueimp-load-image\load-image.js" />
     <Content Include="js\modules\debuglogs.js" />
     <Content Include="js\modules\form-data\form-data.js" />
+    <Content Include="js\modules\fs_extra.js" />
     <Content Include="js\modules\global_errors.js" />
     <Content Include="js\modules\google-libphonenumber\libphonenumber.js" />
     <Content Include="js\modules\got\got.js" />
     <Content Include="js\modules\indexedDB.js" />
     <Content Include="js\modules\lodash\escapeRegExp.js" />
     <Content Include="js\modules\lodash\flowRight.js" />
+    <Content Include="js\modules\lodash\isArrayBuffer.js" />
     <Content Include="js\modules\lodash\isFunction.js" />
     <Content Include="js\modules\lodash\isNumber.js" />
     <Content Include="js\modules\lodash\isRegExp.js" />
@@ -273,8 +276,10 @@
     <Content Include="js\modules\logs.js" />
     <Content Include="js\modules\migrations\17\index.js" />
     <Content Include="js\modules\os.js" />
+    <Content Include="js\modules\path.js" />
     <Content Include="js\modules\privacy.js" />
     <Content Include="js\modules\types\attachment.js" />
+    <Content Include="js\modules\types\attachment\migrate_data_to_file_system.js" />
     <Content Include="js\modules\types\errors.js" />
     <Content Include="js\modules\types\message.js" />
     <Content Include="js\modules\types\mime.js" />
