@@ -2,17 +2,21 @@
 
 (function () {
     window.privacy = {};
+    
+    const Path = window.path;
 
-    const compose = window.lodash.flowRight;
-    const escapeRegExp = window.lodash.escapeRegExp;
-    const isRegExp = window.lodash.isRegExp;
-    const isString = window.lodash.isString;
+    const {
+        escapeRegExp,
+        isRegExp,
+        isString,
+        } = window.lodash;
+    const { compose } = window.lodash.fp;
 
 
     const PHONE_NUMBER_PATTERN = /\+\d{7,12}(\d{3})/g;
     const GROUP_ID_PATTERN = /(group\()([^)]+)(\))/g;
 
-    const APP_ROOT_PATH = Windows.ApplicationModel.Package.current.installedLocation.path;
+    const APP_ROOT_PATH = Path.join(__dirname, '..', '..', '..');
     const APP_ROOT_PATH_PATTERN = (() => {
         try {
             // Safe `String::replaceAll`:
@@ -41,9 +45,9 @@
         }
 
         return text.replace(
-            GROUP_ID_PATTERN,
-            (match, before, id, after) =>
-                `${before}${REDACTION_PLACEHOLDER}${id.slice(-3)}${after}`
+          GROUP_ID_PATTERN,
+          (match, before, id, after) =>
+              `${before}${REDACTION_PLACEHOLDER}${id.slice(-3)}${after}`
         );
     };
 
@@ -62,8 +66,8 @@
 
     //      redactAll :: String -> String
     window.privacy.redactAll = compose(
-        window.privacy.redactSensitivePaths,
-        window.privacy.redactGroupIds,
-        window.privacy.redactPhoneNumbers
+      window.privacy.redactSensitivePaths,
+      window.privacy.redactGroupIds,
+      window.privacy.redactPhoneNumbers
     );
 })();

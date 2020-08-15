@@ -1,5 +1,6 @@
 (function () {
     window.lodash = window.lodash || {};
+    window.lodash.fp = {};
 
     /**
     * lodash (Custom Build) <https://lodash.com/>
@@ -442,5 +443,5 @@
      */
     var flowRight = createFlow(true);
 
-    window.lodash.flowRight = flowRight;
+    window.lodash.fp.compose = flowRight;
 })();

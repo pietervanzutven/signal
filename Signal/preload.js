@@ -6,14 +6,13 @@
   const Attachment = window.types.attachment;
   const Attachments = window.attachments;
   const Message = window.types.message;
+  const { deferredToPromise } = window.deferred_to_promise;
+
 
 
   window.PROTO_ROOT = '/protos';
-  window.wrapDeferred = function(deferred) {
-    return new Promise(function(resolve, reject) {
-      deferred.then(resolve, reject);
-    });
-  };
+  window.config = window.config || {};
+  window.wrapDeferred = deferredToPromise;
 
   window.config.localeMessages = ipc.sendSync('locale-data');
 
@@ -108,13 +107,19 @@
   window.Signal = {};
   window.Signal.Backup = window.backup;
   window.Signal.Crypto = window.crypto;
+  window.Signal.Database = window.database;
+  window.Signal.Debug = window.debug;
   window.Signal.Logs = window.logs;
   window.Signal.Migrations = {};
   window.Signal.Migrations.loadAttachmentData = Attachment.loadData(readAttachmentData);
   window.Signal.Migrations.deleteAttachmentData = Attachment.deleteData(deleteAttachmentData);
   window.Signal.Migrations.upgradeMessageSchema = upgradeMessageSchema;
-  window.Signal.Migrations.V17 = window.migrations.V17;
+  window.Signal.Migrations.Migrations0DatabaseWithAttachmentData =
+    window.migrations.migrations_0_database_with_attachment_data;
+  window.Signal.Migrations.Migrations1DatabaseWithoutAttachmentData =
+    window.migrations.migrations_1_database_without_attachment_data;
   window.Signal.OS = window.os;
+  window.Signal.Settings = window.settings;
   window.Signal.Types = {};
   window.Signal.Types.Attachment = Attachment;
   window.Signal.Types.Errors = window.types.errors;

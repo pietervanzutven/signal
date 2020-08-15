@@ -1,5 +1,10 @@
-﻿(function () {
+﻿'use strict';
+
+(function () {
     window.path = {
-        join: (path1, path2) => path1 === '' ? path2 : path1 + '/' + path2,
+        join: function () {
+            return Array.prototype.slice.call(arguments).join('/');
+        },
     }
+    window.__dirname = 'ms-appx://';
 })();

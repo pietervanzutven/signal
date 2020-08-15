@@ -43,6 +43,7 @@
         this.transaction = function (storeName, readwrite) {
             return new IDBTransaction(this, storeName);
         }
+        this.close = function () { };
     }
 
     function IDBRequest() {

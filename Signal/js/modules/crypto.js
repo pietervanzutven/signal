@@ -39,6 +39,8 @@
     window.crypto.trimBytes = trimBytes;
     window.crypto.verifyAccessKey = verifyAccessKey;
 
+    window.crypto.randomBytes = n => Buffer.from(window.crypto.getRandomBytes(n));
+
     function typedArrayToArrayBuffer(typedArray) {
         const { buffer, byteOffset, byteLength } = typedArray;
         return buffer.slice(byteOffset, byteLength + byteOffset);

@@ -11,17 +11,20 @@
 /* global Whisper: false */
 /* global wrapDeferred: false */
 
-;(function() {
+;(async function() {
     'use strict';
 
     const { IdleDetector, MessageDataMigrator } = Signal.Workflow;
     const { Errors, Message } = window.Signal.Types;
     const { upgradeMessageSchema } = window.Signal.Migrations;
+    const {
+        Migrations0DatabaseWithAttachmentData,
+        // Migrations1DatabaseWithoutAttachmentData,
+    } = window.Signal.Migrations;
     const { Views } = window.Signal;
 
     // Implicitly used in `indexeddb-backbonejs-adapter`:
     // https://github.com/signalapp/Signal-Desktop/blob/4033a9f8137e62ed286170ed5d4941982b1d3a64/components/indexeddb-backbonejs-adapter/backbone-indexeddb.js#L569
-
     window.onInvalidStateError = function(e) {
         console.log(e);
     };
@@ -76,22 +79,40 @@
         return accountManager;
     };
 
+    /* eslint-enable */
     const cancelInitializationMessage = Views.Initialization.setMessage();
     console.log('Start IndexedDB migrations');
+
+    console.log('Migrate database with attachments');
+    await Migrations0DatabaseWithAttachmentData.run({ Backbone });
+
+    // console.log('Migrate attachments to disk');
+    // const database = Migrations0DatabaseWithAttachmentData.getDatabase();
+    // await MessageDataMigrator.processAll({
+    //   Backbone,
+    //   databaseName: database.name,
+    //   minDatabaseVersion: database.version,
+    //   upgradeMessageSchema,
+    // });
+
+    // console.log('Migrate database without attachments');
+    // await Migrations1DatabaseWithoutAttachmentData.run({
+    //   Backbone,
+    //   database: Whisper.Database,
+    // });
+
+    console.log('Storage fetch');
     storage.fetch();
 
-
-    /* eslint-enable */
-    /* jshint ignore:start */
-    const NUM_MESSAGE_UPGRADES_PER_IDLE = 2;
     const idleDetector = new IdleDetector();
+
+    const NUM_MESSAGE_UPGRADES_PER_IDLE = 2;
     idleDetector.on('idle', async () => {
         const results = await MessageDataMigrator.processNext({
             BackboneMessage: Whisper.Message,
             BackboneMessageCollection: Whisper.MessageCollection,
             count: NUM_MESSAGE_UPGRADES_PER_IDLE,
             upgradeMessageSchema,
-            wrapDeferred,
         });
         console.log('Upgrade message schema:', results);
 
@@ -99,7 +120,6 @@
             idleDetector.stop();
         }
     });
-    /* jshint ignore:end */
     /* eslint-disable */
 
     // We need this 'first' check because we don't want to start the app up any other time
@@ -576,7 +596,6 @@
     }
 
     /* eslint-enable */
-    /* jshint ignore:start */
 
     // Descriptors
     const getGroupDescriptor = group => ({
@@ -614,6 +633,7 @@
             if (isProfileUpdate) {
                 return handleProfileUpdate({ data, confirm, messageDescriptor });
             }
+
             const message = createMessage(data);
             const isDuplicate = await isMessageDuplicate(message);
             if (isDuplicate) {
@@ -684,7 +704,6 @@
         getMessageDescriptor: getDescriptorForSent,
         createMessage: createSentMessage,
     });
-    /* jshint ignore:end */
     /* eslint-disable */
 
     function isMessageDuplicate(message) {
@@ -822,10 +841,10 @@
         var receipt = Whisper.ReadReceipts.add({
             reader    : reader,
             timestamp : timestamp,
-            read_at   : read_at
+            read_at   : read_at,
         });
 
-        ev.confirm();
+        receipt.on('remove', ev.confirm);
 
         // Calling this directly so we can wait for completion
         return Whisper.ReadReceipts.onReceipt(receipt);
@@ -842,6 +861,7 @@
             timestamp : timestamp,
             read_at   : read_at
         });
+
         receipt.on('remove', ev.confirm);
 
         // Calling this directly so we can wait for completion
@@ -910,7 +930,7 @@
             source: deliveryReceipt.source
         });
 
-        receipt.on('remove', ev.confirm);
+        ev.confirm();
 
         // Calling this directly so we can wait for completion
         return Whisper.DeliveryReceipts.onReceipt(receipt);
