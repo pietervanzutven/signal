@@ -1,8 +1,8 @@
+/* global Whisper: false */
+/* global window: false */
+
 (function () {
     'use strict';
-    
-    /* global Whisper: false */
-    /* global window: false */
 
     console.log('preload');
 
@@ -104,7 +104,7 @@
     const upgradeMessageSchema = message =>
         Message.upgradeSchema(message, upgradeSchemaContext);
 
-    const { getPlaceholderMigrations } = 
+    const { getPlaceholderMigrations } =
         window.migrations.get_placeholder_migrations;
     const { IdleDetector } = window.idle_detector;
 
@@ -128,6 +128,7 @@
     window.Signal.Migrations.upgradeMessageSchema = upgradeMessageSchema;
     window.Signal.OS = window.os;
     window.Signal.Settings = window.settings;
+    window.Signal.Startup = window.startup;
 
     window.Signal.Types = {};
     window.Signal.Types.Attachment = Attachment;
@@ -144,4 +145,5 @@
     window.Signal.Workflow.IdleDetector = IdleDetector;
     window.Signal.Workflow.MessageDataMigrator =
         window.messages_data_migrator;
+
 })();

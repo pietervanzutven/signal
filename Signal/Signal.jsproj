@@ -232,6 +232,7 @@
     <Content Include="index.html" />
     <Content Include="js\background.js" />
     <Content Include="js\background_task.js" />
+    <Content Include="js\modules\sindresorhus\is.js" />
     <Content Include="js\modules\backup.js" />
     <Content Include="js\chromium.js" />
     <Content Include="js\components.js" />
@@ -297,6 +298,7 @@
     <Content Include="js\modules\privacy.js" />
     <Content Include="js\modules\settings.js" />
     <Content Include="js\modules\sleep.js" />
+    <Content Include="js\modules\startup.js" />
     <Content Include="js\modules\to-arraybuffer\to-arraybuffer.js" />
     <Content Include="js\modules\types\attachment.js" />
     <Content Include="js\modules\types\attachment\migrate_data_to_file_system.js" />

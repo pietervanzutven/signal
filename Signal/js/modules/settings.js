@@ -1,4 +1,6 @@
 (function () {
+    'use strict';
+    
     window.settings = {};
 
     const { isObject, isString } = window.lodash;
@@ -9,6 +11,8 @@
     const IS_MIGRATION_COMPLETE_KEY = 'attachmentMigration_isComplete';
 
     // Public API
+    window.settings.READ_RECEIPT_CONFIGURATION_SYNC = 'read-receipt-configuration-sync';
+
     window.settings.getAttachmentMigrationLastProcessedIndex = connection =>
         window.settings._getItem(connection, LAST_PROCESSED_INDEX_KEY);
 
