@@ -2,7 +2,7 @@
   window.types = window.types || {};
   window.types.message = {};
 
-  const { isFunction } = window.lodash;
+  const { isFunction, isString, omit } = window.lodash;
 
   const Attachment = window.types.attachment;
   const Errors = window.types.errors;
@@ -170,14 +170,73 @@
   );
 
   // UpgradeStep
-  window.types.message.upgradeSchema = async (message, { writeAttachmentData } = {}) => {
-    if (!isFunction(writeAttachmentData)) {
-      throw new TypeError('`context.writeAttachmentData` is required');
+  window.types.message.upgradeSchema = async (message, { writeNewAttachmentData } = {}) => {
+    if (!isFunction(writeNewAttachmentData)) {
+      throw new TypeError('`context.writeNewAttachmentData` is required');
     }
 
     return toVersion3(
       await toVersion2(await toVersion1(await toVersion0(message))),
-      { writeAttachmentData }
+      { writeNewAttachmentData }
     );
+  };
+
+  window.types.message.createAttachmentLoader = (loadAttachmentData) => {
+    if (!isFunction(loadAttachmentData)) {
+      throw new TypeError('`loadAttachmentData` is required');
+    }
+
+    return async message => (Object.assign({}, message, {
+      attachments: await Promise.all(message.attachments.map(loadAttachmentData)),
+    }));
+  };
+
+  //      createAttachmentDataWriter :: (RelativePath -> IO Unit)
+  //                                    Message ->
+  //                                    IO (Promise Message)
+  window.types.message.createAttachmentDataWriter = (writeExistingAttachmentData) => {
+    if (!isFunction(writeExistingAttachmentData)) {
+      throw new TypeError('"writeExistingAttachmentData" must be a function');
+    }
+
+    return async (rawMessage) => {
+      if (!window.types.message.isValid(rawMessage)) {
+        throw new TypeError('"rawMessage" is not valid');
+      }
+
+      const message = window.types.message.initializeSchemaVersion(rawMessage);
+
+      const { attachments } = message;
+      const hasAttachments = attachments && attachments.length > 0;
+      if (!hasAttachments) {
+        return message;
+      }
+
+      const lastVersionWithAttachmentDataInMemory = 2;
+      const willAttachmentsGoToFileSystemOnUpgrade =
+        message.schemaVersion <= lastVersionWithAttachmentDataInMemory;
+      if (willAttachmentsGoToFileSystemOnUpgrade) {
+        return message;
+      }
+
+      attachments.forEach((attachment) => {
+        if (!Attachment.hasData(attachment)) {
+          throw new TypeError('"attachment.data" is required during message import');
+        }
+
+        if (!isString(attachment.path)) {
+          throw new TypeError('"attachment.path" is required during message import');
+        }
+      });
+
+      const messageWithoutAttachmentData = Object.assign({}, message, {
+        attachments: await Promise.all(attachments.map(async (attachment) => {
+          await writeExistingAttachmentData(attachment);
+          return omit(attachment, ['data']);
+        })),
+      });
+
+      return messageWithoutAttachmentData;
+    };
   };
 })();
