@@ -156,6 +156,8 @@ function setupMenu(options) { }
 
 window.config.name = Windows.ApplicationModel.Package.current.id.name;
 
+window.config.locale = Windows.Globalization.ApplicationLanguages.languages[0];
+
 window.config.version = app.getVersion();
 
 var version = Windows.System.Profile.AnalyticsInfo.versionInfo.deviceFamilyVersion;
