@@ -92,6 +92,8 @@ var ipc = {
     }
 }
 
+window.requestIdleCallback = () => {};
+
 const Attachments = window.attachments;
 
 let tray = null;
