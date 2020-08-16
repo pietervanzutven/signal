@@ -315,6 +315,7 @@
     <Content Include="js\views\app_view.js" />
     <Content Include="js\views\debug_log_view.js" />
     <Content Include="js\views\import_view.js" />
+    <Content Include="js\views\react_wrapper_view.js" />
     <Content Include="js\views\standalone_registration_view.js" />
     <Content Include="libtextsecure\event_target.js" />
     <Content Include="main.js" />
