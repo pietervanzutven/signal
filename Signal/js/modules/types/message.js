@@ -1,4 +1,6 @@
 (function () {
+  'use strict';
+
   window.types = window.types || {};
   window.types.message = {};
 
@@ -85,10 +87,10 @@
   // SchemaVersion -> UpgradeStep -> UpgradeStep
   window.types.message._withSchemaVersion = (schemaVersion, upgrade) => {
     if (!SchemaVersion.isValid(schemaVersion)) {
-      throw new TypeError('"schemaVersion" is invalid');
+      throw new TypeError("'schemaVersion' is invalid");
     }
     if (!isFunction(upgrade)) {
-      throw new TypeError('"upgrade" must be a function');
+      throw new TypeError("'upgrade' must be a function");
     }
 
     return async (message, context) => {
@@ -196,12 +198,12 @@
   //                                    IO (Promise Message)
   window.types.message.createAttachmentDataWriter = (writeExistingAttachmentData) => {
     if (!isFunction(writeExistingAttachmentData)) {
-      throw new TypeError('"writeExistingAttachmentData" must be a function');
+      throw new TypeError("'writeExistingAttachmentData' must be a function");
     }
 
     return async (rawMessage) => {
       if (!window.types.message.isValid(rawMessage)) {
-        throw new TypeError('"rawMessage" is not valid');
+        throw new TypeError("'rawMessage' is not valid");
       }
 
       const message = window.types.message.initializeSchemaVersion(rawMessage);
@@ -221,11 +223,11 @@
 
       attachments.forEach((attachment) => {
         if (!Attachment.hasData(attachment)) {
-          throw new TypeError('"attachment.data" is required during message import');
+          throw new TypeError("'attachment.data' is required during message import");
         }
 
         if (!isString(attachment.path)) {
-          throw new TypeError('"attachment.path" is required during message import');
+          throw new TypeError("'attachment.path' is required during message import");
         }
       });
 

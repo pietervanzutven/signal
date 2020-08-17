@@ -1,4 +1,6 @@
 (function () {
+  'use strict';
+
   window.types = window.types || {};
   window.types.attachment = window.types.attachment || {};
 
@@ -120,12 +122,12 @@
   //                  IO (Promise Attachment)
   window.types.attachment.loadData = (readAttachmentData) => {
     if (!isFunction(readAttachmentData)) {
-      throw new TypeError('"readAttachmentData" must be a function');
+      throw new TypeError("'readAttachmentData' must be a function");
     }
 
     return async (attachment) => {
       if (!window.types.attachment.isValid(attachment)) {
-        throw new TypeError('"attachment" is not valid');
+        throw new TypeError("'attachment' is not valid");
       }
 
       const isAlreadyLoaded = window.types.attachment.hasData(attachment);
@@ -134,11 +136,7 @@
       }
 
       if (!isString(attachment.path)) {
-          if (isString(attachment.data)) {
-              attachment.path = '../' + attachment.data;
-          } else {
-              throw new TypeError('"attachment.path" is required');
-          }
+        throw new TypeError("'attachment.path' is required");
       }
 
       const data = await readAttachmentData(attachment.path);
@@ -151,12 +149,12 @@
   //                    IO Unit
   window.types.attachment.deleteData = (deleteAttachmentData) => {
     if (!isFunction(deleteAttachmentData)) {
-      throw new TypeError('"deleteAttachmentData" must be a function');
+      throw new TypeError("'deleteAttachmentData' must be a function");
     }
 
     return async (attachment) => {
       if (!window.types.attachment.isValid(attachment)) {
-        throw new TypeError('"attachment" is not valid');
+        throw new TypeError("'attachment' is not valid");
       }
 
       const hasDataInMemory = window.types.attachment.hasData(attachment);
@@ -165,7 +163,7 @@
       }
 
       if (!isString(attachment.path)) {
-        throw new TypeError('"attachment.path" is required');
+        throw new TypeError("'attachment.path' is required");
       }
 
       await deleteAttachmentData(attachment.path);

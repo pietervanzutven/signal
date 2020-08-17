@@ -22,7 +22,7 @@
   //                                 Promise Attachment
   window.types.attachment.migrate_data_to_file_system.migrateDataToFileSystem = async (attachment, { writeNewAttachmentData } = {}) => {
     if (!isFunction(writeNewAttachmentData)) {
-      throw new TypeError('"writeNewAttachmentData" must be a function');
+      throw new TypeError("'writeNewAttachmentData' must be a function");
     }
 
     const { data } = attachment;
