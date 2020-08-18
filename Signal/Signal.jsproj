@@ -232,7 +232,11 @@
     <Content Include="index.html" />
     <Content Include="js\background.js" />
     <Content Include="js\background_task.js" />
+    <Content Include="js\modules\html\html.js" />
     <Content Include="js\modules\i18n.js" />
+    <Content Include="js\modules\linkify-it\linkify-it.js" />
+    <Content Include="js\modules\linkify-it\re.js" />
+    <Content Include="js\modules\link_text.js" />
     <Content Include="js\modules\moment\moment.js" />
     <Content Include="js\modules\react\react.js" />
     <Content Include="js\modules\react\react_dom.js" />
@@ -311,6 +315,12 @@
     <Content Include="js\modules\types\mime.js" />
     <Content Include="js\modules\types\schema_version.js" />
     <Content Include="js\modules\types\settings.js" />
+    <Content Include="js\modules\uc.micro\categories\Cc\regex.js" />
+    <Content Include="js\modules\uc.micro\categories\Cf\regex.js" />
+    <Content Include="js\modules\uc.micro\categories\P\regex.js" />
+    <Content Include="js\modules\uc.micro\categories\Z\regex.js" />
+    <Content Include="js\modules\uc.micro\properties\Any\regex.js" />
+    <Content Include="js\modules\uc.micro\uc.micro.js" />
     <Content Include="js\modules\views\initialization.js" />
     <Content Include="js\Mp3LameEncoder.min.js" />
     <Content Include="js\views\app_view.js" />
