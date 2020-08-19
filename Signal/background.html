@@ -20,7 +20,13 @@
   <title>Signal</title>
   <link href='images/icon_128.png' rel='shortcut icon'>
   <link href="stylesheets/manifest.css" rel="stylesheet" type="text/css" />
-  <script type='text/x-tmpl-mustache' id='app-import-screen'>
+
+  <!-- When making changes to these templates, be sure to update these two places:
+    1) test/styleguide/legacy_templates.js
+    2) test/index.html
+  -->
+
+  <script type='text/x-tmpl-mustache' id='app-migration-screen'>
     <div class='content'>
       <img src='images/icon_128.png'>
       {{ ^hideProgress }}
@@ -555,7 +561,7 @@
         <hr>
         <p> {{ debugLogExplanation }}</p>
       </div>
-      <textarea spellcheck='false' rows='5'></textarea>
+      <textarea spellcheck='false' rows='5' wrap='off'></textarea>
       <div class='buttons'>
         <button class='grey submit'>{{ submit }}</button>
       </div>
@@ -1070,6 +1076,7 @@
   <script type='text/javascript' src='js/modules/types/message.js'></script>
   <script type='text/javascript' src='js/modules/types/settings.js'></script>
   <script type='text/javascript' src='js/modules/types/errors.js'></script>
+  <script type='text/javascript' src='js/modules/types/Conversation.js'></script>
   <script type='text/javascript' src='js/modules/form-data/form-data.js'></script>
   <script type='text/javascript' src='js/modules/got/got.js'></script>
   <script type='text/javascript' src='js/modules/debuglogs.js'></script>
@@ -1091,6 +1098,21 @@
   <script type='text/javascript' src='js/modules/sleep.js'></script>
   <script type='text/javascript' src='js/modules/startup.js'></script>
   <script type='text/javascript' src='js/modules/views/initialization.js'></script>
+  <script type='text/javascript' src='js/modules/i18n.js'></script>
+  <script type='text/javascript' src='js/modules/react/react.js'></script>
+  <script type='text/javascript' src='js/modules/react/react_dom.js'></script>
+  <script type='text/javascript' src='js/modules/moment/moment.js'></script>
+  <script type='text/javascript' src='js/modules/string_to_array_buffer.js'></script>
+  <script type='text/javascript' src='js/modules/uc.micro/categories/Cc/regex.js'></script>
+  <script type='text/javascript' src='js/modules/uc.micro/categories/Cf/regex.js'></script>
+  <script type='text/javascript' src='js/modules/uc.micro/categories/P/regex.js'></script>
+  <script type='text/javascript' src='js/modules/uc.micro/categories/Z/regex.js'></script>
+  <script type='text/javascript' src='js/modules/uc.micro/properties/Any/regex.js'></script>
+  <script type='text/javascript' src='js/modules/uc.micro/uc.micro.js'></script>
+  <script type='text/javascript' src='js/modules/linkify-it/re.js'></script>
+  <script type='text/javascript' src='js/modules/linkify-it/linkify-it.js'></script>
+  <script type='text/javascript' src='js/modules/link_text.js'></script>
+  <script type='text/javascript' src='js/modules/html/html.js'></script>
 
   <script type='text/javascript' src='app/attachments.js'></script>
   <script type='text/javascript' src='app/logging.js'></script>
@@ -1129,8 +1151,8 @@
   <script type='text/javascript' src='js/registration.js'></script>
   <script type='text/javascript' src='js/expire.js'></script>
   <script type='text/javascript' src='js/conversation_controller.js'></script>
-  <script type='text/javascript' src='js/i18n.js'></script>
 
+  <script type='text/javascript' src='js/views/react_wrapper_view.js'></script>
   <script type='text/javascript' src='js/views/whisper_view.js'></script>
   <script type='text/javascript' src='js/views/last_seen_indicator_view.js'></script>
   <script type='text/javascript' src='js/views/scroll_down_button_view.js'></script>

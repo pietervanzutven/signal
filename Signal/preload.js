@@ -91,6 +91,30 @@
   window.dataURLToBlobSync = window.blueimp_canvas_to_blob;
   window.loadImage = window.blueimp_load_image;
 
+  // Note: when modifying this file, consider whether our React Components or Backbone Views
+  //   will need these things to render in the Style Guide. If so, go update one of these
+  //   two locations:
+  //
+  //   1) test/styleguide/legacy_bridge.js
+  //   2) ts/styleguide/StyleGuideUtil.js
+
+  window.React = window.react.react;
+  window.ReactDOM = window.react.react_dom;
+  window.moment = window.moment.moment;
+
+  const { setup } = window.i18n;
+
+  const { locale, localeMessages } = window.config;
+  window.i18n = setup(locale, localeMessages);
+  window.moment.updateLocale(locale, {
+    relativeTime: {
+      s: window.i18n('timestamp_s'),
+      m: window.i18n('timestamp_m'),
+      h: window.i18n('timestamp_h'),
+    },
+  });
+  window.moment.locale(locale);
+
   // ES2015+ modules
   const attachmentsPath = Attachments.getPath(app.getPath('userData'));
   const deleteAttachmentData = Attachments.createDeleter(attachmentsPath);
@@ -116,7 +140,10 @@
   window.Signal.Crypto = window.crypto;
   window.Signal.Database = window.database;
   window.Signal.Debug = window.debug;
+  window.Signal.HTML = window.html.html;
   window.Signal.Logs = window.logs;
+
+  window.Signal.Components = {};
 
   window.Signal.Migrations = {};
   window.Signal.Migrations.deleteAttachmentData =
@@ -138,6 +165,7 @@
 
   window.Signal.Types = {};
   window.Signal.Types.Attachment = Attachment;
+  window.Signal.Types.Conversation = window.types.Conversation;
   window.Signal.Types.Errors = window.types.errors;
 
   window.Signal.Types.Message = Message;

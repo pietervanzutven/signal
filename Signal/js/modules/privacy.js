@@ -1,73 +1,94 @@
 /* eslint-env node */
 
 (function () {
-    window.privacy = {};
-    
-    const Path = window.path;
+  'use strict';
 
-    const {
-        escapeRegExp,
-        isRegExp,
-        isString,
-        } = window.lodash;
-    const { compose } = window.lodash.fp;
+  window.privacy = {};
+
+  const is = window.sindresorhus.is;
+  const path = window.path;
+
+  const { compose } = window.lodash.fp;
+  const { escapeRegExp } = window.lodash;
 
 
-    const PHONE_NUMBER_PATTERN = /\+\d{7,12}(\d{3})/g;
-    const GROUP_ID_PATTERN = /(group\()([^)]+)(\))/g;
+  const APP_ROOT_PATH = path.join(__dirname, '..', '..', '..');
+  const PHONE_NUMBER_PATTERN = /\+\d{7,12}(\d{3})/g;
+  const GROUP_ID_PATTERN = /(group\()([^)]+)(\))/g;
+  const REDACTION_PLACEHOLDER = '[REDACTED]';
 
-    const APP_ROOT_PATH = Path.join(__dirname, '..', '..', '..');
-    const APP_ROOT_PATH_PATTERN = (() => {
-        try {
-            // Safe `String::replaceAll`:
-            // https://github.com/lodash/lodash/issues/1084#issuecomment-86698786
-            return new RegExp(escapeRegExp(APP_ROOT_PATH), 'g');
-        } catch (error) {
-            return null;
-        }
-    })();
 
-    const REDACTION_PLACEHOLDER = '[REDACTED]';
+  //      _redactPath :: Path -> String -> String
+  window.privacy._redactPath = (filePath) => {
+    if (!is.string(filePath)) {
+      throw new TypeError("'filePath' must be a string");
+    }
 
-    //      redactPhoneNumbers :: String -> String
-    window.privacy.redactPhoneNumbers = (text) => {
-        if (!isString(text)) {
-            throw new TypeError('"text" must be a string');
-        }
+    const filePathPattern = window.privacy._pathToRegExp(filePath);
 
-        return text.replace(PHONE_NUMBER_PATTERN, `+${REDACTION_PLACEHOLDER}$1`);
+    return (text) => {
+      if (!is.string(text)) {
+        throw new TypeError("'text' must be a string");
+      }
+
+      if (!is.regExp(filePathPattern)) {
+        return text;
+      }
+
+      return text.replace(filePathPattern, REDACTION_PLACEHOLDER);
     };
+  };
 
-    //      redactGroupIds :: String -> String
-    window.privacy.redactGroupIds = (text) => {
-        if (!isString(text)) {
-            throw new TypeError('"text" must be a string');
-        }
+  //      _pathToRegExp :: Path -> Maybe RegExp
+  window.privacy._pathToRegExp = (filePath) => {
+    try {
+      const pathWithNormalizedSlashes = filePath.replace(/\//g, '\\');
+      const pathWithEscapedSlashes = filePath.replace(/\\/g, '\\\\');
+      const urlEncodedPath = encodeURI(filePath);
+      // Safe `String::replaceAll`:
+      // https://github.com/lodash/lodash/issues/1084#issuecomment-86698786
+      const patternString = [
+        filePath,
+        pathWithNormalizedSlashes,
+        pathWithEscapedSlashes,
+        urlEncodedPath,
+      ].map(escapeRegExp).join('|');
+      return new RegExp(patternString, 'g');
+    } catch (error) {
+      return null;
+    }
+  };
 
-        return text.replace(
-          GROUP_ID_PATTERN,
-          (match, before, id, after) =>
-              `${before}${REDACTION_PLACEHOLDER}${id.slice(-3)}${after}`
-        );
-    };
+  // Public API
+  //      redactPhoneNumbers :: String -> String
+  window.privacy.redactPhoneNumbers = (text) => {
+    if (!is.string(text)) {
+      throw new TypeError("'text' must be a string");
+    }
 
-    //      redactSensitivePaths :: String -> String
-    window.privacy.redactSensitivePaths = (text) => {
-        if (!isString(text)) {
-            throw new TypeError('"text" must be a string');
-        }
+    return text.replace(PHONE_NUMBER_PATTERN, `+${REDACTION_PLACEHOLDER}$1`);
+  };
 
-        if (!isRegExp(APP_ROOT_PATH_PATTERN)) {
-            return text;
-        }
+  //      redactGroupIds :: String -> String
+  window.privacy.redactGroupIds = (text) => {
+    if (!is.string(text)) {
+      throw new TypeError("'text' must be a string");
+    }
 
-        return text.replace(APP_ROOT_PATH_PATTERN, REDACTION_PLACEHOLDER);
-    };
-
-    //      redactAll :: String -> String
-    window.privacy.redactAll = compose(
-      window.privacy.redactSensitivePaths,
-      window.privacy.redactGroupIds,
-      window.privacy.redactPhoneNumbers
+    return text.replace(
+      GROUP_ID_PATTERN,
+      (match, before, id, after) =>
+        `${before}${REDACTION_PLACEHOLDER}${id.slice(-3)}${after}`
     );
+  };
+
+  //      redactSensitivePaths :: String -> String
+  window.privacy.redactSensitivePaths = window.privacy._redactPath(APP_ROOT_PATH);
+
+  //      redactAll :: String -> String
+  window.privacy.redactAll = compose(
+    window.privacy.redactSensitivePaths,
+    window.privacy.redactGroupIds,
+    window.privacy.redactPhoneNumbers
+  );
 })();

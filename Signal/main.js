@@ -92,6 +92,8 @@ var ipc = {
     }
 }
 
+window.requestIdleCallback = () => {};
+
 const Attachments = window.attachments;
 
 let tray = null;
@@ -155,6 +157,8 @@ function showAbout() {
 function setupMenu(options) { }
 
 window.config.name = Windows.ApplicationModel.Package.current.id.name;
+
+window.config.locale = Windows.Globalization.ApplicationLanguages.languages[0];
 
 window.config.version = app.getVersion();
 
