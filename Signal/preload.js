@@ -165,6 +165,7 @@
 
   window.Signal.Types = {};
   window.Signal.Types.Attachment = Attachment;
+  window.Signal.Types.Conversation = window.types.Conversation;
   window.Signal.Types.Errors = window.types.errors;
 
   window.Signal.Types.Message = Message;
