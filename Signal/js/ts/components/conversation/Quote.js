@@ -1,9 +1,10 @@
 (function () {
     "use strict";
 
-    window.components = window.components || {};
-    window.components.conversation = window.components.conversation || {};
-    const exports = window.components.conversation.quote = {};
+    window.ts = window.ts || {};
+    window.ts.components = window.ts.components || {};
+    window.ts.components.conversation = window.ts.components.conversation || {};
+    const exports = window.ts.components.conversation.quote = {};
 
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };

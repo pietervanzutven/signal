@@ -140,10 +140,10 @@
   window.Signal.Crypto = window.crypto;
   window.Signal.Database = window.database;
   window.Signal.Debug = window.debug;
-  window.Signal.HTML = window.html.html;
+  window.Signal.HTML = window.ts.html;
   window.Signal.Logs = window.logs;
 
-  const { Quote } = window.components.conversation.quote;
+  const { Quote } = window.ts.components.conversation.Quote;
 
   window.Signal.Components = {
     Quote,
@@ -169,7 +169,7 @@
 
   window.Signal.Types = {};
   window.Signal.Types.Attachment = Attachment;
-  window.Signal.Types.Conversation = window.types.Conversation;
+  window.Signal.Types.Conversation = window.ts.types.Conversation;
   window.Signal.Types.Errors = window.types.errors;
 
   window.Signal.Types.Message = Message;

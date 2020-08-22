@@ -1,8 +1,9 @@
 (function () {
     "use strict";
 
-    window.types = window.types || {};
-    const exports = window.types.Conversation = {};
+    window.ts = window.ts || {};
+    window.ts.types = window.ts.types || {};
+    const exports = window.ts.types.Conversation = {};
 
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
