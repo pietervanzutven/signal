@@ -57,7 +57,7 @@
             if (mime_1.default.isVideo(contentType)) {
                 return objectUrl
                     ? this.renderImage(objectUrl, 'play')
-                    : this.renderIcon('play');
+                    : this.renderIcon('movie');
             }
             if (mime_1.default.isImage(contentType)) {
                 return objectUrl
@@ -72,7 +72,7 @@
         renderText() {
             const { i18n, text, attachments } = this.props;
             if (text) {
-                return react_1.default.createElement("div", { className: "text" }, text);
+                return react_1.default.createElement("div", { className: "text", dangerouslySetInnerHTML: { __html: text } });
             }
             if (!attachments || attachments.length === 0) {
                 return null;
@@ -104,6 +104,21 @@
                 : i18n('replyingTo', [authorName]);
             return react_1.default.createElement("div", { className: "ios-label" }, label);
         }
+        renderClose() {
+            const { onClose } = this.props;
+            if (!onClose) {
+                return null;
+            }
+            // We don't want the overall click handler for the quote to fire, so we stop
+            //   propagation before handing control to the caller's callback.
+            const onClick = (e) => {
+                e.stopPropagation();
+                onClose();
+            };
+            // We need the container to give us the flexibility to implement the iOS design.
+            return (react_1.default.createElement("div", { className: "close-container" },
+                react_1.default.createElement("div", { className: "close-button", onClick: onClick })));
+        }
         render() {
             const { authorTitle, authorProfileName, authorColor, onClick, isFromMe, } = this.props;
             if (!validateQuote(this.props)) {
@@ -114,7 +129,7 @@
                     "~",
                     authorProfileName)
                 : null;
-            const classes = classnames_1.default(authorColor, 'quote', isFromMe ? 'from-me' : null, !onClick ? 'no-click' : null);
+            const classes = classnames_1.default(authorColor, 'quoted-message', isFromMe ? 'from-me' : null, !onClick ? 'no-click' : null);
             return (react_1.default.createElement("div", { onClick: onClick, className: classes },
                 react_1.default.createElement("div", { className: "primary" },
                     this.renderIOSLabel(),
@@ -123,7 +138,8 @@
                         ' ',
                         authorProfileElement),
                     this.renderText()),
-                this.renderIconContainer()));
+                this.renderIconContainer(),
+                this.renderClose()));
         }
     }
     exports.Quote = Quote;
