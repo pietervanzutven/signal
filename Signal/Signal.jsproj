@@ -141,6 +141,7 @@
     <Content Include="images\icon_256.png" />
     <Content Include="images\icon_32.png" />
     <Content Include="images\icon_48.png" />
+    <Content Include="images\image_FFFFFF10.svg" />
     <Content Include="images\import_DEDEDE10.svg" />
     <Content Include="images\LargeTile.scale-100.png" />
     <Content Include="images\LargeTile.scale-125.png" />
@@ -160,6 +161,7 @@
     <Content Include="images\open_link_00000010.svg" />
     <Content Include="images\paperclip_61616110.svg" />
     <Content Include="images\paperclip_FFFFFF10.svg" />
+    <Content Include="images\play_FFFFFF10.svg" />
     <Content Include="images\playstore.png" />
     <Content Include="images\save_FFFFFF10.svg" />
     <Content Include="images\search_CCCCCC10.svg" />
@@ -232,6 +234,9 @@
     <Content Include="index.html" />
     <Content Include="js\background.js" />
     <Content Include="js\background_task.js" />
+    <Content Include="js\emoji_util.js" />
+    <Content Include="js\modules\classnames\index.js" />
+    <Content Include="js\modules\components\conversation\Quote.js" />
     <Content Include="js\modules\html\html.js" />
     <Content Include="js\modules\i18n.js" />
     <Content Include="js\modules\linkify-it\linkify-it.js" />

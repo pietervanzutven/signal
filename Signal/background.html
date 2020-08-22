@@ -293,10 +293,15 @@
               <span class='profileName'>{{ profileName }} </span>
             {{ /profileName }}
           </div>
-          <div class='attachments'></div>
-          <p class='content' dir='auto'>
-            {{ #message }}<span class='body'>{{ message }}</span>{{ /message }}
-          </p>
+          <div class='tail-wrapper {{ innerBubbleClasses }}'>
+            <div class='inner-bubble'>
+              <div class='quote-wrapper'></div>
+              <div class='attachments'></div>
+              <div class='content' dir='auto'>
+                {{ #message }}<div class='body'>{{ message }}</div>{{ /message }}
+              </div>
+            </div>
+          </div>
           <div class='meta'>
             <span class='timestamp' data-timestamp={{ timestamp }}></span>
             <span class='status hide'></span>
@@ -1113,6 +1118,8 @@
   <script type='text/javascript' src='js/modules/linkify-it/linkify-it.js'></script>
   <script type='text/javascript' src='js/modules/link_text.js'></script>
   <script type='text/javascript' src='js/modules/html/html.js'></script>
+  <script type='text/javascript' src='js/modules/classnames/index.js'></script>
+  <script type='text/javascript' src='js/modules/components/conversation/Quote.js'></script>
 
   <script type='text/javascript' src='app/attachments.js'></script>
   <script type='text/javascript' src='app/logging.js'></script>
@@ -1151,6 +1158,7 @@
   <script type='text/javascript' src='js/registration.js'></script>
   <script type='text/javascript' src='js/expire.js'></script>
   <script type='text/javascript' src='js/conversation_controller.js'></script>
+  <script type='text/javascript' src='js/emoji_util.js'></script>
 
   <script type='text/javascript' src='js/views/react_wrapper_view.js'></script>
   <script type='text/javascript' src='js/views/whisper_view.js'></script>

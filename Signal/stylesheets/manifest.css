@@ -61,7 +61,7 @@ button {
   cursor: pointer;
   font-size: inherit; }
 
-button.neutral {
+button.grey {
   border-radius: 5px;
   border: solid 1px #ccc;
   cursor: pointer;
@@ -71,9 +71,9 @@ button.neutral {
   color: #616161;
   background: #f3f3f3;
   box-shadow: 0 0 10px -5px rgba(97, 97, 97, 0.5); }
-  button.neutral:hover {
+  button.grey:hover {
     box-shadow: 0 0 10px -3px rgba(97, 97, 97, 0.7); }
-  button.neutral[disabled=disabled], button.neutral[disabled=disabled]:hover {
+  button.grey[disabled=disabled], button.grey[disabled=disabled]:hover {
     opacity: 0.5;
     box-shadow: none;
     cursor: default; }
@@ -729,8 +729,8 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
     min-width: 300px;
     padding: 0.75em;
     margin-top: 1em;
-    margin-top: 1em;
     margin-left: 0.5em;
+    margin-right: 0.5em;
     color: white;
     background: #2090ea;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -1148,7 +1148,6 @@ img.emoji.jumbo {
   font-size: 0.9285714286em;
   color: red; }
 
-
 .settings .clear-data-settings button {
   float: right;
   line-height: 36px;
@@ -1158,6 +1157,7 @@ img.emoji.jumbo {
 .settings .clear-data-settings .destructive {
   background-color: red;
   color: white; }
+
 .conversation-stack,
 .new-conversation, .inbox, .gutter {
   height: 100%; }
@@ -1349,8 +1349,15 @@ input.search {
 
 .conversation.placeholder {
   text-align: center; }
+  .conversation.placeholder .container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
   .conversation.placeholder .content {
-    padding: 100px 36px; }
+    display: inline-block; }
   .conversation.placeholder h3 {
     font-size: large; }
 
@@ -1679,6 +1686,9 @@ li.entry .error-icon-container {
 .outgoing .sender {
   display: none; }
 
+.message-list .outgoing .bubble .quote, .private .message-list .incoming .bubble .quote {
+  margin-top: -5px; }
+
 .sender {
   font-size: smaller;
   opacity: 0.8;
@@ -1752,8 +1762,374 @@ span.status {
       .message-container .bubble,
       .message-list .bubble {
         max-width: calc(100% - 45px - 24px); } }
+    .message-container .bubble .quote,
+    .message-list .bubble .quote {
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      overflow: hidden;
+      border-radius: 2px;
+      background-color: #eee;
+      position: relative;
+      margin-right: -8px;
+      margin-left: -8px;
+      margin-bottom: 0.5em;
+      border-left-width: 3px;
+      border-left-style: solid; }
+      .message-container .bubble .quote.red,
+      .message-list .bubble .quote.red {
+        border-left-color: #EF5350; }
+      .message-container .bubble .quote.pink,
+      .message-list .bubble .quote.pink {
+        border-left-color: #EC407A; }
+      .message-container .bubble .quote.purple,
+      .message-list .bubble .quote.purple {
+        border-left-color: #AB47BC; }
+      .message-container .bubble .quote.deep_purple,
+      .message-list .bubble .quote.deep_purple {
+        border-left-color: #7E57C2; }
+      .message-container .bubble .quote.indigo,
+      .message-list .bubble .quote.indigo {
+        border-left-color: #5C6BC0; }
+      .message-container .bubble .quote.blue,
+      .message-list .bubble .quote.blue {
+        border-left-color: #2196F3; }
+      .message-container .bubble .quote.light_blue,
+      .message-list .bubble .quote.light_blue {
+        border-left-color: #03A9F4; }
+      .message-container .bubble .quote.cyan,
+      .message-list .bubble .quote.cyan {
+        border-left-color: #00BCD4; }
+      .message-container .bubble .quote.teal,
+      .message-list .bubble .quote.teal {
+        border-left-color: #009688; }
+      .message-container .bubble .quote.green,
+      .message-list .bubble .quote.green {
+        border-left-color: #4CAF50; }
+      .message-container .bubble .quote.light_green,
+      .message-list .bubble .quote.light_green {
+        border-left-color: #7CB342; }
+      .message-container .bubble .quote.orange,
+      .message-list .bubble .quote.orange {
+        border-left-color: #FF9800; }
+      .message-container .bubble .quote.deep_orange,
+      .message-list .bubble .quote.deep_orange {
+        border-left-color: #FF5722; }
+      .message-container .bubble .quote.amber,
+      .message-list .bubble .quote.amber {
+        border-left-color: #FFB300; }
+      .message-container .bubble .quote.blue_grey,
+      .message-list .bubble .quote.blue_grey {
+        border-left-color: #607D8B; }
+      .message-container .bubble .quote.grey,
+      .message-list .bubble .quote.grey {
+        border-left-color: #999999; }
+      .message-container .bubble .quote.default,
+      .message-list .bubble .quote.default {
+        border-left-color: #2090ea; }
+      .message-container .bubble .quote.red,
+      .message-list .bubble .quote.red {
+        background-color: rgba(211, 47, 47, 0.2); }
+      .message-container .bubble .quote.pink,
+      .message-list .bubble .quote.pink {
+        background-color: rgba(194, 24, 91, 0.2); }
+      .message-container .bubble .quote.purple,
+      .message-list .bubble .quote.purple {
+        background-color: rgba(123, 31, 162, 0.2); }
+      .message-container .bubble .quote.deep_purple,
+      .message-list .bubble .quote.deep_purple {
+        background-color: rgba(81, 45, 168, 0.2); }
+      .message-container .bubble .quote.indigo,
+      .message-list .bubble .quote.indigo {
+        background-color: rgba(48, 63, 159, 0.2); }
+      .message-container .bubble .quote.blue,
+      .message-list .bubble .quote.blue {
+        background-color: rgba(25, 118, 210, 0.2); }
+      .message-container .bubble .quote.light_blue,
+      .message-list .bubble .quote.light_blue {
+        background-color: rgba(2, 136, 209, 0.2); }
+      .message-container .bubble .quote.cyan,
+      .message-list .bubble .quote.cyan {
+        background-color: rgba(0, 151, 167, 0.2); }
+      .message-container .bubble .quote.teal,
+      .message-list .bubble .quote.teal {
+        background-color: rgba(0, 121, 107, 0.2); }
+      .message-container .bubble .quote.green,
+      .message-list .bubble .quote.green {
+        background-color: rgba(56, 142, 60, 0.2); }
+      .message-container .bubble .quote.light_green,
+      .message-list .bubble .quote.light_green {
+        background-color: rgba(104, 159, 56, 0.2); }
+      .message-container .bubble .quote.orange,
+      .message-list .bubble .quote.orange {
+        background-color: rgba(245, 124, 0, 0.2); }
+      .message-container .bubble .quote.deep_orange,
+      .message-list .bubble .quote.deep_orange {
+        background-color: rgba(230, 74, 25, 0.2); }
+      .message-container .bubble .quote.amber,
+      .message-list .bubble .quote.amber {
+        background-color: rgba(255, 160, 0, 0.2); }
+      .message-container .bubble .quote.blue_grey,
+      .message-list .bubble .quote.blue_grey {
+        background-color: rgba(69, 90, 100, 0.2); }
+      .message-container .bubble .quote.grey,
+      .message-list .bubble .quote.grey {
+        background-color: rgba(102, 102, 102, 0.2); }
+      .message-container .bubble .quote.default,
+      .message-list .bubble .quote.default {
+        background-color: rgba(32, 144, 234, 0.2); }
+      .message-container .bubble .quote.no-click,
+      .message-list .bubble .quote.no-click {
+        cursor: auto; }
+      .message-container .bubble .quote .primary,
+      .message-list .bubble .quote .primary {
+        flex-grow: 1;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 6px;
+        padding-bottom: 6px; }
+        .message-container .bubble .quote .primary .ios-label,
+        .message-list .bubble .quote .primary .ios-label {
+          display: none; }
+        .message-container .bubble .quote .primary .author,
+        .message-list .bubble .quote .primary .author {
+          font-weight: bold;
+          margin-bottom: 0.3em; }
+          .message-container .bubble .quote .primary .author.red,
+          .message-list .bubble .quote .primary .author.red {
+            color: #EF5350; }
+          .message-container .bubble .quote .primary .author.pink,
+          .message-list .bubble .quote .primary .author.pink {
+            color: #EC407A; }
+          .message-container .bubble .quote .primary .author.purple,
+          .message-list .bubble .quote .primary .author.purple {
+            color: #AB47BC; }
+          .message-container .bubble .quote .primary .author.deep_purple,
+          .message-list .bubble .quote .primary .author.deep_purple {
+            color: #7E57C2; }
+          .message-container .bubble .quote .primary .author.indigo,
+          .message-list .bubble .quote .primary .author.indigo {
+            color: #5C6BC0; }
+          .message-container .bubble .quote .primary .author.blue,
+          .message-list .bubble .quote .primary .author.blue {
+            color: #2196F3; }
+          .message-container .bubble .quote .primary .author.light_blue,
+          .message-list .bubble .quote .primary .author.light_blue {
+            color: #03A9F4; }
+          .message-container .bubble .quote .primary .author.cyan,
+          .message-list .bubble .quote .primary .author.cyan {
+            color: #00BCD4; }
+          .message-container .bubble .quote .primary .author.teal,
+          .message-list .bubble .quote .primary .author.teal {
+            color: #009688; }
+          .message-container .bubble .quote .primary .author.green,
+          .message-list .bubble .quote .primary .author.green {
+            color: #4CAF50; }
+          .message-container .bubble .quote .primary .author.light_green,
+          .message-list .bubble .quote .primary .author.light_green {
+            color: #7CB342; }
+          .message-container .bubble .quote .primary .author.orange,
+          .message-list .bubble .quote .primary .author.orange {
+            color: #FF9800; }
+          .message-container .bubble .quote .primary .author.deep_orange,
+          .message-list .bubble .quote .primary .author.deep_orange {
+            color: #FF5722; }
+          .message-container .bubble .quote .primary .author.amber,
+          .message-list .bubble .quote .primary .author.amber {
+            color: #FFB300; }
+          .message-container .bubble .quote .primary .author.blue_grey,
+          .message-list .bubble .quote .primary .author.blue_grey {
+            color: #607D8B; }
+          .message-container .bubble .quote .primary .author.grey,
+          .message-list .bubble .quote .primary .author.grey {
+            color: #999999; }
+          .message-container .bubble .quote .primary .author.default,
+          .message-list .bubble .quote .primary .author.default {
+            color: #2090ea; }
+          .message-container .bubble .quote .primary .author .profile-name,
+          .message-list .bubble .quote .primary .author .profile-name {
+            font-size: smaller; }
+        .message-container .bubble .quote .primary .text,
+        .message-list .bubble .quote .primary .text {
+          white-space: pre-wrap;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical; }
+        .message-container .bubble .quote .primary .type-label,
+        .message-list .bubble .quote .primary .type-label {
+          font-style: italic;
+          font-size: 12px; }
+        .message-container .bubble .quote .primary .filename-label,
+        .message-list .bubble .quote .primary .filename-label {
+          font-size: 12px; }
+      .message-container .bubble .quote .icon-container,
+      .message-list .bubble .quote .icon-container {
+        flex: initial;
+        min-width: 48px;
+        width: 48px;
+        height: 48px;
+        position: relative; }
+        .message-container .bubble .quote .icon-container .circle-background,
+        .message-list .bubble .quote .icon-container .circle-background {
+          position: absolute;
+          left: 6px;
+          right: 6px;
+          top: 6px;
+          bottom: 6px;
+          border-radius: 50%; }
+          .message-container .bubble .quote .icon-container .circle-background.red,
+          .message-list .bubble .quote .icon-container .circle-background.red {
+            background-color: #EF5350; }
+          .message-container .bubble .quote .icon-container .circle-background.pink,
+          .message-list .bubble .quote .icon-container .circle-background.pink {
+            background-color: #EC407A; }
+          .message-container .bubble .quote .icon-container .circle-background.purple,
+          .message-list .bubble .quote .icon-container .circle-background.purple {
+            background-color: #AB47BC; }
+          .message-container .bubble .quote .icon-container .circle-background.deep_purple,
+          .message-list .bubble .quote .icon-container .circle-background.deep_purple {
+            background-color: #7E57C2; }
+          .message-container .bubble .quote .icon-container .circle-background.indigo,
+          .message-list .bubble .quote .icon-container .circle-background.indigo {
+            background-color: #5C6BC0; }
+          .message-container .bubble .quote .icon-container .circle-background.blue,
+          .message-list .bubble .quote .icon-container .circle-background.blue {
+            background-color: #2196F3; }
+          .message-container .bubble .quote .icon-container .circle-background.light_blue,
+          .message-list .bubble .quote .icon-container .circle-background.light_blue {
+            background-color: #03A9F4; }
+          .message-container .bubble .quote .icon-container .circle-background.cyan,
+          .message-list .bubble .quote .icon-container .circle-background.cyan {
+            background-color: #00BCD4; }
+          .message-container .bubble .quote .icon-container .circle-background.teal,
+          .message-list .bubble .quote .icon-container .circle-background.teal {
+            background-color: #009688; }
+          .message-container .bubble .quote .icon-container .circle-background.green,
+          .message-list .bubble .quote .icon-container .circle-background.green {
+            background-color: #4CAF50; }
+          .message-container .bubble .quote .icon-container .circle-background.light_green,
+          .message-list .bubble .quote .icon-container .circle-background.light_green {
+            background-color: #7CB342; }
+          .message-container .bubble .quote .icon-container .circle-background.orange,
+          .message-list .bubble .quote .icon-container .circle-background.orange {
+            background-color: #FF9800; }
+          .message-container .bubble .quote .icon-container .circle-background.deep_orange,
+          .message-list .bubble .quote .icon-container .circle-background.deep_orange {
+            background-color: #FF5722; }
+          .message-container .bubble .quote .icon-container .circle-background.amber,
+          .message-list .bubble .quote .icon-container .circle-background.amber {
+            background-color: #FFB300; }
+          .message-container .bubble .quote .icon-container .circle-background.blue_grey,
+          .message-list .bubble .quote .icon-container .circle-background.blue_grey {
+            background-color: #607D8B; }
+          .message-container .bubble .quote .icon-container .circle-background.grey,
+          .message-list .bubble .quote .icon-container .circle-background.grey {
+            background-color: #999999; }
+          .message-container .bubble .quote .icon-container .circle-background.default,
+          .message-list .bubble .quote .icon-container .circle-background.default {
+            background-color: #2090ea; }
+          .message-container .bubble .quote .icon-container .circle-background.white,
+          .message-list .bubble .quote .icon-container .circle-background.white {
+            background-color: white; }
+        .message-container .bubble .quote .icon-container .icon,
+        .message-list .bubble .quote .icon-container .icon {
+          position: absolute;
+          left: 12px;
+          right: 12px;
+          top: 12px;
+          bottom: 12px; }
+          .message-container .bubble .quote .icon-container .icon.file,
+          .message-list .bubble .quote .icon-container .icon.file {
+            background-image: url("../images/file_FFFFFF10.svg");
+            background-size: 100%;
+            background-repeat: no-repeat;
+            background-position: center center; }
+          .message-container .bubble .quote .icon-container .icon.image,
+          .message-list .bubble .quote .icon-container .icon.image {
+            background-image: url("../images/image_FFFFFF10.svg");
+            background-size: 100%;
+            background-repeat: no-repeat;
+            background-position: center center; }
+          .message-container .bubble .quote .icon-container .icon.microphone,
+          .message-list .bubble .quote .icon-container .icon.microphone {
+            background-image: url("../images/microphone_FFFFFF10.svg");
+            background-size: 100%;
+            background-repeat: no-repeat;
+            background-position: center center; }
+          .message-container .bubble .quote .icon-container .icon.play,
+          .message-list .bubble .quote .icon-container .icon.play {
+            background-image: url("../images/play_FFFFFF10.svg");
+            background-size: 100%;
+            background-repeat: no-repeat;
+            background-position: center center; }
+          .message-container .bubble .quote .icon-container .icon.red,
+          .message-list .bubble .quote .icon-container .icon.red {
+            background-color: #EF5350; }
+          .message-container .bubble .quote .icon-container .icon.pink,
+          .message-list .bubble .quote .icon-container .icon.pink {
+            background-color: #EC407A; }
+          .message-container .bubble .quote .icon-container .icon.purple,
+          .message-list .bubble .quote .icon-container .icon.purple {
+            background-color: #AB47BC; }
+          .message-container .bubble .quote .icon-container .icon.deep_purple,
+          .message-list .bubble .quote .icon-container .icon.deep_purple {
+            background-color: #7E57C2; }
+          .message-container .bubble .quote .icon-container .icon.indigo,
+          .message-list .bubble .quote .icon-container .icon.indigo {
+            background-color: #5C6BC0; }
+          .message-container .bubble .quote .icon-container .icon.blue,
+          .message-list .bubble .quote .icon-container .icon.blue {
+            background-color: #2196F3; }
+          .message-container .bubble .quote .icon-container .icon.light_blue,
+          .message-list .bubble .quote .icon-container .icon.light_blue {
+            background-color: #03A9F4; }
+          .message-container .bubble .quote .icon-container .icon.cyan,
+          .message-list .bubble .quote .icon-container .icon.cyan {
+            background-color: #00BCD4; }
+          .message-container .bubble .quote .icon-container .icon.teal,
+          .message-list .bubble .quote .icon-container .icon.teal {
+            background-color: #009688; }
+          .message-container .bubble .quote .icon-container .icon.green,
+          .message-list .bubble .quote .icon-container .icon.green {
+            background-color: #4CAF50; }
+          .message-container .bubble .quote .icon-container .icon.light_green,
+          .message-list .bubble .quote .icon-container .icon.light_green {
+            background-color: #7CB342; }
+          .message-container .bubble .quote .icon-container .icon.orange,
+          .message-list .bubble .quote .icon-container .icon.orange {
+            background-color: #FF9800; }
+          .message-container .bubble .quote .icon-container .icon.deep_orange,
+          .message-list .bubble .quote .icon-container .icon.deep_orange {
+            background-color: #FF5722; }
+          .message-container .bubble .quote .icon-container .icon.amber,
+          .message-list .bubble .quote .icon-container .icon.amber {
+            background-color: #FFB300; }
+          .message-container .bubble .quote .icon-container .icon.blue_grey,
+          .message-list .bubble .quote .icon-container .icon.blue_grey {
+            background-color: #607D8B; }
+          .message-container .bubble .quote .icon-container .icon.grey,
+          .message-list .bubble .quote .icon-container .icon.grey {
+            background-color: #999999; }
+          .message-container .bubble .quote .icon-container .icon.default,
+          .message-list .bubble .quote .icon-container .icon.default {
+            background-color: #2090ea; }
+        .message-container .bubble .quote .icon-container .inner,
+        .message-list .bubble .quote .icon-container .inner {
+          position: relative;
+          height: 48px;
+          text-align: center;
+          display: flex;
+          align-items: center;
+          justify-content: center; }
+          .message-container .bubble .quote .icon-container .inner img,
+          .message-list .bubble .quote .icon-container .inner img {
+            max-width: 100%;
+            max-height: 100%; }
     .message-container .bubble .body,
     .message-list .bubble .body {
+      margin-top: 0.5em;
       white-space: pre-wrap; }
       .message-container .bubble .body a,
       .message-list .bubble .body a {
@@ -1803,6 +2179,10 @@ span.status {
   .message-list .incoming .avatar,
   .message-list .incoming .bubble {
     float: left; }
+  .message-container .incoming .bubble .quote,
+  .message-list .incoming .bubble .quote {
+    background-color: rgba(255, 255, 255, 0.6);
+    border-left-color: white; }
   .message-container .outgoing .meta,
   .message-list .outgoing .meta {
     float: right; }
@@ -1855,6 +2235,7 @@ span.status {
   .message-list .attachments img,
   .message-list .attachments audio,
   .message-list .attachments video {
+    display: block;
     max-width: 100%;
     max-height: 300px; }
   .message-container .attachments video,
@@ -1873,6 +2254,7 @@ span.status {
     position: relative;
     padding: 5px;
     padding-right: 10px;
+    padding-bottom: 0px;
     cursor: pointer; }
     .message-container .attachments .fileView .fileName,
     .message-list .attachments .fileView .fileName {
@@ -2175,7 +2557,11 @@ span.status {
   background-color: #f3f3f3;
   color: #454545;
   border-color: rgba(0, 0, 0, 0.05);
-  text-align: left; }
+  text-align: left;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1; }
   .ios .conversation-header .conversation-title {
     line-height: 64px; }
     .ios .conversation-header .conversation-title .verified-icon {
@@ -2208,93 +2594,171 @@ span.status {
 .ios .control .content {
   padding: 10px; }
 
+.ios .message-container .quote,
+.ios .message-list .quote {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  background-color: white !important;
+  border: 1px solid #e6e6e6 !important;
+  border-bottom: none !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px; }
+  .ios .message-container .quote .primary,
+  .ios .message-list .quote .primary {
+    padding: 10px; }
+    .ios .message-container .quote .primary .text,
+    .ios .message-container .quote .primary .filename-label,
+    .ios .message-container .quote .primary .type-label,
+    .ios .message-list .quote .primary .text,
+    .ios .message-list .quote .primary .filename-label,
+    .ios .message-list .quote .primary .type-label {
+      border-left: 2px solid #bdbdbd;
+      padding: 5px;
+      padding-left: 7px;
+      padding-bottom: 2px;
+      color: black; }
+    .ios .message-container .quote .primary .author,
+    .ios .message-list .quote .primary .author {
+      display: none; }
+    .ios .message-container .quote .primary .ios-label,
+    .ios .message-list .quote .primary .ios-label {
+      display: block;
+      color: #bdbdbd;
+      font-size: smaller;
+      margin-bottom: 3px; }
+  .ios .message-container .quote .icon-container,
+  .ios .message-list .quote .icon-container {
+    height: 61px;
+    width: 61px;
+    min-width: 61px; }
+    .ios .message-container .quote .icon-container .circle-background,
+    .ios .message-list .quote .icon-container .circle-background {
+      left: 12px;
+      right: 12px;
+      top: 12px;
+      bottom: 12px;
+      background-color: #2090ea !important; }
+    .ios .message-container .quote .icon-container .icon,
+    .ios .message-list .quote .icon-container .icon {
+      left: 18px;
+      right: 18px;
+      top: 18px;
+      bottom: 18px;
+      background-color: white !important; }
+    .ios .message-container .quote .icon-container .inner,
+    .ios .message-list .quote .icon-container .inner {
+      padding: 12px;
+      height: 61px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center; }
+  .ios .message-container .quote .from-me .primary .text,
+  .ios .message-container .quote .from-me .primary .filename-label,
+  .ios .message-container .quote .from-me .primary .type-label,
+  .ios .message-list .quote .from-me .primary .text,
+  .ios .message-list .quote .from-me .primary .filename-label,
+  .ios .message-list .quote .from-me .primary .type-label {
+    border-left: 2px solid #2090ea; }
+
+.ios .message-container .incoming .bubble .quote,
+.ios .message-list .incoming .bubble .quote {
+  border-left: none;
+  border: none !important;
+  border-bottom: 1px solid lightgray !important; }
+
+.ios .message-container .bubble .quote.from-me .primary .text,
+.ios .message-container .bubble .quote.from-me .primary .filename-label,
+.ios .message-container .bubble .quote.from-me .primary .type-label,
+.ios .message-list .bubble .quote.from-me .primary .text,
+.ios .message-list .bubble .quote.from-me .primary .filename-label,
+.ios .message-list .bubble .quote.from-me .primary .type-label {
+  border-left: 2px solid #2090ea; }
+
+.ios .message-container .outgoing .bubble .quote,
+.ios .message-container .private .message-list .incoming .bubble .quote,
+.ios .message-list .outgoing .bubble .quote,
+.ios .message-list .private .message-list .incoming .bubble .quote {
+  margin-top: 0px; }
+
+.ios .message-container .outgoing .bubble .quote .icon-container .circle-background,
+.ios .message-list .outgoing .bubble .quote .icon-container .circle-background {
+  background-color: lightgray !important; }
+
 .ios .attachments .bubbled {
   border-radius: 15px;
-  margin-bottom: 0.25em;
   padding: 10px;
+  padding-top: 0px;
+  padding-bottom: 5px;
   position: relative; }
-  .ios .attachments .bubbled:before, .ios .attachments .bubbled:after {
-    content: '';
-    display: block;
-    border-radius: 20px;
-    position: absolute;
-    width: 10px; }
-  .ios .attachments .bubbled:before {
-    right: -1px;
-    bottom: -3px;
-    height: 10px;
-    border-radius: 20px;
-    background: #2090ea; }
-  .ios .attachments .bubbled:after {
-    height: 11px;
-    right: -6px;
-    bottom: -3px;
-    background: #eee; }
+  .ios .attachments .bubbled video, .ios .attachments .bubbled audio {
+    margin-bottom: 5px; }
 
-.ios .bubble .content {
+.ios .tail-wrapper {
   margin-bottom: 5px; }
-  .ios .bubble .content .body {
+
+.ios .inner-bubble {
+  border-radius: 15px;
+  overflow: hidden; }
+  .ios .inner-bubble .body {
+    margin-top: 0;
     display: inline-block;
     padding: 10px;
     position: relative;
     word-break: break-word; }
-    .ios .bubble .content .body:before, .ios .bubble .content .body:after {
+
+.ios .tail-wrapper.with-tail {
+  position: relative; }
+  .ios .tail-wrapper.with-tail:before, .ios .tail-wrapper.with-tail:after {
       content: '';
       display: block;
       border-radius: 20px;
       position: absolute;
       width: 10px; }
-    .ios .bubble .content .body:before {
+  .ios .tail-wrapper.with-tail:before {
       right: -1px;
       bottom: -3px;
       height: 10px;
       border-radius: 20px;
       background: #2090ea; }
-    .ios .bubble .content .body:after {
+  .ios .tail-wrapper.with-tail:after {
       height: 11px;
       right: -6px;
       bottom: -3px;
       background: #eee; }
 
-.ios .bubble .content, .ios .bubble .attachments img {
-  border-radius: 15px; }
-
-.ios .bubble .attachments img {
-  background-color: white; }
-
-.ios .bubble .meta {
+.ios .meta {
   clear: both; }
 
-.ios .incoming .bubbled {
-  background-color: white;
-  color: black;
-  float: left;
-  max-width: 100%; }
-  .ios .incoming .bubbled:before {
-    left: -1px;
-    background-color: white; }
-  .ios .incoming .bubbled:after {
-    left: -6px; }
-
-.ios .incoming .content {
-  background-color: white;
-  color: black;
-  float: left; }
-  .ios .incoming .content .body:before {
-    left: -1px;
-    background-color: white; }
-  .ios .incoming .content .body:after {
-    left: -6px; }
-
-.ios .outgoing .content, .ios .outgoing .attachments .bubbled {
-  background-color: #2090ea;
-  max-width: 100%;
+.ios .outgoing .with-tail.tail-wrapper {
   float: right; }
-  .ios .outgoing .content, .ios .outgoing .content .body, .ios .outgoing .content a, .ios .outgoing .attachments .bubbled, .ios .outgoing .attachments .bubbled .body, .ios .outgoing .attachments .bubbled a {
-    color: white; }
-    .ios .outgoing .content::selection, .ios .outgoing .content .body::selection, .ios .outgoing .content a::selection, .ios .outgoing .attachments .bubbled::selection, .ios .outgoing .attachments .bubbled .body::selection, .ios .outgoing .attachments .bubbled a::selection {
-      background: white;
-      color: #454545; }
+  .ios .outgoing .with-tail.tail-wrapper .inner-bubble {
+  max-width: 100%; }
+    .ios .outgoing .with-tail.tail-wrapper .inner-bubble .attachments {
+      background-color: #2090ea; }
+    .ios .outgoing .with-tail.tail-wrapper .inner-bubble .content {
+      background-color: #2090ea; }
+    .ios .outgoing .with-tail.tail-wrapper .inner-bubble, .ios .outgoing .with-tail.tail-wrapper .inner-bubble .body, .ios .outgoing .with-tail.tail-wrapper .inner-bubble a {
+      color: white; }
+      .ios .outgoing .with-tail.tail-wrapper .inner-bubble::selection, .ios .outgoing .with-tail.tail-wrapper .inner-bubble .body::selection, .ios .outgoing .with-tail.tail-wrapper .inner-bubble a::selection {
+        background: white;
+        color: #454545; }
+
+.ios .incoming .with-tail.tail-wrapper {
+  float: left; }
+  .ios .incoming .with-tail.tail-wrapper:before {
+    left: -1px;
+    background-color: white; }
+  .ios .incoming .with-tail.tail-wrapper:after {
+    left: -6px; }
+  .ios .incoming .with-tail.tail-wrapper .inner-bubble {
+  background-color: white;
+  color: black;
+    max-width: 100%; }
 
 .ios .outgoing .attachments .fileView .icon {
   background-image: url("../images/file_FFFFFF10.svg");
@@ -2317,8 +2781,6 @@ span.status {
     background-repeat: no-repeat;
     background-position: center center; }
 
-.ios .attachment {
-  margin-bottom: 1px; }
   .ios .attachment a {
     border-radius: 15px; }
 
@@ -2868,6 +3330,17 @@ span.status {
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
+  .android-dark .outgoing .bubble .quote .icon-container .icon {
+    background-color: black; }
+    .android-dark .outgoing .bubble .quote .icon-container .icon.play.with-image {
+      background-color: #CCCCCC; }
+  .android-dark .incoming .bubble .quote {
+    border-left-color: #CCCCCC;
+    background-color: rgba(0, 0, 0, 0.6); }
+    .android-dark .incoming .bubble .quote .icon-container .circle-background {
+      background-color: #CCCCCC; }
+    .android-dark .incoming .bubble .quote .icon-container .icon.play.with-image {
+      background-color: #CCCCCC; }
   .android-dark button.clock {
     background-image: url("../images/clock_FFFFFF08.svg");
     background-size: 100%;
