@@ -143,7 +143,11 @@
   window.Signal.HTML = window.html.html;
   window.Signal.Logs = window.logs;
 
-  window.Signal.Components = {};
+  const { Quote } = window.components.conversation.quote;
+
+  window.Signal.Components = {
+    Quote,
+  };
 
   window.Signal.Migrations = {};
   window.Signal.Migrations.deleteAttachmentData =

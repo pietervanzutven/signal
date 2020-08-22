@@ -293,15 +293,35 @@
               <span class='profileName'>{{ profileName }} </span>
             {{ /profileName }}
           </div>
-          <div class='attachments'></div>
-          <p class='content' dir='auto'>
-            {{ #message }}<span class='body'>{{ message }}</span>{{ /message }}
-          </p>
+          <div class='tail-wrapper {{ innerBubbleClasses }}'>
+            <div class='inner-bubble'>
+              {{ #hasAttachments }}
+                <div class='attachments'></div>
+              {{ /hasAttachments }}
+              {{ #hasBody }}
+                <div class='content' dir='auto'>
+                  {{ #message }}
+                    <div class='body'>{{ message }}</div>
+                  {{ /message }}
+                </div>
+                {{ /hasBody }}
+            </div>
+          </div>
           <div class='meta'>
             <span class='timestamp' data-timestamp={{ timestamp }}></span>
             <span class='status hide'></span>
             <span class='timer'></span>
           </div>
+          {{ #hoverIcon }}
+            <div class='menu-container menu'>
+              <div class='menu-anchor'>
+                <span class='dots-horizontal-icon'></span>
+                <ul class='menu-list'>
+                  <li class='reply'>{{ reply }}</li>
+                </ul>
+              </div>
+            </div>
+          {{ /hoverIcon }}
       </div>
   </script>
   <script type='text/x-tmpl-mustache' id='hourglass'>
@@ -1113,6 +1133,8 @@
   <script type='text/javascript' src='js/modules/linkify-it/linkify-it.js'></script>
   <script type='text/javascript' src='js/modules/link_text.js'></script>
   <script type='text/javascript' src='js/modules/html/html.js'></script>
+  <script type='text/javascript' src='js/modules/classnames/index.js'></script>
+  <script type='text/javascript' src='js/modules/components/conversation/Quote.js'></script>
 
   <script type='text/javascript' src='app/attachments.js'></script>
   <script type='text/javascript' src='app/logging.js'></script>
@@ -1151,6 +1173,7 @@
   <script type='text/javascript' src='js/registration.js'></script>
   <script type='text/javascript' src='js/expire.js'></script>
   <script type='text/javascript' src='js/conversation_controller.js'></script>
+  <script type='text/javascript' src='js/emoji_util.js'></script>
 
   <script type='text/javascript' src='js/views/react_wrapper_view.js'></script>
   <script type='text/javascript' src='js/views/whisper_view.js'></script>

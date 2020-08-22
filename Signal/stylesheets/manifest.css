@@ -61,7 +61,7 @@ button {
   cursor: pointer;
   font-size: inherit; }
 
-button.neutral {
+button.grey {
   border-radius: 5px;
   border: solid 1px #ccc;
   cursor: pointer;
@@ -71,9 +71,9 @@ button.neutral {
   color: #616161;
   background: #f3f3f3;
   box-shadow: 0 0 10px -5px rgba(97, 97, 97, 0.5); }
-  button.neutral:hover {
+  button.grey:hover {
     box-shadow: 0 0 10px -3px rgba(97, 97, 97, 0.7); }
-  button.neutral[disabled=disabled], button.neutral[disabled=disabled]:hover {
+  button.grey[disabled=disabled], button.grey[disabled=disabled]:hover {
     opacity: 0.5;
     box-shadow: none;
     cursor: default; }
@@ -729,8 +729,8 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
     min-width: 300px;
     padding: 0.75em;
     margin-top: 1em;
-    margin-top: 1em;
     margin-left: 0.5em;
+    margin-right: 0.5em;
     color: white;
     background: #2090ea;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -1148,7 +1148,6 @@ img.emoji.jumbo {
   font-size: 0.9285714286em;
   color: red; }
 
-
 .settings .clear-data-settings button {
   float: right;
   line-height: 36px;
@@ -1158,6 +1157,7 @@ img.emoji.jumbo {
 .settings .clear-data-settings .destructive {
   background-color: red;
   color: white; }
+
 .conversation-stack,
 .new-conversation, .inbox, .gutter {
   height: 100%; }
@@ -1349,8 +1349,15 @@ input.search {
 
 .conversation.placeholder {
   text-align: center; }
+  .conversation.placeholder .container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
   .conversation.placeholder .content {
-    padding: 100px 36px; }
+    display: inline-block; }
   .conversation.placeholder h3 {
     font-size: large; }
 
@@ -1658,6 +1665,34 @@ li.entry .error-icon-container {
   li.entry .error-icon-container:hover .error-message {
     display: inline-block; }
 
+li.entry .menu-container {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 5px);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer; }
+  li.entry .menu-container .menu-anchor {
+    position: relative; }
+  li.entry .menu-container li {
+    margin: 0px; }
+
+.dots-horizontal-icon {
+  visibility: hidden; }
+
+li.entry:hover .dots-horizontal-icon {
+  visibility: visible; }
+
+li.entry.outgoing .menu-container {
+  left: auto;
+  right: calc(100% + 5px); }
+
+.incoming .menu-list {
+  left: 0;
+  right: auto; }
+
 .error-icon {
   display: inline-block;
   width: 24px;
@@ -1667,6 +1702,21 @@ li.entry .error-icon-container {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
+
+.dots-horizontal-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  background-image: url("../images/dots-horizontal_80808010.svg");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+  .dots-horizontal-icon:hover {
+    background-image: url("../images/dots-horizontal_00000010.svg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center; }
 
 .group li.entry .unregistered-user-error {
   display: none; }
@@ -1758,6 +1808,12 @@ span.status {
       .message-container .bubble .body a,
       .message-list .bubble .body a {
         word-break: break-all; }
+    .message-container .bubble .attachments + .content,
+    .message-list .bubble .attachments + .content {
+      margin-top: 0.5em; }
+    .message-container .bubble .quote-wrapper + .content,
+    .message-list .bubble .quote-wrapper + .content {
+      margin-top: 0.5em; }
     .message-container .bubble p,
     .message-list .bubble p {
       margin: 0; }
@@ -1855,6 +1911,7 @@ span.status {
   .message-list .attachments img,
   .message-list .attachments audio,
   .message-list .attachments video {
+    display: block;
     max-width: 100%;
     max-height: 300px; }
   .message-container .attachments video,
@@ -1873,6 +1930,7 @@ span.status {
     position: relative;
     padding: 5px;
     padding-right: 10px;
+    padding-bottom: 0px;
     cursor: pointer; }
     .message-container .attachments .fileView .fileName,
     .message-list .attachments .fileView .fileName {
@@ -1929,6 +1987,315 @@ span.status {
   .message-list .bubble .content.error-message {
     cursor: pointer;
     font-style: italic; }
+
+.quoted-message {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: 2px;
+  background-color: #eee;
+  position: relative;
+  margin-right: -8px;
+  margin-left: -8px;
+  margin-bottom: 0.5em;
+  border-left-width: 3px;
+  border-left-style: solid; }
+  .quoted-message.red {
+    border-left-color: #EF5350; }
+  .quoted-message.pink {
+    border-left-color: #EC407A; }
+  .quoted-message.purple {
+    border-left-color: #AB47BC; }
+  .quoted-message.deep_purple {
+    border-left-color: #7E57C2; }
+  .quoted-message.indigo {
+    border-left-color: #5C6BC0; }
+  .quoted-message.blue {
+    border-left-color: #2196F3; }
+  .quoted-message.light_blue {
+    border-left-color: #03A9F4; }
+  .quoted-message.cyan {
+    border-left-color: #00BCD4; }
+  .quoted-message.teal {
+    border-left-color: #009688; }
+  .quoted-message.green {
+    border-left-color: #4CAF50; }
+  .quoted-message.light_green {
+    border-left-color: #7CB342; }
+  .quoted-message.orange {
+    border-left-color: #FF9800; }
+  .quoted-message.deep_orange {
+    border-left-color: #FF5722; }
+  .quoted-message.amber {
+    border-left-color: #FFB300; }
+  .quoted-message.blue_grey {
+    border-left-color: #607D8B; }
+  .quoted-message.grey {
+    border-left-color: #999999; }
+  .quoted-message.default {
+    border-left-color: #2090ea; }
+  .quoted-message.red {
+    background-color: rgba(211, 47, 47, 0.2); }
+  .quoted-message.pink {
+    background-color: rgba(194, 24, 91, 0.2); }
+  .quoted-message.purple {
+    background-color: rgba(123, 31, 162, 0.2); }
+  .quoted-message.deep_purple {
+    background-color: rgba(81, 45, 168, 0.2); }
+  .quoted-message.indigo {
+    background-color: rgba(48, 63, 159, 0.2); }
+  .quoted-message.blue {
+    background-color: rgba(25, 118, 210, 0.2); }
+  .quoted-message.light_blue {
+    background-color: rgba(2, 136, 209, 0.2); }
+  .quoted-message.cyan {
+    background-color: rgba(0, 151, 167, 0.2); }
+  .quoted-message.teal {
+    background-color: rgba(0, 121, 107, 0.2); }
+  .quoted-message.green {
+    background-color: rgba(56, 142, 60, 0.2); }
+  .quoted-message.light_green {
+    background-color: rgba(104, 159, 56, 0.2); }
+  .quoted-message.orange {
+    background-color: rgba(245, 124, 0, 0.2); }
+  .quoted-message.deep_orange {
+    background-color: rgba(230, 74, 25, 0.2); }
+  .quoted-message.amber {
+    background-color: rgba(255, 160, 0, 0.2); }
+  .quoted-message.blue_grey {
+    background-color: rgba(69, 90, 100, 0.2); }
+  .quoted-message.grey {
+    background-color: rgba(102, 102, 102, 0.2); }
+  .quoted-message.default {
+    background-color: rgba(32, 144, 234, 0.2); }
+  .quoted-message.no-click {
+    cursor: auto; }
+  .quoted-message .primary {
+    flex-grow: 1;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px; }
+    .quoted-message .primary .ios-label {
+      display: none; }
+    .quoted-message .primary .author {
+      font-weight: bold;
+      margin-bottom: 0.3em; }
+      .quoted-message .primary .author.red {
+        color: #EF5350; }
+      .quoted-message .primary .author.pink {
+        color: #EC407A; }
+      .quoted-message .primary .author.purple {
+        color: #AB47BC; }
+      .quoted-message .primary .author.deep_purple {
+        color: #7E57C2; }
+      .quoted-message .primary .author.indigo {
+        color: #5C6BC0; }
+      .quoted-message .primary .author.blue {
+        color: #2196F3; }
+      .quoted-message .primary .author.light_blue {
+        color: #03A9F4; }
+      .quoted-message .primary .author.cyan {
+        color: #00BCD4; }
+      .quoted-message .primary .author.teal {
+        color: #009688; }
+      .quoted-message .primary .author.green {
+        color: #4CAF50; }
+      .quoted-message .primary .author.light_green {
+        color: #7CB342; }
+      .quoted-message .primary .author.orange {
+        color: #FF9800; }
+      .quoted-message .primary .author.deep_orange {
+        color: #FF5722; }
+      .quoted-message .primary .author.amber {
+        color: #FFB300; }
+      .quoted-message .primary .author.blue_grey {
+        color: #607D8B; }
+      .quoted-message .primary .author.grey {
+        color: #999999; }
+      .quoted-message .primary .author.default {
+        color: #2090ea; }
+      .quoted-message .primary .author .profile-name {
+        font-size: smaller; }
+    .quoted-message .primary .text {
+      white-space: pre-wrap;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical; }
+    .quoted-message .primary .type-label {
+      font-style: italic;
+      font-size: 12px; }
+    .quoted-message .primary .filename-label {
+      font-size: 12px; }
+  .quoted-message .close-container {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    height: 16px;
+    width: 16px;
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 50%; }
+    .quoted-message .close-container .close-button {
+      width: 100%;
+      height: 100%;
+      background-image: url("../images/x_61616110.svg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+  .quoted-message .icon-container {
+    flex: initial;
+    min-width: 50px;
+    width: 50px;
+    height: 50px;
+    position: relative; }
+    .quoted-message .icon-container .circle-background {
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      top: 6px;
+      bottom: 6px;
+      border-radius: 50%; }
+      .quoted-message .icon-container .circle-background.red {
+        background-color: #EF5350; }
+      .quoted-message .icon-container .circle-background.pink {
+        background-color: #EC407A; }
+      .quoted-message .icon-container .circle-background.purple {
+        background-color: #AB47BC; }
+      .quoted-message .icon-container .circle-background.deep_purple {
+        background-color: #7E57C2; }
+      .quoted-message .icon-container .circle-background.indigo {
+        background-color: #5C6BC0; }
+      .quoted-message .icon-container .circle-background.blue {
+        background-color: #2196F3; }
+      .quoted-message .icon-container .circle-background.light_blue {
+        background-color: #03A9F4; }
+      .quoted-message .icon-container .circle-background.cyan {
+        background-color: #00BCD4; }
+      .quoted-message .icon-container .circle-background.teal {
+        background-color: #009688; }
+      .quoted-message .icon-container .circle-background.green {
+        background-color: #4CAF50; }
+      .quoted-message .icon-container .circle-background.light_green {
+        background-color: #7CB342; }
+      .quoted-message .icon-container .circle-background.orange {
+        background-color: #FF9800; }
+      .quoted-message .icon-container .circle-background.deep_orange {
+        background-color: #FF5722; }
+      .quoted-message .icon-container .circle-background.amber {
+        background-color: #FFB300; }
+      .quoted-message .icon-container .circle-background.blue_grey {
+        background-color: #607D8B; }
+      .quoted-message .icon-container .circle-background.grey {
+        background-color: #999999; }
+      .quoted-message .icon-container .circle-background.default {
+        background-color: #2090ea; }
+      .quoted-message .icon-container .circle-background.white {
+        background-color: white; }
+    .quoted-message .icon-container .icon {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      top: 12px;
+      bottom: 12px; }
+      .quoted-message .icon-container .icon.file {
+        background-image: url("../images/file_FFFFFF10.svg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+      .quoted-message .icon-container .icon.image {
+        background-image: url("../images/image_FFFFFF10.svg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+      .quoted-message .icon-container .icon.microphone {
+        background-image: url("../images/microphone_FFFFFF10.svg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+      .quoted-message .icon-container .icon.play {
+        background-image: url("../images/play_FFFFFF10.svg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+      .quoted-message .icon-container .icon.movie {
+        background-image: url("../images/movie_FFFFFF10.svg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+      .quoted-message .icon-container .icon.red {
+        background-color: #EF5350; }
+      .quoted-message .icon-container .icon.pink {
+        background-color: #EC407A; }
+      .quoted-message .icon-container .icon.purple {
+        background-color: #AB47BC; }
+      .quoted-message .icon-container .icon.deep_purple {
+        background-color: #7E57C2; }
+      .quoted-message .icon-container .icon.indigo {
+        background-color: #5C6BC0; }
+      .quoted-message .icon-container .icon.blue {
+        background-color: #2196F3; }
+      .quoted-message .icon-container .icon.light_blue {
+        background-color: #03A9F4; }
+      .quoted-message .icon-container .icon.cyan {
+        background-color: #00BCD4; }
+      .quoted-message .icon-container .icon.teal {
+        background-color: #009688; }
+      .quoted-message .icon-container .icon.green {
+        background-color: #4CAF50; }
+      .quoted-message .icon-container .icon.light_green {
+        background-color: #7CB342; }
+      .quoted-message .icon-container .icon.orange {
+        background-color: #FF9800; }
+      .quoted-message .icon-container .icon.deep_orange {
+        background-color: #FF5722; }
+      .quoted-message .icon-container .icon.amber {
+        background-color: #FFB300; }
+      .quoted-message .icon-container .icon.blue_grey {
+        background-color: #607D8B; }
+      .quoted-message .icon-container .icon.grey {
+        background-color: #999999; }
+      .quoted-message .icon-container .icon.default {
+        background-color: #2090ea; }
+    .quoted-message .icon-container .inner {
+      position: relative;
+      height: 50px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      object-fit: cover; }
+      .quoted-message .icon-container .inner img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; }
+
+.outgoing .quoted-message,
+.private .incoming .quoted-message {
+  margin-top: -5px; }
+
+.bottom-bar .quoted-message {
+  margin: 0; }
+
+.bottom-bar .quote-wrapper {
+  margin-right: 5px;
+  margin-bottom: 5px; }
+
+.send .quote-wrapper {
+  margin-left: 46px;
+  margin-top: 5px;
+  margin-right: 75px;
+  margin-bottom: 0px; }
+
+.incoming .quoted-message {
+  background-color: rgba(255, 255, 255, 0.6);
+  border-top: none;
+  border-bottom: none;
+  border-right: none;
+  border-left-color: white; }
 
 .message-list .avatar,
 .message-container .avatar {
@@ -2175,7 +2542,11 @@ span.status {
   background-color: #f3f3f3;
   color: #454545;
   border-color: rgba(0, 0, 0, 0.05);
-  text-align: left; }
+  text-align: left;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1; }
   .ios .conversation-header .conversation-title {
     line-height: 64px; }
     .ios .conversation-header .conversation-title .verified-icon {
@@ -2208,93 +2579,208 @@ span.status {
 .ios .control .content {
   padding: 10px; }
 
+.ios .message-container .bubble .content,
+.ios .message-list .bubble .content {
+  margin-top: 0px; }
+
+.ios .quoted-message {
+  background-color: white !important;
+  border: none !important;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+
+  margin-top: 0px !important;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px; }
+  .ios .quoted-message .primary {
+    padding: 10px; }
+    .ios .quoted-message .primary .text,
+    .ios .quoted-message .primary .filename-label,
+    .ios .quoted-message .primary .type-label {
+      border-left: 2px solid #bdbdbd;
+      padding: 5px;
+      padding-left: 7px;
+      padding-bottom: 2px;
+      color: black; }
+    .ios .quoted-message .primary .author {
+      display: none; }
+    .ios .quoted-message .primary .ios-label {
+      display: block;
+      color: #bdbdbd;
+      font-size: smaller;
+      margin-bottom: 3px; }
+  .ios .quoted-message .icon-container {
+    height: 61px;
+    width: 61px;
+    min-width: 61px; }
+    .ios .quoted-message .icon-container .circle-background {
+      left: 12px;
+      right: 12px;
+      top: 12px;
+      bottom: 12px;
+      background-color: #2090ea !important; }
+    .ios .quoted-message .icon-container .icon {
+      left: 18px;
+      right: 18px;
+      top: 18px;
+      bottom: 18px;
+      background-color: white !important; }
+    .ios .quoted-message .icon-container .inner {
+      padding: 12px;
+      height: 61px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center; }
+  .ios .quoted-message .close-container {
+    flex: initial;
+    min-width: 32px;
+    width: 32px;
+    height: 50px;
+    position: relative;
+    top: auto;
+    right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-mask: none;
+    background: none; }
+    .ios .quoted-message .close-container .close-button {
+      height: 20px;
+      width: 20px;
+      background-image: url("../images/close-circle_8D8D8D10.svg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+  .ios .quoted-message .from-me .primary .text,
+  .ios .quoted-message .from-me .primary .filename-label,
+  .ios .quoted-message .from-me .primary .type-label {
+    border-left: 2px solid #2090ea; }
+
+.ios .incoming .quoted-message {
+  border-bottom: 1px solid lightgray !important; }
+
+.ios .quoted-message.from-me .primary .text,
+.ios .quoted-message.from-me .primary .filename-label,
+.ios .quoted-message.from-me .primary .type-label {
+  border-left: 2px solid #2090ea; }
+
+.ios .outgoing .quoted-message,
+.ios .private .incoming .quoted-message {
+  margin-top: 0px; }
+
+.ios .outgoing .quoted-message .icon-container .circle-background {
+  background-color: lightgray !important; }
+
+.ios .bottom-bar .quote-wrapper {
+  margin-right: 0px;
+  margin-bottom: 15px; }
+
+.ios .bottom-bar .quoted-message {
+  background: none !important; }
+  .ios .bottom-bar .quoted-message .primary {
+    padding: 0px; }
+    .ios .bottom-bar .quoted-message .primary .ios-label {
+      color: #8d8d8d; }
+  .ios .bottom-bar .quoted-message .icon-container {
+    height: 50px;
+    width: 50px;
+    min-width: 50px; }
+    .ios .bottom-bar .quoted-message .icon-container .circle-background {
+      left: 6px;
+      right: 6px;
+      top: 6px;
+      bottom: 6px;
+      background-color: #2090ea !important; }
+    .ios .bottom-bar .quoted-message .icon-container .icon {
+      left: 12px;
+      right: 12px;
+      top: 12px;
+      bottom: 12px; }
+    .ios .bottom-bar .quoted-message .icon-container .inner {
+      padding: 0px;
+      height: 50px; }
+
 .ios .attachments .bubbled {
   border-radius: 15px;
-  margin-bottom: 0.25em;
   padding: 10px;
+  padding-top: 0px;
+  padding-bottom: 5px;
   position: relative; }
-  .ios .attachments .bubbled:before, .ios .attachments .bubbled:after {
-    content: '';
-    display: block;
-    border-radius: 20px;
-    position: absolute;
-    width: 10px; }
-  .ios .attachments .bubbled:before {
-    right: -1px;
-    bottom: -3px;
-    height: 10px;
-    border-radius: 20px;
-    background: #2090ea; }
-  .ios .attachments .bubbled:after {
-    height: 11px;
-    right: -6px;
-    bottom: -3px;
-    background: #eee; }
+  .ios .attachments .bubbled video, .ios .attachments .bubbled audio {
+    margin-bottom: 5px; }
 
-.ios .bubble .content {
+.ios .tail-wrapper {
   margin-bottom: 5px; }
-  .ios .bubble .content .body {
+
+.ios .inner-bubble {
+  border-radius: 15px;
+  overflow: hidden; }
+  .ios .inner-bubble .body {
+    margin-top: 0;
     display: inline-block;
     padding: 10px;
     position: relative;
     word-break: break-word; }
-    .ios .bubble .content .body:before, .ios .bubble .content .body:after {
+
+.ios .tail-wrapper.with-tail {
+  position: relative; }
+  .ios .tail-wrapper.with-tail:before, .ios .tail-wrapper.with-tail:after {
       content: '';
       display: block;
       border-radius: 20px;
       position: absolute;
       width: 10px; }
-    .ios .bubble .content .body:before {
+  .ios .tail-wrapper.with-tail:before {
       right: -1px;
       bottom: -3px;
       height: 10px;
       border-radius: 20px;
       background: #2090ea; }
-    .ios .bubble .content .body:after {
+  .ios .tail-wrapper.with-tail:after {
       height: 11px;
       right: -6px;
       bottom: -3px;
       background: #eee; }
 
-.ios .bubble .content, .ios .bubble .attachments img {
-  border-radius: 15px; }
-
-.ios .bubble .attachments img {
-  background-color: white; }
-
-.ios .bubble .meta {
+.ios .meta {
   clear: both; }
 
-.ios .incoming .bubbled {
-  background-color: white;
-  color: black;
-  float: left;
-  max-width: 100%; }
-  .ios .incoming .bubbled:before {
-    left: -1px;
-    background-color: white; }
-  .ios .incoming .bubbled:after {
-    left: -6px; }
-
-.ios .incoming .content {
-  background-color: white;
-  color: black;
-  float: left; }
-  .ios .incoming .content .body:before {
-    left: -1px;
-    background-color: white; }
-  .ios .incoming .content .body:after {
-    left: -6px; }
-
-.ios .outgoing .content, .ios .outgoing .attachments .bubbled {
-  background-color: #2090ea;
-  max-width: 100%;
+.ios .outgoing .tail-wrapper {
   float: right; }
-  .ios .outgoing .content, .ios .outgoing .content .body, .ios .outgoing .content a, .ios .outgoing .attachments .bubbled, .ios .outgoing .attachments .bubbled .body, .ios .outgoing .attachments .bubbled a {
-    color: white; }
-    .ios .outgoing .content::selection, .ios .outgoing .content .body::selection, .ios .outgoing .content a::selection, .ios .outgoing .attachments .bubbled::selection, .ios .outgoing .attachments .bubbled .body::selection, .ios .outgoing .attachments .bubbled a::selection {
-      background: white;
-      color: #454545; }
+  .ios .outgoing .tail-wrapper .inner-bubble {
+  max-width: 100%; }
+
+.ios .incoming .tail-wrapper {
+  float: left; }
+  .ios .incoming .tail-wrapper .inner-bubble {
+  max-width: 100%; }
+
+.ios .outgoing .tail-wrapper .attachments {
+      background-color: #2090ea; }
+
+.ios .outgoing .tail-wrapper .content {
+      background-color: #2090ea; }
+
+.ios .outgoing .tail-wrapper, .ios .outgoing .tail-wrapper .body, .ios .outgoing .tail-wrapper a {
+      color: white; }
+  .ios .outgoing .tail-wrapper::selection, .ios .outgoing .tail-wrapper .body::selection, .ios .outgoing .tail-wrapper a::selection {
+        background: white;
+        color: #454545; }
+
+.ios .incoming .tail-wrapper.with-tail:before {
+    left: -1px;
+    background-color: white; }
+
+.ios .incoming .tail-wrapper.with-tail:after {
+    left: -6px; }
+
+.ios .incoming .tail-wrapper .inner-bubble {
+  background-color: white;
+  color: black; }
 
 .ios .outgoing .attachments .fileView .icon {
   background-image: url("../images/file_FFFFFF10.svg");
@@ -2317,10 +2803,12 @@ span.status {
     background-repeat: no-repeat;
     background-position: center center; }
 
-.ios .attachment {
-  margin-bottom: 1px; }
   .ios .attachment a {
     border-radius: 15px; }
+
+.ios .attachment img {
+  margin-right: auto;
+  margin-left: auto; }
 
 .ios .hourglass {
   display: inline-block;
@@ -2868,6 +3356,19 @@ span.status {
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
+  .android-dark .outgoing .quoted-message {
+    background: rgba(255, 255, 255, 0.38); }
+    .android-dark .outgoing .quoted-message .icon-container .icon {
+    background-color: black; }
+      .android-dark .outgoing .quoted-message .icon-container .icon.play.with-image {
+      background-color: #CCCCCC; }
+  .android-dark .incoming .quoted-message {
+    border-left-color: #CCCCCC;
+    background-color: rgba(0, 0, 0, 0.6); }
+    .android-dark .incoming .quoted-message .icon-container .circle-background {
+      background-color: #CCCCCC; }
+    .android-dark .incoming .quoted-message .icon-container .icon.play.with-image {
+      background-color: #CCCCCC; }
   .android-dark button.clock {
     background-image: url("../images/clock_FFFFFF08.svg");
     background-size: 100%;

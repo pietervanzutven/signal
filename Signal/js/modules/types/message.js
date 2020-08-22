@@ -2,7 +2,7 @@
   'use strict';
 
   window.types = window.types || {};
-  window.types.message = {};
+  const exports = window.types.message = {};
 
   const { isFunction, isString, omit } = window.lodash;
 
@@ -24,6 +24,9 @@
   //   - Attachments: Sanitize Unicode order override characters.
   // Version 3
   //   - Attachments: Write attachment data to disk and store relative path to it.
+// Version 4
+//   - Quotes: Write thumbnail data to disk and store relative path to it.
+
 
   const INITIAL_SCHEMA_VERSION = 0;
 
@@ -32,19 +35,19 @@
   // add more upgrade steps, we could design a pipeline that does this
   // incrementally, e.g. from version 0 / unknown -> 1, 1 --> 2, etc., similar to
   // how we do database migrations:
-  window.types.message.CURRENT_SCHEMA_VERSION = 3;
+  exports.CURRENT_SCHEMA_VERSION = 4;
 
 
   // Public API
-  window.types.message.GROUP = GROUP;
-  window.types.message.PRIVATE = PRIVATE;
+  exports.GROUP = GROUP;
+  exports.PRIVATE = PRIVATE;
 
   // Placeholder until we have stronger preconditions:
-  window.types.message.isValid = () =>
+  exports.isValid = () =>
     true;
 
   // Schema
-  window.types.message.initializeSchemaVersion = (message) => {
+  exports.initializeSchemaVersion = (message) => {
     const isInitialized = SchemaVersion.isValid(message.schemaVersion) &&
       message.schemaVersion >= 1;
     if (isInitialized) {
@@ -85,7 +88,7 @@
   // type UpgradeStep = (Message, Context) -> Promise Message
 
   // SchemaVersion -> UpgradeStep -> UpgradeStep
-  window.types.message._withSchemaVersion = (schemaVersion, upgrade) => {
+  exports._withSchemaVersion = (schemaVersion, upgrade) => {
     if (!SchemaVersion.isValid(schemaVersion)) {
       throw new TypeError("'schemaVersion' is invalid");
     }
@@ -94,7 +97,7 @@
     }
 
     return async (message, context) => {
-      if (!window.types.message.isValid(message)) {
+      if (!exports.isValid(message)) {
         console.log('Message._withSchemaVersion: Invalid input message:', message);
         return message;
       }
@@ -127,7 +130,7 @@
         return message;
       }
 
-      if (!window.types.message.isValid(upgradedMessage)) {
+      if (!exports.isValid(upgradedMessage)) {
         console.log(
           'Message._withSchemaVersion: Invalid upgraded message:',
           upgradedMessage
@@ -148,42 +151,89 @@
   //      _mapAttachments :: (Attachment -> Promise Attachment) ->
   //                         (Message, Context) ->
   //                         Promise Message
-  window.types.message._mapAttachments = upgradeAttachment => async (message, context) => {
+  exports._mapAttachments = upgradeAttachment => async (message, context) => {
     const upgradeWithContext = attachment =>
       upgradeAttachment(attachment, context);
     const attachments = await Promise.all(message.attachments.map(upgradeWithContext));
     return Object.assign({}, message, { attachments });
   };
 
-  const toVersion0 = async message =>
-    window.types.message.initializeSchemaVersion(message);
+  //      _mapQuotedAttachments :: (QuotedAttachment -> Promise QuotedAttachment) ->
+  //                               (Message, Context) ->
+  //                               Promise Message
+  exports._mapQuotedAttachments = upgradeAttachment => async (message, context) => {
+    if (!message.quote) {
+      return message;
+    }
 
-  const toVersion1 = window.types.message._withSchemaVersion(
+    const upgradeWithContext = async (attachment) => {
+    const { thumbnail } = attachment;
+    if (!thumbnail) {
+        return attachment;
+      }
+
+    if (!thumbnail.data) {
+      console.log('Quoted attachment did not have thumbnail data; removing it');
+      return omit(attachment, ['thumbnail']);
+    }
+
+    const upgradedThumbnail = await upgradeAttachment(thumbnail, context);
+      return Object.assign({}, attachment, {
+      thumbnail: upgradedThumbnail,
+      });
+    };
+
+    const quotedAttachments = (message.quote && message.quote.attachments) || [];
+
+    const attachments = await Promise.all(quotedAttachments.map(upgradeWithContext));
+    return Object.assign({}, message, {
+      quote: Object.assign({}, message.quote, {
+        attachments,
+      }),
+    });
+  };
+
+  const toVersion0 = async message =>
+    exports.initializeSchemaVersion(message);
+
+  const toVersion1 = exports._withSchemaVersion(
     1,
-    window.types.message._mapAttachments(Attachment.autoOrientJPEG)
+    exports._mapAttachments(Attachment.autoOrientJPEG)
   );
-  const toVersion2 = window.types.message._withSchemaVersion(
+  const toVersion2 = exports._withSchemaVersion(
     2,
-    window.types.message._mapAttachments(Attachment.replaceUnicodeOrderOverrides)
+    exports._mapAttachments(Attachment.replaceUnicodeOrderOverrides)
   );
-  const toVersion3 = window.types.message._withSchemaVersion(
+  const toVersion3 = exports._withSchemaVersion(
     3,
-    window.types.message._mapAttachments(Attachment.migrateDataToFileSystem)
+    exports._mapAttachments(Attachment.migrateDataToFileSystem)
+  );
+  const toVersion4 = exports._withSchemaVersion(
+    4,
+    exports._mapQuotedAttachments(Attachment.migrateDataToFileSystem)
   );
 
   // UpgradeStep
-  window.types.message.upgradeSchema = async (message, { writeNewAttachmentData } = {}) => {
+  exports.upgradeSchema = async (rawMessage, { writeNewAttachmentData } = {}) => {
     if (!isFunction(writeNewAttachmentData)) {
       throw new TypeError('`context.writeNewAttachmentData` is required');
     }
 
-    return toVersion3(
-      await toVersion2(await toVersion1(await toVersion0(message))),
-      { writeNewAttachmentData }
-    );
+    let message = rawMessage;
+    const versions = [toVersion0, toVersion1, toVersion2, toVersion3, toVersion4];
+
+    for (let i = 0, max = versions.length; i < max; i += 1) {
+      const currentVersion = versions[i];
+      // We really do want this intra-loop await because this is a chained async action,
+      //   each step dependent on the previous
+      // eslint-disable-next-line no-await-in-loop
+      message = await currentVersion(message, { writeNewAttachmentData });
+    }
+
+    return message;
   };
 
-  window.types.message.createAttachmentLoader = (loadAttachmentData) => {
+  exports.createAttachmentLoader = (loadAttachmentData) => {
     if (!isFunction(loadAttachmentData)) {
       throw new TypeError('`loadAttachmentData` is required');
     }
@@ -196,21 +246,24 @@
   //      createAttachmentDataWriter :: (RelativePath -> IO Unit)
   //                                    Message ->
   //                                    IO (Promise Message)
-  window.types.message.createAttachmentDataWriter = (writeExistingAttachmentData) => {
+  exports.createAttachmentDataWriter = (writeExistingAttachmentData) => {
     if (!isFunction(writeExistingAttachmentData)) {
       throw new TypeError("'writeExistingAttachmentData' must be a function");
     }
 
     return async (rawMessage) => {
-      if (!window.types.message.isValid(rawMessage)) {
+      if (!exports.isValid(rawMessage)) {
         throw new TypeError("'rawMessage' is not valid");
       }
 
-      const message = window.types.message.initializeSchemaVersion(rawMessage);
+      const message = exports.initializeSchemaVersion(rawMessage);
 
-      const { attachments } = message;
-      const hasAttachments = attachments && attachments.length > 0;
-      if (!hasAttachments) {
+    const { attachments, quote } = message;
+    const hasFilesToWrite =
+      (quote && quote.attachments && quote.attachments.length > 0) ||
+      (attachments && attachments.length > 0);
+
+    if (!hasFilesToWrite) {
         return message;
       }
 
@@ -221,7 +274,7 @@
         return message;
       }
 
-      attachments.forEach((attachment) => {
+    (attachments || []).forEach((attachment) => {
         if (!Attachment.hasData(attachment)) {
           throw new TypeError("'attachment.data' is required during message import");
         }
@@ -231,12 +284,35 @@
         }
       });
 
-      const messageWithoutAttachmentData = Object.assign({}, message, {
-        attachments: await Promise.all(attachments.map(async (attachment) => {
+    const writeThumbnails = exports._mapQuotedAttachments(async (thumbnail) => {
+      const { data, path } = thumbnail;
+
+      // we want to be bulletproof to thumbnails without data
+      if (!data || !path) {
+        console.log(
+          'Thumbnail had neither data nor path.',
+          'id:',
+          message.id,
+          'source:',
+          message.source
+        );
+        return thumbnail;
+      }
+
+      await writeExistingAttachmentData(thumbnail);
+      return omit(thumbnail, ['data']);
+    });
+
+    const messageWithoutAttachmentData = Object.assign(
+      {},
+      await writeThumbnails(message),
+      {
+        attachments: await Promise.all((attachments || []).map(async (attachment) => {
           await writeExistingAttachmentData(attachment);
           return omit(attachment, ['data']);
         })),
-      });
+      }
+    );
 
       return messageWithoutAttachmentData;
     };

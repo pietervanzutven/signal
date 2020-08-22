@@ -113,7 +113,10 @@
     <Content Include="images\clock_CCCCCC10.svg" />
     <Content Include="images\clock_FFFFFF08.svg" />
     <Content Include="images\clock_FFFFFF10.svg" />
+    <Content Include="images\close-circle_8D8D8D10.svg" />
     <Content Include="images\delete_DEDEDE10.svg" />
+    <Content Include="images\dots-horizontal_00000010.svg" />
+    <Content Include="images\dots-horizontal_80808010.svg" />
     <Content Include="images\double-check_00000010.svg" />
     <Content Include="images\double-check_2090EA10.svg" />
     <Content Include="images\double-check_FFFFFF10.svg" />
@@ -141,6 +144,7 @@
     <Content Include="images\icon_256.png" />
     <Content Include="images\icon_32.png" />
     <Content Include="images\icon_48.png" />
+    <Content Include="images\image_FFFFFF10.svg" />
     <Content Include="images\import_DEDEDE10.svg" />
     <Content Include="images\LargeTile.scale-100.png" />
     <Content Include="images\LargeTile.scale-125.png" />
@@ -156,10 +160,12 @@
     <Content Include="images\menu_FFFFFF10.svg" />
     <Content Include="images\microphone_61616110.svg" />
     <Content Include="images\microphone_FFFFFF10.svg" />
+    <Content Include="images\movie_FFFFFF10.svg" />
     <Content Include="images\open_link_00000005.svg" />
     <Content Include="images\open_link_00000010.svg" />
     <Content Include="images\paperclip_61616110.svg" />
     <Content Include="images\paperclip_FFFFFF10.svg" />
+    <Content Include="images\play_FFFFFF10.svg" />
     <Content Include="images\playstore.png" />
     <Content Include="images\save_FFFFFF10.svg" />
     <Content Include="images\search_CCCCCC10.svg" />
@@ -225,6 +231,7 @@
     <Content Include="images\Wide310x150Logo.scale-400.png" />
     <Content Include="images\windows_2090EA10.svg" />
     <Content Include="images\x_00000010.svg" />
+    <Content Include="images\x_61616110.svg" />
     <Content Include="images\x_17171710.svg" />
     <Content Include="images\x_2090EA10.svg" />
     <Content Include="images\x_EF898910.svg" />
@@ -232,6 +239,9 @@
     <Content Include="index.html" />
     <Content Include="js\background.js" />
     <Content Include="js\background_task.js" />
+    <Content Include="js\emoji_util.js" />
+    <Content Include="js\modules\classnames\index.js" />
+    <Content Include="js\modules\components\conversation\Quote.js" />
     <Content Include="js\modules\html\html.js" />
     <Content Include="js\modules\i18n.js" />
     <Content Include="js\modules\linkify-it\linkify-it.js" />
