@@ -2680,7 +2680,8 @@ span.status {
   margin-bottom: 15px; }
 
 .ios .bottom-bar .quoted-message {
-  background: none !important; }
+  background: none !important;
+  border-radius: 0; }
   .ios .bottom-bar .quoted-message .primary {
     padding: 0px; }
     .ios .bottom-bar .quoted-message .primary .ios-label {
