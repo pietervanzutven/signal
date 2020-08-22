@@ -2586,7 +2586,11 @@ span.status {
 .ios .quoted-message {
   background-color: white !important;
   border: none !important;
-  border-radius: 0;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+
   margin-top: 0px !important;
   margin-bottom: 0px;
   margin-left: 0px;
