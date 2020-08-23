@@ -1,18 +1,26 @@
 (function () {
     "use strict";
 
-    window.components = window.components || {};
-    window.components.conversation = window.components.conversation || {};
-    const exports = window.components.conversation.quote = {};
+    window.ts = window.ts || {};
+    window.ts.components = window.ts.components || {};
+    window.ts.components.conversation = window.ts.components.conversation || {};
+    const exports = window.ts.components.conversation.Quote = {};
 
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
+    var __importStar = (this && this.__importStar) || function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+        result["default"] = mod;
+        return result;
+    };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react.react);
+    const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
-    // @ts-ignore
-    const mime_1 = __importDefault(window.types.mime);
+    const MIME = __importStar(window.ts.types.MIME);
+    const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
     function validateQuote(quote) {
         if (quote.text) {
             return true;
@@ -54,17 +62,17 @@
             const first = attachments[0];
             const { contentType, thumbnail } = first;
             const objectUrl = getObjectUrl(thumbnail);
-            if (mime_1.default.isVideo(contentType)) {
+            if (GoogleChrome.isVideoTypeSupported(contentType)) {
                 return objectUrl
                     ? this.renderImage(objectUrl, 'play')
-                    : this.renderIcon('play');
+                    : this.renderIcon('movie');
             }
-            if (mime_1.default.isImage(contentType)) {
+            if (GoogleChrome.isImageTypeSupported(contentType)) {
                 return objectUrl
                     ? this.renderImage(objectUrl)
                     : this.renderIcon('image');
             }
-            if (mime_1.default.isAudio(contentType)) {
+            if (MIME.isAudio(contentType)) {
                 return this.renderIcon('microphone');
             }
             return this.renderIcon('file');
@@ -72,23 +80,23 @@
         renderText() {
             const { i18n, text, attachments } = this.props;
             if (text) {
-                return react_1.default.createElement("div", { className: "text" }, text);
+                return react_1.default.createElement("div", { className: "text", dangerouslySetInnerHTML: { __html: text } });
             }
             if (!attachments || attachments.length === 0) {
                 return null;
             }
             const first = attachments[0];
             const { contentType, fileName, isVoiceMessage } = first;
-            if (mime_1.default.isVideo(contentType)) {
+            if (GoogleChrome.isVideoTypeSupported(contentType)) {
                 return react_1.default.createElement("div", { className: "type-label" }, i18n('video'));
             }
-            if (mime_1.default.isImage(contentType)) {
+            if (GoogleChrome.isImageTypeSupported(contentType)) {
                 return react_1.default.createElement("div", { className: "type-label" }, i18n('photo'));
             }
-            if (mime_1.default.isAudio(contentType) && isVoiceMessage) {
+            if (MIME.isAudio(contentType) && isVoiceMessage) {
                 return react_1.default.createElement("div", { className: "type-label" }, i18n('voiceMessage'));
             }
-            if (mime_1.default.isAudio(contentType)) {
+            if (MIME.isAudio(contentType)) {
                 return react_1.default.createElement("div", { className: "type-label" }, i18n('audio'));
             }
             return react_1.default.createElement("div", { className: "filename-label" }, fileName);
@@ -104,6 +112,21 @@
                 : i18n('replyingTo', [authorName]);
             return react_1.default.createElement("div", { className: "ios-label" }, label);
         }
+        renderClose() {
+            const { onClose } = this.props;
+            if (!onClose) {
+                return null;
+            }
+            // We don't want the overall click handler for the quote to fire, so we stop
+            //   propagation before handing control to the caller's callback.
+            const onClick = (e) => {
+                e.stopPropagation();
+                onClose();
+            };
+            // We need the container to give us the flexibility to implement the iOS design.
+            return (react_1.default.createElement("div", { className: "close-container" },
+                react_1.default.createElement("div", { className: "close-button", onClick: onClick })));
+        }
         render() {
             const { authorTitle, authorProfileName, authorColor, onClick, isFromMe, } = this.props;
             if (!validateQuote(this.props)) {
@@ -114,7 +137,7 @@
                     "~",
                     authorProfileName)
                 : null;
-            const classes = classnames_1.default(authorColor, 'quote', isFromMe ? 'from-me' : null, !onClick ? 'no-click' : null);
+            const classes = classnames_1.default(authorColor, 'quoted-message', isFromMe ? 'from-me' : null, !onClick ? 'no-click' : null);
             return (react_1.default.createElement("div", { onClick: onClick, className: classes },
                 react_1.default.createElement("div", { className: "primary" },
                     this.renderIOSLabel(),
@@ -123,7 +146,8 @@
                         ' ',
                         authorProfileElement),
                     this.renderText()),
-                this.renderIconContainer()));
+                this.renderIconContainer(),
+                this.renderClose()));
         }
     }
     exports.Quote = Quote;

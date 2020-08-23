@@ -9,6 +9,8 @@
   const Attachment = window.types.attachment;
   const Errors = window.types.errors;
   const SchemaVersion = window.types.schema_version;
+  const { initializeAttachmentMetadata } =
+    window.ts.types.message.initializeAttachmentMetadata;
 
 
   const GROUP = 'group';
@@ -26,7 +28,11 @@
   //   - Attachments: Write attachment data to disk and store relative path to it.
 // Version 4
 //   - Quotes: Write thumbnail data to disk and store relative path to it.
-
+// Version 5
+//   - Attachments: Track number and kind of attachments for media gallery
+//     - `hasAttachments?: 1 | 0`
+//     - `hasVisualMediaAttachments?: 1 | undefined` (for media gallery ‘Media’ view)
+//     - `hasFileAttachments?: 1 | undefined` (for media gallery ‘Documents’ view)
 
   const INITIAL_SCHEMA_VERSION = 0;
 
@@ -35,7 +41,7 @@
   // add more upgrade steps, we could design a pipeline that does this
   // incrementally, e.g. from version 0 / unknown -> 1, 1 --> 2, etc., similar to
   // how we do database migrations:
-  exports.CURRENT_SCHEMA_VERSION = 4;
+exports.CURRENT_SCHEMA_VERSION = 5;
 
 
   // Public API
@@ -212,6 +218,7 @@
     4,
     exports._mapQuotedAttachments(Attachment.migrateDataToFileSystem)
   );
+const toVersion5 = exports._withSchemaVersion(5, initializeAttachmentMetadata);
 
   // UpgradeStep
   exports.upgradeSchema = async (rawMessage, { writeNewAttachmentData } = {}) => {
@@ -220,7 +227,14 @@
     }
 
     let message = rawMessage;
-    const versions = [toVersion0, toVersion1, toVersion2, toVersion3, toVersion4];
+  const versions = [
+    toVersion0,
+    toVersion1,
+    toVersion2,
+    toVersion3,
+    toVersion4,
+    toVersion5,
+  ];
 
     for (let i = 0, max = versions.length; i < max; i += 1) {
       const currentVersion = versions[i];

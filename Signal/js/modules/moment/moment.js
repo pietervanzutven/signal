@@ -7,8 +7,6 @@
 (function () {
     'use strict';
 
-    window.moment = window.moment || {};
-
     var hookCallback;
 
     function hooks() {
@@ -5662,6 +5660,6 @@
         MONTH: 'YYYY-MM', // <input type="month" />
     };
 
-    window.moment.moment = hooks;
+    window.moment = hooks;
 
 })();

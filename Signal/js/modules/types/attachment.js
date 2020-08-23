@@ -2,11 +2,11 @@
   'use strict';
 
   window.types = window.types || {};
-  window.types.attachment = window.types.attachment || {};
+  const exports = window.types.attachment = window.types.attachment || {};
 
-  const { isFunction, isString } = window.lodash;
+  const is = window.sindresorhus.is;
 
-  const MIME = window.types.mime;
+  const MIME = window.ts.types.MIME;
   const { arrayBufferToBlob, blobToArrayBuffer, dataURLToBlob } = window.blob_util;
   const { autoOrientImage } = window.auto_orient_image;
   const { migrateDataToFileSystem } = window.types.attachment.migrate_data_to_file_system;
@@ -35,7 +35,7 @@
   // Returns true if `rawAttachment` is a valid attachment based on our current schema.
   // Over time, we can expand this definition to become more narrow, e.g. require certain
   // fields, etc.
-  window.types.attachment.isValid = (rawAttachment) => {
+  exports.isValid = (rawAttachment) => {
     // NOTE: We cannot use `_.isPlainObject` because `rawAttachment` is
     // deserialized by protobuf:
     if (!rawAttachment) {
@@ -46,7 +46,7 @@
   };
 
   // Upgrade steps
-  window.types.attachment.autoOrientJPEG = async (attachment) => {
+  exports.autoOrientJPEG = async (attachment) => {
     if (!MIME.isJPEG(attachment.contentType)) {
       return attachment;
     }
@@ -81,8 +81,8 @@
   // NOTE: Expose synchronous version to do property-based testing using `testcheck`,
   // which currently doesn’t support async testing:
   // https://github.com/leebyron/testcheck-js/issues/45
-  window.types.attachment._replaceUnicodeOrderOverridesSync = (attachment) => {
-    if (!isString(attachment.fileName)) {
+  exports._replaceUnicodeOrderOverridesSync = (attachment) => {
+    if (!is.string(attachment.fileName)) {
       return attachment;
     }
 
@@ -97,11 +97,11 @@
     return newAttachment;
   };
 
-  window.types.attachment.replaceUnicodeOrderOverrides = async attachment =>
-    window.types.attachment._replaceUnicodeOrderOverridesSync(attachment);
+  exports.replaceUnicodeOrderOverrides = async attachment =>
+    exports._replaceUnicodeOrderOverridesSync(attachment);
 
-  window.types.attachment.removeSchemaVersion = (attachment) => {
-    if (!window.types.attachment.isValid(attachment)) {
+  exports.removeSchemaVersion = (attachment) => {
+    if (!exports.isValid(attachment)) {
       console.log('Attachment.removeSchemaVersion: Invalid input attachment:', attachment);
       return attachment;
     }
@@ -111,31 +111,31 @@
     return attachmentWithoutSchemaVersion;
   };
 
-  window.types.attachment.migrateDataToFileSystem = migrateDataToFileSystem;
+  exports.migrateDataToFileSystem = migrateDataToFileSystem;
 
   //      hasData :: Attachment -> Boolean
-  window.types.attachment.hasData = attachment =>
+  exports.hasData = attachment =>
     attachment.data instanceof ArrayBuffer || ArrayBuffer.isView(attachment.data);
 
   //      loadData :: (RelativePath -> IO (Promise ArrayBuffer))
   //                  Attachment ->
   //                  IO (Promise Attachment)
-  window.types.attachment.loadData = (readAttachmentData) => {
-    if (!isFunction(readAttachmentData)) {
+  exports.loadData = (readAttachmentData) => {
+    if (!is.function(readAttachmentData)) {
       throw new TypeError("'readAttachmentData' must be a function");
     }
 
     return async (attachment) => {
-      if (!window.types.attachment.isValid(attachment)) {
+      if (!exports.isValid(attachment)) {
         throw new TypeError("'attachment' is not valid");
       }
 
-      const isAlreadyLoaded = window.types.attachment.hasData(attachment);
+      const isAlreadyLoaded = exports.hasData(attachment);
       if (isAlreadyLoaded) {
         return attachment;
       }
 
-      if (!isString(attachment.path)) {
+      if (!is.string(attachment.path)) {
         throw new TypeError("'attachment.path' is required");
       }
 
@@ -147,22 +147,22 @@
   //      deleteData :: (RelativePath -> IO Unit)
   //                    Attachment ->
   //                    IO Unit
-  window.types.attachment.deleteData = (deleteAttachmentData) => {
-    if (!isFunction(deleteAttachmentData)) {
+  exports.deleteData = (deleteAttachmentData) => {
+    if (!is.function(deleteAttachmentData)) {
       throw new TypeError("'deleteAttachmentData' must be a function");
     }
 
     return async (attachment) => {
-      if (!window.types.attachment.isValid(attachment)) {
+      if (!exports.isValid(attachment)) {
         throw new TypeError("'attachment' is not valid");
       }
 
-      const hasDataInMemory = window.types.attachment.hasData(attachment);
+      const hasDataInMemory = exports.hasData(attachment);
       if (hasDataInMemory) {
         return;
       }
 
-      if (!isString(attachment.path)) {
+      if (!is.string(attachment.path)) {
         throw new TypeError("'attachment.path' is required");
       }
 

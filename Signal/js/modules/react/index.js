@@ -7,11 +7,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-(function (exports) {
+(function () {
     'use strict';
 
-    window.react = window.react || {};
-    window.react.react = {};
+    const exports = window.react = {};
 
     var ReactVersion = '16.13.1';
 
@@ -3284,33 +3283,33 @@
         only: onlyChild
     };
 
-    window.react.react.Children = Children;
-    window.react.react.Component = Component;
-    window.react.react.Fragment = REACT_FRAGMENT_TYPE;
-    window.react.react.Profiler = REACT_PROFILER_TYPE;
-    window.react.react.PureComponent = PureComponent;
-    window.react.react.StrictMode = REACT_STRICT_MODE_TYPE;
-    window.react.react.Suspense = REACT_SUSPENSE_TYPE;
-    window.react.react.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactSharedInternals$1;
-    window.react.react.cloneElement = cloneElement$1;
-    window.react.react.createContext = createContext;
-    window.react.react.createElement = createElement$1;
-    window.react.react.createFactory = createFactory;
-    window.react.react.createRef = createRef;
-    window.react.react.forwardRef = forwardRef;
-    window.react.react.isValidElement = isValidElement;
-    window.react.react.lazy = lazy;
-    window.react.react.memo = memo;
-    window.react.react.useCallback = useCallback;
-    window.react.react.useContext = useContext;
-    window.react.react.useDebugValue = useDebugValue;
-    window.react.react.useEffect = useEffect;
-    window.react.react.useImperativeHandle = useImperativeHandle;
-    window.react.react.useLayoutEffect = useLayoutEffect;
-    window.react.react.useMemo = useMemo;
-    window.react.react.useReducer = useReducer;
-    window.react.react.useRef = useRef;
-    window.react.react.useState = useState;
-    window.react.react.version = ReactVersion;
+    exports.Children = Children;
+    exports.Component = Component;
+    exports.Fragment = REACT_FRAGMENT_TYPE;
+    exports.Profiler = REACT_PROFILER_TYPE;
+    exports.PureComponent = PureComponent;
+    exports.StrictMode = REACT_STRICT_MODE_TYPE;
+    exports.Suspense = REACT_SUSPENSE_TYPE;
+    exports.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactSharedInternals$1;
+    exports.cloneElement = cloneElement$1;
+    exports.createContext = createContext;
+    exports.createElement = createElement$1;
+    exports.createFactory = createFactory;
+    exports.createRef = createRef;
+    exports.forwardRef = forwardRef;
+    exports.isValidElement = isValidElement;
+    exports.lazy = lazy;
+    exports.memo = memo;
+    exports.useCallback = useCallback;
+    exports.useContext = useContext;
+    exports.useDebugValue = useDebugValue;
+    exports.useEffect = useEffect;
+    exports.useImperativeHandle = useImperativeHandle;
+    exports.useLayoutEffect = useLayoutEffect;
+    exports.useMemo = useMemo;
+    exports.useReducer = useReducer;
+    exports.useRef = useRef;
+    exports.useState = useState;
+    exports.version = ReactVersion;
 
 })();
