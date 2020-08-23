@@ -90,6 +90,7 @@
   window.autoOrientImage = autoOrientImage;
   window.dataURLToBlobSync = window.blueimp_canvas_to_blob;
   window.loadImage = window.blueimp_load_image;
+  window.filesize = window.filesize;
 
   // Note: when modifying this file, consider whether our React Components or Backbone Views
   //   will need these things to render in the Style Guide. If so, go update one of these
@@ -98,9 +99,9 @@
   //   1) test/styleguide/legacy_bridge.js
   //   2) ts/styleguide/StyleGuideUtil.js
 
-  window.React = window.react.react;
-  window.ReactDOM = window.react.react_dom;
-  window.moment = window.moment.moment;
+  window.React = window.react;
+  window.ReactDOM = window.react_dom;
+  window.moment = window.moment;
 
   const { setup } = window.i18n;
 
@@ -136,6 +137,7 @@
   const { IdleDetector } = window.idle_detector;
 
   window.Signal = {};
+  window.Signal.Backbone = window.ts.backbone;
   window.Signal.Backup = window.backup;
   window.Signal.Crypto = window.crypto;
   window.Signal.Database = window.database;
@@ -143,9 +145,21 @@
   window.Signal.HTML = window.ts.html;
   window.Signal.Logs = window.logs;
 
+  // React components
+  const { Lightbox } = window.ts.components.Lightbox;
+  const { MediaGallery } =
+    window.ts.components.conversation.media_gallery.MediaGallery;
   const { Quote } = window.ts.components.conversation.Quote;
 
+  const PropTypesMessage =
+    window.ts.components.conversation.media_gallery.propTypes.Message;
+
   window.Signal.Components = {
+    Lightbox,
+    MediaGallery,
+    PropTypes: {
+      Message: PropTypesMessage,
+    },
     Quote,
   };
 
@@ -173,8 +187,9 @@
   window.Signal.Types.Errors = window.types.errors;
 
   window.Signal.Types.Message = Message;
-  window.Signal.Types.MIME = window.types.mime;
+  window.Signal.Types.MIME = window.ts.types.MIME;
   window.Signal.Types.Settings = window.types.settings;
+  window.Signal.Util = window.ts.util;
 
   window.Signal.Views = {};
   window.Signal.Views.Initialization = window.views.initialization;

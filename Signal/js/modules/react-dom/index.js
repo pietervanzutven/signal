@@ -10,10 +10,9 @@
 (function () { 
   'use strict';
   
-  window.react = window.react || {};
-  window.react.react_dom = {};
+  const exports = window.react_dom = {};
 
-  const React = window.react.react;
+  const React = window.react;
 
   var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED; // Prevent newer renderers from RTE when used with older react package versions.
   // Current owner and dispatcher used to share the same ref,
@@ -25132,16 +25131,16 @@
     }
   }
 
-  window.react.react_dom.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = Internals;
-  window.react.react_dom.createPortal = createPortal$1;
-  window.react.react_dom.findDOMNode = findDOMNode;
-  window.react.react_dom.flushSync = flushSync;
-  window.react.react_dom.hydrate = hydrate;
-  window.react.react_dom.render = render;
-  window.react.react_dom.unmountComponentAtNode = unmountComponentAtNode;
-  window.react.react_dom.unstable_batchedUpdates = batchedUpdates$1;
-  window.react.react_dom.unstable_createPortal = unstable_createPortal;
-  window.react.react_dom.unstable_renderSubtreeIntoContainer = renderSubtreeIntoContainer;
-  window.react.react_dom.version = ReactVersion;
+  exports.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = Internals;
+  exports.createPortal = createPortal$1;
+  exports.findDOMNode = findDOMNode;
+  exports.flushSync = flushSync;
+  exports.hydrate = hydrate;
+  exports.render = render;
+  exports.unmountComponentAtNode = unmountComponentAtNode;
+  exports.unstable_batchedUpdates = batchedUpdates$1;
+  exports.unstable_createPortal = unstable_createPortal;
+  exports.unstable_renderSubtreeIntoContainer = renderSubtreeIntoContainer;
+  exports.version = ReactVersion;
 
 })();

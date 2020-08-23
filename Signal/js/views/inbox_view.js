@@ -218,7 +218,6 @@
       'click .setup-as-standalone': window.setupAsStandalone,
       'select .gutter .conversation-list-item': 'openConversation',
       'input input.search': 'filterContacts',
-      'show .lightbox': 'showLightbox',
     },
     startConnectionListener() {
       this.interval = setInterval(() => {
@@ -306,10 +305,7 @@
       }
     },
     toggleMenu() {
-      this.$('.global-menu .menu-list').toggle();
-    },
-    showLightbox(e) {
-      this.$el.append(e.target);
+        this.$('.global-menu .menu-list').toggle();
     },
     closeRecording(e) {
       if (e && this.$(e.target).closest('.capture-audio').length > 0) {
