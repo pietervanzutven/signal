@@ -1,8 +1,8 @@
 (function () {
   'use strict';
 
-  window.attachments = {};
-  
+  const exports = window.attachments = {};
+
   const crypto = window.crypto;
   const path = window.path;
 
@@ -14,7 +14,7 @@
   const PATH = 'attachments.noindex';
 
   //      getPath :: AbsolutePath -> AbsolutePath
-  window.attachments.getPath = (userDataPath) => {
+  exports.getPath = (userDataPath) => {
     if (!isString(userDataPath)) {
       throw new TypeError("'userDataPath' must be a string");
     }
@@ -22,17 +22,17 @@
   };
 
   //      ensureDirectory :: AbsolutePath -> IO Unit
-  window.attachments.ensureDirectory = async (userDataPath) => {
+  exports.ensureDirectory = async (userDataPath) => {
     if (!isString(userDataPath)) {
       throw new TypeError("'userDataPath' must be a string");
     }
-    await fse.ensureDir(window.attachments.getPath(userDataPath));
+    await fse.ensureDir(exports.getPath(userDataPath));
   };
 
   //      createReader :: AttachmentsPath ->
   //                      RelativePath ->
   //                      IO (Promise ArrayBuffer)
-  window.attachments.createReader = (root) => {
+  exports.createReader = (root) => {
     if (!isString(root)) {
       throw new TypeError("'root' must be a path");
     }
@@ -51,7 +51,7 @@
   //      createWriterForNew :: AttachmentsPath ->
   //                            ArrayBuffer ->
   //                            IO (Promise RelativePath)
-  window.attachments.createWriterForNew = (root) => {
+  exports.createWriterForNew = (root) => {
     if (!isString(root)) {
       throw new TypeError("'root' must be a path");
     }
@@ -61,9 +61,9 @@
         throw new TypeError("'arrayBuffer' must be an array buffer");
       }
 
-      const name = window.attachments.createName();
-      const relativePath = window.attachments.getRelativePath(name);
-      return window.attachments.createWriterForExisting(root)({
+      const name = exports.createName();
+      const relativePath = exports.getRelativePath(name);
+      return exports.createWriterForExisting(root)({
         data: arrayBuffer,
         path: relativePath,
       });
@@ -73,7 +73,7 @@
   //      createWriter :: AttachmentsPath ->
   //                      { data: ArrayBuffer, path: RelativePath } ->
   //                      IO (Promise RelativePath)
-  window.attachments.createWriterForExisting = (root) => {
+  exports.createWriterForExisting = (root) => {
     if (!isString(root)) {
       throw new TypeError("'root' must be a path");
     }
@@ -98,7 +98,7 @@
   //      createDeleter :: AttachmentsPath ->
   //                       RelativePath ->
   //                       IO Unit
-  window.attachments.createDeleter = (root) => {
+  exports.createDeleter = (root) => {
     if (!isString(root)) {
       throw new TypeError("'root' must be a path");
     }
@@ -114,13 +114,13 @@
   };
 
   //      createName :: Unit -> IO String
-  window.attachments.createName = () => {
+  exports.createName = () => {
     const buffer = crypto.randomBytes(32);
     return buffer.toString('hex');
   };
 
-  //      getRelativePath :: String -> IO Path
-  window.attachments.getRelativePath = (name) => {
+  //      getRelativePath :: String -> Path
+  exports.getRelativePath = (name) => {
     if (!isString(name)) {
       throw new TypeError("'name' must be a string");
     }
@@ -128,4 +128,9 @@
     const prefix = name.slice(0, 2);
     return path.join(prefix, name);
   };
+
+  //      createAbsolutePathGetter :: RoothPath -> RelativePath -> AbsolutePath
+  exports.createAbsolutePathGetter = rootPath => relativePath =>
+    path.join(rootPath, relativePath);
+
 })();

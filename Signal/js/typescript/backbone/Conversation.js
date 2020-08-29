@@ -22,7 +22,23 @@
      */
     const is_1 = __importDefault(window.sindresorhus.is);
     const deferred_to_promise_1 = window.deferred_to_promise;
-    exports.fetchVisualMediaAttachments = ({ conversationId, WhisperMessageCollection, }) => __awaiter(this, void 0, void 0, function* () {
+    exports.fetchVisualMediaAttachments = ({ conversationId, count, WhisperMessageCollection, }) => __awaiter(this, void 0, void 0, function* () {
+        return fetchFromAttachmentsIndex({
+            name: 'hasVisualMediaAttachments',
+            conversationId,
+            WhisperMessageCollection,
+            count,
+        });
+    });
+    exports.fetchFileAttachments = ({ conversationId, count, WhisperMessageCollection, }) => __awaiter(this, void 0, void 0, function* () {
+        return fetchFromAttachmentsIndex({
+            name: 'hasFileAttachments',
+            conversationId,
+            WhisperMessageCollection,
+            count,
+        });
+    });
+    const fetchFromAttachmentsIndex = ({ name, conversationId, WhisperMessageCollection, count, }) => __awaiter(this, void 0, void 0, function* () {
         if (!is_1.default.string(conversationId)) {
             throw new TypeError("'conversationId' is required");
         }
@@ -32,15 +48,15 @@
         const collection = new WhisperMessageCollection();
         const lowerReceivedAt = 0;
         const upperReceivedAt = Number.MAX_VALUE;
-        const hasVisualMediaAttachments = 1;
+        const condition = 1;
         yield deferred_to_promise_1.deferredToPromise(collection.fetch({
             index: {
-                name: 'hasVisualMediaAttachments',
-                lower: [conversationId, lowerReceivedAt, hasVisualMediaAttachments],
-                upper: [conversationId, upperReceivedAt, hasVisualMediaAttachments],
+                name,
+                lower: [conversationId, lowerReceivedAt, condition],
+                upper: [conversationId, upperReceivedAt, condition],
                 order: 'desc',
             },
-            limit: 50,
+            limit: count,
         }));
         return collection.models.map(model => model.toJSON());
     });

@@ -5,8 +5,8 @@
     window.ts.components = window.ts.components || {};
     window.ts.components.conversation = window.ts.components.conversation || {};
     window.ts.components.conversation.media_gallery = window.ts.components.conversation.media_gallery || {};
-    window.ts.components.conversation.media_gallery.propTypes = window.ts.components.conversation.media_gallery.propTypes || {};
-    const exports = window.ts.components.conversation.media_gallery.propTypes.Message = {};
+    window.ts.components.conversation.media_gallery.types = window.ts.components.conversation.media_gallery.types || {};
+    const exports = window.ts.components.conversation.media_gallery.types.Message = {};
 
     var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
         return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,7 +36,7 @@
     const arrayBufferToObjectURL_1 = window.ts.util.arrayBufferToObjectURL;
     const DEFAULT_CONTENT_TYPE = 'application/octet-stream';
     exports.loadWithObjectURL = (loadMessage) => (messages) => __awaiter(this, void 0, void 0, function* () {
-        if (!is_1.default.function_(loadMessage)) {
+        if (!is_1.default.function(loadMessage)) {
             throw new TypeError("'loadMessage' must be a function");
         }
         if (!is_1.default.array(messages)) {
@@ -46,9 +46,9 @@
         const [, messagesWithoutVideo] = lodash_1.partition(messages, hasVideoAttachment);
         const loadedMessagesWithoutVideo = yield Promise.all(messagesWithoutVideo.map(loadMessage));
         const loadedMessages = lodash_1.sortBy(
-        // // Only show images for MVP:
-        // [...messagesWithVideo, ...loadedMessagesWithoutVideo],
-        loadedMessagesWithoutVideo, message => -message.received_at);
+            // // Only show images for MVP:
+            // [...messagesWithVideo, ...loadedMessagesWithoutVideo],
+            loadedMessagesWithoutVideo, message => -message.received_at);
         return loadedMessages.map(withObjectURL);
     });
     const hasVideoAttachment = (message) => message.attachments.some(attachment => !is_1.default.undefined(attachment.contentType) &&

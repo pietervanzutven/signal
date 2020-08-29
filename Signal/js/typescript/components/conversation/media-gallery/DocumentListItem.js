@@ -5,7 +5,7 @@
     window.ts.components = window.ts.components || {};
     window.ts.components.conversation = window.ts.components.conversation || {};
     window.ts.components.conversation.media_gallery = window.ts.components.conversation.media_gallery || {};
-    const exports = window.ts.components.conversation.media_gallery;
+    const exports = window.ts.components.conversation.media_gallery.DocumentListItem = {};
 
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -26,6 +26,7 @@
             borderBottomStyle: 'solid',
         },
         itemContainer: {
+            cursor: 'pointer',
             display: 'flex',
             flexDirection: 'row',
             flexWrap: 'nowrap',

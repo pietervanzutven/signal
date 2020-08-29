@@ -118,6 +118,7 @@
 
   // ES2015+ modules
   const attachmentsPath = Attachments.getPath(app.getPath('userData'));
+  const getAbsoluteAttachmentPath = Attachments.createAbsolutePathGetter(attachmentsPath);
   const deleteAttachmentData = Attachments.createDeleter(attachmentsPath);
   const readAttachmentData = Attachments.createReader(attachmentsPath);
   const writeNewAttachmentData = Attachments.createWriterForNew(attachmentsPath);
@@ -147,18 +148,20 @@
 
   // React components
   const { Lightbox } = window.ts.components.Lightbox;
+  const { LightboxGallery } = window.ts.components.LightboxGallery;
   const { MediaGallery } =
     window.ts.components.conversation.media_gallery.MediaGallery;
   const { Quote } = window.ts.components.conversation.Quote;
 
-  const PropTypesMessage =
-    window.ts.components.conversation.media_gallery.propTypes.Message;
+  const MediaGalleryMessage =
+    window.ts.components.conversation.media_gallery.types.Message;
 
   window.Signal.Components = {
     Lightbox,
+    LightboxGallery,
     MediaGallery,
-    PropTypes: {
-      Message: PropTypesMessage,
+    Types: {
+      Message: MediaGalleryMessage,
     },
     Quote,
   };
@@ -169,6 +172,7 @@
   window.Signal.Migrations.getPlaceholderMigrations = getPlaceholderMigrations;
   window.Signal.Migrations.writeMessageAttachments =
     Message.createAttachmentDataWriter(writeExistingAttachmentData);
+  window.Signal.Migrations.getAbsoluteAttachmentPath = getAbsoluteAttachmentPath;
   window.Signal.Migrations.loadAttachmentData = loadAttachmentData;
   window.Signal.Migrations.loadMessage = Message.createAttachmentLoader(loadAttachmentData);
   window.Signal.Migrations.Migrations0DatabaseWithAttachmentData =
