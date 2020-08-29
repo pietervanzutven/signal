@@ -3,31 +3,33 @@
 /* global i18n: false */
 
 (function () {
-    window.views = window.views || {};
+  'use strict';
 
-    const OPTIMIZATION_MESSAGE_DISPLAY_THRESHOLD = 1000; // milliseconds
+  window.views = window.views || {};
 
-    const setMessage = () => {
-        const message = document.querySelector('.app-loading-screen .message');
-        if (!message) {
-            return () => { };
-        }
-        message.innerText = i18n('loading');
+  const OPTIMIZATION_MESSAGE_DISPLAY_THRESHOLD = 1000; // milliseconds
 
-        const optimizingMessageTimeoutId = setTimeout(() => {
-            const innerMessage = document.querySelector('.app-loading-screen .message');
-            if (!innerMessage) {
-                return;
-            }
-            innerMessage.innerText = i18n('optimizingApplication');
-        }, OPTIMIZATION_MESSAGE_DISPLAY_THRESHOLD);
+  const setMessage = () => {
+    const message = document.querySelector('.app-loading-screen .message');
+    if (!message) {
+      return () => { };
+    }
+    message.innerText = i18n('loading');
 
-        return () => {
-            clearTimeout(optimizingMessageTimeoutId);
-        };
+    const optimizingMessageTimeoutId = setTimeout(() => {
+      const innerMessage = document.querySelector('.app-loading-screen .message');
+      if (!innerMessage) {
+        return;
+      }
+      innerMessage.innerText = i18n('optimizingApplication');
+    }, OPTIMIZATION_MESSAGE_DISPLAY_THRESHOLD);
+
+    return () => {
+      clearTimeout(optimizingMessageTimeoutId);
     };
+  };
 
-    window.views.initialization = {
-        setMessage,
-    };
+  window.views.initialization = {
+    setMessage,
+  };
 })();

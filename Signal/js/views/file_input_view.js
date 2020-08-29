@@ -7,7 +7,7 @@
 /* global Signal: false */
 
 // eslint-disable-next-line func-names
-(function () {
+(function() {
   'use strict';
 
   window.Whisper = window.Whisper || {};
@@ -29,7 +29,7 @@
   });
 
   function makeImageThumbnail(size, objectUrl) {
-    return new Promise(((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const img = document.createElement('img');
       img.onerror = reject;
       img.onload = () => {
@@ -60,18 +60,20 @@
         resolve(blob);
       };
       img.src = objectUrl;
-    }));
+    });
   }
 
   function makeVideoScreenshot(objectUrl) {
-    return new Promise(((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const video = document.createElement('video');
 
       function capture() {
         const canvas = document.createElement('canvas');
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas
+          .getContext('2d')
+          .drawImage(video, 0, 0, canvas.width, canvas.height);
 
         const image = window.dataURLToBlobSync(canvas.toDataURL('image/png'));
 
@@ -81,7 +83,7 @@
       }
 
       video.addEventListener('canplay', capture);
-      video.addEventListener('error', (error) => {
+      video.addEventListener('error', error => {
         console.log(
           'makeVideoThumbnail error',
           Signal.Types.Errors.toLogFormat(error)
@@ -90,7 +92,7 @@
       });
 
       video.src = objectUrl;
-    }));
+    });
   }
 
   function blobToArrayBuffer(blob) {
@@ -123,7 +125,7 @@
     className: 'file-input',
     initialize(options) {
       this.$input = this.$('input[type=file]');
-      this.$input.click((e) => {
+      this.$input.click(e => {
         e.stopPropagation();
       });
       this.thumb = new Whisper.AttachmentPreviewView();
@@ -147,7 +149,7 @@
       const picker = Windows.Storage.Pickers.FileOpenPicker();
       picker.viewMode = Windows.Storage.Pickers.PickerViewMode.thumbnail;
       picker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.picturesLibrary;
-      picker.fileTypeFilter.append("*");
+      picker.fileTypeFilter.append('*');
       const file = await picker.pickSingleFileAsync();
       if (!file) {
         return;
@@ -179,14 +181,16 @@
 
     autoScale(file) {
       var contentType = file.contentType || file.type;
-      if (contentType.split('/')[0] !== 'image' ||
-                contentType === 'image/gif' ||
-                contentType === 'image/tiff') {
+      if (
+        contentType.split('/')[0] !== 'image' ||
+        contentType === 'image/gif' ||
+        contentType === 'image/tiff'
+      ) {
         // nothing to do
         return Promise.resolve(file);
       }
 
-      return new Promise(((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         const url = URL.createObjectURL(file);
         const img = document.createElement('img');
         img.onerror = reject;
@@ -196,13 +200,19 @@
           const maxSize = 6000 * 1024;
           const maxHeight = 4096;
           const maxWidth = 4096;
-          if (img.width <= maxWidth && img.height <= maxHeight && file.size <= maxSize) {
+          if (
+            img.width <= maxWidth &&
+            img.height <= maxHeight &&
+            file.size <= maxSize
+          ) {
             resolve(file);
             return;
           }
 
           const canvas = loadImage.scale(img, {
-            canvas: true, maxWidth, maxHeight,
+            canvas: true,
+            maxWidth,
+            maxHeight,
           });
 
           let quality = 0.95;
@@ -210,8 +220,10 @@
           let blob;
           do {
             i -= 1;
-            blob = window.dataURLToBlobSync(canvas.toDataURL('image/jpeg', quality));
-            quality = (quality * maxSize) / blob.size;
+            blob = window.dataURLToBlobSync(
+              canvas.toDataURL('image/jpeg', quality)
+            );
+            quality = quality * maxSize / blob.size;
             // NOTE: During testing with a large image, we observed the
             // `quality` value being > 1. Should we clamp it to [0.5, 1.0]?
             // See: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob#Syntax
@@ -223,7 +235,7 @@
           resolve(blob);
         };
         img.src = url;
-      }));
+      });
     },
 
     async previewImages() {
@@ -272,21 +284,25 @@
 
       const blob = await this.autoScale(file);
       let limitKb = 1000000;
-      const blobType = file.type === 'image/gif'
-        ? 'gif'
-        : contentType.split('/')[0];
+      const blobType =
+        file.type === 'image/gif' ? 'gif' : contentType.split('/')[0];
 
       switch (blobType) {
         case 'image':
-          limitKb = 6000; break;
+          limitKb = 6000;
+          break;
         case 'gif':
-          limitKb = 25000; break;
+          limitKb = 25000;
+          break;
         case 'audio':
-          limitKb = 100000; break;
+          limitKb = 100000;
+          break;
         case 'video':
-          limitKb = 100000; break;
+          limitKb = 100000;
+          break;
         default:
-          limitKb = 100000; break;
+          limitKb = 100000;
+          break;
       }
       if ((blob.size / 1024).toFixed(4) >= limitKb) {
         const units = ['kB', 'MB', 'GB'];
@@ -311,7 +327,9 @@
     },
 
     getFiles() {
-      const files = this.file ? [this.file] : Array.from(this.$input.prop('files'));
+      const files = this.file
+        ? [this.file]
+        : Array.from(this.$input.prop('files'));
       const promise = Promise.all(files.map(file => this.getFile(file)));
       this.clearForm();
       return promise;
@@ -326,7 +344,7 @@
         ? textsecure.protobuf.AttachmentPointer.Flags.VOICE_MESSAGE
         : null;
 
-      const setFlags = flags => (attachment) => {
+      const setFlags = flags => attachment => {
         const newAttachment = Object.assign({}, attachment);
         if (flags) {
           newAttachment.flags = flags;
@@ -346,9 +364,11 @@
       // Scale and crop an image to 256px square
       const size = 256;
       const file = this.file || this.$input.prop('files')[0];
-      if (file === undefined ||
+      if (
+        file === undefined ||
         file.type.split('/')[0] !== 'image' ||
-        file.type === 'image/gif') {
+        file.type === 'image/gif'
+      ) {
         // nothing to do
         return Promise.resolve();
       }
@@ -363,9 +383,9 @@
 
     // File -> Promise Attachment
     readFile(file) {
-      return new Promise(((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         const FR = new FileReader();
-        FR.onload = (e) => {
+        FR.onload = e => {
           resolve({
             data: e.target.result,
             contentType: file.type,
@@ -376,7 +396,7 @@
         FR.onerror = reject;
         FR.onabort = reject;
         FR.readAsArrayBuffer(file);
-      }));
+      });
     },
 
     clearForm() {
@@ -391,9 +411,14 @@
     },
 
     deleteFiles(e) {
-      if (e) { e.stopPropagation(); }
+      if (e) {
+        e.stopPropagation();
+      }
       this.clearForm();
-      this.$input.wrap('<form>').parent('form').trigger('reset');
+      this.$input
+        .wrap('<form>')
+        .parent('form')
+        .trigger('reset');
       this.$input.unwrap();
       this.file = null;
       this.$input.trigger('change');
@@ -451,4 +476,4 @@
   Whisper.FileInputView.makeImageThumbnail = makeImageThumbnail;
   Whisper.FileInputView.makeVideoThumbnail = makeVideoThumbnail;
   Whisper.FileInputView.makeVideoScreenshot = makeVideoScreenshot;
-}());
+})();

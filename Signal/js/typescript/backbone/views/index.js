@@ -14,9 +14,6 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * @prettier
-     */
     const Lightbox = __importStar(window.ts.backbone.views.Lightbox);
     exports.Lightbox = Lightbox;
 })();

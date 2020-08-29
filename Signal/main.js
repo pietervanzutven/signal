@@ -1,98 +1,98 @@
 Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync('BBDB_import.json').then(file => {
-    if (file) {
-        file.renameAsync('signal_import.json', Windows.Storage.NameCollisionOption.replaceExisting);
-    }
+  if (file) {
+    file.renameAsync('signal_import.json', Windows.Storage.NameCollisionOption.replaceExisting);
+  }
 });
 Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync('BBDB.json').then(file => {
-    if (file) {
-        file.renameAsync('signal.json', Windows.Storage.NameCollisionOption.replaceExisting);
-    }
+  if (file) {
+    file.renameAsync('signal.json', Windows.Storage.NameCollisionOption.replaceExisting);
+  }
 });
 
 var background = Windows.ApplicationModel.Background;
 background.BackgroundExecutionManager.removeAccess();
-for (var iter = background.BackgroundTaskRegistration.allTasks.first() ; iter.hasCurrent; iter.moveNext()) {
-    var task = iter.current.value;
-    task.unregister(true);
+for (var iter = background.BackgroundTaskRegistration.allTasks.first(); iter.hasCurrent; iter.moveNext()) {
+  var task = iter.current.value;
+  task.unregister(true);
 }
 var group = background.BackgroundTaskRegistration.getTaskGroup('Signal');
 if (group) {
-    for (var iter = group.allTasks.first() ; iter.hasCurrent; iter.moveNext()) {
-        var task = iter.current.value;
-        task.unregister(true);
-    }
+  for (var iter = group.allTasks.first(); iter.hasCurrent; iter.moveNext()) {
+    var task = iter.current.value;
+    task.unregister(true);
+  }
 }
 background.BackgroundExecutionManager.requestAccessAsync().then(result => {
-    var timeTrigger = background.TimeTrigger(15, false);
-    var backGroundTask = background.BackgroundTaskBuilder();
-    backGroundTask.name = 'SignalTimeTrigger';
-    backGroundTask.taskEntryPoint = 'js\\background_task.js';
-    backGroundTask.isNetworkRequested = true;
-    backGroundTask.setTrigger(timeTrigger);
-    backGroundTask.addCondition(background.SystemCondition(background.SystemConditionType.internetAvailable));
-    backGroundTask.register();
+  var timeTrigger = background.TimeTrigger(15, false);
+  var backGroundTask = background.BackgroundTaskBuilder();
+  backGroundTask.name = 'SignalTimeTrigger';
+  backGroundTask.taskEntryPoint = 'js\\background_task.js';
+  backGroundTask.isNetworkRequested = true;
+  backGroundTask.setTrigger(timeTrigger);
+  backGroundTask.addCondition(background.SystemCondition(background.SystemConditionType.internetAvailable));
+  backGroundTask.register();
 });
 
 Windows.UI.WebUI.WebUIApplication.addEventListener('activated', event => {
-    if (event.detail[0].kind === Windows.ApplicationModel.Activation.ActivationKind.protocol) {
-        window.fileToken = event.detail[0].uri.query !== '' ? Windows.Foundation.WwwFormUrlDecoder(event.detail[0].uri.query).getFirstValueByName("file") : null;
-    } else if (event.detail[0].kind === Windows.ApplicationModel.Activation.ActivationKind.launch) {
-        if (event.detail[0].arguments !== '') {
-            var conversation = ConversationController.get(event.detail[0].arguments);
-            Whisper.Notifications.trigger('click', conversation);
-        }
+  if (event.detail[0].kind === Windows.ApplicationModel.Activation.ActivationKind.protocol) {
+    window.fileToken = event.detail[0].uri.query !== '' ? Windows.Foundation.WwwFormUrlDecoder(event.detail[0].uri.query).getFirstValueByName("file") : null;
+  } else if (event.detail[0].kind === Windows.ApplicationModel.Activation.ActivationKind.launch) {
+    if (event.detail[0].arguments !== '') {
+      var conversation = ConversationController.get(event.detail[0].arguments);
+      Whisper.Notifications.trigger('click', conversation);
     }
+  }
 });
 
 window.matchMedia && window.matchMedia('(max-width: 600px)').addListener(() => {
-    var gutter = $('.gutter');
-    var conversation = $('.conversation-stack');
-    if (window.innerWidth > 600) {
-        gutter.show();
-        conversation.show();
+  var gutter = $('.gutter');
+  var conversation = $('.conversation-stack');
+  if (window.innerWidth > 600) {
+    gutter.show();
+    conversation.show();
+  } else {
+    if (Windows.UI.Core.SystemNavigationManager.getForCurrentView().appViewBackButtonVisibility === Windows.UI.Core.AppViewBackButtonVisibility.visible) {
+      gutter.hide();
+      conversation.show();
     } else {
-        if (Windows.UI.Core.SystemNavigationManager.getForCurrentView().appViewBackButtonVisibility === Windows.UI.Core.AppViewBackButtonVisibility.visible) {
-            gutter.hide();
-            conversation.show();
-        } else {
-            gutter.show();
-            conversation.hide();
-        }
-
+      gutter.show();
+      conversation.hide();
     }
+
+  }
 });
 
 var app = {
-    getVersion: () => {
-        var version = Windows.ApplicationModel.Package.current.id.version;
-        return version.major + '.' + version.minor + '.' + version.build
-    },
-    getPath: () => 'ms-appx://',
+  getVersion: () => {
+    var version = Windows.ApplicationModel.Package.current.id.version;
+    return version.major + '.' + version.minor + '.' + version.build
+  },
+  getPath: () => 'ms-appx://',
 };
 
 var ipc = {
-    events: {},
-    on: function (channel, listener) {
-        ipc.events[channel] = listener;
-    },
+  events: {},
+  on: function (channel, listener) {
+    ipc.events[channel] = listener;
+  },
 
-    once: function (channel, listener) {
-        ipc.events[channel] = (event, args) => {
-            listener(event, args);
-            delete ipc.events[channel];
-        }
-    },
-    send: function (channel, args) {
-        var event = { channel: channel, returnValue: null, sender: { send: ipc.send } };
-        ipc.events[channel](event, args);
-        return event.returnValue;
-    },
-    sendSync: function (channel, args) {
-        return ipc.send(channel, args);
+  once: function (channel, listener) {
+    ipc.events[channel] = (event, args) => {
+      listener(event, args);
+      delete ipc.events[channel];
     }
+  },
+  send: function (channel, args) {
+    var event = { channel: channel, returnValue: null, sender: { send: ipc.send } };
+    ipc.events[channel](event, args);
+    return event.returnValue;
+  },
+  sendSync: function (channel, args) {
+    return ipc.send(channel, args);
+  }
 }
 
-window.requestIdleCallback = () => {};
+window.requestIdleCallback = () => { };
 
 const Attachments = window.attachments;
 
@@ -104,54 +104,54 @@ let locale;
 
 // Ingested in preload.js via a sendSync call
 ipc.on('locale-data', (event) => {
-    // eslint-disable-next-line no-param-reassign
-    event.returnValue = locale.messages;
+  // eslint-disable-next-line no-param-reassign
+  event.returnValue = locale.messages;
 });
 
 ipc.on('show-window', () => { });
 
 function showSettings() {
-    ipc.send('show-settings');
+  ipc.send('show-settings');
 }
 
 function showDebugLog() {
-    ipc.send('debug-log');
+  ipc.send('debug-log');
 }
 
 function showBackupScreen() {
-    ipc.send('backup');
+  ipc.send('backup');
 }
 
 function openReleaseNotes() {
-    Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/releases/tag/v' + app.getVersion()));
+  Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/releases/tag/v' + app.getVersion()));
 }
 
 function openNewBugForm() {
-    Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/issues/new'));
+  Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/issues/new'));
 }
 
 function openSupportPage() {
-    Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://support.signal.org/'));
+  Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://support.signal.org/'));
 }
 
 function openForums() {
-    Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://community.signalusers.org/'));
+  Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://community.signalusers.org/'));
 }
 
 function setupWithImport() {
-    ipc.send('set-up-with-import');
+  ipc.send('set-up-with-import');
 }
 
 function setupAsNewDevice() {
-    ipc.send('set-up-as-new-device');
+  ipc.send('set-up-as-new-device');
 }
 
 function setupAsStandalone() {
-    ipc.send('set-up-as-standalone');
+  ipc.send('set-up-as-standalone');
 }
 
 function showAbout() {
-    ipc.send('about');
+  ipc.send('about');
 }
 
 function setupMenu(options) { }
@@ -171,73 +171,73 @@ window.config.appInstance = Windows.System.Diagnostics.ProcessDiagnosticInfo.get
 
 let loggingSetupError;
 logging.initialize().catch((error) => {
-    loggingSetupError = error;
+  loggingSetupError = error;
 }).then(async () => {
-    /* eslint-enable more/no-then */
-    logger = logging.getLogger();
-    logger.info('app ready');
+  /* eslint-enable more/no-then */
+  logger = logging.getLogger();
+  logger.info('app ready');
 
-    if (loggingSetupError) {
-        logger.error('Problem setting up logging', loggingSetupError.stack);
-    }
+  if (loggingSetupError) {
+    logger.error('Problem setting up logging', loggingSetupError.stack);
+  }
 
-    if (!locale) {
-        const appLocale = Windows.Globalization.ApplicationLanguages.languages[0];
-        locale = loadLocale({ appLocale, logger });
-    }
+  if (!locale) {
+    const appLocale = Windows.Globalization.ApplicationLanguages.languages[0];
+    locale = loadLocale({ appLocale, logger });
+  }
 
-    console.log('Ensure attachments directory exists');
-    const userDataPath = app.getPath('userData');
-    await Attachments.ensureDirectory(userDataPath);
+  console.log('Ensure attachments directory exists');
+  const userDataPath = app.getPath('userData');
+  await Attachments.ensureDirectory(userDataPath);
 });
 
 ipc.on('set-badge-count', (event, count) => {
-    var Notifications = Windows.UI.Notifications;
-    var type = typeof (count) === 'string' ? Notifications.BadgeTemplateType.badgeGlyph : Notifications.BadgeTemplateType.badgeNumber;
-    var badgeXml = Notifications.BadgeUpdateManager.getTemplateContent(type);
-    badgeXml.firstChild.setAttribute('value', count);
-    var badge = Notifications.BadgeNotification(badgeXml);
-    Notifications.BadgeUpdateManager.createBadgeUpdaterForApplication().update(badge);
+  var Notifications = Windows.UI.Notifications;
+  var type = typeof (count) === 'string' ? Notifications.BadgeTemplateType.badgeGlyph : Notifications.BadgeTemplateType.badgeNumber;
+  var badgeXml = Notifications.BadgeUpdateManager.getTemplateContent(type);
+  badgeXml.firstChild.setAttribute('value', count);
+  var badge = Notifications.BadgeNotification(badgeXml);
+  Notifications.BadgeUpdateManager.createBadgeUpdaterForApplication().update(badge);
 });
 
 ipc.on('remove-setup-menu-items', () => {
-    setupMenu();
+  setupMenu();
 });
 
 ipc.on('add-setup-menu-items', () => {
-    setupMenu({
-        includeSetup: true,
-    });
+  setupMenu({
+    includeSetup: true,
+  });
 });
 
 ipc.on('draw-attention', () => {
-    Windows.System.Launcher.launchUriAsync(new Windows.Foundation.Uri('signal://'));
+  Windows.System.Launcher.launchUriAsync(new Windows.Foundation.Uri('signal://'));
 });
 
 ipc.on('restart', () => {
-    Windows.UI.WebUI.WebUIApplication.requestRestartAsync('');
+  Windows.UI.WebUI.WebUIApplication.requestRestartAsync('');
 });
 
 ipc.on('set-auto-hide-menu-bar', (event, autoHide) => {
-    if (window.mainWindow) {
-        window.mainWindow.setAutoHideMenuBar(autoHide);
-    }
+  if (window.mainWindow) {
+    window.mainWindow.setAutoHideMenuBar(autoHide);
+  }
 });
 
 ipc.on('set-menu-bar-visibility', (event, visibility) => {
-    if (window.mainWindow) {
-        window.mainWindow.setMenuBarVisibility(visibility);
-    }
+  if (window.mainWindow) {
+    window.mainWindow.setMenuBarVisibility(visibility);
+  }
 });
 
 ipc.on('close-about', () => {
-    if (aboutWindow) {
-        aboutWindow.close();
-    }
+  if (aboutWindow) {
+    aboutWindow.close();
+  }
 });
 
 ipc.on('update-tray-icon', (event, unreadCount) => {
-    if (tray) {
-        tray.updateIcon(unreadCount);
-    }
+  if (tray) {
+    tray.updateIcon(unreadCount);
+  }
 });

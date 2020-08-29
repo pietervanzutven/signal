@@ -247,6 +247,7 @@
     <Content Include="js\modules\linkify-it\linkify-it.js" />
     <Content Include="js\modules\linkify-it\re.js" />
     <Content Include="js\modules\link_text.js" />
+    <Content Include="js\modules\lodash\partial.js" />
     <Content Include="js\modules\lodash\partition.js" />
     <Content Include="js\modules\lodash\sortBy.js" />
     <Content Include="js\modules\migrations\18\index.js" />

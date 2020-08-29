@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  window.database = {};
+  const exports = window.database = {};
 
   /* global indexedDB */
 
@@ -11,14 +11,12 @@
 
   const { isObject, isNumber } = window.lodash;
 
-
-  window.database.open = (name, version, { onUpgradeNeeded } = {}) => {
+  exports.open = (name, version, { onUpgradeNeeded } = {}) => {
     const request = indexedDB.open(name, version);
     return new Promise((resolve, reject) => {
-      request.onblocked = () =>
-        reject(new Error('Database blocked'));
+      request.onblocked = () => reject(new Error('Database blocked'));
 
-      request.onupgradeneeded = (event) => {
+      request.onupgradeneeded = event => {
         const hasRequestedSpecificVersion = isNumber(version);
         if (!hasRequestedSpecificVersion) {
           return;
@@ -31,45 +29,46 @@
           return;
         }
 
-        reject(new Error('Database upgrade required:' +
-          ` oldVersion: ${oldVersion}, newVersion: ${newVersion}`));
+        reject(
+          new Error(
+            'Database upgrade required:' +
+            ` oldVersion: ${oldVersion}, newVersion: ${newVersion}`
+          )
+        );
       };
 
-      request.onerror = event =>
-        reject(event.target.error);
+      request.onerror = event => reject(event.target.error);
 
-      request.onsuccess = (event) => {
+      request.onsuccess = event => {
         const connection = event.target.result;
         resolve(connection);
       };
     });
   };
 
-  window.database.completeTransaction = transaction =>
+  exports.completeTransaction = transaction =>
     new Promise((resolve, reject) => {
       transaction.addEventListener('abort', event => reject(event.target.error));
       transaction.addEventListener('error', event => reject(event.target.error));
       transaction.addEventListener('complete', () => resolve());
     });
 
-  window.database.getVersion = async (name) => {
-    const connection = await window.database.open(name);
+  exports.getVersion = async name => {
+    const connection = await exports.open(name);
     const { version } = connection;
     connection.close();
     return version;
   };
 
-  window.database.getCount = async ({ store } = {}) => {
+  exports.getCount = async ({ store } = {}) => {
     if (!isObject(store)) {
       throw new TypeError("'store' is required");
     }
 
     const request = store.count();
     return new Promise((resolve, reject) => {
-      request.onerror = event =>
-        reject(event.target.error);
-      request.onsuccess = event =>
-        resolve(event.target.result);
+      request.onerror = event => reject(event.target.error);
+      request.onsuccess = event => resolve(event.target.result);
     });
   };
 })();

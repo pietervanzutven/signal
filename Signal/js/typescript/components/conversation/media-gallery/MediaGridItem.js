@@ -11,9 +11,6 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * @prettier
-     */
     const react_1 = __importDefault(window.react);
     const size = {
         width: 94,

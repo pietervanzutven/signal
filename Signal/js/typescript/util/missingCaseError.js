@@ -6,9 +6,6 @@
     const exports = window.ts.util;
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * @prettier
-     */
     // `missingCaseError` is useful for compile-time checking that all `case`s in
     // a `switch` statement have been handled, e.g.
     //

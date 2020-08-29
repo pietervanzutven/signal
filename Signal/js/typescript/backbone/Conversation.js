@@ -17,9 +17,6 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * @prettier
-     */
     const is_1 = __importDefault(window.sindresorhus.is);
     const deferred_to_promise_1 = window.deferred_to_promise;
     exports.fetchVisualMediaAttachments = ({ conversationId, count, WhisperMessageCollection, }) => __awaiter(this, void 0, void 0, function* () {

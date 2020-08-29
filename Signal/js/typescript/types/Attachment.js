@@ -16,9 +16,6 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * @prettier
-     */
     const is_1 = __importDefault(window.sindresorhus.is);
     const moment_1 = __importDefault(window.moment);
     const GoogleChrome = __importStar(window.ts.util.GoogleChrome);

@@ -11,9 +11,6 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * @prettier
-     */
     const react_1 = __importDefault(window.react);
     const DocumentListItem_1 = window.ts.components.conversation.media_gallery.DocumentListItem;
     const MediaGridItem_1 = window.ts.components.conversation.media_gallery.MediaGridItem;

@@ -4,32 +4,30 @@
   'use strict';
 
   window.migrations = window.migrations || {};
-  window.migrations.run_migrations = {};
+  const exports = window.migrations.run_migrations = {};
 
-  const {
-    head,
-    isFunction,
-    isObject,
-    isString,
-    last,
-  } = window.lodash;
-
+  const { head, isFunction, isObject, isString, last } = window.lodash;
 
   const db = window.database;
   const { deferredToPromise } = window.deferred_to_promise;
 
-
   const closeDatabaseConnection = ({ Backbone } = {}) =>
     deferredToPromise(Backbone.sync('closeall'));
 
-  window.migrations.run_migrations.runMigrations = async ({ Backbone, database } = {}) => {
-    if (!isObject(Backbone) || !isObject(Backbone.Collection) ||
-      !isFunction(Backbone.Collection.extend)) {
+  exports.runMigrations = async ({ Backbone, database } = {}) => {
+    if (
+      !isObject(Backbone) ||
+      !isObject(Backbone.Collection) ||
+      !isFunction(Backbone.Collection.extend)
+    ) {
       throw new TypeError("'Backbone' is required");
     }
 
-    if (!isObject(database) || !isString(database.id) ||
-      !Array.isArray(database.migrations)) {
+    if (
+      !isObject(database) ||
+      !isString(database.id) ||
+      !Array.isArray(database.migrations)
+    ) {
       throw new TypeError("'database' is required");
     }
 
@@ -62,7 +60,7 @@
     await closeDatabaseConnection({ Backbone });
   };
 
-  const getMigrationVersions = (database) => {
+  const getMigrationVersions = database => {
     if (!isObject(database) || !Array.isArray(database.migrations)) {
       throw new TypeError("'database' is required");
     }
@@ -70,8 +68,12 @@
     const firstMigration = head(database.migrations);
     const lastMigration = last(database.migrations);
 
-    const firstVersion = firstMigration ? parseInt(firstMigration.version, 10) : null;
-    const lastVersion = lastMigration ? parseInt(lastMigration.version, 10) : null;
+    const firstVersion = firstMigration
+      ? parseInt(firstMigration.version, 10)
+      : null;
+    const lastVersion = lastMigration
+      ? parseInt(lastMigration.version, 10)
+      : null;
 
     return { firstVersion, lastVersion };
   };

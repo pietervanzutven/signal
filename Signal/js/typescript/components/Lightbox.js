@@ -16,9 +16,6 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * @prettier
-     */
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
     const is_1 = __importDefault(window.sindresorhus.is);

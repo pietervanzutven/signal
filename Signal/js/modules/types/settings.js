@@ -1,9 +1,11 @@
 (function () {
-    const OS = window.os;
+    'use strict';
 
     window.types = window.types || {};
-    window.types.settings = {
-        isAudioNotificationSupported: () =>
-            !OS.isLinux()
-    }
+    const exports = window.types.settings = {}
+
+    const OS = window.os;
+
+    exports.isAudioNotificationSupported = () => !OS.isLinux();
+
 })();
