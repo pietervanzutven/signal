@@ -127,24 +127,30 @@
             return (react_1.default.createElement("div", { className: "close-container" },
                 react_1.default.createElement("div", { className: "close-button", onClick: onClick })));
         }
-        render() {
-            const { authorTitle, authorProfileName, authorColor, onClick, isFromMe, } = this.props;
-            if (!validateQuote(this.props)) {
-                return null;
-            }
+        renderAuthor() {
+            const { authorColor, authorProfileName, authorTitle, i18n, isFromMe, } = this.props;
             const authorProfileElement = authorProfileName
                 ? react_1.default.createElement("span", { className: "profile-name" },
                     "~",
                     authorProfileName)
                 : null;
+            return (react_1.default.createElement("div", { className: classnames_1.default(authorColor, 'author') }, isFromMe
+                ? i18n('you')
+                : react_1.default.createElement("span", null,
+                    authorTitle,
+                    ' ',
+                    authorProfileElement)));
+        }
+        render() {
+            const { authorColor, onClick, isFromMe, } = this.props;
+            if (!validateQuote(this.props)) {
+                return null;
+            }
             const classes = classnames_1.default(authorColor, 'quoted-message', isFromMe ? 'from-me' : null, !onClick ? 'no-click' : null);
             return (react_1.default.createElement("div", { onClick: onClick, className: classes },
                 react_1.default.createElement("div", { className: "primary" },
                     this.renderIOSLabel(),
-                    react_1.default.createElement("div", { className: classnames_1.default(authorColor, 'author') },
-                        authorTitle,
-                        ' ',
-                        authorProfileElement),
+                    this.renderAuthor(),
                     this.renderText()),
                 this.renderIconContainer(),
                 this.renderClose()));
