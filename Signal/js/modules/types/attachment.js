@@ -53,6 +53,8 @@
   };
 
   // Upgrade steps
+  // NOTE: This step strips all EXIF metadata from JPEG images as
+  // part of re-encoding the image:
   exports.autoOrientJPEG = async attachment => {
     if (!MIME.isJPEG(attachment.contentType)) {
       return attachment;
@@ -192,5 +194,4 @@
   };
 
   exports.save = AttachmentTS.save;
-
 })();
