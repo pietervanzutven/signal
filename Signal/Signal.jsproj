@@ -355,6 +355,7 @@
     <Content Include="js\typescript\types\Attachment.js" />
     <Content Include="js\typescript\types\Conversation.js" />
     <Content Include="js\typescript\types\IndexedDB.js" />
+    <Content Include="js\typescript\types\Message.js" />
     <Content Include="js\typescript\types\message\initializeAttachmentMetadata.js" />
     <Content Include="js\typescript\types\MIME.js" />
     <Content Include="js\typescript\util\arrayBufferToObjectURL.js" />

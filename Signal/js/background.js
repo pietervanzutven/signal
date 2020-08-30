@@ -250,6 +250,10 @@
         appView.openInbox();
       }
     });
+
+    window.addEventListener('focus', () => Whisper.Notifications.clear());
+    window.addEventListener('unload', () => Whisper.Notifications.clear());
+
     Whisper.Notifications.on('click', function(conversation) {
       showWindow();
       if (conversation) {

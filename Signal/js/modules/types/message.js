@@ -12,6 +12,7 @@
   const {
     initializeAttachmentMetadata,
   } = window.ts.types.message.initializeAttachmentMetadata;
+  const MessageTS = window.ts.types.Message;
 
   const GROUP = 'group';
   const PRIVATE = 'private';
@@ -340,4 +341,7 @@
       return messageWithoutAttachmentData;
     };
   };
+
+  exports.hasExpiration = MessageTS.hasExpiration;
+
 })();
