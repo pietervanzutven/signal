@@ -182,7 +182,8 @@ const MediaGalleryMessage = window.ts.components.conversation.media_gallery.type
   window.Signal.Migrations.Migrations1DatabaseWithoutAttachmentData = window.migrations.migrations_1_database_without_attachment_data;
 
   window.Signal.Migrations.upgradeMessageSchema = upgradeMessageSchema;
-  window.Signal.OS = window.os;
+  window.Signal.Notifications = window.ts.notifications;
+  window.Signal.OS = window.ts.OS;
   window.Signal.Settings = window.settings;
   window.Signal.Startup = window.startup;
 
@@ -193,7 +194,7 @@ const MediaGalleryMessage = window.ts.components.conversation.media_gallery.type
 
   window.Signal.Types.Message = Message;
   window.Signal.Types.MIME = window.ts.types.MIME;
-  window.Signal.Types.Settings = window.types.settings;
+  window.Signal.Types.Settings = window.ts.types.Settings;
   window.Signal.Util = window.ts.util;
 
   window.Signal.Views = {};
