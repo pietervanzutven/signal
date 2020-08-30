@@ -1,15 +1,17 @@
-﻿(function () {
-    const environment = 'production';
+(function () {
+  'use strict';
 
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'config/default.json', false);
-    xhr.send(null);
+  const environment = 'production';
 
-    window.config = JSON.parse(xhr.response);
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'config/default.json', false);
+  xhr.send(null);
 
-    xhr.open('GET', 'config/' + environment + '.json', false);
-    xhr.send(null);
+  window.config = JSON.parse(xhr.response);
 
-    window.config = Object.assign(window.config, JSON.parse(xhr.response));
-    window.config.environment = environment;
-})()
+  xhr.open('GET', 'config/' + environment + '.json', false);
+  xhr.send(null);
+
+  window.config = Object.assign(window.config, JSON.parse(xhr.response));
+  window.config.environment = environment;
+})();
