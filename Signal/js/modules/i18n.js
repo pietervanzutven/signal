@@ -1,40 +1,42 @@
 /* eslint-env node */
 
 (function () {
-    'use strict';
+  'use strict';
 
-    window.i18n = {};
+  const exports = window.i18n = {};
 
-    window.i18n.setup = (locale, messages) => {
-        if (!locale) {
-            throw new Error('i18n: locale parameter is required');
-        }
-        if (!messages) {
-            throw new Error('i18n: messages parameter is required');
-        }
+  exports.setup = (locale, messages) => {
+    if (!locale) {
+      throw new Error('i18n: locale parameter is required');
+    }
+    if (!messages) {
+      throw new Error('i18n: messages parameter is required');
+    }
 
-        function getMessage(key, substitutions) {
-            const entry = messages[key];
-            if (!entry) {
-                console.error(`i18n: Attempted to get translation for nonexistent key '${key}'`);
-                return '';
-            }
+    function getMessage(key, substitutions) {
+      const entry = messages[key];
+      if (!entry) {
+        console.error(
+          `i18n: Attempted to get translation for nonexistent key '${key}'`
+        );
+        return '';
+      }
 
-            const { message } = entry;
-            if (Array.isArray(substitutions)) {
-                return substitutions.reduce(
-                  (result, substitution) => result.replace(/\$.+?\$/, substitution),
-                  message
-                );
-            } else if (substitutions) {
-                return message.replace(/\$.+?\$/, substitutions);
-            }
+      const { message } = entry;
+      if (Array.isArray(substitutions)) {
+        return substitutions.reduce(
+          (result, substitution) => result.replace(/\$.+?\$/, substitution),
+          message
+        );
+      } else if (substitutions) {
+        return message.replace(/\$.+?\$/, substitutions);
+      }
 
-            return message;
-        }
+      return message;
+    }
 
-        getMessage.getLocale = () => locale;
+    getMessage.getLocale = () => locale;
 
-        return getMessage;
-    };
+    return getMessage;
+  };
 })();

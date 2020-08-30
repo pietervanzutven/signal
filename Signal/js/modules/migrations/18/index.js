@@ -1,26 +1,24 @@
 (function () {
-  'use strict';
+    'use strict';
 
-  window.migrations = window.migrations || {};
-  const exports = window.migrations.v18 = {};
-  
-  exports.run = (transaction) => {
-    const messagesStore = transaction.objectStore('messages');
+    window.migrations = window.migrations || {};
+    const exports = window.migrations.v18 = {};
 
-    console.log("Create message attachment metadata index: 'hasAttachments'");
-    messagesStore.createIndex(
-      'hasAttachments',
-      ['conversationId', 'hasAttachments', 'received_at'],
-      { unique: false }
-    );
+    exports.run = transaction => {
+        const messagesStore = transaction.objectStore('messages');
 
-    ['hasVisualMediaAttachments', 'hasFileAttachments'].forEach((name) => {
-      console.log(`Create message attachment metadata index: '${name}'`);
-      messagesStore.createIndex(
-        name,
-        ['conversationId', 'received_at', name],
-        { unique: false }
-      );
-    });
-  };
+        console.log("Create message attachment metadata index: 'hasAttachments'");
+        messagesStore.createIndex(
+            'hasAttachments',
+            ['conversationId', 'hasAttachments', 'received_at'],
+            { unique: false }
+        );
+
+        ['hasVisualMediaAttachments', 'hasFileAttachments'].forEach(name => {
+            console.log(`Create message attachment metadata index: '${name}'`);
+            messagesStore.createIndex(name, ['conversationId', 'received_at', name], {
+                unique: false,
+            });
+        });
+    };
 })();

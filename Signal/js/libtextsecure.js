@@ -1,7 +1,4 @@
 ;(function() {
-/*
- * vim: ts=4:sw=4:expandtab
- */
 ;(function() {
     'use strict';
 
@@ -35263,6 +35260,7 @@ Curve25519Worker.prototype = {
         if (pubKey.byteLength == 33) {
             return pubKey.slice(1);
         } else {
+            console.error("WARNING: Expected pubkey of length 33, please report the ST and client that generated the pubkey");
             return pubKey;
         }
     }
@@ -35456,6 +35454,10 @@ var Internal = Internal || {};
 
     // HKDF for TextSecure has a bit of additional handling - salts always end up being 32 bytes
     Internal.HKDF = function(input, salt, info) {
+        if (salt.byteLength != 32) {
+            throw new Error("Got salt of incorrect length");
+        }
+
         return Internal.crypto.HKDF(input, salt,  util.toArrayBuffer(info));
     };
 
@@ -36719,9 +36721,6 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
 
 
 })();
-/*
- * vim: ts=4:sw=4:expandtab
- */
 ;(function() {
     'use strict';
     window.textsecure = window.textsecure || {};
@@ -36733,10 +36732,6 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
     textsecure.startWorker        = libsignal.worker.startWorker;
     textsecure.stopWorker         = libsignal.worker.stopWorker;
 })();
-
-/*
- * vim: ts=4:sw=4:expandtab
- */
 
 ;(function(){
     'use strict';
@@ -36916,15 +36911,12 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
             });
         },
 
+
         getRandomBytes: function(size) {
             return libsignal.crypto.getRandomBytes(size);
         }
     };
 })();
-
-/*
- * vim: ts=4:sw=4:expandtab
- */
 
 'use strict';
 
@@ -36973,10 +36965,6 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
 })();
 
 
-/*
- * vim: ts=4:sw=4:expandtab
- */
-
 'use strict';
 
 ;(function() {
@@ -37013,10 +37001,6 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
         }
     };
 })();
-
-/*
- * vim: ts=4:sw=4:expandtab
- */
 
 ;(function() {
     'use strict';
@@ -37163,10 +37147,6 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
     };
 })();
 
-/*
- * vim: ts=4:sw=4:expandtab
- */
-
 ;(function() {
     'use strict';
 
@@ -37228,10 +37208,6 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
     // Metadata-specific protos
     loadProtoBufs('UnidentifiedDelivery.proto');
 })();
-
-/*
- * vim: ts=4:sw=4:expandtab
- */
 
 window.textsecure = window.textsecure || {};
 
@@ -37307,9 +37283,6 @@ window.textsecure.utils = function() {
 }();
 
 
-/*
- * vim: ts=4:sw=4:expandtab
- */
 ;(function() {
     "use strict";
 
@@ -37394,13 +37367,9 @@ window.textsecure.utils = function() {
 }());
 
 /*
- * vim: ts=4:sw=4:expandtab
- *
  * Implements EventTarget
  * https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
- *
  */
-
 ;(function () {
     'use strict';
     window.textsecure = window.textsecure || {};
@@ -37478,10 +37447,6 @@ window.textsecure.utils = function() {
     textsecure.EventTarget = EventTarget;
 }());
 
-/*
- * vim: ts=4:sw=4:expandtab
- */
-
 var TextSecureServer = (function() {
     'use strict';
 
@@ -37542,16 +37507,7 @@ var TextSecureServer = (function() {
           var resultPromise;
           if (options.responseType === 'json'
               && response.headers.get('Content-Type') === 'application/json') {
-            resultPromise = response.json().catch(function(error) {
-                // If the response was otherwise successful, a JSON.parse() failure really
-                //   is a problem. But the Signal server does return HTML in error cases
-                //   when we requested JSON, sadly.
-                if (0 <= response.status && response.status < 400) {
-                    throw error;
-                }
-
-                return null;
-            })
+            resultPromise = response.json();
           } else if (options.responseType === 'arraybuffer') {
             resultPromise = response.arrayBuffer();
           } else {
@@ -37621,7 +37577,6 @@ var TextSecureServer = (function() {
         var e = new Error(message + '; code: ' + code);
         e.name     = 'HTTPError';
         e.code     = code;
-        e.stack    = stack;
         e.stack   += '\nOriginal stack:\n' + stack;
         if (response) {
             e.response = response;
@@ -37917,11 +37872,6 @@ var TextSecureServer = (function() {
     return TextSecureServer;
 })();
 
-/*
- * vim: ts=4:sw=4:expandtab
- */
-
-
 ;(function () {
     'use strict';
     window.textsecure = window.textsecure || {};
@@ -38077,7 +38027,7 @@ var TextSecureServer = (function() {
                 //   retries every five seconds.
                 return store.getIdentityKeyPair().then(function(identityKey) {
                     return libsignal.KeyHelper.generateSignedPreKey(identityKey, signedKeyId);
-                }, function (error) {
+                }, function(error) {
                     console.log('Failed to get identity key. Canceling key rotation.');
                 }).then(function(res) {
                     if (!res) {
@@ -38193,7 +38143,8 @@ var TextSecureServer = (function() {
                 });
             });
         },
-        createAccount: function(number, verificationCode, identityKeyPair, profileKey, deviceName, userAgent, readReceipts) {
+        createAccount: function(number, verificationCode, identityKeyPair,
+                           profileKey, deviceName, userAgent, readReceipts) {
             var signalingKey = libsignal.crypto.getRandomBytes(32 + 20);
             var password = btoa(getString(libsignal.crypto.getRandomBytes(16)));
             password = password.substring(0, password.length - 2);
@@ -38348,9 +38299,6 @@ var TextSecureServer = (function() {
 
 }());
 
-/*
- * vim: ts=4:sw=4:expandtab
- */
 ;(function(){
     'use strict';
 
@@ -39751,9 +39699,6 @@ textsecure.MessageReceiver.prototype = {
 };
 
 
-/*
- * vim: ts=4:sw=4:expandtab
- */
 function OutgoingMessage(server, timestamp, numbers, message, silent, callback) {
     if (message instanceof textsecure.protobuf.DataMessage) {
         var content = new textsecure.protobuf.Content();
@@ -39995,10 +39940,6 @@ OutgoingMessage.prototype = {
         }.bind(this));
     }
 };
-
-/*
- * vim: ts=4:sw=4:expandtab
- */
 
 function stringToArrayBuffer(str) {
     if (typeof str !== 'string') {
@@ -40816,11 +40757,6 @@ textsecure.MessageSender.prototype = {
     constructor: textsecure.MessageSender
 };
 
-/*
- * vim: ts=4:sw=4:expandtab
- */
-
-
 ;(function () {
     'use strict';
     window.textsecure = window.textsecure || {};
@@ -40895,10 +40831,6 @@ textsecure.MessageSender.prototype = {
 
 
 }());
-
-/*
- * vim: ts=4:sw=4:expandtab
- */
 
 function ProtoParser(arrayBuffer, protobuf) {
     this.protobuf = protobuf;
@@ -41022,9 +40954,6 @@ libsignal.ProvisioningCipher = function() {
 
 })();
 
-/*
- * vim: ts=4:sw=4:expandtab
- */
 (function () {
     window.textsecure = window.textsecure || {};
 

@@ -1,9 +1,14 @@
 /* eslint-env node */
 
 (function () {
-    window.os = {};
+    'use strict';
 
-    window.os.isMacOS = () => false;
-    window.os.isLinux = () => false;
-    window.os.isWindows = () => true;
+    const exports = window.os = {};
+
+    exports.isMacOS = () => false;
+
+    exports.isLinux = () => false;
+
+    exports.isWindows = () => true;
+
 })();

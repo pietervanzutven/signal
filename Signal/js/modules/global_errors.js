@@ -1,21 +1,22 @@
 (function () {
-    const addUnhandledErrorHandler = options => window.onerror = options.logger(error);
-    
-    const Errors = window.types.errors;
+  'use strict';
 
+  const exports = window.global_errors = {};
 
-    //      addHandler :: Unit -> Unit
-    window.global_errors = {
-        addHandler: () => {
-            addUnhandledErrorHandler({
-                logger: (error) => {
-                    console.error(
-                      'Uncaught error or unhandled promise rejection:',
-                      Errors.toLogFormat(error)
-                    );
-                },
-                showDialog: false,
-            });
-        }
-    }
+  const addUnhandledErrorHandler = () => { };
+
+  const Errors = window.types.errors;
+
+  //      addHandler :: Unit -> Unit
+  exports.addHandler = () => {
+    addUnhandledErrorHandler({
+      logger: error => {
+        console.error(
+          'Uncaught error or unhandled promise rejection:',
+          Errors.toLogFormat(error)
+        );
+      },
+      showDialog: false,
+    });
+  };
 })();

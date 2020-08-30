@@ -1,11 +1,11 @@
 (function () {
-  window.types = window.types || {};
-  window.types.schema_version = {};
+    'use strict';
 
-  const { isNumber } = window.lodash;
+    window.types = window.types || {};
+    const exports = window.types.schema_version = {};
 
+    const { isNumber } = window.lodash;
 
-  window.types.schema_version.isValid = value =>
-    isNumber(value) && value >= 0;
+    exports.isValid = value => isNumber(value) && value >= 0;
 
 })();

@@ -936,7 +936,6 @@ input[type=text]:active, input[type=text]:focus, input[type=search]:active, inpu
     background: transparent;
     width: 50px;
     height: 50px;
-    margin-bottom: 10px;
     display: inline-block;
     cursor: pointer;
     border-radius: 50%;
@@ -1455,7 +1454,8 @@ input.search {
         animation: loading 1500ms ease infinite 333ms; }
       .conversation .conversation-loading-screen .dot:nth-child(3) {
         animation: loading 1500ms ease infinite 666ms; }
-  .conversation .panel {
+  .conversation .panel,
+  .conversation .react-wrapper {
     height: calc(100% - 64px);
     overflow-y: scroll; }
     .conversation .panel .container {
@@ -1463,7 +1463,8 @@ input.search {
       max-width: 750px;
       margin: 0 auto;
       padding: 20px; }
-  .conversation .main.panel {
+  .conversation .main.panel,
+  .conversation .react-wrapper {
     display: flex;
     flex-direction: column;
     overflow: initial; }
@@ -2316,6 +2317,25 @@ span.status {
     outline: solid 1px #2090ea; }
   .bottom-bar form.send {
     background: #ffffff; }
+    .bottom-bar form.send.video-attachment .image-container {
+      position: relative; }
+    .bottom-bar form.send.video-attachment .outer {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center; }
+      .bottom-bar form.send.video-attachment .outer .play.icon {
+        height: 30px;
+        width: 30px;
+        background-image: url("../images/play_FFFFFF10.svg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
   .bottom-bar input, .bottom-bar textarea {
     color: #454545; }
   .bottom-bar .attachment-previews {
@@ -2463,7 +2483,8 @@ span.status {
     text-align: center;
     background-color: white;
     border: none;
-    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2); }
+    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
+    outline: none; }
     .discussion-container .scroll-down-button-view button .icon {
       background-image: url("../images/down_C0C0C010.svg");
       background-size: 100%;
@@ -2560,7 +2581,8 @@ span.status {
   .ios .conversation-header .avatar {
     display: none; }
 
-.ios .conversation .panel {
+.ios .conversation .panel,
+.ios .conversation .react-wrapper {
   position: absolute;
   top: 64px;
   bottom: 0;

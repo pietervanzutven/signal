@@ -5,9 +5,6 @@
     window.ts.types = window.ts.types || {};
     const exports = window.ts.types.IndexedDB = {};
 
-    /**
-     * @prettier
-     */
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.INDEXABLE_FALSE = 0;
     exports.INDEXABLE_TRUE = 1;

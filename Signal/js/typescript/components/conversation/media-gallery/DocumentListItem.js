@@ -5,15 +5,12 @@
     window.ts.components = window.ts.components || {};
     window.ts.components.conversation = window.ts.components.conversation || {};
     window.ts.components.conversation.media_gallery = window.ts.components.conversation.media_gallery || {};
-    const exports = window.ts.components.conversation.media_gallery;
+    const exports = window.ts.components.conversation.media_gallery.DocumentListItem = {};
 
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * @prettier
-     */
     const react_1 = __importDefault(window.react);
     const moment_1 = __importDefault(window.moment);
     const filesize_1 = __importDefault(window.filesize);
@@ -26,6 +23,7 @@
             borderBottomStyle: 'solid',
         },
         itemContainer: {
+            cursor: 'pointer',
             display: 'flex',
             flexDirection: 'row',
             flexWrap: 'nowrap',

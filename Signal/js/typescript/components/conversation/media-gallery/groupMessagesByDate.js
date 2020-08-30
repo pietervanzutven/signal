@@ -5,15 +5,12 @@
     window.ts.components = window.ts.components || {};
     window.ts.components.conversation = window.ts.components.conversation || {};
     window.ts.components.conversation.media_gallery = window.ts.components.conversation.media_gallery || {};
-    const exports = window.ts.components.conversation.media_gallery;
+    const exports = window.ts.components.conversation.media_gallery.groupMessagesByDate = {};
 
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * @prettier
-     */
     const moment_1 = __importDefault(window.moment);
     const lodash_1 = window.lodash;
     exports.groupMessagesByDate = (timestamp, messages) => {

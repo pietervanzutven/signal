@@ -247,6 +247,9 @@
     <Content Include="js\modules\linkify-it\linkify-it.js" />
     <Content Include="js\modules\linkify-it\re.js" />
     <Content Include="js\modules\link_text.js" />
+    <Content Include="js\modules\lodash\partial.js" />
+    <Content Include="js\modules\lodash\partition.js" />
+    <Content Include="js\modules\lodash\sortBy.js" />
     <Content Include="js\modules\migrations\18\index.js" />
     <Content Include="js\modules\moment\moment.js" />
     <Content Include="js\modules\react\index.js" />
@@ -339,12 +342,15 @@
     <Content Include="js\typescript\backbone\views\Lightbox.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\AttachmentSection.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\DocumentListItem.js" />
+    <Content Include="js\typescript\components\conversation\media-gallery\EmptyState.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\groupMessagesByDate.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\MediaGallery.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\MediaGridItem.js" />
-    <Content Include="js\typescript\components\conversation\media-gallery\propTypes\Message.js" />
+    <Content Include="js\typescript\components\conversation\media-gallery\types\Message.js" />
     <Content Include="js\typescript\components\conversation\Quote.js" />
     <Content Include="js\typescript\components\Lightbox.js" />
+    <Content Include="js\typescript\components\LightboxGallery.js" />
+    <Content Include="js\typescript\components\styles\Colors.js" />
     <Content Include="js\typescript\html\index.js" />
     <Content Include="js\typescript\types\Attachment.js" />
     <Content Include="js\typescript\types\Conversation.js" />
@@ -354,6 +360,7 @@
     <Content Include="js\typescript\util\arrayBufferToObjectURL.js" />
     <Content Include="js\typescript\util\GoogleChrome.js" />
     <Content Include="js\typescript\util\missingCaseError.js" />
+    <Content Include="js\typescript\util\saveURLAsFile.js" />
     <Content Include="js\views\app_view.js" />
     <Content Include="js\views\debug_log_view.js" />
     <Content Include="js\views\import_view.js" />

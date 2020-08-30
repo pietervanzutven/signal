@@ -1,8 +1,10 @@
 /* global setTimeout */
 
 (function () {
-    window.sleep = {};
+    'use strict';
+    
+    const exports = window.sleep = {};
 
-    window.sleep.sleep = ms =>
-        new Promise(resolve => setTimeout(resolve, ms));
+    exports.sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 })();

@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  window.privacy = {};
+  const exports = window.privacy = {};
 
   const is = window.sindresorhus.is;
   const path = window.path;
@@ -11,22 +11,20 @@
   const { compose } = window.lodash.fp;
   const { escapeRegExp } = window.lodash;
 
-
   const APP_ROOT_PATH = path.join(__dirname, '..', '..', '..');
   const PHONE_NUMBER_PATTERN = /\+\d{7,12}(\d{3})/g;
   const GROUP_ID_PATTERN = /(group\()([^)]+)(\))/g;
   const REDACTION_PLACEHOLDER = '[REDACTED]';
 
-
   //      _redactPath :: Path -> String -> String
-  window.privacy._redactPath = (filePath) => {
+  exports._redactPath = filePath => {
     if (!is.string(filePath)) {
       throw new TypeError("'filePath' must be a string");
     }
 
-    const filePathPattern = window.privacy._pathToRegExp(filePath);
+    const filePathPattern = exports._pathToRegExp(filePath);
 
-    return (text) => {
+    return text => {
       if (!is.string(text)) {
         throw new TypeError("'text' must be a string");
       }
@@ -40,7 +38,7 @@
   };
 
   //      _pathToRegExp :: Path -> Maybe RegExp
-  window.privacy._pathToRegExp = (filePath) => {
+  exports._pathToRegExp = filePath => {
     try {
       const pathWithNormalizedSlashes = filePath.replace(/\//g, '\\');
       const pathWithEscapedSlashes = filePath.replace(/\\/g, '\\\\');
@@ -52,7 +50,9 @@
         pathWithNormalizedSlashes,
         pathWithEscapedSlashes,
         urlEncodedPath,
-      ].map(escapeRegExp).join('|');
+      ]
+        .map(escapeRegExp)
+        .join('|');
       return new RegExp(patternString, 'g');
     } catch (error) {
       return null;
@@ -61,7 +61,7 @@
 
   // Public API
   //      redactPhoneNumbers :: String -> String
-  window.privacy.redactPhoneNumbers = (text) => {
+  exports.redactPhoneNumbers = text => {
     if (!is.string(text)) {
       throw new TypeError("'text' must be a string");
     }
@@ -70,7 +70,7 @@
   };
 
   //      redactGroupIds :: String -> String
-  window.privacy.redactGroupIds = (text) => {
+  exports.redactGroupIds = text => {
     if (!is.string(text)) {
       throw new TypeError("'text' must be a string");
     }
@@ -83,12 +83,12 @@
   };
 
   //      redactSensitivePaths :: String -> String
-  window.privacy.redactSensitivePaths = window.privacy._redactPath(APP_ROOT_PATH);
+  exports.redactSensitivePaths = exports._redactPath(APP_ROOT_PATH);
 
   //      redactAll :: String -> String
-  window.privacy.redactAll = compose(
-    window.privacy.redactSensitivePaths,
-    window.privacy.redactGroupIds,
-    window.privacy.redactPhoneNumbers
+  exports.redactAll = compose(
+    exports.redactSensitivePaths,
+    exports.redactGroupIds,
+    exports.redactPhoneNumbers
   );
 })();

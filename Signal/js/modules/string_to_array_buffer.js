@@ -1,5 +1,9 @@
 (function () {
-  window.stringToArrayBuffer = (string) => {
+  'use strict';
+
+  const exports = window.string_to_array_buffer = {};
+
+  exports.stringToArrayBuffer = string => {
     if (typeof string !== 'string') {
       throw new TypeError("'string' must be a string");
     }

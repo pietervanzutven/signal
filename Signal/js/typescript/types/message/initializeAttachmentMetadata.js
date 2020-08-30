@@ -22,9 +22,6 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * @prettier
-     */
     const lodash_1 = window.lodash;
     const Attachment = __importStar(window.ts.types.Attachment);
     const IndexedDB = __importStar(window.ts.types.IndexedDB);

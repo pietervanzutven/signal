@@ -7,9 +7,6 @@
     const exports = window.ts.backbone.views.Lightbox = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * @prettier
-     */
     exports.show = (element) => {
         const container = document.querySelector('.lightbox-container');
         if (container === null) {

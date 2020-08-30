@@ -21,12 +21,13 @@
         const isVerifiedChangeMessage = type === 'verified-change';
         const isExpiringMessage = is_1.default.object(lastMessage.expirationTimerUpdate);
         const shouldUpdateTimestamp = !isVerifiedChangeMessage && !isExpiringMessage;
-        const newTimestamp = shouldUpdateTimestamp ?
-            lastMessage.sent_at :
-            currentTimestamp;
+        const newTimestamp = shouldUpdateTimestamp
+            ? lastMessage.sent_at
+            : currentTimestamp;
         const shouldUpdateLastMessageText = !isVerifiedChangeMessage;
-        const newLastMessageText = shouldUpdateLastMessageText ?
-            lastMessageNotificationText : currentLastMessageText;
+        const newLastMessageText = shouldUpdateLastMessageText
+            ? lastMessageNotificationText
+            : currentLastMessageText;
         return {
             lastMessage: newLastMessageText,
             timestamp: newTimestamp,

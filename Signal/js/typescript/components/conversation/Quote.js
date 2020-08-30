@@ -38,9 +38,7 @@
     }
     class Quote extends react_1.default.Component {
         renderImage(url, icon) {
-            const iconElement = icon
-                ? react_1.default.createElement("div", { className: classnames_1.default('icon', 'with-image', icon) })
-                : null;
+            const iconElement = icon ? (react_1.default.createElement("div", { className: classnames_1.default('icon', 'with-image', icon) })) : null;
             return (react_1.default.createElement("div", { className: "icon-container" },
                 react_1.default.createElement("div", { className: "inner" },
                     react_1.default.createElement("img", { src: url }),
@@ -68,9 +66,7 @@
                     : this.renderIcon('movie');
             }
             if (GoogleChrome.isImageTypeSupported(contentType)) {
-                return objectUrl
-                    ? this.renderImage(objectUrl)
-                    : this.renderIcon('image');
+                return objectUrl ? this.renderImage(objectUrl) : this.renderIcon('image');
             }
             if (MIME.isAudio(contentType)) {
                 return this.renderIcon('microphone');
@@ -80,7 +76,7 @@
         renderText() {
             const { i18n, text, attachments } = this.props;
             if (text) {
-                return react_1.default.createElement("div", { className: "text", dangerouslySetInnerHTML: { __html: text } });
+                return (react_1.default.createElement("div", { className: "text", dangerouslySetInnerHTML: { __html: text } }));
             }
             if (!attachments || attachments.length === 0) {
                 return null;
@@ -102,7 +98,7 @@
             return react_1.default.createElement("div", { className: "filename-label" }, fileName);
         }
         renderIOSLabel() {
-            const { i18n, isIncoming, isFromMe, authorTitle, authorProfileName } = this.props;
+            const { i18n, isIncoming, isFromMe, authorTitle, authorProfileName, } = this.props;
             const profileString = authorProfileName ? ` ~${authorProfileName}` : '';
             const authorName = `${authorTitle}${profileString}`;
             const label = isFromMe
@@ -127,24 +123,26 @@
             return (react_1.default.createElement("div", { className: "close-container" },
                 react_1.default.createElement("div", { className: "close-button", onClick: onClick })));
         }
+        renderAuthor() {
+            const { authorColor, authorProfileName, authorTitle, i18n, isFromMe, } = this.props;
+            const authorProfileElement = authorProfileName ? (react_1.default.createElement("span", { className: "profile-name" },
+                "~",
+                authorProfileName)) : null;
+            return (react_1.default.createElement("div", { className: classnames_1.default(authorColor, 'author') }, isFromMe ? (i18n('you')) : (react_1.default.createElement("span", null,
+                authorTitle,
+                " ",
+                authorProfileElement))));
+        }
         render() {
-            const { authorTitle, authorProfileName, authorColor, onClick, isFromMe, } = this.props;
+            const { authorColor, onClick, isFromMe } = this.props;
             if (!validateQuote(this.props)) {
                 return null;
             }
-            const authorProfileElement = authorProfileName
-                ? react_1.default.createElement("span", { className: "profile-name" },
-                    "~",
-                    authorProfileName)
-                : null;
             const classes = classnames_1.default(authorColor, 'quoted-message', isFromMe ? 'from-me' : null, !onClick ? 'no-click' : null);
             return (react_1.default.createElement("div", { onClick: onClick, className: classes },
                 react_1.default.createElement("div", { className: "primary" },
                     this.renderIOSLabel(),
-                    react_1.default.createElement("div", { className: classnames_1.default(authorColor, 'author') },
-                        authorTitle,
-                        ' ',
-                        authorProfileElement),
+                    this.renderAuthor(),
                     this.renderText()),
                 this.renderIconContainer(),
                 this.renderClose()));

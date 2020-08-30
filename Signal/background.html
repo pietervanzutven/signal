@@ -180,8 +180,7 @@
               <button class='hamburger' alt='conversation menu'></button>
               <ul class='menu-list'>
                   <li class='disappearing-messages'>{{ disappearing-messages }}</li>
-                  <!-- TODO: Enable once media gallerys ships: -->
-                  <!-- <li class='view-all-media'>{{ view-all-media }}</li> -->
+                  <li class='view-all-media'>{{ view-all-media }}</li>
                   {{#group}}
                       <li class='show-members'>{{ show-members }}</li>
                       <!-- <li class='update-group'>Update group</li> -->
@@ -253,7 +252,12 @@
     </div>
   </script>
   <script type='text/x-tmpl-mustache' id='attachment-preview'>
-        <img src='{{ source }}' class='preview' />
+        <div class='image-container'>
+          <img src='{{ source }}' class='preview' />
+          <div class='outer'>
+            <div class='play icon'></div>
+          </div>
+        </div>
         <a class='x close' alt='remove attachment' href='#'></a>
   </script>
   <script type='text/x-tmpl-mustache' id='file-view'>
@@ -1065,9 +1069,12 @@
   <script type='text/javascript' src='js/modules/lodash/isUndefined.js'></script>
   <script type='text/javascript' src='js/modules/lodash/last.js'></script>
   <script type='text/javascript' src='js/modules/lodash/omit.js'></script>
+  <script type='text/javascript' src='js/modules/lodash/partial.js'></script>
+  <script type='text/javascript' src='js/modules/lodash/partition.js'></script>
   <script type='text/javascript' src='js/modules/lodash/random.js'></script>
   <script type='text/javascript' src='js/modules/lodash/range.js'></script>
   <script type='text/javascript' src='js/modules/lodash/sample.js'></script>
+  <script type='text/javascript' src='js/modules/lodash/sortBy.js'></script>
   <script type='text/javascript' src='js/modules/blueimp-canvas-to-blob/canvas-to-blob.js'></script>
   <script type='text/javascript' src='js/modules/blueimp-load-image/load-image.js'></script>
   <script type='text/javascript' src='js/modules/blueimp-load-image/load-image-scale.js'></script>
@@ -1087,6 +1094,7 @@
   <script type='text/javascript' src='js/typescript/util/arrayBufferToObjectURL.js'></script>
   <script type='text/javascript' src='js/typescript/util/GoogleChrome.js'></script>
   <script type='text/javascript' src='js/typescript/util/missingCaseError.js'></script>
+  <script type='text/javascript' src='js/typescript/util/saveURLAsFile.js'></script>
   <script type='text/javascript' src='js/typescript/types/Attachment.js'></script>
   <script type='text/javascript' src='js/typescript/types/Conversation.js'></script>
   <script type='text/javascript' src='js/typescript/types/IndexedDB.js'></script>
@@ -1137,12 +1145,15 @@
   <script type='text/javascript' src='js/modules/filesize/filesize.js'></script>
   <script type='text/javascript' src='js/typescript/html/index.js'></script>
   <script type='text/javascript' src='js/typescript/components/Lightbox.js'></script>
+  <script type='text/javascript' src='js/typescript/components/LightboxGallery.js'></script>
+  <script type='text/javascript' src='js/typescript/components/styles/Colors.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/DocumentListItem.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/EmptyState.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/MediaGridItem.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/AttachmentSection.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/groupMessagesByDate.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/MediaGallery.js'></script>
-  <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/propTypes/Message.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/types/Message.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/Quote.js'></script>
   <script type='text/javascript' src='js/typescript/backbone/Conversation.js'></script>
   <script type='text/javascript' src='js/typescript/backbone/views/Lightbox.js'></script>

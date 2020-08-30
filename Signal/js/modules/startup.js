@@ -1,15 +1,14 @@
 (function () {
   'use strict';
 
-  window.startup = {};
+  const exports = window.startup = {};
 
   const is = window.sindresorhus.is;
 
   const Errors = window.types.errors;
   const Settings = window.settings;
 
-
-  window.startup.syncReadReceiptConfiguration = async ({
+  exports.syncReadReceiptConfiguration = async ({
     deviceId,
     sendRequestConfigurationSyncMessage,
     storage,

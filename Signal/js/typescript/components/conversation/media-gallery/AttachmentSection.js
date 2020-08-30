@@ -5,15 +5,12 @@
     window.ts.components = window.ts.components || {};
     window.ts.components.conversation = window.ts.components.conversation || {};
     window.ts.components.conversation.media_gallery = window.ts.components.conversation.media_gallery || {};
-    const exports = window.ts.components.conversation.media_gallery;
+    const exports = window.ts.components.conversation.media_gallery.AttachmentSection = {};
 
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * @prettier
-     */
     const react_1 = __importDefault(window.react);
     const DocumentListItem_1 = window.ts.components.conversation.media_gallery.DocumentListItem;
     const MediaGridItem_1 = window.ts.components.conversation.media_gallery.MediaGridItem;
@@ -39,11 +36,11 @@
         constructor() {
             super(...arguments);
             this.createClickHandler = (message) => () => {
-                const { onItemClick } = this.props;
+                const { onItemClick, type } = this.props;
                 if (!onItemClick) {
                     return;
                 }
-                onItemClick({ message });
+                onItemClick({ type, message });
             };
         }
         render() {
