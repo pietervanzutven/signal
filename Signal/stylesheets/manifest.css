@@ -3584,6 +3584,11 @@ span.status {
     background-color: #171717; }
   .android-dark .emoji-panel-container .ep-emojies {
     background-color: #292929; }
+  .android-dark .dots-horizontal-icon:hover {
+    background-image: url("../images/dots-horizontal_F3F3F310.svg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center; }
 
 .iti-flag {
   width: 16px;
