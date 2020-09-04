@@ -256,6 +256,7 @@
     <Content Include="js\modules\moment\moment.js" />
     <Content Include="js\modules\Notification.js" />
     <Content Include="js\modules\os.js" />
+    <Content Include="js\modules\protobuf\protobuf.js" />
     <Content Include="js\modules\react\index.js" />
     <Content Include="js\modules\react-dom\index.js" />
     <Content Include="js\modules\semver\functions\compare.js" />
@@ -364,6 +365,7 @@
     <Content Include="js\typescript\html\index.js" />
     <Content Include="js\typescript\notifications\getStatus.js" />
     <Content Include="js\typescript\OS.js" />
+    <Content Include="js\typescript\protobuf\protobuf.js" />
     <Content Include="js\typescript\types\Attachment.js" />
     <Content Include="js\typescript\types\Conversation.js" />
     <Content Include="js\typescript\types\IndexedDB.js" />
@@ -448,7 +450,6 @@
     <Content Include="protos\Stickers.proto" />
     <Content Include="protos\SubProtocol.proto" />
     <Content Include="protos\UnidentifiedDelivery.proto" />
-    <Content Include="protos\WhisperTextProtocol.proto" />
     <Content Include="share.html" />
     <Content Include="stylesheets\manifest.css" />
     <Content Include="TextSecure.cer" />

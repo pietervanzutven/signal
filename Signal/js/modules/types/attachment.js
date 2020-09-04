@@ -193,5 +193,7 @@
     };
   };
 
+  exports.isVoiceMessage = AttachmentTS.isVoiceMessage;
   exports.save = AttachmentTS.save;
+  
 })();
