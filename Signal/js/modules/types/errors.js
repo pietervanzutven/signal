@@ -2,7 +2,7 @@
   'use strict';
   
   window.types = window.types || {};
-  const exports = window.types.Errors = {};
+  const exports = window.types.errors = {};
 
   //      toLogFormat :: Error -> String
   exports.toLogFormat = error => {

@@ -6,9 +6,6 @@
 
   console.log('preload');
 
-  const Attachment = window.types.attachment;
-  const Attachments = window.attachments;
-  const Message = window.types.message;
   const { deferredToPromise } = window.deferred_to_promise;
 
   window.PROTO_ROOT = '/protos';
@@ -83,8 +80,10 @@
 
   window.autoOrientImage = autoOrientImage;
   window.dataURLToBlobSync = window.blueimp_canvas_to_blob;
-  window.loadImage = window.blueimp_load_image;
   window.filesize = window.filesize;
+  window.libphonenumber = window.google_libphonenumber.PhoneNumberUtil.getInstance();
+  window.libphonenumber.PhoneNumberFormat = window.google_libphonenumber.PhoneNumberFormat;
+  window.loadImage = window.blueimp_load_image;
 
   // Note: when modifying this file, consider whether our React Components or Backbone Views
   //   will need these things to render in the Style Guide. If so, go update one of these
@@ -97,10 +96,12 @@
   window.ReactDOM = window.react_dom;
   window.moment = window.moment;
 
-  const { setup } = window.i18n;
+  const Signal = window.signal;
+  const i18n = window.i18n;
+  const Attachments = window.attachments;
 
   const { locale, localeMessages } = window.config;
-  window.i18n = setup(locale, localeMessages);
+  window.i18n = i18n.setup(locale, localeMessages);
   window.moment.updateLocale(locale, {
     relativeTime: {
       s: window.i18n('timestamp_s'),
@@ -110,99 +111,26 @@
   });
   window.moment.locale(locale);
 
-  // ES2015+ modules
-  const attachmentsPath = Attachments.getPath(app.getPath('userData'));
-  const getAbsoluteAttachmentPath = Attachments.createAbsolutePathGetter(
-    attachmentsPath
-  );
-  const deleteAttachmentData = Attachments.createDeleter(attachmentsPath);
-  const readAttachmentData = Attachments.createReader(attachmentsPath);
-  const writeNewAttachmentData = Attachments.createWriterForNew(attachmentsPath);
-  const writeExistingAttachmentData = Attachments.createWriterForExisting(
-    attachmentsPath
-  );
+  window.Signal = Signal.setup({
+    Attachments,
+    userDataPath: app.getPath('userData'),
+  });
 
-  const loadAttachmentData = Attachment.loadData(readAttachmentData);
-
-  // Injected context functions to keep `Message` agnostic from Electron:
-  const upgradeSchemaContext = {
-    writeNewAttachmentData,
-  };
-  const upgradeMessageSchema = message =>
-    Message.upgradeSchema(message, upgradeSchemaContext);
-
-  const {
-    getPlaceholderMigrations,
-  } = window.migrations.get_placeholder_migrations;
-  const { IdleDetector } = window.idle_detector;
-
-  window.Signal = {};
-  window.Signal.Backbone = window.ts.backbone;
+  // Pulling these in separately since they access filesystem, electron
   window.Signal.Backup = window.backup;
-  window.Signal.Crypto = window.crypto;
-  window.Signal.Database = window.database;
   window.Signal.Debug = window.debug;
-  window.Signal.HTML = window.ts.html;
   window.Signal.Logs = window.logs;
 
-  // React components
-  const { Lightbox } = window.ts.components.Lightbox;
-  const { LightboxGallery } = window.ts.components.LightboxGallery;
-  const {
-    MediaGallery,
-  } = window.ts.components.conversation.media_gallery.MediaGallery;
-  const { Quote } = window.ts.components.conversation.Quote;
-
-const MediaGalleryMessage = window.ts.components.conversation.media_gallery.types.Message;
-
-  window.Signal.Components = {
-    Lightbox,
-    LightboxGallery,
-    MediaGallery,
-    Types: {
-      Message: MediaGalleryMessage,
-    },
-    Quote,
-  };
-
-  window.Signal.Migrations = {};
-  window.Signal.Migrations.deleteAttachmentData = Attachment.deleteData(
-    deleteAttachmentData
-  );
-  window.Signal.Migrations.getPlaceholderMigrations = getPlaceholderMigrations;
-  window.Signal.Migrations.writeMessageAttachments = Message.createAttachmentDataWriter(
-    writeExistingAttachmentData
-  );
-  window.Signal.Migrations.getAbsoluteAttachmentPath = getAbsoluteAttachmentPath;
-  window.Signal.Migrations.loadAttachmentData = loadAttachmentData;
-  window.Signal.Migrations.loadMessage = Message.createAttachmentLoader(
-    loadAttachmentData
-  );
-  window.Signal.Migrations.Migrations0DatabaseWithAttachmentData = window.migrations.migrations_0_database_with_attachment_data;
-  window.Signal.Migrations.Migrations1DatabaseWithoutAttachmentData = window.migrations.migrations_1_database_without_attachment_data;
-
-  window.Signal.Migrations.upgradeMessageSchema = upgradeMessageSchema;
-  window.Signal.Notifications = window.ts.notifications;
-  window.Signal.OS = window.ts.OS;
-  window.Signal.Settings = window.settings;
-  window.Signal.Startup = window.startup;
-
-  window.Signal.Types = {};
-  window.Signal.Types.Attachment = Attachment;
-  window.Signal.Types.Conversation = window.ts.types.Conversation;
-  window.Signal.Types.Errors = window.types.errors;
-
-  window.Signal.Types.Message = Message;
-  window.Signal.Types.MIME = window.ts.types.MIME;
-  window.Signal.Types.Settings = window.ts.types.Settings;
-  window.Signal.Util = window.ts.util;
-
-  window.Signal.Views = {};
-  window.Signal.Views.Initialization = window.views.initialization;
-
-  window.Signal.Workflow = {};
-  window.Signal.Workflow.IdleDetector = IdleDetector;
-  window.Signal.Workflow.MessageDataMigrator =
-    window.messages_data_migrator;
-
+  if (window.config.environment === 'test') {
+    /* eslint-disable global-require, import/no-extraneous-dependencies */
+    window.test = {
+      glob: require('glob'),
+      fse: require('fs-extra'),
+      tmp: require('tmp'),
+      path: require('path'),
+      basePath: __dirname,
+      attachmentsPath: window.Signal.Migrations.attachmentsPath,
+    };
+    /* eslint-enable global-require, import/no-extraneous-dependencies */
+  }
 })();

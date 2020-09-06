@@ -5052,8 +5052,7 @@
             };
             Object.defineProperty(exports, "__esModule", { value: !0 });
             exports["default"] = i18n.phonenumbers;
-            window.libphonenumber = exports["default"].PhoneNumberUtil.getInstance();
-            window.libphonenumber.PhoneNumberFormat = exports["default"].PhoneNumberFormat;
+            window.google_libphonenumber = exports["default"];
 
         }, {}]
     }, {}, [1])(1)

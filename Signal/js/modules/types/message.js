@@ -6,6 +6,7 @@
 
   const { isFunction, isString, omit } = window.lodash;
 
+  const Contact = window.types.contact;
   const Attachment = window.types.attachment;
   const Errors = window.types.errors;
   const SchemaVersion = window.types.schema_version;
@@ -35,6 +36,8 @@
   //     - `hasAttachments?: 1 | 0`
   //     - `hasVisualMediaAttachments?: 1 | undefined` (for media gallery ‘Media’ view)
   //     - `hasFileAttachments?: 1 | undefined` (for media gallery ‘Documents’ view)
+  // Version 6
+  //   - Contact: Write contact avatar to disk, ensure contact data is well-formed
 
   const INITIAL_SCHEMA_VERSION = 0;
 
@@ -43,7 +46,7 @@
   // add more upgrade steps, we could design a pipeline that does this
   // incrementally, e.g. from version 0 / unknown -> 1, 1 --> 2, etc., similar to
   // how we do database migrations:
-  exports.CURRENT_SCHEMA_VERSION = 5;
+  exports.CURRENT_SCHEMA_VERSION = 6;
 
   // Public API
   exports.GROUP = GROUP;
@@ -160,6 +163,20 @@
     return Object.assign({}, message, { attachments });
   };
 
+  // Public API
+  //      _mapContact :: (Contact -> Promise Contact) ->
+  //                     (Message, Context) ->
+  //                     Promise Message
+  exports._mapContact = upgradeContact => async (message, context) => {
+    const contextWithMessage = Object.assign({}, context, { message });
+    const upgradeWithContext = contact =>
+      upgradeContact(contact, contextWithMessage);
+    const contact = await Promise.all(
+      (message.contact || []).map(upgradeWithContext)
+    );
+    return Object.assign({}, message, { contact });
+  };
+
   //      _mapQuotedAttachments :: (QuotedAttachment -> Promise QuotedAttachment) ->
   //                               (Message, Context) ->
   //                               Promise Message
@@ -220,6 +237,13 @@
   );
   const toVersion5 = exports._withSchemaVersion(5, initializeAttachmentMetadata);
 
+  const toVersion6 = exports._withSchemaVersion(
+    6,
+    exports._mapContact(
+      Contact.parseAndWriteAvatar(Attachment.migrateDataToFileSystem)
+    )
+  );
+
   // UpgradeStep
   exports.upgradeSchema = async (rawMessage, { writeNewAttachmentData } = {}) => {
     if (!isFunction(writeNewAttachmentData)) {
@@ -234,6 +258,7 @@
       toVersion3,
       toVersion4,
       toVersion5,
+      toVersion6,
     ];
 
     for (let i = 0, max = versions.length; i < max; i += 1) {
@@ -275,10 +300,11 @@
 
       const message = exports.initializeSchemaVersion(rawMessage);
 
-      const { attachments, quote } = message;
+      const { attachments, quote, contact } = message;
       const hasFilesToWrite =
         (quote && quote.attachments && quote.attachments.length > 0) ||
-        (attachments && attachments.length > 0);
+        (attachments && attachments.length > 0) ||
+        (contact && contact.length > 0);
 
       if (!hasFilesToWrite) {
         return message;
@@ -324,10 +350,26 @@
         return omit(thumbnail, ['data']);
       });
 
+      const writeContactAvatar = async messageContact => {
+        const { avatar } = messageContact;
+        if (avatar && !avatar.avatar) {
+          return omit(messageContact, ['avatar']);
+        }
+
+        await writeExistingAttachmentData(avatar.avatar);
+
+        return Object.assign({}, messageContact, {
+          avatar: Object.assign({}, avatar, {
+            avatar: omit(avatar.avatar, ['data']),
+          }),
+        });
+      };
+
       const messageWithoutAttachmentData = Object.assign(
         {},
         await writeThumbnails(message),
         {
+          contact: await Promise.all((contact || []).map(writeContactAvatar)),
           attachments: await Promise.all(
             (attachments || []).map(async attachment => {
               await writeExistingAttachmentData(attachment);

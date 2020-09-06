@@ -8,6 +8,11 @@
 
 @font-face {
   font-family: 'Roboto';
+  src: url("../fonts/Roboto-Medium.ttf") format("truetype");
+  font-weight: 300; }
+
+@font-face {
+  font-family: 'Roboto';
   src: url("../fonts/Roboto-Italic.ttf") format("truetype");
   font-style: italic; }
 
@@ -1321,8 +1326,7 @@ input.search {
 
 .index .last-message {
   margin: 6px 0 0;
-  font-size: 0.9285714286em;
-  font-weight: 300; }
+  font-size: 0.9285714286em; }
 
 .index .gutter .timestamp {
   position: absolute;
@@ -1833,6 +1837,9 @@ span.status {
     .message-container .bubble .quote-wrapper + .content,
     .message-list .bubble .quote-wrapper + .content {
       margin-top: 0.5em; }
+    .message-container .bubble .contact-wrapper + .content,
+    .message-list .bubble .contact-wrapper + .content {
+      margin-top: 0.5em; }
     .message-container .bubble p,
     .message-list .bubble p {
       margin: 0; }
@@ -2017,6 +2024,168 @@ span.status {
   .message-list .bubble .content.error-message {
     cursor: pointer;
     font-style: italic; }
+
+.embedded-contact {
+  margin-top: -9px;
+  margin-left: -12px;
+  margin-right: -12px;
+  cursor: pointer; }
+  .embedded-contact button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit; }
+  .embedded-contact .first-line {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    margin: 8px; }
+    .embedded-contact .first-line .image-container {
+      flex: initial;
+      min-width: 50px;
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      object-fit: cover; }
+      .embedded-contact .first-line .image-container img {
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; }
+      .embedded-contact .first-line .image-container .default-avatar {
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+        background-color: gray;
+        color: white;
+        font-size: 25px;
+        line-height: 52px; }
+    .embedded-contact .first-line .text-container {
+      flex-grow: 1;
+      margin-left: 8px; }
+      .embedded-contact .first-line .text-container .contact-name {
+        font-size: 16px;
+        font-weight: 300;
+        margin-top: 3px;
+        color: #2090ea; }
+      .embedded-contact .first-line .text-container .contact-method {
+        font-size: 14px;
+        margin-top: 6px; }
+  .embedded-contact .send-message {
+    margin-top: 8px;
+    margin-bottom: 3px;
+    padding: 11px;
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+    color: #2090ea;
+    font-weight: 300;
+    display: flex;
+    flex-direction: column;
+    align-items: center; }
+    .embedded-contact .send-message .inner {
+      display: flex;
+      align-items: center; }
+    .embedded-contact .send-message .bubble-icon {
+      height: 17px;
+      width: 18px;
+      display: inline-block;
+      margin-right: 5px;
+      background-image: url("../images/chat-bubble_2090EA10.svg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+
+.incoming .embedded-contact {
+  color: white; }
+  .incoming .embedded-contact .text-container .contact-name {
+    color: white; }
+  .incoming .embedded-contact .send-message {
+    color: white; }
+    .incoming .embedded-contact .send-message .bubble-icon {
+      background-color: white; }
+
+.group .incoming .embedded-contact {
+  margin-top: -2px; }
+
+.contact-detail {
+  text-align: center;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto; }
+  .contact-detail button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit; }
+  .contact-detail .image-container {
+    height: 80px;
+    width: 80px;
+    margin-bottom: 4px;
+    text-align: center;
+    display: inline-block;
+    object-fit: cover; }
+    .contact-detail .image-container img {
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; }
+    .contact-detail .image-container .default-avatar {
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      background-color: gray;
+      color: white;
+      font-size: 50px;
+      line-height: 82px; }
+  .contact-detail .contact-name {
+    font-size: 20px;
+    font-weight: bold; }
+  .contact-detail .contact-method {
+    font-size: 14px;
+    margin-top: 10px; }
+  .contact-detail .send-message {
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #2090ea;
+    display: inline-block;
+    padding: 6px;
+    margin-top: 20px;
+    color: white;
+    flex-direction: column;
+    align-items: center; }
+    .contact-detail .send-message .inner {
+      display: flex;
+      align-items: center; }
+    .contact-detail .send-message .bubble-icon {
+      height: 17px;
+      width: 18px;
+      display: inline-block;
+      margin-right: 5px;
+      background-image: url("../images/chat-bubble_FFFFFF10.svg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+  .contact-detail .additional-contact {
+    text-align: left;
+    border-top: 1px solid #e6e6e6;
+    margin-top: 15px;
+    padding-top: 8px; }
+    .contact-detail .additional-contact .type {
+      color: rgba(0, 0, 0, 0.5);
+      font-size: 12px;
+      margin-bottom: 3px; }
+
+.conversation .contact-detail {
+  margin-top: 40px; }
 
 .quoted-message {
   position: relative;
@@ -2635,6 +2804,40 @@ span.status {
 .ios .message-list .bubble .content {
   margin-top: 0px; }
 
+.ios .embedded-contact {
+  margin: 0;
+  color: white; }
+  .ios .embedded-contact .first-line {
+    margin: 0;
+    padding: 10px; }
+    .ios .embedded-contact .first-line .text-container .contact-name {
+      color: white; }
+  .ios .embedded-contact .send-message {
+    font-weight: normal;
+    border-bottom: none;
+    margin-top: 0;
+    color: white; }
+    .ios .embedded-contact .send-message .bubble-icon {
+      background-image: url("../images/chat-bubble-outline_FFFFFF10.svg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+
+.ios .incoming .embedded-contact {
+  color: black; }
+  .ios .incoming .embedded-contact .first-line .text-container .contact-name {
+    color: #2090ea; }
+  .ios .incoming .embedded-contact .send-message {
+    color: #2090ea; }
+    .ios .incoming .embedded-contact .send-message .bubble-icon {
+      background-image: url("../images/chat-bubble-outline_2090EA10.svg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+
+.ios .embedded-contact + .content {
+  border-bottom: 1px solid white; }
+
 .ios .quoted-message {
   background-color: white !important;
   border: none !important;
@@ -2812,10 +3015,7 @@ span.status {
   .ios .incoming .tail-wrapper .inner-bubble {
   max-width: 100%; }
 
-.ios .outgoing .tail-wrapper .attachments {
-      background-color: #2090ea; }
-
-.ios .outgoing .tail-wrapper .content {
+.ios .outgoing .tail-wrapper .inner-bubble {
       background-color: #2090ea; }
 
 .ios .outgoing .tail-wrapper,
@@ -3497,6 +3697,30 @@ span.status {
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
+  .android-dark .embedded-contact .first-line .image-container .default-avatar {
+    background-color: gray;
+    color: white; }
+  .android-dark .embedded-contact .first-line .text-container .contact-name {
+    color: #2090ea; }
+  .android-dark .embedded-contact .send-message {
+    color: #2090ea;
+    border-top: 1px solid #616161;
+    border-bottom: 1px solid #616161; }
+    .android-dark .embedded-contact .send-message .bubble-icon {
+      background-image: url("../images/chat-bubble-outline_2090EA10.svg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+  .android-dark .incoming .embedded-contact {
+    color: white; }
+    .android-dark .incoming .embedded-contact .text-container .contact-name {
+      color: white; }
+    .android-dark .incoming .embedded-contact .send-message {
+      color: white;
+      border-top: 1px solid #e6e6e6;
+      border-bottom: 1px solid #e6e6e6; }
+      .android-dark .incoming .embedded-contact .send-message .bubble-icon {
+        background-color: white; }
   .android-dark .outgoing .quoted-message {
     background: rgba(255, 255, 255, 0.38); }
     .android-dark .outgoing .quoted-message .icon-container .icon {

@@ -1,27 +1,27 @@
-(function() {
+(function () {
     /*eslint-disable block-scoped-var, no-redeclare, no-control-regex, no-prototype-builtins*/
     "use strict";
 
     window.ts = window.ts || {};
 
-    var $protobuf=window.protobuf;
+    var $protobuf = window.protobuf;
 
     // Common aliases
-    var $Reader=$protobuf.Reader,$Writer=$protobuf.Writer,$util=$protobuf.util;
+    var $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.util;
 
     // Exported root namespace
-    var $root=$protobuf.roots["default"]||($protobuf.roots["default"]={});
+    var $root = $protobuf.roots["default"] || ($protobuf.roots["default"] = {});
 
-    $root.signalservice=(function() {
+    $root.SignalService = (function () {
 
         /**
          * Namespace signalservice.
          * @exports signalservice
          * @namespace
          */
-        var signalservice={};
+        var signalservice = {};
 
-        signalservice.ProvisioningUuid=(function() {
+        signalservice.ProvisioningUuid = (function () {
 
             /**
              * Properties of a ProvisioningUuid.
@@ -39,10 +39,10 @@
              * @param {signalservice.IProvisioningUuid=} [properties] Properties to set
              */
             function ProvisioningUuid(properties) {
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -51,7 +51,7 @@
              * @memberof signalservice.ProvisioningUuid
              * @instance
              */
-            ProvisioningUuid.prototype.uuid="";
+            ProvisioningUuid.prototype.uuid = "";
 
             /**
              * Creates a new ProvisioningUuid instance using the specified properties.
@@ -61,7 +61,7 @@
              * @param {signalservice.IProvisioningUuid=} [properties] Properties to set
              * @returns {signalservice.ProvisioningUuid} ProvisioningUuid instance
              */
-            ProvisioningUuid.create=function create(properties) {
+            ProvisioningUuid.create = function create(properties) {
                 return new ProvisioningUuid(properties);
             };
 
@@ -74,10 +74,10 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            ProvisioningUuid.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.uuid!=null&&message.hasOwnProperty("uuid"))
+            ProvisioningUuid.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.uuid != null && message.hasOwnProperty("uuid"))
                     writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
                 return writer;
             };
@@ -91,8 +91,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            ProvisioningUuid.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            ProvisioningUuid.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -106,18 +106,18 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            ProvisioningUuid.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.ProvisioningUuid();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            ProvisioningUuid.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.ProvisioningUuid();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.uuid=reader.string();
+                            message.uuid = reader.string();
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -134,10 +134,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            ProvisioningUuid.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            ProvisioningUuid.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -148,11 +148,11 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            ProvisioningUuid.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            ProvisioningUuid.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.uuid!=null&&message.hasOwnProperty("uuid"))
-                    if(!$util.isString(message.uuid))
+                if (message.uuid != null && message.hasOwnProperty("uuid"))
+                    if (!$util.isString(message.uuid))
                         return "uuid: string expected";
                 return null;
             };
@@ -165,12 +165,12 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.ProvisioningUuid} ProvisioningUuid
              */
-            ProvisioningUuid.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.ProvisioningUuid)
+            ProvisioningUuid.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.ProvisioningUuid)
                     return object;
-                var message=new $root.signalservice.ProvisioningUuid();
-                if(object.uuid!=null)
-                    message.uuid=String(object.uuid);
+                var message = new $root.signalservice.ProvisioningUuid();
+                if (object.uuid != null)
+                    message.uuid = String(object.uuid);
                 return message;
             };
 
@@ -183,14 +183,14 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            ProvisioningUuid.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.defaults)
-                    object.uuid="";
-                if(message.uuid!=null&&message.hasOwnProperty("uuid"))
-                    object.uuid=message.uuid;
+            ProvisioningUuid.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults)
+                    object.uuid = "";
+                if (message.uuid != null && message.hasOwnProperty("uuid"))
+                    object.uuid = message.uuid;
                 return object;
             };
 
@@ -201,14 +201,14 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            ProvisioningUuid.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            ProvisioningUuid.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             return ProvisioningUuid;
         })();
 
-        signalservice.ProvisionEnvelope=(function() {
+        signalservice.ProvisionEnvelope = (function () {
 
             /**
              * Properties of a ProvisionEnvelope.
@@ -227,10 +227,10 @@
              * @param {signalservice.IProvisionEnvelope=} [properties] Properties to set
              */
             function ProvisionEnvelope(properties) {
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -239,7 +239,7 @@
              * @memberof signalservice.ProvisionEnvelope
              * @instance
              */
-            ProvisionEnvelope.prototype.publicKey=$util.newBuffer([]);
+            ProvisionEnvelope.prototype.publicKey = $util.newBuffer([]);
 
             /**
              * ProvisionEnvelope body.
@@ -247,7 +247,7 @@
              * @memberof signalservice.ProvisionEnvelope
              * @instance
              */
-            ProvisionEnvelope.prototype.body=$util.newBuffer([]);
+            ProvisionEnvelope.prototype.body = $util.newBuffer([]);
 
             /**
              * Creates a new ProvisionEnvelope instance using the specified properties.
@@ -257,7 +257,7 @@
              * @param {signalservice.IProvisionEnvelope=} [properties] Properties to set
              * @returns {signalservice.ProvisionEnvelope} ProvisionEnvelope instance
              */
-            ProvisionEnvelope.create=function create(properties) {
+            ProvisionEnvelope.create = function create(properties) {
                 return new ProvisionEnvelope(properties);
             };
 
@@ -270,12 +270,12 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            ProvisionEnvelope.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.publicKey!=null&&message.hasOwnProperty("publicKey"))
+            ProvisionEnvelope.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.publicKey != null && message.hasOwnProperty("publicKey"))
                     writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.publicKey);
-                if(message.body!=null&&message.hasOwnProperty("body"))
+                if (message.body != null && message.hasOwnProperty("body"))
                     writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.body);
                 return writer;
             };
@@ -289,8 +289,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            ProvisionEnvelope.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            ProvisionEnvelope.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -304,21 +304,21 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            ProvisionEnvelope.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.ProvisionEnvelope();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            ProvisionEnvelope.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.ProvisionEnvelope();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.publicKey=reader.bytes();
+                            message.publicKey = reader.bytes();
                             break;
                         case 2:
-                            message.body=reader.bytes();
+                            message.body = reader.bytes();
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -335,10 +335,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            ProvisionEnvelope.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            ProvisionEnvelope.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -349,14 +349,14 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            ProvisionEnvelope.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            ProvisionEnvelope.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.publicKey!=null&&message.hasOwnProperty("publicKey"))
-                    if(!(message.publicKey&&typeof message.publicKey.length==="number"||$util.isString(message.publicKey)))
+                if (message.publicKey != null && message.hasOwnProperty("publicKey"))
+                    if (!(message.publicKey && typeof message.publicKey.length === "number" || $util.isString(message.publicKey)))
                         return "publicKey: buffer expected";
-                if(message.body!=null&&message.hasOwnProperty("body"))
-                    if(!(message.body&&typeof message.body.length==="number"||$util.isString(message.body)))
+                if (message.body != null && message.hasOwnProperty("body"))
+                    if (!(message.body && typeof message.body.length === "number" || $util.isString(message.body)))
                         return "body: buffer expected";
                 return null;
             };
@@ -369,20 +369,20 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.ProvisionEnvelope} ProvisionEnvelope
              */
-            ProvisionEnvelope.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.ProvisionEnvelope)
+            ProvisionEnvelope.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.ProvisionEnvelope)
                     return object;
-                var message=new $root.signalservice.ProvisionEnvelope();
-                if(object.publicKey!=null)
-                    if(typeof object.publicKey==="string")
-                        $util.base64.decode(object.publicKey,message.publicKey=$util.newBuffer($util.base64.length(object.publicKey)),0);
-                    else if(object.publicKey.length)
-                        message.publicKey=object.publicKey;
-                if(object.body!=null)
-                    if(typeof object.body==="string")
-                        $util.base64.decode(object.body,message.body=$util.newBuffer($util.base64.length(object.body)),0);
-                    else if(object.body.length)
-                        message.body=object.body;
+                var message = new $root.signalservice.ProvisionEnvelope();
+                if (object.publicKey != null)
+                    if (typeof object.publicKey === "string")
+                        $util.base64.decode(object.publicKey, message.publicKey = $util.newBuffer($util.base64.length(object.publicKey)), 0);
+                    else if (object.publicKey.length)
+                        message.publicKey = object.publicKey;
+                if (object.body != null)
+                    if (typeof object.body === "string")
+                        $util.base64.decode(object.body, message.body = $util.newBuffer($util.base64.length(object.body)), 0);
+                    else if (object.body.length)
+                        message.body = object.body;
                 return message;
             };
 
@@ -395,18 +395,18 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            ProvisionEnvelope.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.defaults) {
-                    object.publicKey=options.bytes===String? "":[];
-                    object.body=options.bytes===String? "":[];
+            ProvisionEnvelope.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.publicKey = options.bytes === String ? "" : [];
+                    object.body = options.bytes === String ? "" : [];
                 }
-                if(message.publicKey!=null&&message.hasOwnProperty("publicKey"))
-                    object.publicKey=options.bytes===String? $util.base64.encode(message.publicKey,0,message.publicKey.length):options.bytes===Array? Array.prototype.slice.call(message.publicKey):message.publicKey;
-                if(message.body!=null&&message.hasOwnProperty("body"))
-                    object.body=options.bytes===String? $util.base64.encode(message.body,0,message.body.length):options.bytes===Array? Array.prototype.slice.call(message.body):message.body;
+                if (message.publicKey != null && message.hasOwnProperty("publicKey"))
+                    object.publicKey = options.bytes === String ? $util.base64.encode(message.publicKey, 0, message.publicKey.length) : options.bytes === Array ? Array.prototype.slice.call(message.publicKey) : message.publicKey;
+                if (message.body != null && message.hasOwnProperty("body"))
+                    object.body = options.bytes === String ? $util.base64.encode(message.body, 0, message.body.length) : options.bytes === Array ? Array.prototype.slice.call(message.body) : message.body;
                 return object;
             };
 
@@ -417,14 +417,14 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            ProvisionEnvelope.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            ProvisionEnvelope.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             return ProvisionEnvelope;
         })();
 
-        signalservice.ProvisionMessage=(function() {
+        signalservice.ProvisionMessage = (function () {
 
             /**
              * Properties of a ProvisionMessage.
@@ -447,10 +447,10 @@
              * @param {signalservice.IProvisionMessage=} [properties] Properties to set
              */
             function ProvisionMessage(properties) {
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -459,7 +459,7 @@
              * @memberof signalservice.ProvisionMessage
              * @instance
              */
-            ProvisionMessage.prototype.identityKeyPrivate=$util.newBuffer([]);
+            ProvisionMessage.prototype.identityKeyPrivate = $util.newBuffer([]);
 
             /**
              * ProvisionMessage number.
@@ -467,7 +467,7 @@
              * @memberof signalservice.ProvisionMessage
              * @instance
              */
-            ProvisionMessage.prototype.number="";
+            ProvisionMessage.prototype.number = "";
 
             /**
              * ProvisionMessage provisioningCode.
@@ -475,7 +475,7 @@
              * @memberof signalservice.ProvisionMessage
              * @instance
              */
-            ProvisionMessage.prototype.provisioningCode="";
+            ProvisionMessage.prototype.provisioningCode = "";
 
             /**
              * ProvisionMessage userAgent.
@@ -483,7 +483,7 @@
              * @memberof signalservice.ProvisionMessage
              * @instance
              */
-            ProvisionMessage.prototype.userAgent="";
+            ProvisionMessage.prototype.userAgent = "";
 
             /**
              * ProvisionMessage profileKey.
@@ -491,7 +491,7 @@
              * @memberof signalservice.ProvisionMessage
              * @instance
              */
-            ProvisionMessage.prototype.profileKey=$util.newBuffer([]);
+            ProvisionMessage.prototype.profileKey = $util.newBuffer([]);
 
             /**
              * ProvisionMessage readReceipts.
@@ -499,7 +499,7 @@
              * @memberof signalservice.ProvisionMessage
              * @instance
              */
-            ProvisionMessage.prototype.readReceipts=false;
+            ProvisionMessage.prototype.readReceipts = false;
 
             /**
              * Creates a new ProvisionMessage instance using the specified properties.
@@ -509,7 +509,7 @@
              * @param {signalservice.IProvisionMessage=} [properties] Properties to set
              * @returns {signalservice.ProvisionMessage} ProvisionMessage instance
              */
-            ProvisionMessage.create=function create(properties) {
+            ProvisionMessage.create = function create(properties) {
                 return new ProvisionMessage(properties);
             };
 
@@ -522,20 +522,20 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            ProvisionMessage.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.identityKeyPrivate!=null&&message.hasOwnProperty("identityKeyPrivate"))
+            ProvisionMessage.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.identityKeyPrivate != null && message.hasOwnProperty("identityKeyPrivate"))
                     writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.identityKeyPrivate);
-                if(message.number!=null&&message.hasOwnProperty("number"))
+                if (message.number != null && message.hasOwnProperty("number"))
                     writer.uint32(/* id 3, wireType 2 =*/26).string(message.number);
-                if(message.provisioningCode!=null&&message.hasOwnProperty("provisioningCode"))
+                if (message.provisioningCode != null && message.hasOwnProperty("provisioningCode"))
                     writer.uint32(/* id 4, wireType 2 =*/34).string(message.provisioningCode);
-                if(message.userAgent!=null&&message.hasOwnProperty("userAgent"))
+                if (message.userAgent != null && message.hasOwnProperty("userAgent"))
                     writer.uint32(/* id 5, wireType 2 =*/42).string(message.userAgent);
-                if(message.profileKey!=null&&message.hasOwnProperty("profileKey"))
+                if (message.profileKey != null && message.hasOwnProperty("profileKey"))
                     writer.uint32(/* id 6, wireType 2 =*/50).bytes(message.profileKey);
-                if(message.readReceipts!=null&&message.hasOwnProperty("readReceipts"))
+                if (message.readReceipts != null && message.hasOwnProperty("readReceipts"))
                     writer.uint32(/* id 7, wireType 0 =*/56).bool(message.readReceipts);
                 return writer;
             };
@@ -549,8 +549,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            ProvisionMessage.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            ProvisionMessage.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -564,33 +564,33 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            ProvisionMessage.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.ProvisionMessage();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            ProvisionMessage.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.ProvisionMessage();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 2:
-                            message.identityKeyPrivate=reader.bytes();
+                            message.identityKeyPrivate = reader.bytes();
                             break;
                         case 3:
-                            message.number=reader.string();
+                            message.number = reader.string();
                             break;
                         case 4:
-                            message.provisioningCode=reader.string();
+                            message.provisioningCode = reader.string();
                             break;
                         case 5:
-                            message.userAgent=reader.string();
+                            message.userAgent = reader.string();
                             break;
                         case 6:
-                            message.profileKey=reader.bytes();
+                            message.profileKey = reader.bytes();
                             break;
                         case 7:
-                            message.readReceipts=reader.bool();
+                            message.readReceipts = reader.bool();
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -607,10 +607,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            ProvisionMessage.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            ProvisionMessage.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -621,26 +621,26 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            ProvisionMessage.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            ProvisionMessage.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.identityKeyPrivate!=null&&message.hasOwnProperty("identityKeyPrivate"))
-                    if(!(message.identityKeyPrivate&&typeof message.identityKeyPrivate.length==="number"||$util.isString(message.identityKeyPrivate)))
+                if (message.identityKeyPrivate != null && message.hasOwnProperty("identityKeyPrivate"))
+                    if (!(message.identityKeyPrivate && typeof message.identityKeyPrivate.length === "number" || $util.isString(message.identityKeyPrivate)))
                         return "identityKeyPrivate: buffer expected";
-                if(message.number!=null&&message.hasOwnProperty("number"))
-                    if(!$util.isString(message.number))
+                if (message.number != null && message.hasOwnProperty("number"))
+                    if (!$util.isString(message.number))
                         return "number: string expected";
-                if(message.provisioningCode!=null&&message.hasOwnProperty("provisioningCode"))
-                    if(!$util.isString(message.provisioningCode))
+                if (message.provisioningCode != null && message.hasOwnProperty("provisioningCode"))
+                    if (!$util.isString(message.provisioningCode))
                         return "provisioningCode: string expected";
-                if(message.userAgent!=null&&message.hasOwnProperty("userAgent"))
-                    if(!$util.isString(message.userAgent))
+                if (message.userAgent != null && message.hasOwnProperty("userAgent"))
+                    if (!$util.isString(message.userAgent))
                         return "userAgent: string expected";
-                if(message.profileKey!=null&&message.hasOwnProperty("profileKey"))
-                    if(!(message.profileKey&&typeof message.profileKey.length==="number"||$util.isString(message.profileKey)))
+                if (message.profileKey != null && message.hasOwnProperty("profileKey"))
+                    if (!(message.profileKey && typeof message.profileKey.length === "number" || $util.isString(message.profileKey)))
                         return "profileKey: buffer expected";
-                if(message.readReceipts!=null&&message.hasOwnProperty("readReceipts"))
-                    if(typeof message.readReceipts!=="boolean")
+                if (message.readReceipts != null && message.hasOwnProperty("readReceipts"))
+                    if (typeof message.readReceipts !== "boolean")
                         return "readReceipts: boolean expected";
                 return null;
             };
@@ -653,28 +653,28 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.ProvisionMessage} ProvisionMessage
              */
-            ProvisionMessage.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.ProvisionMessage)
+            ProvisionMessage.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.ProvisionMessage)
                     return object;
-                var message=new $root.signalservice.ProvisionMessage();
-                if(object.identityKeyPrivate!=null)
-                    if(typeof object.identityKeyPrivate==="string")
-                        $util.base64.decode(object.identityKeyPrivate,message.identityKeyPrivate=$util.newBuffer($util.base64.length(object.identityKeyPrivate)),0);
-                    else if(object.identityKeyPrivate.length)
-                        message.identityKeyPrivate=object.identityKeyPrivate;
-                if(object.number!=null)
-                    message.number=String(object.number);
-                if(object.provisioningCode!=null)
-                    message.provisioningCode=String(object.provisioningCode);
-                if(object.userAgent!=null)
-                    message.userAgent=String(object.userAgent);
-                if(object.profileKey!=null)
-                    if(typeof object.profileKey==="string")
-                        $util.base64.decode(object.profileKey,message.profileKey=$util.newBuffer($util.base64.length(object.profileKey)),0);
-                    else if(object.profileKey.length)
-                        message.profileKey=object.profileKey;
-                if(object.readReceipts!=null)
-                    message.readReceipts=Boolean(object.readReceipts);
+                var message = new $root.signalservice.ProvisionMessage();
+                if (object.identityKeyPrivate != null)
+                    if (typeof object.identityKeyPrivate === "string")
+                        $util.base64.decode(object.identityKeyPrivate, message.identityKeyPrivate = $util.newBuffer($util.base64.length(object.identityKeyPrivate)), 0);
+                    else if (object.identityKeyPrivate.length)
+                        message.identityKeyPrivate = object.identityKeyPrivate;
+                if (object.number != null)
+                    message.number = String(object.number);
+                if (object.provisioningCode != null)
+                    message.provisioningCode = String(object.provisioningCode);
+                if (object.userAgent != null)
+                    message.userAgent = String(object.userAgent);
+                if (object.profileKey != null)
+                    if (typeof object.profileKey === "string")
+                        $util.base64.decode(object.profileKey, message.profileKey = $util.newBuffer($util.base64.length(object.profileKey)), 0);
+                    else if (object.profileKey.length)
+                        message.profileKey = object.profileKey;
+                if (object.readReceipts != null)
+                    message.readReceipts = Boolean(object.readReceipts);
                 return message;
             };
 
@@ -687,30 +687,30 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            ProvisionMessage.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.defaults) {
-                    object.identityKeyPrivate=options.bytes===String? "":[];
-                    object.number="";
-                    object.provisioningCode="";
-                    object.userAgent="";
-                    object.profileKey=options.bytes===String? "":[];
-                    object.readReceipts=false;
+            ProvisionMessage.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.identityKeyPrivate = options.bytes === String ? "" : [];
+                    object.number = "";
+                    object.provisioningCode = "";
+                    object.userAgent = "";
+                    object.profileKey = options.bytes === String ? "" : [];
+                    object.readReceipts = false;
                 }
-                if(message.identityKeyPrivate!=null&&message.hasOwnProperty("identityKeyPrivate"))
-                    object.identityKeyPrivate=options.bytes===String? $util.base64.encode(message.identityKeyPrivate,0,message.identityKeyPrivate.length):options.bytes===Array? Array.prototype.slice.call(message.identityKeyPrivate):message.identityKeyPrivate;
-                if(message.number!=null&&message.hasOwnProperty("number"))
-                    object.number=message.number;
-                if(message.provisioningCode!=null&&message.hasOwnProperty("provisioningCode"))
-                    object.provisioningCode=message.provisioningCode;
-                if(message.userAgent!=null&&message.hasOwnProperty("userAgent"))
-                    object.userAgent=message.userAgent;
-                if(message.profileKey!=null&&message.hasOwnProperty("profileKey"))
-                    object.profileKey=options.bytes===String? $util.base64.encode(message.profileKey,0,message.profileKey.length):options.bytes===Array? Array.prototype.slice.call(message.profileKey):message.profileKey;
-                if(message.readReceipts!=null&&message.hasOwnProperty("readReceipts"))
-                    object.readReceipts=message.readReceipts;
+                if (message.identityKeyPrivate != null && message.hasOwnProperty("identityKeyPrivate"))
+                    object.identityKeyPrivate = options.bytes === String ? $util.base64.encode(message.identityKeyPrivate, 0, message.identityKeyPrivate.length) : options.bytes === Array ? Array.prototype.slice.call(message.identityKeyPrivate) : message.identityKeyPrivate;
+                if (message.number != null && message.hasOwnProperty("number"))
+                    object.number = message.number;
+                if (message.provisioningCode != null && message.hasOwnProperty("provisioningCode"))
+                    object.provisioningCode = message.provisioningCode;
+                if (message.userAgent != null && message.hasOwnProperty("userAgent"))
+                    object.userAgent = message.userAgent;
+                if (message.profileKey != null && message.hasOwnProperty("profileKey"))
+                    object.profileKey = options.bytes === String ? $util.base64.encode(message.profileKey, 0, message.profileKey.length) : options.bytes === Array ? Array.prototype.slice.call(message.profileKey) : message.profileKey;
+                if (message.readReceipts != null && message.hasOwnProperty("readReceipts"))
+                    object.readReceipts = message.readReceipts;
                 return object;
             };
 
@@ -721,14 +721,14 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            ProvisionMessage.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            ProvisionMessage.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             return ProvisionMessage;
         })();
 
-        signalservice.Envelope=(function() {
+        signalservice.Envelope = (function () {
 
             /**
              * Properties of an Envelope.
@@ -752,10 +752,10 @@
              * @param {signalservice.IEnvelope=} [properties] Properties to set
              */
             function Envelope(properties) {
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -764,7 +764,7 @@
              * @memberof signalservice.Envelope
              * @instance
              */
-            Envelope.prototype.type=0;
+            Envelope.prototype.type = 0;
 
             /**
              * Envelope source.
@@ -772,7 +772,7 @@
              * @memberof signalservice.Envelope
              * @instance
              */
-            Envelope.prototype.source="";
+            Envelope.prototype.source = "";
 
             /**
              * Envelope sourceDevice.
@@ -780,7 +780,7 @@
              * @memberof signalservice.Envelope
              * @instance
              */
-            Envelope.prototype.sourceDevice=0;
+            Envelope.prototype.sourceDevice = 0;
 
             /**
              * Envelope relay.
@@ -788,7 +788,7 @@
              * @memberof signalservice.Envelope
              * @instance
              */
-            Envelope.prototype.relay="";
+            Envelope.prototype.relay = "";
 
             /**
              * Envelope timestamp.
@@ -796,7 +796,7 @@
              * @memberof signalservice.Envelope
              * @instance
              */
-            Envelope.prototype.timestamp=$util.Long? $util.Long.fromBits(0,0,true):0;
+            Envelope.prototype.timestamp = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 
             /**
              * Envelope legacyMessage.
@@ -804,7 +804,7 @@
              * @memberof signalservice.Envelope
              * @instance
              */
-            Envelope.prototype.legacyMessage=$util.newBuffer([]);
+            Envelope.prototype.legacyMessage = $util.newBuffer([]);
 
             /**
              * Envelope content.
@@ -812,7 +812,7 @@
              * @memberof signalservice.Envelope
              * @instance
              */
-            Envelope.prototype.content=$util.newBuffer([]);
+            Envelope.prototype.content = $util.newBuffer([]);
 
             /**
              * Creates a new Envelope instance using the specified properties.
@@ -822,7 +822,7 @@
              * @param {signalservice.IEnvelope=} [properties] Properties to set
              * @returns {signalservice.Envelope} Envelope instance
              */
-            Envelope.create=function create(properties) {
+            Envelope.create = function create(properties) {
                 return new Envelope(properties);
             };
 
@@ -835,22 +835,22 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            Envelope.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.type!=null&&message.hasOwnProperty("type"))
+            Envelope.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.type != null && message.hasOwnProperty("type"))
                     writer.uint32(/* id 1, wireType 0 =*/8).int32(message.type);
-                if(message.source!=null&&message.hasOwnProperty("source"))
+                if (message.source != null && message.hasOwnProperty("source"))
                     writer.uint32(/* id 2, wireType 2 =*/18).string(message.source);
-                if(message.relay!=null&&message.hasOwnProperty("relay"))
+                if (message.relay != null && message.hasOwnProperty("relay"))
                     writer.uint32(/* id 3, wireType 2 =*/26).string(message.relay);
-                if(message.timestamp!=null&&message.hasOwnProperty("timestamp"))
+                if (message.timestamp != null && message.hasOwnProperty("timestamp"))
                     writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.timestamp);
-                if(message.legacyMessage!=null&&message.hasOwnProperty("legacyMessage"))
+                if (message.legacyMessage != null && message.hasOwnProperty("legacyMessage"))
                     writer.uint32(/* id 6, wireType 2 =*/50).bytes(message.legacyMessage);
-                if(message.sourceDevice!=null&&message.hasOwnProperty("sourceDevice"))
+                if (message.sourceDevice != null && message.hasOwnProperty("sourceDevice"))
                     writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.sourceDevice);
-                if(message.content!=null&&message.hasOwnProperty("content"))
+                if (message.content != null && message.hasOwnProperty("content"))
                     writer.uint32(/* id 8, wireType 2 =*/66).bytes(message.content);
                 return writer;
             };
@@ -864,8 +864,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            Envelope.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            Envelope.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -879,36 +879,36 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            Envelope.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.Envelope();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            Envelope.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.Envelope();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.type=reader.int32();
+                            message.type = reader.int32();
                             break;
                         case 2:
-                            message.source=reader.string();
+                            message.source = reader.string();
                             break;
                         case 7:
-                            message.sourceDevice=reader.uint32();
+                            message.sourceDevice = reader.uint32();
                             break;
                         case 3:
-                            message.relay=reader.string();
+                            message.relay = reader.string();
                             break;
                         case 5:
-                            message.timestamp=reader.uint64();
+                            message.timestamp = reader.uint64();
                             break;
                         case 6:
-                            message.legacyMessage=reader.bytes();
+                            message.legacyMessage = reader.bytes();
                             break;
                         case 8:
-                            message.content=reader.bytes();
+                            message.content = reader.bytes();
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -925,10 +925,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            Envelope.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            Envelope.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -939,11 +939,11 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            Envelope.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            Envelope.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.type!=null&&message.hasOwnProperty("type"))
-                    switch(message.type) {
+                if (message.type != null && message.hasOwnProperty("type"))
+                    switch (message.type) {
                         default:
                             return "type: enum value expected";
                         case 0:
@@ -953,23 +953,23 @@
                         case 5:
                             break;
                     }
-                if(message.source!=null&&message.hasOwnProperty("source"))
-                    if(!$util.isString(message.source))
+                if (message.source != null && message.hasOwnProperty("source"))
+                    if (!$util.isString(message.source))
                         return "source: string expected";
-                if(message.sourceDevice!=null&&message.hasOwnProperty("sourceDevice"))
-                    if(!$util.isInteger(message.sourceDevice))
+                if (message.sourceDevice != null && message.hasOwnProperty("sourceDevice"))
+                    if (!$util.isInteger(message.sourceDevice))
                         return "sourceDevice: integer expected";
-                if(message.relay!=null&&message.hasOwnProperty("relay"))
-                    if(!$util.isString(message.relay))
+                if (message.relay != null && message.hasOwnProperty("relay"))
+                    if (!$util.isString(message.relay))
                         return "relay: string expected";
-                if(message.timestamp!=null&&message.hasOwnProperty("timestamp"))
-                    if(!$util.isInteger(message.timestamp)&&!(message.timestamp&&$util.isInteger(message.timestamp.low)&&$util.isInteger(message.timestamp.high)))
+                if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                    if (!$util.isInteger(message.timestamp) && !(message.timestamp && $util.isInteger(message.timestamp.low) && $util.isInteger(message.timestamp.high)))
                         return "timestamp: integer|Long expected";
-                if(message.legacyMessage!=null&&message.hasOwnProperty("legacyMessage"))
-                    if(!(message.legacyMessage&&typeof message.legacyMessage.length==="number"||$util.isString(message.legacyMessage)))
+                if (message.legacyMessage != null && message.hasOwnProperty("legacyMessage"))
+                    if (!(message.legacyMessage && typeof message.legacyMessage.length === "number" || $util.isString(message.legacyMessage)))
                         return "legacyMessage: buffer expected";
-                if(message.content!=null&&message.hasOwnProperty("content"))
-                    if(!(message.content&&typeof message.content.length==="number"||$util.isString(message.content)))
+                if (message.content != null && message.hasOwnProperty("content"))
+                    if (!(message.content && typeof message.content.length === "number" || $util.isString(message.content)))
                         return "content: buffer expected";
                 return null;
             };
@@ -982,57 +982,57 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.Envelope} Envelope
              */
-            Envelope.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.Envelope)
+            Envelope.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.Envelope)
                     return object;
-                var message=new $root.signalservice.Envelope();
-                switch(object.type) {
+                var message = new $root.signalservice.Envelope();
+                switch (object.type) {
                     case "UNKNOWN":
                     case 0:
-                        message.type=0;
+                        message.type = 0;
                         break;
                     case "CIPHERTEXT":
                     case 1:
-                        message.type=1;
+                        message.type = 1;
                         break;
                     case "KEY_EXCHANGE":
                     case 2:
-                        message.type=2;
+                        message.type = 2;
                         break;
                     case "PREKEY_BUNDLE":
                     case 3:
-                        message.type=3;
+                        message.type = 3;
                         break;
                     case "RECEIPT":
                     case 5:
-                        message.type=5;
+                        message.type = 5;
                         break;
                 }
-                if(object.source!=null)
-                    message.source=String(object.source);
-                if(object.sourceDevice!=null)
-                    message.sourceDevice=object.sourceDevice>>>0;
-                if(object.relay!=null)
-                    message.relay=String(object.relay);
-                if(object.timestamp!=null)
-                    if($util.Long)
-                        (message.timestamp=$util.Long.fromValue(object.timestamp)).unsigned=true;
-                    else if(typeof object.timestamp==="string")
-                        message.timestamp=parseInt(object.timestamp,10);
-                    else if(typeof object.timestamp==="number")
-                        message.timestamp=object.timestamp;
-                    else if(typeof object.timestamp==="object")
-                        message.timestamp=new $util.LongBits(object.timestamp.low>>>0,object.timestamp.high>>>0).toNumber(true);
-                if(object.legacyMessage!=null)
-                    if(typeof object.legacyMessage==="string")
-                        $util.base64.decode(object.legacyMessage,message.legacyMessage=$util.newBuffer($util.base64.length(object.legacyMessage)),0);
-                    else if(object.legacyMessage.length)
-                        message.legacyMessage=object.legacyMessage;
-                if(object.content!=null)
-                    if(typeof object.content==="string")
-                        $util.base64.decode(object.content,message.content=$util.newBuffer($util.base64.length(object.content)),0);
-                    else if(object.content.length)
-                        message.content=object.content;
+                if (object.source != null)
+                    message.source = String(object.source);
+                if (object.sourceDevice != null)
+                    message.sourceDevice = object.sourceDevice >>> 0;
+                if (object.relay != null)
+                    message.relay = String(object.relay);
+                if (object.timestamp != null)
+                    if ($util.Long)
+                        (message.timestamp = $util.Long.fromValue(object.timestamp)).unsigned = true;
+                    else if (typeof object.timestamp === "string")
+                        message.timestamp = parseInt(object.timestamp, 10);
+                    else if (typeof object.timestamp === "number")
+                        message.timestamp = object.timestamp;
+                    else if (typeof object.timestamp === "object")
+                        message.timestamp = new $util.LongBits(object.timestamp.low >>> 0, object.timestamp.high >>> 0).toNumber(true);
+                if (object.legacyMessage != null)
+                    if (typeof object.legacyMessage === "string")
+                        $util.base64.decode(object.legacyMessage, message.legacyMessage = $util.newBuffer($util.base64.length(object.legacyMessage)), 0);
+                    else if (object.legacyMessage.length)
+                        message.legacyMessage = object.legacyMessage;
+                if (object.content != null)
+                    if (typeof object.content === "string")
+                        $util.base64.decode(object.content, message.content = $util.newBuffer($util.base64.length(object.content)), 0);
+                    else if (object.content.length)
+                        message.content = object.content;
                 return message;
             };
 
@@ -1045,40 +1045,40 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            Envelope.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.defaults) {
-                    object.type=options.enums===String? "UNKNOWN":0;
-                    object.source="";
-                    object.relay="";
-                    if($util.Long) {
-                        var long=new $util.Long(0,0,true);
-                        object.timestamp=options.longs===String? long.toString():options.longs===Number? long.toNumber():long;
+            Envelope.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.type = options.enums === String ? "UNKNOWN" : 0;
+                    object.source = "";
+                    object.relay = "";
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, true);
+                        object.timestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                     } else
-                        object.timestamp=options.longs===String? "0":0;
-                    object.legacyMessage=options.bytes===String? "":[];
-                    object.sourceDevice=0;
-                    object.content=options.bytes===String? "":[];
+                        object.timestamp = options.longs === String ? "0" : 0;
+                    object.legacyMessage = options.bytes === String ? "" : [];
+                    object.sourceDevice = 0;
+                    object.content = options.bytes === String ? "" : [];
                 }
-                if(message.type!=null&&message.hasOwnProperty("type"))
-                    object.type=options.enums===String? $root.signalservice.Envelope.Type[message.type]:message.type;
-                if(message.source!=null&&message.hasOwnProperty("source"))
-                    object.source=message.source;
-                if(message.relay!=null&&message.hasOwnProperty("relay"))
-                    object.relay=message.relay;
-                if(message.timestamp!=null&&message.hasOwnProperty("timestamp"))
-                    if(typeof message.timestamp==="number")
-                        object.timestamp=options.longs===String? String(message.timestamp):message.timestamp;
+                if (message.type != null && message.hasOwnProperty("type"))
+                    object.type = options.enums === String ? $root.signalservice.Envelope.Type[message.type] : message.type;
+                if (message.source != null && message.hasOwnProperty("source"))
+                    object.source = message.source;
+                if (message.relay != null && message.hasOwnProperty("relay"))
+                    object.relay = message.relay;
+                if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                    if (typeof message.timestamp === "number")
+                        object.timestamp = options.longs === String ? String(message.timestamp) : message.timestamp;
                     else
-                        object.timestamp=options.longs===String? $util.Long.prototype.toString.call(message.timestamp):options.longs===Number? new $util.LongBits(message.timestamp.low>>>0,message.timestamp.high>>>0).toNumber(true):message.timestamp;
-                if(message.legacyMessage!=null&&message.hasOwnProperty("legacyMessage"))
-                    object.legacyMessage=options.bytes===String? $util.base64.encode(message.legacyMessage,0,message.legacyMessage.length):options.bytes===Array? Array.prototype.slice.call(message.legacyMessage):message.legacyMessage;
-                if(message.sourceDevice!=null&&message.hasOwnProperty("sourceDevice"))
-                    object.sourceDevice=message.sourceDevice;
-                if(message.content!=null&&message.hasOwnProperty("content"))
-                    object.content=options.bytes===String? $util.base64.encode(message.content,0,message.content.length):options.bytes===Array? Array.prototype.slice.call(message.content):message.content;
+                        object.timestamp = options.longs === String ? $util.Long.prototype.toString.call(message.timestamp) : options.longs === Number ? new $util.LongBits(message.timestamp.low >>> 0, message.timestamp.high >>> 0).toNumber(true) : message.timestamp;
+                if (message.legacyMessage != null && message.hasOwnProperty("legacyMessage"))
+                    object.legacyMessage = options.bytes === String ? $util.base64.encode(message.legacyMessage, 0, message.legacyMessage.length) : options.bytes === Array ? Array.prototype.slice.call(message.legacyMessage) : message.legacyMessage;
+                if (message.sourceDevice != null && message.hasOwnProperty("sourceDevice"))
+                    object.sourceDevice = message.sourceDevice;
+                if (message.content != null && message.hasOwnProperty("content"))
+                    object.content = options.bytes === String ? $util.base64.encode(message.content, 0, message.content.length) : options.bytes === Array ? Array.prototype.slice.call(message.content) : message.content;
                 return object;
             };
 
@@ -1089,8 +1089,8 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            Envelope.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            Envelope.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             /**
@@ -1103,20 +1103,20 @@
              * @property {number} PREKEY_BUNDLE=3 PREKEY_BUNDLE value
              * @property {number} RECEIPT=5 RECEIPT value
              */
-            Envelope.Type=(function() {
-                var valuesById={},values=Object.create(valuesById);
-                values[valuesById[0]="UNKNOWN"]=0;
-                values[valuesById[1]="CIPHERTEXT"]=1;
-                values[valuesById[2]="KEY_EXCHANGE"]=2;
-                values[valuesById[3]="PREKEY_BUNDLE"]=3;
-                values[valuesById[5]="RECEIPT"]=5;
+            Envelope.Type = (function () {
+                var valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[0] = "UNKNOWN"] = 0;
+                values[valuesById[1] = "CIPHERTEXT"] = 1;
+                values[valuesById[2] = "KEY_EXCHANGE"] = 2;
+                values[valuesById[3] = "PREKEY_BUNDLE"] = 3;
+                values[valuesById[5] = "RECEIPT"] = 5;
                 return values;
             })();
 
             return Envelope;
         })();
 
-        signalservice.Content=(function() {
+        signalservice.Content = (function () {
 
             /**
              * Properties of a Content.
@@ -1138,10 +1138,10 @@
              * @param {signalservice.IContent=} [properties] Properties to set
              */
             function Content(properties) {
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -1150,7 +1150,7 @@
              * @memberof signalservice.Content
              * @instance
              */
-            Content.prototype.dataMessage=null;
+            Content.prototype.dataMessage = null;
 
             /**
              * Content syncMessage.
@@ -1158,7 +1158,7 @@
              * @memberof signalservice.Content
              * @instance
              */
-            Content.prototype.syncMessage=null;
+            Content.prototype.syncMessage = null;
 
             /**
              * Content callMessage.
@@ -1166,7 +1166,7 @@
              * @memberof signalservice.Content
              * @instance
              */
-            Content.prototype.callMessage=null;
+            Content.prototype.callMessage = null;
 
             /**
              * Content nullMessage.
@@ -1174,7 +1174,7 @@
              * @memberof signalservice.Content
              * @instance
              */
-            Content.prototype.nullMessage=null;
+            Content.prototype.nullMessage = null;
 
             /**
              * Content receiptMessage.
@@ -1182,7 +1182,7 @@
              * @memberof signalservice.Content
              * @instance
              */
-            Content.prototype.receiptMessage=null;
+            Content.prototype.receiptMessage = null;
 
             /**
              * Creates a new Content instance using the specified properties.
@@ -1192,7 +1192,7 @@
              * @param {signalservice.IContent=} [properties] Properties to set
              * @returns {signalservice.Content} Content instance
              */
-            Content.create=function create(properties) {
+            Content.create = function create(properties) {
                 return new Content(properties);
             };
 
@@ -1205,19 +1205,19 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            Content.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.dataMessage!=null&&message.hasOwnProperty("dataMessage"))
-                    $root.signalservice.DataMessage.encode(message.dataMessage,writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                if(message.syncMessage!=null&&message.hasOwnProperty("syncMessage"))
-                    $root.signalservice.SyncMessage.encode(message.syncMessage,writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                if(message.callMessage!=null&&message.hasOwnProperty("callMessage"))
-                    $root.signalservice.CallMessage.encode(message.callMessage,writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                if(message.nullMessage!=null&&message.hasOwnProperty("nullMessage"))
-                    $root.signalservice.NullMessage.encode(message.nullMessage,writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                if(message.receiptMessage!=null&&message.hasOwnProperty("receiptMessage"))
-                    $root.signalservice.ReceiptMessage.encode(message.receiptMessage,writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+            Content.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.dataMessage != null && message.hasOwnProperty("dataMessage"))
+                    $root.signalservice.DataMessage.encode(message.dataMessage, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.syncMessage != null && message.hasOwnProperty("syncMessage"))
+                    $root.signalservice.SyncMessage.encode(message.syncMessage, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                if (message.callMessage != null && message.hasOwnProperty("callMessage"))
+                    $root.signalservice.CallMessage.encode(message.callMessage, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                if (message.nullMessage != null && message.hasOwnProperty("nullMessage"))
+                    $root.signalservice.NullMessage.encode(message.nullMessage, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                if (message.receiptMessage != null && message.hasOwnProperty("receiptMessage"))
+                    $root.signalservice.ReceiptMessage.encode(message.receiptMessage, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                 return writer;
             };
 
@@ -1230,8 +1230,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            Content.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            Content.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -1245,30 +1245,30 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            Content.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.Content();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            Content.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.Content();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.dataMessage=$root.signalservice.DataMessage.decode(reader,reader.uint32());
+                            message.dataMessage = $root.signalservice.DataMessage.decode(reader, reader.uint32());
                             break;
                         case 2:
-                            message.syncMessage=$root.signalservice.SyncMessage.decode(reader,reader.uint32());
+                            message.syncMessage = $root.signalservice.SyncMessage.decode(reader, reader.uint32());
                             break;
                         case 3:
-                            message.callMessage=$root.signalservice.CallMessage.decode(reader,reader.uint32());
+                            message.callMessage = $root.signalservice.CallMessage.decode(reader, reader.uint32());
                             break;
                         case 4:
-                            message.nullMessage=$root.signalservice.NullMessage.decode(reader,reader.uint32());
+                            message.nullMessage = $root.signalservice.NullMessage.decode(reader, reader.uint32());
                             break;
                         case 5:
-                            message.receiptMessage=$root.signalservice.ReceiptMessage.decode(reader,reader.uint32());
+                            message.receiptMessage = $root.signalservice.ReceiptMessage.decode(reader, reader.uint32());
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -1285,10 +1285,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            Content.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            Content.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -1299,33 +1299,33 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            Content.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            Content.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.dataMessage!=null&&message.hasOwnProperty("dataMessage")) {
-                    var error=$root.signalservice.DataMessage.verify(message.dataMessage);
-                    if(error)
-                        return "dataMessage."+error;
+                if (message.dataMessage != null && message.hasOwnProperty("dataMessage")) {
+                    var error = $root.signalservice.DataMessage.verify(message.dataMessage);
+                    if (error)
+                        return "dataMessage." + error;
                 }
-                if(message.syncMessage!=null&&message.hasOwnProperty("syncMessage")) {
-                    var error=$root.signalservice.SyncMessage.verify(message.syncMessage);
-                    if(error)
-                        return "syncMessage."+error;
+                if (message.syncMessage != null && message.hasOwnProperty("syncMessage")) {
+                    var error = $root.signalservice.SyncMessage.verify(message.syncMessage);
+                    if (error)
+                        return "syncMessage." + error;
                 }
-                if(message.callMessage!=null&&message.hasOwnProperty("callMessage")) {
-                    var error=$root.signalservice.CallMessage.verify(message.callMessage);
-                    if(error)
-                        return "callMessage."+error;
+                if (message.callMessage != null && message.hasOwnProperty("callMessage")) {
+                    var error = $root.signalservice.CallMessage.verify(message.callMessage);
+                    if (error)
+                        return "callMessage." + error;
                 }
-                if(message.nullMessage!=null&&message.hasOwnProperty("nullMessage")) {
-                    var error=$root.signalservice.NullMessage.verify(message.nullMessage);
-                    if(error)
-                        return "nullMessage."+error;
+                if (message.nullMessage != null && message.hasOwnProperty("nullMessage")) {
+                    var error = $root.signalservice.NullMessage.verify(message.nullMessage);
+                    if (error)
+                        return "nullMessage." + error;
                 }
-                if(message.receiptMessage!=null&&message.hasOwnProperty("receiptMessage")) {
-                    var error=$root.signalservice.ReceiptMessage.verify(message.receiptMessage);
-                    if(error)
-                        return "receiptMessage."+error;
+                if (message.receiptMessage != null && message.hasOwnProperty("receiptMessage")) {
+                    var error = $root.signalservice.ReceiptMessage.verify(message.receiptMessage);
+                    if (error)
+                        return "receiptMessage." + error;
                 }
                 return null;
             };
@@ -1338,34 +1338,34 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.Content} Content
              */
-            Content.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.Content)
+            Content.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.Content)
                     return object;
-                var message=new $root.signalservice.Content();
-                if(object.dataMessage!=null) {
-                    if(typeof object.dataMessage!=="object")
+                var message = new $root.signalservice.Content();
+                if (object.dataMessage != null) {
+                    if (typeof object.dataMessage !== "object")
                         throw TypeError(".signalservice.Content.dataMessage: object expected");
-                    message.dataMessage=$root.signalservice.DataMessage.fromObject(object.dataMessage);
+                    message.dataMessage = $root.signalservice.DataMessage.fromObject(object.dataMessage);
                 }
-                if(object.syncMessage!=null) {
-                    if(typeof object.syncMessage!=="object")
+                if (object.syncMessage != null) {
+                    if (typeof object.syncMessage !== "object")
                         throw TypeError(".signalservice.Content.syncMessage: object expected");
-                    message.syncMessage=$root.signalservice.SyncMessage.fromObject(object.syncMessage);
+                    message.syncMessage = $root.signalservice.SyncMessage.fromObject(object.syncMessage);
                 }
-                if(object.callMessage!=null) {
-                    if(typeof object.callMessage!=="object")
+                if (object.callMessage != null) {
+                    if (typeof object.callMessage !== "object")
                         throw TypeError(".signalservice.Content.callMessage: object expected");
-                    message.callMessage=$root.signalservice.CallMessage.fromObject(object.callMessage);
+                    message.callMessage = $root.signalservice.CallMessage.fromObject(object.callMessage);
                 }
-                if(object.nullMessage!=null) {
-                    if(typeof object.nullMessage!=="object")
+                if (object.nullMessage != null) {
+                    if (typeof object.nullMessage !== "object")
                         throw TypeError(".signalservice.Content.nullMessage: object expected");
-                    message.nullMessage=$root.signalservice.NullMessage.fromObject(object.nullMessage);
+                    message.nullMessage = $root.signalservice.NullMessage.fromObject(object.nullMessage);
                 }
-                if(object.receiptMessage!=null) {
-                    if(typeof object.receiptMessage!=="object")
+                if (object.receiptMessage != null) {
+                    if (typeof object.receiptMessage !== "object")
                         throw TypeError(".signalservice.Content.receiptMessage: object expected");
-                    message.receiptMessage=$root.signalservice.ReceiptMessage.fromObject(object.receiptMessage);
+                    message.receiptMessage = $root.signalservice.ReceiptMessage.fromObject(object.receiptMessage);
                 }
                 return message;
             };
@@ -1379,27 +1379,27 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            Content.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.defaults) {
-                    object.dataMessage=null;
-                    object.syncMessage=null;
-                    object.callMessage=null;
-                    object.nullMessage=null;
-                    object.receiptMessage=null;
+            Content.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.dataMessage = null;
+                    object.syncMessage = null;
+                    object.callMessage = null;
+                    object.nullMessage = null;
+                    object.receiptMessage = null;
                 }
-                if(message.dataMessage!=null&&message.hasOwnProperty("dataMessage"))
-                    object.dataMessage=$root.signalservice.DataMessage.toObject(message.dataMessage,options);
-                if(message.syncMessage!=null&&message.hasOwnProperty("syncMessage"))
-                    object.syncMessage=$root.signalservice.SyncMessage.toObject(message.syncMessage,options);
-                if(message.callMessage!=null&&message.hasOwnProperty("callMessage"))
-                    object.callMessage=$root.signalservice.CallMessage.toObject(message.callMessage,options);
-                if(message.nullMessage!=null&&message.hasOwnProperty("nullMessage"))
-                    object.nullMessage=$root.signalservice.NullMessage.toObject(message.nullMessage,options);
-                if(message.receiptMessage!=null&&message.hasOwnProperty("receiptMessage"))
-                    object.receiptMessage=$root.signalservice.ReceiptMessage.toObject(message.receiptMessage,options);
+                if (message.dataMessage != null && message.hasOwnProperty("dataMessage"))
+                    object.dataMessage = $root.signalservice.DataMessage.toObject(message.dataMessage, options);
+                if (message.syncMessage != null && message.hasOwnProperty("syncMessage"))
+                    object.syncMessage = $root.signalservice.SyncMessage.toObject(message.syncMessage, options);
+                if (message.callMessage != null && message.hasOwnProperty("callMessage"))
+                    object.callMessage = $root.signalservice.CallMessage.toObject(message.callMessage, options);
+                if (message.nullMessage != null && message.hasOwnProperty("nullMessage"))
+                    object.nullMessage = $root.signalservice.NullMessage.toObject(message.nullMessage, options);
+                if (message.receiptMessage != null && message.hasOwnProperty("receiptMessage"))
+                    object.receiptMessage = $root.signalservice.ReceiptMessage.toObject(message.receiptMessage, options);
                 return object;
             };
 
@@ -1410,14 +1410,14 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            Content.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            Content.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             return Content;
         })();
 
-        signalservice.CallMessage=(function() {
+        signalservice.CallMessage = (function () {
 
             /**
              * Properties of a CallMessage.
@@ -1439,11 +1439,11 @@
              * @param {signalservice.ICallMessage=} [properties] Properties to set
              */
             function CallMessage(properties) {
-                this.iceUpdate=[];
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                this.iceUpdate = [];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -1452,7 +1452,7 @@
              * @memberof signalservice.CallMessage
              * @instance
              */
-            CallMessage.prototype.offer=null;
+            CallMessage.prototype.offer = null;
 
             /**
              * CallMessage answer.
@@ -1460,7 +1460,7 @@
              * @memberof signalservice.CallMessage
              * @instance
              */
-            CallMessage.prototype.answer=null;
+            CallMessage.prototype.answer = null;
 
             /**
              * CallMessage iceUpdate.
@@ -1468,7 +1468,7 @@
              * @memberof signalservice.CallMessage
              * @instance
              */
-            CallMessage.prototype.iceUpdate=$util.emptyArray;
+            CallMessage.prototype.iceUpdate = $util.emptyArray;
 
             /**
              * CallMessage hangup.
@@ -1476,7 +1476,7 @@
              * @memberof signalservice.CallMessage
              * @instance
              */
-            CallMessage.prototype.hangup=null;
+            CallMessage.prototype.hangup = null;
 
             /**
              * CallMessage busy.
@@ -1484,7 +1484,7 @@
              * @memberof signalservice.CallMessage
              * @instance
              */
-            CallMessage.prototype.busy=null;
+            CallMessage.prototype.busy = null;
 
             /**
              * Creates a new CallMessage instance using the specified properties.
@@ -1494,7 +1494,7 @@
              * @param {signalservice.ICallMessage=} [properties] Properties to set
              * @returns {signalservice.CallMessage} CallMessage instance
              */
-            CallMessage.create=function create(properties) {
+            CallMessage.create = function create(properties) {
                 return new CallMessage(properties);
             };
 
@@ -1507,20 +1507,20 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            CallMessage.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.offer!=null&&message.hasOwnProperty("offer"))
-                    $root.signalservice.CallMessage.Offer.encode(message.offer,writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                if(message.answer!=null&&message.hasOwnProperty("answer"))
-                    $root.signalservice.CallMessage.Answer.encode(message.answer,writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                if(message.iceUpdate!=null&&message.iceUpdate.length)
-                    for(var i=0;i<message.iceUpdate.length;++i)
-                        $root.signalservice.CallMessage.IceUpdate.encode(message.iceUpdate[i],writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                if(message.hangup!=null&&message.hasOwnProperty("hangup"))
-                    $root.signalservice.CallMessage.Hangup.encode(message.hangup,writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                if(message.busy!=null&&message.hasOwnProperty("busy"))
-                    $root.signalservice.CallMessage.Busy.encode(message.busy,writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+            CallMessage.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.offer != null && message.hasOwnProperty("offer"))
+                    $root.signalservice.CallMessage.Offer.encode(message.offer, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.answer != null && message.hasOwnProperty("answer"))
+                    $root.signalservice.CallMessage.Answer.encode(message.answer, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                if (message.iceUpdate != null && message.iceUpdate.length)
+                    for (var i = 0; i < message.iceUpdate.length; ++i)
+                        $root.signalservice.CallMessage.IceUpdate.encode(message.iceUpdate[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                if (message.hangup != null && message.hasOwnProperty("hangup"))
+                    $root.signalservice.CallMessage.Hangup.encode(message.hangup, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                if (message.busy != null && message.hasOwnProperty("busy"))
+                    $root.signalservice.CallMessage.Busy.encode(message.busy, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                 return writer;
             };
 
@@ -1533,8 +1533,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            CallMessage.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            CallMessage.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -1548,32 +1548,32 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            CallMessage.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.CallMessage();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            CallMessage.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.CallMessage();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.offer=$root.signalservice.CallMessage.Offer.decode(reader,reader.uint32());
+                            message.offer = $root.signalservice.CallMessage.Offer.decode(reader, reader.uint32());
                             break;
                         case 2:
-                            message.answer=$root.signalservice.CallMessage.Answer.decode(reader,reader.uint32());
+                            message.answer = $root.signalservice.CallMessage.Answer.decode(reader, reader.uint32());
                             break;
                         case 3:
-                            if(!(message.iceUpdate&&message.iceUpdate.length))
-                                message.iceUpdate=[];
-                            message.iceUpdate.push($root.signalservice.CallMessage.IceUpdate.decode(reader,reader.uint32()));
+                            if (!(message.iceUpdate && message.iceUpdate.length))
+                                message.iceUpdate = [];
+                            message.iceUpdate.push($root.signalservice.CallMessage.IceUpdate.decode(reader, reader.uint32()));
                             break;
                         case 4:
-                            message.hangup=$root.signalservice.CallMessage.Hangup.decode(reader,reader.uint32());
+                            message.hangup = $root.signalservice.CallMessage.Hangup.decode(reader, reader.uint32());
                             break;
                         case 5:
-                            message.busy=$root.signalservice.CallMessage.Busy.decode(reader,reader.uint32());
+                            message.busy = $root.signalservice.CallMessage.Busy.decode(reader, reader.uint32());
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -1590,10 +1590,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            CallMessage.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            CallMessage.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -1604,37 +1604,37 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            CallMessage.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            CallMessage.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.offer!=null&&message.hasOwnProperty("offer")) {
-                    var error=$root.signalservice.CallMessage.Offer.verify(message.offer);
-                    if(error)
-                        return "offer."+error;
+                if (message.offer != null && message.hasOwnProperty("offer")) {
+                    var error = $root.signalservice.CallMessage.Offer.verify(message.offer);
+                    if (error)
+                        return "offer." + error;
                 }
-                if(message.answer!=null&&message.hasOwnProperty("answer")) {
-                    var error=$root.signalservice.CallMessage.Answer.verify(message.answer);
-                    if(error)
-                        return "answer."+error;
+                if (message.answer != null && message.hasOwnProperty("answer")) {
+                    var error = $root.signalservice.CallMessage.Answer.verify(message.answer);
+                    if (error)
+                        return "answer." + error;
                 }
-                if(message.iceUpdate!=null&&message.hasOwnProperty("iceUpdate")) {
-                    if(!Array.isArray(message.iceUpdate))
+                if (message.iceUpdate != null && message.hasOwnProperty("iceUpdate")) {
+                    if (!Array.isArray(message.iceUpdate))
                         return "iceUpdate: array expected";
-                    for(var i=0;i<message.iceUpdate.length;++i) {
-                        var error=$root.signalservice.CallMessage.IceUpdate.verify(message.iceUpdate[i]);
-                        if(error)
-                            return "iceUpdate."+error;
+                    for (var i = 0; i < message.iceUpdate.length; ++i) {
+                        var error = $root.signalservice.CallMessage.IceUpdate.verify(message.iceUpdate[i]);
+                        if (error)
+                            return "iceUpdate." + error;
                     }
                 }
-                if(message.hangup!=null&&message.hasOwnProperty("hangup")) {
-                    var error=$root.signalservice.CallMessage.Hangup.verify(message.hangup);
-                    if(error)
-                        return "hangup."+error;
+                if (message.hangup != null && message.hasOwnProperty("hangup")) {
+                    var error = $root.signalservice.CallMessage.Hangup.verify(message.hangup);
+                    if (error)
+                        return "hangup." + error;
                 }
-                if(message.busy!=null&&message.hasOwnProperty("busy")) {
-                    var error=$root.signalservice.CallMessage.Busy.verify(message.busy);
-                    if(error)
-                        return "busy."+error;
+                if (message.busy != null && message.hasOwnProperty("busy")) {
+                    var error = $root.signalservice.CallMessage.Busy.verify(message.busy);
+                    if (error)
+                        return "busy." + error;
                 }
                 return null;
             };
@@ -1647,39 +1647,39 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.CallMessage} CallMessage
              */
-            CallMessage.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.CallMessage)
+            CallMessage.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.CallMessage)
                     return object;
-                var message=new $root.signalservice.CallMessage();
-                if(object.offer!=null) {
-                    if(typeof object.offer!=="object")
+                var message = new $root.signalservice.CallMessage();
+                if (object.offer != null) {
+                    if (typeof object.offer !== "object")
                         throw TypeError(".signalservice.CallMessage.offer: object expected");
-                    message.offer=$root.signalservice.CallMessage.Offer.fromObject(object.offer);
+                    message.offer = $root.signalservice.CallMessage.Offer.fromObject(object.offer);
                 }
-                if(object.answer!=null) {
-                    if(typeof object.answer!=="object")
+                if (object.answer != null) {
+                    if (typeof object.answer !== "object")
                         throw TypeError(".signalservice.CallMessage.answer: object expected");
-                    message.answer=$root.signalservice.CallMessage.Answer.fromObject(object.answer);
+                    message.answer = $root.signalservice.CallMessage.Answer.fromObject(object.answer);
                 }
-                if(object.iceUpdate) {
-                    if(!Array.isArray(object.iceUpdate))
+                if (object.iceUpdate) {
+                    if (!Array.isArray(object.iceUpdate))
                         throw TypeError(".signalservice.CallMessage.iceUpdate: array expected");
-                    message.iceUpdate=[];
-                    for(var i=0;i<object.iceUpdate.length;++i) {
-                        if(typeof object.iceUpdate[i]!=="object")
+                    message.iceUpdate = [];
+                    for (var i = 0; i < object.iceUpdate.length; ++i) {
+                        if (typeof object.iceUpdate[i] !== "object")
                             throw TypeError(".signalservice.CallMessage.iceUpdate: object expected");
-                        message.iceUpdate[i]=$root.signalservice.CallMessage.IceUpdate.fromObject(object.iceUpdate[i]);
+                        message.iceUpdate[i] = $root.signalservice.CallMessage.IceUpdate.fromObject(object.iceUpdate[i]);
                     }
                 }
-                if(object.hangup!=null) {
-                    if(typeof object.hangup!=="object")
+                if (object.hangup != null) {
+                    if (typeof object.hangup !== "object")
                         throw TypeError(".signalservice.CallMessage.hangup: object expected");
-                    message.hangup=$root.signalservice.CallMessage.Hangup.fromObject(object.hangup);
+                    message.hangup = $root.signalservice.CallMessage.Hangup.fromObject(object.hangup);
                 }
-                if(object.busy!=null) {
-                    if(typeof object.busy!=="object")
+                if (object.busy != null) {
+                    if (typeof object.busy !== "object")
                         throw TypeError(".signalservice.CallMessage.busy: object expected");
-                    message.busy=$root.signalservice.CallMessage.Busy.fromObject(object.busy);
+                    message.busy = $root.signalservice.CallMessage.Busy.fromObject(object.busy);
                 }
                 return message;
             };
@@ -1693,31 +1693,31 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            CallMessage.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.arrays||options.defaults)
-                    object.iceUpdate=[];
-                if(options.defaults) {
-                    object.offer=null;
-                    object.answer=null;
-                    object.hangup=null;
-                    object.busy=null;
+            CallMessage.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.arrays || options.defaults)
+                    object.iceUpdate = [];
+                if (options.defaults) {
+                    object.offer = null;
+                    object.answer = null;
+                    object.hangup = null;
+                    object.busy = null;
                 }
-                if(message.offer!=null&&message.hasOwnProperty("offer"))
-                    object.offer=$root.signalservice.CallMessage.Offer.toObject(message.offer,options);
-                if(message.answer!=null&&message.hasOwnProperty("answer"))
-                    object.answer=$root.signalservice.CallMessage.Answer.toObject(message.answer,options);
-                if(message.iceUpdate&&message.iceUpdate.length) {
-                    object.iceUpdate=[];
-                    for(var j=0;j<message.iceUpdate.length;++j)
-                        object.iceUpdate[j]=$root.signalservice.CallMessage.IceUpdate.toObject(message.iceUpdate[j],options);
+                if (message.offer != null && message.hasOwnProperty("offer"))
+                    object.offer = $root.signalservice.CallMessage.Offer.toObject(message.offer, options);
+                if (message.answer != null && message.hasOwnProperty("answer"))
+                    object.answer = $root.signalservice.CallMessage.Answer.toObject(message.answer, options);
+                if (message.iceUpdate && message.iceUpdate.length) {
+                    object.iceUpdate = [];
+                    for (var j = 0; j < message.iceUpdate.length; ++j)
+                        object.iceUpdate[j] = $root.signalservice.CallMessage.IceUpdate.toObject(message.iceUpdate[j], options);
                 }
-                if(message.hangup!=null&&message.hasOwnProperty("hangup"))
-                    object.hangup=$root.signalservice.CallMessage.Hangup.toObject(message.hangup,options);
-                if(message.busy!=null&&message.hasOwnProperty("busy"))
-                    object.busy=$root.signalservice.CallMessage.Busy.toObject(message.busy,options);
+                if (message.hangup != null && message.hasOwnProperty("hangup"))
+                    object.hangup = $root.signalservice.CallMessage.Hangup.toObject(message.hangup, options);
+                if (message.busy != null && message.hasOwnProperty("busy"))
+                    object.busy = $root.signalservice.CallMessage.Busy.toObject(message.busy, options);
                 return object;
             };
 
@@ -1728,11 +1728,11 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            CallMessage.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            CallMessage.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
-            CallMessage.Offer=(function() {
+            CallMessage.Offer = (function () {
 
                 /**
                  * Properties of an Offer.
@@ -1751,10 +1751,10 @@
                  * @param {signalservice.CallMessage.IOffer=} [properties] Properties to set
                  */
                 function Offer(properties) {
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -1763,7 +1763,7 @@
                  * @memberof signalservice.CallMessage.Offer
                  * @instance
                  */
-                Offer.prototype.id=$util.Long? $util.Long.fromBits(0,0,true):0;
+                Offer.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 
                 /**
                  * Offer description.
@@ -1771,7 +1771,7 @@
                  * @memberof signalservice.CallMessage.Offer
                  * @instance
                  */
-                Offer.prototype.description="";
+                Offer.prototype.description = "";
 
                 /**
                  * Creates a new Offer instance using the specified properties.
@@ -1781,7 +1781,7 @@
                  * @param {signalservice.CallMessage.IOffer=} [properties] Properties to set
                  * @returns {signalservice.CallMessage.Offer} Offer instance
                  */
-                Offer.create=function create(properties) {
+                Offer.create = function create(properties) {
                     return new Offer(properties);
                 };
 
@@ -1794,12 +1794,12 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Offer.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.id!=null&&message.hasOwnProperty("id"))
+                Offer.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.id != null && message.hasOwnProperty("id"))
                         writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.id);
-                    if(message.description!=null&&message.hasOwnProperty("description"))
+                    if (message.description != null && message.hasOwnProperty("description"))
                         writer.uint32(/* id 2, wireType 2 =*/18).string(message.description);
                     return writer;
                 };
@@ -1813,8 +1813,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Offer.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                Offer.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -1828,21 +1828,21 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Offer.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.CallMessage.Offer();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                Offer.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.CallMessage.Offer();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                message.id=reader.uint64();
+                                message.id = reader.uint64();
                                 break;
                             case 2:
-                                message.description=reader.string();
+                                message.description = reader.string();
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -1859,10 +1859,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Offer.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                Offer.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -1873,14 +1873,14 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                Offer.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                Offer.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.id!=null&&message.hasOwnProperty("id"))
-                        if(!$util.isInteger(message.id)&&!(message.id&&$util.isInteger(message.id.low)&&$util.isInteger(message.id.high)))
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
                             return "id: integer|Long expected";
-                    if(message.description!=null&&message.hasOwnProperty("description"))
-                        if(!$util.isString(message.description))
+                    if (message.description != null && message.hasOwnProperty("description"))
+                        if (!$util.isString(message.description))
                             return "description: string expected";
                     return null;
                 };
@@ -1893,21 +1893,21 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.CallMessage.Offer} Offer
                  */
-                Offer.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.CallMessage.Offer)
+                Offer.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.CallMessage.Offer)
                         return object;
-                    var message=new $root.signalservice.CallMessage.Offer();
-                    if(object.id!=null)
-                        if($util.Long)
-                            (message.id=$util.Long.fromValue(object.id)).unsigned=true;
-                        else if(typeof object.id==="string")
-                            message.id=parseInt(object.id,10);
-                        else if(typeof object.id==="number")
-                            message.id=object.id;
-                        else if(typeof object.id==="object")
-                            message.id=new $util.LongBits(object.id.low>>>0,object.id.high>>>0).toNumber(true);
-                    if(object.description!=null)
-                        message.description=String(object.description);
+                    var message = new $root.signalservice.CallMessage.Offer();
+                    if (object.id != null)
+                        if ($util.Long)
+                            (message.id = $util.Long.fromValue(object.id)).unsigned = true;
+                        else if (typeof object.id === "string")
+                            message.id = parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber(true);
+                    if (object.description != null)
+                        message.description = String(object.description);
                     return message;
                 };
 
@@ -1920,25 +1920,25 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                Offer.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.defaults) {
-                        if($util.Long) {
-                            var long=new $util.Long(0,0,true);
-                            object.id=options.longs===String? long.toString():options.longs===Number? long.toNumber():long;
+                Offer.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        if ($util.Long) {
+                            var long = new $util.Long(0, 0, true);
+                            object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                         } else
-                            object.id=options.longs===String? "0":0;
-                        object.description="";
+                            object.id = options.longs === String ? "0" : 0;
+                        object.description = "";
                     }
-                    if(message.id!=null&&message.hasOwnProperty("id"))
-                        if(typeof message.id==="number")
-                            object.id=options.longs===String? String(message.id):message.id;
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        if (typeof message.id === "number")
+                            object.id = options.longs === String ? String(message.id) : message.id;
                         else
-                            object.id=options.longs===String? $util.Long.prototype.toString.call(message.id):options.longs===Number? new $util.LongBits(message.id.low>>>0,message.id.high>>>0).toNumber(true):message.id;
-                    if(message.description!=null&&message.hasOwnProperty("description"))
-                        object.description=message.description;
+                            object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
+                    if (message.description != null && message.hasOwnProperty("description"))
+                        object.description = message.description;
                     return object;
                 };
 
@@ -1949,14 +1949,14 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                Offer.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                Offer.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
                 return Offer;
             })();
 
-            CallMessage.Answer=(function() {
+            CallMessage.Answer = (function () {
 
                 /**
                  * Properties of an Answer.
@@ -1975,10 +1975,10 @@
                  * @param {signalservice.CallMessage.IAnswer=} [properties] Properties to set
                  */
                 function Answer(properties) {
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -1987,7 +1987,7 @@
                  * @memberof signalservice.CallMessage.Answer
                  * @instance
                  */
-                Answer.prototype.id=$util.Long? $util.Long.fromBits(0,0,true):0;
+                Answer.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 
                 /**
                  * Answer description.
@@ -1995,7 +1995,7 @@
                  * @memberof signalservice.CallMessage.Answer
                  * @instance
                  */
-                Answer.prototype.description="";
+                Answer.prototype.description = "";
 
                 /**
                  * Creates a new Answer instance using the specified properties.
@@ -2005,7 +2005,7 @@
                  * @param {signalservice.CallMessage.IAnswer=} [properties] Properties to set
                  * @returns {signalservice.CallMessage.Answer} Answer instance
                  */
-                Answer.create=function create(properties) {
+                Answer.create = function create(properties) {
                     return new Answer(properties);
                 };
 
@@ -2018,12 +2018,12 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Answer.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.id!=null&&message.hasOwnProperty("id"))
+                Answer.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.id != null && message.hasOwnProperty("id"))
                         writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.id);
-                    if(message.description!=null&&message.hasOwnProperty("description"))
+                    if (message.description != null && message.hasOwnProperty("description"))
                         writer.uint32(/* id 2, wireType 2 =*/18).string(message.description);
                     return writer;
                 };
@@ -2037,8 +2037,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Answer.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                Answer.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -2052,21 +2052,21 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Answer.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.CallMessage.Answer();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                Answer.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.CallMessage.Answer();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                message.id=reader.uint64();
+                                message.id = reader.uint64();
                                 break;
                             case 2:
-                                message.description=reader.string();
+                                message.description = reader.string();
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -2083,10 +2083,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Answer.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                Answer.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -2097,14 +2097,14 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                Answer.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                Answer.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.id!=null&&message.hasOwnProperty("id"))
-                        if(!$util.isInteger(message.id)&&!(message.id&&$util.isInteger(message.id.low)&&$util.isInteger(message.id.high)))
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
                             return "id: integer|Long expected";
-                    if(message.description!=null&&message.hasOwnProperty("description"))
-                        if(!$util.isString(message.description))
+                    if (message.description != null && message.hasOwnProperty("description"))
+                        if (!$util.isString(message.description))
                             return "description: string expected";
                     return null;
                 };
@@ -2117,21 +2117,21 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.CallMessage.Answer} Answer
                  */
-                Answer.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.CallMessage.Answer)
+                Answer.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.CallMessage.Answer)
                         return object;
-                    var message=new $root.signalservice.CallMessage.Answer();
-                    if(object.id!=null)
-                        if($util.Long)
-                            (message.id=$util.Long.fromValue(object.id)).unsigned=true;
-                        else if(typeof object.id==="string")
-                            message.id=parseInt(object.id,10);
-                        else if(typeof object.id==="number")
-                            message.id=object.id;
-                        else if(typeof object.id==="object")
-                            message.id=new $util.LongBits(object.id.low>>>0,object.id.high>>>0).toNumber(true);
-                    if(object.description!=null)
-                        message.description=String(object.description);
+                    var message = new $root.signalservice.CallMessage.Answer();
+                    if (object.id != null)
+                        if ($util.Long)
+                            (message.id = $util.Long.fromValue(object.id)).unsigned = true;
+                        else if (typeof object.id === "string")
+                            message.id = parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber(true);
+                    if (object.description != null)
+                        message.description = String(object.description);
                     return message;
                 };
 
@@ -2144,25 +2144,25 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                Answer.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.defaults) {
-                        if($util.Long) {
-                            var long=new $util.Long(0,0,true);
-                            object.id=options.longs===String? long.toString():options.longs===Number? long.toNumber():long;
+                Answer.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        if ($util.Long) {
+                            var long = new $util.Long(0, 0, true);
+                            object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                         } else
-                            object.id=options.longs===String? "0":0;
-                        object.description="";
+                            object.id = options.longs === String ? "0" : 0;
+                        object.description = "";
                     }
-                    if(message.id!=null&&message.hasOwnProperty("id"))
-                        if(typeof message.id==="number")
-                            object.id=options.longs===String? String(message.id):message.id;
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        if (typeof message.id === "number")
+                            object.id = options.longs === String ? String(message.id) : message.id;
                         else
-                            object.id=options.longs===String? $util.Long.prototype.toString.call(message.id):options.longs===Number? new $util.LongBits(message.id.low>>>0,message.id.high>>>0).toNumber(true):message.id;
-                    if(message.description!=null&&message.hasOwnProperty("description"))
-                        object.description=message.description;
+                            object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
+                    if (message.description != null && message.hasOwnProperty("description"))
+                        object.description = message.description;
                     return object;
                 };
 
@@ -2173,14 +2173,14 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                Answer.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                Answer.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
                 return Answer;
             })();
 
-            CallMessage.IceUpdate=(function() {
+            CallMessage.IceUpdate = (function () {
 
                 /**
                  * Properties of an IceUpdate.
@@ -2201,10 +2201,10 @@
                  * @param {signalservice.CallMessage.IIceUpdate=} [properties] Properties to set
                  */
                 function IceUpdate(properties) {
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -2213,7 +2213,7 @@
                  * @memberof signalservice.CallMessage.IceUpdate
                  * @instance
                  */
-                IceUpdate.prototype.id=$util.Long? $util.Long.fromBits(0,0,true):0;
+                IceUpdate.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 
                 /**
                  * IceUpdate sdpMid.
@@ -2221,7 +2221,7 @@
                  * @memberof signalservice.CallMessage.IceUpdate
                  * @instance
                  */
-                IceUpdate.prototype.sdpMid="";
+                IceUpdate.prototype.sdpMid = "";
 
                 /**
                  * IceUpdate sdpMLineIndex.
@@ -2229,7 +2229,7 @@
                  * @memberof signalservice.CallMessage.IceUpdate
                  * @instance
                  */
-                IceUpdate.prototype.sdpMLineIndex=0;
+                IceUpdate.prototype.sdpMLineIndex = 0;
 
                 /**
                  * IceUpdate sdp.
@@ -2237,7 +2237,7 @@
                  * @memberof signalservice.CallMessage.IceUpdate
                  * @instance
                  */
-                IceUpdate.prototype.sdp="";
+                IceUpdate.prototype.sdp = "";
 
                 /**
                  * Creates a new IceUpdate instance using the specified properties.
@@ -2247,7 +2247,7 @@
                  * @param {signalservice.CallMessage.IIceUpdate=} [properties] Properties to set
                  * @returns {signalservice.CallMessage.IceUpdate} IceUpdate instance
                  */
-                IceUpdate.create=function create(properties) {
+                IceUpdate.create = function create(properties) {
                     return new IceUpdate(properties);
                 };
 
@@ -2260,16 +2260,16 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                IceUpdate.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.id!=null&&message.hasOwnProperty("id"))
+                IceUpdate.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.id != null && message.hasOwnProperty("id"))
                         writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.id);
-                    if(message.sdpMid!=null&&message.hasOwnProperty("sdpMid"))
+                    if (message.sdpMid != null && message.hasOwnProperty("sdpMid"))
                         writer.uint32(/* id 2, wireType 2 =*/18).string(message.sdpMid);
-                    if(message.sdpMLineIndex!=null&&message.hasOwnProperty("sdpMLineIndex"))
+                    if (message.sdpMLineIndex != null && message.hasOwnProperty("sdpMLineIndex"))
                         writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.sdpMLineIndex);
-                    if(message.sdp!=null&&message.hasOwnProperty("sdp"))
+                    if (message.sdp != null && message.hasOwnProperty("sdp"))
                         writer.uint32(/* id 4, wireType 2 =*/34).string(message.sdp);
                     return writer;
                 };
@@ -2283,8 +2283,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                IceUpdate.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                IceUpdate.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -2298,27 +2298,27 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                IceUpdate.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.CallMessage.IceUpdate();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                IceUpdate.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.CallMessage.IceUpdate();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                message.id=reader.uint64();
+                                message.id = reader.uint64();
                                 break;
                             case 2:
-                                message.sdpMid=reader.string();
+                                message.sdpMid = reader.string();
                                 break;
                             case 3:
-                                message.sdpMLineIndex=reader.uint32();
+                                message.sdpMLineIndex = reader.uint32();
                                 break;
                             case 4:
-                                message.sdp=reader.string();
+                                message.sdp = reader.string();
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -2335,10 +2335,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                IceUpdate.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                IceUpdate.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -2349,20 +2349,20 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                IceUpdate.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                IceUpdate.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.id!=null&&message.hasOwnProperty("id"))
-                        if(!$util.isInteger(message.id)&&!(message.id&&$util.isInteger(message.id.low)&&$util.isInteger(message.id.high)))
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
                             return "id: integer|Long expected";
-                    if(message.sdpMid!=null&&message.hasOwnProperty("sdpMid"))
-                        if(!$util.isString(message.sdpMid))
+                    if (message.sdpMid != null && message.hasOwnProperty("sdpMid"))
+                        if (!$util.isString(message.sdpMid))
                             return "sdpMid: string expected";
-                    if(message.sdpMLineIndex!=null&&message.hasOwnProperty("sdpMLineIndex"))
-                        if(!$util.isInteger(message.sdpMLineIndex))
+                    if (message.sdpMLineIndex != null && message.hasOwnProperty("sdpMLineIndex"))
+                        if (!$util.isInteger(message.sdpMLineIndex))
                             return "sdpMLineIndex: integer expected";
-                    if(message.sdp!=null&&message.hasOwnProperty("sdp"))
-                        if(!$util.isString(message.sdp))
+                    if (message.sdp != null && message.hasOwnProperty("sdp"))
+                        if (!$util.isString(message.sdp))
                             return "sdp: string expected";
                     return null;
                 };
@@ -2375,25 +2375,25 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.CallMessage.IceUpdate} IceUpdate
                  */
-                IceUpdate.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.CallMessage.IceUpdate)
+                IceUpdate.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.CallMessage.IceUpdate)
                         return object;
-                    var message=new $root.signalservice.CallMessage.IceUpdate();
-                    if(object.id!=null)
-                        if($util.Long)
-                            (message.id=$util.Long.fromValue(object.id)).unsigned=true;
-                        else if(typeof object.id==="string")
-                            message.id=parseInt(object.id,10);
-                        else if(typeof object.id==="number")
-                            message.id=object.id;
-                        else if(typeof object.id==="object")
-                            message.id=new $util.LongBits(object.id.low>>>0,object.id.high>>>0).toNumber(true);
-                    if(object.sdpMid!=null)
-                        message.sdpMid=String(object.sdpMid);
-                    if(object.sdpMLineIndex!=null)
-                        message.sdpMLineIndex=object.sdpMLineIndex>>>0;
-                    if(object.sdp!=null)
-                        message.sdp=String(object.sdp);
+                    var message = new $root.signalservice.CallMessage.IceUpdate();
+                    if (object.id != null)
+                        if ($util.Long)
+                            (message.id = $util.Long.fromValue(object.id)).unsigned = true;
+                        else if (typeof object.id === "string")
+                            message.id = parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber(true);
+                    if (object.sdpMid != null)
+                        message.sdpMid = String(object.sdpMid);
+                    if (object.sdpMLineIndex != null)
+                        message.sdpMLineIndex = object.sdpMLineIndex >>> 0;
+                    if (object.sdp != null)
+                        message.sdp = String(object.sdp);
                     return message;
                 };
 
@@ -2406,31 +2406,31 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                IceUpdate.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.defaults) {
-                        if($util.Long) {
-                            var long=new $util.Long(0,0,true);
-                            object.id=options.longs===String? long.toString():options.longs===Number? long.toNumber():long;
+                IceUpdate.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        if ($util.Long) {
+                            var long = new $util.Long(0, 0, true);
+                            object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                         } else
-                            object.id=options.longs===String? "0":0;
-                        object.sdpMid="";
-                        object.sdpMLineIndex=0;
-                        object.sdp="";
+                            object.id = options.longs === String ? "0" : 0;
+                        object.sdpMid = "";
+                        object.sdpMLineIndex = 0;
+                        object.sdp = "";
                     }
-                    if(message.id!=null&&message.hasOwnProperty("id"))
-                        if(typeof message.id==="number")
-                            object.id=options.longs===String? String(message.id):message.id;
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        if (typeof message.id === "number")
+                            object.id = options.longs === String ? String(message.id) : message.id;
                         else
-                            object.id=options.longs===String? $util.Long.prototype.toString.call(message.id):options.longs===Number? new $util.LongBits(message.id.low>>>0,message.id.high>>>0).toNumber(true):message.id;
-                    if(message.sdpMid!=null&&message.hasOwnProperty("sdpMid"))
-                        object.sdpMid=message.sdpMid;
-                    if(message.sdpMLineIndex!=null&&message.hasOwnProperty("sdpMLineIndex"))
-                        object.sdpMLineIndex=message.sdpMLineIndex;
-                    if(message.sdp!=null&&message.hasOwnProperty("sdp"))
-                        object.sdp=message.sdp;
+                            object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
+                    if (message.sdpMid != null && message.hasOwnProperty("sdpMid"))
+                        object.sdpMid = message.sdpMid;
+                    if (message.sdpMLineIndex != null && message.hasOwnProperty("sdpMLineIndex"))
+                        object.sdpMLineIndex = message.sdpMLineIndex;
+                    if (message.sdp != null && message.hasOwnProperty("sdp"))
+                        object.sdp = message.sdp;
                     return object;
                 };
 
@@ -2441,14 +2441,14 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                IceUpdate.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                IceUpdate.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
                 return IceUpdate;
             })();
 
-            CallMessage.Busy=(function() {
+            CallMessage.Busy = (function () {
 
                 /**
                  * Properties of a Busy.
@@ -2466,10 +2466,10 @@
                  * @param {signalservice.CallMessage.IBusy=} [properties] Properties to set
                  */
                 function Busy(properties) {
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -2478,7 +2478,7 @@
                  * @memberof signalservice.CallMessage.Busy
                  * @instance
                  */
-                Busy.prototype.id=$util.Long? $util.Long.fromBits(0,0,true):0;
+                Busy.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 
                 /**
                  * Creates a new Busy instance using the specified properties.
@@ -2488,7 +2488,7 @@
                  * @param {signalservice.CallMessage.IBusy=} [properties] Properties to set
                  * @returns {signalservice.CallMessage.Busy} Busy instance
                  */
-                Busy.create=function create(properties) {
+                Busy.create = function create(properties) {
                     return new Busy(properties);
                 };
 
@@ -2501,10 +2501,10 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Busy.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.id!=null&&message.hasOwnProperty("id"))
+                Busy.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.id != null && message.hasOwnProperty("id"))
                         writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.id);
                     return writer;
                 };
@@ -2518,8 +2518,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Busy.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                Busy.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -2533,18 +2533,18 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Busy.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.CallMessage.Busy();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                Busy.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.CallMessage.Busy();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                message.id=reader.uint64();
+                                message.id = reader.uint64();
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -2561,10 +2561,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Busy.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                Busy.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -2575,11 +2575,11 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                Busy.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                Busy.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.id!=null&&message.hasOwnProperty("id"))
-                        if(!$util.isInteger(message.id)&&!(message.id&&$util.isInteger(message.id.low)&&$util.isInteger(message.id.high)))
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
                             return "id: integer|Long expected";
                     return null;
                 };
@@ -2592,19 +2592,19 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.CallMessage.Busy} Busy
                  */
-                Busy.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.CallMessage.Busy)
+                Busy.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.CallMessage.Busy)
                         return object;
-                    var message=new $root.signalservice.CallMessage.Busy();
-                    if(object.id!=null)
-                        if($util.Long)
-                            (message.id=$util.Long.fromValue(object.id)).unsigned=true;
-                        else if(typeof object.id==="string")
-                            message.id=parseInt(object.id,10);
-                        else if(typeof object.id==="number")
-                            message.id=object.id;
-                        else if(typeof object.id==="object")
-                            message.id=new $util.LongBits(object.id.low>>>0,object.id.high>>>0).toNumber(true);
+                    var message = new $root.signalservice.CallMessage.Busy();
+                    if (object.id != null)
+                        if ($util.Long)
+                            (message.id = $util.Long.fromValue(object.id)).unsigned = true;
+                        else if (typeof object.id === "string")
+                            message.id = parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber(true);
                     return message;
                 };
 
@@ -2617,21 +2617,21 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                Busy.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.defaults)
-                        if($util.Long) {
-                            var long=new $util.Long(0,0,true);
-                            object.id=options.longs===String? long.toString():options.longs===Number? long.toNumber():long;
+                Busy.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults)
+                        if ($util.Long) {
+                            var long = new $util.Long(0, 0, true);
+                            object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                         } else
-                            object.id=options.longs===String? "0":0;
-                    if(message.id!=null&&message.hasOwnProperty("id"))
-                        if(typeof message.id==="number")
-                            object.id=options.longs===String? String(message.id):message.id;
+                            object.id = options.longs === String ? "0" : 0;
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        if (typeof message.id === "number")
+                            object.id = options.longs === String ? String(message.id) : message.id;
                         else
-                            object.id=options.longs===String? $util.Long.prototype.toString.call(message.id):options.longs===Number? new $util.LongBits(message.id.low>>>0,message.id.high>>>0).toNumber(true):message.id;
+                            object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
                     return object;
                 };
 
@@ -2642,14 +2642,14 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                Busy.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                Busy.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
                 return Busy;
             })();
 
-            CallMessage.Hangup=(function() {
+            CallMessage.Hangup = (function () {
 
                 /**
                  * Properties of a Hangup.
@@ -2667,10 +2667,10 @@
                  * @param {signalservice.CallMessage.IHangup=} [properties] Properties to set
                  */
                 function Hangup(properties) {
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -2679,7 +2679,7 @@
                  * @memberof signalservice.CallMessage.Hangup
                  * @instance
                  */
-                Hangup.prototype.id=$util.Long? $util.Long.fromBits(0,0,true):0;
+                Hangup.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 
                 /**
                  * Creates a new Hangup instance using the specified properties.
@@ -2689,7 +2689,7 @@
                  * @param {signalservice.CallMessage.IHangup=} [properties] Properties to set
                  * @returns {signalservice.CallMessage.Hangup} Hangup instance
                  */
-                Hangup.create=function create(properties) {
+                Hangup.create = function create(properties) {
                     return new Hangup(properties);
                 };
 
@@ -2702,10 +2702,10 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Hangup.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.id!=null&&message.hasOwnProperty("id"))
+                Hangup.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.id != null && message.hasOwnProperty("id"))
                         writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.id);
                     return writer;
                 };
@@ -2719,8 +2719,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Hangup.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                Hangup.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -2734,18 +2734,18 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Hangup.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.CallMessage.Hangup();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                Hangup.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.CallMessage.Hangup();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                message.id=reader.uint64();
+                                message.id = reader.uint64();
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -2762,10 +2762,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Hangup.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                Hangup.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -2776,11 +2776,11 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                Hangup.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                Hangup.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.id!=null&&message.hasOwnProperty("id"))
-                        if(!$util.isInteger(message.id)&&!(message.id&&$util.isInteger(message.id.low)&&$util.isInteger(message.id.high)))
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
                             return "id: integer|Long expected";
                     return null;
                 };
@@ -2793,19 +2793,19 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.CallMessage.Hangup} Hangup
                  */
-                Hangup.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.CallMessage.Hangup)
+                Hangup.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.CallMessage.Hangup)
                         return object;
-                    var message=new $root.signalservice.CallMessage.Hangup();
-                    if(object.id!=null)
-                        if($util.Long)
-                            (message.id=$util.Long.fromValue(object.id)).unsigned=true;
-                        else if(typeof object.id==="string")
-                            message.id=parseInt(object.id,10);
-                        else if(typeof object.id==="number")
-                            message.id=object.id;
-                        else if(typeof object.id==="object")
-                            message.id=new $util.LongBits(object.id.low>>>0,object.id.high>>>0).toNumber(true);
+                    var message = new $root.signalservice.CallMessage.Hangup();
+                    if (object.id != null)
+                        if ($util.Long)
+                            (message.id = $util.Long.fromValue(object.id)).unsigned = true;
+                        else if (typeof object.id === "string")
+                            message.id = parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber(true);
                     return message;
                 };
 
@@ -2818,21 +2818,21 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                Hangup.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.defaults)
-                        if($util.Long) {
-                            var long=new $util.Long(0,0,true);
-                            object.id=options.longs===String? long.toString():options.longs===Number? long.toNumber():long;
+                Hangup.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults)
+                        if ($util.Long) {
+                            var long = new $util.Long(0, 0, true);
+                            object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                         } else
-                            object.id=options.longs===String? "0":0;
-                    if(message.id!=null&&message.hasOwnProperty("id"))
-                        if(typeof message.id==="number")
-                            object.id=options.longs===String? String(message.id):message.id;
+                            object.id = options.longs === String ? "0" : 0;
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        if (typeof message.id === "number")
+                            object.id = options.longs === String ? String(message.id) : message.id;
                         else
-                            object.id=options.longs===String? $util.Long.prototype.toString.call(message.id):options.longs===Number? new $util.LongBits(message.id.low>>>0,message.id.high>>>0).toNumber(true):message.id;
+                            object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
                     return object;
                 };
 
@@ -2843,8 +2843,8 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                Hangup.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                Hangup.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
                 return Hangup;
@@ -2853,7 +2853,7 @@
             return CallMessage;
         })();
 
-        signalservice.DataMessage=(function() {
+        signalservice.DataMessage = (function () {
 
             /**
              * Properties of a DataMessage.
@@ -2867,6 +2867,7 @@
              * @property {Uint8Array|null} [profileKey] DataMessage profileKey
              * @property {number|Long|null} [timestamp] DataMessage timestamp
              * @property {signalservice.DataMessage.IQuote|null} [quote] DataMessage quote
+         * @property {Array.<signalservice.DataMessage.IContact>|null} [contact] DataMessage contact
              */
 
             /**
@@ -2878,11 +2879,12 @@
              * @param {signalservice.IDataMessage=} [properties] Properties to set
              */
             function DataMessage(properties) {
-                this.attachments=[];
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                this.attachments = [];
+                this.contact = [];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -2891,7 +2893,7 @@
              * @memberof signalservice.DataMessage
              * @instance
              */
-            DataMessage.prototype.body="";
+            DataMessage.prototype.body = "";
 
             /**
              * DataMessage attachments.
@@ -2899,7 +2901,7 @@
              * @memberof signalservice.DataMessage
              * @instance
              */
-            DataMessage.prototype.attachments=$util.emptyArray;
+            DataMessage.prototype.attachments = $util.emptyArray;
 
             /**
              * DataMessage group.
@@ -2907,7 +2909,7 @@
              * @memberof signalservice.DataMessage
              * @instance
              */
-            DataMessage.prototype.group=null;
+            DataMessage.prototype.group = null;
 
             /**
              * DataMessage flags.
@@ -2915,7 +2917,7 @@
              * @memberof signalservice.DataMessage
              * @instance
              */
-            DataMessage.prototype.flags=0;
+            DataMessage.prototype.flags = 0;
 
             /**
              * DataMessage expireTimer.
@@ -2923,7 +2925,7 @@
              * @memberof signalservice.DataMessage
              * @instance
              */
-            DataMessage.prototype.expireTimer=0;
+            DataMessage.prototype.expireTimer = 0;
 
             /**
              * DataMessage profileKey.
@@ -2931,7 +2933,7 @@
              * @memberof signalservice.DataMessage
              * @instance
              */
-            DataMessage.prototype.profileKey=$util.newBuffer([]);
+            DataMessage.prototype.profileKey = $util.newBuffer([]);
 
             /**
              * DataMessage timestamp.
@@ -2939,7 +2941,7 @@
              * @memberof signalservice.DataMessage
              * @instance
              */
-            DataMessage.prototype.timestamp=$util.Long? $util.Long.fromBits(0,0,true):0;
+            DataMessage.prototype.timestamp = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 
             /**
              * DataMessage quote.
@@ -2947,7 +2949,15 @@
              * @memberof signalservice.DataMessage
              * @instance
              */
-            DataMessage.prototype.quote=null;
+            DataMessage.prototype.quote = null;
+
+            /**
+             * DataMessage contact.
+             * @member {Array.<signalservice.DataMessage.IContact>} contact
+             * @memberof signalservice.DataMessage
+             * @instance
+             */
+            DataMessage.prototype.contact = $util.emptyArray;
 
             /**
              * Creates a new DataMessage instance using the specified properties.
@@ -2957,7 +2967,7 @@
              * @param {signalservice.IDataMessage=} [properties] Properties to set
              * @returns {signalservice.DataMessage} DataMessage instance
              */
-            DataMessage.create=function create(properties) {
+            DataMessage.create = function create(properties) {
                 return new DataMessage(properties);
             };
 
@@ -2970,26 +2980,29 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            DataMessage.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.body!=null&&message.hasOwnProperty("body"))
+            DataMessage.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.body != null && message.hasOwnProperty("body"))
                     writer.uint32(/* id 1, wireType 2 =*/10).string(message.body);
-                if(message.attachments!=null&&message.attachments.length)
-                    for(var i=0;i<message.attachments.length;++i)
-                        $root.signalservice.AttachmentPointer.encode(message.attachments[i],writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                if(message.group!=null&&message.hasOwnProperty("group"))
-                    $root.signalservice.GroupContext.encode(message.group,writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                if(message.flags!=null&&message.hasOwnProperty("flags"))
+                if (message.attachments != null && message.attachments.length)
+                    for (var i = 0; i < message.attachments.length; ++i)
+                        $root.signalservice.AttachmentPointer.encode(message.attachments[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                if (message.group != null && message.hasOwnProperty("group"))
+                    $root.signalservice.GroupContext.encode(message.group, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                if (message.flags != null && message.hasOwnProperty("flags"))
                     writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.flags);
-                if(message.expireTimer!=null&&message.hasOwnProperty("expireTimer"))
+                if (message.expireTimer != null && message.hasOwnProperty("expireTimer"))
                     writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.expireTimer);
-                if(message.profileKey!=null&&message.hasOwnProperty("profileKey"))
+                if (message.profileKey != null && message.hasOwnProperty("profileKey"))
                     writer.uint32(/* id 6, wireType 2 =*/50).bytes(message.profileKey);
-                if(message.timestamp!=null&&message.hasOwnProperty("timestamp"))
+                if (message.timestamp != null && message.hasOwnProperty("timestamp"))
                     writer.uint32(/* id 7, wireType 0 =*/56).uint64(message.timestamp);
-                if(message.quote!=null&&message.hasOwnProperty("quote"))
-                    $root.signalservice.DataMessage.Quote.encode(message.quote,writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
+                if (message.quote != null && message.hasOwnProperty("quote"))
+                    $root.signalservice.DataMessage.Quote.encode(message.quote, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
+                if (message.contact != null && message.contact.length)
+                    for (var i = 0; i < message.contact.length; ++i)
+                        $root.signalservice.DataMessage.Contact.encode(message.contact[i], writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
                 return writer;
             };
 
@@ -3002,8 +3015,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            DataMessage.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            DataMessage.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -3017,41 +3030,46 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            DataMessage.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.DataMessage();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            DataMessage.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.DataMessage();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.body=reader.string();
+                            message.body = reader.string();
                             break;
                         case 2:
-                            if(!(message.attachments&&message.attachments.length))
-                                message.attachments=[];
-                            message.attachments.push($root.signalservice.AttachmentPointer.decode(reader,reader.uint32()));
+                            if (!(message.attachments && message.attachments.length))
+                                message.attachments = [];
+                            message.attachments.push($root.signalservice.AttachmentPointer.decode(reader, reader.uint32()));
                             break;
                         case 3:
-                            message.group=$root.signalservice.GroupContext.decode(reader,reader.uint32());
+                            message.group = $root.signalservice.GroupContext.decode(reader, reader.uint32());
                             break;
                         case 4:
-                            message.flags=reader.uint32();
+                            message.flags = reader.uint32();
                             break;
                         case 5:
-                            message.expireTimer=reader.uint32();
+                            message.expireTimer = reader.uint32();
                             break;
                         case 6:
-                            message.profileKey=reader.bytes();
+                            message.profileKey = reader.bytes();
                             break;
                         case 7:
-                            message.timestamp=reader.uint64();
+                            message.timestamp = reader.uint64();
                             break;
                         case 8:
-                            message.quote=$root.signalservice.DataMessage.Quote.decode(reader,reader.uint32());
+                            message.quote = $root.signalservice.DataMessage.Quote.decode(reader, reader.uint32());
+                            break;
+                        case 9:
+                            if (!(message.contact && message.contact.length))
+                                message.contact = [];
+                            message.contact.push($root.signalservice.DataMessage.Contact.decode(reader, reader.uint32()));
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -3068,10 +3086,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            DataMessage.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            DataMessage.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -3082,42 +3100,51 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            DataMessage.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            DataMessage.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.body!=null&&message.hasOwnProperty("body"))
-                    if(!$util.isString(message.body))
+                if (message.body != null && message.hasOwnProperty("body"))
+                    if (!$util.isString(message.body))
                         return "body: string expected";
-                if(message.attachments!=null&&message.hasOwnProperty("attachments")) {
-                    if(!Array.isArray(message.attachments))
+                if (message.attachments != null && message.hasOwnProperty("attachments")) {
+                    if (!Array.isArray(message.attachments))
                         return "attachments: array expected";
-                    for(var i=0;i<message.attachments.length;++i) {
-                        var error=$root.signalservice.AttachmentPointer.verify(message.attachments[i]);
-                        if(error)
-                            return "attachments."+error;
+                    for (var i = 0; i < message.attachments.length; ++i) {
+                        var error = $root.signalservice.AttachmentPointer.verify(message.attachments[i]);
+                        if (error)
+                            return "attachments." + error;
                     }
                 }
-                if(message.group!=null&&message.hasOwnProperty("group")) {
-                    var error=$root.signalservice.GroupContext.verify(message.group);
-                    if(error)
-                        return "group."+error;
+                if (message.group != null && message.hasOwnProperty("group")) {
+                    var error = $root.signalservice.GroupContext.verify(message.group);
+                    if (error)
+                        return "group." + error;
                 }
-                if(message.flags!=null&&message.hasOwnProperty("flags"))
-                    if(!$util.isInteger(message.flags))
+                if (message.flags != null && message.hasOwnProperty("flags"))
+                    if (!$util.isInteger(message.flags))
                         return "flags: integer expected";
-                if(message.expireTimer!=null&&message.hasOwnProperty("expireTimer"))
-                    if(!$util.isInteger(message.expireTimer))
+                if (message.expireTimer != null && message.hasOwnProperty("expireTimer"))
+                    if (!$util.isInteger(message.expireTimer))
                         return "expireTimer: integer expected";
-                if(message.profileKey!=null&&message.hasOwnProperty("profileKey"))
-                    if(!(message.profileKey&&typeof message.profileKey.length==="number"||$util.isString(message.profileKey)))
+                if (message.profileKey != null && message.hasOwnProperty("profileKey"))
+                    if (!(message.profileKey && typeof message.profileKey.length === "number" || $util.isString(message.profileKey)))
                         return "profileKey: buffer expected";
-                if(message.timestamp!=null&&message.hasOwnProperty("timestamp"))
-                    if(!$util.isInteger(message.timestamp)&&!(message.timestamp&&$util.isInteger(message.timestamp.low)&&$util.isInteger(message.timestamp.high)))
+                if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                    if (!$util.isInteger(message.timestamp) && !(message.timestamp && $util.isInteger(message.timestamp.low) && $util.isInteger(message.timestamp.high)))
                         return "timestamp: integer|Long expected";
-                if(message.quote!=null&&message.hasOwnProperty("quote")) {
-                    var error=$root.signalservice.DataMessage.Quote.verify(message.quote);
-                    if(error)
-                        return "quote."+error;
+                if (message.quote != null && message.hasOwnProperty("quote")) {
+                    var error = $root.signalservice.DataMessage.Quote.verify(message.quote);
+                    if (error)
+                        return "quote." + error;
+                }
+                if (message.contact != null && message.hasOwnProperty("contact")) {
+                    if (!Array.isArray(message.contact))
+                        return "contact: array expected";
+                    for (var i = 0; i < message.contact.length; ++i) {
+                        var error = $root.signalservice.DataMessage.Contact.verify(message.contact[i]);
+                        if (error)
+                            return "contact." + error;
+                    }
                 }
                 return null;
             };
@@ -3130,49 +3157,59 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.DataMessage} DataMessage
              */
-            DataMessage.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.DataMessage)
+            DataMessage.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.DataMessage)
                     return object;
-                var message=new $root.signalservice.DataMessage();
-                if(object.body!=null)
-                    message.body=String(object.body);
-                if(object.attachments) {
-                    if(!Array.isArray(object.attachments))
+                var message = new $root.signalservice.DataMessage();
+                if (object.body != null)
+                    message.body = String(object.body);
+                if (object.attachments) {
+                    if (!Array.isArray(object.attachments))
                         throw TypeError(".signalservice.DataMessage.attachments: array expected");
-                    message.attachments=[];
-                    for(var i=0;i<object.attachments.length;++i) {
-                        if(typeof object.attachments[i]!=="object")
+                    message.attachments = [];
+                    for (var i = 0; i < object.attachments.length; ++i) {
+                        if (typeof object.attachments[i] !== "object")
                             throw TypeError(".signalservice.DataMessage.attachments: object expected");
-                        message.attachments[i]=$root.signalservice.AttachmentPointer.fromObject(object.attachments[i]);
+                        message.attachments[i] = $root.signalservice.AttachmentPointer.fromObject(object.attachments[i]);
                     }
                 }
-                if(object.group!=null) {
-                    if(typeof object.group!=="object")
+                if (object.group != null) {
+                    if (typeof object.group !== "object")
                         throw TypeError(".signalservice.DataMessage.group: object expected");
-                    message.group=$root.signalservice.GroupContext.fromObject(object.group);
+                    message.group = $root.signalservice.GroupContext.fromObject(object.group);
                 }
-                if(object.flags!=null)
-                    message.flags=object.flags>>>0;
-                if(object.expireTimer!=null)
-                    message.expireTimer=object.expireTimer>>>0;
-                if(object.profileKey!=null)
-                    if(typeof object.profileKey==="string")
-                        $util.base64.decode(object.profileKey,message.profileKey=$util.newBuffer($util.base64.length(object.profileKey)),0);
-                    else if(object.profileKey.length)
-                        message.profileKey=object.profileKey;
-                if(object.timestamp!=null)
-                    if($util.Long)
-                        (message.timestamp=$util.Long.fromValue(object.timestamp)).unsigned=true;
-                    else if(typeof object.timestamp==="string")
-                        message.timestamp=parseInt(object.timestamp,10);
-                    else if(typeof object.timestamp==="number")
-                        message.timestamp=object.timestamp;
-                    else if(typeof object.timestamp==="object")
-                        message.timestamp=new $util.LongBits(object.timestamp.low>>>0,object.timestamp.high>>>0).toNumber(true);
-                if(object.quote!=null) {
-                    if(typeof object.quote!=="object")
+                if (object.flags != null)
+                    message.flags = object.flags >>> 0;
+                if (object.expireTimer != null)
+                    message.expireTimer = object.expireTimer >>> 0;
+                if (object.profileKey != null)
+                    if (typeof object.profileKey === "string")
+                        $util.base64.decode(object.profileKey, message.profileKey = $util.newBuffer($util.base64.length(object.profileKey)), 0);
+                    else if (object.profileKey.length)
+                        message.profileKey = object.profileKey;
+                if (object.timestamp != null)
+                    if ($util.Long)
+                        (message.timestamp = $util.Long.fromValue(object.timestamp)).unsigned = true;
+                    else if (typeof object.timestamp === "string")
+                        message.timestamp = parseInt(object.timestamp, 10);
+                    else if (typeof object.timestamp === "number")
+                        message.timestamp = object.timestamp;
+                    else if (typeof object.timestamp === "object")
+                        message.timestamp = new $util.LongBits(object.timestamp.low >>> 0, object.timestamp.high >>> 0).toNumber(true);
+                if (object.quote != null) {
+                    if (typeof object.quote !== "object")
                         throw TypeError(".signalservice.DataMessage.quote: object expected");
-                    message.quote=$root.signalservice.DataMessage.Quote.fromObject(object.quote);
+                    message.quote = $root.signalservice.DataMessage.Quote.fromObject(object.quote);
+                }
+                if (object.contact) {
+                    if (!Array.isArray(object.contact))
+                        throw TypeError(".signalservice.DataMessage.contact: array expected");
+                    message.contact = [];
+                    for (var i = 0; i < object.contact.length; ++i) {
+                        if (typeof object.contact[i] !== "object")
+                            throw TypeError(".signalservice.DataMessage.contact: object expected");
+                        message.contact[i] = $root.signalservice.DataMessage.Contact.fromObject(object.contact[i]);
+                    }
                 }
                 return message;
             };
@@ -3186,47 +3223,54 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            DataMessage.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.arrays||options.defaults)
-                    object.attachments=[];
-                if(options.defaults) {
-                    object.body="";
-                    object.group=null;
-                    object.flags=0;
-                    object.expireTimer=0;
-                    object.profileKey=options.bytes===String? "":[];
-                    if($util.Long) {
-                        var long=new $util.Long(0,0,true);
-                        object.timestamp=options.longs===String? long.toString():options.longs===Number? long.toNumber():long;
+            DataMessage.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.arrays || options.defaults) {
+                    object.attachments = [];
+                    object.contact = [];
+                }
+                if (options.defaults) {
+                    object.body = "";
+                    object.group = null;
+                    object.flags = 0;
+                    object.expireTimer = 0;
+                    object.profileKey = options.bytes === String ? "" : [];
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, true);
+                        object.timestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                     } else
-                        object.timestamp=options.longs===String? "0":0;
-                    object.quote=null;
+                        object.timestamp = options.longs === String ? "0" : 0;
+                    object.quote = null;
                 }
-                if(message.body!=null&&message.hasOwnProperty("body"))
-                    object.body=message.body;
-                if(message.attachments&&message.attachments.length) {
-                    object.attachments=[];
-                    for(var j=0;j<message.attachments.length;++j)
-                        object.attachments[j]=$root.signalservice.AttachmentPointer.toObject(message.attachments[j],options);
+                if (message.body != null && message.hasOwnProperty("body"))
+                    object.body = message.body;
+                if (message.attachments && message.attachments.length) {
+                    object.attachments = [];
+                    for (var j = 0; j < message.attachments.length; ++j)
+                        object.attachments[j] = $root.signalservice.AttachmentPointer.toObject(message.attachments[j], options);
                 }
-                if(message.group!=null&&message.hasOwnProperty("group"))
-                    object.group=$root.signalservice.GroupContext.toObject(message.group,options);
-                if(message.flags!=null&&message.hasOwnProperty("flags"))
-                    object.flags=message.flags;
-                if(message.expireTimer!=null&&message.hasOwnProperty("expireTimer"))
-                    object.expireTimer=message.expireTimer;
-                if(message.profileKey!=null&&message.hasOwnProperty("profileKey"))
-                    object.profileKey=options.bytes===String? $util.base64.encode(message.profileKey,0,message.profileKey.length):options.bytes===Array? Array.prototype.slice.call(message.profileKey):message.profileKey;
-                if(message.timestamp!=null&&message.hasOwnProperty("timestamp"))
-                    if(typeof message.timestamp==="number")
-                        object.timestamp=options.longs===String? String(message.timestamp):message.timestamp;
+                if (message.group != null && message.hasOwnProperty("group"))
+                    object.group = $root.signalservice.GroupContext.toObject(message.group, options);
+                if (message.flags != null && message.hasOwnProperty("flags"))
+                    object.flags = message.flags;
+                if (message.expireTimer != null && message.hasOwnProperty("expireTimer"))
+                    object.expireTimer = message.expireTimer;
+                if (message.profileKey != null && message.hasOwnProperty("profileKey"))
+                    object.profileKey = options.bytes === String ? $util.base64.encode(message.profileKey, 0, message.profileKey.length) : options.bytes === Array ? Array.prototype.slice.call(message.profileKey) : message.profileKey;
+                if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                    if (typeof message.timestamp === "number")
+                        object.timestamp = options.longs === String ? String(message.timestamp) : message.timestamp;
                     else
-                        object.timestamp=options.longs===String? $util.Long.prototype.toString.call(message.timestamp):options.longs===Number? new $util.LongBits(message.timestamp.low>>>0,message.timestamp.high>>>0).toNumber(true):message.timestamp;
-                if(message.quote!=null&&message.hasOwnProperty("quote"))
-                    object.quote=$root.signalservice.DataMessage.Quote.toObject(message.quote,options);
+                        object.timestamp = options.longs === String ? $util.Long.prototype.toString.call(message.timestamp) : options.longs === Number ? new $util.LongBits(message.timestamp.low >>> 0, message.timestamp.high >>> 0).toNumber(true) : message.timestamp;
+                if (message.quote != null && message.hasOwnProperty("quote"))
+                    object.quote = $root.signalservice.DataMessage.Quote.toObject(message.quote, options);
+                if (message.contact && message.contact.length) {
+                    object.contact = [];
+                    for (var j = 0; j < message.contact.length; ++j)
+                        object.contact[j] = $root.signalservice.DataMessage.Contact.toObject(message.contact[j], options);
+                }
                 return object;
             };
 
@@ -3237,8 +3281,8 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            DataMessage.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            DataMessage.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             /**
@@ -3249,15 +3293,15 @@
              * @property {number} EXPIRATION_TIMER_UPDATE=2 EXPIRATION_TIMER_UPDATE value
              * @property {number} PROFILE_KEY_UPDATE=4 PROFILE_KEY_UPDATE value
              */
-            DataMessage.Flags=(function() {
-                var valuesById={},values=Object.create(valuesById);
-                values[valuesById[1]="END_SESSION"]=1;
-                values[valuesById[2]="EXPIRATION_TIMER_UPDATE"]=2;
-                values[valuesById[4]="PROFILE_KEY_UPDATE"]=4;
+            DataMessage.Flags = (function () {
+                var valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[1] = "END_SESSION"] = 1;
+                values[valuesById[2] = "EXPIRATION_TIMER_UPDATE"] = 2;
+                values[valuesById[4] = "PROFILE_KEY_UPDATE"] = 4;
                 return values;
             })();
 
-            DataMessage.Quote=(function() {
+            DataMessage.Quote = (function () {
 
                 /**
                  * Properties of a Quote.
@@ -3278,11 +3322,11 @@
                  * @param {signalservice.DataMessage.IQuote=} [properties] Properties to set
                  */
                 function Quote(properties) {
-                    this.attachments=[];
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    this.attachments = [];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -3291,7 +3335,7 @@
                  * @memberof signalservice.DataMessage.Quote
                  * @instance
                  */
-                Quote.prototype.id=$util.Long? $util.Long.fromBits(0,0,true):0;
+                Quote.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 
                 /**
                  * Quote author.
@@ -3299,7 +3343,7 @@
                  * @memberof signalservice.DataMessage.Quote
                  * @instance
                  */
-                Quote.prototype.author="";
+                Quote.prototype.author = "";
 
                 /**
                  * Quote text.
@@ -3307,7 +3351,7 @@
                  * @memberof signalservice.DataMessage.Quote
                  * @instance
                  */
-                Quote.prototype.text="";
+                Quote.prototype.text = "";
 
                 /**
                  * Quote attachments.
@@ -3315,7 +3359,7 @@
                  * @memberof signalservice.DataMessage.Quote
                  * @instance
                  */
-                Quote.prototype.attachments=$util.emptyArray;
+                Quote.prototype.attachments = $util.emptyArray;
 
                 /**
                  * Creates a new Quote instance using the specified properties.
@@ -3325,7 +3369,7 @@
                  * @param {signalservice.DataMessage.IQuote=} [properties] Properties to set
                  * @returns {signalservice.DataMessage.Quote} Quote instance
                  */
-                Quote.create=function create(properties) {
+                Quote.create = function create(properties) {
                     return new Quote(properties);
                 };
 
@@ -3338,18 +3382,18 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Quote.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.id!=null&&message.hasOwnProperty("id"))
+                Quote.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.id != null && message.hasOwnProperty("id"))
                         writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.id);
-                    if(message.author!=null&&message.hasOwnProperty("author"))
+                    if (message.author != null && message.hasOwnProperty("author"))
                         writer.uint32(/* id 2, wireType 2 =*/18).string(message.author);
-                    if(message.text!=null&&message.hasOwnProperty("text"))
+                    if (message.text != null && message.hasOwnProperty("text"))
                         writer.uint32(/* id 3, wireType 2 =*/26).string(message.text);
-                    if(message.attachments!=null&&message.attachments.length)
-                        for(var i=0;i<message.attachments.length;++i)
-                            $root.signalservice.DataMessage.Quote.QuotedAttachment.encode(message.attachments[i],writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                    if (message.attachments != null && message.attachments.length)
+                        for (var i = 0; i < message.attachments.length; ++i)
+                            $root.signalservice.DataMessage.Quote.QuotedAttachment.encode(message.attachments[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     return writer;
                 };
 
@@ -3362,8 +3406,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Quote.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                Quote.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -3377,29 +3421,29 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Quote.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.DataMessage.Quote();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                Quote.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.DataMessage.Quote();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                message.id=reader.uint64();
+                                message.id = reader.uint64();
                                 break;
                             case 2:
-                                message.author=reader.string();
+                                message.author = reader.string();
                                 break;
                             case 3:
-                                message.text=reader.string();
+                                message.text = reader.string();
                                 break;
                             case 4:
-                                if(!(message.attachments&&message.attachments.length))
-                                    message.attachments=[];
-                                message.attachments.push($root.signalservice.DataMessage.Quote.QuotedAttachment.decode(reader,reader.uint32()));
+                                if (!(message.attachments && message.attachments.length))
+                                    message.attachments = [];
+                                message.attachments.push($root.signalservice.DataMessage.Quote.QuotedAttachment.decode(reader, reader.uint32()));
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -3416,10 +3460,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Quote.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                Quote.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -3430,25 +3474,25 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                Quote.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                Quote.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.id!=null&&message.hasOwnProperty("id"))
-                        if(!$util.isInteger(message.id)&&!(message.id&&$util.isInteger(message.id.low)&&$util.isInteger(message.id.high)))
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
                             return "id: integer|Long expected";
-                    if(message.author!=null&&message.hasOwnProperty("author"))
-                        if(!$util.isString(message.author))
+                    if (message.author != null && message.hasOwnProperty("author"))
+                        if (!$util.isString(message.author))
                             return "author: string expected";
-                    if(message.text!=null&&message.hasOwnProperty("text"))
-                        if(!$util.isString(message.text))
+                    if (message.text != null && message.hasOwnProperty("text"))
+                        if (!$util.isString(message.text))
                             return "text: string expected";
-                    if(message.attachments!=null&&message.hasOwnProperty("attachments")) {
-                        if(!Array.isArray(message.attachments))
+                    if (message.attachments != null && message.hasOwnProperty("attachments")) {
+                        if (!Array.isArray(message.attachments))
                             return "attachments: array expected";
-                        for(var i=0;i<message.attachments.length;++i) {
-                            var error=$root.signalservice.DataMessage.Quote.QuotedAttachment.verify(message.attachments[i]);
-                            if(error)
-                                return "attachments."+error;
+                        for (var i = 0; i < message.attachments.length; ++i) {
+                            var error = $root.signalservice.DataMessage.Quote.QuotedAttachment.verify(message.attachments[i]);
+                            if (error)
+                                return "attachments." + error;
                         }
                     }
                     return null;
@@ -3462,31 +3506,31 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.DataMessage.Quote} Quote
                  */
-                Quote.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.DataMessage.Quote)
+                Quote.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.DataMessage.Quote)
                         return object;
-                    var message=new $root.signalservice.DataMessage.Quote();
-                    if(object.id!=null)
-                        if($util.Long)
-                            (message.id=$util.Long.fromValue(object.id)).unsigned=true;
-                        else if(typeof object.id==="string")
-                            message.id=parseInt(object.id,10);
-                        else if(typeof object.id==="number")
-                            message.id=object.id;
-                        else if(typeof object.id==="object")
-                            message.id=new $util.LongBits(object.id.low>>>0,object.id.high>>>0).toNumber(true);
-                    if(object.author!=null)
-                        message.author=String(object.author);
-                    if(object.text!=null)
-                        message.text=String(object.text);
-                    if(object.attachments) {
-                        if(!Array.isArray(object.attachments))
+                    var message = new $root.signalservice.DataMessage.Quote();
+                    if (object.id != null)
+                        if ($util.Long)
+                            (message.id = $util.Long.fromValue(object.id)).unsigned = true;
+                        else if (typeof object.id === "string")
+                            message.id = parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber(true);
+                    if (object.author != null)
+                        message.author = String(object.author);
+                    if (object.text != null)
+                        message.text = String(object.text);
+                    if (object.attachments) {
+                        if (!Array.isArray(object.attachments))
                             throw TypeError(".signalservice.DataMessage.Quote.attachments: array expected");
-                        message.attachments=[];
-                        for(var i=0;i<object.attachments.length;++i) {
-                            if(typeof object.attachments[i]!=="object")
+                        message.attachments = [];
+                        for (var i = 0; i < object.attachments.length; ++i) {
+                            if (typeof object.attachments[i] !== "object")
                                 throw TypeError(".signalservice.DataMessage.Quote.attachments: object expected");
-                            message.attachments[i]=$root.signalservice.DataMessage.Quote.QuotedAttachment.fromObject(object.attachments[i]);
+                            message.attachments[i] = $root.signalservice.DataMessage.Quote.QuotedAttachment.fromObject(object.attachments[i]);
                         }
                     }
                     return message;
@@ -3501,34 +3545,34 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                Quote.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.arrays||options.defaults)
-                        object.attachments=[];
-                    if(options.defaults) {
-                        if($util.Long) {
-                            var long=new $util.Long(0,0,true);
-                            object.id=options.longs===String? long.toString():options.longs===Number? long.toNumber():long;
+                Quote.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.arrays || options.defaults)
+                        object.attachments = [];
+                    if (options.defaults) {
+                        if ($util.Long) {
+                            var long = new $util.Long(0, 0, true);
+                            object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                         } else
-                            object.id=options.longs===String? "0":0;
-                        object.author="";
-                        object.text="";
+                            object.id = options.longs === String ? "0" : 0;
+                        object.author = "";
+                        object.text = "";
                     }
-                    if(message.id!=null&&message.hasOwnProperty("id"))
-                        if(typeof message.id==="number")
-                            object.id=options.longs===String? String(message.id):message.id;
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        if (typeof message.id === "number")
+                            object.id = options.longs === String ? String(message.id) : message.id;
                         else
-                            object.id=options.longs===String? $util.Long.prototype.toString.call(message.id):options.longs===Number? new $util.LongBits(message.id.low>>>0,message.id.high>>>0).toNumber(true):message.id;
-                    if(message.author!=null&&message.hasOwnProperty("author"))
-                        object.author=message.author;
-                    if(message.text!=null&&message.hasOwnProperty("text"))
-                        object.text=message.text;
-                    if(message.attachments&&message.attachments.length) {
-                        object.attachments=[];
-                        for(var j=0;j<message.attachments.length;++j)
-                            object.attachments[j]=$root.signalservice.DataMessage.Quote.QuotedAttachment.toObject(message.attachments[j],options);
+                            object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
+                    if (message.author != null && message.hasOwnProperty("author"))
+                        object.author = message.author;
+                    if (message.text != null && message.hasOwnProperty("text"))
+                        object.text = message.text;
+                    if (message.attachments && message.attachments.length) {
+                        object.attachments = [];
+                        for (var j = 0; j < message.attachments.length; ++j)
+                            object.attachments[j] = $root.signalservice.DataMessage.Quote.QuotedAttachment.toObject(message.attachments[j], options);
                     }
                     return object;
                 };
@@ -3540,11 +3584,11 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                Quote.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                Quote.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
-                Quote.QuotedAttachment=(function() {
+                Quote.QuotedAttachment = (function () {
 
                     /**
                      * Properties of a QuotedAttachment.
@@ -3564,10 +3608,10 @@
                      * @param {signalservice.DataMessage.Quote.IQuotedAttachment=} [properties] Properties to set
                      */
                     function QuotedAttachment(properties) {
-                        if(properties)
-                            for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                                if(properties[keys[i]]!=null)
-                                    this[keys[i]]=properties[keys[i]];
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
                     }
 
                     /**
@@ -3576,7 +3620,7 @@
                      * @memberof signalservice.DataMessage.Quote.QuotedAttachment
                      * @instance
                      */
-                    QuotedAttachment.prototype.contentType="";
+                    QuotedAttachment.prototype.contentType = "";
 
                     /**
                      * QuotedAttachment fileName.
@@ -3584,7 +3628,7 @@
                      * @memberof signalservice.DataMessage.Quote.QuotedAttachment
                      * @instance
                      */
-                    QuotedAttachment.prototype.fileName="";
+                    QuotedAttachment.prototype.fileName = "";
 
                     /**
                      * QuotedAttachment thumbnail.
@@ -3592,7 +3636,7 @@
                      * @memberof signalservice.DataMessage.Quote.QuotedAttachment
                      * @instance
                      */
-                    QuotedAttachment.prototype.thumbnail=null;
+                    QuotedAttachment.prototype.thumbnail = null;
 
                     /**
                      * Creates a new QuotedAttachment instance using the specified properties.
@@ -3602,7 +3646,7 @@
                      * @param {signalservice.DataMessage.Quote.IQuotedAttachment=} [properties] Properties to set
                      * @returns {signalservice.DataMessage.Quote.QuotedAttachment} QuotedAttachment instance
                      */
-                    QuotedAttachment.create=function create(properties) {
+                    QuotedAttachment.create = function create(properties) {
                         return new QuotedAttachment(properties);
                     };
 
@@ -3615,15 +3659,15 @@
                      * @param {$protobuf.Writer} [writer] Writer to encode to
                      * @returns {$protobuf.Writer} Writer
                      */
-                    QuotedAttachment.encode=function encode(message,writer) {
-                        if(!writer)
-                            writer=$Writer.create();
-                        if(message.contentType!=null&&message.hasOwnProperty("contentType"))
+                    QuotedAttachment.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.contentType != null && message.hasOwnProperty("contentType"))
                             writer.uint32(/* id 1, wireType 2 =*/10).string(message.contentType);
-                        if(message.fileName!=null&&message.hasOwnProperty("fileName"))
+                        if (message.fileName != null && message.hasOwnProperty("fileName"))
                             writer.uint32(/* id 2, wireType 2 =*/18).string(message.fileName);
-                        if(message.thumbnail!=null&&message.hasOwnProperty("thumbnail"))
-                            $root.signalservice.AttachmentPointer.encode(message.thumbnail,writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                        if (message.thumbnail != null && message.hasOwnProperty("thumbnail"))
+                            $root.signalservice.AttachmentPointer.encode(message.thumbnail, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                         return writer;
                     };
 
@@ -3636,8 +3680,8 @@
                      * @param {$protobuf.Writer} [writer] Writer to encode to
                      * @returns {$protobuf.Writer} Writer
                      */
-                    QuotedAttachment.encodeDelimited=function encodeDelimited(message,writer) {
-                        return this.encode(message,writer).ldelim();
+                    QuotedAttachment.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
                     };
 
                     /**
@@ -3651,24 +3695,24 @@
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    QuotedAttachment.decode=function decode(reader,length) {
-                        if(!(reader instanceof $Reader))
-                            reader=$Reader.create(reader);
-                        var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.DataMessage.Quote.QuotedAttachment();
-                        while(reader.pos<end) {
-                            var tag=reader.uint32();
-                            switch(tag>>>3) {
+                    QuotedAttachment.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.DataMessage.Quote.QuotedAttachment();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
                                 case 1:
-                                    message.contentType=reader.string();
+                                    message.contentType = reader.string();
                                     break;
                                 case 2:
-                                    message.fileName=reader.string();
+                                    message.fileName = reader.string();
                                     break;
                                 case 3:
-                                    message.thumbnail=$root.signalservice.AttachmentPointer.decode(reader,reader.uint32());
+                                    message.thumbnail = $root.signalservice.AttachmentPointer.decode(reader, reader.uint32());
                                     break;
                                 default:
-                                    reader.skipType(tag&7);
+                                    reader.skipType(tag & 7);
                                     break;
                             }
                         }
@@ -3685,10 +3729,10 @@
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    QuotedAttachment.decodeDelimited=function decodeDelimited(reader) {
-                        if(!(reader instanceof $Reader))
-                            reader=new $Reader(reader);
-                        return this.decode(reader,reader.uint32());
+                    QuotedAttachment.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
                     };
 
                     /**
@@ -3699,19 +3743,19 @@
                      * @param {Object.<string,*>} message Plain object to verify
                      * @returns {string|null} `null` if valid, otherwise the reason why it is not
                      */
-                    QuotedAttachment.verify=function verify(message) {
-                        if(typeof message!=="object"||message===null)
+                    QuotedAttachment.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
                             return "object expected";
-                        if(message.contentType!=null&&message.hasOwnProperty("contentType"))
-                            if(!$util.isString(message.contentType))
+                        if (message.contentType != null && message.hasOwnProperty("contentType"))
+                            if (!$util.isString(message.contentType))
                                 return "contentType: string expected";
-                        if(message.fileName!=null&&message.hasOwnProperty("fileName"))
-                            if(!$util.isString(message.fileName))
+                        if (message.fileName != null && message.hasOwnProperty("fileName"))
+                            if (!$util.isString(message.fileName))
                                 return "fileName: string expected";
-                        if(message.thumbnail!=null&&message.hasOwnProperty("thumbnail")) {
-                            var error=$root.signalservice.AttachmentPointer.verify(message.thumbnail);
-                            if(error)
-                                return "thumbnail."+error;
+                        if (message.thumbnail != null && message.hasOwnProperty("thumbnail")) {
+                            var error = $root.signalservice.AttachmentPointer.verify(message.thumbnail);
+                            if (error)
+                                return "thumbnail." + error;
                         }
                         return null;
                     };
@@ -3724,18 +3768,18 @@
                      * @param {Object.<string,*>} object Plain object
                      * @returns {signalservice.DataMessage.Quote.QuotedAttachment} QuotedAttachment
                      */
-                    QuotedAttachment.fromObject=function fromObject(object) {
-                        if(object instanceof $root.signalservice.DataMessage.Quote.QuotedAttachment)
+                    QuotedAttachment.fromObject = function fromObject(object) {
+                        if (object instanceof $root.signalservice.DataMessage.Quote.QuotedAttachment)
                             return object;
-                        var message=new $root.signalservice.DataMessage.Quote.QuotedAttachment();
-                        if(object.contentType!=null)
-                            message.contentType=String(object.contentType);
-                        if(object.fileName!=null)
-                            message.fileName=String(object.fileName);
-                        if(object.thumbnail!=null) {
-                            if(typeof object.thumbnail!=="object")
+                        var message = new $root.signalservice.DataMessage.Quote.QuotedAttachment();
+                        if (object.contentType != null)
+                            message.contentType = String(object.contentType);
+                        if (object.fileName != null)
+                            message.fileName = String(object.fileName);
+                        if (object.thumbnail != null) {
+                            if (typeof object.thumbnail !== "object")
                                 throw TypeError(".signalservice.DataMessage.Quote.QuotedAttachment.thumbnail: object expected");
-                            message.thumbnail=$root.signalservice.AttachmentPointer.fromObject(object.thumbnail);
+                            message.thumbnail = $root.signalservice.AttachmentPointer.fromObject(object.thumbnail);
                         }
                         return message;
                     };
@@ -3749,21 +3793,21 @@
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    QuotedAttachment.toObject=function toObject(message,options) {
-                        if(!options)
-                            options={};
-                        var object={};
-                        if(options.defaults) {
-                            object.contentType="";
-                            object.fileName="";
-                            object.thumbnail=null;
+                    QuotedAttachment.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.contentType = "";
+                            object.fileName = "";
+                            object.thumbnail = null;
                         }
-                        if(message.contentType!=null&&message.hasOwnProperty("contentType"))
-                            object.contentType=message.contentType;
-                        if(message.fileName!=null&&message.hasOwnProperty("fileName"))
-                            object.fileName=message.fileName;
-                        if(message.thumbnail!=null&&message.hasOwnProperty("thumbnail"))
-                            object.thumbnail=$root.signalservice.AttachmentPointer.toObject(message.thumbnail,options);
+                        if (message.contentType != null && message.hasOwnProperty("contentType"))
+                            object.contentType = message.contentType;
+                        if (message.fileName != null && message.hasOwnProperty("fileName"))
+                            object.fileName = message.fileName;
+                        if (message.thumbnail != null && message.hasOwnProperty("thumbnail"))
+                            object.thumbnail = $root.signalservice.AttachmentPointer.toObject(message.thumbnail, options);
                         return object;
                     };
 
@@ -3774,8 +3818,8 @@
                      * @instance
                      * @returns {Object.<string,*>} JSON object
                      */
-                    QuotedAttachment.prototype.toJSON=function toJSON() {
-                        return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                    QuotedAttachment.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
 
                     return QuotedAttachment;
@@ -3784,10 +3828,1840 @@
                 return Quote;
             })();
 
+            DataMessage.Contact = (function () {
+
+                /**
+                 * Properties of a Contact.
+                 * @memberof signalservice.DataMessage
+                 * @interface IContact
+                 * @property {signalservice.DataMessage.Contact.IName|null} [name] Contact name
+                 * @property {Array.<signalservice.DataMessage.Contact.IPhone>|null} [number] Contact number
+                 * @property {Array.<signalservice.DataMessage.Contact.IEmail>|null} [email] Contact email
+                 * @property {Array.<signalservice.DataMessage.Contact.IPostalAddress>|null} [address] Contact address
+                 * @property {signalservice.DataMessage.Contact.IAvatar|null} [avatar] Contact avatar
+                 * @property {string|null} [organization] Contact organization
+                 */
+
+                /**
+                 * Constructs a new Contact.
+                 * @memberof signalservice.DataMessage
+                 * @classdesc Represents a Contact.
+                 * @implements IContact
+                 * @constructor
+                 * @param {signalservice.DataMessage.IContact=} [properties] Properties to set
+                 */
+                function Contact(properties) {
+                    this.number = [];
+                    this.email = [];
+                    this.address = [];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Contact name.
+                 * @member {signalservice.DataMessage.Contact.IName|null|undefined} name
+                 * @memberof signalservice.DataMessage.Contact
+                 * @instance
+                 */
+                Contact.prototype.name = null;
+
+                /**
+                 * Contact number.
+                 * @member {Array.<signalservice.DataMessage.Contact.IPhone>} number
+                 * @memberof signalservice.DataMessage.Contact
+                 * @instance
+                 */
+                Contact.prototype.number = $util.emptyArray;
+
+                /**
+                 * Contact email.
+                 * @member {Array.<signalservice.DataMessage.Contact.IEmail>} email
+                 * @memberof signalservice.DataMessage.Contact
+                 * @instance
+                 */
+                Contact.prototype.email = $util.emptyArray;
+
+                /**
+                 * Contact address.
+                 * @member {Array.<signalservice.DataMessage.Contact.IPostalAddress>} address
+                 * @memberof signalservice.DataMessage.Contact
+                 * @instance
+                 */
+                Contact.prototype.address = $util.emptyArray;
+
+                /**
+                 * Contact avatar.
+                 * @member {signalservice.DataMessage.Contact.IAvatar|null|undefined} avatar
+                 * @memberof signalservice.DataMessage.Contact
+                 * @instance
+                 */
+                Contact.prototype.avatar = null;
+
+                /**
+                 * Contact organization.
+                 * @member {string} organization
+                 * @memberof signalservice.DataMessage.Contact
+                 * @instance
+                 */
+                Contact.prototype.organization = "";
+
+                /**
+                 * Creates a new Contact instance using the specified properties.
+                 * @function create
+                 * @memberof signalservice.DataMessage.Contact
+                 * @static
+                 * @param {signalservice.DataMessage.IContact=} [properties] Properties to set
+                 * @returns {signalservice.DataMessage.Contact} Contact instance
+                 */
+                Contact.create = function create(properties) {
+                    return new Contact(properties);
+                };
+
+                /**
+                 * Encodes the specified Contact message. Does not implicitly {@link signalservice.DataMessage.Contact.verify|verify} messages.
+                 * @function encode
+                 * @memberof signalservice.DataMessage.Contact
+                 * @static
+                 * @param {signalservice.DataMessage.IContact} message Contact message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Contact.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        $root.signalservice.DataMessage.Contact.Name.encode(message.name, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                    if (message.number != null && message.number.length)
+                        for (var i = 0; i < message.number.length; ++i)
+                            $root.signalservice.DataMessage.Contact.Phone.encode(message.number[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                    if (message.email != null && message.email.length)
+                        for (var i = 0; i < message.email.length; ++i)
+                            $root.signalservice.DataMessage.Contact.Email.encode(message.email[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                    if (message.address != null && message.address.length)
+                        for (var i = 0; i < message.address.length; ++i)
+                            $root.signalservice.DataMessage.Contact.PostalAddress.encode(message.address[i], writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                    if (message.avatar != null && message.hasOwnProperty("avatar"))
+                        $root.signalservice.DataMessage.Contact.Avatar.encode(message.avatar, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                    if (message.organization != null && message.hasOwnProperty("organization"))
+                        writer.uint32(/* id 7, wireType 2 =*/58).string(message.organization);
+                    return writer;
+                };
+
+                /**
+                 * Encodes the specified Contact message, length delimited. Does not implicitly {@link signalservice.DataMessage.Contact.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof signalservice.DataMessage.Contact
+                 * @static
+                 * @param {signalservice.DataMessage.IContact} message Contact message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Contact.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+
+                /**
+                 * Decodes a Contact message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof signalservice.DataMessage.Contact
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {signalservice.DataMessage.Contact} Contact
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Contact.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.DataMessage.Contact();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                            case 1:
+                                message.name = $root.signalservice.DataMessage.Contact.Name.decode(reader, reader.uint32());
+                                break;
+                            case 3:
+                                if (!(message.number && message.number.length))
+                                    message.number = [];
+                                message.number.push($root.signalservice.DataMessage.Contact.Phone.decode(reader, reader.uint32()));
+                                break;
+                            case 4:
+                                if (!(message.email && message.email.length))
+                                    message.email = [];
+                                message.email.push($root.signalservice.DataMessage.Contact.Email.decode(reader, reader.uint32()));
+                                break;
+                            case 5:
+                                if (!(message.address && message.address.length))
+                                    message.address = [];
+                                message.address.push($root.signalservice.DataMessage.Contact.PostalAddress.decode(reader, reader.uint32()));
+                                break;
+                            case 6:
+                                message.avatar = $root.signalservice.DataMessage.Contact.Avatar.decode(reader, reader.uint32());
+                                break;
+                            case 7:
+                                message.organization = reader.string();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                        }
+                    }
+                    return message;
+                };
+
+                /**
+                 * Decodes a Contact message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof signalservice.DataMessage.Contact
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {signalservice.DataMessage.Contact} Contact
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Contact.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+
+                /**
+                 * Verifies a Contact message.
+                 * @function verify
+                 * @memberof signalservice.DataMessage.Contact
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                Contact.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.name != null && message.hasOwnProperty("name")) {
+                        var error = $root.signalservice.DataMessage.Contact.Name.verify(message.name);
+                        if (error)
+                            return "name." + error;
+                    }
+                    if (message.number != null && message.hasOwnProperty("number")) {
+                        if (!Array.isArray(message.number))
+                            return "number: array expected";
+                        for (var i = 0; i < message.number.length; ++i) {
+                            var error = $root.signalservice.DataMessage.Contact.Phone.verify(message.number[i]);
+                            if (error)
+                                return "number." + error;
+                        }
+                    }
+                    if (message.email != null && message.hasOwnProperty("email")) {
+                        if (!Array.isArray(message.email))
+                            return "email: array expected";
+                        for (var i = 0; i < message.email.length; ++i) {
+                            var error = $root.signalservice.DataMessage.Contact.Email.verify(message.email[i]);
+                            if (error)
+                                return "email." + error;
+                        }
+                    }
+                    if (message.address != null && message.hasOwnProperty("address")) {
+                        if (!Array.isArray(message.address))
+                            return "address: array expected";
+                        for (var i = 0; i < message.address.length; ++i) {
+                            var error = $root.signalservice.DataMessage.Contact.PostalAddress.verify(message.address[i]);
+                            if (error)
+                                return "address." + error;
+                        }
+                    }
+                    if (message.avatar != null && message.hasOwnProperty("avatar")) {
+                        var error = $root.signalservice.DataMessage.Contact.Avatar.verify(message.avatar);
+                        if (error)
+                            return "avatar." + error;
+                    }
+                    if (message.organization != null && message.hasOwnProperty("organization"))
+                        if (!$util.isString(message.organization))
+                            return "organization: string expected";
+                    return null;
+                };
+
+                /**
+                 * Creates a Contact message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof signalservice.DataMessage.Contact
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {signalservice.DataMessage.Contact} Contact
+                 */
+                Contact.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.DataMessage.Contact)
+                        return object;
+                    var message = new $root.signalservice.DataMessage.Contact();
+                    if (object.name != null) {
+                        if (typeof object.name !== "object")
+                            throw TypeError(".signalservice.DataMessage.Contact.name: object expected");
+                        message.name = $root.signalservice.DataMessage.Contact.Name.fromObject(object.name);
+                    }
+                    if (object.number) {
+                        if (!Array.isArray(object.number))
+                            throw TypeError(".signalservice.DataMessage.Contact.number: array expected");
+                        message.number = [];
+                        for (var i = 0; i < object.number.length; ++i) {
+                            if (typeof object.number[i] !== "object")
+                                throw TypeError(".signalservice.DataMessage.Contact.number: object expected");
+                            message.number[i] = $root.signalservice.DataMessage.Contact.Phone.fromObject(object.number[i]);
+                        }
+                    }
+                    if (object.email) {
+                        if (!Array.isArray(object.email))
+                            throw TypeError(".signalservice.DataMessage.Contact.email: array expected");
+                        message.email = [];
+                        for (var i = 0; i < object.email.length; ++i) {
+                            if (typeof object.email[i] !== "object")
+                                throw TypeError(".signalservice.DataMessage.Contact.email: object expected");
+                            message.email[i] = $root.signalservice.DataMessage.Contact.Email.fromObject(object.email[i]);
+                        }
+                    }
+                    if (object.address) {
+                        if (!Array.isArray(object.address))
+                            throw TypeError(".signalservice.DataMessage.Contact.address: array expected");
+                        message.address = [];
+                        for (var i = 0; i < object.address.length; ++i) {
+                            if (typeof object.address[i] !== "object")
+                                throw TypeError(".signalservice.DataMessage.Contact.address: object expected");
+                            message.address[i] = $root.signalservice.DataMessage.Contact.PostalAddress.fromObject(object.address[i]);
+                        }
+                    }
+                    if (object.avatar != null) {
+                        if (typeof object.avatar !== "object")
+                            throw TypeError(".signalservice.DataMessage.Contact.avatar: object expected");
+                        message.avatar = $root.signalservice.DataMessage.Contact.Avatar.fromObject(object.avatar);
+                    }
+                    if (object.organization != null)
+                        message.organization = String(object.organization);
+                    return message;
+                };
+
+                /**
+                 * Creates a plain object from a Contact message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof signalservice.DataMessage.Contact
+                 * @static
+                 * @param {signalservice.DataMessage.Contact} message Contact
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Contact.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.arrays || options.defaults) {
+                        object.number = [];
+                        object.email = [];
+                        object.address = [];
+                    }
+                    if (options.defaults) {
+                        object.name = null;
+                        object.avatar = null;
+                        object.organization = "";
+                    }
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        object.name = $root.signalservice.DataMessage.Contact.Name.toObject(message.name, options);
+                    if (message.number && message.number.length) {
+                        object.number = [];
+                        for (var j = 0; j < message.number.length; ++j)
+                            object.number[j] = $root.signalservice.DataMessage.Contact.Phone.toObject(message.number[j], options);
+                    }
+                    if (message.email && message.email.length) {
+                        object.email = [];
+                        for (var j = 0; j < message.email.length; ++j)
+                            object.email[j] = $root.signalservice.DataMessage.Contact.Email.toObject(message.email[j], options);
+                    }
+                    if (message.address && message.address.length) {
+                        object.address = [];
+                        for (var j = 0; j < message.address.length; ++j)
+                            object.address[j] = $root.signalservice.DataMessage.Contact.PostalAddress.toObject(message.address[j], options);
+                    }
+                    if (message.avatar != null && message.hasOwnProperty("avatar"))
+                        object.avatar = $root.signalservice.DataMessage.Contact.Avatar.toObject(message.avatar, options);
+                    if (message.organization != null && message.hasOwnProperty("organization"))
+                        object.organization = message.organization;
+                    return object;
+                };
+
+                /**
+                 * Converts this Contact to JSON.
+                 * @function toJSON
+                 * @memberof signalservice.DataMessage.Contact
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Contact.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+
+                Contact.Name = (function () {
+
+                    /**
+                     * Properties of a Name.
+                     * @memberof signalservice.DataMessage.Contact
+                     * @interface IName
+                     * @property {string|null} [givenName] Name givenName
+                     * @property {string|null} [familyName] Name familyName
+                     * @property {string|null} [prefix] Name prefix
+                     * @property {string|null} [suffix] Name suffix
+                     * @property {string|null} [middleName] Name middleName
+                     * @property {string|null} [displayName] Name displayName
+                     */
+
+                    /**
+                     * Constructs a new Name.
+                     * @memberof signalservice.DataMessage.Contact
+                     * @classdesc Represents a Name.
+                     * @implements IName
+                     * @constructor
+                     * @param {signalservice.DataMessage.Contact.IName=} [properties] Properties to set
+                     */
+                    function Name(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * Name givenName.
+                     * @member {string} givenName
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @instance
+                     */
+                    Name.prototype.givenName = "";
+
+                    /**
+                     * Name familyName.
+                     * @member {string} familyName
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @instance
+                     */
+                    Name.prototype.familyName = "";
+
+                    /**
+                     * Name prefix.
+                     * @member {string} prefix
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @instance
+                     */
+                    Name.prototype.prefix = "";
+
+                    /**
+                     * Name suffix.
+                     * @member {string} suffix
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @instance
+                     */
+                    Name.prototype.suffix = "";
+
+                    /**
+                     * Name middleName.
+                     * @member {string} middleName
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @instance
+                     */
+                    Name.prototype.middleName = "";
+
+                    /**
+                     * Name displayName.
+                     * @member {string} displayName
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @instance
+                     */
+                    Name.prototype.displayName = "";
+
+                    /**
+                     * Creates a new Name instance using the specified properties.
+                     * @function create
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IName=} [properties] Properties to set
+                     * @returns {signalservice.DataMessage.Contact.Name} Name instance
+                     */
+                    Name.create = function create(properties) {
+                        return new Name(properties);
+                    };
+
+                    /**
+                     * Encodes the specified Name message. Does not implicitly {@link signalservice.DataMessage.Contact.Name.verify|verify} messages.
+                     * @function encode
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IName} message Name message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Name.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.givenName != null && message.hasOwnProperty("givenName"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.givenName);
+                        if (message.familyName != null && message.hasOwnProperty("familyName"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.familyName);
+                        if (message.prefix != null && message.hasOwnProperty("prefix"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.prefix);
+                        if (message.suffix != null && message.hasOwnProperty("suffix"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.suffix);
+                        if (message.middleName != null && message.hasOwnProperty("middleName"))
+                            writer.uint32(/* id 5, wireType 2 =*/42).string(message.middleName);
+                        if (message.displayName != null && message.hasOwnProperty("displayName"))
+                            writer.uint32(/* id 6, wireType 2 =*/50).string(message.displayName);
+                        return writer;
+                    };
+
+                    /**
+                     * Encodes the specified Name message, length delimited. Does not implicitly {@link signalservice.DataMessage.Contact.Name.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IName} message Name message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Name.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+
+                    /**
+                     * Decodes a Name message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {signalservice.DataMessage.Contact.Name} Name
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Name.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.DataMessage.Contact.Name();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                                case 1:
+                                    message.givenName = reader.string();
+                                    break;
+                                case 2:
+                                    message.familyName = reader.string();
+                                    break;
+                                case 3:
+                                    message.prefix = reader.string();
+                                    break;
+                                case 4:
+                                    message.suffix = reader.string();
+                                    break;
+                                case 5:
+                                    message.middleName = reader.string();
+                                    break;
+                                case 6:
+                                    message.displayName = reader.string();
+                                    break;
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                            }
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Decodes a Name message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {signalservice.DataMessage.Contact.Name} Name
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Name.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+
+                    /**
+                     * Verifies a Name message.
+                     * @function verify
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    Name.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.givenName != null && message.hasOwnProperty("givenName"))
+                            if (!$util.isString(message.givenName))
+                                return "givenName: string expected";
+                        if (message.familyName != null && message.hasOwnProperty("familyName"))
+                            if (!$util.isString(message.familyName))
+                                return "familyName: string expected";
+                        if (message.prefix != null && message.hasOwnProperty("prefix"))
+                            if (!$util.isString(message.prefix))
+                                return "prefix: string expected";
+                        if (message.suffix != null && message.hasOwnProperty("suffix"))
+                            if (!$util.isString(message.suffix))
+                                return "suffix: string expected";
+                        if (message.middleName != null && message.hasOwnProperty("middleName"))
+                            if (!$util.isString(message.middleName))
+                                return "middleName: string expected";
+                        if (message.displayName != null && message.hasOwnProperty("displayName"))
+                            if (!$util.isString(message.displayName))
+                                return "displayName: string expected";
+                        return null;
+                    };
+
+                    /**
+                     * Creates a Name message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {signalservice.DataMessage.Contact.Name} Name
+                     */
+                    Name.fromObject = function fromObject(object) {
+                        if (object instanceof $root.signalservice.DataMessage.Contact.Name)
+                            return object;
+                        var message = new $root.signalservice.DataMessage.Contact.Name();
+                        if (object.givenName != null)
+                            message.givenName = String(object.givenName);
+                        if (object.familyName != null)
+                            message.familyName = String(object.familyName);
+                        if (object.prefix != null)
+                            message.prefix = String(object.prefix);
+                        if (object.suffix != null)
+                            message.suffix = String(object.suffix);
+                        if (object.middleName != null)
+                            message.middleName = String(object.middleName);
+                        if (object.displayName != null)
+                            message.displayName = String(object.displayName);
+                        return message;
+                    };
+
+                    /**
+                     * Creates a plain object from a Name message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.Name} message Name
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    Name.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.givenName = "";
+                            object.familyName = "";
+                            object.prefix = "";
+                            object.suffix = "";
+                            object.middleName = "";
+                            object.displayName = "";
+                        }
+                        if (message.givenName != null && message.hasOwnProperty("givenName"))
+                            object.givenName = message.givenName;
+                        if (message.familyName != null && message.hasOwnProperty("familyName"))
+                            object.familyName = message.familyName;
+                        if (message.prefix != null && message.hasOwnProperty("prefix"))
+                            object.prefix = message.prefix;
+                        if (message.suffix != null && message.hasOwnProperty("suffix"))
+                            object.suffix = message.suffix;
+                        if (message.middleName != null && message.hasOwnProperty("middleName"))
+                            object.middleName = message.middleName;
+                        if (message.displayName != null && message.hasOwnProperty("displayName"))
+                            object.displayName = message.displayName;
+                        return object;
+                    };
+
+                    /**
+                     * Converts this Name to JSON.
+                     * @function toJSON
+                     * @memberof signalservice.DataMessage.Contact.Name
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    Name.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    return Name;
+                })();
+
+                Contact.Phone = (function () {
+
+                    /**
+                     * Properties of a Phone.
+                     * @memberof signalservice.DataMessage.Contact
+                     * @interface IPhone
+                     * @property {string|null} [value] Phone value
+                     * @property {signalservice.DataMessage.Contact.Phone.Type|null} [type] Phone type
+                     * @property {string|null} [label] Phone label
+                     */
+
+                    /**
+                     * Constructs a new Phone.
+                     * @memberof signalservice.DataMessage.Contact
+                     * @classdesc Represents a Phone.
+                     * @implements IPhone
+                     * @constructor
+                     * @param {signalservice.DataMessage.Contact.IPhone=} [properties] Properties to set
+                     */
+                    function Phone(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * Phone value.
+                     * @member {string} value
+                     * @memberof signalservice.DataMessage.Contact.Phone
+                     * @instance
+                     */
+                    Phone.prototype.value = "";
+
+                    /**
+                     * Phone type.
+                     * @member {signalservice.DataMessage.Contact.Phone.Type} type
+                     * @memberof signalservice.DataMessage.Contact.Phone
+                     * @instance
+                     */
+                    Phone.prototype.type = 1;
+
+                    /**
+                     * Phone label.
+                     * @member {string} label
+                     * @memberof signalservice.DataMessage.Contact.Phone
+                     * @instance
+                     */
+                    Phone.prototype.label = "";
+
+                    /**
+                     * Creates a new Phone instance using the specified properties.
+                     * @function create
+                     * @memberof signalservice.DataMessage.Contact.Phone
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IPhone=} [properties] Properties to set
+                     * @returns {signalservice.DataMessage.Contact.Phone} Phone instance
+                     */
+                    Phone.create = function create(properties) {
+                        return new Phone(properties);
+                    };
+
+                    /**
+                     * Encodes the specified Phone message. Does not implicitly {@link signalservice.DataMessage.Contact.Phone.verify|verify} messages.
+                     * @function encode
+                     * @memberof signalservice.DataMessage.Contact.Phone
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IPhone} message Phone message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Phone.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.value != null && message.hasOwnProperty("value"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.value);
+                        if (message.type != null && message.hasOwnProperty("type"))
+                            writer.uint32(/* id 2, wireType 0 =*/16).int32(message.type);
+                        if (message.label != null && message.hasOwnProperty("label"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.label);
+                        return writer;
+                    };
+
+                    /**
+                     * Encodes the specified Phone message, length delimited. Does not implicitly {@link signalservice.DataMessage.Contact.Phone.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof signalservice.DataMessage.Contact.Phone
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IPhone} message Phone message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Phone.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+
+                    /**
+                     * Decodes a Phone message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof signalservice.DataMessage.Contact.Phone
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {signalservice.DataMessage.Contact.Phone} Phone
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Phone.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.DataMessage.Contact.Phone();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                                case 1:
+                                    message.value = reader.string();
+                                    break;
+                                case 2:
+                                    message.type = reader.int32();
+                                    break;
+                                case 3:
+                                    message.label = reader.string();
+                                    break;
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                            }
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Decodes a Phone message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof signalservice.DataMessage.Contact.Phone
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {signalservice.DataMessage.Contact.Phone} Phone
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Phone.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+
+                    /**
+                     * Verifies a Phone message.
+                     * @function verify
+                     * @memberof signalservice.DataMessage.Contact.Phone
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    Phone.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.value != null && message.hasOwnProperty("value"))
+                            if (!$util.isString(message.value))
+                                return "value: string expected";
+                        if (message.type != null && message.hasOwnProperty("type"))
+                            switch (message.type) {
+                                default:
+                                    return "type: enum value expected";
+                                case 1:
+                                case 2:
+                                case 3:
+                                case 4:
+                                    break;
+                            }
+                        if (message.label != null && message.hasOwnProperty("label"))
+                            if (!$util.isString(message.label))
+                                return "label: string expected";
+                        return null;
+                    };
+
+                    /**
+                     * Creates a Phone message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof signalservice.DataMessage.Contact.Phone
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {signalservice.DataMessage.Contact.Phone} Phone
+                     */
+                    Phone.fromObject = function fromObject(object) {
+                        if (object instanceof $root.signalservice.DataMessage.Contact.Phone)
+                            return object;
+                        var message = new $root.signalservice.DataMessage.Contact.Phone();
+                        if (object.value != null)
+                            message.value = String(object.value);
+                        switch (object.type) {
+                            case "HOME":
+                            case 1:
+                                message.type = 1;
+                                break;
+                            case "MOBILE":
+                            case 2:
+                                message.type = 2;
+                                break;
+                            case "WORK":
+                            case 3:
+                                message.type = 3;
+                                break;
+                            case "CUSTOM":
+                            case 4:
+                                message.type = 4;
+                                break;
+                        }
+                        if (object.label != null)
+                            message.label = String(object.label);
+                        return message;
+                    };
+
+                    /**
+                     * Creates a plain object from a Phone message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof signalservice.DataMessage.Contact.Phone
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.Phone} message Phone
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    Phone.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.value = "";
+                            object.type = options.enums === String ? "HOME" : 1;
+                            object.label = "";
+                        }
+                        if (message.value != null && message.hasOwnProperty("value"))
+                            object.value = message.value;
+                        if (message.type != null && message.hasOwnProperty("type"))
+                            object.type = options.enums === String ? $root.signalservice.DataMessage.Contact.Phone.Type[message.type] : message.type;
+                        if (message.label != null && message.hasOwnProperty("label"))
+                            object.label = message.label;
+                        return object;
+                    };
+
+                    /**
+                     * Converts this Phone to JSON.
+                     * @function toJSON
+                     * @memberof signalservice.DataMessage.Contact.Phone
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    Phone.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Type enum.
+                     * @name signalservice.DataMessage.Contact.Phone.Type
+                     * @enum {string}
+                     * @property {number} HOME=1 HOME value
+                     * @property {number} MOBILE=2 MOBILE value
+                     * @property {number} WORK=3 WORK value
+                     * @property {number} CUSTOM=4 CUSTOM value
+                     */
+                    Phone.Type = (function () {
+                        var valuesById = {}, values = Object.create(valuesById);
+                        values[valuesById[1] = "HOME"] = 1;
+                        values[valuesById[2] = "MOBILE"] = 2;
+                        values[valuesById[3] = "WORK"] = 3;
+                        values[valuesById[4] = "CUSTOM"] = 4;
+                        return values;
+                    })();
+
+                    return Phone;
+                })();
+
+                Contact.Email = (function () {
+
+                    /**
+                     * Properties of an Email.
+                     * @memberof signalservice.DataMessage.Contact
+                     * @interface IEmail
+                     * @property {string|null} [value] Email value
+                     * @property {signalservice.DataMessage.Contact.Email.Type|null} [type] Email type
+                     * @property {string|null} [label] Email label
+                     */
+
+                    /**
+                     * Constructs a new Email.
+                     * @memberof signalservice.DataMessage.Contact
+                     * @classdesc Represents an Email.
+                     * @implements IEmail
+                     * @constructor
+                     * @param {signalservice.DataMessage.Contact.IEmail=} [properties] Properties to set
+                     */
+                    function Email(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * Email value.
+                     * @member {string} value
+                     * @memberof signalservice.DataMessage.Contact.Email
+                     * @instance
+                     */
+                    Email.prototype.value = "";
+
+                    /**
+                     * Email type.
+                     * @member {signalservice.DataMessage.Contact.Email.Type} type
+                     * @memberof signalservice.DataMessage.Contact.Email
+                     * @instance
+                     */
+                    Email.prototype.type = 1;
+
+                    /**
+                     * Email label.
+                     * @member {string} label
+                     * @memberof signalservice.DataMessage.Contact.Email
+                     * @instance
+                     */
+                    Email.prototype.label = "";
+
+                    /**
+                     * Creates a new Email instance using the specified properties.
+                     * @function create
+                     * @memberof signalservice.DataMessage.Contact.Email
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IEmail=} [properties] Properties to set
+                     * @returns {signalservice.DataMessage.Contact.Email} Email instance
+                     */
+                    Email.create = function create(properties) {
+                        return new Email(properties);
+                    };
+
+                    /**
+                     * Encodes the specified Email message. Does not implicitly {@link signalservice.DataMessage.Contact.Email.verify|verify} messages.
+                     * @function encode
+                     * @memberof signalservice.DataMessage.Contact.Email
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IEmail} message Email message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Email.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.value != null && message.hasOwnProperty("value"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.value);
+                        if (message.type != null && message.hasOwnProperty("type"))
+                            writer.uint32(/* id 2, wireType 0 =*/16).int32(message.type);
+                        if (message.label != null && message.hasOwnProperty("label"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.label);
+                        return writer;
+                    };
+
+                    /**
+                     * Encodes the specified Email message, length delimited. Does not implicitly {@link signalservice.DataMessage.Contact.Email.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof signalservice.DataMessage.Contact.Email
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IEmail} message Email message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Email.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+
+                    /**
+                     * Decodes an Email message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof signalservice.DataMessage.Contact.Email
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {signalservice.DataMessage.Contact.Email} Email
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Email.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.DataMessage.Contact.Email();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                                case 1:
+                                    message.value = reader.string();
+                                    break;
+                                case 2:
+                                    message.type = reader.int32();
+                                    break;
+                                case 3:
+                                    message.label = reader.string();
+                                    break;
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                            }
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Decodes an Email message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof signalservice.DataMessage.Contact.Email
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {signalservice.DataMessage.Contact.Email} Email
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Email.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+
+                    /**
+                     * Verifies an Email message.
+                     * @function verify
+                     * @memberof signalservice.DataMessage.Contact.Email
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    Email.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.value != null && message.hasOwnProperty("value"))
+                            if (!$util.isString(message.value))
+                                return "value: string expected";
+                        if (message.type != null && message.hasOwnProperty("type"))
+                            switch (message.type) {
+                                default:
+                                    return "type: enum value expected";
+                                case 1:
+                                case 2:
+                                case 3:
+                                case 4:
+                                    break;
+                            }
+                        if (message.label != null && message.hasOwnProperty("label"))
+                            if (!$util.isString(message.label))
+                                return "label: string expected";
+                        return null;
+                    };
+
+                    /**
+                     * Creates an Email message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof signalservice.DataMessage.Contact.Email
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {signalservice.DataMessage.Contact.Email} Email
+                     */
+                    Email.fromObject = function fromObject(object) {
+                        if (object instanceof $root.signalservice.DataMessage.Contact.Email)
+                            return object;
+                        var message = new $root.signalservice.DataMessage.Contact.Email();
+                        if (object.value != null)
+                            message.value = String(object.value);
+                        switch (object.type) {
+                            case "HOME":
+                            case 1:
+                                message.type = 1;
+                                break;
+                            case "MOBILE":
+                            case 2:
+                                message.type = 2;
+                                break;
+                            case "WORK":
+                            case 3:
+                                message.type = 3;
+                                break;
+                            case "CUSTOM":
+                            case 4:
+                                message.type = 4;
+                                break;
+                        }
+                        if (object.label != null)
+                            message.label = String(object.label);
+                        return message;
+                    };
+
+                    /**
+                     * Creates a plain object from an Email message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof signalservice.DataMessage.Contact.Email
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.Email} message Email
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    Email.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.value = "";
+                            object.type = options.enums === String ? "HOME" : 1;
+                            object.label = "";
+                        }
+                        if (message.value != null && message.hasOwnProperty("value"))
+                            object.value = message.value;
+                        if (message.type != null && message.hasOwnProperty("type"))
+                            object.type = options.enums === String ? $root.signalservice.DataMessage.Contact.Email.Type[message.type] : message.type;
+                        if (message.label != null && message.hasOwnProperty("label"))
+                            object.label = message.label;
+                        return object;
+                    };
+
+                    /**
+                     * Converts this Email to JSON.
+                     * @function toJSON
+                     * @memberof signalservice.DataMessage.Contact.Email
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    Email.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Type enum.
+                     * @name signalservice.DataMessage.Contact.Email.Type
+                     * @enum {string}
+                     * @property {number} HOME=1 HOME value
+                     * @property {number} MOBILE=2 MOBILE value
+                     * @property {number} WORK=3 WORK value
+                     * @property {number} CUSTOM=4 CUSTOM value
+                     */
+                    Email.Type = (function () {
+                        var valuesById = {}, values = Object.create(valuesById);
+                        values[valuesById[1] = "HOME"] = 1;
+                        values[valuesById[2] = "MOBILE"] = 2;
+                        values[valuesById[3] = "WORK"] = 3;
+                        values[valuesById[4] = "CUSTOM"] = 4;
+                        return values;
+                    })();
+
+                    return Email;
+                })();
+
+                Contact.PostalAddress = (function () {
+
+                    /**
+                     * Properties of a PostalAddress.
+                     * @memberof signalservice.DataMessage.Contact
+                     * @interface IPostalAddress
+                     * @property {signalservice.DataMessage.Contact.PostalAddress.Type|null} [type] PostalAddress type
+                     * @property {string|null} [label] PostalAddress label
+                     * @property {string|null} [street] PostalAddress street
+                     * @property {string|null} [pobox] PostalAddress pobox
+                     * @property {string|null} [neighborhood] PostalAddress neighborhood
+                     * @property {string|null} [city] PostalAddress city
+                     * @property {string|null} [region] PostalAddress region
+                     * @property {string|null} [postcode] PostalAddress postcode
+                     * @property {string|null} [country] PostalAddress country
+                     */
+
+                    /**
+                     * Constructs a new PostalAddress.
+                     * @memberof signalservice.DataMessage.Contact
+                     * @classdesc Represents a PostalAddress.
+                     * @implements IPostalAddress
+                     * @constructor
+                     * @param {signalservice.DataMessage.Contact.IPostalAddress=} [properties] Properties to set
+                     */
+                    function PostalAddress(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * PostalAddress type.
+                     * @member {signalservice.DataMessage.Contact.PostalAddress.Type} type
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @instance
+                     */
+                    PostalAddress.prototype.type = 1;
+
+                    /**
+                     * PostalAddress label.
+                     * @member {string} label
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @instance
+                     */
+                    PostalAddress.prototype.label = "";
+
+                    /**
+                     * PostalAddress street.
+                     * @member {string} street
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @instance
+                     */
+                    PostalAddress.prototype.street = "";
+
+                    /**
+                     * PostalAddress pobox.
+                     * @member {string} pobox
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @instance
+                     */
+                    PostalAddress.prototype.pobox = "";
+
+                    /**
+                     * PostalAddress neighborhood.
+                     * @member {string} neighborhood
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @instance
+                     */
+                    PostalAddress.prototype.neighborhood = "";
+
+                    /**
+                     * PostalAddress city.
+                     * @member {string} city
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @instance
+                     */
+                    PostalAddress.prototype.city = "";
+
+                    /**
+                     * PostalAddress region.
+                     * @member {string} region
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @instance
+                     */
+                    PostalAddress.prototype.region = "";
+
+                    /**
+                     * PostalAddress postcode.
+                     * @member {string} postcode
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @instance
+                     */
+                    PostalAddress.prototype.postcode = "";
+
+                    /**
+                     * PostalAddress country.
+                     * @member {string} country
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @instance
+                     */
+                    PostalAddress.prototype.country = "";
+
+                    /**
+                     * Creates a new PostalAddress instance using the specified properties.
+                     * @function create
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IPostalAddress=} [properties] Properties to set
+                     * @returns {signalservice.DataMessage.Contact.PostalAddress} PostalAddress instance
+                     */
+                    PostalAddress.create = function create(properties) {
+                        return new PostalAddress(properties);
+                    };
+
+                    /**
+                     * Encodes the specified PostalAddress message. Does not implicitly {@link signalservice.DataMessage.Contact.PostalAddress.verify|verify} messages.
+                     * @function encode
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IPostalAddress} message PostalAddress message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    PostalAddress.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.type != null && message.hasOwnProperty("type"))
+                            writer.uint32(/* id 1, wireType 0 =*/8).int32(message.type);
+                        if (message.label != null && message.hasOwnProperty("label"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.label);
+                        if (message.street != null && message.hasOwnProperty("street"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.street);
+                        if (message.pobox != null && message.hasOwnProperty("pobox"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.pobox);
+                        if (message.neighborhood != null && message.hasOwnProperty("neighborhood"))
+                            writer.uint32(/* id 5, wireType 2 =*/42).string(message.neighborhood);
+                        if (message.city != null && message.hasOwnProperty("city"))
+                            writer.uint32(/* id 6, wireType 2 =*/50).string(message.city);
+                        if (message.region != null && message.hasOwnProperty("region"))
+                            writer.uint32(/* id 7, wireType 2 =*/58).string(message.region);
+                        if (message.postcode != null && message.hasOwnProperty("postcode"))
+                            writer.uint32(/* id 8, wireType 2 =*/66).string(message.postcode);
+                        if (message.country != null && message.hasOwnProperty("country"))
+                            writer.uint32(/* id 9, wireType 2 =*/74).string(message.country);
+                        return writer;
+                    };
+
+                    /**
+                     * Encodes the specified PostalAddress message, length delimited. Does not implicitly {@link signalservice.DataMessage.Contact.PostalAddress.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IPostalAddress} message PostalAddress message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    PostalAddress.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+
+                    /**
+                     * Decodes a PostalAddress message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {signalservice.DataMessage.Contact.PostalAddress} PostalAddress
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    PostalAddress.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.DataMessage.Contact.PostalAddress();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                                case 1:
+                                    message.type = reader.int32();
+                                    break;
+                                case 2:
+                                    message.label = reader.string();
+                                    break;
+                                case 3:
+                                    message.street = reader.string();
+                                    break;
+                                case 4:
+                                    message.pobox = reader.string();
+                                    break;
+                                case 5:
+                                    message.neighborhood = reader.string();
+                                    break;
+                                case 6:
+                                    message.city = reader.string();
+                                    break;
+                                case 7:
+                                    message.region = reader.string();
+                                    break;
+                                case 8:
+                                    message.postcode = reader.string();
+                                    break;
+                                case 9:
+                                    message.country = reader.string();
+                                    break;
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                            }
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Decodes a PostalAddress message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {signalservice.DataMessage.Contact.PostalAddress} PostalAddress
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    PostalAddress.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+
+                    /**
+                     * Verifies a PostalAddress message.
+                     * @function verify
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    PostalAddress.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.type != null && message.hasOwnProperty("type"))
+                            switch (message.type) {
+                                default:
+                                    return "type: enum value expected";
+                                case 1:
+                                case 2:
+                                case 3:
+                                    break;
+                            }
+                        if (message.label != null && message.hasOwnProperty("label"))
+                            if (!$util.isString(message.label))
+                                return "label: string expected";
+                        if (message.street != null && message.hasOwnProperty("street"))
+                            if (!$util.isString(message.street))
+                                return "street: string expected";
+                        if (message.pobox != null && message.hasOwnProperty("pobox"))
+                            if (!$util.isString(message.pobox))
+                                return "pobox: string expected";
+                        if (message.neighborhood != null && message.hasOwnProperty("neighborhood"))
+                            if (!$util.isString(message.neighborhood))
+                                return "neighborhood: string expected";
+                        if (message.city != null && message.hasOwnProperty("city"))
+                            if (!$util.isString(message.city))
+                                return "city: string expected";
+                        if (message.region != null && message.hasOwnProperty("region"))
+                            if (!$util.isString(message.region))
+                                return "region: string expected";
+                        if (message.postcode != null && message.hasOwnProperty("postcode"))
+                            if (!$util.isString(message.postcode))
+                                return "postcode: string expected";
+                        if (message.country != null && message.hasOwnProperty("country"))
+                            if (!$util.isString(message.country))
+                                return "country: string expected";
+                        return null;
+                    };
+
+                    /**
+                     * Creates a PostalAddress message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {signalservice.DataMessage.Contact.PostalAddress} PostalAddress
+                     */
+                    PostalAddress.fromObject = function fromObject(object) {
+                        if (object instanceof $root.signalservice.DataMessage.Contact.PostalAddress)
+                            return object;
+                        var message = new $root.signalservice.DataMessage.Contact.PostalAddress();
+                        switch (object.type) {
+                            case "HOME":
+                            case 1:
+                                message.type = 1;
+                                break;
+                            case "WORK":
+                            case 2:
+                                message.type = 2;
+                                break;
+                            case "CUSTOM":
+                            case 3:
+                                message.type = 3;
+                                break;
+                        }
+                        if (object.label != null)
+                            message.label = String(object.label);
+                        if (object.street != null)
+                            message.street = String(object.street);
+                        if (object.pobox != null)
+                            message.pobox = String(object.pobox);
+                        if (object.neighborhood != null)
+                            message.neighborhood = String(object.neighborhood);
+                        if (object.city != null)
+                            message.city = String(object.city);
+                        if (object.region != null)
+                            message.region = String(object.region);
+                        if (object.postcode != null)
+                            message.postcode = String(object.postcode);
+                        if (object.country != null)
+                            message.country = String(object.country);
+                        return message;
+                    };
+
+                    /**
+                     * Creates a plain object from a PostalAddress message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.PostalAddress} message PostalAddress
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    PostalAddress.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.type = options.enums === String ? "HOME" : 1;
+                            object.label = "";
+                            object.street = "";
+                            object.pobox = "";
+                            object.neighborhood = "";
+                            object.city = "";
+                            object.region = "";
+                            object.postcode = "";
+                            object.country = "";
+                        }
+                        if (message.type != null && message.hasOwnProperty("type"))
+                            object.type = options.enums === String ? $root.signalservice.DataMessage.Contact.PostalAddress.Type[message.type] : message.type;
+                        if (message.label != null && message.hasOwnProperty("label"))
+                            object.label = message.label;
+                        if (message.street != null && message.hasOwnProperty("street"))
+                            object.street = message.street;
+                        if (message.pobox != null && message.hasOwnProperty("pobox"))
+                            object.pobox = message.pobox;
+                        if (message.neighborhood != null && message.hasOwnProperty("neighborhood"))
+                            object.neighborhood = message.neighborhood;
+                        if (message.city != null && message.hasOwnProperty("city"))
+                            object.city = message.city;
+                        if (message.region != null && message.hasOwnProperty("region"))
+                            object.region = message.region;
+                        if (message.postcode != null && message.hasOwnProperty("postcode"))
+                            object.postcode = message.postcode;
+                        if (message.country != null && message.hasOwnProperty("country"))
+                            object.country = message.country;
+                        return object;
+                    };
+
+                    /**
+                     * Converts this PostalAddress to JSON.
+                     * @function toJSON
+                     * @memberof signalservice.DataMessage.Contact.PostalAddress
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    PostalAddress.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Type enum.
+                     * @name signalservice.DataMessage.Contact.PostalAddress.Type
+                     * @enum {string}
+                     * @property {number} HOME=1 HOME value
+                     * @property {number} WORK=2 WORK value
+                     * @property {number} CUSTOM=3 CUSTOM value
+                     */
+                    PostalAddress.Type = (function () {
+                        var valuesById = {}, values = Object.create(valuesById);
+                        values[valuesById[1] = "HOME"] = 1;
+                        values[valuesById[2] = "WORK"] = 2;
+                        values[valuesById[3] = "CUSTOM"] = 3;
+                        return values;
+                    })();
+
+                    return PostalAddress;
+                })();
+
+                Contact.Avatar = (function () {
+
+                    /**
+                     * Properties of an Avatar.
+                     * @memberof signalservice.DataMessage.Contact
+                     * @interface IAvatar
+                     * @property {signalservice.IAttachmentPointer|null} [avatar] Avatar avatar
+                     * @property {boolean|null} [isProfile] Avatar isProfile
+                     */
+
+                    /**
+                     * Constructs a new Avatar.
+                     * @memberof signalservice.DataMessage.Contact
+                     * @classdesc Represents an Avatar.
+                     * @implements IAvatar
+                     * @constructor
+                     * @param {signalservice.DataMessage.Contact.IAvatar=} [properties] Properties to set
+                     */
+                    function Avatar(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * Avatar avatar.
+                     * @member {signalservice.IAttachmentPointer|null|undefined} avatar
+                     * @memberof signalservice.DataMessage.Contact.Avatar
+                     * @instance
+                     */
+                    Avatar.prototype.avatar = null;
+
+                    /**
+                     * Avatar isProfile.
+                     * @member {boolean} isProfile
+                     * @memberof signalservice.DataMessage.Contact.Avatar
+                     * @instance
+                     */
+                    Avatar.prototype.isProfile = false;
+
+                    /**
+                     * Creates a new Avatar instance using the specified properties.
+                     * @function create
+                     * @memberof signalservice.DataMessage.Contact.Avatar
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IAvatar=} [properties] Properties to set
+                     * @returns {signalservice.DataMessage.Contact.Avatar} Avatar instance
+                     */
+                    Avatar.create = function create(properties) {
+                        return new Avatar(properties);
+                    };
+
+                    /**
+                     * Encodes the specified Avatar message. Does not implicitly {@link signalservice.DataMessage.Contact.Avatar.verify|verify} messages.
+                     * @function encode
+                     * @memberof signalservice.DataMessage.Contact.Avatar
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IAvatar} message Avatar message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Avatar.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.avatar != null && message.hasOwnProperty("avatar"))
+                            $root.signalservice.AttachmentPointer.encode(message.avatar, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                        if (message.isProfile != null && message.hasOwnProperty("isProfile"))
+                            writer.uint32(/* id 2, wireType 0 =*/16).bool(message.isProfile);
+                        return writer;
+                    };
+
+                    /**
+                     * Encodes the specified Avatar message, length delimited. Does not implicitly {@link signalservice.DataMessage.Contact.Avatar.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof signalservice.DataMessage.Contact.Avatar
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.IAvatar} message Avatar message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Avatar.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+
+                    /**
+                     * Decodes an Avatar message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof signalservice.DataMessage.Contact.Avatar
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {signalservice.DataMessage.Contact.Avatar} Avatar
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Avatar.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.DataMessage.Contact.Avatar();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                                case 1:
+                                    message.avatar = $root.signalservice.AttachmentPointer.decode(reader, reader.uint32());
+                                    break;
+                                case 2:
+                                    message.isProfile = reader.bool();
+                                    break;
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                            }
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Decodes an Avatar message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof signalservice.DataMessage.Contact.Avatar
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {signalservice.DataMessage.Contact.Avatar} Avatar
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Avatar.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+
+                    /**
+                     * Verifies an Avatar message.
+                     * @function verify
+                     * @memberof signalservice.DataMessage.Contact.Avatar
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    Avatar.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.avatar != null && message.hasOwnProperty("avatar")) {
+                            var error = $root.signalservice.AttachmentPointer.verify(message.avatar);
+                            if (error)
+                                return "avatar." + error;
+                        }
+                        if (message.isProfile != null && message.hasOwnProperty("isProfile"))
+                            if (typeof message.isProfile !== "boolean")
+                                return "isProfile: boolean expected";
+                        return null;
+                    };
+
+                    /**
+                     * Creates an Avatar message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof signalservice.DataMessage.Contact.Avatar
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {signalservice.DataMessage.Contact.Avatar} Avatar
+                     */
+                    Avatar.fromObject = function fromObject(object) {
+                        if (object instanceof $root.signalservice.DataMessage.Contact.Avatar)
+                            return object;
+                        var message = new $root.signalservice.DataMessage.Contact.Avatar();
+                        if (object.avatar != null) {
+                            if (typeof object.avatar !== "object")
+                                throw TypeError(".signalservice.DataMessage.Contact.Avatar.avatar: object expected");
+                            message.avatar = $root.signalservice.AttachmentPointer.fromObject(object.avatar);
+                        }
+                        if (object.isProfile != null)
+                            message.isProfile = Boolean(object.isProfile);
+                        return message;
+                    };
+
+                    /**
+                     * Creates a plain object from an Avatar message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof signalservice.DataMessage.Contact.Avatar
+                     * @static
+                     * @param {signalservice.DataMessage.Contact.Avatar} message Avatar
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    Avatar.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.avatar = null;
+                            object.isProfile = false;
+                        }
+                        if (message.avatar != null && message.hasOwnProperty("avatar"))
+                            object.avatar = $root.signalservice.AttachmentPointer.toObject(message.avatar, options);
+                        if (message.isProfile != null && message.hasOwnProperty("isProfile"))
+                            object.isProfile = message.isProfile;
+                        return object;
+                    };
+
+                    /**
+                     * Converts this Avatar to JSON.
+                     * @function toJSON
+                     * @memberof signalservice.DataMessage.Contact.Avatar
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    Avatar.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    return Avatar;
+                })();
+
+                return Contact;
+            })();
+
             return DataMessage;
         })();
 
-        signalservice.NullMessage=(function() {
+        signalservice.NullMessage = (function () {
 
             /**
              * Properties of a NullMessage.
@@ -3805,10 +5679,10 @@
              * @param {signalservice.INullMessage=} [properties] Properties to set
              */
             function NullMessage(properties) {
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -3817,7 +5691,7 @@
              * @memberof signalservice.NullMessage
              * @instance
              */
-            NullMessage.prototype.padding=$util.newBuffer([]);
+            NullMessage.prototype.padding = $util.newBuffer([]);
 
             /**
              * Creates a new NullMessage instance using the specified properties.
@@ -3827,7 +5701,7 @@
              * @param {signalservice.INullMessage=} [properties] Properties to set
              * @returns {signalservice.NullMessage} NullMessage instance
              */
-            NullMessage.create=function create(properties) {
+            NullMessage.create = function create(properties) {
                 return new NullMessage(properties);
             };
 
@@ -3840,10 +5714,10 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            NullMessage.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.padding!=null&&message.hasOwnProperty("padding"))
+            NullMessage.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.padding != null && message.hasOwnProperty("padding"))
                     writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.padding);
                 return writer;
             };
@@ -3857,8 +5731,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            NullMessage.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            NullMessage.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -3872,18 +5746,18 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            NullMessage.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.NullMessage();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            NullMessage.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.NullMessage();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.padding=reader.bytes();
+                            message.padding = reader.bytes();
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -3900,10 +5774,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            NullMessage.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            NullMessage.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -3914,11 +5788,11 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            NullMessage.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            NullMessage.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.padding!=null&&message.hasOwnProperty("padding"))
-                    if(!(message.padding&&typeof message.padding.length==="number"||$util.isString(message.padding)))
+                if (message.padding != null && message.hasOwnProperty("padding"))
+                    if (!(message.padding && typeof message.padding.length === "number" || $util.isString(message.padding)))
                         return "padding: buffer expected";
                 return null;
             };
@@ -3931,15 +5805,15 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.NullMessage} NullMessage
              */
-            NullMessage.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.NullMessage)
+            NullMessage.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.NullMessage)
                     return object;
-                var message=new $root.signalservice.NullMessage();
-                if(object.padding!=null)
-                    if(typeof object.padding==="string")
-                        $util.base64.decode(object.padding,message.padding=$util.newBuffer($util.base64.length(object.padding)),0);
-                    else if(object.padding.length)
-                        message.padding=object.padding;
+                var message = new $root.signalservice.NullMessage();
+                if (object.padding != null)
+                    if (typeof object.padding === "string")
+                        $util.base64.decode(object.padding, message.padding = $util.newBuffer($util.base64.length(object.padding)), 0);
+                    else if (object.padding.length)
+                        message.padding = object.padding;
                 return message;
             };
 
@@ -3952,14 +5826,14 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            NullMessage.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.defaults)
-                    object.padding=options.bytes===String? "":[];
-                if(message.padding!=null&&message.hasOwnProperty("padding"))
-                    object.padding=options.bytes===String? $util.base64.encode(message.padding,0,message.padding.length):options.bytes===Array? Array.prototype.slice.call(message.padding):message.padding;
+            NullMessage.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults)
+                    object.padding = options.bytes === String ? "" : [];
+                if (message.padding != null && message.hasOwnProperty("padding"))
+                    object.padding = options.bytes === String ? $util.base64.encode(message.padding, 0, message.padding.length) : options.bytes === Array ? Array.prototype.slice.call(message.padding) : message.padding;
                 return object;
             };
 
@@ -3970,14 +5844,14 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            NullMessage.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            NullMessage.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             return NullMessage;
         })();
 
-        signalservice.ReceiptMessage=(function() {
+        signalservice.ReceiptMessage = (function () {
 
             /**
              * Properties of a ReceiptMessage.
@@ -3996,11 +5870,11 @@
              * @param {signalservice.IReceiptMessage=} [properties] Properties to set
              */
             function ReceiptMessage(properties) {
-                this.timestamp=[];
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                this.timestamp = [];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -4009,7 +5883,7 @@
              * @memberof signalservice.ReceiptMessage
              * @instance
              */
-            ReceiptMessage.prototype.type=0;
+            ReceiptMessage.prototype.type = 0;
 
             /**
              * ReceiptMessage timestamp.
@@ -4017,7 +5891,7 @@
              * @memberof signalservice.ReceiptMessage
              * @instance
              */
-            ReceiptMessage.prototype.timestamp=$util.emptyArray;
+            ReceiptMessage.prototype.timestamp = $util.emptyArray;
 
             /**
              * Creates a new ReceiptMessage instance using the specified properties.
@@ -4027,7 +5901,7 @@
              * @param {signalservice.IReceiptMessage=} [properties] Properties to set
              * @returns {signalservice.ReceiptMessage} ReceiptMessage instance
              */
-            ReceiptMessage.create=function create(properties) {
+            ReceiptMessage.create = function create(properties) {
                 return new ReceiptMessage(properties);
             };
 
@@ -4040,13 +5914,13 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            ReceiptMessage.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.type!=null&&message.hasOwnProperty("type"))
+            ReceiptMessage.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.type != null && message.hasOwnProperty("type"))
                     writer.uint32(/* id 1, wireType 0 =*/8).int32(message.type);
-                if(message.timestamp!=null&&message.timestamp.length)
-                    for(var i=0;i<message.timestamp.length;++i)
+                if (message.timestamp != null && message.timestamp.length)
+                    for (var i = 0; i < message.timestamp.length; ++i)
                         writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.timestamp[i]);
                 return writer;
             };
@@ -4060,8 +5934,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            ReceiptMessage.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            ReceiptMessage.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -4075,28 +5949,28 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            ReceiptMessage.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.ReceiptMessage();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            ReceiptMessage.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.ReceiptMessage();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.type=reader.int32();
+                            message.type = reader.int32();
                             break;
                         case 2:
-                            if(!(message.timestamp&&message.timestamp.length))
-                                message.timestamp=[];
-                            if((tag&7)===2) {
-                                var end2=reader.uint32()+reader.pos;
-                                while(reader.pos<end2)
+                            if (!(message.timestamp && message.timestamp.length))
+                                message.timestamp = [];
+                            if ((tag & 7) === 2) {
+                                var end2 = reader.uint32() + reader.pos;
+                                while (reader.pos < end2)
                                     message.timestamp.push(reader.uint64());
                             } else
                                 message.timestamp.push(reader.uint64());
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -4113,10 +5987,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            ReceiptMessage.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            ReceiptMessage.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -4127,22 +6001,22 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            ReceiptMessage.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            ReceiptMessage.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.type!=null&&message.hasOwnProperty("type"))
-                    switch(message.type) {
+                if (message.type != null && message.hasOwnProperty("type"))
+                    switch (message.type) {
                         default:
                             return "type: enum value expected";
                         case 0:
                         case 1:
                             break;
                     }
-                if(message.timestamp!=null&&message.hasOwnProperty("timestamp")) {
-                    if(!Array.isArray(message.timestamp))
+                if (message.timestamp != null && message.hasOwnProperty("timestamp")) {
+                    if (!Array.isArray(message.timestamp))
                         return "timestamp: array expected";
-                    for(var i=0;i<message.timestamp.length;++i)
-                        if(!$util.isInteger(message.timestamp[i])&&!(message.timestamp[i]&&$util.isInteger(message.timestamp[i].low)&&$util.isInteger(message.timestamp[i].high)))
+                    for (var i = 0; i < message.timestamp.length; ++i)
+                        if (!$util.isInteger(message.timestamp[i]) && !(message.timestamp[i] && $util.isInteger(message.timestamp[i].low) && $util.isInteger(message.timestamp[i].high)))
                             return "timestamp: integer|Long[] expected";
                 }
                 return null;
@@ -4156,33 +6030,33 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.ReceiptMessage} ReceiptMessage
              */
-            ReceiptMessage.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.ReceiptMessage)
+            ReceiptMessage.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.ReceiptMessage)
                     return object;
-                var message=new $root.signalservice.ReceiptMessage();
-                switch(object.type) {
+                var message = new $root.signalservice.ReceiptMessage();
+                switch (object.type) {
                     case "DELIVERY":
                     case 0:
-                        message.type=0;
+                        message.type = 0;
                         break;
                     case "READ":
                     case 1:
-                        message.type=1;
+                        message.type = 1;
                         break;
                 }
-                if(object.timestamp) {
-                    if(!Array.isArray(object.timestamp))
+                if (object.timestamp) {
+                    if (!Array.isArray(object.timestamp))
                         throw TypeError(".signalservice.ReceiptMessage.timestamp: array expected");
-                    message.timestamp=[];
-                    for(var i=0;i<object.timestamp.length;++i)
-                        if($util.Long)
-                            (message.timestamp[i]=$util.Long.fromValue(object.timestamp[i])).unsigned=true;
-                        else if(typeof object.timestamp[i]==="string")
-                            message.timestamp[i]=parseInt(object.timestamp[i],10);
-                        else if(typeof object.timestamp[i]==="number")
-                            message.timestamp[i]=object.timestamp[i];
-                        else if(typeof object.timestamp[i]==="object")
-                            message.timestamp[i]=new $util.LongBits(object.timestamp[i].low>>>0,object.timestamp[i].high>>>0).toNumber(true);
+                    message.timestamp = [];
+                    for (var i = 0; i < object.timestamp.length; ++i)
+                        if ($util.Long)
+                            (message.timestamp[i] = $util.Long.fromValue(object.timestamp[i])).unsigned = true;
+                        else if (typeof object.timestamp[i] === "string")
+                            message.timestamp[i] = parseInt(object.timestamp[i], 10);
+                        else if (typeof object.timestamp[i] === "number")
+                            message.timestamp[i] = object.timestamp[i];
+                        else if (typeof object.timestamp[i] === "object")
+                            message.timestamp[i] = new $util.LongBits(object.timestamp[i].low >>> 0, object.timestamp[i].high >>> 0).toNumber(true);
                 }
                 return message;
             };
@@ -4196,23 +6070,23 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            ReceiptMessage.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.arrays||options.defaults)
-                    object.timestamp=[];
-                if(options.defaults)
-                    object.type=options.enums===String? "DELIVERY":0;
-                if(message.type!=null&&message.hasOwnProperty("type"))
-                    object.type=options.enums===String? $root.signalservice.ReceiptMessage.Type[message.type]:message.type;
-                if(message.timestamp&&message.timestamp.length) {
-                    object.timestamp=[];
-                    for(var j=0;j<message.timestamp.length;++j)
-                        if(typeof message.timestamp[j]==="number")
-                            object.timestamp[j]=options.longs===String? String(message.timestamp[j]):message.timestamp[j];
+            ReceiptMessage.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.arrays || options.defaults)
+                    object.timestamp = [];
+                if (options.defaults)
+                    object.type = options.enums === String ? "DELIVERY" : 0;
+                if (message.type != null && message.hasOwnProperty("type"))
+                    object.type = options.enums === String ? $root.signalservice.ReceiptMessage.Type[message.type] : message.type;
+                if (message.timestamp && message.timestamp.length) {
+                    object.timestamp = [];
+                    for (var j = 0; j < message.timestamp.length; ++j)
+                        if (typeof message.timestamp[j] === "number")
+                            object.timestamp[j] = options.longs === String ? String(message.timestamp[j]) : message.timestamp[j];
                         else
-                            object.timestamp[j]=options.longs===String? $util.Long.prototype.toString.call(message.timestamp[j]):options.longs===Number? new $util.LongBits(message.timestamp[j].low>>>0,message.timestamp[j].high>>>0).toNumber(true):message.timestamp[j];
+                            object.timestamp[j] = options.longs === String ? $util.Long.prototype.toString.call(message.timestamp[j]) : options.longs === Number ? new $util.LongBits(message.timestamp[j].low >>> 0, message.timestamp[j].high >>> 0).toNumber(true) : message.timestamp[j];
                 }
                 return object;
             };
@@ -4224,8 +6098,8 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            ReceiptMessage.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            ReceiptMessage.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             /**
@@ -4235,17 +6109,17 @@
              * @property {number} DELIVERY=0 DELIVERY value
              * @property {number} READ=1 READ value
              */
-            ReceiptMessage.Type=(function() {
-                var valuesById={},values=Object.create(valuesById);
-                values[valuesById[0]="DELIVERY"]=0;
-                values[valuesById[1]="READ"]=1;
+            ReceiptMessage.Type = (function () {
+                var valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[0] = "DELIVERY"] = 0;
+                values[valuesById[1] = "READ"] = 1;
                 return values;
             })();
 
             return ReceiptMessage;
         })();
 
-        signalservice.Verified=(function() {
+        signalservice.Verified = (function () {
 
             /**
              * Properties of a Verified.
@@ -4266,10 +6140,10 @@
              * @param {signalservice.IVerified=} [properties] Properties to set
              */
             function Verified(properties) {
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -4278,7 +6152,7 @@
              * @memberof signalservice.Verified
              * @instance
              */
-            Verified.prototype.destination="";
+            Verified.prototype.destination = "";
 
             /**
              * Verified identityKey.
@@ -4286,7 +6160,7 @@
              * @memberof signalservice.Verified
              * @instance
              */
-            Verified.prototype.identityKey=$util.newBuffer([]);
+            Verified.prototype.identityKey = $util.newBuffer([]);
 
             /**
              * Verified state.
@@ -4294,7 +6168,7 @@
              * @memberof signalservice.Verified
              * @instance
              */
-            Verified.prototype.state=0;
+            Verified.prototype.state = 0;
 
             /**
              * Verified nullMessage.
@@ -4302,7 +6176,7 @@
              * @memberof signalservice.Verified
              * @instance
              */
-            Verified.prototype.nullMessage=$util.newBuffer([]);
+            Verified.prototype.nullMessage = $util.newBuffer([]);
 
             /**
              * Creates a new Verified instance using the specified properties.
@@ -4312,7 +6186,7 @@
              * @param {signalservice.IVerified=} [properties] Properties to set
              * @returns {signalservice.Verified} Verified instance
              */
-            Verified.create=function create(properties) {
+            Verified.create = function create(properties) {
                 return new Verified(properties);
             };
 
@@ -4325,16 +6199,16 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            Verified.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.destination!=null&&message.hasOwnProperty("destination"))
+            Verified.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.destination != null && message.hasOwnProperty("destination"))
                     writer.uint32(/* id 1, wireType 2 =*/10).string(message.destination);
-                if(message.identityKey!=null&&message.hasOwnProperty("identityKey"))
+                if (message.identityKey != null && message.hasOwnProperty("identityKey"))
                     writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.identityKey);
-                if(message.state!=null&&message.hasOwnProperty("state"))
+                if (message.state != null && message.hasOwnProperty("state"))
                     writer.uint32(/* id 3, wireType 0 =*/24).int32(message.state);
-                if(message.nullMessage!=null&&message.hasOwnProperty("nullMessage"))
+                if (message.nullMessage != null && message.hasOwnProperty("nullMessage"))
                     writer.uint32(/* id 4, wireType 2 =*/34).bytes(message.nullMessage);
                 return writer;
             };
@@ -4348,8 +6222,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            Verified.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            Verified.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -4363,27 +6237,27 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            Verified.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.Verified();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            Verified.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.Verified();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.destination=reader.string();
+                            message.destination = reader.string();
                             break;
                         case 2:
-                            message.identityKey=reader.bytes();
+                            message.identityKey = reader.bytes();
                             break;
                         case 3:
-                            message.state=reader.int32();
+                            message.state = reader.int32();
                             break;
                         case 4:
-                            message.nullMessage=reader.bytes();
+                            message.nullMessage = reader.bytes();
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -4400,10 +6274,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            Verified.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            Verified.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -4414,17 +6288,17 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            Verified.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            Verified.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.destination!=null&&message.hasOwnProperty("destination"))
-                    if(!$util.isString(message.destination))
+                if (message.destination != null && message.hasOwnProperty("destination"))
+                    if (!$util.isString(message.destination))
                         return "destination: string expected";
-                if(message.identityKey!=null&&message.hasOwnProperty("identityKey"))
-                    if(!(message.identityKey&&typeof message.identityKey.length==="number"||$util.isString(message.identityKey)))
+                if (message.identityKey != null && message.hasOwnProperty("identityKey"))
+                    if (!(message.identityKey && typeof message.identityKey.length === "number" || $util.isString(message.identityKey)))
                         return "identityKey: buffer expected";
-                if(message.state!=null&&message.hasOwnProperty("state"))
-                    switch(message.state) {
+                if (message.state != null && message.hasOwnProperty("state"))
+                    switch (message.state) {
                         default:
                             return "state: enum value expected";
                         case 0:
@@ -4432,8 +6306,8 @@
                         case 2:
                             break;
                     }
-                if(message.nullMessage!=null&&message.hasOwnProperty("nullMessage"))
-                    if(!(message.nullMessage&&typeof message.nullMessage.length==="number"||$util.isString(message.nullMessage)))
+                if (message.nullMessage != null && message.hasOwnProperty("nullMessage"))
+                    if (!(message.nullMessage && typeof message.nullMessage.length === "number" || $util.isString(message.nullMessage)))
                         return "nullMessage: buffer expected";
                 return null;
             };
@@ -4446,36 +6320,36 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.Verified} Verified
              */
-            Verified.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.Verified)
+            Verified.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.Verified)
                     return object;
-                var message=new $root.signalservice.Verified();
-                if(object.destination!=null)
-                    message.destination=String(object.destination);
-                if(object.identityKey!=null)
-                    if(typeof object.identityKey==="string")
-                        $util.base64.decode(object.identityKey,message.identityKey=$util.newBuffer($util.base64.length(object.identityKey)),0);
-                    else if(object.identityKey.length)
-                        message.identityKey=object.identityKey;
-                switch(object.state) {
+                var message = new $root.signalservice.Verified();
+                if (object.destination != null)
+                    message.destination = String(object.destination);
+                if (object.identityKey != null)
+                    if (typeof object.identityKey === "string")
+                        $util.base64.decode(object.identityKey, message.identityKey = $util.newBuffer($util.base64.length(object.identityKey)), 0);
+                    else if (object.identityKey.length)
+                        message.identityKey = object.identityKey;
+                switch (object.state) {
                     case "DEFAULT":
                     case 0:
-                        message.state=0;
+                        message.state = 0;
                         break;
                     case "VERIFIED":
                     case 1:
-                        message.state=1;
+                        message.state = 1;
                         break;
                     case "UNVERIFIED":
                     case 2:
-                        message.state=2;
+                        message.state = 2;
                         break;
                 }
-                if(object.nullMessage!=null)
-                    if(typeof object.nullMessage==="string")
-                        $util.base64.decode(object.nullMessage,message.nullMessage=$util.newBuffer($util.base64.length(object.nullMessage)),0);
-                    else if(object.nullMessage.length)
-                        message.nullMessage=object.nullMessage;
+                if (object.nullMessage != null)
+                    if (typeof object.nullMessage === "string")
+                        $util.base64.decode(object.nullMessage, message.nullMessage = $util.newBuffer($util.base64.length(object.nullMessage)), 0);
+                    else if (object.nullMessage.length)
+                        message.nullMessage = object.nullMessage;
                 return message;
             };
 
@@ -4488,24 +6362,24 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            Verified.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.defaults) {
-                    object.destination="";
-                    object.identityKey=options.bytes===String? "":[];
-                    object.state=options.enums===String? "DEFAULT":0;
-                    object.nullMessage=options.bytes===String? "":[];
+            Verified.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.destination = "";
+                    object.identityKey = options.bytes === String ? "" : [];
+                    object.state = options.enums === String ? "DEFAULT" : 0;
+                    object.nullMessage = options.bytes === String ? "" : [];
                 }
-                if(message.destination!=null&&message.hasOwnProperty("destination"))
-                    object.destination=message.destination;
-                if(message.identityKey!=null&&message.hasOwnProperty("identityKey"))
-                    object.identityKey=options.bytes===String? $util.base64.encode(message.identityKey,0,message.identityKey.length):options.bytes===Array? Array.prototype.slice.call(message.identityKey):message.identityKey;
-                if(message.state!=null&&message.hasOwnProperty("state"))
-                    object.state=options.enums===String? $root.signalservice.Verified.State[message.state]:message.state;
-                if(message.nullMessage!=null&&message.hasOwnProperty("nullMessage"))
-                    object.nullMessage=options.bytes===String? $util.base64.encode(message.nullMessage,0,message.nullMessage.length):options.bytes===Array? Array.prototype.slice.call(message.nullMessage):message.nullMessage;
+                if (message.destination != null && message.hasOwnProperty("destination"))
+                    object.destination = message.destination;
+                if (message.identityKey != null && message.hasOwnProperty("identityKey"))
+                    object.identityKey = options.bytes === String ? $util.base64.encode(message.identityKey, 0, message.identityKey.length) : options.bytes === Array ? Array.prototype.slice.call(message.identityKey) : message.identityKey;
+                if (message.state != null && message.hasOwnProperty("state"))
+                    object.state = options.enums === String ? $root.signalservice.Verified.State[message.state] : message.state;
+                if (message.nullMessage != null && message.hasOwnProperty("nullMessage"))
+                    object.nullMessage = options.bytes === String ? $util.base64.encode(message.nullMessage, 0, message.nullMessage.length) : options.bytes === Array ? Array.prototype.slice.call(message.nullMessage) : message.nullMessage;
                 return object;
             };
 
@@ -4516,8 +6390,8 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            Verified.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            Verified.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             /**
@@ -4528,18 +6402,18 @@
              * @property {number} VERIFIED=1 VERIFIED value
              * @property {number} UNVERIFIED=2 UNVERIFIED value
              */
-            Verified.State=(function() {
-                var valuesById={},values=Object.create(valuesById);
-                values[valuesById[0]="DEFAULT"]=0;
-                values[valuesById[1]="VERIFIED"]=1;
-                values[valuesById[2]="UNVERIFIED"]=2;
+            Verified.State = (function () {
+                var valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[0] = "DEFAULT"] = 0;
+                values[valuesById[1] = "VERIFIED"] = 1;
+                values[valuesById[2] = "UNVERIFIED"] = 2;
                 return values;
             })();
 
             return Verified;
         })();
 
-        signalservice.SyncMessage=(function() {
+        signalservice.SyncMessage = (function () {
 
             /**
              * Properties of a SyncMessage.
@@ -4565,11 +6439,11 @@
              * @param {signalservice.ISyncMessage=} [properties] Properties to set
              */
             function SyncMessage(properties) {
-                this.read=[];
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                this.read = [];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -4578,7 +6452,7 @@
              * @memberof signalservice.SyncMessage
              * @instance
              */
-            SyncMessage.prototype.sent=null;
+            SyncMessage.prototype.sent = null;
 
             /**
              * SyncMessage contacts.
@@ -4586,7 +6460,7 @@
              * @memberof signalservice.SyncMessage
              * @instance
              */
-            SyncMessage.prototype.contacts=null;
+            SyncMessage.prototype.contacts = null;
 
             /**
              * SyncMessage groups.
@@ -4594,7 +6468,7 @@
              * @memberof signalservice.SyncMessage
              * @instance
              */
-            SyncMessage.prototype.groups=null;
+            SyncMessage.prototype.groups = null;
 
             /**
              * SyncMessage request.
@@ -4602,7 +6476,7 @@
              * @memberof signalservice.SyncMessage
              * @instance
              */
-            SyncMessage.prototype.request=null;
+            SyncMessage.prototype.request = null;
 
             /**
              * SyncMessage read.
@@ -4610,7 +6484,7 @@
              * @memberof signalservice.SyncMessage
              * @instance
              */
-            SyncMessage.prototype.read=$util.emptyArray;
+            SyncMessage.prototype.read = $util.emptyArray;
 
             /**
              * SyncMessage blocked.
@@ -4618,7 +6492,7 @@
              * @memberof signalservice.SyncMessage
              * @instance
              */
-            SyncMessage.prototype.blocked=null;
+            SyncMessage.prototype.blocked = null;
 
             /**
              * SyncMessage verified.
@@ -4626,7 +6500,7 @@
              * @memberof signalservice.SyncMessage
              * @instance
              */
-            SyncMessage.prototype.verified=null;
+            SyncMessage.prototype.verified = null;
 
             /**
              * SyncMessage configuration.
@@ -4634,7 +6508,7 @@
              * @memberof signalservice.SyncMessage
              * @instance
              */
-            SyncMessage.prototype.configuration=null;
+            SyncMessage.prototype.configuration = null;
 
             /**
              * SyncMessage padding.
@@ -4642,7 +6516,7 @@
              * @memberof signalservice.SyncMessage
              * @instance
              */
-            SyncMessage.prototype.padding=$util.newBuffer([]);
+            SyncMessage.prototype.padding = $util.newBuffer([]);
 
             /**
              * Creates a new SyncMessage instance using the specified properties.
@@ -4652,7 +6526,7 @@
              * @param {signalservice.ISyncMessage=} [properties] Properties to set
              * @returns {signalservice.SyncMessage} SyncMessage instance
              */
-            SyncMessage.create=function create(properties) {
+            SyncMessage.create = function create(properties) {
                 return new SyncMessage(properties);
             };
 
@@ -4665,28 +6539,28 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            SyncMessage.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.sent!=null&&message.hasOwnProperty("sent"))
-                    $root.signalservice.SyncMessage.Sent.encode(message.sent,writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                if(message.contacts!=null&&message.hasOwnProperty("contacts"))
-                    $root.signalservice.SyncMessage.Contacts.encode(message.contacts,writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                if(message.groups!=null&&message.hasOwnProperty("groups"))
-                    $root.signalservice.SyncMessage.Groups.encode(message.groups,writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                if(message.request!=null&&message.hasOwnProperty("request"))
-                    $root.signalservice.SyncMessage.Request.encode(message.request,writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                if(message.read!=null&&message.read.length)
-                    for(var i=0;i<message.read.length;++i)
-                        $root.signalservice.SyncMessage.Read.encode(message.read[i],writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                if(message.blocked!=null&&message.hasOwnProperty("blocked"))
-                    $root.signalservice.SyncMessage.Blocked.encode(message.blocked,writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                if(message.verified!=null&&message.hasOwnProperty("verified"))
-                    $root.signalservice.Verified.encode(message.verified,writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-                if(message.padding!=null&&message.hasOwnProperty("padding"))
+            SyncMessage.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.sent != null && message.hasOwnProperty("sent"))
+                    $root.signalservice.SyncMessage.Sent.encode(message.sent, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                if (message.contacts != null && message.hasOwnProperty("contacts"))
+                    $root.signalservice.SyncMessage.Contacts.encode(message.contacts, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                if (message.groups != null && message.hasOwnProperty("groups"))
+                    $root.signalservice.SyncMessage.Groups.encode(message.groups, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                if (message.request != null && message.hasOwnProperty("request"))
+                    $root.signalservice.SyncMessage.Request.encode(message.request, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                if (message.read != null && message.read.length)
+                    for (var i = 0; i < message.read.length; ++i)
+                        $root.signalservice.SyncMessage.Read.encode(message.read[i], writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                if (message.blocked != null && message.hasOwnProperty("blocked"))
+                    $root.signalservice.SyncMessage.Blocked.encode(message.blocked, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                if (message.verified != null && message.hasOwnProperty("verified"))
+                    $root.signalservice.Verified.encode(message.verified, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
+                if (message.padding != null && message.hasOwnProperty("padding"))
                     writer.uint32(/* id 8, wireType 2 =*/66).bytes(message.padding);
-                if(message.configuration!=null&&message.hasOwnProperty("configuration"))
-                    $root.signalservice.SyncMessage.Configuration.encode(message.configuration,writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
+                if (message.configuration != null && message.hasOwnProperty("configuration"))
+                    $root.signalservice.SyncMessage.Configuration.encode(message.configuration, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
                 return writer;
             };
 
@@ -4699,8 +6573,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            SyncMessage.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            SyncMessage.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -4714,44 +6588,44 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            SyncMessage.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.SyncMessage();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            SyncMessage.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.SyncMessage();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.sent=$root.signalservice.SyncMessage.Sent.decode(reader,reader.uint32());
+                            message.sent = $root.signalservice.SyncMessage.Sent.decode(reader, reader.uint32());
                             break;
                         case 2:
-                            message.contacts=$root.signalservice.SyncMessage.Contacts.decode(reader,reader.uint32());
+                            message.contacts = $root.signalservice.SyncMessage.Contacts.decode(reader, reader.uint32());
                             break;
                         case 3:
-                            message.groups=$root.signalservice.SyncMessage.Groups.decode(reader,reader.uint32());
+                            message.groups = $root.signalservice.SyncMessage.Groups.decode(reader, reader.uint32());
                             break;
                         case 4:
-                            message.request=$root.signalservice.SyncMessage.Request.decode(reader,reader.uint32());
+                            message.request = $root.signalservice.SyncMessage.Request.decode(reader, reader.uint32());
                             break;
                         case 5:
-                            if(!(message.read&&message.read.length))
-                                message.read=[];
-                            message.read.push($root.signalservice.SyncMessage.Read.decode(reader,reader.uint32()));
+                            if (!(message.read && message.read.length))
+                                message.read = [];
+                            message.read.push($root.signalservice.SyncMessage.Read.decode(reader, reader.uint32()));
                             break;
                         case 6:
-                            message.blocked=$root.signalservice.SyncMessage.Blocked.decode(reader,reader.uint32());
+                            message.blocked = $root.signalservice.SyncMessage.Blocked.decode(reader, reader.uint32());
                             break;
                         case 7:
-                            message.verified=$root.signalservice.Verified.decode(reader,reader.uint32());
+                            message.verified = $root.signalservice.Verified.decode(reader, reader.uint32());
                             break;
                         case 9:
-                            message.configuration=$root.signalservice.SyncMessage.Configuration.decode(reader,reader.uint32());
+                            message.configuration = $root.signalservice.SyncMessage.Configuration.decode(reader, reader.uint32());
                             break;
                         case 8:
-                            message.padding=reader.bytes();
+                            message.padding = reader.bytes();
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -4768,10 +6642,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            SyncMessage.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            SyncMessage.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -4782,55 +6656,55 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            SyncMessage.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            SyncMessage.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.sent!=null&&message.hasOwnProperty("sent")) {
-                    var error=$root.signalservice.SyncMessage.Sent.verify(message.sent);
-                    if(error)
-                        return "sent."+error;
+                if (message.sent != null && message.hasOwnProperty("sent")) {
+                    var error = $root.signalservice.SyncMessage.Sent.verify(message.sent);
+                    if (error)
+                        return "sent." + error;
                 }
-                if(message.contacts!=null&&message.hasOwnProperty("contacts")) {
-                    var error=$root.signalservice.SyncMessage.Contacts.verify(message.contacts);
-                    if(error)
-                        return "contacts."+error;
+                if (message.contacts != null && message.hasOwnProperty("contacts")) {
+                    var error = $root.signalservice.SyncMessage.Contacts.verify(message.contacts);
+                    if (error)
+                        return "contacts." + error;
                 }
-                if(message.groups!=null&&message.hasOwnProperty("groups")) {
-                    var error=$root.signalservice.SyncMessage.Groups.verify(message.groups);
-                    if(error)
-                        return "groups."+error;
+                if (message.groups != null && message.hasOwnProperty("groups")) {
+                    var error = $root.signalservice.SyncMessage.Groups.verify(message.groups);
+                    if (error)
+                        return "groups." + error;
                 }
-                if(message.request!=null&&message.hasOwnProperty("request")) {
-                    var error=$root.signalservice.SyncMessage.Request.verify(message.request);
-                    if(error)
-                        return "request."+error;
+                if (message.request != null && message.hasOwnProperty("request")) {
+                    var error = $root.signalservice.SyncMessage.Request.verify(message.request);
+                    if (error)
+                        return "request." + error;
                 }
-                if(message.read!=null&&message.hasOwnProperty("read")) {
-                    if(!Array.isArray(message.read))
+                if (message.read != null && message.hasOwnProperty("read")) {
+                    if (!Array.isArray(message.read))
                         return "read: array expected";
-                    for(var i=0;i<message.read.length;++i) {
-                        var error=$root.signalservice.SyncMessage.Read.verify(message.read[i]);
-                        if(error)
-                            return "read."+error;
+                    for (var i = 0; i < message.read.length; ++i) {
+                        var error = $root.signalservice.SyncMessage.Read.verify(message.read[i]);
+                        if (error)
+                            return "read." + error;
                     }
                 }
-                if(message.blocked!=null&&message.hasOwnProperty("blocked")) {
-                    var error=$root.signalservice.SyncMessage.Blocked.verify(message.blocked);
-                    if(error)
-                        return "blocked."+error;
+                if (message.blocked != null && message.hasOwnProperty("blocked")) {
+                    var error = $root.signalservice.SyncMessage.Blocked.verify(message.blocked);
+                    if (error)
+                        return "blocked." + error;
                 }
-                if(message.verified!=null&&message.hasOwnProperty("verified")) {
-                    var error=$root.signalservice.Verified.verify(message.verified);
-                    if(error)
-                        return "verified."+error;
+                if (message.verified != null && message.hasOwnProperty("verified")) {
+                    var error = $root.signalservice.Verified.verify(message.verified);
+                    if (error)
+                        return "verified." + error;
                 }
-                if(message.configuration!=null&&message.hasOwnProperty("configuration")) {
-                    var error=$root.signalservice.SyncMessage.Configuration.verify(message.configuration);
-                    if(error)
-                        return "configuration."+error;
+                if (message.configuration != null && message.hasOwnProperty("configuration")) {
+                    var error = $root.signalservice.SyncMessage.Configuration.verify(message.configuration);
+                    if (error)
+                        return "configuration." + error;
                 }
-                if(message.padding!=null&&message.hasOwnProperty("padding"))
-                    if(!(message.padding&&typeof message.padding.length==="number"||$util.isString(message.padding)))
+                if (message.padding != null && message.hasOwnProperty("padding"))
+                    if (!(message.padding && typeof message.padding.length === "number" || $util.isString(message.padding)))
                         return "padding: buffer expected";
                 return null;
             };
@@ -4843,60 +6717,60 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.SyncMessage} SyncMessage
              */
-            SyncMessage.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.SyncMessage)
+            SyncMessage.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.SyncMessage)
                     return object;
-                var message=new $root.signalservice.SyncMessage();
-                if(object.sent!=null) {
-                    if(typeof object.sent!=="object")
+                var message = new $root.signalservice.SyncMessage();
+                if (object.sent != null) {
+                    if (typeof object.sent !== "object")
                         throw TypeError(".signalservice.SyncMessage.sent: object expected");
-                    message.sent=$root.signalservice.SyncMessage.Sent.fromObject(object.sent);
+                    message.sent = $root.signalservice.SyncMessage.Sent.fromObject(object.sent);
                 }
-                if(object.contacts!=null) {
-                    if(typeof object.contacts!=="object")
+                if (object.contacts != null) {
+                    if (typeof object.contacts !== "object")
                         throw TypeError(".signalservice.SyncMessage.contacts: object expected");
-                    message.contacts=$root.signalservice.SyncMessage.Contacts.fromObject(object.contacts);
+                    message.contacts = $root.signalservice.SyncMessage.Contacts.fromObject(object.contacts);
                 }
-                if(object.groups!=null) {
-                    if(typeof object.groups!=="object")
+                if (object.groups != null) {
+                    if (typeof object.groups !== "object")
                         throw TypeError(".signalservice.SyncMessage.groups: object expected");
-                    message.groups=$root.signalservice.SyncMessage.Groups.fromObject(object.groups);
+                    message.groups = $root.signalservice.SyncMessage.Groups.fromObject(object.groups);
                 }
-                if(object.request!=null) {
-                    if(typeof object.request!=="object")
+                if (object.request != null) {
+                    if (typeof object.request !== "object")
                         throw TypeError(".signalservice.SyncMessage.request: object expected");
-                    message.request=$root.signalservice.SyncMessage.Request.fromObject(object.request);
+                    message.request = $root.signalservice.SyncMessage.Request.fromObject(object.request);
                 }
-                if(object.read) {
-                    if(!Array.isArray(object.read))
+                if (object.read) {
+                    if (!Array.isArray(object.read))
                         throw TypeError(".signalservice.SyncMessage.read: array expected");
-                    message.read=[];
-                    for(var i=0;i<object.read.length;++i) {
-                        if(typeof object.read[i]!=="object")
+                    message.read = [];
+                    for (var i = 0; i < object.read.length; ++i) {
+                        if (typeof object.read[i] !== "object")
                             throw TypeError(".signalservice.SyncMessage.read: object expected");
-                        message.read[i]=$root.signalservice.SyncMessage.Read.fromObject(object.read[i]);
+                        message.read[i] = $root.signalservice.SyncMessage.Read.fromObject(object.read[i]);
                     }
                 }
-                if(object.blocked!=null) {
-                    if(typeof object.blocked!=="object")
+                if (object.blocked != null) {
+                    if (typeof object.blocked !== "object")
                         throw TypeError(".signalservice.SyncMessage.blocked: object expected");
-                    message.blocked=$root.signalservice.SyncMessage.Blocked.fromObject(object.blocked);
+                    message.blocked = $root.signalservice.SyncMessage.Blocked.fromObject(object.blocked);
                 }
-                if(object.verified!=null) {
-                    if(typeof object.verified!=="object")
+                if (object.verified != null) {
+                    if (typeof object.verified !== "object")
                         throw TypeError(".signalservice.SyncMessage.verified: object expected");
-                    message.verified=$root.signalservice.Verified.fromObject(object.verified);
+                    message.verified = $root.signalservice.Verified.fromObject(object.verified);
                 }
-                if(object.configuration!=null) {
-                    if(typeof object.configuration!=="object")
+                if (object.configuration != null) {
+                    if (typeof object.configuration !== "object")
                         throw TypeError(".signalservice.SyncMessage.configuration: object expected");
-                    message.configuration=$root.signalservice.SyncMessage.Configuration.fromObject(object.configuration);
+                    message.configuration = $root.signalservice.SyncMessage.Configuration.fromObject(object.configuration);
                 }
-                if(object.padding!=null)
-                    if(typeof object.padding==="string")
-                        $util.base64.decode(object.padding,message.padding=$util.newBuffer($util.base64.length(object.padding)),0);
-                    else if(object.padding.length)
-                        message.padding=object.padding;
+                if (object.padding != null)
+                    if (typeof object.padding === "string")
+                        $util.base64.decode(object.padding, message.padding = $util.newBuffer($util.base64.length(object.padding)), 0);
+                    else if (object.padding.length)
+                        message.padding = object.padding;
                 return message;
             };
 
@@ -4909,43 +6783,43 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            SyncMessage.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.arrays||options.defaults)
-                    object.read=[];
-                if(options.defaults) {
-                    object.sent=null;
-                    object.contacts=null;
-                    object.groups=null;
-                    object.request=null;
-                    object.blocked=null;
-                    object.verified=null;
-                    object.padding=options.bytes===String? "":[];
-                    object.configuration=null;
+            SyncMessage.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.arrays || options.defaults)
+                    object.read = [];
+                if (options.defaults) {
+                    object.sent = null;
+                    object.contacts = null;
+                    object.groups = null;
+                    object.request = null;
+                    object.blocked = null;
+                    object.verified = null;
+                    object.padding = options.bytes === String ? "" : [];
+                    object.configuration = null;
                 }
-                if(message.sent!=null&&message.hasOwnProperty("sent"))
-                    object.sent=$root.signalservice.SyncMessage.Sent.toObject(message.sent,options);
-                if(message.contacts!=null&&message.hasOwnProperty("contacts"))
-                    object.contacts=$root.signalservice.SyncMessage.Contacts.toObject(message.contacts,options);
-                if(message.groups!=null&&message.hasOwnProperty("groups"))
-                    object.groups=$root.signalservice.SyncMessage.Groups.toObject(message.groups,options);
-                if(message.request!=null&&message.hasOwnProperty("request"))
-                    object.request=$root.signalservice.SyncMessage.Request.toObject(message.request,options);
-                if(message.read&&message.read.length) {
-                    object.read=[];
-                    for(var j=0;j<message.read.length;++j)
-                        object.read[j]=$root.signalservice.SyncMessage.Read.toObject(message.read[j],options);
+                if (message.sent != null && message.hasOwnProperty("sent"))
+                    object.sent = $root.signalservice.SyncMessage.Sent.toObject(message.sent, options);
+                if (message.contacts != null && message.hasOwnProperty("contacts"))
+                    object.contacts = $root.signalservice.SyncMessage.Contacts.toObject(message.contacts, options);
+                if (message.groups != null && message.hasOwnProperty("groups"))
+                    object.groups = $root.signalservice.SyncMessage.Groups.toObject(message.groups, options);
+                if (message.request != null && message.hasOwnProperty("request"))
+                    object.request = $root.signalservice.SyncMessage.Request.toObject(message.request, options);
+                if (message.read && message.read.length) {
+                    object.read = [];
+                    for (var j = 0; j < message.read.length; ++j)
+                        object.read[j] = $root.signalservice.SyncMessage.Read.toObject(message.read[j], options);
                 }
-                if(message.blocked!=null&&message.hasOwnProperty("blocked"))
-                    object.blocked=$root.signalservice.SyncMessage.Blocked.toObject(message.blocked,options);
-                if(message.verified!=null&&message.hasOwnProperty("verified"))
-                    object.verified=$root.signalservice.Verified.toObject(message.verified,options);
-                if(message.padding!=null&&message.hasOwnProperty("padding"))
-                    object.padding=options.bytes===String? $util.base64.encode(message.padding,0,message.padding.length):options.bytes===Array? Array.prototype.slice.call(message.padding):message.padding;
-                if(message.configuration!=null&&message.hasOwnProperty("configuration"))
-                    object.configuration=$root.signalservice.SyncMessage.Configuration.toObject(message.configuration,options);
+                if (message.blocked != null && message.hasOwnProperty("blocked"))
+                    object.blocked = $root.signalservice.SyncMessage.Blocked.toObject(message.blocked, options);
+                if (message.verified != null && message.hasOwnProperty("verified"))
+                    object.verified = $root.signalservice.Verified.toObject(message.verified, options);
+                if (message.padding != null && message.hasOwnProperty("padding"))
+                    object.padding = options.bytes === String ? $util.base64.encode(message.padding, 0, message.padding.length) : options.bytes === Array ? Array.prototype.slice.call(message.padding) : message.padding;
+                if (message.configuration != null && message.hasOwnProperty("configuration"))
+                    object.configuration = $root.signalservice.SyncMessage.Configuration.toObject(message.configuration, options);
                 return object;
             };
 
@@ -4956,11 +6830,11 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            SyncMessage.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            SyncMessage.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
-            SyncMessage.Sent=(function() {
+            SyncMessage.Sent = (function () {
 
                 /**
                  * Properties of a Sent.
@@ -4981,10 +6855,10 @@
                  * @param {signalservice.SyncMessage.ISent=} [properties] Properties to set
                  */
                 function Sent(properties) {
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -4993,7 +6867,7 @@
                  * @memberof signalservice.SyncMessage.Sent
                  * @instance
                  */
-                Sent.prototype.destination="";
+                Sent.prototype.destination = "";
 
                 /**
                  * Sent timestamp.
@@ -5001,7 +6875,7 @@
                  * @memberof signalservice.SyncMessage.Sent
                  * @instance
                  */
-                Sent.prototype.timestamp=$util.Long? $util.Long.fromBits(0,0,true):0;
+                Sent.prototype.timestamp = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 
                 /**
                  * Sent message.
@@ -5009,7 +6883,7 @@
                  * @memberof signalservice.SyncMessage.Sent
                  * @instance
                  */
-                Sent.prototype.message=null;
+                Sent.prototype.message = null;
 
                 /**
                  * Sent expirationStartTimestamp.
@@ -5017,7 +6891,7 @@
                  * @memberof signalservice.SyncMessage.Sent
                  * @instance
                  */
-                Sent.prototype.expirationStartTimestamp=$util.Long? $util.Long.fromBits(0,0,true):0;
+                Sent.prototype.expirationStartTimestamp = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 
                 /**
                  * Creates a new Sent instance using the specified properties.
@@ -5027,7 +6901,7 @@
                  * @param {signalservice.SyncMessage.ISent=} [properties] Properties to set
                  * @returns {signalservice.SyncMessage.Sent} Sent instance
                  */
-                Sent.create=function create(properties) {
+                Sent.create = function create(properties) {
                     return new Sent(properties);
                 };
 
@@ -5040,16 +6914,16 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Sent.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.destination!=null&&message.hasOwnProperty("destination"))
+                Sent.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.destination != null && message.hasOwnProperty("destination"))
                         writer.uint32(/* id 1, wireType 2 =*/10).string(message.destination);
-                    if(message.timestamp!=null&&message.hasOwnProperty("timestamp"))
+                    if (message.timestamp != null && message.hasOwnProperty("timestamp"))
                         writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.timestamp);
-                    if(message.message!=null&&message.hasOwnProperty("message"))
-                        $root.signalservice.DataMessage.encode(message.message,writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if(message.expirationStartTimestamp!=null&&message.hasOwnProperty("expirationStartTimestamp"))
+                    if (message.message != null && message.hasOwnProperty("message"))
+                        $root.signalservice.DataMessage.encode(message.message, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                    if (message.expirationStartTimestamp != null && message.hasOwnProperty("expirationStartTimestamp"))
                         writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.expirationStartTimestamp);
                     return writer;
                 };
@@ -5063,8 +6937,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Sent.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                Sent.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -5078,27 +6952,27 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Sent.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.SyncMessage.Sent();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                Sent.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.SyncMessage.Sent();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                message.destination=reader.string();
+                                message.destination = reader.string();
                                 break;
                             case 2:
-                                message.timestamp=reader.uint64();
+                                message.timestamp = reader.uint64();
                                 break;
                             case 3:
-                                message.message=$root.signalservice.DataMessage.decode(reader,reader.uint32());
+                                message.message = $root.signalservice.DataMessage.decode(reader, reader.uint32());
                                 break;
                             case 4:
-                                message.expirationStartTimestamp=reader.uint64();
+                                message.expirationStartTimestamp = reader.uint64();
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -5115,10 +6989,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Sent.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                Sent.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -5129,22 +7003,22 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                Sent.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                Sent.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.destination!=null&&message.hasOwnProperty("destination"))
-                        if(!$util.isString(message.destination))
+                    if (message.destination != null && message.hasOwnProperty("destination"))
+                        if (!$util.isString(message.destination))
                             return "destination: string expected";
-                    if(message.timestamp!=null&&message.hasOwnProperty("timestamp"))
-                        if(!$util.isInteger(message.timestamp)&&!(message.timestamp&&$util.isInteger(message.timestamp.low)&&$util.isInteger(message.timestamp.high)))
+                    if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                        if (!$util.isInteger(message.timestamp) && !(message.timestamp && $util.isInteger(message.timestamp.low) && $util.isInteger(message.timestamp.high)))
                             return "timestamp: integer|Long expected";
-                    if(message.message!=null&&message.hasOwnProperty("message")) {
-                        var error=$root.signalservice.DataMessage.verify(message.message);
-                        if(error)
-                            return "message."+error;
+                    if (message.message != null && message.hasOwnProperty("message")) {
+                        var error = $root.signalservice.DataMessage.verify(message.message);
+                        if (error)
+                            return "message." + error;
                     }
-                    if(message.expirationStartTimestamp!=null&&message.hasOwnProperty("expirationStartTimestamp"))
-                        if(!$util.isInteger(message.expirationStartTimestamp)&&!(message.expirationStartTimestamp&&$util.isInteger(message.expirationStartTimestamp.low)&&$util.isInteger(message.expirationStartTimestamp.high)))
+                    if (message.expirationStartTimestamp != null && message.hasOwnProperty("expirationStartTimestamp"))
+                        if (!$util.isInteger(message.expirationStartTimestamp) && !(message.expirationStartTimestamp && $util.isInteger(message.expirationStartTimestamp.low) && $util.isInteger(message.expirationStartTimestamp.high)))
                             return "expirationStartTimestamp: integer|Long expected";
                     return null;
                 };
@@ -5157,35 +7031,35 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.SyncMessage.Sent} Sent
                  */
-                Sent.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.SyncMessage.Sent)
+                Sent.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.SyncMessage.Sent)
                         return object;
-                    var message=new $root.signalservice.SyncMessage.Sent();
-                    if(object.destination!=null)
-                        message.destination=String(object.destination);
-                    if(object.timestamp!=null)
-                        if($util.Long)
-                            (message.timestamp=$util.Long.fromValue(object.timestamp)).unsigned=true;
-                        else if(typeof object.timestamp==="string")
-                            message.timestamp=parseInt(object.timestamp,10);
-                        else if(typeof object.timestamp==="number")
-                            message.timestamp=object.timestamp;
-                        else if(typeof object.timestamp==="object")
-                            message.timestamp=new $util.LongBits(object.timestamp.low>>>0,object.timestamp.high>>>0).toNumber(true);
-                    if(object.message!=null) {
-                        if(typeof object.message!=="object")
+                    var message = new $root.signalservice.SyncMessage.Sent();
+                    if (object.destination != null)
+                        message.destination = String(object.destination);
+                    if (object.timestamp != null)
+                        if ($util.Long)
+                            (message.timestamp = $util.Long.fromValue(object.timestamp)).unsigned = true;
+                        else if (typeof object.timestamp === "string")
+                            message.timestamp = parseInt(object.timestamp, 10);
+                        else if (typeof object.timestamp === "number")
+                            message.timestamp = object.timestamp;
+                        else if (typeof object.timestamp === "object")
+                            message.timestamp = new $util.LongBits(object.timestamp.low >>> 0, object.timestamp.high >>> 0).toNumber(true);
+                    if (object.message != null) {
+                        if (typeof object.message !== "object")
                             throw TypeError(".signalservice.SyncMessage.Sent.message: object expected");
-                        message.message=$root.signalservice.DataMessage.fromObject(object.message);
+                        message.message = $root.signalservice.DataMessage.fromObject(object.message);
                     }
-                    if(object.expirationStartTimestamp!=null)
-                        if($util.Long)
-                            (message.expirationStartTimestamp=$util.Long.fromValue(object.expirationStartTimestamp)).unsigned=true;
-                        else if(typeof object.expirationStartTimestamp==="string")
-                            message.expirationStartTimestamp=parseInt(object.expirationStartTimestamp,10);
-                        else if(typeof object.expirationStartTimestamp==="number")
-                            message.expirationStartTimestamp=object.expirationStartTimestamp;
-                        else if(typeof object.expirationStartTimestamp==="object")
-                            message.expirationStartTimestamp=new $util.LongBits(object.expirationStartTimestamp.low>>>0,object.expirationStartTimestamp.high>>>0).toNumber(true);
+                    if (object.expirationStartTimestamp != null)
+                        if ($util.Long)
+                            (message.expirationStartTimestamp = $util.Long.fromValue(object.expirationStartTimestamp)).unsigned = true;
+                        else if (typeof object.expirationStartTimestamp === "string")
+                            message.expirationStartTimestamp = parseInt(object.expirationStartTimestamp, 10);
+                        else if (typeof object.expirationStartTimestamp === "number")
+                            message.expirationStartTimestamp = object.expirationStartTimestamp;
+                        else if (typeof object.expirationStartTimestamp === "object")
+                            message.expirationStartTimestamp = new $util.LongBits(object.expirationStartTimestamp.low >>> 0, object.expirationStartTimestamp.high >>> 0).toNumber(true);
                     return message;
                 };
 
@@ -5198,38 +7072,38 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                Sent.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.defaults) {
-                        object.destination="";
-                        if($util.Long) {
-                            var long=new $util.Long(0,0,true);
-                            object.timestamp=options.longs===String? long.toString():options.longs===Number? long.toNumber():long;
+                Sent.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.destination = "";
+                        if ($util.Long) {
+                            var long = new $util.Long(0, 0, true);
+                            object.timestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                         } else
-                            object.timestamp=options.longs===String? "0":0;
-                        object.message=null;
-                        if($util.Long) {
-                            var long=new $util.Long(0,0,true);
-                            object.expirationStartTimestamp=options.longs===String? long.toString():options.longs===Number? long.toNumber():long;
+                            object.timestamp = options.longs === String ? "0" : 0;
+                        object.message = null;
+                        if ($util.Long) {
+                            var long = new $util.Long(0, 0, true);
+                            object.expirationStartTimestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                         } else
-                            object.expirationStartTimestamp=options.longs===String? "0":0;
+                            object.expirationStartTimestamp = options.longs === String ? "0" : 0;
                     }
-                    if(message.destination!=null&&message.hasOwnProperty("destination"))
-                        object.destination=message.destination;
-                    if(message.timestamp!=null&&message.hasOwnProperty("timestamp"))
-                        if(typeof message.timestamp==="number")
-                            object.timestamp=options.longs===String? String(message.timestamp):message.timestamp;
+                    if (message.destination != null && message.hasOwnProperty("destination"))
+                        object.destination = message.destination;
+                    if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                        if (typeof message.timestamp === "number")
+                            object.timestamp = options.longs === String ? String(message.timestamp) : message.timestamp;
                         else
-                            object.timestamp=options.longs===String? $util.Long.prototype.toString.call(message.timestamp):options.longs===Number? new $util.LongBits(message.timestamp.low>>>0,message.timestamp.high>>>0).toNumber(true):message.timestamp;
-                    if(message.message!=null&&message.hasOwnProperty("message"))
-                        object.message=$root.signalservice.DataMessage.toObject(message.message,options);
-                    if(message.expirationStartTimestamp!=null&&message.hasOwnProperty("expirationStartTimestamp"))
-                        if(typeof message.expirationStartTimestamp==="number")
-                            object.expirationStartTimestamp=options.longs===String? String(message.expirationStartTimestamp):message.expirationStartTimestamp;
+                            object.timestamp = options.longs === String ? $util.Long.prototype.toString.call(message.timestamp) : options.longs === Number ? new $util.LongBits(message.timestamp.low >>> 0, message.timestamp.high >>> 0).toNumber(true) : message.timestamp;
+                    if (message.message != null && message.hasOwnProperty("message"))
+                        object.message = $root.signalservice.DataMessage.toObject(message.message, options);
+                    if (message.expirationStartTimestamp != null && message.hasOwnProperty("expirationStartTimestamp"))
+                        if (typeof message.expirationStartTimestamp === "number")
+                            object.expirationStartTimestamp = options.longs === String ? String(message.expirationStartTimestamp) : message.expirationStartTimestamp;
                         else
-                            object.expirationStartTimestamp=options.longs===String? $util.Long.prototype.toString.call(message.expirationStartTimestamp):options.longs===Number? new $util.LongBits(message.expirationStartTimestamp.low>>>0,message.expirationStartTimestamp.high>>>0).toNumber(true):message.expirationStartTimestamp;
+                            object.expirationStartTimestamp = options.longs === String ? $util.Long.prototype.toString.call(message.expirationStartTimestamp) : options.longs === Number ? new $util.LongBits(message.expirationStartTimestamp.low >>> 0, message.expirationStartTimestamp.high >>> 0).toNumber(true) : message.expirationStartTimestamp;
                     return object;
                 };
 
@@ -5240,14 +7114,14 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                Sent.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                Sent.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
                 return Sent;
             })();
 
-            SyncMessage.Contacts=(function() {
+            SyncMessage.Contacts = (function () {
 
                 /**
                  * Properties of a Contacts.
@@ -5266,10 +7140,10 @@
                  * @param {signalservice.SyncMessage.IContacts=} [properties] Properties to set
                  */
                 function Contacts(properties) {
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -5278,7 +7152,7 @@
                  * @memberof signalservice.SyncMessage.Contacts
                  * @instance
                  */
-                Contacts.prototype.blob=null;
+                Contacts.prototype.blob = null;
 
                 /**
                  * Contacts complete.
@@ -5286,7 +7160,7 @@
                  * @memberof signalservice.SyncMessage.Contacts
                  * @instance
                  */
-                Contacts.prototype.complete=false;
+                Contacts.prototype.complete = false;
 
                 /**
                  * Creates a new Contacts instance using the specified properties.
@@ -5296,7 +7170,7 @@
                  * @param {signalservice.SyncMessage.IContacts=} [properties] Properties to set
                  * @returns {signalservice.SyncMessage.Contacts} Contacts instance
                  */
-                Contacts.create=function create(properties) {
+                Contacts.create = function create(properties) {
                     return new Contacts(properties);
                 };
 
@@ -5309,12 +7183,12 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Contacts.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.blob!=null&&message.hasOwnProperty("blob"))
-                        $root.signalservice.AttachmentPointer.encode(message.blob,writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if(message.complete!=null&&message.hasOwnProperty("complete"))
+                Contacts.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.blob != null && message.hasOwnProperty("blob"))
+                        $root.signalservice.AttachmentPointer.encode(message.blob, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                    if (message.complete != null && message.hasOwnProperty("complete"))
                         writer.uint32(/* id 2, wireType 0 =*/16).bool(message.complete);
                     return writer;
                 };
@@ -5328,8 +7202,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Contacts.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                Contacts.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -5343,21 +7217,21 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Contacts.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.SyncMessage.Contacts();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                Contacts.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.SyncMessage.Contacts();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                message.blob=$root.signalservice.AttachmentPointer.decode(reader,reader.uint32());
+                                message.blob = $root.signalservice.AttachmentPointer.decode(reader, reader.uint32());
                                 break;
                             case 2:
-                                message.complete=reader.bool();
+                                message.complete = reader.bool();
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -5374,10 +7248,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Contacts.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                Contacts.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -5388,16 +7262,16 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                Contacts.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                Contacts.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.blob!=null&&message.hasOwnProperty("blob")) {
-                        var error=$root.signalservice.AttachmentPointer.verify(message.blob);
-                        if(error)
-                            return "blob."+error;
+                    if (message.blob != null && message.hasOwnProperty("blob")) {
+                        var error = $root.signalservice.AttachmentPointer.verify(message.blob);
+                        if (error)
+                            return "blob." + error;
                     }
-                    if(message.complete!=null&&message.hasOwnProperty("complete"))
-                        if(typeof message.complete!=="boolean")
+                    if (message.complete != null && message.hasOwnProperty("complete"))
+                        if (typeof message.complete !== "boolean")
                             return "complete: boolean expected";
                     return null;
                 };
@@ -5410,17 +7284,17 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.SyncMessage.Contacts} Contacts
                  */
-                Contacts.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.SyncMessage.Contacts)
+                Contacts.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.SyncMessage.Contacts)
                         return object;
-                    var message=new $root.signalservice.SyncMessage.Contacts();
-                    if(object.blob!=null) {
-                        if(typeof object.blob!=="object")
+                    var message = new $root.signalservice.SyncMessage.Contacts();
+                    if (object.blob != null) {
+                        if (typeof object.blob !== "object")
                             throw TypeError(".signalservice.SyncMessage.Contacts.blob: object expected");
-                        message.blob=$root.signalservice.AttachmentPointer.fromObject(object.blob);
+                        message.blob = $root.signalservice.AttachmentPointer.fromObject(object.blob);
                     }
-                    if(object.complete!=null)
-                        message.complete=Boolean(object.complete);
+                    if (object.complete != null)
+                        message.complete = Boolean(object.complete);
                     return message;
                 };
 
@@ -5433,18 +7307,18 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                Contacts.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.defaults) {
-                        object.blob=null;
-                        object.complete=false;
+                Contacts.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.blob = null;
+                        object.complete = false;
                     }
-                    if(message.blob!=null&&message.hasOwnProperty("blob"))
-                        object.blob=$root.signalservice.AttachmentPointer.toObject(message.blob,options);
-                    if(message.complete!=null&&message.hasOwnProperty("complete"))
-                        object.complete=message.complete;
+                    if (message.blob != null && message.hasOwnProperty("blob"))
+                        object.blob = $root.signalservice.AttachmentPointer.toObject(message.blob, options);
+                    if (message.complete != null && message.hasOwnProperty("complete"))
+                        object.complete = message.complete;
                     return object;
                 };
 
@@ -5455,14 +7329,14 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                Contacts.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                Contacts.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
                 return Contacts;
             })();
 
-            SyncMessage.Groups=(function() {
+            SyncMessage.Groups = (function () {
 
                 /**
                  * Properties of a Groups.
@@ -5480,10 +7354,10 @@
                  * @param {signalservice.SyncMessage.IGroups=} [properties] Properties to set
                  */
                 function Groups(properties) {
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -5492,7 +7366,7 @@
                  * @memberof signalservice.SyncMessage.Groups
                  * @instance
                  */
-                Groups.prototype.blob=null;
+                Groups.prototype.blob = null;
 
                 /**
                  * Creates a new Groups instance using the specified properties.
@@ -5502,7 +7376,7 @@
                  * @param {signalservice.SyncMessage.IGroups=} [properties] Properties to set
                  * @returns {signalservice.SyncMessage.Groups} Groups instance
                  */
-                Groups.create=function create(properties) {
+                Groups.create = function create(properties) {
                     return new Groups(properties);
                 };
 
@@ -5515,11 +7389,11 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Groups.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.blob!=null&&message.hasOwnProperty("blob"))
-                        $root.signalservice.AttachmentPointer.encode(message.blob,writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                Groups.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.blob != null && message.hasOwnProperty("blob"))
+                        $root.signalservice.AttachmentPointer.encode(message.blob, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                     return writer;
                 };
 
@@ -5532,8 +7406,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Groups.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                Groups.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -5547,18 +7421,18 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Groups.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.SyncMessage.Groups();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                Groups.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.SyncMessage.Groups();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                message.blob=$root.signalservice.AttachmentPointer.decode(reader,reader.uint32());
+                                message.blob = $root.signalservice.AttachmentPointer.decode(reader, reader.uint32());
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -5575,10 +7449,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Groups.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                Groups.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -5589,13 +7463,13 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                Groups.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                Groups.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.blob!=null&&message.hasOwnProperty("blob")) {
-                        var error=$root.signalservice.AttachmentPointer.verify(message.blob);
-                        if(error)
-                            return "blob."+error;
+                    if (message.blob != null && message.hasOwnProperty("blob")) {
+                        var error = $root.signalservice.AttachmentPointer.verify(message.blob);
+                        if (error)
+                            return "blob." + error;
                     }
                     return null;
                 };
@@ -5608,14 +7482,14 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.SyncMessage.Groups} Groups
                  */
-                Groups.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.SyncMessage.Groups)
+                Groups.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.SyncMessage.Groups)
                         return object;
-                    var message=new $root.signalservice.SyncMessage.Groups();
-                    if(object.blob!=null) {
-                        if(typeof object.blob!=="object")
+                    var message = new $root.signalservice.SyncMessage.Groups();
+                    if (object.blob != null) {
+                        if (typeof object.blob !== "object")
                             throw TypeError(".signalservice.SyncMessage.Groups.blob: object expected");
-                        message.blob=$root.signalservice.AttachmentPointer.fromObject(object.blob);
+                        message.blob = $root.signalservice.AttachmentPointer.fromObject(object.blob);
                     }
                     return message;
                 };
@@ -5629,14 +7503,14 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                Groups.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.defaults)
-                        object.blob=null;
-                    if(message.blob!=null&&message.hasOwnProperty("blob"))
-                        object.blob=$root.signalservice.AttachmentPointer.toObject(message.blob,options);
+                Groups.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults)
+                        object.blob = null;
+                    if (message.blob != null && message.hasOwnProperty("blob"))
+                        object.blob = $root.signalservice.AttachmentPointer.toObject(message.blob, options);
                     return object;
                 };
 
@@ -5647,14 +7521,14 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                Groups.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                Groups.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
                 return Groups;
             })();
 
-            SyncMessage.Blocked=(function() {
+            SyncMessage.Blocked = (function () {
 
                 /**
                  * Properties of a Blocked.
@@ -5672,11 +7546,11 @@
                  * @param {signalservice.SyncMessage.IBlocked=} [properties] Properties to set
                  */
                 function Blocked(properties) {
-                    this.numbers=[];
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    this.numbers = [];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -5685,7 +7559,7 @@
                  * @memberof signalservice.SyncMessage.Blocked
                  * @instance
                  */
-                Blocked.prototype.numbers=$util.emptyArray;
+                Blocked.prototype.numbers = $util.emptyArray;
 
                 /**
                  * Creates a new Blocked instance using the specified properties.
@@ -5695,7 +7569,7 @@
                  * @param {signalservice.SyncMessage.IBlocked=} [properties] Properties to set
                  * @returns {signalservice.SyncMessage.Blocked} Blocked instance
                  */
-                Blocked.create=function create(properties) {
+                Blocked.create = function create(properties) {
                     return new Blocked(properties);
                 };
 
@@ -5708,11 +7582,11 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Blocked.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.numbers!=null&&message.numbers.length)
-                        for(var i=0;i<message.numbers.length;++i)
+                Blocked.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.numbers != null && message.numbers.length)
+                        for (var i = 0; i < message.numbers.length; ++i)
                             writer.uint32(/* id 1, wireType 2 =*/10).string(message.numbers[i]);
                     return writer;
                 };
@@ -5726,8 +7600,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Blocked.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                Blocked.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -5741,20 +7615,20 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Blocked.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.SyncMessage.Blocked();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                Blocked.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.SyncMessage.Blocked();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                if(!(message.numbers&&message.numbers.length))
-                                    message.numbers=[];
+                                if (!(message.numbers && message.numbers.length))
+                                    message.numbers = [];
                                 message.numbers.push(reader.string());
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -5771,10 +7645,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Blocked.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                Blocked.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -5785,14 +7659,14 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                Blocked.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                Blocked.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.numbers!=null&&message.hasOwnProperty("numbers")) {
-                        if(!Array.isArray(message.numbers))
+                    if (message.numbers != null && message.hasOwnProperty("numbers")) {
+                        if (!Array.isArray(message.numbers))
                             return "numbers: array expected";
-                        for(var i=0;i<message.numbers.length;++i)
-                            if(!$util.isString(message.numbers[i]))
+                        for (var i = 0; i < message.numbers.length; ++i)
+                            if (!$util.isString(message.numbers[i]))
                                 return "numbers: string[] expected";
                     }
                     return null;
@@ -5806,16 +7680,16 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.SyncMessage.Blocked} Blocked
                  */
-                Blocked.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.SyncMessage.Blocked)
+                Blocked.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.SyncMessage.Blocked)
                         return object;
-                    var message=new $root.signalservice.SyncMessage.Blocked();
-                    if(object.numbers) {
-                        if(!Array.isArray(object.numbers))
+                    var message = new $root.signalservice.SyncMessage.Blocked();
+                    if (object.numbers) {
+                        if (!Array.isArray(object.numbers))
                             throw TypeError(".signalservice.SyncMessage.Blocked.numbers: array expected");
-                        message.numbers=[];
-                        for(var i=0;i<object.numbers.length;++i)
-                            message.numbers[i]=String(object.numbers[i]);
+                        message.numbers = [];
+                        for (var i = 0; i < object.numbers.length; ++i)
+                            message.numbers[i] = String(object.numbers[i]);
                     }
                     return message;
                 };
@@ -5829,16 +7703,16 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                Blocked.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.arrays||options.defaults)
-                        object.numbers=[];
-                    if(message.numbers&&message.numbers.length) {
-                        object.numbers=[];
-                        for(var j=0;j<message.numbers.length;++j)
-                            object.numbers[j]=message.numbers[j];
+                Blocked.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.arrays || options.defaults)
+                        object.numbers = [];
+                    if (message.numbers && message.numbers.length) {
+                        object.numbers = [];
+                        for (var j = 0; j < message.numbers.length; ++j)
+                            object.numbers[j] = message.numbers[j];
                     }
                     return object;
                 };
@@ -5850,14 +7724,14 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                Blocked.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                Blocked.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
                 return Blocked;
             })();
 
-            SyncMessage.Request=(function() {
+            SyncMessage.Request = (function () {
 
                 /**
                  * Properties of a Request.
@@ -5875,10 +7749,10 @@
                  * @param {signalservice.SyncMessage.IRequest=} [properties] Properties to set
                  */
                 function Request(properties) {
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -5887,7 +7761,7 @@
                  * @memberof signalservice.SyncMessage.Request
                  * @instance
                  */
-                Request.prototype.type=0;
+                Request.prototype.type = 0;
 
                 /**
                  * Creates a new Request instance using the specified properties.
@@ -5897,7 +7771,7 @@
                  * @param {signalservice.SyncMessage.IRequest=} [properties] Properties to set
                  * @returns {signalservice.SyncMessage.Request} Request instance
                  */
-                Request.create=function create(properties) {
+                Request.create = function create(properties) {
                     return new Request(properties);
                 };
 
@@ -5910,10 +7784,10 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Request.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.type!=null&&message.hasOwnProperty("type"))
+                Request.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.type != null && message.hasOwnProperty("type"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.type);
                     return writer;
                 };
@@ -5927,8 +7801,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Request.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                Request.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -5942,18 +7816,18 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Request.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.SyncMessage.Request();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                Request.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.SyncMessage.Request();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                message.type=reader.int32();
+                                message.type = reader.int32();
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -5970,10 +7844,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Request.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                Request.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -5984,11 +7858,11 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                Request.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                Request.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.type!=null&&message.hasOwnProperty("type"))
-                        switch(message.type) {
+                    if (message.type != null && message.hasOwnProperty("type"))
+                        switch (message.type) {
                             default:
                                 return "type: enum value expected";
                             case 0:
@@ -6009,30 +7883,30 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.SyncMessage.Request} Request
                  */
-                Request.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.SyncMessage.Request)
+                Request.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.SyncMessage.Request)
                         return object;
-                    var message=new $root.signalservice.SyncMessage.Request();
-                    switch(object.type) {
+                    var message = new $root.signalservice.SyncMessage.Request();
+                    switch (object.type) {
                         case "UNKNOWN":
                         case 0:
-                            message.type=0;
+                            message.type = 0;
                             break;
                         case "CONTACTS":
                         case 1:
-                            message.type=1;
+                            message.type = 1;
                             break;
                         case "GROUPS":
                         case 2:
-                            message.type=2;
+                            message.type = 2;
                             break;
                         case "BLOCKED":
                         case 3:
-                            message.type=3;
+                            message.type = 3;
                             break;
                         case "CONFIGURATION":
                         case 4:
-                            message.type=4;
+                            message.type = 4;
                             break;
                     }
                     return message;
@@ -6047,14 +7921,14 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                Request.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.defaults)
-                        object.type=options.enums===String? "UNKNOWN":0;
-                    if(message.type!=null&&message.hasOwnProperty("type"))
-                        object.type=options.enums===String? $root.signalservice.SyncMessage.Request.Type[message.type]:message.type;
+                Request.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults)
+                        object.type = options.enums === String ? "UNKNOWN" : 0;
+                    if (message.type != null && message.hasOwnProperty("type"))
+                        object.type = options.enums === String ? $root.signalservice.SyncMessage.Request.Type[message.type] : message.type;
                     return object;
                 };
 
@@ -6065,8 +7939,8 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                Request.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                Request.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
                 /**
@@ -6079,20 +7953,20 @@
                  * @property {number} BLOCKED=3 BLOCKED value
                  * @property {number} CONFIGURATION=4 CONFIGURATION value
                  */
-                Request.Type=(function() {
-                    var valuesById={},values=Object.create(valuesById);
-                    values[valuesById[0]="UNKNOWN"]=0;
-                    values[valuesById[1]="CONTACTS"]=1;
-                    values[valuesById[2]="GROUPS"]=2;
-                    values[valuesById[3]="BLOCKED"]=3;
-                    values[valuesById[4]="CONFIGURATION"]=4;
+                Request.Type = (function () {
+                    var valuesById = {}, values = Object.create(valuesById);
+                    values[valuesById[0] = "UNKNOWN"] = 0;
+                    values[valuesById[1] = "CONTACTS"] = 1;
+                    values[valuesById[2] = "GROUPS"] = 2;
+                    values[valuesById[3] = "BLOCKED"] = 3;
+                    values[valuesById[4] = "CONFIGURATION"] = 4;
                     return values;
                 })();
 
                 return Request;
             })();
 
-            SyncMessage.Read=(function() {
+            SyncMessage.Read = (function () {
 
                 /**
                  * Properties of a Read.
@@ -6111,10 +7985,10 @@
                  * @param {signalservice.SyncMessage.IRead=} [properties] Properties to set
                  */
                 function Read(properties) {
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -6123,7 +7997,7 @@
                  * @memberof signalservice.SyncMessage.Read
                  * @instance
                  */
-                Read.prototype.sender="";
+                Read.prototype.sender = "";
 
                 /**
                  * Read timestamp.
@@ -6131,7 +8005,7 @@
                  * @memberof signalservice.SyncMessage.Read
                  * @instance
                  */
-                Read.prototype.timestamp=$util.Long? $util.Long.fromBits(0,0,true):0;
+                Read.prototype.timestamp = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 
                 /**
                  * Creates a new Read instance using the specified properties.
@@ -6141,7 +8015,7 @@
                  * @param {signalservice.SyncMessage.IRead=} [properties] Properties to set
                  * @returns {signalservice.SyncMessage.Read} Read instance
                  */
-                Read.create=function create(properties) {
+                Read.create = function create(properties) {
                     return new Read(properties);
                 };
 
@@ -6154,12 +8028,12 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Read.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.sender!=null&&message.hasOwnProperty("sender"))
+                Read.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.sender != null && message.hasOwnProperty("sender"))
                         writer.uint32(/* id 1, wireType 2 =*/10).string(message.sender);
-                    if(message.timestamp!=null&&message.hasOwnProperty("timestamp"))
+                    if (message.timestamp != null && message.hasOwnProperty("timestamp"))
                         writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.timestamp);
                     return writer;
                 };
@@ -6173,8 +8047,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Read.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                Read.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -6188,21 +8062,21 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Read.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.SyncMessage.Read();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                Read.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.SyncMessage.Read();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                message.sender=reader.string();
+                                message.sender = reader.string();
                                 break;
                             case 2:
-                                message.timestamp=reader.uint64();
+                                message.timestamp = reader.uint64();
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -6219,10 +8093,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Read.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                Read.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -6233,14 +8107,14 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                Read.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                Read.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.sender!=null&&message.hasOwnProperty("sender"))
-                        if(!$util.isString(message.sender))
+                    if (message.sender != null && message.hasOwnProperty("sender"))
+                        if (!$util.isString(message.sender))
                             return "sender: string expected";
-                    if(message.timestamp!=null&&message.hasOwnProperty("timestamp"))
-                        if(!$util.isInteger(message.timestamp)&&!(message.timestamp&&$util.isInteger(message.timestamp.low)&&$util.isInteger(message.timestamp.high)))
+                    if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                        if (!$util.isInteger(message.timestamp) && !(message.timestamp && $util.isInteger(message.timestamp.low) && $util.isInteger(message.timestamp.high)))
                             return "timestamp: integer|Long expected";
                     return null;
                 };
@@ -6253,21 +8127,21 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.SyncMessage.Read} Read
                  */
-                Read.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.SyncMessage.Read)
+                Read.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.SyncMessage.Read)
                         return object;
-                    var message=new $root.signalservice.SyncMessage.Read();
-                    if(object.sender!=null)
-                        message.sender=String(object.sender);
-                    if(object.timestamp!=null)
-                        if($util.Long)
-                            (message.timestamp=$util.Long.fromValue(object.timestamp)).unsigned=true;
-                        else if(typeof object.timestamp==="string")
-                            message.timestamp=parseInt(object.timestamp,10);
-                        else if(typeof object.timestamp==="number")
-                            message.timestamp=object.timestamp;
-                        else if(typeof object.timestamp==="object")
-                            message.timestamp=new $util.LongBits(object.timestamp.low>>>0,object.timestamp.high>>>0).toNumber(true);
+                    var message = new $root.signalservice.SyncMessage.Read();
+                    if (object.sender != null)
+                        message.sender = String(object.sender);
+                    if (object.timestamp != null)
+                        if ($util.Long)
+                            (message.timestamp = $util.Long.fromValue(object.timestamp)).unsigned = true;
+                        else if (typeof object.timestamp === "string")
+                            message.timestamp = parseInt(object.timestamp, 10);
+                        else if (typeof object.timestamp === "number")
+                            message.timestamp = object.timestamp;
+                        else if (typeof object.timestamp === "object")
+                            message.timestamp = new $util.LongBits(object.timestamp.low >>> 0, object.timestamp.high >>> 0).toNumber(true);
                     return message;
                 };
 
@@ -6280,25 +8154,25 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                Read.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.defaults) {
-                        object.sender="";
-                        if($util.Long) {
-                            var long=new $util.Long(0,0,true);
-                            object.timestamp=options.longs===String? long.toString():options.longs===Number? long.toNumber():long;
+                Read.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.sender = "";
+                        if ($util.Long) {
+                            var long = new $util.Long(0, 0, true);
+                            object.timestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                         } else
-                            object.timestamp=options.longs===String? "0":0;
+                            object.timestamp = options.longs === String ? "0" : 0;
                     }
-                    if(message.sender!=null&&message.hasOwnProperty("sender"))
-                        object.sender=message.sender;
-                    if(message.timestamp!=null&&message.hasOwnProperty("timestamp"))
-                        if(typeof message.timestamp==="number")
-                            object.timestamp=options.longs===String? String(message.timestamp):message.timestamp;
+                    if (message.sender != null && message.hasOwnProperty("sender"))
+                        object.sender = message.sender;
+                    if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                        if (typeof message.timestamp === "number")
+                            object.timestamp = options.longs === String ? String(message.timestamp) : message.timestamp;
                         else
-                            object.timestamp=options.longs===String? $util.Long.prototype.toString.call(message.timestamp):options.longs===Number? new $util.LongBits(message.timestamp.low>>>0,message.timestamp.high>>>0).toNumber(true):message.timestamp;
+                            object.timestamp = options.longs === String ? $util.Long.prototype.toString.call(message.timestamp) : options.longs === Number ? new $util.LongBits(message.timestamp.low >>> 0, message.timestamp.high >>> 0).toNumber(true) : message.timestamp;
                     return object;
                 };
 
@@ -6309,14 +8183,14 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                Read.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                Read.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
                 return Read;
             })();
 
-            SyncMessage.Configuration=(function() {
+            SyncMessage.Configuration = (function () {
 
                 /**
                  * Properties of a Configuration.
@@ -6334,10 +8208,10 @@
                  * @param {signalservice.SyncMessage.IConfiguration=} [properties] Properties to set
                  */
                 function Configuration(properties) {
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -6346,7 +8220,7 @@
                  * @memberof signalservice.SyncMessage.Configuration
                  * @instance
                  */
-                Configuration.prototype.readReceipts=false;
+                Configuration.prototype.readReceipts = false;
 
                 /**
                  * Creates a new Configuration instance using the specified properties.
@@ -6356,7 +8230,7 @@
                  * @param {signalservice.SyncMessage.IConfiguration=} [properties] Properties to set
                  * @returns {signalservice.SyncMessage.Configuration} Configuration instance
                  */
-                Configuration.create=function create(properties) {
+                Configuration.create = function create(properties) {
                     return new Configuration(properties);
                 };
 
@@ -6369,10 +8243,10 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Configuration.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.readReceipts!=null&&message.hasOwnProperty("readReceipts"))
+                Configuration.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.readReceipts != null && message.hasOwnProperty("readReceipts"))
                         writer.uint32(/* id 1, wireType 0 =*/8).bool(message.readReceipts);
                     return writer;
                 };
@@ -6386,8 +8260,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Configuration.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                Configuration.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -6401,18 +8275,18 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Configuration.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.SyncMessage.Configuration();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                Configuration.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.SyncMessage.Configuration();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                message.readReceipts=reader.bool();
+                                message.readReceipts = reader.bool();
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -6429,10 +8303,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Configuration.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                Configuration.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -6443,11 +8317,11 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                Configuration.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                Configuration.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.readReceipts!=null&&message.hasOwnProperty("readReceipts"))
-                        if(typeof message.readReceipts!=="boolean")
+                    if (message.readReceipts != null && message.hasOwnProperty("readReceipts"))
+                        if (typeof message.readReceipts !== "boolean")
                             return "readReceipts: boolean expected";
                     return null;
                 };
@@ -6460,12 +8334,12 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.SyncMessage.Configuration} Configuration
                  */
-                Configuration.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.SyncMessage.Configuration)
+                Configuration.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.SyncMessage.Configuration)
                         return object;
-                    var message=new $root.signalservice.SyncMessage.Configuration();
-                    if(object.readReceipts!=null)
-                        message.readReceipts=Boolean(object.readReceipts);
+                    var message = new $root.signalservice.SyncMessage.Configuration();
+                    if (object.readReceipts != null)
+                        message.readReceipts = Boolean(object.readReceipts);
                     return message;
                 };
 
@@ -6478,14 +8352,14 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                Configuration.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.defaults)
-                        object.readReceipts=false;
-                    if(message.readReceipts!=null&&message.hasOwnProperty("readReceipts"))
-                        object.readReceipts=message.readReceipts;
+                Configuration.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults)
+                        object.readReceipts = false;
+                    if (message.readReceipts != null && message.hasOwnProperty("readReceipts"))
+                        object.readReceipts = message.readReceipts;
                     return object;
                 };
 
@@ -6496,8 +8370,8 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                Configuration.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                Configuration.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
                 return Configuration;
@@ -6506,7 +8380,7 @@
             return SyncMessage;
         })();
 
-        signalservice.AttachmentPointer=(function() {
+        signalservice.AttachmentPointer = (function () {
 
             /**
              * Properties of an AttachmentPointer.
@@ -6533,10 +8407,10 @@
              * @param {signalservice.IAttachmentPointer=} [properties] Properties to set
              */
             function AttachmentPointer(properties) {
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -6545,7 +8419,7 @@
              * @memberof signalservice.AttachmentPointer
              * @instance
              */
-            AttachmentPointer.prototype.id=$util.Long? $util.Long.fromBits(0,0,false):0;
+            AttachmentPointer.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, false) : 0;
 
             /**
              * AttachmentPointer contentType.
@@ -6553,7 +8427,7 @@
              * @memberof signalservice.AttachmentPointer
              * @instance
              */
-            AttachmentPointer.prototype.contentType="";
+            AttachmentPointer.prototype.contentType = "";
 
             /**
              * AttachmentPointer key.
@@ -6561,7 +8435,7 @@
              * @memberof signalservice.AttachmentPointer
              * @instance
              */
-            AttachmentPointer.prototype.key=$util.newBuffer([]);
+            AttachmentPointer.prototype.key = $util.newBuffer([]);
 
             /**
              * AttachmentPointer size.
@@ -6569,7 +8443,7 @@
              * @memberof signalservice.AttachmentPointer
              * @instance
              */
-            AttachmentPointer.prototype.size=0;
+            AttachmentPointer.prototype.size = 0;
 
             /**
              * AttachmentPointer thumbnail.
@@ -6577,7 +8451,7 @@
              * @memberof signalservice.AttachmentPointer
              * @instance
              */
-            AttachmentPointer.prototype.thumbnail=$util.newBuffer([]);
+            AttachmentPointer.prototype.thumbnail = $util.newBuffer([]);
 
             /**
              * AttachmentPointer digest.
@@ -6585,7 +8459,7 @@
              * @memberof signalservice.AttachmentPointer
              * @instance
              */
-            AttachmentPointer.prototype.digest=$util.newBuffer([]);
+            AttachmentPointer.prototype.digest = $util.newBuffer([]);
 
             /**
              * AttachmentPointer fileName.
@@ -6593,7 +8467,7 @@
              * @memberof signalservice.AttachmentPointer
              * @instance
              */
-            AttachmentPointer.prototype.fileName="";
+            AttachmentPointer.prototype.fileName = "";
 
             /**
              * AttachmentPointer flags.
@@ -6601,7 +8475,7 @@
              * @memberof signalservice.AttachmentPointer
              * @instance
              */
-            AttachmentPointer.prototype.flags=0;
+            AttachmentPointer.prototype.flags = 0;
 
             /**
              * AttachmentPointer width.
@@ -6609,7 +8483,7 @@
              * @memberof signalservice.AttachmentPointer
              * @instance
              */
-            AttachmentPointer.prototype.width=0;
+            AttachmentPointer.prototype.width = 0;
 
             /**
              * AttachmentPointer height.
@@ -6617,7 +8491,7 @@
              * @memberof signalservice.AttachmentPointer
              * @instance
              */
-            AttachmentPointer.prototype.height=0;
+            AttachmentPointer.prototype.height = 0;
 
             /**
              * Creates a new AttachmentPointer instance using the specified properties.
@@ -6627,7 +8501,7 @@
              * @param {signalservice.IAttachmentPointer=} [properties] Properties to set
              * @returns {signalservice.AttachmentPointer} AttachmentPointer instance
              */
-            AttachmentPointer.create=function create(properties) {
+            AttachmentPointer.create = function create(properties) {
                 return new AttachmentPointer(properties);
             };
 
@@ -6640,28 +8514,28 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            AttachmentPointer.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.id!=null&&message.hasOwnProperty("id"))
+            AttachmentPointer.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.id != null && message.hasOwnProperty("id"))
                     writer.uint32(/* id 1, wireType 1 =*/9).fixed64(message.id);
-                if(message.contentType!=null&&message.hasOwnProperty("contentType"))
+                if (message.contentType != null && message.hasOwnProperty("contentType"))
                     writer.uint32(/* id 2, wireType 2 =*/18).string(message.contentType);
-                if(message.key!=null&&message.hasOwnProperty("key"))
+                if (message.key != null && message.hasOwnProperty("key"))
                     writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.key);
-                if(message.size!=null&&message.hasOwnProperty("size"))
+                if (message.size != null && message.hasOwnProperty("size"))
                     writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.size);
-                if(message.thumbnail!=null&&message.hasOwnProperty("thumbnail"))
+                if (message.thumbnail != null && message.hasOwnProperty("thumbnail"))
                     writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.thumbnail);
-                if(message.digest!=null&&message.hasOwnProperty("digest"))
+                if (message.digest != null && message.hasOwnProperty("digest"))
                     writer.uint32(/* id 6, wireType 2 =*/50).bytes(message.digest);
-                if(message.fileName!=null&&message.hasOwnProperty("fileName"))
+                if (message.fileName != null && message.hasOwnProperty("fileName"))
                     writer.uint32(/* id 7, wireType 2 =*/58).string(message.fileName);
-                if(message.flags!=null&&message.hasOwnProperty("flags"))
+                if (message.flags != null && message.hasOwnProperty("flags"))
                     writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.flags);
-                if(message.width!=null&&message.hasOwnProperty("width"))
+                if (message.width != null && message.hasOwnProperty("width"))
                     writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.width);
-                if(message.height!=null&&message.hasOwnProperty("height"))
+                if (message.height != null && message.hasOwnProperty("height"))
                     writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.height);
                 return writer;
             };
@@ -6675,8 +8549,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            AttachmentPointer.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            AttachmentPointer.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -6690,45 +8564,45 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            AttachmentPointer.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.AttachmentPointer();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            AttachmentPointer.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.AttachmentPointer();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.id=reader.fixed64();
+                            message.id = reader.fixed64();
                             break;
                         case 2:
-                            message.contentType=reader.string();
+                            message.contentType = reader.string();
                             break;
                         case 3:
-                            message.key=reader.bytes();
+                            message.key = reader.bytes();
                             break;
                         case 4:
-                            message.size=reader.uint32();
+                            message.size = reader.uint32();
                             break;
                         case 5:
-                            message.thumbnail=reader.bytes();
+                            message.thumbnail = reader.bytes();
                             break;
                         case 6:
-                            message.digest=reader.bytes();
+                            message.digest = reader.bytes();
                             break;
                         case 7:
-                            message.fileName=reader.string();
+                            message.fileName = reader.string();
                             break;
                         case 8:
-                            message.flags=reader.uint32();
+                            message.flags = reader.uint32();
                             break;
                         case 9:
-                            message.width=reader.uint32();
+                            message.width = reader.uint32();
                             break;
                         case 10:
-                            message.height=reader.uint32();
+                            message.height = reader.uint32();
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -6745,10 +8619,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            AttachmentPointer.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            AttachmentPointer.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -6759,38 +8633,38 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            AttachmentPointer.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            AttachmentPointer.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.id!=null&&message.hasOwnProperty("id"))
-                    if(!$util.isInteger(message.id)&&!(message.id&&$util.isInteger(message.id.low)&&$util.isInteger(message.id.high)))
+                if (message.id != null && message.hasOwnProperty("id"))
+                    if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
                         return "id: integer|Long expected";
-                if(message.contentType!=null&&message.hasOwnProperty("contentType"))
-                    if(!$util.isString(message.contentType))
+                if (message.contentType != null && message.hasOwnProperty("contentType"))
+                    if (!$util.isString(message.contentType))
                         return "contentType: string expected";
-                if(message.key!=null&&message.hasOwnProperty("key"))
-                    if(!(message.key&&typeof message.key.length==="number"||$util.isString(message.key)))
+                if (message.key != null && message.hasOwnProperty("key"))
+                    if (!(message.key && typeof message.key.length === "number" || $util.isString(message.key)))
                         return "key: buffer expected";
-                if(message.size!=null&&message.hasOwnProperty("size"))
-                    if(!$util.isInteger(message.size))
+                if (message.size != null && message.hasOwnProperty("size"))
+                    if (!$util.isInteger(message.size))
                         return "size: integer expected";
-                if(message.thumbnail!=null&&message.hasOwnProperty("thumbnail"))
-                    if(!(message.thumbnail&&typeof message.thumbnail.length==="number"||$util.isString(message.thumbnail)))
+                if (message.thumbnail != null && message.hasOwnProperty("thumbnail"))
+                    if (!(message.thumbnail && typeof message.thumbnail.length === "number" || $util.isString(message.thumbnail)))
                         return "thumbnail: buffer expected";
-                if(message.digest!=null&&message.hasOwnProperty("digest"))
-                    if(!(message.digest&&typeof message.digest.length==="number"||$util.isString(message.digest)))
+                if (message.digest != null && message.hasOwnProperty("digest"))
+                    if (!(message.digest && typeof message.digest.length === "number" || $util.isString(message.digest)))
                         return "digest: buffer expected";
-                if(message.fileName!=null&&message.hasOwnProperty("fileName"))
-                    if(!$util.isString(message.fileName))
+                if (message.fileName != null && message.hasOwnProperty("fileName"))
+                    if (!$util.isString(message.fileName))
                         return "fileName: string expected";
-                if(message.flags!=null&&message.hasOwnProperty("flags"))
-                    if(!$util.isInteger(message.flags))
+                if (message.flags != null && message.hasOwnProperty("flags"))
+                    if (!$util.isInteger(message.flags))
                         return "flags: integer expected";
-                if(message.width!=null&&message.hasOwnProperty("width"))
-                    if(!$util.isInteger(message.width))
+                if (message.width != null && message.hasOwnProperty("width"))
+                    if (!$util.isInteger(message.width))
                         return "width: integer expected";
-                if(message.height!=null&&message.hasOwnProperty("height"))
-                    if(!$util.isInteger(message.height))
+                if (message.height != null && message.hasOwnProperty("height"))
+                    if (!$util.isInteger(message.height))
                         return "height: integer expected";
                 return null;
             };
@@ -6803,46 +8677,46 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.AttachmentPointer} AttachmentPointer
              */
-            AttachmentPointer.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.AttachmentPointer)
+            AttachmentPointer.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.AttachmentPointer)
                     return object;
-                var message=new $root.signalservice.AttachmentPointer();
-                if(object.id!=null)
-                    if($util.Long)
-                        (message.id=$util.Long.fromValue(object.id)).unsigned=false;
-                    else if(typeof object.id==="string")
-                        message.id=parseInt(object.id,10);
-                    else if(typeof object.id==="number")
-                        message.id=object.id;
-                    else if(typeof object.id==="object")
-                        message.id=new $util.LongBits(object.id.low>>>0,object.id.high>>>0).toNumber();
-                if(object.contentType!=null)
-                    message.contentType=String(object.contentType);
-                if(object.key!=null)
-                    if(typeof object.key==="string")
-                        $util.base64.decode(object.key,message.key=$util.newBuffer($util.base64.length(object.key)),0);
-                    else if(object.key.length)
-                        message.key=object.key;
-                if(object.size!=null)
-                    message.size=object.size>>>0;
-                if(object.thumbnail!=null)
-                    if(typeof object.thumbnail==="string")
-                        $util.base64.decode(object.thumbnail,message.thumbnail=$util.newBuffer($util.base64.length(object.thumbnail)),0);
-                    else if(object.thumbnail.length)
-                        message.thumbnail=object.thumbnail;
-                if(object.digest!=null)
-                    if(typeof object.digest==="string")
-                        $util.base64.decode(object.digest,message.digest=$util.newBuffer($util.base64.length(object.digest)),0);
-                    else if(object.digest.length)
-                        message.digest=object.digest;
-                if(object.fileName!=null)
-                    message.fileName=String(object.fileName);
-                if(object.flags!=null)
-                    message.flags=object.flags>>>0;
-                if(object.width!=null)
-                    message.width=object.width>>>0;
-                if(object.height!=null)
-                    message.height=object.height>>>0;
+                var message = new $root.signalservice.AttachmentPointer();
+                if (object.id != null)
+                    if ($util.Long)
+                        (message.id = $util.Long.fromValue(object.id)).unsigned = false;
+                    else if (typeof object.id === "string")
+                        message.id = parseInt(object.id, 10);
+                    else if (typeof object.id === "number")
+                        message.id = object.id;
+                    else if (typeof object.id === "object")
+                        message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber();
+                if (object.contentType != null)
+                    message.contentType = String(object.contentType);
+                if (object.key != null)
+                    if (typeof object.key === "string")
+                        $util.base64.decode(object.key, message.key = $util.newBuffer($util.base64.length(object.key)), 0);
+                    else if (object.key.length)
+                        message.key = object.key;
+                if (object.size != null)
+                    message.size = object.size >>> 0;
+                if (object.thumbnail != null)
+                    if (typeof object.thumbnail === "string")
+                        $util.base64.decode(object.thumbnail, message.thumbnail = $util.newBuffer($util.base64.length(object.thumbnail)), 0);
+                    else if (object.thumbnail.length)
+                        message.thumbnail = object.thumbnail;
+                if (object.digest != null)
+                    if (typeof object.digest === "string")
+                        $util.base64.decode(object.digest, message.digest = $util.newBuffer($util.base64.length(object.digest)), 0);
+                    else if (object.digest.length)
+                        message.digest = object.digest;
+                if (object.fileName != null)
+                    message.fileName = String(object.fileName);
+                if (object.flags != null)
+                    message.flags = object.flags >>> 0;
+                if (object.width != null)
+                    message.width = object.width >>> 0;
+                if (object.height != null)
+                    message.height = object.height >>> 0;
                 return message;
             };
 
@@ -6855,49 +8729,49 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            AttachmentPointer.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.defaults) {
-                    if($util.Long) {
-                        var long=new $util.Long(0,0,false);
-                        object.id=options.longs===String? long.toString():options.longs===Number? long.toNumber():long;
+            AttachmentPointer.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, false);
+                        object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                     } else
-                        object.id=options.longs===String? "0":0;
-                    object.contentType="";
-                    object.key=options.bytes===String? "":[];
-                    object.size=0;
-                    object.thumbnail=options.bytes===String? "":[];
-                    object.digest=options.bytes===String? "":[];
-                    object.fileName="";
-                    object.flags=0;
-                    object.width=0;
-                    object.height=0;
+                        object.id = options.longs === String ? "0" : 0;
+                    object.contentType = "";
+                    object.key = options.bytes === String ? "" : [];
+                    object.size = 0;
+                    object.thumbnail = options.bytes === String ? "" : [];
+                    object.digest = options.bytes === String ? "" : [];
+                    object.fileName = "";
+                    object.flags = 0;
+                    object.width = 0;
+                    object.height = 0;
                 }
-                if(message.id!=null&&message.hasOwnProperty("id"))
-                    if(typeof message.id==="number")
-                        object.id=options.longs===String? String(message.id):message.id;
+                if (message.id != null && message.hasOwnProperty("id"))
+                    if (typeof message.id === "number")
+                        object.id = options.longs === String ? String(message.id) : message.id;
                     else
-                        object.id=options.longs===String? $util.Long.prototype.toString.call(message.id):options.longs===Number? new $util.LongBits(message.id.low>>>0,message.id.high>>>0).toNumber():message.id;
-                if(message.contentType!=null&&message.hasOwnProperty("contentType"))
-                    object.contentType=message.contentType;
-                if(message.key!=null&&message.hasOwnProperty("key"))
-                    object.key=options.bytes===String? $util.base64.encode(message.key,0,message.key.length):options.bytes===Array? Array.prototype.slice.call(message.key):message.key;
-                if(message.size!=null&&message.hasOwnProperty("size"))
-                    object.size=message.size;
-                if(message.thumbnail!=null&&message.hasOwnProperty("thumbnail"))
-                    object.thumbnail=options.bytes===String? $util.base64.encode(message.thumbnail,0,message.thumbnail.length):options.bytes===Array? Array.prototype.slice.call(message.thumbnail):message.thumbnail;
-                if(message.digest!=null&&message.hasOwnProperty("digest"))
-                    object.digest=options.bytes===String? $util.base64.encode(message.digest,0,message.digest.length):options.bytes===Array? Array.prototype.slice.call(message.digest):message.digest;
-                if(message.fileName!=null&&message.hasOwnProperty("fileName"))
-                    object.fileName=message.fileName;
-                if(message.flags!=null&&message.hasOwnProperty("flags"))
-                    object.flags=message.flags;
-                if(message.width!=null&&message.hasOwnProperty("width"))
-                    object.width=message.width;
-                if(message.height!=null&&message.hasOwnProperty("height"))
-                    object.height=message.height;
+                        object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber() : message.id;
+                if (message.contentType != null && message.hasOwnProperty("contentType"))
+                    object.contentType = message.contentType;
+                if (message.key != null && message.hasOwnProperty("key"))
+                    object.key = options.bytes === String ? $util.base64.encode(message.key, 0, message.key.length) : options.bytes === Array ? Array.prototype.slice.call(message.key) : message.key;
+                if (message.size != null && message.hasOwnProperty("size"))
+                    object.size = message.size;
+                if (message.thumbnail != null && message.hasOwnProperty("thumbnail"))
+                    object.thumbnail = options.bytes === String ? $util.base64.encode(message.thumbnail, 0, message.thumbnail.length) : options.bytes === Array ? Array.prototype.slice.call(message.thumbnail) : message.thumbnail;
+                if (message.digest != null && message.hasOwnProperty("digest"))
+                    object.digest = options.bytes === String ? $util.base64.encode(message.digest, 0, message.digest.length) : options.bytes === Array ? Array.prototype.slice.call(message.digest) : message.digest;
+                if (message.fileName != null && message.hasOwnProperty("fileName"))
+                    object.fileName = message.fileName;
+                if (message.flags != null && message.hasOwnProperty("flags"))
+                    object.flags = message.flags;
+                if (message.width != null && message.hasOwnProperty("width"))
+                    object.width = message.width;
+                if (message.height != null && message.hasOwnProperty("height"))
+                    object.height = message.height;
                 return object;
             };
 
@@ -6908,8 +8782,8 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            AttachmentPointer.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            AttachmentPointer.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             /**
@@ -6918,16 +8792,16 @@
              * @enum {string}
              * @property {number} VOICE_MESSAGE=1 VOICE_MESSAGE value
              */
-            AttachmentPointer.Flags=(function() {
-                var valuesById={},values=Object.create(valuesById);
-                values[valuesById[1]="VOICE_MESSAGE"]=1;
+            AttachmentPointer.Flags = (function () {
+                var valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[1] = "VOICE_MESSAGE"] = 1;
                 return values;
             })();
 
             return AttachmentPointer;
         })();
 
-        signalservice.GroupContext=(function() {
+        signalservice.GroupContext = (function () {
 
             /**
              * Properties of a GroupContext.
@@ -6949,11 +8823,11 @@
              * @param {signalservice.IGroupContext=} [properties] Properties to set
              */
             function GroupContext(properties) {
-                this.members=[];
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                this.members = [];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -6962,7 +8836,7 @@
              * @memberof signalservice.GroupContext
              * @instance
              */
-            GroupContext.prototype.id=$util.newBuffer([]);
+            GroupContext.prototype.id = $util.newBuffer([]);
 
             /**
              * GroupContext type.
@@ -6970,7 +8844,7 @@
              * @memberof signalservice.GroupContext
              * @instance
              */
-            GroupContext.prototype.type=0;
+            GroupContext.prototype.type = 0;
 
             /**
              * GroupContext name.
@@ -6978,7 +8852,7 @@
              * @memberof signalservice.GroupContext
              * @instance
              */
-            GroupContext.prototype.name="";
+            GroupContext.prototype.name = "";
 
             /**
              * GroupContext members.
@@ -6986,7 +8860,7 @@
              * @memberof signalservice.GroupContext
              * @instance
              */
-            GroupContext.prototype.members=$util.emptyArray;
+            GroupContext.prototype.members = $util.emptyArray;
 
             /**
              * GroupContext avatar.
@@ -6994,7 +8868,7 @@
              * @memberof signalservice.GroupContext
              * @instance
              */
-            GroupContext.prototype.avatar=null;
+            GroupContext.prototype.avatar = null;
 
             /**
              * Creates a new GroupContext instance using the specified properties.
@@ -7004,7 +8878,7 @@
              * @param {signalservice.IGroupContext=} [properties] Properties to set
              * @returns {signalservice.GroupContext} GroupContext instance
              */
-            GroupContext.create=function create(properties) {
+            GroupContext.create = function create(properties) {
                 return new GroupContext(properties);
             };
 
@@ -7017,20 +8891,20 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            GroupContext.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.id!=null&&message.hasOwnProperty("id"))
+            GroupContext.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.id != null && message.hasOwnProperty("id"))
                     writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.id);
-                if(message.type!=null&&message.hasOwnProperty("type"))
+                if (message.type != null && message.hasOwnProperty("type"))
                     writer.uint32(/* id 2, wireType 0 =*/16).int32(message.type);
-                if(message.name!=null&&message.hasOwnProperty("name"))
+                if (message.name != null && message.hasOwnProperty("name"))
                     writer.uint32(/* id 3, wireType 2 =*/26).string(message.name);
-                if(message.members!=null&&message.members.length)
-                    for(var i=0;i<message.members.length;++i)
+                if (message.members != null && message.members.length)
+                    for (var i = 0; i < message.members.length; ++i)
                         writer.uint32(/* id 4, wireType 2 =*/34).string(message.members[i]);
-                if(message.avatar!=null&&message.hasOwnProperty("avatar"))
-                    $root.signalservice.AttachmentPointer.encode(message.avatar,writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                if (message.avatar != null && message.hasOwnProperty("avatar"))
+                    $root.signalservice.AttachmentPointer.encode(message.avatar, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                 return writer;
             };
 
@@ -7043,8 +8917,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            GroupContext.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            GroupContext.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -7058,32 +8932,32 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            GroupContext.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.GroupContext();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            GroupContext.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.GroupContext();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.id=reader.bytes();
+                            message.id = reader.bytes();
                             break;
                         case 2:
-                            message.type=reader.int32();
+                            message.type = reader.int32();
                             break;
                         case 3:
-                            message.name=reader.string();
+                            message.name = reader.string();
                             break;
                         case 4:
-                            if(!(message.members&&message.members.length))
-                                message.members=[];
+                            if (!(message.members && message.members.length))
+                                message.members = [];
                             message.members.push(reader.string());
                             break;
                         case 5:
-                            message.avatar=$root.signalservice.AttachmentPointer.decode(reader,reader.uint32());
+                            message.avatar = $root.signalservice.AttachmentPointer.decode(reader, reader.uint32());
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -7100,10 +8974,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            GroupContext.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            GroupContext.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -7114,14 +8988,14 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            GroupContext.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            GroupContext.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.id!=null&&message.hasOwnProperty("id"))
-                    if(!(message.id&&typeof message.id.length==="number"||$util.isString(message.id)))
+                if (message.id != null && message.hasOwnProperty("id"))
+                    if (!(message.id && typeof message.id.length === "number" || $util.isString(message.id)))
                         return "id: buffer expected";
-                if(message.type!=null&&message.hasOwnProperty("type"))
-                    switch(message.type) {
+                if (message.type != null && message.hasOwnProperty("type"))
+                    switch (message.type) {
                         default:
                             return "type: enum value expected";
                         case 0:
@@ -7131,20 +9005,20 @@
                         case 4:
                             break;
                     }
-                if(message.name!=null&&message.hasOwnProperty("name"))
-                    if(!$util.isString(message.name))
+                if (message.name != null && message.hasOwnProperty("name"))
+                    if (!$util.isString(message.name))
                         return "name: string expected";
-                if(message.members!=null&&message.hasOwnProperty("members")) {
-                    if(!Array.isArray(message.members))
+                if (message.members != null && message.hasOwnProperty("members")) {
+                    if (!Array.isArray(message.members))
                         return "members: array expected";
-                    for(var i=0;i<message.members.length;++i)
-                        if(!$util.isString(message.members[i]))
+                    for (var i = 0; i < message.members.length; ++i)
+                        if (!$util.isString(message.members[i]))
                             return "members: string[] expected";
                 }
-                if(message.avatar!=null&&message.hasOwnProperty("avatar")) {
-                    var error=$root.signalservice.AttachmentPointer.verify(message.avatar);
-                    if(error)
-                        return "avatar."+error;
+                if (message.avatar != null && message.hasOwnProperty("avatar")) {
+                    var error = $root.signalservice.AttachmentPointer.verify(message.avatar);
+                    if (error)
+                        return "avatar." + error;
                 }
                 return null;
             };
@@ -7157,50 +9031,50 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.GroupContext} GroupContext
              */
-            GroupContext.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.GroupContext)
+            GroupContext.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.GroupContext)
                     return object;
-                var message=new $root.signalservice.GroupContext();
-                if(object.id!=null)
-                    if(typeof object.id==="string")
-                        $util.base64.decode(object.id,message.id=$util.newBuffer($util.base64.length(object.id)),0);
-                    else if(object.id.length)
-                        message.id=object.id;
-                switch(object.type) {
+                var message = new $root.signalservice.GroupContext();
+                if (object.id != null)
+                    if (typeof object.id === "string")
+                        $util.base64.decode(object.id, message.id = $util.newBuffer($util.base64.length(object.id)), 0);
+                    else if (object.id.length)
+                        message.id = object.id;
+                switch (object.type) {
                     case "UNKNOWN":
                     case 0:
-                        message.type=0;
+                        message.type = 0;
                         break;
                     case "UPDATE":
                     case 1:
-                        message.type=1;
+                        message.type = 1;
                         break;
                     case "DELIVER":
                     case 2:
-                        message.type=2;
+                        message.type = 2;
                         break;
                     case "QUIT":
                     case 3:
-                        message.type=3;
+                        message.type = 3;
                         break;
                     case "REQUEST_INFO":
                     case 4:
-                        message.type=4;
+                        message.type = 4;
                         break;
                 }
-                if(object.name!=null)
-                    message.name=String(object.name);
-                if(object.members) {
-                    if(!Array.isArray(object.members))
+                if (object.name != null)
+                    message.name = String(object.name);
+                if (object.members) {
+                    if (!Array.isArray(object.members))
                         throw TypeError(".signalservice.GroupContext.members: array expected");
-                    message.members=[];
-                    for(var i=0;i<object.members.length;++i)
-                        message.members[i]=String(object.members[i]);
+                    message.members = [];
+                    for (var i = 0; i < object.members.length; ++i)
+                        message.members[i] = String(object.members[i]);
                 }
-                if(object.avatar!=null) {
-                    if(typeof object.avatar!=="object")
+                if (object.avatar != null) {
+                    if (typeof object.avatar !== "object")
                         throw TypeError(".signalservice.GroupContext.avatar: object expected");
-                    message.avatar=$root.signalservice.AttachmentPointer.fromObject(object.avatar);
+                    message.avatar = $root.signalservice.AttachmentPointer.fromObject(object.avatar);
                 }
                 return message;
             };
@@ -7214,31 +9088,31 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            GroupContext.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.arrays||options.defaults)
-                    object.members=[];
-                if(options.defaults) {
-                    object.id=options.bytes===String? "":[];
-                    object.type=options.enums===String? "UNKNOWN":0;
-                    object.name="";
-                    object.avatar=null;
+            GroupContext.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.arrays || options.defaults)
+                    object.members = [];
+                if (options.defaults) {
+                    object.id = options.bytes === String ? "" : [];
+                    object.type = options.enums === String ? "UNKNOWN" : 0;
+                    object.name = "";
+                    object.avatar = null;
                 }
-                if(message.id!=null&&message.hasOwnProperty("id"))
-                    object.id=options.bytes===String? $util.base64.encode(message.id,0,message.id.length):options.bytes===Array? Array.prototype.slice.call(message.id):message.id;
-                if(message.type!=null&&message.hasOwnProperty("type"))
-                    object.type=options.enums===String? $root.signalservice.GroupContext.Type[message.type]:message.type;
-                if(message.name!=null&&message.hasOwnProperty("name"))
-                    object.name=message.name;
-                if(message.members&&message.members.length) {
-                    object.members=[];
-                    for(var j=0;j<message.members.length;++j)
-                        object.members[j]=message.members[j];
+                if (message.id != null && message.hasOwnProperty("id"))
+                    object.id = options.bytes === String ? $util.base64.encode(message.id, 0, message.id.length) : options.bytes === Array ? Array.prototype.slice.call(message.id) : message.id;
+                if (message.type != null && message.hasOwnProperty("type"))
+                    object.type = options.enums === String ? $root.signalservice.GroupContext.Type[message.type] : message.type;
+                if (message.name != null && message.hasOwnProperty("name"))
+                    object.name = message.name;
+                if (message.members && message.members.length) {
+                    object.members = [];
+                    for (var j = 0; j < message.members.length; ++j)
+                        object.members[j] = message.members[j];
                 }
-                if(message.avatar!=null&&message.hasOwnProperty("avatar"))
-                    object.avatar=$root.signalservice.AttachmentPointer.toObject(message.avatar,options);
+                if (message.avatar != null && message.hasOwnProperty("avatar"))
+                    object.avatar = $root.signalservice.AttachmentPointer.toObject(message.avatar, options);
                 return object;
             };
 
@@ -7249,8 +9123,8 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            GroupContext.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            GroupContext.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             /**
@@ -7263,20 +9137,20 @@
              * @property {number} QUIT=3 QUIT value
              * @property {number} REQUEST_INFO=4 REQUEST_INFO value
              */
-            GroupContext.Type=(function() {
-                var valuesById={},values=Object.create(valuesById);
-                values[valuesById[0]="UNKNOWN"]=0;
-                values[valuesById[1]="UPDATE"]=1;
-                values[valuesById[2]="DELIVER"]=2;
-                values[valuesById[3]="QUIT"]=3;
-                values[valuesById[4]="REQUEST_INFO"]=4;
+            GroupContext.Type = (function () {
+                var valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[0] = "UNKNOWN"] = 0;
+                values[valuesById[1] = "UPDATE"] = 1;
+                values[valuesById[2] = "DELIVER"] = 2;
+                values[valuesById[3] = "QUIT"] = 3;
+                values[valuesById[4] = "REQUEST_INFO"] = 4;
                 return values;
             })();
 
             return GroupContext;
         })();
 
-        signalservice.ContactDetails=(function() {
+        signalservice.ContactDetails = (function () {
 
             /**
              * Properties of a ContactDetails.
@@ -7301,10 +9175,10 @@
              * @param {signalservice.IContactDetails=} [properties] Properties to set
              */
             function ContactDetails(properties) {
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -7313,7 +9187,7 @@
              * @memberof signalservice.ContactDetails
              * @instance
              */
-            ContactDetails.prototype.number="";
+            ContactDetails.prototype.number = "";
 
             /**
              * ContactDetails name.
@@ -7321,7 +9195,7 @@
              * @memberof signalservice.ContactDetails
              * @instance
              */
-            ContactDetails.prototype.name="";
+            ContactDetails.prototype.name = "";
 
             /**
              * ContactDetails avatar.
@@ -7329,7 +9203,7 @@
              * @memberof signalservice.ContactDetails
              * @instance
              */
-            ContactDetails.prototype.avatar=null;
+            ContactDetails.prototype.avatar = null;
 
             /**
              * ContactDetails color.
@@ -7337,7 +9211,7 @@
              * @memberof signalservice.ContactDetails
              * @instance
              */
-            ContactDetails.prototype.color="";
+            ContactDetails.prototype.color = "";
 
             /**
              * ContactDetails verified.
@@ -7345,7 +9219,7 @@
              * @memberof signalservice.ContactDetails
              * @instance
              */
-            ContactDetails.prototype.verified=null;
+            ContactDetails.prototype.verified = null;
 
             /**
              * ContactDetails profileKey.
@@ -7353,7 +9227,7 @@
              * @memberof signalservice.ContactDetails
              * @instance
              */
-            ContactDetails.prototype.profileKey=$util.newBuffer([]);
+            ContactDetails.prototype.profileKey = $util.newBuffer([]);
 
             /**
              * ContactDetails blocked.
@@ -7361,7 +9235,7 @@
              * @memberof signalservice.ContactDetails
              * @instance
              */
-            ContactDetails.prototype.blocked=false;
+            ContactDetails.prototype.blocked = false;
 
             /**
              * ContactDetails expireTimer.
@@ -7369,7 +9243,7 @@
              * @memberof signalservice.ContactDetails
              * @instance
              */
-            ContactDetails.prototype.expireTimer=0;
+            ContactDetails.prototype.expireTimer = 0;
 
             /**
              * Creates a new ContactDetails instance using the specified properties.
@@ -7379,7 +9253,7 @@
              * @param {signalservice.IContactDetails=} [properties] Properties to set
              * @returns {signalservice.ContactDetails} ContactDetails instance
              */
-            ContactDetails.create=function create(properties) {
+            ContactDetails.create = function create(properties) {
                 return new ContactDetails(properties);
             };
 
@@ -7392,24 +9266,24 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            ContactDetails.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.number!=null&&message.hasOwnProperty("number"))
+            ContactDetails.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.number != null && message.hasOwnProperty("number"))
                     writer.uint32(/* id 1, wireType 2 =*/10).string(message.number);
-                if(message.name!=null&&message.hasOwnProperty("name"))
+                if (message.name != null && message.hasOwnProperty("name"))
                     writer.uint32(/* id 2, wireType 2 =*/18).string(message.name);
-                if(message.avatar!=null&&message.hasOwnProperty("avatar"))
-                    $root.signalservice.ContactDetails.Avatar.encode(message.avatar,writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                if(message.color!=null&&message.hasOwnProperty("color"))
+                if (message.avatar != null && message.hasOwnProperty("avatar"))
+                    $root.signalservice.ContactDetails.Avatar.encode(message.avatar, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                if (message.color != null && message.hasOwnProperty("color"))
                     writer.uint32(/* id 4, wireType 2 =*/34).string(message.color);
-                if(message.verified!=null&&message.hasOwnProperty("verified"))
-                    $root.signalservice.Verified.encode(message.verified,writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                if(message.profileKey!=null&&message.hasOwnProperty("profileKey"))
+                if (message.verified != null && message.hasOwnProperty("verified"))
+                    $root.signalservice.Verified.encode(message.verified, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                if (message.profileKey != null && message.hasOwnProperty("profileKey"))
                     writer.uint32(/* id 6, wireType 2 =*/50).bytes(message.profileKey);
-                if(message.blocked!=null&&message.hasOwnProperty("blocked"))
+                if (message.blocked != null && message.hasOwnProperty("blocked"))
                     writer.uint32(/* id 7, wireType 0 =*/56).bool(message.blocked);
-                if(message.expireTimer!=null&&message.hasOwnProperty("expireTimer"))
+                if (message.expireTimer != null && message.hasOwnProperty("expireTimer"))
                     writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.expireTimer);
                 return writer;
             };
@@ -7423,8 +9297,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            ContactDetails.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            ContactDetails.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -7438,39 +9312,39 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            ContactDetails.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.ContactDetails();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            ContactDetails.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.ContactDetails();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.number=reader.string();
+                            message.number = reader.string();
                             break;
                         case 2:
-                            message.name=reader.string();
+                            message.name = reader.string();
                             break;
                         case 3:
-                            message.avatar=$root.signalservice.ContactDetails.Avatar.decode(reader,reader.uint32());
+                            message.avatar = $root.signalservice.ContactDetails.Avatar.decode(reader, reader.uint32());
                             break;
                         case 4:
-                            message.color=reader.string();
+                            message.color = reader.string();
                             break;
                         case 5:
-                            message.verified=$root.signalservice.Verified.decode(reader,reader.uint32());
+                            message.verified = $root.signalservice.Verified.decode(reader, reader.uint32());
                             break;
                         case 6:
-                            message.profileKey=reader.bytes();
+                            message.profileKey = reader.bytes();
                             break;
                         case 7:
-                            message.blocked=reader.bool();
+                            message.blocked = reader.bool();
                             break;
                         case 8:
-                            message.expireTimer=reader.uint32();
+                            message.expireTimer = reader.uint32();
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -7487,10 +9361,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            ContactDetails.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            ContactDetails.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -7501,36 +9375,36 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            ContactDetails.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            ContactDetails.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.number!=null&&message.hasOwnProperty("number"))
-                    if(!$util.isString(message.number))
+                if (message.number != null && message.hasOwnProperty("number"))
+                    if (!$util.isString(message.number))
                         return "number: string expected";
-                if(message.name!=null&&message.hasOwnProperty("name"))
-                    if(!$util.isString(message.name))
+                if (message.name != null && message.hasOwnProperty("name"))
+                    if (!$util.isString(message.name))
                         return "name: string expected";
-                if(message.avatar!=null&&message.hasOwnProperty("avatar")) {
-                    var error=$root.signalservice.ContactDetails.Avatar.verify(message.avatar);
-                    if(error)
-                        return "avatar."+error;
+                if (message.avatar != null && message.hasOwnProperty("avatar")) {
+                    var error = $root.signalservice.ContactDetails.Avatar.verify(message.avatar);
+                    if (error)
+                        return "avatar." + error;
                 }
-                if(message.color!=null&&message.hasOwnProperty("color"))
-                    if(!$util.isString(message.color))
+                if (message.color != null && message.hasOwnProperty("color"))
+                    if (!$util.isString(message.color))
                         return "color: string expected";
-                if(message.verified!=null&&message.hasOwnProperty("verified")) {
-                    var error=$root.signalservice.Verified.verify(message.verified);
-                    if(error)
-                        return "verified."+error;
+                if (message.verified != null && message.hasOwnProperty("verified")) {
+                    var error = $root.signalservice.Verified.verify(message.verified);
+                    if (error)
+                        return "verified." + error;
                 }
-                if(message.profileKey!=null&&message.hasOwnProperty("profileKey"))
-                    if(!(message.profileKey&&typeof message.profileKey.length==="number"||$util.isString(message.profileKey)))
+                if (message.profileKey != null && message.hasOwnProperty("profileKey"))
+                    if (!(message.profileKey && typeof message.profileKey.length === "number" || $util.isString(message.profileKey)))
                         return "profileKey: buffer expected";
-                if(message.blocked!=null&&message.hasOwnProperty("blocked"))
-                    if(typeof message.blocked!=="boolean")
+                if (message.blocked != null && message.hasOwnProperty("blocked"))
+                    if (typeof message.blocked !== "boolean")
                         return "blocked: boolean expected";
-                if(message.expireTimer!=null&&message.hasOwnProperty("expireTimer"))
-                    if(!$util.isInteger(message.expireTimer))
+                if (message.expireTimer != null && message.hasOwnProperty("expireTimer"))
+                    if (!$util.isInteger(message.expireTimer))
                         return "expireTimer: integer expected";
                 return null;
             };
@@ -7543,35 +9417,35 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.ContactDetails} ContactDetails
              */
-            ContactDetails.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.ContactDetails)
+            ContactDetails.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.ContactDetails)
                     return object;
-                var message=new $root.signalservice.ContactDetails();
-                if(object.number!=null)
-                    message.number=String(object.number);
-                if(object.name!=null)
-                    message.name=String(object.name);
-                if(object.avatar!=null) {
-                    if(typeof object.avatar!=="object")
+                var message = new $root.signalservice.ContactDetails();
+                if (object.number != null)
+                    message.number = String(object.number);
+                if (object.name != null)
+                    message.name = String(object.name);
+                if (object.avatar != null) {
+                    if (typeof object.avatar !== "object")
                         throw TypeError(".signalservice.ContactDetails.avatar: object expected");
-                    message.avatar=$root.signalservice.ContactDetails.Avatar.fromObject(object.avatar);
+                    message.avatar = $root.signalservice.ContactDetails.Avatar.fromObject(object.avatar);
                 }
-                if(object.color!=null)
-                    message.color=String(object.color);
-                if(object.verified!=null) {
-                    if(typeof object.verified!=="object")
+                if (object.color != null)
+                    message.color = String(object.color);
+                if (object.verified != null) {
+                    if (typeof object.verified !== "object")
                         throw TypeError(".signalservice.ContactDetails.verified: object expected");
-                    message.verified=$root.signalservice.Verified.fromObject(object.verified);
+                    message.verified = $root.signalservice.Verified.fromObject(object.verified);
                 }
-                if(object.profileKey!=null)
-                    if(typeof object.profileKey==="string")
-                        $util.base64.decode(object.profileKey,message.profileKey=$util.newBuffer($util.base64.length(object.profileKey)),0);
-                    else if(object.profileKey.length)
-                        message.profileKey=object.profileKey;
-                if(object.blocked!=null)
-                    message.blocked=Boolean(object.blocked);
-                if(object.expireTimer!=null)
-                    message.expireTimer=object.expireTimer>>>0;
+                if (object.profileKey != null)
+                    if (typeof object.profileKey === "string")
+                        $util.base64.decode(object.profileKey, message.profileKey = $util.newBuffer($util.base64.length(object.profileKey)), 0);
+                    else if (object.profileKey.length)
+                        message.profileKey = object.profileKey;
+                if (object.blocked != null)
+                    message.blocked = Boolean(object.blocked);
+                if (object.expireTimer != null)
+                    message.expireTimer = object.expireTimer >>> 0;
                 return message;
             };
 
@@ -7584,36 +9458,36 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            ContactDetails.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.defaults) {
-                    object.number="";
-                    object.name="";
-                    object.avatar=null;
-                    object.color="";
-                    object.verified=null;
-                    object.profileKey=options.bytes===String? "":[];
-                    object.blocked=false;
-                    object.expireTimer=0;
+            ContactDetails.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.number = "";
+                    object.name = "";
+                    object.avatar = null;
+                    object.color = "";
+                    object.verified = null;
+                    object.profileKey = options.bytes === String ? "" : [];
+                    object.blocked = false;
+                    object.expireTimer = 0;
                 }
-                if(message.number!=null&&message.hasOwnProperty("number"))
-                    object.number=message.number;
-                if(message.name!=null&&message.hasOwnProperty("name"))
-                    object.name=message.name;
-                if(message.avatar!=null&&message.hasOwnProperty("avatar"))
-                    object.avatar=$root.signalservice.ContactDetails.Avatar.toObject(message.avatar,options);
-                if(message.color!=null&&message.hasOwnProperty("color"))
-                    object.color=message.color;
-                if(message.verified!=null&&message.hasOwnProperty("verified"))
-                    object.verified=$root.signalservice.Verified.toObject(message.verified,options);
-                if(message.profileKey!=null&&message.hasOwnProperty("profileKey"))
-                    object.profileKey=options.bytes===String? $util.base64.encode(message.profileKey,0,message.profileKey.length):options.bytes===Array? Array.prototype.slice.call(message.profileKey):message.profileKey;
-                if(message.blocked!=null&&message.hasOwnProperty("blocked"))
-                    object.blocked=message.blocked;
-                if(message.expireTimer!=null&&message.hasOwnProperty("expireTimer"))
-                    object.expireTimer=message.expireTimer;
+                if (message.number != null && message.hasOwnProperty("number"))
+                    object.number = message.number;
+                if (message.name != null && message.hasOwnProperty("name"))
+                    object.name = message.name;
+                if (message.avatar != null && message.hasOwnProperty("avatar"))
+                    object.avatar = $root.signalservice.ContactDetails.Avatar.toObject(message.avatar, options);
+                if (message.color != null && message.hasOwnProperty("color"))
+                    object.color = message.color;
+                if (message.verified != null && message.hasOwnProperty("verified"))
+                    object.verified = $root.signalservice.Verified.toObject(message.verified, options);
+                if (message.profileKey != null && message.hasOwnProperty("profileKey"))
+                    object.profileKey = options.bytes === String ? $util.base64.encode(message.profileKey, 0, message.profileKey.length) : options.bytes === Array ? Array.prototype.slice.call(message.profileKey) : message.profileKey;
+                if (message.blocked != null && message.hasOwnProperty("blocked"))
+                    object.blocked = message.blocked;
+                if (message.expireTimer != null && message.hasOwnProperty("expireTimer"))
+                    object.expireTimer = message.expireTimer;
                 return object;
             };
 
@@ -7624,11 +9498,11 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            ContactDetails.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            ContactDetails.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
-            ContactDetails.Avatar=(function() {
+            ContactDetails.Avatar = (function () {
 
                 /**
                  * Properties of an Avatar.
@@ -7647,10 +9521,10 @@
                  * @param {signalservice.ContactDetails.IAvatar=} [properties] Properties to set
                  */
                 function Avatar(properties) {
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -7659,7 +9533,7 @@
                  * @memberof signalservice.ContactDetails.Avatar
                  * @instance
                  */
-                Avatar.prototype.contentType="";
+                Avatar.prototype.contentType = "";
 
                 /**
                  * Avatar length.
@@ -7667,7 +9541,7 @@
                  * @memberof signalservice.ContactDetails.Avatar
                  * @instance
                  */
-                Avatar.prototype.length=0;
+                Avatar.prototype.length = 0;
 
                 /**
                  * Creates a new Avatar instance using the specified properties.
@@ -7677,7 +9551,7 @@
                  * @param {signalservice.ContactDetails.IAvatar=} [properties] Properties to set
                  * @returns {signalservice.ContactDetails.Avatar} Avatar instance
                  */
-                Avatar.create=function create(properties) {
+                Avatar.create = function create(properties) {
                     return new Avatar(properties);
                 };
 
@@ -7690,12 +9564,12 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Avatar.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.contentType!=null&&message.hasOwnProperty("contentType"))
+                Avatar.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.contentType != null && message.hasOwnProperty("contentType"))
                         writer.uint32(/* id 1, wireType 2 =*/10).string(message.contentType);
-                    if(message.length!=null&&message.hasOwnProperty("length"))
+                    if (message.length != null && message.hasOwnProperty("length"))
                         writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.length);
                     return writer;
                 };
@@ -7709,8 +9583,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Avatar.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                Avatar.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -7724,21 +9598,21 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Avatar.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.ContactDetails.Avatar();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                Avatar.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.ContactDetails.Avatar();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                message.contentType=reader.string();
+                                message.contentType = reader.string();
                                 break;
                             case 2:
-                                message.length=reader.uint32();
+                                message.length = reader.uint32();
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -7755,10 +9629,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Avatar.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                Avatar.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -7769,14 +9643,14 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                Avatar.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                Avatar.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.contentType!=null&&message.hasOwnProperty("contentType"))
-                        if(!$util.isString(message.contentType))
+                    if (message.contentType != null && message.hasOwnProperty("contentType"))
+                        if (!$util.isString(message.contentType))
                             return "contentType: string expected";
-                    if(message.length!=null&&message.hasOwnProperty("length"))
-                        if(!$util.isInteger(message.length))
+                    if (message.length != null && message.hasOwnProperty("length"))
+                        if (!$util.isInteger(message.length))
                             return "length: integer expected";
                     return null;
                 };
@@ -7789,14 +9663,14 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.ContactDetails.Avatar} Avatar
                  */
-                Avatar.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.ContactDetails.Avatar)
+                Avatar.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.ContactDetails.Avatar)
                         return object;
-                    var message=new $root.signalservice.ContactDetails.Avatar();
-                    if(object.contentType!=null)
-                        message.contentType=String(object.contentType);
-                    if(object.length!=null)
-                        message.length=object.length>>>0;
+                    var message = new $root.signalservice.ContactDetails.Avatar();
+                    if (object.contentType != null)
+                        message.contentType = String(object.contentType);
+                    if (object.length != null)
+                        message.length = object.length >>> 0;
                     return message;
                 };
 
@@ -7809,18 +9683,18 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                Avatar.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.defaults) {
-                        object.contentType="";
-                        object.length=0;
+                Avatar.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.contentType = "";
+                        object.length = 0;
                     }
-                    if(message.contentType!=null&&message.hasOwnProperty("contentType"))
-                        object.contentType=message.contentType;
-                    if(message.length!=null&&message.hasOwnProperty("length"))
-                        object.length=message.length;
+                    if (message.contentType != null && message.hasOwnProperty("contentType"))
+                        object.contentType = message.contentType;
+                    if (message.length != null && message.hasOwnProperty("length"))
+                        object.length = message.length;
                     return object;
                 };
 
@@ -7831,8 +9705,8 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                Avatar.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                Avatar.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
                 return Avatar;
@@ -7841,7 +9715,7 @@
             return ContactDetails;
         })();
 
-        signalservice.GroupDetails=(function() {
+        signalservice.GroupDetails = (function () {
 
             /**
              * Properties of a GroupDetails.
@@ -7864,11 +9738,11 @@
              * @param {signalservice.IGroupDetails=} [properties] Properties to set
              */
             function GroupDetails(properties) {
-                this.members=[];
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                this.members = [];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -7877,7 +9751,7 @@
              * @memberof signalservice.GroupDetails
              * @instance
              */
-            GroupDetails.prototype.id=$util.newBuffer([]);
+            GroupDetails.prototype.id = $util.newBuffer([]);
 
             /**
              * GroupDetails name.
@@ -7885,7 +9759,7 @@
              * @memberof signalservice.GroupDetails
              * @instance
              */
-            GroupDetails.prototype.name="";
+            GroupDetails.prototype.name = "";
 
             /**
              * GroupDetails members.
@@ -7893,7 +9767,7 @@
              * @memberof signalservice.GroupDetails
              * @instance
              */
-            GroupDetails.prototype.members=$util.emptyArray;
+            GroupDetails.prototype.members = $util.emptyArray;
 
             /**
              * GroupDetails avatar.
@@ -7901,7 +9775,7 @@
              * @memberof signalservice.GroupDetails
              * @instance
              */
-            GroupDetails.prototype.avatar=null;
+            GroupDetails.prototype.avatar = null;
 
             /**
              * GroupDetails active.
@@ -7909,7 +9783,7 @@
              * @memberof signalservice.GroupDetails
              * @instance
              */
-            GroupDetails.prototype.active=true;
+            GroupDetails.prototype.active = true;
 
             /**
              * GroupDetails expireTimer.
@@ -7917,7 +9791,7 @@
              * @memberof signalservice.GroupDetails
              * @instance
              */
-            GroupDetails.prototype.expireTimer=0;
+            GroupDetails.prototype.expireTimer = 0;
 
             /**
              * Creates a new GroupDetails instance using the specified properties.
@@ -7927,7 +9801,7 @@
              * @param {signalservice.IGroupDetails=} [properties] Properties to set
              * @returns {signalservice.GroupDetails} GroupDetails instance
              */
-            GroupDetails.create=function create(properties) {
+            GroupDetails.create = function create(properties) {
                 return new GroupDetails(properties);
             };
 
@@ -7940,21 +9814,21 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            GroupDetails.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.id!=null&&message.hasOwnProperty("id"))
+            GroupDetails.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.id != null && message.hasOwnProperty("id"))
                     writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.id);
-                if(message.name!=null&&message.hasOwnProperty("name"))
+                if (message.name != null && message.hasOwnProperty("name"))
                     writer.uint32(/* id 2, wireType 2 =*/18).string(message.name);
-                if(message.members!=null&&message.members.length)
-                    for(var i=0;i<message.members.length;++i)
+                if (message.members != null && message.members.length)
+                    for (var i = 0; i < message.members.length; ++i)
                         writer.uint32(/* id 3, wireType 2 =*/26).string(message.members[i]);
-                if(message.avatar!=null&&message.hasOwnProperty("avatar"))
-                    $root.signalservice.GroupDetails.Avatar.encode(message.avatar,writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                if(message.active!=null&&message.hasOwnProperty("active"))
+                if (message.avatar != null && message.hasOwnProperty("avatar"))
+                    $root.signalservice.GroupDetails.Avatar.encode(message.avatar, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                if (message.active != null && message.hasOwnProperty("active"))
                     writer.uint32(/* id 5, wireType 0 =*/40).bool(message.active);
-                if(message.expireTimer!=null&&message.hasOwnProperty("expireTimer"))
+                if (message.expireTimer != null && message.hasOwnProperty("expireTimer"))
                     writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.expireTimer);
                 return writer;
             };
@@ -7968,8 +9842,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            GroupDetails.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            GroupDetails.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -7983,35 +9857,35 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            GroupDetails.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.GroupDetails();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            GroupDetails.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.GroupDetails();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.id=reader.bytes();
+                            message.id = reader.bytes();
                             break;
                         case 2:
-                            message.name=reader.string();
+                            message.name = reader.string();
                             break;
                         case 3:
-                            if(!(message.members&&message.members.length))
-                                message.members=[];
+                            if (!(message.members && message.members.length))
+                                message.members = [];
                             message.members.push(reader.string());
                             break;
                         case 4:
-                            message.avatar=$root.signalservice.GroupDetails.Avatar.decode(reader,reader.uint32());
+                            message.avatar = $root.signalservice.GroupDetails.Avatar.decode(reader, reader.uint32());
                             break;
                         case 5:
-                            message.active=reader.bool();
+                            message.active = reader.bool();
                             break;
                         case 6:
-                            message.expireTimer=reader.uint32();
+                            message.expireTimer = reader.uint32();
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -8028,10 +9902,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            GroupDetails.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            GroupDetails.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -8042,32 +9916,32 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            GroupDetails.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            GroupDetails.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.id!=null&&message.hasOwnProperty("id"))
-                    if(!(message.id&&typeof message.id.length==="number"||$util.isString(message.id)))
+                if (message.id != null && message.hasOwnProperty("id"))
+                    if (!(message.id && typeof message.id.length === "number" || $util.isString(message.id)))
                         return "id: buffer expected";
-                if(message.name!=null&&message.hasOwnProperty("name"))
-                    if(!$util.isString(message.name))
+                if (message.name != null && message.hasOwnProperty("name"))
+                    if (!$util.isString(message.name))
                         return "name: string expected";
-                if(message.members!=null&&message.hasOwnProperty("members")) {
-                    if(!Array.isArray(message.members))
+                if (message.members != null && message.hasOwnProperty("members")) {
+                    if (!Array.isArray(message.members))
                         return "members: array expected";
-                    for(var i=0;i<message.members.length;++i)
-                        if(!$util.isString(message.members[i]))
+                    for (var i = 0; i < message.members.length; ++i)
+                        if (!$util.isString(message.members[i]))
                             return "members: string[] expected";
                 }
-                if(message.avatar!=null&&message.hasOwnProperty("avatar")) {
-                    var error=$root.signalservice.GroupDetails.Avatar.verify(message.avatar);
-                    if(error)
-                        return "avatar."+error;
+                if (message.avatar != null && message.hasOwnProperty("avatar")) {
+                    var error = $root.signalservice.GroupDetails.Avatar.verify(message.avatar);
+                    if (error)
+                        return "avatar." + error;
                 }
-                if(message.active!=null&&message.hasOwnProperty("active"))
-                    if(typeof message.active!=="boolean")
+                if (message.active != null && message.hasOwnProperty("active"))
+                    if (typeof message.active !== "boolean")
                         return "active: boolean expected";
-                if(message.expireTimer!=null&&message.hasOwnProperty("expireTimer"))
-                    if(!$util.isInteger(message.expireTimer))
+                if (message.expireTimer != null && message.hasOwnProperty("expireTimer"))
+                    if (!$util.isInteger(message.expireTimer))
                         return "expireTimer: integer expected";
                 return null;
             };
@@ -8080,33 +9954,33 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.GroupDetails} GroupDetails
              */
-            GroupDetails.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.GroupDetails)
+            GroupDetails.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.GroupDetails)
                     return object;
-                var message=new $root.signalservice.GroupDetails();
-                if(object.id!=null)
-                    if(typeof object.id==="string")
-                        $util.base64.decode(object.id,message.id=$util.newBuffer($util.base64.length(object.id)),0);
-                    else if(object.id.length)
-                        message.id=object.id;
-                if(object.name!=null)
-                    message.name=String(object.name);
-                if(object.members) {
-                    if(!Array.isArray(object.members))
+                var message = new $root.signalservice.GroupDetails();
+                if (object.id != null)
+                    if (typeof object.id === "string")
+                        $util.base64.decode(object.id, message.id = $util.newBuffer($util.base64.length(object.id)), 0);
+                    else if (object.id.length)
+                        message.id = object.id;
+                if (object.name != null)
+                    message.name = String(object.name);
+                if (object.members) {
+                    if (!Array.isArray(object.members))
                         throw TypeError(".signalservice.GroupDetails.members: array expected");
-                    message.members=[];
-                    for(var i=0;i<object.members.length;++i)
-                        message.members[i]=String(object.members[i]);
+                    message.members = [];
+                    for (var i = 0; i < object.members.length; ++i)
+                        message.members[i] = String(object.members[i]);
                 }
-                if(object.avatar!=null) {
-                    if(typeof object.avatar!=="object")
+                if (object.avatar != null) {
+                    if (typeof object.avatar !== "object")
                         throw TypeError(".signalservice.GroupDetails.avatar: object expected");
-                    message.avatar=$root.signalservice.GroupDetails.Avatar.fromObject(object.avatar);
+                    message.avatar = $root.signalservice.GroupDetails.Avatar.fromObject(object.avatar);
                 }
-                if(object.active!=null)
-                    message.active=Boolean(object.active);
-                if(object.expireTimer!=null)
-                    message.expireTimer=object.expireTimer>>>0;
+                if (object.active != null)
+                    message.active = Boolean(object.active);
+                if (object.expireTimer != null)
+                    message.expireTimer = object.expireTimer >>> 0;
                 return message;
             };
 
@@ -8119,34 +9993,34 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            GroupDetails.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.arrays||options.defaults)
-                    object.members=[];
-                if(options.defaults) {
-                    object.id=options.bytes===String? "":[];
-                    object.name="";
-                    object.avatar=null;
-                    object.active=true;
-                    object.expireTimer=0;
+            GroupDetails.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.arrays || options.defaults)
+                    object.members = [];
+                if (options.defaults) {
+                    object.id = options.bytes === String ? "" : [];
+                    object.name = "";
+                    object.avatar = null;
+                    object.active = true;
+                    object.expireTimer = 0;
                 }
-                if(message.id!=null&&message.hasOwnProperty("id"))
-                    object.id=options.bytes===String? $util.base64.encode(message.id,0,message.id.length):options.bytes===Array? Array.prototype.slice.call(message.id):message.id;
-                if(message.name!=null&&message.hasOwnProperty("name"))
-                    object.name=message.name;
-                if(message.members&&message.members.length) {
-                    object.members=[];
-                    for(var j=0;j<message.members.length;++j)
-                        object.members[j]=message.members[j];
+                if (message.id != null && message.hasOwnProperty("id"))
+                    object.id = options.bytes === String ? $util.base64.encode(message.id, 0, message.id.length) : options.bytes === Array ? Array.prototype.slice.call(message.id) : message.id;
+                if (message.name != null && message.hasOwnProperty("name"))
+                    object.name = message.name;
+                if (message.members && message.members.length) {
+                    object.members = [];
+                    for (var j = 0; j < message.members.length; ++j)
+                        object.members[j] = message.members[j];
                 }
-                if(message.avatar!=null&&message.hasOwnProperty("avatar"))
-                    object.avatar=$root.signalservice.GroupDetails.Avatar.toObject(message.avatar,options);
-                if(message.active!=null&&message.hasOwnProperty("active"))
-                    object.active=message.active;
-                if(message.expireTimer!=null&&message.hasOwnProperty("expireTimer"))
-                    object.expireTimer=message.expireTimer;
+                if (message.avatar != null && message.hasOwnProperty("avatar"))
+                    object.avatar = $root.signalservice.GroupDetails.Avatar.toObject(message.avatar, options);
+                if (message.active != null && message.hasOwnProperty("active"))
+                    object.active = message.active;
+                if (message.expireTimer != null && message.hasOwnProperty("expireTimer"))
+                    object.expireTimer = message.expireTimer;
                 return object;
             };
 
@@ -8157,11 +10031,11 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            GroupDetails.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            GroupDetails.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
-            GroupDetails.Avatar=(function() {
+            GroupDetails.Avatar = (function () {
 
                 /**
                  * Properties of an Avatar.
@@ -8180,10 +10054,10 @@
                  * @param {signalservice.GroupDetails.IAvatar=} [properties] Properties to set
                  */
                 function Avatar(properties) {
-                    if(properties)
-                        for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                            if(properties[keys[i]]!=null)
-                                this[keys[i]]=properties[keys[i]];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
                 }
 
                 /**
@@ -8192,7 +10066,7 @@
                  * @memberof signalservice.GroupDetails.Avatar
                  * @instance
                  */
-                Avatar.prototype.contentType="";
+                Avatar.prototype.contentType = "";
 
                 /**
                  * Avatar length.
@@ -8200,7 +10074,7 @@
                  * @memberof signalservice.GroupDetails.Avatar
                  * @instance
                  */
-                Avatar.prototype.length=0;
+                Avatar.prototype.length = 0;
 
                 /**
                  * Creates a new Avatar instance using the specified properties.
@@ -8210,7 +10084,7 @@
                  * @param {signalservice.GroupDetails.IAvatar=} [properties] Properties to set
                  * @returns {signalservice.GroupDetails.Avatar} Avatar instance
                  */
-                Avatar.create=function create(properties) {
+                Avatar.create = function create(properties) {
                     return new Avatar(properties);
                 };
 
@@ -8223,12 +10097,12 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Avatar.encode=function encode(message,writer) {
-                    if(!writer)
-                        writer=$Writer.create();
-                    if(message.contentType!=null&&message.hasOwnProperty("contentType"))
+                Avatar.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.contentType != null && message.hasOwnProperty("contentType"))
                         writer.uint32(/* id 1, wireType 2 =*/10).string(message.contentType);
-                    if(message.length!=null&&message.hasOwnProperty("length"))
+                    if (message.length != null && message.hasOwnProperty("length"))
                         writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.length);
                     return writer;
                 };
@@ -8242,8 +10116,8 @@
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                Avatar.encodeDelimited=function encodeDelimited(message,writer) {
-                    return this.encode(message,writer).ldelim();
+                Avatar.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
                 };
 
                 /**
@@ -8257,21 +10131,21 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Avatar.decode=function decode(reader,length) {
-                    if(!(reader instanceof $Reader))
-                        reader=$Reader.create(reader);
-                    var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.GroupDetails.Avatar();
-                    while(reader.pos<end) {
-                        var tag=reader.uint32();
-                        switch(tag>>>3) {
+                Avatar.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.GroupDetails.Avatar();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
                             case 1:
-                                message.contentType=reader.string();
+                                message.contentType = reader.string();
                                 break;
                             case 2:
-                                message.length=reader.uint32();
+                                message.length = reader.uint32();
                                 break;
                             default:
-                                reader.skipType(tag&7);
+                                reader.skipType(tag & 7);
                                 break;
                         }
                     }
@@ -8288,10 +10162,10 @@
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                Avatar.decodeDelimited=function decodeDelimited(reader) {
-                    if(!(reader instanceof $Reader))
-                        reader=new $Reader(reader);
-                    return this.decode(reader,reader.uint32());
+                Avatar.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
                 };
 
                 /**
@@ -8302,14 +10176,14 @@
                  * @param {Object.<string,*>} message Plain object to verify
                  * @returns {string|null} `null` if valid, otherwise the reason why it is not
                  */
-                Avatar.verify=function verify(message) {
-                    if(typeof message!=="object"||message===null)
+                Avatar.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
                         return "object expected";
-                    if(message.contentType!=null&&message.hasOwnProperty("contentType"))
-                        if(!$util.isString(message.contentType))
+                    if (message.contentType != null && message.hasOwnProperty("contentType"))
+                        if (!$util.isString(message.contentType))
                             return "contentType: string expected";
-                    if(message.length!=null&&message.hasOwnProperty("length"))
-                        if(!$util.isInteger(message.length))
+                    if (message.length != null && message.hasOwnProperty("length"))
+                        if (!$util.isInteger(message.length))
                             return "length: integer expected";
                     return null;
                 };
@@ -8322,14 +10196,14 @@
                  * @param {Object.<string,*>} object Plain object
                  * @returns {signalservice.GroupDetails.Avatar} Avatar
                  */
-                Avatar.fromObject=function fromObject(object) {
-                    if(object instanceof $root.signalservice.GroupDetails.Avatar)
+                Avatar.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.GroupDetails.Avatar)
                         return object;
-                    var message=new $root.signalservice.GroupDetails.Avatar();
-                    if(object.contentType!=null)
-                        message.contentType=String(object.contentType);
-                    if(object.length!=null)
-                        message.length=object.length>>>0;
+                    var message = new $root.signalservice.GroupDetails.Avatar();
+                    if (object.contentType != null)
+                        message.contentType = String(object.contentType);
+                    if (object.length != null)
+                        message.length = object.length >>> 0;
                     return message;
                 };
 
@@ -8342,18 +10216,18 @@
                  * @param {$protobuf.IConversionOptions} [options] Conversion options
                  * @returns {Object.<string,*>} Plain object
                  */
-                Avatar.toObject=function toObject(message,options) {
-                    if(!options)
-                        options={};
-                    var object={};
-                    if(options.defaults) {
-                        object.contentType="";
-                        object.length=0;
+                Avatar.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.contentType = "";
+                        object.length = 0;
                     }
-                    if(message.contentType!=null&&message.hasOwnProperty("contentType"))
-                        object.contentType=message.contentType;
-                    if(message.length!=null&&message.hasOwnProperty("length"))
-                        object.length=message.length;
+                    if (message.contentType != null && message.hasOwnProperty("contentType"))
+                        object.contentType = message.contentType;
+                    if (message.length != null && message.hasOwnProperty("length"))
+                        object.length = message.length;
                     return object;
                 };
 
@@ -8364,8 +10238,8 @@
                  * @instance
                  * @returns {Object.<string,*>} JSON object
                  */
-                Avatar.prototype.toJSON=function toJSON() {
-                    return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+                Avatar.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
 
                 return Avatar;
@@ -8374,7 +10248,7 @@
             return GroupDetails;
         })();
 
-        signalservice.WebSocketRequestMessage=(function() {
+        signalservice.WebSocketRequestMessage = (function () {
 
             /**
              * Properties of a WebSocketRequestMessage.
@@ -8395,10 +10269,10 @@
              * @param {signalservice.IWebSocketRequestMessage=} [properties] Properties to set
              */
             function WebSocketRequestMessage(properties) {
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -8407,7 +10281,7 @@
              * @memberof signalservice.WebSocketRequestMessage
              * @instance
              */
-            WebSocketRequestMessage.prototype.verb="";
+            WebSocketRequestMessage.prototype.verb = "";
 
             /**
              * WebSocketRequestMessage path.
@@ -8415,7 +10289,7 @@
              * @memberof signalservice.WebSocketRequestMessage
              * @instance
              */
-            WebSocketRequestMessage.prototype.path="";
+            WebSocketRequestMessage.prototype.path = "";
 
             /**
              * WebSocketRequestMessage body.
@@ -8423,7 +10297,7 @@
              * @memberof signalservice.WebSocketRequestMessage
              * @instance
              */
-            WebSocketRequestMessage.prototype.body=$util.newBuffer([]);
+            WebSocketRequestMessage.prototype.body = $util.newBuffer([]);
 
             /**
              * WebSocketRequestMessage id.
@@ -8431,7 +10305,7 @@
              * @memberof signalservice.WebSocketRequestMessage
              * @instance
              */
-            WebSocketRequestMessage.prototype.id=$util.Long? $util.Long.fromBits(0,0,true):0;
+            WebSocketRequestMessage.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 
             /**
              * Creates a new WebSocketRequestMessage instance using the specified properties.
@@ -8441,7 +10315,7 @@
              * @param {signalservice.IWebSocketRequestMessage=} [properties] Properties to set
              * @returns {signalservice.WebSocketRequestMessage} WebSocketRequestMessage instance
              */
-            WebSocketRequestMessage.create=function create(properties) {
+            WebSocketRequestMessage.create = function create(properties) {
                 return new WebSocketRequestMessage(properties);
             };
 
@@ -8454,16 +10328,16 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            WebSocketRequestMessage.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.verb!=null&&message.hasOwnProperty("verb"))
+            WebSocketRequestMessage.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.verb != null && message.hasOwnProperty("verb"))
                     writer.uint32(/* id 1, wireType 2 =*/10).string(message.verb);
-                if(message.path!=null&&message.hasOwnProperty("path"))
+                if (message.path != null && message.hasOwnProperty("path"))
                     writer.uint32(/* id 2, wireType 2 =*/18).string(message.path);
-                if(message.body!=null&&message.hasOwnProperty("body"))
+                if (message.body != null && message.hasOwnProperty("body"))
                     writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.body);
-                if(message.id!=null&&message.hasOwnProperty("id"))
+                if (message.id != null && message.hasOwnProperty("id"))
                     writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.id);
                 return writer;
             };
@@ -8477,8 +10351,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            WebSocketRequestMessage.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            WebSocketRequestMessage.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -8492,27 +10366,27 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            WebSocketRequestMessage.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.WebSocketRequestMessage();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            WebSocketRequestMessage.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.WebSocketRequestMessage();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.verb=reader.string();
+                            message.verb = reader.string();
                             break;
                         case 2:
-                            message.path=reader.string();
+                            message.path = reader.string();
                             break;
                         case 3:
-                            message.body=reader.bytes();
+                            message.body = reader.bytes();
                             break;
                         case 4:
-                            message.id=reader.uint64();
+                            message.id = reader.uint64();
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -8529,10 +10403,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            WebSocketRequestMessage.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            WebSocketRequestMessage.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -8543,20 +10417,20 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            WebSocketRequestMessage.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            WebSocketRequestMessage.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.verb!=null&&message.hasOwnProperty("verb"))
-                    if(!$util.isString(message.verb))
+                if (message.verb != null && message.hasOwnProperty("verb"))
+                    if (!$util.isString(message.verb))
                         return "verb: string expected";
-                if(message.path!=null&&message.hasOwnProperty("path"))
-                    if(!$util.isString(message.path))
+                if (message.path != null && message.hasOwnProperty("path"))
+                    if (!$util.isString(message.path))
                         return "path: string expected";
-                if(message.body!=null&&message.hasOwnProperty("body"))
-                    if(!(message.body&&typeof message.body.length==="number"||$util.isString(message.body)))
+                if (message.body != null && message.hasOwnProperty("body"))
+                    if (!(message.body && typeof message.body.length === "number" || $util.isString(message.body)))
                         return "body: buffer expected";
-                if(message.id!=null&&message.hasOwnProperty("id"))
-                    if(!$util.isInteger(message.id)&&!(message.id&&$util.isInteger(message.id.low)&&$util.isInteger(message.id.high)))
+                if (message.id != null && message.hasOwnProperty("id"))
+                    if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
                         return "id: integer|Long expected";
                 return null;
             };
@@ -8569,28 +10443,28 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.WebSocketRequestMessage} WebSocketRequestMessage
              */
-            WebSocketRequestMessage.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.WebSocketRequestMessage)
+            WebSocketRequestMessage.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.WebSocketRequestMessage)
                     return object;
-                var message=new $root.signalservice.WebSocketRequestMessage();
-                if(object.verb!=null)
-                    message.verb=String(object.verb);
-                if(object.path!=null)
-                    message.path=String(object.path);
-                if(object.body!=null)
-                    if(typeof object.body==="string")
-                        $util.base64.decode(object.body,message.body=$util.newBuffer($util.base64.length(object.body)),0);
-                    else if(object.body.length)
-                        message.body=object.body;
-                if(object.id!=null)
-                    if($util.Long)
-                        (message.id=$util.Long.fromValue(object.id)).unsigned=true;
-                    else if(typeof object.id==="string")
-                        message.id=parseInt(object.id,10);
-                    else if(typeof object.id==="number")
-                        message.id=object.id;
-                    else if(typeof object.id==="object")
-                        message.id=new $util.LongBits(object.id.low>>>0,object.id.high>>>0).toNumber(true);
+                var message = new $root.signalservice.WebSocketRequestMessage();
+                if (object.verb != null)
+                    message.verb = String(object.verb);
+                if (object.path != null)
+                    message.path = String(object.path);
+                if (object.body != null)
+                    if (typeof object.body === "string")
+                        $util.base64.decode(object.body, message.body = $util.newBuffer($util.base64.length(object.body)), 0);
+                    else if (object.body.length)
+                        message.body = object.body;
+                if (object.id != null)
+                    if ($util.Long)
+                        (message.id = $util.Long.fromValue(object.id)).unsigned = true;
+                    else if (typeof object.id === "string")
+                        message.id = parseInt(object.id, 10);
+                    else if (typeof object.id === "number")
+                        message.id = object.id;
+                    else if (typeof object.id === "object")
+                        message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber(true);
                 return message;
             };
 
@@ -8603,31 +10477,31 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            WebSocketRequestMessage.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.defaults) {
-                    object.verb="";
-                    object.path="";
-                    object.body=options.bytes===String? "":[];
-                    if($util.Long) {
-                        var long=new $util.Long(0,0,true);
-                        object.id=options.longs===String? long.toString():options.longs===Number? long.toNumber():long;
+            WebSocketRequestMessage.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.verb = "";
+                    object.path = "";
+                    object.body = options.bytes === String ? "" : [];
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, true);
+                        object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                     } else
-                        object.id=options.longs===String? "0":0;
+                        object.id = options.longs === String ? "0" : 0;
                 }
-                if(message.verb!=null&&message.hasOwnProperty("verb"))
-                    object.verb=message.verb;
-                if(message.path!=null&&message.hasOwnProperty("path"))
-                    object.path=message.path;
-                if(message.body!=null&&message.hasOwnProperty("body"))
-                    object.body=options.bytes===String? $util.base64.encode(message.body,0,message.body.length):options.bytes===Array? Array.prototype.slice.call(message.body):message.body;
-                if(message.id!=null&&message.hasOwnProperty("id"))
-                    if(typeof message.id==="number")
-                        object.id=options.longs===String? String(message.id):message.id;
+                if (message.verb != null && message.hasOwnProperty("verb"))
+                    object.verb = message.verb;
+                if (message.path != null && message.hasOwnProperty("path"))
+                    object.path = message.path;
+                if (message.body != null && message.hasOwnProperty("body"))
+                    object.body = options.bytes === String ? $util.base64.encode(message.body, 0, message.body.length) : options.bytes === Array ? Array.prototype.slice.call(message.body) : message.body;
+                if (message.id != null && message.hasOwnProperty("id"))
+                    if (typeof message.id === "number")
+                        object.id = options.longs === String ? String(message.id) : message.id;
                     else
-                        object.id=options.longs===String? $util.Long.prototype.toString.call(message.id):options.longs===Number? new $util.LongBits(message.id.low>>>0,message.id.high>>>0).toNumber(true):message.id;
+                        object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
                 return object;
             };
 
@@ -8638,14 +10512,14 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            WebSocketRequestMessage.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            WebSocketRequestMessage.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             return WebSocketRequestMessage;
         })();
 
-        signalservice.WebSocketResponseMessage=(function() {
+        signalservice.WebSocketResponseMessage = (function () {
 
             /**
              * Properties of a WebSocketResponseMessage.
@@ -8666,10 +10540,10 @@
              * @param {signalservice.IWebSocketResponseMessage=} [properties] Properties to set
              */
             function WebSocketResponseMessage(properties) {
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -8678,7 +10552,7 @@
              * @memberof signalservice.WebSocketResponseMessage
              * @instance
              */
-            WebSocketResponseMessage.prototype.id=$util.Long? $util.Long.fromBits(0,0,true):0;
+            WebSocketResponseMessage.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 
             /**
              * WebSocketResponseMessage status.
@@ -8686,7 +10560,7 @@
              * @memberof signalservice.WebSocketResponseMessage
              * @instance
              */
-            WebSocketResponseMessage.prototype.status=0;
+            WebSocketResponseMessage.prototype.status = 0;
 
             /**
              * WebSocketResponseMessage message.
@@ -8694,7 +10568,7 @@
              * @memberof signalservice.WebSocketResponseMessage
              * @instance
              */
-            WebSocketResponseMessage.prototype.message="";
+            WebSocketResponseMessage.prototype.message = "";
 
             /**
              * WebSocketResponseMessage body.
@@ -8702,7 +10576,7 @@
              * @memberof signalservice.WebSocketResponseMessage
              * @instance
              */
-            WebSocketResponseMessage.prototype.body=$util.newBuffer([]);
+            WebSocketResponseMessage.prototype.body = $util.newBuffer([]);
 
             /**
              * Creates a new WebSocketResponseMessage instance using the specified properties.
@@ -8712,7 +10586,7 @@
              * @param {signalservice.IWebSocketResponseMessage=} [properties] Properties to set
              * @returns {signalservice.WebSocketResponseMessage} WebSocketResponseMessage instance
              */
-            WebSocketResponseMessage.create=function create(properties) {
+            WebSocketResponseMessage.create = function create(properties) {
                 return new WebSocketResponseMessage(properties);
             };
 
@@ -8725,16 +10599,16 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            WebSocketResponseMessage.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.id!=null&&message.hasOwnProperty("id"))
+            WebSocketResponseMessage.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.id != null && message.hasOwnProperty("id"))
                     writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.id);
-                if(message.status!=null&&message.hasOwnProperty("status"))
+                if (message.status != null && message.hasOwnProperty("status"))
                     writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.status);
-                if(message.message!=null&&message.hasOwnProperty("message"))
+                if (message.message != null && message.hasOwnProperty("message"))
                     writer.uint32(/* id 3, wireType 2 =*/26).string(message.message);
-                if(message.body!=null&&message.hasOwnProperty("body"))
+                if (message.body != null && message.hasOwnProperty("body"))
                     writer.uint32(/* id 4, wireType 2 =*/34).bytes(message.body);
                 return writer;
             };
@@ -8748,8 +10622,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            WebSocketResponseMessage.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            WebSocketResponseMessage.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -8763,27 +10637,27 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            WebSocketResponseMessage.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.WebSocketResponseMessage();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            WebSocketResponseMessage.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.WebSocketResponseMessage();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.id=reader.uint64();
+                            message.id = reader.uint64();
                             break;
                         case 2:
-                            message.status=reader.uint32();
+                            message.status = reader.uint32();
                             break;
                         case 3:
-                            message.message=reader.string();
+                            message.message = reader.string();
                             break;
                         case 4:
-                            message.body=reader.bytes();
+                            message.body = reader.bytes();
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -8800,10 +10674,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            WebSocketResponseMessage.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            WebSocketResponseMessage.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -8814,20 +10688,20 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            WebSocketResponseMessage.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            WebSocketResponseMessage.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.id!=null&&message.hasOwnProperty("id"))
-                    if(!$util.isInteger(message.id)&&!(message.id&&$util.isInteger(message.id.low)&&$util.isInteger(message.id.high)))
+                if (message.id != null && message.hasOwnProperty("id"))
+                    if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
                         return "id: integer|Long expected";
-                if(message.status!=null&&message.hasOwnProperty("status"))
-                    if(!$util.isInteger(message.status))
+                if (message.status != null && message.hasOwnProperty("status"))
+                    if (!$util.isInteger(message.status))
                         return "status: integer expected";
-                if(message.message!=null&&message.hasOwnProperty("message"))
-                    if(!$util.isString(message.message))
+                if (message.message != null && message.hasOwnProperty("message"))
+                    if (!$util.isString(message.message))
                         return "message: string expected";
-                if(message.body!=null&&message.hasOwnProperty("body"))
-                    if(!(message.body&&typeof message.body.length==="number"||$util.isString(message.body)))
+                if (message.body != null && message.hasOwnProperty("body"))
+                    if (!(message.body && typeof message.body.length === "number" || $util.isString(message.body)))
                         return "body: buffer expected";
                 return null;
             };
@@ -8840,28 +10714,28 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.WebSocketResponseMessage} WebSocketResponseMessage
              */
-            WebSocketResponseMessage.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.WebSocketResponseMessage)
+            WebSocketResponseMessage.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.WebSocketResponseMessage)
                     return object;
-                var message=new $root.signalservice.WebSocketResponseMessage();
-                if(object.id!=null)
-                    if($util.Long)
-                        (message.id=$util.Long.fromValue(object.id)).unsigned=true;
-                    else if(typeof object.id==="string")
-                        message.id=parseInt(object.id,10);
-                    else if(typeof object.id==="number")
-                        message.id=object.id;
-                    else if(typeof object.id==="object")
-                        message.id=new $util.LongBits(object.id.low>>>0,object.id.high>>>0).toNumber(true);
-                if(object.status!=null)
-                    message.status=object.status>>>0;
-                if(object.message!=null)
-                    message.message=String(object.message);
-                if(object.body!=null)
-                    if(typeof object.body==="string")
-                        $util.base64.decode(object.body,message.body=$util.newBuffer($util.base64.length(object.body)),0);
-                    else if(object.body.length)
-                        message.body=object.body;
+                var message = new $root.signalservice.WebSocketResponseMessage();
+                if (object.id != null)
+                    if ($util.Long)
+                        (message.id = $util.Long.fromValue(object.id)).unsigned = true;
+                    else if (typeof object.id === "string")
+                        message.id = parseInt(object.id, 10);
+                    else if (typeof object.id === "number")
+                        message.id = object.id;
+                    else if (typeof object.id === "object")
+                        message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber(true);
+                if (object.status != null)
+                    message.status = object.status >>> 0;
+                if (object.message != null)
+                    message.message = String(object.message);
+                if (object.body != null)
+                    if (typeof object.body === "string")
+                        $util.base64.decode(object.body, message.body = $util.newBuffer($util.base64.length(object.body)), 0);
+                    else if (object.body.length)
+                        message.body = object.body;
                 return message;
             };
 
@@ -8874,31 +10748,31 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            WebSocketResponseMessage.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.defaults) {
-                    if($util.Long) {
-                        var long=new $util.Long(0,0,true);
-                        object.id=options.longs===String? long.toString():options.longs===Number? long.toNumber():long;
+            WebSocketResponseMessage.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, true);
+                        object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                     } else
-                        object.id=options.longs===String? "0":0;
-                    object.status=0;
-                    object.message="";
-                    object.body=options.bytes===String? "":[];
+                        object.id = options.longs === String ? "0" : 0;
+                    object.status = 0;
+                    object.message = "";
+                    object.body = options.bytes === String ? "" : [];
                 }
-                if(message.id!=null&&message.hasOwnProperty("id"))
-                    if(typeof message.id==="number")
-                        object.id=options.longs===String? String(message.id):message.id;
+                if (message.id != null && message.hasOwnProperty("id"))
+                    if (typeof message.id === "number")
+                        object.id = options.longs === String ? String(message.id) : message.id;
                     else
-                        object.id=options.longs===String? $util.Long.prototype.toString.call(message.id):options.longs===Number? new $util.LongBits(message.id.low>>>0,message.id.high>>>0).toNumber(true):message.id;
-                if(message.status!=null&&message.hasOwnProperty("status"))
-                    object.status=message.status;
-                if(message.message!=null&&message.hasOwnProperty("message"))
-                    object.message=message.message;
-                if(message.body!=null&&message.hasOwnProperty("body"))
-                    object.body=options.bytes===String? $util.base64.encode(message.body,0,message.body.length):options.bytes===Array? Array.prototype.slice.call(message.body):message.body;
+                        object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
+                if (message.status != null && message.hasOwnProperty("status"))
+                    object.status = message.status;
+                if (message.message != null && message.hasOwnProperty("message"))
+                    object.message = message.message;
+                if (message.body != null && message.hasOwnProperty("body"))
+                    object.body = options.bytes === String ? $util.base64.encode(message.body, 0, message.body.length) : options.bytes === Array ? Array.prototype.slice.call(message.body) : message.body;
                 return object;
             };
 
@@ -8909,14 +10783,14 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            WebSocketResponseMessage.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            WebSocketResponseMessage.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             return WebSocketResponseMessage;
         })();
 
-        signalservice.WebSocketMessage=(function() {
+        signalservice.WebSocketMessage = (function () {
 
             /**
              * Properties of a WebSocketMessage.
@@ -8936,10 +10810,10 @@
              * @param {signalservice.IWebSocketMessage=} [properties] Properties to set
              */
             function WebSocketMessage(properties) {
-                if(properties)
-                    for(var keys=Object.keys(properties),i=0;i<keys.length;++i)
-                        if(properties[keys[i]]!=null)
-                            this[keys[i]]=properties[keys[i]];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
             }
 
             /**
@@ -8948,7 +10822,7 @@
              * @memberof signalservice.WebSocketMessage
              * @instance
              */
-            WebSocketMessage.prototype.type=0;
+            WebSocketMessage.prototype.type = 0;
 
             /**
              * WebSocketMessage request.
@@ -8956,7 +10830,7 @@
              * @memberof signalservice.WebSocketMessage
              * @instance
              */
-            WebSocketMessage.prototype.request=null;
+            WebSocketMessage.prototype.request = null;
 
             /**
              * WebSocketMessage response.
@@ -8964,7 +10838,7 @@
              * @memberof signalservice.WebSocketMessage
              * @instance
              */
-            WebSocketMessage.prototype.response=null;
+            WebSocketMessage.prototype.response = null;
 
             /**
              * Creates a new WebSocketMessage instance using the specified properties.
@@ -8974,7 +10848,7 @@
              * @param {signalservice.IWebSocketMessage=} [properties] Properties to set
              * @returns {signalservice.WebSocketMessage} WebSocketMessage instance
              */
-            WebSocketMessage.create=function create(properties) {
+            WebSocketMessage.create = function create(properties) {
                 return new WebSocketMessage(properties);
             };
 
@@ -8987,15 +10861,15 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            WebSocketMessage.encode=function encode(message,writer) {
-                if(!writer)
-                    writer=$Writer.create();
-                if(message.type!=null&&message.hasOwnProperty("type"))
+            WebSocketMessage.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.type != null && message.hasOwnProperty("type"))
                     writer.uint32(/* id 1, wireType 0 =*/8).int32(message.type);
-                if(message.request!=null&&message.hasOwnProperty("request"))
-                    $root.signalservice.WebSocketRequestMessage.encode(message.request,writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                if(message.response!=null&&message.hasOwnProperty("response"))
-                    $root.signalservice.WebSocketResponseMessage.encode(message.response,writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                if (message.request != null && message.hasOwnProperty("request"))
+                    $root.signalservice.WebSocketRequestMessage.encode(message.request, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                if (message.response != null && message.hasOwnProperty("response"))
+                    $root.signalservice.WebSocketResponseMessage.encode(message.response, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                 return writer;
             };
 
@@ -9008,8 +10882,8 @@
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
-            WebSocketMessage.encodeDelimited=function encodeDelimited(message,writer) {
-                return this.encode(message,writer).ldelim();
+            WebSocketMessage.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
             };
 
             /**
@@ -9023,24 +10897,24 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            WebSocketMessage.decode=function decode(reader,length) {
-                if(!(reader instanceof $Reader))
-                    reader=$Reader.create(reader);
-                var end=length===undefined? reader.len:reader.pos+length,message=new $root.signalservice.WebSocketMessage();
-                while(reader.pos<end) {
-                    var tag=reader.uint32();
-                    switch(tag>>>3) {
+            WebSocketMessage.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.WebSocketMessage();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
                         case 1:
-                            message.type=reader.int32();
+                            message.type = reader.int32();
                             break;
                         case 2:
-                            message.request=$root.signalservice.WebSocketRequestMessage.decode(reader,reader.uint32());
+                            message.request = $root.signalservice.WebSocketRequestMessage.decode(reader, reader.uint32());
                             break;
                         case 3:
-                            message.response=$root.signalservice.WebSocketResponseMessage.decode(reader,reader.uint32());
+                            message.response = $root.signalservice.WebSocketResponseMessage.decode(reader, reader.uint32());
                             break;
                         default:
-                            reader.skipType(tag&7);
+                            reader.skipType(tag & 7);
                             break;
                     }
                 }
@@ -9057,10 +10931,10 @@
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
-            WebSocketMessage.decodeDelimited=function decodeDelimited(reader) {
-                if(!(reader instanceof $Reader))
-                    reader=new $Reader(reader);
-                return this.decode(reader,reader.uint32());
+            WebSocketMessage.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
             };
 
             /**
@@ -9071,11 +10945,11 @@
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
              */
-            WebSocketMessage.verify=function verify(message) {
-                if(typeof message!=="object"||message===null)
+            WebSocketMessage.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
                     return "object expected";
-                if(message.type!=null&&message.hasOwnProperty("type"))
-                    switch(message.type) {
+                if (message.type != null && message.hasOwnProperty("type"))
+                    switch (message.type) {
                         default:
                             return "type: enum value expected";
                         case 0:
@@ -9083,15 +10957,15 @@
                         case 2:
                             break;
                     }
-                if(message.request!=null&&message.hasOwnProperty("request")) {
-                    var error=$root.signalservice.WebSocketRequestMessage.verify(message.request);
-                    if(error)
-                        return "request."+error;
+                if (message.request != null && message.hasOwnProperty("request")) {
+                    var error = $root.signalservice.WebSocketRequestMessage.verify(message.request);
+                    if (error)
+                        return "request." + error;
                 }
-                if(message.response!=null&&message.hasOwnProperty("response")) {
-                    var error=$root.signalservice.WebSocketResponseMessage.verify(message.response);
-                    if(error)
-                        return "response."+error;
+                if (message.response != null && message.hasOwnProperty("response")) {
+                    var error = $root.signalservice.WebSocketResponseMessage.verify(message.response);
+                    if (error)
+                        return "response." + error;
                 }
                 return null;
             };
@@ -9104,33 +10978,33 @@
              * @param {Object.<string,*>} object Plain object
              * @returns {signalservice.WebSocketMessage} WebSocketMessage
              */
-            WebSocketMessage.fromObject=function fromObject(object) {
-                if(object instanceof $root.signalservice.WebSocketMessage)
+            WebSocketMessage.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.WebSocketMessage)
                     return object;
-                var message=new $root.signalservice.WebSocketMessage();
-                switch(object.type) {
+                var message = new $root.signalservice.WebSocketMessage();
+                switch (object.type) {
                     case "UNKNOWN":
                     case 0:
-                        message.type=0;
+                        message.type = 0;
                         break;
                     case "REQUEST":
                     case 1:
-                        message.type=1;
+                        message.type = 1;
                         break;
                     case "RESPONSE":
                     case 2:
-                        message.type=2;
+                        message.type = 2;
                         break;
                 }
-                if(object.request!=null) {
-                    if(typeof object.request!=="object")
+                if (object.request != null) {
+                    if (typeof object.request !== "object")
                         throw TypeError(".signalservice.WebSocketMessage.request: object expected");
-                    message.request=$root.signalservice.WebSocketRequestMessage.fromObject(object.request);
+                    message.request = $root.signalservice.WebSocketRequestMessage.fromObject(object.request);
                 }
-                if(object.response!=null) {
-                    if(typeof object.response!=="object")
+                if (object.response != null) {
+                    if (typeof object.response !== "object")
                         throw TypeError(".signalservice.WebSocketMessage.response: object expected");
-                    message.response=$root.signalservice.WebSocketResponseMessage.fromObject(object.response);
+                    message.response = $root.signalservice.WebSocketResponseMessage.fromObject(object.response);
                 }
                 return message;
             };
@@ -9144,21 +11018,21 @@
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            WebSocketMessage.toObject=function toObject(message,options) {
-                if(!options)
-                    options={};
-                var object={};
-                if(options.defaults) {
-                    object.type=options.enums===String? "UNKNOWN":0;
-                    object.request=null;
-                    object.response=null;
+            WebSocketMessage.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.type = options.enums === String ? "UNKNOWN" : 0;
+                    object.request = null;
+                    object.response = null;
                 }
-                if(message.type!=null&&message.hasOwnProperty("type"))
-                    object.type=options.enums===String? $root.signalservice.WebSocketMessage.Type[message.type]:message.type;
-                if(message.request!=null&&message.hasOwnProperty("request"))
-                    object.request=$root.signalservice.WebSocketRequestMessage.toObject(message.request,options);
-                if(message.response!=null&&message.hasOwnProperty("response"))
-                    object.response=$root.signalservice.WebSocketResponseMessage.toObject(message.response,options);
+                if (message.type != null && message.hasOwnProperty("type"))
+                    object.type = options.enums === String ? $root.signalservice.WebSocketMessage.Type[message.type] : message.type;
+                if (message.request != null && message.hasOwnProperty("request"))
+                    object.request = $root.signalservice.WebSocketRequestMessage.toObject(message.request, options);
+                if (message.response != null && message.hasOwnProperty("response"))
+                    object.response = $root.signalservice.WebSocketResponseMessage.toObject(message.response, options);
                 return object;
             };
 
@@ -9169,8 +11043,8 @@
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            WebSocketMessage.prototype.toJSON=function toJSON() {
-                return this.constructor.toObject(this,$protobuf.util.toJSONOptions);
+            WebSocketMessage.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
             /**
@@ -9181,11 +11055,11 @@
              * @property {number} REQUEST=1 REQUEST value
              * @property {number} RESPONSE=2 RESPONSE value
              */
-            WebSocketMessage.Type=(function() {
-                var valuesById={},values=Object.create(valuesById);
-                values[valuesById[0]="UNKNOWN"]=0;
-                values[valuesById[1]="REQUEST"]=1;
-                values[valuesById[2]="RESPONSE"]=2;
+            WebSocketMessage.Type = (function () {
+                var valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[0] = "UNKNOWN"] = 0;
+                values[valuesById[1] = "REQUEST"] = 1;
+                values[valuesById[2] = "RESPONSE"] = 2;
                 return values;
             })();
 
@@ -9195,5 +11069,5 @@
         return signalservice;
     })();
 
-    window.ts.protobuf=$root;
+    window.ts.protobuf = $root;
 })();
