@@ -18,6 +18,8 @@
         container: {
             width: '100%',
             height: 72,
+        },
+        containerSeparator: {
             borderBottomWidth: 1,
             borderBottomColor: '#ccc',
             borderBottomStyle: 'solid',
@@ -55,6 +57,10 @@
         },
     };
     class DocumentListItem extends react_1.default.Component {
+        render() {
+            const { shouldShowSeparator } = this.props;
+            return (react_1.default.createElement("div", { style: Object.assign({}, styles.container, (shouldShowSeparator ? styles.containerSeparator : {})) }, this.renderContent()));
+        }
         renderContent() {
             const { fileName, fileSize, timestamp } = this.props;
             return (react_1.default.createElement("div", { style: styles.itemContainer, onClick: this.props.onClick },
@@ -64,9 +70,9 @@
                     react_1.default.createElement("span", { style: styles.itemFileSize }, typeof fileSize === 'number' ? filesize_1.default(fileSize) : '')),
                 react_1.default.createElement("div", { style: styles.itemDate }, moment_1.default(timestamp).format('ddd, MMM D, Y'))));
         }
-        render() {
-            return react_1.default.createElement("div", { style: styles.container }, this.renderContent());
-        }
     }
+    DocumentListItem.defaultProps = {
+        shouldShowSeparator: true,
+    };
     exports.DocumentListItem = DocumentListItem;
 })();

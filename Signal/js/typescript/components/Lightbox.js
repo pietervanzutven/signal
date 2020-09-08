@@ -19,7 +19,10 @@
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
     const is_1 = __importDefault(window.sindresorhus.is);
+    const Colors = __importStar(window.ts.styles.Colors);
     const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
+    const MIME = __importStar(window.ts.types.MIME);
+    const colorSVG_1 = window.ts.styles.colorSVG;
     const CONTROLS_WIDTH = 50;
     const CONTROLS_SPACING = 10;
     const styles = {
@@ -47,7 +50,7 @@
             display: 'inline-flex',
             justifyContent: 'center',
         },
-        image: {
+        object: {
             flexGrow: 1,
             flexShrink: 0,
             maxWidth: '100%',
@@ -94,23 +97,29 @@
         return (react_1.default.createElement("a", { href: "#", onClick: clickHandler, className: classnames_1.default('iconButton', type), style: style }));
     };
     const IconButtonPlaceholder = () => (react_1.default.createElement("div", { style: styles.iconButtonPlaceholder }));
+    const Icon = ({ onClick, url, }) => (react_1.default.createElement("div", { style: Object.assign({}, styles.object, colorSVG_1.colorSVG(url, Colors.ICON_SECONDARY), { maxWidth: 200 }), onClick: onClick }));
     class Lightbox extends react_1.default.Component {
         constructor() {
             super(...arguments);
             this.containerRef = null;
             this.renderObject = ({ objectURL, contentType, }) => {
-                const isImage = GoogleChrome.isImageTypeSupported(contentType);
-                if (isImage) {
-                    return (react_1.default.createElement("img", { style: styles.image, src: objectURL, onClick: this.onObjectClick }));
+                const isImageTypeSupported = GoogleChrome.isImageTypeSupported(contentType);
+                if (isImageTypeSupported) {
+                    return (react_1.default.createElement("img", { style: styles.object, src: objectURL, onClick: this.onObjectClick }));
                 }
-                const isVideo = GoogleChrome.isVideoTypeSupported(contentType);
-                if (isVideo) {
-                    return (react_1.default.createElement("video", { controls: true },
+                const isVideoTypeSupported = GoogleChrome.isVideoTypeSupported(contentType);
+                if (isVideoTypeSupported) {
+                    return (react_1.default.createElement("video", { controls: true, style: styles.object },
                         react_1.default.createElement("source", { src: objectURL })));
+                }
+                const isUnsupportedImageType = !isImageTypeSupported && MIME.isImage(contentType);
+                const isUnsupportedVideoType = !isVideoTypeSupported && MIME.isVideo(contentType);
+                if (isUnsupportedImageType || isUnsupportedVideoType) {
+                    return (react_1.default.createElement(Icon, { url: isUnsupportedVideoType ? 'images/video.svg' : 'images/image.svg', onClick: this.onObjectClick }));
                 }
                 // tslint:disable-next-line no-console
                 console.log('Lightbox: Unexpected content type', { contentType });
-                return null;
+                return react_1.default.createElement(Icon, { onClick: this.onObjectClick, url: "images/file.svg" });
             };
             this.setContainerRef = (value) => {
                 this.containerRef = value;

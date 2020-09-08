@@ -22,19 +22,22 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = window.lodash;
     const Attachment = __importStar(window.ts.types.Attachment);
     const IndexedDB = __importStar(window.ts.types.IndexedDB);
+    const hasAttachment = (predicate) => (message) => IndexedDB.toIndexablePresence(message.attachments.some(predicate));
+    const hasFileAttachment = hasAttachment(Attachment.isFile);
+    const hasVisualMediaAttachment = hasAttachment(Attachment.isVisualMedia);
     exports.initializeAttachmentMetadata = (message) => __awaiter(this, void 0, void 0, function* () {
         if (message.type === 'verified-change') {
             return message;
         }
         const hasAttachments = IndexedDB.toIndexableBoolean(message.attachments.length > 0);
-        const [hasVisualMediaAttachments, hasFileAttachments] = lodash_1.partition(message.attachments, Attachment.isVisualMedia)
-            .map(attachments => attachments.length > 0)
-            .map(IndexedDB.toIndexablePresence);
-        return Object.assign({}, message, { hasAttachments,
-            hasVisualMediaAttachments,
-            hasFileAttachments });
+        const hasFileAttachments = hasFileAttachment(message);
+        const hasVisualMediaAttachments = hasVisualMediaAttachment(message);
+        return Object.assign({}, message, {
+            hasAttachments,
+            hasFileAttachments,
+            hasVisualMediaAttachments
+        });
     });
 })();

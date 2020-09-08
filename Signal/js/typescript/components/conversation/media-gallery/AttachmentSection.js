@@ -51,7 +51,8 @@
         }
         renderItems() {
             const { i18n, messages, type } = this.props;
-            return messages.map(message => {
+            return messages.map((message, index, array) => {
+                const shouldShowSeparator = index < array.length - 1;
                 const { attachments } = message;
                 const firstAttachment = attachments[0];
                 const onClick = this.createClickHandler(message);
@@ -59,7 +60,7 @@
                     case 'media':
                         return (react_1.default.createElement(MediaGridItem_1.MediaGridItem, { key: message.id, message: message, onClick: onClick }));
                     case 'documents':
-                        return (react_1.default.createElement(DocumentListItem_1.DocumentListItem, { key: message.id, i18n: i18n, fileSize: firstAttachment.size, fileName: firstAttachment.fileName, timestamp: message.received_at, onClick: onClick }));
+                        return (react_1.default.createElement(DocumentListItem_1.DocumentListItem, { key: message.id, fileName: firstAttachment.fileName, fileSize: firstAttachment.size, i18n: i18n, shouldShowSeparator: shouldShowSeparator, onClick: onClick, timestamp: message.received_at }));
                     default:
                         return missingCaseError_1.missingCaseError(type);
                 }

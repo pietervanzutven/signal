@@ -18,7 +18,6 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const is_1 = __importDefault(window.sindresorhus.is);
     const moment_1 = __importDefault(window.moment);
-    const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
     const MIME = __importStar(window.ts.types.MIME);
     const arrayBufferToObjectURL_1 = window.ts.util.arrayBufferToObjectURL;
     const saveURLAsFile_1 = window.ts.util.saveURLAsFile;
@@ -28,9 +27,23 @@
         if (is_1.default.undefined(contentType)) {
             return false;
         }
-        const isSupportedImageType = GoogleChrome.isImageTypeSupported(contentType);
-        const isSupportedVideoType = GoogleChrome.isVideoTypeSupported(contentType);
-        return isSupportedImageType || isSupportedVideoType;
+        if (exports.isVoiceMessage(attachment)) {
+            return false;
+        }
+        return MIME.isImage(contentType) || MIME.isVideo(contentType);
+    };
+    exports.isFile = (attachment) => {
+        const { contentType } = attachment;
+        if (is_1.default.undefined(contentType)) {
+            return false;
+        }
+        if (exports.isVisualMedia(attachment)) {
+            return false;
+        }
+        if (exports.isVoiceMessage(attachment)) {
+            return false;
+        }
+        return true;
     };
     exports.isVoiceMessage = (attachment) => {
         const flag = protobuf_1.SignalService.AttachmentPointer.Flags.VOICE_MESSAGE;

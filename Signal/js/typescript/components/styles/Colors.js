@@ -11,4 +11,5 @@
      * @prettier
      */
     exports.TEXT_SECONDARY = '#bbb';
+    exports.ICON_SECONDARY = '#ccc';
 })();
