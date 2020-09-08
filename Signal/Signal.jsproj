@@ -54,7 +54,7 @@
     <MinimumVisualStudioVersion>$(VersionNumberMajor).$(VersionNumberMinor)</MinimumVisualStudioVersion>
     <DefaultLanguage>en</DefaultLanguage>
     <PackageCertificateKeyFile>Signal_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>40E5434AE19909E4C664C1C85AC37B68A9A17155</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>0129299496503C815BCAB5310A50064948A96409</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
@@ -379,6 +379,7 @@
     <Content Include="js\typescript\types\Contact.js" />
     <Content Include="js\typescript\types\Conversation.js" />
     <Content Include="js\typescript\types\IndexedDB.js" />
+    <Content Include="js\typescript\types\Message.js" />
     <Content Include="js\typescript\types\message\initializeAttachmentMetadata.js" />
     <Content Include="js\typescript\types\MIME.js" />
     <Content Include="js\typescript\types\Settings.js" />
