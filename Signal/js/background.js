@@ -252,7 +252,7 @@
     });
 
     window.addEventListener('focus', () => Whisper.Notifications.clear());
-    window.addEventListener('unload', () => Whisper.Notifications.clear());
+    window.addEventListener('unload', () => Whisper.Notifications.fastClear());
 
     Whisper.events.on('showConversation', function(conversation) {
       if (appView) {
