@@ -2,12 +2,12 @@
     "use strict";
 
     window.ts = window.ts || {};
-    window.ts.util = window.ts.util || {};
-    const exports = window.ts.util;
+    window.ts.types = window.ts.types || {};
+    const exports = window.ts.types.PhoneNumber = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
     const libphonenumberInstance_1 = window.ts.util.libphonenumberInstance;
-    function formatPhoneNumber(phoneNumber, options) {
+    function format(phoneNumber, options) {
         try {
             const { ourRegionCode } = options;
             const parsedNumber = libphonenumberInstance_1.instance.parse(phoneNumber);
@@ -21,5 +21,14 @@
             return phoneNumber;
         }
     }
-    exports.formatPhoneNumber = formatPhoneNumber;
+    exports.format = format;
+    function parse(phoneNumber, options) {
+        const { regionCode } = options;
+        const parsedNumber = libphonenumberInstance_1.instance.parse(phoneNumber, regionCode);
+        if (libphonenumberInstance_1.instance.isValidNumber(parsedNumber)) {
+            return libphonenumberInstance_1.instance.format(parsedNumber, libphonenumberInstance_1.PhoneNumberFormat.E164);
+        }
+        return phoneNumber;
+    }
+    exports.parse = parse;
 })();

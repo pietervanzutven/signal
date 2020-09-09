@@ -261,9 +261,15 @@
   exports.CURRENT_SCHEMA_VERSION = VERSIONS.length - 1;
 
   // UpgradeStep
-  exports.upgradeSchema = async (rawMessage, { writeNewAttachmentData } = {}) => {
+  exports.upgradeSchema = async (
+    rawMessage,
+    { writeNewAttachmentData, getRegionCode } = {}
+  ) => {
     if (!isFunction(writeNewAttachmentData)) {
       throw new TypeError('`context.writeNewAttachmentData` is required');
+    }
+    if (!isFunction(getRegionCode)) {
+      throw new TypeError('`context.getRegionCode` is required');
     }
 
     let message = rawMessage;
@@ -272,7 +278,10 @@
       // We really do want this intra-loop await because this is a chained async action,
       //   each step dependent on the previous
       // eslint-disable-next-line no-await-in-loop
-      message = await currentVersion(message, { writeNewAttachmentData });
+      message = await currentVersion(message, {
+        writeNewAttachmentData,
+        regionCode: getRegionCode(),
+      });
     }
 
     return message;

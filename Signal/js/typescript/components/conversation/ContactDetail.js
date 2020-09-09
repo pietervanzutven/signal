@@ -14,10 +14,10 @@
     const Contact_1 = window.ts.types.Contact;
     const missingCaseError_1 = window.ts.util.missingCaseError;
     const EmbeddedContact_1 = window.ts.components.conversation.EmbeddedContact;
-    function getLabelForContactMethod(method, i18n) {
+    function getLabelForEmail(method, i18n) {
         switch (method.type) {
             case Contact_1.ContactType.CUSTOM:
-                return method.label;
+                return method.label || i18n('email');
             case Contact_1.ContactType.HOME:
                 return i18n('home');
             case Contact_1.ContactType.MOBILE:
@@ -25,29 +25,53 @@
             case Contact_1.ContactType.WORK:
                 return i18n('work');
             default:
-                return missingCaseError_1.missingCaseError(method.type);
+                throw missingCaseError_1.missingCaseError(method.type);
+        }
+    }
+    function getLabelForPhone(method, i18n) {
+        switch (method.type) {
+            case Contact_1.ContactType.CUSTOM:
+                return method.label || i18n('phone');
+            case Contact_1.ContactType.HOME:
+                return i18n('home');
+            case Contact_1.ContactType.MOBILE:
+                return i18n('mobile');
+            case Contact_1.ContactType.WORK:
+                return i18n('work');
+            default:
+                throw missingCaseError_1.missingCaseError(method.type);
         }
     }
     function getLabelForAddress(address, i18n) {
         switch (address.type) {
             case Contact_1.AddressType.CUSTOM:
-                return address.label;
+                return address.label || i18n('address');
             case Contact_1.AddressType.HOME:
                 return i18n('home');
             case Contact_1.AddressType.WORK:
                 return i18n('work');
             default:
-                return missingCaseError_1.missingCaseError(address.type);
+                throw missingCaseError_1.missingCaseError(address.type);
         }
     }
     class ContactDetail extends react_1.default.Component {
-        renderAdditionalContact(items, i18n) {
+        renderEmail(items, i18n) {
             if (!items || items.length === 0) {
                 return;
             }
             return items.map((item) => {
                 return (react_1.default.createElement("div", { key: item.value, className: "additional-contact" },
-                    react_1.default.createElement("div", { className: "type" }, getLabelForContactMethod(item, i18n)),
+                    react_1.default.createElement("div", { className: "type" }, getLabelForEmail(item, i18n)),
+                    item.value));
+            });
+        }
+        renderPhone(items, i18n) {
+            if (!items || items.length === 0) {
+                return;
+            }
+            return items.map((item) => {
+                return (react_1.default.createElement("div", { key: item.value, className: "additional-contact" },
+                    react_1.default.createElement("div", { className: "type" }, getLabelForPhone(item, i18n)),
                     item.value));
             });
         }
@@ -98,8 +122,8 @@
                 EmbeddedContact_1.renderName(contact),
                 EmbeddedContact_1.renderContactShorthand(contact),
                 EmbeddedContact_1.renderSendMessage({ hasSignalAccount, i18n, onSendMessage }),
-                this.renderAdditionalContact(contact.number, i18n),
-                this.renderAdditionalContact(contact.email, i18n),
+                this.renderPhone(contact.number, i18n),
+                this.renderEmail(contact.email, i18n),
                 this.renderAddresses(contact.address, i18n)));
         }
     }

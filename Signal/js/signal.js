@@ -55,7 +55,7 @@
   const MessageDataMigrator = window.messages_data_migrator;
 
   exports.setup = (options = {}) => {
-    const { Attachments, userDataPath } = options;
+    const { Attachments, userDataPath, getRegionCode } = options;
 
     const Components = {
       ContactDetail,
@@ -89,6 +89,7 @@
       upgradeMessageSchema: message =>
         Message.upgradeSchema(message, {
           writeNewAttachmentData: Attachments.createWriterForNew(attachmentsPath),
+          getRegionCode,
         }),
       writeMessageAttachments: Message.createAttachmentDataWriter(
         Attachments.createWriterForExisting(attachmentsPath)

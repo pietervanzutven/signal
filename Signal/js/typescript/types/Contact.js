@@ -6,7 +6,7 @@
     const exports = window.ts.types.Contact = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const formatPhoneNumber_1 = window.ts.util.formatPhoneNumber;
+    const PhoneNumber_1 = window.ts.types.PhoneNumber;
     var ContactType;
     (function (ContactType) {
         ContactType[ContactType["HOME"] = 1] = "HOME";
@@ -29,7 +29,7 @@
         return Object.assign({}, contact, {
             avatar, number: contact.number &&
                 contact.number.map(item => (Object.assign({}, item, {
-                    value: formatPhoneNumber_1.formatPhoneNumber(item.value, {
+                    value: PhoneNumber_1.format(item.value, {
                         ourRegionCode: regionCode,
                     })
                 })))
@@ -38,7 +38,11 @@
     exports.contactSelector = contactSelector;
     function getName(contact) {
         const { name, organization } = contact;
-        return (name && name.displayName) || organization || null;
+        const displayName = (name && name.displayName) || null;
+        const givenName = (name && name.givenName) || null;
+        const familyName = (name && name.familyName) || null;
+        const backupName = (givenName && familyName && `${givenName} ${familyName}`) || null;
+        return displayName || organization || backupName || givenName || familyName;
     }
     exports.getName = getName;
 })();
