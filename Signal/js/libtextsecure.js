@@ -35453,10 +35453,6 @@ var Internal = Internal || {};
 
     // HKDF for TextSecure has a bit of additional handling - salts always end up being 32 bytes
     Internal.HKDF = function(input, salt, info) {
-        if (salt.byteLength != 32) {
-            throw new Error("Got salt of incorrect length");
-        }
-
         return Internal.crypto.HKDF(input, salt,  util.toArrayBuffer(info));
     };
 
@@ -39225,6 +39221,8 @@ MessageReceiver.prototype.extend({
     return plaintext;
   },
   decrypt(envelope, ciphertext) {
+    const { serverTrustRoot } = this;
+
     let promise;
     const address = new libsignal.SignalProtocolAddress(
       envelope.source,
@@ -39245,6 +39243,14 @@ MessageReceiver.prototype.extend({
       address,
       options
     );
+    const secretSessionCipher = new window.Signal.Metadata.SecretSessionCipher(
+      textsecure.storage.protocol
+    );
+
+    const me = {
+      number: ourNumber,
+      deviceId: parseInt(textsecure.storage.user.getDeviceId(), 10),
+    };
 
     switch (envelope.type) {
       case textsecure.protobuf.Envelope.Type.CIPHERTEXT:
