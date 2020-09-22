@@ -18,18 +18,48 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const is_1 = __importDefault(window.sindresorhus.is);
     const moment_1 = __importDefault(window.moment);
-    const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
-    const saveURLAsFile_1 = window.ts.util.saveURLAsFile;
+    const MIME = __importStar(window.ts.types.MIME);
     const arrayBufferToObjectURL_1 = window.ts.util.arrayBufferToObjectURL;
-    const SAVE_CONTENT_TYPE = 'application/octet-stream';
+    const saveURLAsFile_1 = window.ts.util.saveURLAsFile;
+    const protobuf_1 = window.ts.protobuf;
     exports.isVisualMedia = (attachment) => {
         const { contentType } = attachment;
         if (is_1.default.undefined(contentType)) {
             return false;
         }
-        const isSupportedImageType = GoogleChrome.isImageTypeSupported(contentType);
-        const isSupportedVideoType = GoogleChrome.isVideoTypeSupported(contentType);
-        return isSupportedImageType || isSupportedVideoType;
+        if (exports.isVoiceMessage(attachment)) {
+            return false;
+        }
+        return MIME.isImage(contentType) || MIME.isVideo(contentType);
+    };
+    exports.isFile = (attachment) => {
+        const { contentType } = attachment;
+        if (is_1.default.undefined(contentType)) {
+            return false;
+        }
+        if (exports.isVisualMedia(attachment)) {
+            return false;
+        }
+        if (exports.isVoiceMessage(attachment)) {
+            return false;
+        }
+        return true;
+    };
+    exports.isVoiceMessage = (attachment) => {
+        const flag = protobuf_1.SignalService.AttachmentPointer.Flags.VOICE_MESSAGE;
+        const hasFlag =
+            // tslint:disable-next-line no-bitwise
+            !is_1.default.undefined(attachment.flags) && (attachment.flags & flag) === flag;
+        if (hasFlag) {
+            return true;
+        }
+        const isLegacyAndroidVoiceMessage = !is_1.default.undefined(attachment.contentType) &&
+            MIME.isAudio(attachment.contentType) &&
+            attachment.fileName === null;
+        if (isLegacyAndroidVoiceMessage) {
+            return true;
+        }
+        return false;
     };
     exports.save = ({ attachment, document, getAbsolutePath, timestamp, }) => {
         const isObjectURLRequired = is_1.default.undefined(attachment.path);
@@ -37,7 +67,7 @@
             ? getAbsolutePath(attachment.path)
             : arrayBufferToObjectURL_1.arrayBufferToObjectURL({
                 data: attachment.data,
-                type: SAVE_CONTENT_TYPE,
+                type: MIME.APPLICATION_OCTET_STREAM,
             });
         const filename = exports.getSuggestedFilename({ attachment, timestamp });
         saveURLAsFile_1.saveURLAsFile({ url, filename, document });

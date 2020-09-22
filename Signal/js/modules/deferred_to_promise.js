@@ -1,7 +1,9 @@
 (function () {
-    window.deferred_to_promise = {};
+  'use strict';
 
-    window.deferred_to_promise.deferredToPromise = deferred =>
-        // eslint-disable-next-line more/no-then
-        new Promise((resolve, reject) => deferred.then(resolve, reject));
+  const exports = window.deferred_to_promise = {};
+
+  exports.deferredToPromise = deferred =>
+    // eslint-disable-next-line more/no-then
+    new Promise((resolve, reject) => deferred.then(resolve, reject));
 })();

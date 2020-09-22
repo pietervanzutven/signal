@@ -1,7 +1,8 @@
 (function () {
   'use strict';
   
-  const exports = window.types = window.types || {};
+  window.types = window.types || {};
+  const exports = window.types.errors = {};
 
   //      toLogFormat :: Error -> String
   exports.toLogFormat = error => {

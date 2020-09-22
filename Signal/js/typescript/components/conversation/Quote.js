@@ -21,6 +21,7 @@
     const classnames_1 = __importDefault(window.classnames);
     const MIME = __importStar(window.ts.types.MIME);
     const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
+    const MessageBody_1 = window.ts.components.conversation.MessageBody;
     function validateQuote(quote) {
         if (quote.text) {
             return true;
@@ -76,7 +77,8 @@
         renderText() {
             const { i18n, text, attachments } = this.props;
             if (text) {
-                return (react_1.default.createElement("div", { className: "text", dangerouslySetInnerHTML: { __html: text } }));
+                return (react_1.default.createElement("div", { className: "text" },
+                    react_1.default.createElement(MessageBody_1.MessageBody, { text: text })));
             }
             if (!attachments || attachments.length === 0) {
                 return null;
