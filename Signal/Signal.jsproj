@@ -247,6 +247,7 @@
     <Content Include="js\background_task.js" />
     <Content Include="js\emoji_util.js" />
     <Content Include="js\modules\classnames\index.js" />
+    <Content Include="js\modules\emoji-js\index.js" />
     <Content Include="js\modules\filesize\filesize.js" />
     <Content Include="js\modules\i18n.js" />
     <Content Include="js\modules\linkify-it\linkify-it.js" />
@@ -357,8 +358,10 @@
     <Content Include="js\typescript\backbone\index.js" />
     <Content Include="js\typescript\backbone\views\index.js" />
     <Content Include="js\typescript\backbone\views\Lightbox.js" />
+    <Content Include="js\typescript\components\conversation\AddNewLines.js" />
     <Content Include="js\typescript\components\conversation\ContactDetail.js" />
     <Content Include="js\typescript\components\conversation\EmbeddedContact.js" />
+    <Content Include="js\typescript\components\conversation\Emojify.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\AttachmentSection.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\DocumentListItem.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\EmptyState.js" />
@@ -366,6 +369,7 @@
     <Content Include="js\typescript\components\conversation\media-gallery\MediaGallery.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\MediaGridItem.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\types\Message.js" />
+    <Content Include="js\typescript\components\conversation\MessageBody.js" />
     <Content Include="js\typescript\components\conversation\Quote.js" />
     <Content Include="js\typescript\components\Lightbox.js" />
     <Content Include="js\typescript\components\LightboxGallery.js" />

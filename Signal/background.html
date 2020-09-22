@@ -8,14 +8,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy"
     content="default-src 'none';
-            connect-src 'self' https: wss:;
-            script-src 'self';
-            style-src 'self' 'unsafe-inline';
-            img-src 'self' blob: data: ms-appdata:;
-            font-src 'self';
-            media-src 'self' blob: ms-appdata:;
             child-src 'self';
-            object-src 'none'"
+            connect-src 'self' https: wss:;
+            font-src 'self';
+            frame-src 'none';
+            img-src 'self' blob: data: ms-appdata:;
+            media-src 'self' blob: ms-appdata:;
+            object-src 'none';
+            script-src 'self';
+            style-src 'self' 'unsafe-inline';"
   >
   <title>Signal</title>
   <link href='images/icon_128.png' rel='shortcut icon'>
@@ -299,7 +300,7 @@
               {{ #hasBody }}
                 <div class='content' dir='auto'>
                   {{ #message }}
-                    <div class='body'>{{ message }}</div>
+                    <div class='body'></div>
                   {{ /message }}
                 </div>
                 {{ /hasBody }}
@@ -391,7 +392,7 @@
             <span class='unread-count'>{{ unreadCount }}</span>
           {{ /unreadCount }}
           {{ #last_message }}
-            <p class='last-message' dir='auto'> {{ last_message }} </p>
+            <p class='last-message' dir='auto'></p>
           {{ /last_message }}
       </div>
   </script>
@@ -1164,6 +1165,7 @@
   <script type='text/javascript' src='js/modules/link_text.js'></script>
   <script type='text/javascript' src='js/modules/classnames/index.js'></script>
   <script type='text/javascript' src='js/modules/filesize/filesize.js'></script>
+  <script type='text/javascript' src='js/modules/emoji-js/index.js'></script>
   <script type='text/javascript' src='js/typescript/html/index.js'></script>
   <script type='text/javascript' src='js/typescript/components/Lightbox.js'></script>
   <script type='text/javascript' src='js/typescript/components/LightboxGallery.js'></script>
@@ -1178,6 +1180,9 @@
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/MediaGallery.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/types/Message.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/Quote.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/AddNewLines.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/Emojify.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/MessageBody.js'></script>
   <script type='text/javascript' src='js/typescript/backbone/Conversation.js'></script>
   <script type='text/javascript' src='js/typescript/backbone/views/Lightbox.js'></script>
   <script type='text/javascript' src='js/typescript/backbone/views/index.js'></script>

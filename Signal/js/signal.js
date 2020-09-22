@@ -28,6 +28,7 @@
   const {
     MediaGallery,
   } = window.ts.components.conversation.media_gallery.MediaGallery;
+  const { MessageBody } = window.ts.components.conversation.MessageBody;
   const { Quote } = window.ts.components.conversation.Quote;
 
   // Migrations
@@ -63,6 +64,7 @@
       Lightbox,
       LightboxGallery,
       MediaGallery,
+      MessageBody,
       Types: {
         Message: MediaGalleryMessage,
       },

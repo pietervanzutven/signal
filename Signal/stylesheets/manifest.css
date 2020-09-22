@@ -396,6 +396,8 @@ button.hamburger {
   text-align: left; }
   .contact-details p {
     overflow-x: hidden;
+    overflow-y: hidden;
+    height: 1.2em;
     text-overflow: ellipsis; }
   .contact-details .name {
     display: block;
