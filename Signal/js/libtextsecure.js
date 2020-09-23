@@ -23014,7 +23014,7 @@ function _memset(ptr, value, num) {
         }
       }
       while ((ptr|0) < (stop4|0)) {
-        HEAP32[((ptr)>>2)]=value4;
+        HEAP32[ptr>>2]=value4;
         ptr = (ptr+4)|0;
       }
     }
@@ -23070,7 +23070,7 @@ function _memcpy(dest, src, num) {
         num = (num-1)|0;
       }
       while ((num|0) >= 4) {
-        HEAP32[((dest)>>2)]=((HEAP32[((src)>>2)])|0);
+        HEAP32[dest>>2]=((HEAP32[src>>2])|0);
         dest = (dest+4)|0;
         src = (src+4)|0;
         num = (num-4)|0;
