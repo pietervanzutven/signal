@@ -14,11 +14,12 @@
     exports.isMacOS = () => process.platform === 'darwin';
     exports.isLinux = () => process.platform === 'linux';
     exports.isWindows = (minVersion) => {
-        const isPlatformValid = process.platform === 'win32';
+        if (process.platform !== 'win32')
+            return false;
         const osRelease = os_1.default.release();
         const isVersionValid = is_1.default.undefined(minVersion)
             ? true
             : semver_1.default.gte(osRelease, minVersion);
-        return isPlatformValid && isVersionValid;
+        return isVersionValid;
     };
 })();
