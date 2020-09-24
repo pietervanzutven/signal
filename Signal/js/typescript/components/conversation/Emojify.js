@@ -14,7 +14,6 @@
     const classnames_1 = __importDefault(window.classnames);
     const is_1 = __importDefault(window.sindresorhus.is);
     const emoji_1 = window.ts.util.emoji;
-    const AddNewLines_1 = window.ts.components.conversation.AddNewLines;
     // Some of this logic taken from emoji-js/replacement
     function getImageTag({ match, sizeClass, key, }) {
         const result = emoji_1.getReplacementData(match[0], match[1], match[2]);
@@ -27,29 +26,37 @@
     }
     class Emojify extends react_1.default.Component {
         render() {
-            const { text, sizeClass } = this.props;
+            const { text, sizeClass, renderNonEmoji } = this.props;
             const results = [];
             const regex = emoji_1.getRegex();
+            // We have to do this, because renderNonEmoji is not required in our Props object,
+            //  but it is always provided via defaultProps.
+            if (!renderNonEmoji) {
+                return;
+            }
             let match = regex.exec(text);
             let last = 0;
             let count = 1;
             if (!match) {
-                return react_1.default.createElement(AddNewLines_1.AddNewLines, { text: text });
+                return renderNonEmoji({ text, key: 0 });
             }
             while (match) {
                 if (last < match.index) {
                     const textWithNoEmoji = text.slice(last, match.index);
-                    results.push(react_1.default.createElement(AddNewLines_1.AddNewLines, { key: count++, text: textWithNoEmoji }));
+                    results.push(renderNonEmoji({ text: textWithNoEmoji, key: count++ }));
                 }
                 results.push(getImageTag({ match, sizeClass, key: count++ }));
                 last = regex.lastIndex;
                 match = regex.exec(text);
             }
             if (last < text.length) {
-                results.push(react_1.default.createElement(AddNewLines_1.AddNewLines, { key: count++, text: text.slice(last) }));
+                results.push(renderNonEmoji({ text: text.slice(last), key: count++ }));
             }
-            return react_1.default.createElement("span", null, results);
+            return results;
         }
     }
+    Emojify.defaultProps = {
+        renderNonEmoji: ({ text, key }) => react_1.default.createElement("span", { key: key }, text),
+    };
     exports.Emojify = Emojify;
 })();

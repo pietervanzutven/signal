@@ -361,6 +361,7 @@
     <Content Include="js\typescript\components\conversation\ContactDetail.js" />
     <Content Include="js\typescript\components\conversation\EmbeddedContact.js" />
     <Content Include="js\typescript\components\conversation\Emojify.js" />
+    <Content Include="js\typescript\components\conversation\Linkify.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\AttachmentSection.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\DocumentListItem.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\EmptyState.js" />
