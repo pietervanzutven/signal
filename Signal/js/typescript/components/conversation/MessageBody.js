@@ -5,13 +5,14 @@
     window.ts.components = window.ts.components || {};
     window.ts.components.conversation = window.ts.components.conversation || {};
     const exports = window.ts.components.conversation.MessageBody = {};
-    
+
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const linkify_it_1 = __importDefault(window.linkify_it.linkify_it);
+    const emoji_1 = window.ts.util.emoji;
     const Emojify_1 = window.ts.components.conversation.Emojify;
     const linkify = linkify_it_1.default();
     const SUPPORTED_PROTOCOLS = /^(http|https):/i;
@@ -24,7 +25,7 @@
             let count = 1;
             // We only use this sizeClass if there was no link detected, because jumbo emoji
             //   only fire when there's no other text in the message.
-            const sizeClass = disableJumbomoji ? '' : Emojify_1.getSizeClass(text);
+            const sizeClass = disableJumbomoji ? '' : emoji_1.getSizeClass(text);
             if (disableLinks || matchData.length === 0) {
                 return react_1.default.createElement(Emojify_1.Emojify, { text: text, sizeClass: sizeClass });
             }

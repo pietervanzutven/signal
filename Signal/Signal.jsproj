@@ -245,7 +245,6 @@
     <Content Include="index.html" />
     <Content Include="js\background.js" />
     <Content Include="js\background_task.js" />
-    <Content Include="js\emoji_util.js" />
     <Content Include="js\modules\classnames\index.js" />
     <Content Include="js\modules\emoji-js\index.js" />
     <Content Include="js\modules\filesize\filesize.js" />
@@ -389,6 +388,7 @@
     <Content Include="js\typescript\types\PhoneNumber.js" />
     <Content Include="js\typescript\types\Settings.js" />
     <Content Include="js\typescript\util\arrayBufferToObjectURL.js" />
+    <Content Include="js\typescript\util\emoji.js" />
     <Content Include="js\typescript\util\GoogleChrome.js" />
     <Content Include="js\typescript\util\libphonenumberInstance.js" />
     <Content Include="js\typescript\util\missingCaseError.js" />
