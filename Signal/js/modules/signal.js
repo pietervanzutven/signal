@@ -9,7 +9,6 @@
   const Crypto = window.crypto;
   const Database = window.database;
   const Emoji = window.ts.util.emoji;
-  const HTML = window.ts.html;
   const Message = window.types.message;
   const Notifications = window.ts.notifications;
   const OS = window.ts.OS;
@@ -132,7 +131,6 @@
       Crypto,
       Database,
       Emoji,
-      HTML,
       Migrations,
       Notifications,
       OS,

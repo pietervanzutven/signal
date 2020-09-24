@@ -245,7 +245,6 @@
     <Content Include="js\background.js" />
     <Content Include="js\background_task.js" />
     <Content Include="js\modules\i18n.js" />
-    <Content Include="js\modules\link_text.js" />
     <Content Include="js\modules\migrations\18\index.js" />
     <Content Include="js\modules\backup.js" />
     <Content Include="js\chromium.js" />
@@ -277,6 +276,7 @@
     <Content Include="js\modules\migrations\run_migrations.js" />
     <Content Include="js\modules\privacy.js" />
     <Content Include="js\modules\settings.js" />
+    <Content Include="js\modules\signal.js" />
     <Content Include="js\modules\sleep.js" />
     <Content Include="js\modules\startup.js" />
     <Content Include="js\modules\string_to_array_buffer.js" />
@@ -288,7 +288,6 @@
     <Content Include="js\modules\types\schema_version.js" />
     <Content Include="js\modules\views\initialization.js" />
     <Content Include="js\Mp3LameEncoder.min.js" />
-    <Content Include="js\signal.js" />
     <Content Include="js\typescript\backbone\Conversation.js" />
     <Content Include="js\typescript\backbone\index.js" />
     <Content Include="js\typescript\backbone\views\index.js" />
@@ -312,7 +311,6 @@
     <Content Include="js\typescript\components\Lightbox.js" />
     <Content Include="js\typescript\components\LightboxGallery.js" />
     <Content Include="js\typescript\components\styles\Colors.js" />
-    <Content Include="js\typescript\html\index.js" />
     <Content Include="js\typescript\notifications\getStatus.js" />
     <Content Include="js\typescript\OS.js" />
     <Content Include="js\typescript\protobuf\protobuf.js" />
