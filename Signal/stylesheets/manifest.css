@@ -3723,6 +3723,8 @@ span.status {
       border-bottom: 1px solid #e6e6e6; }
       .android-dark .incoming .embedded-contact .send-message .bubble-icon {
         background-color: white; }
+  .android-dark .contact-detail .additional-contact .type {
+    color: rgba(255, 255, 255, 0.5); }
   .android-dark .outgoing .quoted-message {
     background: rgba(255, 255, 255, 0.38); }
     .android-dark .outgoing .quoted-message .icon-container .icon {

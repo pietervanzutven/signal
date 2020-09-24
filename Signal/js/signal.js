@@ -21,9 +21,14 @@
   const {
     ContactDetail,
   } = window.ts.components.conversation.ContactDetail;
+  const { ContactName } = window.ts.components.conversation.ContactName;
+  const {
+    ConversationTitle,
+  } = window.ts.components.conversation.ConversationTitle;
   const {
     EmbeddedContact,
   } = window.ts.components.conversation.EmbeddedContact;
+  const { Emojify } = window.ts.components.conversation.Emojify;
   const { Lightbox } = window.ts.components.Lightbox;
   const { LightboxGallery } = window.ts.components.LightboxGallery;
   const {
@@ -61,7 +66,10 @@
 
     const Components = {
       ContactDetail,
+      ContactName,
+      ConversationTitle,
       EmbeddedContact,
+      Emojify,
       Lightbox,
       LightboxGallery,
       MediaGallery,

@@ -359,6 +359,8 @@
     <Content Include="js\typescript\backbone\views\Lightbox.js" />
     <Content Include="js\typescript\components\conversation\AddNewLines.js" />
     <Content Include="js\typescript\components\conversation\ContactDetail.js" />
+    <Content Include="js\typescript\components\conversation\ContactName.js" />
+    <Content Include="js\typescript\components\conversation\ConversationTitle.js" />
     <Content Include="js\typescript\components\conversation\EmbeddedContact.js" />
     <Content Include="js\typescript\components\conversation\Emojify.js" />
     <Content Include="js\typescript\components\conversation\Linkify.js" />
