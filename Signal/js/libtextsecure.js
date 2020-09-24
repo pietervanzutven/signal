@@ -37526,20 +37526,36 @@ window.textsecure.utils = (function() {
   textsecure.EventTarget = EventTarget;
 })();
 
-var TextSecureServer = (function() {
-  'use strict';
+/* global nodeBuffer: false */
+/* global nodeWebSocket: false */
+/* global nodeFetch: false */
+/* global nodeSetImmediate: false */
+/* global ProxyAgent: false */
 
+/* global window: false */
+/* global getString: false */
+/* global btoa: false */
+/* global StringView: false */
+/* global textsecure: false */
+
+/* eslint-disable more/no-then */
+
+// eslint-disable-next-line no-unused-vars, func-names
+const TextSecureServer = (function() {
   function validateResponse(response, schema) {
     try {
-      for (var i in schema) {
+      // eslint-disable-next-line guard-for-in, no-restricted-syntax
+      for (const i in schema) {
         switch (schema[i]) {
           case 'object':
           case 'string':
           case 'number':
+            // eslint-disable-next-line valid-typeof
             if (typeof response[i] !== schema[i]) {
               return false;
             }
             break;
+          default:
         }
       }
     } catch (ex) {
@@ -37552,42 +37568,41 @@ var TextSecureServer = (function() {
     return new WebSocket(url);
   }
 
-  function promise_ajax(url, options) {
+  function promiseAjax(url, options) {
     return new Promise(function(resolve, reject) {
-      if (!url) {
-        url = options.host + '/' + options.path;
-      }
+      const url = providedUrl || `${options.host}/${options.path}`;
       console.log(options.type, url);
-      var timeout =
+      const timeout =
         typeof options.timeout !== 'undefined' ? options.timeout : 10000;
 
-      var fetchOptions = {
+      const fetchOptions = {
         method: options.type,
         headers: { 'X-Signal-Agent': 'OWD' },
-        timeout: timeout,
+        timeout,
       };
       if (options.data) {
         fetchOptions.body = options.data;
       }
 
       if (fetchOptions.body instanceof ArrayBuffer) {
-        var contentLength = fetchOptions.body.byteLength;
+        const contentLength = fetchOptions.body.byteLength;
+
         // fetch doesn't set content-length like S3 requires
         fetchOptions.headers['Content-Length'] = contentLength;
       }
 
       if (options.user && options.password) {
-        fetchOptions.headers['Authorization'] =
-          'Basic ' +
-          btoa(getString(options.user) + ':' + getString(options.password));
+        const user = getString(options.user);
+        const password = getString(options.password);
+        const auth = btoa(`${user}:${password}`);
+        fetchOptions.headers.Authorization = `Basic ${auth}`;
       }
       if (options.contentType) {
         fetchOptions.headers['Content-Type'] = options.contentType;
       }
-      window
-        .fetch(url, fetchOptions)
-        .then(function(response) {
-          var resultPromise;
+      fetch(url, fetchOptions)
+        .then(response => {
+          let resultPromise;
           if (
             options.responseType === 'json' &&
             response.headers.get('Content-Type') === 'application/json'
@@ -37598,14 +37613,14 @@ var TextSecureServer = (function() {
           } else {
             resultPromise = response.text();
           }
-          return resultPromise.then(function(result) {
+          return resultPromise.then(result => {
             if (options.responseType === 'json') {
               if (options.validateResponse) {
                 if (!validateResponse(result, options.validateResponse)) {
                   console.log(options.type, url, response.status, 'Error');
                   reject(
                     HTTPError(
-                      'promise_ajax: invalid response',
+                      'promiseAjax: invalid response',
                       response.status,
                       result,
                       options.stack
@@ -37614,14 +37629,14 @@ var TextSecureServer = (function() {
                 }
               }
             }
-            if (0 <= response.status && response.status < 400) {
+            if (response.status >= 0 && response.status < 400) {
               console.log(options.type, url, response.status, 'Success');
               resolve(result, response.status);
             } else {
               console.log(options.type, url, response.status, 'Error');
               reject(
                 HTTPError(
-                  'promise_ajax: error response',
+                  'promiseAjax: error response',
                   response.status,
                   result,
                   options.stack
@@ -37630,51 +37645,48 @@ var TextSecureServer = (function() {
             }
           });
         })
-        .catch(function(e) {
+        .catch(e => {
           console.log(options.type, url, 0, 'Error');
-          var stack = e.stack + '\nInitial stack:\n' + options.stack;
-          reject(HTTPError('promise_ajax catch', 0, e.toString(), stack));
+          const stack = `${e.stack}\nInitial stack:\n${options.stack}`;
+          reject(HTTPError('promiseAjax catch', 0, e.toString(), stack));
         });
     });
   }
 
-  function retry_ajax(url, options, limit, count) {
-    count = count || 0;
-    limit = limit || 3;
-    count++;
-    return promise_ajax(url, options).catch(function(e) {
+  function retryAjax(url, options, providedLimit, providedCount) {
+    const count = (providedCount || 0) + 1;
+    const limit = providedLimit || 3;
+    return promiseAjax(url, options).catch(e => {
       if (e.name === 'HTTPError' && e.code === -1 && count < limit) {
-        return new Promise(function(resolve) {
-          setTimeout(function() {
-            resolve(retry_ajax(url, options, limit, count));
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve(retryAjax(url, options, limit, count));
           }, 1000);
         });
-      } else {
-        throw e;
       }
+        throw e;
     });
   }
 
   function ajax(url, options) {
+    // eslint-disable-next-line no-param-reassign
     options.stack = new Error().stack; // just in case, save stack here.
-    return retry_ajax(url, options);
+    return retryAjax(url, options);
   }
 
-  function HTTPError(message, code, response, stack) {
-    if (code > 999 || code < 100) {
-      code = -1;
-    }
-    var e = new Error(message + '; code: ' + code);
+  function HTTPError(message, providedCode, response, stack) {
+    const code = providedCode > 999 || providedCode < 100 ? -1 : providedCode;
+    const e = new Error(`${message}; code: ${code}`);
     e.name = 'HTTPError';
     e.code = code;
-    e.stack += '\nOriginal stack:\n' + stack;
+    e.stack += `\nOriginal stack:\n${stack}`;
     if (response) {
       e.response = response;
     }
     return e;
   }
 
-  var URL_CALLS = {
+  const URL_CALLS = {
     accounts: 'v1/accounts',
     devices: 'v1/devices',
     keys: 'v2/keys',
@@ -37684,20 +37696,22 @@ var TextSecureServer = (function() {
     profile: 'v1/profile',
   };
 
-  function TextSecureServer(url, username, password, cdn_url) {
+  // eslint-disable-next-line no-shadow
+  function TextSecureServer(url, username, password, cdnUrl) {
     if (typeof url !== 'string') {
       throw new Error('Invalid server url');
     }
     this.url = url;
-    this.cdn_url = cdn_url;
+    this.cdnUrl = cdnUrl;
     this.username = username;
     this.password = password;
   }
 
   TextSecureServer.prototype = {
     constructor: TextSecureServer,
-    ajax: function(param) {
+    ajax(param) {
       if (!param.urlParameters) {
+        // eslint-disable-next-line no-param-reassign
         param.urlParameters = '';
       }
       return ajax(null, {
@@ -37712,14 +37726,14 @@ var TextSecureServer = (function() {
         validateResponse: param.validateResponse,
         certificateAuthorities: window.config.certificateAuthorities,
         timeout: param.timeout,
-      }).catch(function(e) {
-        var code = e.code;
+      }).catch(e => {
+        const { code } = e;
         if (code === 200) {
           // happens sometimes when we get no response
           // (TODO: Fix server to return 204? instead)
           return null;
         }
-        var message;
+        let message;
         switch (code) {
           case -1:
             message =
@@ -37750,16 +37764,16 @@ var TextSecureServer = (function() {
         throw e;
       });
     },
-    getProfile: function(number) {
+    getProfile(number) {
       return this.ajax({
         call: 'profile',
         httpType: 'GET',
-        urlParameters: '/' + number,
+        urlParameters: `/${number}`,
         responseType: 'json',
       });
     },
-    getAvatar: function(path) {
-      return ajax(this.cdn_url + '/' + path, {
+    getAvatar(path) {
+      return ajax(`${this.cdnUrl}/${path}`, {
         type: 'GET',
         responseType: 'arraybuffer',
         contentType: 'application/octet-stream',
@@ -37767,36 +37781,40 @@ var TextSecureServer = (function() {
         timeout: 0,
       });
     },
-    requestVerificationSMS: function(number) {
+    requestVerificationSMS(number) {
       return this.ajax({
         call: 'accounts',
         httpType: 'GET',
-        urlParameters: '/sms/code/' + number,
+        urlParameters: `/sms/code/${number}`,
       });
     },
-    requestVerificationVoice: function(number) {
+    requestVerificationVoice(number) {
       return this.ajax({
         call: 'accounts',
         httpType: 'GET',
-        urlParameters: '/voice/code/' + number,
+        urlParameters: `/voice/code/${number}`,
       });
     },
-    confirmCode: function(
+    confirmCode(
       number,
       code,
       password,
-      signaling_key,
+      signalingKey,
       registrationId,
       deviceName
     ) {
-      var jsonData = {
-        signalingKey: btoa(getString(signaling_key)),
+      const jsonData = {
+        signalingKey: btoa(getString(signalingKey)),
         supportsSms: false,
         fetchesMessages: true,
-        registrationId: registrationId,
+        registrationId,
       };
 
-      var call, urlPrefix, schema, responseType;
+      let call;
+      let urlPrefix;
+      let schema;
+      let responseType;
+
       if (deviceName) {
         jsonData.name = deviceName;
         call = 'devices';
@@ -37811,22 +37829,22 @@ var TextSecureServer = (function() {
       this.username = number;
       this.password = password;
       return this.ajax({
-        call: call,
+        call,
         httpType: 'PUT',
         urlParameters: urlPrefix + code,
-        jsonData: jsonData,
-        responseType: responseType,
+        jsonData,
+        responseType,
         validateResponse: schema,
       });
     },
-    getDevices: function(number) {
+    getDevices() {
       return this.ajax({
         call: 'devices',
         httpType: 'GET',
       });
     },
-    registerKeys: function(genKeys) {
-      var keys = {};
+    registerKeys(genKeys) {
+      const keys = {};
       keys.identityKey = btoa(getString(genKeys.identityKey));
       keys.signedPreKey = {
         keyId: genKeys.signedPreKey.keyId,
@@ -37835,12 +37853,14 @@ var TextSecureServer = (function() {
       };
 
       keys.preKeys = [];
-      var j = 0;
-      for (var i in genKeys.preKeys) {
-        keys.preKeys[j++] = {
+      let j = 0;
+      // eslint-disable-next-line guard-for-in, no-restricted-syntax
+      for (const i in genKeys.preKeys) {
+        keys.preKeys[j] = {
           keyId: genKeys.preKeys[i].keyId,
           publicKey: btoa(getString(genKeys.preKeys[i].publicKey)),
         };
+        j += 1;
       }
 
       // This is just to make the server happy
@@ -37853,7 +37873,7 @@ var TextSecureServer = (function() {
         jsonData: keys,
       });
     },
-    setSignedPreKey: function(signedPreKey) {
+    setSignedPreKey(signedPreKey) {
       return this.ajax({
         call: 'signed',
         httpType: 'PUT',
@@ -37864,31 +37884,27 @@ var TextSecureServer = (function() {
         },
       });
     },
-    getMyKeys: function(number, deviceId) {
+    getMyKeys() {
       return this.ajax({
         call: 'keys',
         httpType: 'GET',
         responseType: 'json',
         validateResponse: { count: 'number' },
-      }).then(function(res) {
-        return res.count;
-      });
+      }).then(res => res.count);
     },
-    getKeysForNumber: function(number, deviceId) {
-      if (deviceId === undefined) deviceId = '*';
-
+    getKeysForNumber(number, deviceId = '*') {
       return this.ajax({
         call: 'keys',
         httpType: 'GET',
-        urlParameters: '/' + number + '/' + deviceId,
+        urlParameters: `/${number}/${deviceId}`,
         responseType: 'json',
         validateResponse: { identityKey: 'string', devices: 'object' },
-      }).then(function(res) {
+      }).then(res => {
         if (res.devices.constructor !== Array) {
           throw new Error('Invalid response');
         }
         res.identityKey = StringView.base64ToBytes(res.identityKey);
-        res.devices.forEach(function(device) {
+        res.devices.forEach(device => {
           if (
             !validateResponse(device, { signedPreKey: 'object' }) ||
             !validateResponse(device.signedPreKey, {
@@ -37905,13 +37921,16 @@ var TextSecureServer = (function() {
             ) {
               throw new Error('Invalid preKey');
             }
+            // eslint-disable-next-line no-param-reassign
             device.preKey.publicKey = StringView.base64ToBytes(
               device.preKey.publicKey
             );
           }
+          // eslint-disable-next-line no-param-reassign
           device.signedPreKey.publicKey = StringView.base64ToBytes(
             device.signedPreKey.publicKey
           );
+          // eslint-disable-next-line no-param-reassign
           device.signedPreKey.signature = StringView.base64ToBytes(
             device.signedPreKey.signature
           );
@@ -37919,8 +37938,8 @@ var TextSecureServer = (function() {
         return res;
       });
     },
-    sendMessages: function(destination, messageArray, timestamp, silent) {
-      var jsonData = { messages: messageArray, timestamp: timestamp };
+    sendMessages(destination, messageArray, timestamp, silent) {
+      const jsonData = { messages: messageArray, timestamp };
 
       if (silent) {
         jsonData.silent = true;
@@ -37929,66 +37948,62 @@ var TextSecureServer = (function() {
       return this.ajax({
         call: 'messages',
         httpType: 'PUT',
-        urlParameters: '/' + destination,
-        jsonData: jsonData,
+        urlParameters: `/${destination}`,
+        jsonData,
         responseType: 'json',
       });
     },
-    getAttachment: function(id) {
+    getAttachment(id) {
       return this.ajax({
         call: 'attachment',
         httpType: 'GET',
-        urlParameters: '/' + id,
+        urlParameters: `/${id}`,
         responseType: 'json',
         validateResponse: { location: 'string' },
-      }).then(
-        function(response) {
-          return ajax(response.location, {
+      }).then(response =>
+        ajax(response.location, {
             timeout: 0,
             type: 'GET',
             responseType: 'arraybuffer',
             contentType: 'application/octet-stream',
-          });
-        }.bind(this)
+        })
       );
     },
-    putAttachment: function(encryptedBin) {
+    putAttachment(encryptedBin) {
       return this.ajax({
         call: 'attachment',
         httpType: 'GET',
         responseType: 'json',
-      }).then(
-        function(response) {
-          return ajax(response.location, {
+      }).then(response =>
+        ajax(response.location, {
             timeout: 0,
             type: 'PUT',
             contentType: 'application/octet-stream',
             data: encryptedBin,
             processData: false,
-          }).then(
-            function() {
-              return response.idString;
-            }.bind(this)
-          );
-        }.bind(this)
+        }).then(() => response.idString)
       );
     },
-    getMessageSocket: function() {
+    getMessageSocket() {
       console.log('opening message socket', this.url);
+      const fixedScheme = this.url
+        .replace('https://', 'wss://')
+        .replace('http://', 'ws://');
+      const login = encodeURIComponent(this.username);
+      const password = encodeURIComponent(this.password);
+
       return createSocket(
-        this.url.replace('https://', 'wss://').replace('http://', 'ws://') +
-          '/v1/websocket/?login=' +
-          encodeURIComponent(this.username) +
-          '&password=' +
-          encodeURIComponent(this.password) +
-          '&agent=OWD'
+        `${fixedScheme}/v1/websocket/?login=${login}&password=${password}&agent=OWD`
       );
     },
-    getProvisioningSocket: function() {
+    getProvisioningSocket() {
       console.log('opening provisioning socket', this.url);
+      const fixedScheme = this.url
+        .replace('https://', 'wss://')
+        .replace('http://', 'ws://');
+
       return createSocket(
-        this.url.replace('https://', 'wss://').replace('http://', 'ws://') +
-          '/v1/websocket/provisioning/?agent=OWD'
+        `${fixedScheme}/v1/websocket/provisioning/?agent=OWD`
       );
     },
   };
