@@ -5,6 +5,7 @@
     window.ts.components = window.ts.components || {};
     const exports = window.ts.components.Lightbox = {};
 
+    // tslint:disable:react-a11y-anchors
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -94,18 +95,18 @@
             }
             onClick();
         };
-        return (react_1.default.createElement("a", { href: "#", onClick: clickHandler, className: classnames_1.default('iconButton', type), style: style }));
+        return (react_1.default.createElement("a", { href: "#", onClick: clickHandler, className: classnames_1.default('iconButton', type), role: "button", style: style }));
     };
     const IconButtonPlaceholder = () => (react_1.default.createElement("div", { style: styles.iconButtonPlaceholder }));
-    const Icon = ({ onClick, url, }) => (react_1.default.createElement("div", { style: Object.assign({}, styles.object, colorSVG_1.colorSVG(url, Colors.ICON_SECONDARY), { maxWidth: 200 }), onClick: onClick }));
+    const Icon = ({ onClick, url, }) => (react_1.default.createElement("div", { style: Object.assign({}, styles.object, colorSVG_1.colorSVG(url, Colors.ICON_SECONDARY), { maxWidth: 200 }), onClick: onClick, role: "button" }));
     class Lightbox extends react_1.default.Component {
         constructor() {
             super(...arguments);
             this.containerRef = null;
-            this.renderObject = ({ objectURL, contentType, }) => {
+            this.renderObject = ({ objectURL, contentType, i18n, }) => {
                 const isImageTypeSupported = GoogleChrome.isImageTypeSupported(contentType);
                 if (isImageTypeSupported) {
-                    return (react_1.default.createElement("img", { style: styles.object, src: objectURL, onClick: this.onObjectClick }));
+                    return (react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), style: styles.object, src: objectURL, onClick: this.onObjectClick }));
                 }
                 const isVideoTypeSupported = GoogleChrome.isVideoTypeSupported(contentType);
                 if (isVideoTypeSupported) {
@@ -132,11 +133,10 @@
                 close();
             };
             this.onKeyUp = (event) => {
-                const { onClose } = this;
                 const { onNext, onPrevious } = this.props;
                 switch (event.key) {
                     case 'Escape':
-                        onClose();
+                        this.onClose();
                         break;
                     case 'ArrowLeft':
                         if (onPrevious) {
@@ -149,7 +149,6 @@
                         }
                         break;
                     default:
-                        break;
                 }
             };
             this.onContainerClick = (event) => {
@@ -172,12 +171,12 @@
             document.removeEventListener('keyup', this.onKeyUp, useCapture);
         }
         render() {
-            const { contentType, objectURL, onNext, onPrevious, onSave } = this.props;
-            return (react_1.default.createElement("div", { style: styles.container, onClick: this.onContainerClick, ref: this.setContainerRef },
+            const { contentType, objectURL, onNext, onPrevious, onSave, i18n, } = this.props;
+            return (react_1.default.createElement("div", { style: styles.container, onClick: this.onContainerClick, ref: this.setContainerRef, role: "dialog" },
                 react_1.default.createElement("div", { style: styles.mainContainer },
                     react_1.default.createElement("div", { style: styles.controlsOffsetPlaceholder }),
                     react_1.default.createElement("div", { style: styles.objectContainer }, !is_1.default.undefined(contentType)
-                        ? this.renderObject({ objectURL, contentType })
+                        ? this.renderObject({ objectURL, contentType, i18n })
                         : null),
                     react_1.default.createElement("div", { style: styles.controls },
                         react_1.default.createElement(IconButton, { type: "close", onClick: this.onClose }),

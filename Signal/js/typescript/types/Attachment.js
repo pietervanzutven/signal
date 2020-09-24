@@ -95,7 +95,6 @@
             case 'video/quicktime':
                 return 'mov';
             default:
-                // TODO: Use better MIME --> file extension mapping:
                 return attachment.contentType.split('/')[1];
         }
     };

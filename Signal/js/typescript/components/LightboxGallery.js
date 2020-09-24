@@ -45,7 +45,7 @@
             };
         }
         render() {
-            const { close, messages, onSave } = this.props;
+            const { close, messages, onSave, i18n } = this.props;
             const { selectedIndex } = this.state;
             const selectedMessage = messages[selectedIndex];
             const selectedItem = messageToItem(selectedMessage);
@@ -54,7 +54,7 @@
             const lastIndex = messages.length - 1;
             const onNext = selectedIndex < lastIndex ? this.handleNext : undefined;
             const objectURL = selectedItem.objectURL || 'images/alert-outline.svg';
-            return (react_1.default.createElement(Lightbox_1.Lightbox, { close: close, onPrevious: onPrevious, onNext: onNext, onSave: onSave ? this.handleSave : undefined, objectURL: objectURL, contentType: selectedItem.contentType }));
+            return (react_1.default.createElement(Lightbox_1.Lightbox, { close: close, onPrevious: onPrevious, onNext: onNext, onSave: onSave ? this.handleSave : undefined, objectURL: objectURL, contentType: selectedItem.contentType, i18n: i18n }));
         }
     }
     LightboxGallery.defaultProps = {
