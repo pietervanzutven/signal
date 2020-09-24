@@ -136,7 +136,6 @@
     <Content Include="images\file_45454510.svg" />
     <Content Include="images\file_CCCCCC10.svg" />
     <Content Include="images\file_FFFFFF10.svg" />
-    <Content Include="images\flags.png" />
     <Content Include="images\folder-outline_DEDEDE10.svg" />
     <Content Include="images\forward_FFFFFF10.svg" />
     <Content Include="images\group_default.png" />
@@ -416,6 +415,7 @@
     <Content Include="js\registration.js" />
     <Content Include="js\reliable_trigger.js" />
     <Content Include="js\rotate_signed_prekey_listener.js" />
+    <Content Include="node_modules\int-tel-input\build\img\flags.png" />
     <Content Include="preload.js" />
     <Content Include="js\read_syncs.js" />
     <Content Include="js\share.js" />

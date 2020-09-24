@@ -3821,7 +3821,7 @@ span.status {
 .iti-flag {
   width: 16px;
   height: 11px;
-  background: url("../img/flags.png"); }
+  background: url("../node_modules/intl-tel-input/build/img/flags.png"); }
 
 .iti-flag.ad {
   background-position: -16px 0; }
@@ -4615,7 +4615,7 @@ span.status {
   margin-right: 6px; }
 
 .iti-flag {
-  background: url("../images/flags.png"); }
+  background: url("../node_modules/intl-tel-input/build/img/flags.png"); }
 
 .intl-tel-input .country-list {
   text-align: left; }
