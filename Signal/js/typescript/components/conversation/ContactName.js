@@ -14,13 +14,13 @@
     const Emojify_1 = window.ts.components.conversation.Emojify;
     class ContactName extends react_1.default.Component {
         render() {
-            const { phoneNumber, name, profileName } = this.props;
+            const { phoneNumber, name, profileName, i18n } = this.props;
             const title = name ? name : phoneNumber;
             const profileElement = profileName && !name ? (react_1.default.createElement("span", { className: "profile-name" },
                 "~",
-                react_1.default.createElement(Emojify_1.Emojify, { text: profileName }))) : null;
+                react_1.default.createElement(Emojify_1.Emojify, { text: profileName, i18n: i18n }))) : null;
             return (react_1.default.createElement("span", null,
-                react_1.default.createElement(Emojify_1.Emojify, { text: title }),
+                react_1.default.createElement(Emojify_1.Emojify, { text: title, i18n: i18n }),
                 " ",
                 profileElement));
         }
