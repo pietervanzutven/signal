@@ -76,6 +76,19 @@
 
   // We pull these dependencies in now, from here, because they have Node.js dependencies
 
+  if (window.config.proxyUrl) {
+    console.log('using proxy url', window.config.proxyUrl);
+  }
+
+  const { initialize: initializeWebAPI } = window.web_api;
+
+  window.WebAPI = initializeWebAPI({
+    url: window.config.serverUrl,
+    cdnUrl: window.config.cdnUrl,
+    certificateAuthority: window.config.certificateAuthority,
+    proxyUrl: window.config.proxyUrl,
+  });
+
   const { autoOrientImage } = window.auto_orient_image;
 
   window.autoOrientImage = autoOrientImage;

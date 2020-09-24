@@ -244,6 +244,7 @@
     <Content Include="index.html" />
     <Content Include="js\background.js" />
     <Content Include="js\background_task.js" />
+    <Content Include="js\libtextsecure2.js" />
     <Content Include="js\modules\i18n.js" />
     <Content Include="js\modules\migrations\18\index.js" />
     <Content Include="js\modules\backup.js" />
@@ -287,6 +288,7 @@
     <Content Include="js\modules\types\message.js" />
     <Content Include="js\modules\types\schema_version.js" />
     <Content Include="js\modules\views\initialization.js" />
+    <Content Include="js\modules\web_api.js" />
     <Content Include="js\Mp3LameEncoder.min.js" />
     <Content Include="js\typescript\backbone\Conversation.js" />
     <Content Include="js\typescript\backbone\index.js" />
