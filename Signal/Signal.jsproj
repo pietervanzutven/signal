@@ -244,8 +244,10 @@
     <Content Include="index.html" />
     <Content Include="js\background.js" />
     <Content Include="js\background_task.js" />
-    <Content Include="js\libtextsecure2.js" />
+    <Content Include="js\libtextsecure.js" />
     <Content Include="js\modules\i18n.js" />
+    <Content Include="js\modules\metadata\CiphertextMessage.js" />
+    <Content Include="js\modules\metadata\SecretSessionCipher.js" />
     <Content Include="js\modules\migrations\18\index.js" />
     <Content Include="js\modules\backup.js" />
     <Content Include="js\chromium.js" />
@@ -259,7 +261,6 @@
     <Content Include="js\keychange_listener.js" />
     <Content Include="js\libphonenumber-util.js" />
     <Content Include="js\libsignal-protocol-worker.js" />
-    <Content Include="js\libtextsecure.js" />
     <Content Include="app\locale.js" />
     <Content Include="js\logging.js" />
     <Content Include="js\modules\auto_orient_image.js" />
@@ -343,6 +344,8 @@
     <Content Include="js\models\conversations.js" />
     <Content Include="js\models\messages.js" />
     <Content Include="js\modules\crypto.js" />
+    <Content Include="node_modules\lodash\compact.js" />
+    <Content Include="node_modules\lodash\groupBy.js" />
     <Content Include="node_modules\uuidv4\uuidv4.js" />
     <Content Include="js\notifications.js" />
     <Content Include="js\read_receipts.js" />
@@ -394,8 +397,6 @@
     <Content Include="node_modules\lodash\range.js" />
     <Content Include="node_modules\lodash\sample.js" />
     <Content Include="node_modules\lodash\sortBy.js" />
-    <Content Include="node_modules\metadata\CiphertextMessage.js" />
-    <Content Include="node_modules\metadata\SecretSessionCipher.js" />
     <Content Include="node_modules\moment\moment.js" />
     <Content Include="node_modules\protobuf\protobuf.js" />
     <Content Include="node_modules\react-dom\index.js" />

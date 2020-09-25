@@ -15,7 +15,8 @@
   const Settings = window.settings;
   const Startup = window.startup;
   const Util = window.ts.util;
-
+  const Metadata = window.metadata.SecretSessionCipher;
+    
   // Components
   const {
     ContactDetail,
@@ -126,6 +127,7 @@
     };
 
     return {
+      Metadata,
       Backbone,
       Components,
       Crypto,
