@@ -170,12 +170,14 @@
 
       const fetchOptions = {
         method: options.type,
-        body: options.data || null,
         headers: { 'X-Signal-Agent': 'OWD' },
         agent,
         ca: options.certificateAuthority,
         timeout,
       };
+      if (options.data) {
+          fetchOptions.body = options.data;
+      }
 
       if (fetchOptions.body instanceof ArrayBuffer) {
         const contentLength = fetchOptions.body.byteLength;
