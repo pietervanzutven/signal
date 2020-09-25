@@ -68,7 +68,7 @@ var app = {
         var version = Windows.ApplicationModel.Package.current.id.version;
         return version.major + '.' + version.minor + '.' + version.build
     },
-    getPath: () => 'ms-appx://',
+    getPath: () => 'ms-appdata:///local',
 };
 
 var ipc = {
