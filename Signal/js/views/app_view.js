@@ -32,7 +32,7 @@
     },
     openView: function(view) {
       this.el.innerHTML = '';
-      this.el.append(view.el);
+      this.el.appendChild(view.el);
       this.delegateEvents();
     },
     openDebugLog: function() {
