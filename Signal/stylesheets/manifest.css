@@ -317,6 +317,9 @@ button.hamburger {
   .profileName:before {
     content: '~'; }
 
+.profile-name {
+  font-size: smaller; }
+
 .conversation-list-item {
   cursor: pointer; }
   .conversation-list-item:hover {
@@ -2114,6 +2117,9 @@ span.status {
 
 .group .incoming .embedded-contact {
   margin-top: -2px; }
+
+.contact-detail-pane {
+  overflow-y: scroll; }
 
 .contact-detail {
   text-align: center;
