@@ -2867,6 +2867,10 @@ span.status {
       padding-left: 7px;
       padding-bottom: 2px;
       color: black; }
+      .ios .quoted-message .primary .text a,
+      .ios .quoted-message .primary .filename-label a,
+      .ios .quoted-message .primary .type-label a {
+        color: #2090ea; }
     .ios .quoted-message .primary .author {
       display: none; }
     .ios .quoted-message .primary .ios-label {
