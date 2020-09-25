@@ -3,7 +3,7 @@
 
     window.ts = window.ts || {};
     window.ts.util = window.ts.util || {};
-    const exports = window.ts.util;
+    const exports = window.ts.util.saveURLAsFile = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
