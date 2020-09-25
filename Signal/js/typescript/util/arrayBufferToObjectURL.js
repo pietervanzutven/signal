@@ -3,7 +3,7 @@
 
     window.ts = window.ts || {};
     window.ts.util = window.ts.util || {};
-    const exports = window.ts.util;
+    const exports = window.ts.util.arrayBufferToObjectURL = {};
 
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };

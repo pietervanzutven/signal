@@ -8,21 +8,27 @@
   const Backbone = window.ts.backbone;
   const Crypto = window.crypto;
   const Database = window.database;
-  const HTML = window.ts.html;
+  const Emoji = window.ts.util.emoji;
   const Message = window.types.message;
   const Notifications = window.ts.notifications;
   const OS = window.ts.OS;
   const Settings = window.settings;
   const Startup = window.startup;
   const Util = window.ts.util;
-
+  const Metadata = window.metadata.SecretSessionCipher;
+    
   // Components
   const {
     ContactDetail,
   } = window.ts.components.conversation.ContactDetail;
+  const { ContactName } = window.ts.components.conversation.ContactName;
+  const {
+    ConversationTitle,
+  } = window.ts.components.conversation.ConversationTitle;
   const {
     EmbeddedContact,
   } = window.ts.components.conversation.EmbeddedContact;
+  const { Emojify } = window.ts.components.conversation.Emojify;
   const { Lightbox } = window.ts.components.Lightbox;
   const { LightboxGallery } = window.ts.components.LightboxGallery;
   const {
@@ -60,7 +66,10 @@
 
     const Components = {
       ContactDetail,
+      ContactName,
+      ConversationTitle,
       EmbeddedContact,
+      Emojify,
       Lightbox,
       LightboxGallery,
       MediaGallery,
@@ -118,11 +127,12 @@
     };
 
     return {
+      Metadata,
       Backbone,
       Components,
       Crypto,
       Database,
-      HTML,
+      Emoji,
       Migrations,
       Notifications,
       OS,

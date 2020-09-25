@@ -21,6 +21,7 @@
     const classnames_1 = __importDefault(window.classnames);
     const MIME = __importStar(window.ts.types.MIME);
     const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
+    const Emojify_1 = window.ts.components.conversation.Emojify;
     const MessageBody_1 = window.ts.components.conversation.MessageBody;
     function validateQuote(quote) {
         if (quote.text) {
@@ -129,9 +130,9 @@
             const { authorColor, authorProfileName, authorTitle, i18n, isFromMe, } = this.props;
             const authorProfileElement = authorProfileName ? (react_1.default.createElement("span", { className: "profile-name" },
                 "~",
-                authorProfileName)) : null;
+                react_1.default.createElement(Emojify_1.Emojify, { text: authorProfileName }))) : null;
             return (react_1.default.createElement("div", { className: classnames_1.default(authorColor, 'author') }, isFromMe ? (i18n('you')) : (react_1.default.createElement("span", null,
-                authorTitle,
+                react_1.default.createElement(Emojify_1.Emojify, { text: authorTitle }),
                 " ",
                 authorProfileElement))));
         }

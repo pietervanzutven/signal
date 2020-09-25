@@ -13,19 +13,24 @@
     const react_1 = __importDefault(window.react);
     class AddNewLines extends react_1.default.Component {
         render() {
-            const { text } = this.props;
+            const { text, renderNonNewLine } = this.props;
             const results = [];
             const FIND_NEWLINES = /\n/g;
+            // We have to do this, because renderNonNewLine is not required in our Props object,
+            //  but it is always provided via defaultProps.
+            if (!renderNonNewLine) {
+                return;
+            }
             let match = FIND_NEWLINES.exec(text);
             let last = 0;
             let count = 1;
             if (!match) {
-                return react_1.default.createElement("span", null, text);
+                return renderNonNewLine({ text, key: 0 });
             }
             while (match) {
                 if (last < match.index) {
                     const textWithNoNewline = text.slice(last, match.index);
-                    results.push(react_1.default.createElement("span", { key: count++ }, textWithNoNewline));
+                    results.push(renderNonNewLine({ text: textWithNoNewline, key: count++ }));
                 }
                 results.push(react_1.default.createElement("br", { key: count++ }));
                 // @ts-ignore
@@ -33,10 +38,13 @@
                 match = FIND_NEWLINES.exec(text);
             }
             if (last < text.length) {
-                results.push(react_1.default.createElement("span", { key: count++ }, text.slice(last)));
+                results.push(renderNonNewLine({ text: text.slice(last), key: count++ }));
             }
-            return react_1.default.createElement("span", null, results);
+            return results;
         }
     }
+    AddNewLines.defaultProps = {
+        renderNonNewLine: ({ text, key }) => react_1.default.createElement("span", { key: key }, text),
+    };
     exports.AddNewLines = AddNewLines;
 })();

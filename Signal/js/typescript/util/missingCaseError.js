@@ -3,7 +3,7 @@
 
     window.ts = window.ts || {};
     window.ts.util = window.ts.util || {};
-    const exports = window.ts.util;
+    const exports = window.ts.util.missingCaseError = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
     // `missingCaseError` is useful for compile-time checking that all `case`s in

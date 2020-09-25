@@ -3723,6 +3723,8 @@ span.status {
       border-bottom: 1px solid #e6e6e6; }
       .android-dark .incoming .embedded-contact .send-message .bubble-icon {
         background-color: white; }
+  .android-dark .contact-detail .additional-contact .type {
+    color: rgba(255, 255, 255, 0.5); }
   .android-dark .outgoing .quoted-message {
     background: rgba(255, 255, 255, 0.38); }
     .android-dark .outgoing .quoted-message .icon-container .icon {
@@ -3819,7 +3821,7 @@ span.status {
 .iti-flag {
   width: 16px;
   height: 11px;
-  background: url("../img/flags.png"); }
+  background: url("../node_modules/intl-tel-input/build/img/flags.png"); }
 
 .iti-flag.ad {
   background-position: -16px 0; }
@@ -4613,7 +4615,7 @@ span.status {
   margin-right: 6px; }
 
 .iti-flag {
-  background: url("../images/flags.png"); }
+  background: url("../node_modules/intl-tel-input/build/img/flags.png"); }
 
 .intl-tel-input .country-list {
   text-align: left; }
