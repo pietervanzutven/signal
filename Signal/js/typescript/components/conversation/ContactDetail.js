@@ -117,8 +117,8 @@
         }
         render() {
             const { contact, hasSignalAccount, i18n, onSendMessage } = this.props;
-            return (react_1.default.createElement("div", { className: "contact-detail" },
-                EmbeddedContact_1.renderAvatar(contact),
+            return (react_1.default.createElement("div", { className: "contact-detail-component" },
+                EmbeddedContact_1.renderAvatar(contact, i18n),
                 EmbeddedContact_1.renderName(contact),
                 EmbeddedContact_1.renderContactShorthand(contact),
                 EmbeddedContact_1.renderSendMessage({ hasSignalAccount, i18n, onSendMessage }),
