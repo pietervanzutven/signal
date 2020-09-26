@@ -16,8 +16,8 @@
         },
         render_attributes: {
             about: i18n('aboutSignalDesktop'),
-            version: window.config.version,
-            states: window.config.environment + ' - ' + window.config.appInstance
+            version: window.getVersion(),
+            states: window.getEnvironment() + ' - ' + window.getAppInstance()
         },
         close: function(e) {
             e.preventDefault();
