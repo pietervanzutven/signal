@@ -151,16 +151,4 @@
   window.Signal.Debug = window.debug;
   window.Signal.Logs = window.logs;
 
-  if (config.environment === 'test') {
-    /* eslint-disable global-require, import/no-extraneous-dependencies */
-    window.test = {
-      glob: require('glob'),
-      fse: require('fs-extra'),
-      tmp: require('tmp'),
-      path: require('path'),
-      basePath: __dirname,
-      attachmentsPath: window.Signal.Migrations.attachmentsPath,
-    };
-    /* eslint-enable global-require, import/no-extraneous-dependencies */
-  }
 })();
