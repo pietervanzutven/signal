@@ -11,7 +11,8 @@
         'image/bmp': true,
         'image/gif': true,
         'image/jpeg': true,
-        'image/svg+xml': true,
+        // No need to support SVG
+        'image/svg+xml': false,
         'image/webp': true,
         'image/x-xbitmap': true,
         // ICO

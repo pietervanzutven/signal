@@ -37532,7 +37532,7 @@ window.textsecure.utils = (function() {
 
   var ARCHIVE_AGE = 7 * 24 * 60 * 60 * 1000;
 
-  function AccountManager(url, username, password) {
+  function AccountManager(username, password) {
     this.server = window.WebAPI.connect({ username, password });
     this.pending = Promise.resolve();
   }
@@ -38318,10 +38318,9 @@ window.textsecure.utils = (function() {
 
 /* eslint-disable more/no-then */
 
-function MessageReceiver(url, username, password, signalingKey, options = {}) {
+function MessageReceiver(username, password, signalingKey, options = {}) {
   this.count = 0;
 
-  this.url = url;
   this.signalingKey = signalingKey;
   this.username = username;
   this.password = password;
@@ -39531,14 +39530,12 @@ MessageReceiver.prototype.extend({
 window.textsecure = window.textsecure || {};
 
 textsecure.MessageReceiver = function MessageReceiverWrapper(
-  url,
   username,
   password,
   signalingKey,
   options
 ) {
   const messageReceiver = new MessageReceiver(
-    url,
     username,
     password,
     signalingKey,
@@ -40058,7 +40055,7 @@ Message.prototype = {
   },
 };
 
-function MessageSender(url, username, password, cdn_url) {
+function MessageSender(username, password) {
   this.server = WebAPI.connect({ username, password });
   this.pendingMessages = {};
 }

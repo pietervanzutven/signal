@@ -9,11 +9,28 @@
   const { deferredToPromise } = window.deferred_to_promise;
 
   window.PROTO_ROOT = '/protos';
-  window.config = window.config || {};
+  const config = window.config || {};
+
+  let title = config.name;
+  if (config.environment !== 'production') {
+    title += ` - ${config.environment}`;
+  }
+  if (config.appInstance) {
+    title += ` - ${config.appInstance}`;
+  }
+
+  window.getTitle = () => title;
+  window.getEnvironment = () => config.environment;
+  window.getAppInstance = () => config.appInstance;
+  window.getVersion = () => config.version;
+  window.isImportMode = () => config.importMode;
+  window.getExpiration = () => config.buildExpiration;
+  window.getNodeVersion = () => config.uwp_version;
+  window.getHostName = () => config.hostname;
 
   window.wrapDeferred = deferredToPromise;
 
-  window.config.localeMessages = ipc.sendSync('locale-data');
+  const localeMessages = ipc.sendSync('locale-data');
 
   window.setBadgeCount = count => ipc.send('set-badge-count', count);
 
@@ -76,17 +93,17 @@
 
   // We pull these dependencies in now, from here, because they have Node.js dependencies
 
-  if (window.config.proxyUrl) {
-    console.log('using proxy url', window.config.proxyUrl);
+  if (config.proxyUrl) {
+    console.log('using proxy url', config.proxyUrl);
   }
 
   const { initialize: initializeWebAPI } = window.web_api;
 
   window.WebAPI = initializeWebAPI({
-    url: window.config.serverUrl,
-    cdnUrl: window.config.cdnUrl,
-    certificateAuthority: window.config.certificateAuthority,
-    proxyUrl: window.config.proxyUrl,
+    url: config.serverUrl,
+    cdnUrl: config.cdnUrl,
+    certificateAuthority: config.certificateAuthority,
+    proxyUrl: config.proxyUrl,
   });
 
   const { autoOrientImage } = window.auto_orient_image;
@@ -113,7 +130,7 @@
   const i18n = window.i18n;
   const Attachments = window.attachments;
 
-  const { locale, localeMessages } = window.config;
+  const { locale } = config;
   window.i18n = i18n.setup(locale, localeMessages);
   window.moment.updateLocale(locale, {
     relativeTime: {
@@ -135,16 +152,4 @@
   window.Signal.Debug = window.debug;
   window.Signal.Logs = window.logs;
 
-  if (window.config.environment === 'test') {
-    /* eslint-disable global-require, import/no-extraneous-dependencies */
-    window.test = {
-      glob: require('glob'),
-      fse: require('fs-extra'),
-      tmp: require('tmp'),
-      path: require('path'),
-      basePath: __dirname,
-      attachmentsPath: window.Signal.Migrations.attachmentsPath,
-    };
-    /* eslint-enable global-require, import/no-extraneous-dependencies */
-  }
 })();
