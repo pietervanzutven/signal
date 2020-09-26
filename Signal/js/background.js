@@ -74,6 +74,7 @@
   let isMigrationWithIndexComplete = false;
   let isMigrationWithoutIndexComplete = false;
   idleDetector.on('idle', async () => {
+    console.log('Idle processing started');
     const NUM_MESSAGES_PER_BATCH = 1;
 
     if (!isMigrationWithIndexComplete) {
@@ -104,6 +105,7 @@
     const areAllMigrationsComplete =
       isMigrationWithIndexComplete && isMigrationWithoutIndexComplete;
     if (areAllMigrationsComplete) {
+      console.log('All migrations are complete. Stopping idle detector.');
       idleDetector.stop();
     }
   });
