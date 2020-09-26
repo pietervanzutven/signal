@@ -38347,6 +38347,12 @@ MessageReceiver.prototype.extend({
       return;
     }
 
+    this.count = 0;
+    if (this.hasConnected) {
+      const ev = new Event('reconnect');
+      this.dispatchEvent(ev);
+    }
+
     this.hasConnected = true;
 
     if (this.socket && this.socket.readyState !== WebSocket.CLOSED) {
