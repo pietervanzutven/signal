@@ -87,34 +87,34 @@ a {
   color: #2090ea; }
 
 button.back {
-  background-image: url("../images/back_00000005.svg");
+  background-image: url("../images/back_80000000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
   button.back:focus, button.back:hover {
-    background-image: url("../images/back_back_00000010.svg");
+    background-image: url("../images/back_FF000000.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
 button.clock {
-  background-image: url("../images/clock_00000005.svg");
+  background-image: url("../images/clock_80000000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
   button.clock:focus, button.clock:hover {
-    background-image: url("../images/clock_00000010.svg");
+    background-image: url("../images/clock_FF000000.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
 button.hamburger {
-  background-image: url("../images/menu_00000005.svg");
+  background-image: url("../images/menu_80000000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
   button.hamburger:focus, button.hamburger:hover {
-    background-image: url("../images/menu_00000010.svg");
+    background-image: url("../images/menu_FF000000.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -201,7 +201,7 @@ button.hamburger {
       display: inline-block;
       width: 24px;
       height: 24px;
-      background-image: url("../images/paperclip_61616110.svg");
+      background-image: url("../images/paperclip_FF616161.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
@@ -376,7 +376,7 @@ button.hamburger {
     height: 18px;
     display: inline-block;
     vertical-align: text-bottom;
-    background-image: url("../images/warning_00000010.svg");
+    background-image: url("../images/warning_FF000000.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -386,7 +386,7 @@ button.hamburger {
     top: 3px;
     height: 23px;
     width: 23px;
-    background-image: url("../images/x_00000010.svg");
+    background-image: url("../images/x_FF000000.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -415,7 +415,7 @@ button.hamburger {
   .contact-details.clickable {
     cursor: pointer; }
   .contact-details .verified-icon {
-    background-image: url("../images/verified-check_61616110.svg");
+    background-image: url("../images/verified-check_FF616161.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -498,7 +498,7 @@ button.hamburger {
     display: block;
     width: 100%;
     height: 100%;
-    background-image: url("../images/x_FFFFFF10.svg");
+    background-image: url("../images/x_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -636,12 +636,12 @@ textarea:focus {
     display: inline-block;
     margin: 0.5em; }
     .full-screen-flow .os-icon.apple {
-      background-image: url("../images/apple_00000010.svg");
+      background-image: url("../images/apple_FF000000.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .full-screen-flow .os-icon.android {
-      background-image: url("../images/android_00000010.svg");
+      background-image: url("../images/android_FF000000.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -696,48 +696,50 @@ textarea:focus {
         height: 10em;
         width: 10em; } }
     .full-screen-flow .banner-icon.check-circle-outline {
-      background-image: url("../images/check-circle-outline_DEDEDE10.svg");
+      background-image: url("../images/check-circle-outline_FFDEDEDE.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .full-screen-flow .banner-icon.alert-outline {
-      background-image: url("../images/alert-outline_DEDEDE10.svg");
+      background-image: url("../images/alert-outline_FFDEDEDE.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .full-screen-flow .banner-icon.folder-outline {
-      background-image: url("../images/folder-outline_DEDEDE10.svg");
+      background-image: url("../images/folder-outline_FFDEDEDE.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .full-screen-flow .banner-icon.import {
-      background-image: url("../images/import_DEDEDE10.svg");
+      background-image: url("../images/import_FFDEDEDE.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .full-screen-flow .banner-icon.export {
-      background-image: url("../images/export_DEDEDE10.svg");
+      background-image: url("../images/export_FFDEDEDE.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .full-screen-flow .banner-icon.lead-pencil {
-      background-image: url("../images/lead_pencil_DEDEDE10.svg");
+      background-image: url("../images/lead-pencil_FFDEDEDE.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .full-screen-flow .banner-icon.sync {
-      background-image: url("../images/sync_DEDEDE10.svg");
+      background-image: url("../images/sync_FFDEDEDE.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .full-screen-flow .banner-icon.alert-outline-red {
-      background-image: url("../images/alert-outline_FF000010.svg");
+      background-image: url("../images/alert-outline_FFFF0000.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .full-screen-flow .banner-icon.delete {
-      background-image: url("../images/delete_DEDEDE10.svg");
-      background-size: 100%; }
+      background-image: url("../images/delete_FFDEDEDE.svg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
   .full-screen-flow .button {
     cursor: pointer;
     display: inline-block;
@@ -902,12 +904,12 @@ textarea:focus {
       display: block;
       width: 24px;
       height: 24px;
-      background-image: url("../images/open_link_00000005.svg");
+      background-image: url("../images/open_link_80000000.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
       .debug-log .result .open:before:focus, .debug-log .result .open:before:hover {
-        background-image: url("../images/open_link_00000010.svg");
+        background-image: url("../images/open_link_FF000000.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
@@ -969,22 +971,22 @@ textarea:focus {
   .iconButton:hover {
       background: #616161; }
   .iconButton.save:before {
-    background-image: url("../images/save_FFFFFF10.svg");
+    background-image: url("../images/save_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .iconButton.close:before {
-    background-image: url("../images/x_FFFFFF10.svg");
+    background-image: url("../images/x_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .iconButton.previous:before {
-    background-image: url("../images/back_FFFFFF10.svg");
+    background-image: url("../images/back_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .iconButton.next:before {
-    background-image: url("../images/forward_FFFFFF10.svg");
+    background-image: url("../images/forward_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -1006,7 +1008,7 @@ textarea:focus {
       display: inline-block;
       height: 24px;
       width: 24px;
-      background-image: url("../images/microphone_61616110.svg");
+      background-image: url("../images/microphone_FF616161.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -1032,7 +1034,7 @@ textarea:focus {
     background: #9ae99a;
     border: 1px solid #47d647; }
     .recorder .finish .icon {
-      background-image: url("../images/check_47D64710.svg");
+      background-image: url("../images/check_FF47D647.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -1040,7 +1042,7 @@ textarea:focus {
     background: #fbe3e3;
     border: 1px solid #ef8989; }
     .recorder .close .icon {
-      background-image: url("../images/x_EF898910.svg");
+      background-image: url("../images/x_FFEF8989.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -1258,7 +1260,7 @@ img.emoji.jumbo {
   color: #454545;
   border-color: rgba(0, 0, 0, 0.05); }
   .inactive .conversation-header .verified-icon {
-    background-image: url("../images/verified-check_45454510.svg");
+    background-image: url("../images/verified-check_FF454545.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -1271,7 +1273,7 @@ img.emoji.jumbo {
     float: left;
     width: 24px;
     height: 100%;
-    background-image: url("../images/search_CCCCCC10.svg");
+    background-image: url('../images/search_FFCCCCCC.svg');
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -1293,7 +1295,7 @@ input.search {
   position: relative; }
   input.search.active {
     outline: solid 1px #2090ea;
-    background-image: url("../images/x_2090EA10.svg");
+    background-image: url("../images/x.svg");
     background-repeat: no-repeat;
     background-size: 16px; }
     input.search.active.ltr {
@@ -1431,7 +1433,7 @@ input.search {
   padding: 0 5px 0 4px; }
 
 .conversation-title .verified-icon {
-  background-image: url("../images/verified-check_FFFFFF10.svg");
+  background-image: url("../images/verified-check_FFFFFFFF.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -1521,12 +1523,12 @@ input.search {
   vertical-align: text-bottom;
   display: inline-block; }
   .key-verification .icon.verified {
-    background-image: url("../images/verified-check_45454510.svg");
+    background-image: url("../images/verified-check_FF454545.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .key-verification .icon.shield {
-    background-image: url("../images/shield_45454510.svg");
+    background-image: url("../images/shield_FF454545.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -1629,7 +1631,7 @@ input.search {
         height: 1.25em;
         position: relative;
         vertical-align: middle;
-        background-image: url("../images/warning_FFFFFF10.svg");
+        background-image: url("../images/warning_FFFFFFFF.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
@@ -1726,7 +1728,7 @@ li.entry.outgoing .menu-container {
   width: 24px;
   height: 24px;
   position: relative;
-  background-image: url("../images/warning_FF000010.svg");
+  background-image: url("../images/warning_FFFF0000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
@@ -1736,12 +1738,12 @@ li.entry.outgoing .menu-container {
   width: 24px;
   height: 24px;
   position: relative;
-  background-image: url("../images/dots-horizontal_80808010.svg");
+  background-image: url("../images/dots-horizontal_FF808080.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
   .dots-horizontal-icon:hover {
-    background-image: url("../images/dots-horizontal_00000010.svg");
+    background-image: url("../images/dots-horizontal_FF000000.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -1773,21 +1775,21 @@ span.status {
 
 .sent span.status {
   display: inline-block;
-  background-image: url("../images/check_00000010.svg");
+  background-image: url("../images/check_FF000000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .delivered span.status {
   display: inline-block;
-  background-image: url("../images/double-check_00000010.svg");
+  background-image: url("../images/double-check_FF000000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .read span.status {
   display: inline-block;
-  background-image: url("../images/double-check_2090EA10.svg");
+  background-image: url("../images/double-check_FF2090EA.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
@@ -2000,25 +2002,25 @@ span.status {
       vertical-align: middle;
       width: 48px;
       height: 48px;
-      background-image: url("../images/file_45454510.svg");
+      background-image: url("../images/file_FF454545.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
       .message-container .attachments .fileView .icon.audio,
       .message-list .attachments .fileView .icon.audio {
-        background-image: url("../images/audio_45454510.svg");
+        background-image: url("../images/audio_FF454545.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
       .message-container .attachments .fileView .icon.video,
       .message-list .attachments .fileView .icon.video {
-        background-image: url("../images/video_45454510.svg");
+        background-image: url("../images/video_FF454545.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
       .message-container .attachments .fileView .icon.voice,
       .message-list .attachments .fileView .icon.voice {
-        background-image: url("../images/voice_45454510.svg");
+        background-image: url("../images/voice_FF454545.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
@@ -2101,7 +2103,7 @@ span.status {
       width: 18px;
       display: inline-block;
       margin-right: 5px;
-      background-image: url("../images/chat-bubble_2090EA10.svg");
+      background-image: url("../images/chat-bubble_FF2090EA.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -2178,7 +2180,7 @@ span.status {
       width: 18px;
       display: inline-block;
       margin-right: 5px;
-      background-image: url("../images/chat-bubble_FFFFFF10.svg");
+      background-image: url("../images/chat-bubble_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -2349,7 +2351,7 @@ span.status {
     .quoted-message .close-container .close-button {
       width: 100%;
       height: 100%;
-      background-image: url("../images/x_61616110.svg");
+      background-image: url("../images/x_FF616161.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -2409,27 +2411,27 @@ span.status {
       top: 12px;
       bottom: 12px; }
       .quoted-message .icon-container .icon.file {
-        background-image: url("../images/file_FFFFFF10.svg");
+        background-image: url("../images/file_FFFFFFFF.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
       .quoted-message .icon-container .icon.image {
-        background-image: url("../images/image_FFFFFF10.svg");
+        background-image: url("../images/image_FFFFFFFF.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
       .quoted-message .icon-container .icon.microphone {
-        background-image: url("../images/microphone_FFFFFF10.svg");
+        background-image: url("../images/microphone_FFFFFFFF.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
       .quoted-message .icon-container .icon.play {
-        background-image: url("../images/play_FFFFFF10.svg");
+        background-image: url("../images/play_FFFFFFFF.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
       .quoted-message .icon-container .icon.movie {
-        background-image: url("../images/movie_FFFFFF10.svg");
+        background-image: url("../images/movie_FFFFFFFF.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
@@ -2535,7 +2537,7 @@ span.status {
       .bottom-bar form.send.video-attachment .outer .play.icon {
         height: 30px;
         width: 30px;
-        background-image: url("../images/play_FFFFFF10.svg");
+        background-image: url("../images/play_FFFFFFFF.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
@@ -2624,17 +2626,17 @@ span.status {
   vertical-align: text-bottom;
   display: inline-block; }
   .advisory .icon.verified {
-    background-image: url("../images/verified-check_45454510.svg");
+    background-image: url("../images/verified-check_FF454545.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .advisory .icon.shield {
-    background-image: url("../images/shield_45454510.svg");
+    background-image: url("../images/shield_FF454545.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .advisory .icon.clock {
-    background-image: url("../images/clock_45454510.svg");
+    background-image: url("../images/clock_FF454545.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -2690,29 +2692,29 @@ span.status {
     box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
     outline: none; }
     .discussion-container .scroll-down-button-view button .icon {
-      background-image: url("../images/down_C0C0C010.svg");
+      background-image: url("../images/down_FFC0C0C0.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center;
       height: 100%;
       width: 100%; }
     .discussion-container .scroll-down-button-view button .icon:hover {
-      background-image: url("../images/down_61616110.svg");
+      background-image: url("../images/down_FF616161.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .discussion-container .scroll-down-button-view button.new-messages {
-      background-image: url("../images/down_2090EA10.svg"); 
+      background-image: url("../images/down_FF2090EA.svg"); 
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
       .discussion-container .scroll-down-button-view button.new-messages .icon {
-        background-image: url("../images/down_FFFFFF10.svg");
+        background-image: url("../images/down_FFFFFFFF.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
       .discussion-container .scroll-down-button-view button.new-messages:hover {
-        background-image: url("../images/down_1472BD10.svg");
+        background-image: url("../images/down_FF1472BD.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
@@ -2778,7 +2780,7 @@ span.status {
   .ios .conversation-header .conversation-title {
     line-height: 64px; }
     .ios .conversation-header .conversation-title .verified-icon {
-      background-image: url("../images/verified-check_45454510.svg");
+      background-image: url("../images/verified-check_FF454545.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -2826,7 +2828,7 @@ span.status {
     margin-top: 0;
     color: white; }
     .ios .embedded-contact .send-message .bubble-icon {
-      background-image: url("../images/chat-bubble-outline_FFFFFF10.svg");
+      background-image: url("../images/chat-bubble-outline_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -2838,7 +2840,7 @@ span.status {
   .ios .incoming .embedded-contact .send-message {
     color: #2090ea; }
     .ios .incoming .embedded-contact .send-message .bubble-icon {
-      background-image: url("../images/chat-bubble-outline_2090EA10.svg");
+      background-image: url("../images/chat-bubble-outline_FF2090EA.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -2917,7 +2919,7 @@ span.status {
     .ios .quoted-message .close-container .close-button {
       height: 20px;
       width: 20px;
-      background-image: url("../images/close-circle_8D8D8D10.svg");
+      background-image: url("../images/close-circle_FF8D8D8D.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -3052,22 +3054,22 @@ span.status {
   color: black; }
 
 .ios .outgoing .attachments .fileView .icon {
-  background-image: url("../images/file_FFFFFF10.svg");
+  background-image: url("../images/file_FFFFFFFF.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
   .ios .outgoing .attachments .fileView .icon.audio {
-    background-image: url("../images/audio_FFFFFF10.svg");
+    background-image: url("../images/audio_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .ios .outgoing .attachments .fileView .icon.video {
-    background-image: url("../images/video_FFFFFF10.svg");
+    background-image: url("../images/video_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .ios .outgoing .attachments .fileView .icon.voice {
-    background-image: url("../images/voice_FFFFFF10.svg");
+    background-image: url("../images/voice_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -3082,7 +3084,7 @@ span.status {
 .ios .hourglass {
   display: inline-block;
   position: relative;
-  background-image: url("../images/hourglass_full_99999910.svg");
+  background-image: url("../images/hourglass_full_00000000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -3100,7 +3102,7 @@ span.status {
   .ios .hourglass .sand {
     background: #999; }
   .ios .hourglass:after {
-    background-image: url("../images/hourglass_empty_99999910.svg");
+    background-image: url("../images/hourglass_empty_FF999999.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -3205,7 +3207,7 @@ span.status {
 .android .outgoing .hourglass {
   display: inline-block;
   position: relative;
-  background-image: url("../images/hourglass_full_99999910.svg");
+  background-image: url("../images/hourglass_full_00000000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -3223,7 +3225,7 @@ span.status {
   .android .outgoing .hourglass .sand {
     background: #999; }
   .android .outgoing .hourglass:after {
-    background-image: url("../images/hourglass_empty_99999910.svg");
+    background-image: url("../images/hourglass_empty_FF999999.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -3231,7 +3233,7 @@ span.status {
 .android .incoming .hourglass {
   display: inline-block;
   position: relative;
-  background-image: url("../images/hourglass_full_FFFFFF10.svg");
+  background-image: url("../images/hourglass_full_00000000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -3249,7 +3251,7 @@ span.status {
   .android .incoming .hourglass .sand {
     background: #fff; }
   .android .incoming .hourglass:after {
-    background-image: url("../images/hourglass_empty_FFFFFF10.svg");
+    background-image: url("../images/hourglass_empty_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -3275,88 +3277,88 @@ span.status {
   color: #f3f3f3; }
 
 .android .incoming .bubble .fileView .icon {
-  background-image: url("../images/file_FFFFFF10.svg");
+  background-image: url("../images/file_FFFFFFFF.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
   .android .incoming .bubble .fileView .icon.audio {
-    background-image: url("../images/audio_FFFFFF10.svg");
+    background-image: url("../images/audio_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .android .incoming .bubble .fileView .icon.video {
-    background-image: url("../images/video_FFFFFF10.svg");
+    background-image: url("../images/video_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .android .incoming .bubble .fileView .icon.voice {
-    background-image: url("../images/voice_FFFFFF10.svg");
+    background-image: url("../images/voice_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
 .android button.clock {
-  background-image: url("../images/clock_FFFFFF08.svg");
+  background-image: url("../images/clock_CCFFFFFF.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
   .android button.clock:focus, .android button.clock:hover {
-    background-image: url("../images/clock_FFFFFF10.svg");
+    background-image: url("../images/clock_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
 .android .inactive button.clock {
-  background-image: url("../images/clock_00000005.svg");
+  background-image: url("../images/clock_80000000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
   .android .inactive button.clock:focus, .android .inactive button.clock:hover {
-    background-image: url("../images/clock_00000010.svg");
+    background-image: url("../images/clock_FF000000.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
 .android button.hamburger {
-  background-image: url("../images/menu_FFFFFF08.svg");
+  background-image: url("../images/menu_CCFFFFFF.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
   .android button.hamburger:focus, .android button.hamburger:hover {
-    background-image: url("../images/menu_FFFFFF10.svg");
+    background-image: url("../images/menu_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
 .android .inactive button.hamburger {
-  background-image: url("../images/menu_00000005.svg");
+  background-image: url("../images/menu_80000000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
   .android .inactive button.hamburger:focus, .android .inactive button.hamburger:hover {
-    background-image: url("../images/menu_00000010.svg");
+    background-image: url("../images/menu_FF000000.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
 .android button.back {
-  background-image: url("../images/back_FFFFFF08.svg");
+  background-image: url("../images/back_CCFFFFFF.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
   .android button.back:focus, .android button.back:hover {
-    background-image: url("../images/back_FFFFFF10.svg");
+    background-image: url("../images/back_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
 .android .inactive button.back {
-  background-image: url("../images/back_00000005.svg");
+  background-image: url("../images/back_80000000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
   .android .inactive button.back:focus, .android .inactive button.back:hover {
-    background-image: url("../images/back_00000010.svg");
+    background-image: url("../images/back_FF000000.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -3400,12 +3402,12 @@ span.status {
     background-color: #030303;
     border-color: #292929; }
   .android-dark .key-verification .icon.verified {
-    background-image: url("../images/verified-check_CCCCCC10.svg");
+    background-image: url("../images/verified-check_FFCCCCCC.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .android-dark .key-verification .icon.shield {
-    background-image: url("../images/shield_CCCCCC10.svg");
+    background-image: url("../images/shield_FFCCCCCC.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -3431,7 +3433,7 @@ span.status {
   .android-dark .contact-details .number {
     color: #807f7f; }
     .android-dark .contact-details .number .verified-icon {
-      background-image: url("../images/verified-check_807F7F10.svg");
+      background-image: url("../images/verified-check_FF807F7F.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -3519,17 +3521,17 @@ span.status {
   .android-dark .message-list .advisory .content {
     background-color: #333333; }
   .android-dark .message-list .advisory .shield {
-    background-image: url("../images/shield_CCCCCC10.svg");
+    background-image: url("../images/shield_FFCCCCCC.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .android-dark .message-list .advisory .verified {
-    background-image: url("../images/verified-check_CCCCCC10.svg");
+    background-image: url("../images/verified-check_FFCCCCCC.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .android-dark .message-list .advisory .clock {
-    background-image: url("../images/clock_CCCCCC10.svg");
+    background-image: url("../images/clock_FFCCCCCC.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -3537,25 +3539,25 @@ span.status {
     background-color: #333333 !important;
     color: #cccccc; }
     .android-dark .inactive .conversation-header .verified-icon {
-      background-image: url("../images/verified-check_CCCCCC10.svg");
+      background-image: url("../images/verified-check_FFCCCCCC.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
   .android-dark .sent span.status {
     display: inline-block;
-    background-image: url("../images/check_FFFFFF10.svg");
+    background-image: url("../images/check_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .android-dark .delivered span.status {
     display: inline-block;
-    background-image: url("../images/double-check_FFFFFF10.svg");
+    background-image: url("../images/double-check_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .android-dark .read span.status {
     display: inline-block;
-    background-image: url("../images/double-check_2090EA10.svg");
+    background-image: url("../images/double-check_FF2090EA.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -3564,13 +3566,13 @@ span.status {
     display: inline-block;
     width: 24px;
     height: 24px;
-    background-image: url("../images/paperclip_FFFFFF10.svg");
+    background-image: url("../images/paperclip_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     transform: rotateZ(-45deg); }
   .android-dark .capture-audio .microphone:before {
-    background-image: url("../images/microphone_FFFFFF10.svg");
+    background-image: url("../images/microphone_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -3592,7 +3594,7 @@ span.status {
       background: white;
       color: #454545; }
     .android-dark .search.active.ltr, .android-dark .search.active.rtl {
-      background-image: url("../images/x_17171710.svg"); }
+      background-image: url("../images/x_white.svg"); }
   .android-dark .bubble {
     padding: 9px 12px;
     border-radius: 5px;
@@ -3607,10 +3609,11 @@ span.status {
   .android-dark .outgoing .hourglass {
     display: inline-block;
     position: relative;
-    background-image: url("../images/hourglass_full_99999910.svg");
+    background-image: url("../images/hourglass_full_00000000.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center; }
+    background-position: center center;
+    background-size: 100%; }
     .android-dark .outgoing .hourglass,
     .android-dark .outgoing .hourglass .sand, .android-dark .outgoing .hourglass:before, .android-dark .outgoing .hourglass:after {
       width: 13px;
@@ -3624,17 +3627,18 @@ span.status {
     .android-dark .outgoing .hourglass .sand {
       background: #999; }
     .android-dark .outgoing .hourglass:after {
-      background-image: url("../images/hourglass_empty_99999910.svg");
+      background-image: url("../images/hourglass_empty_FF999999.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
   .android-dark .incoming .hourglass {
     display: inline-block;
     position: relative;
-    background-image: url("../images/hourglass_full_FFFFFF10.svg");
+    background-image: url("../images/hourglass_full_00000000.svg");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center center; }
+    background-position: center center;
+    background-size: 100%; }
     .android-dark .incoming .hourglass,
     .android-dark .incoming .hourglass .sand, .android-dark .incoming .hourglass:before, .android-dark .incoming .hourglass:after {
       width: 13px;
@@ -3648,7 +3652,7 @@ span.status {
     .android-dark .incoming .hourglass .sand {
       background: #fff; }
     .android-dark .incoming .hourglass:after {
-      background-image: url("../images/hourglass_empty_FFFFFF10.svg");
+      background-image: url("../images/hourglass_empty_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -3670,42 +3674,42 @@ span.status {
   .android-dark .incoming .bubble .content a {
     color: #f3f3f3; }
   .android-dark .incoming .bubble .fileView .icon {
-    background-image: url("../images/file_FFFFFF10.svg");
+    background-image: url("../images/file_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
     .android-dark .incoming .bubble .fileView .icon.audio {
-      background-image: url("../images/audio_FFFFFF10.svg");
+      background-image: url("../images/audio_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .android-dark .incoming .bubble .fileView .icon.video {
-      background-image: url("../images/video_FFFFFF10.svg");
+      background-image: url("../images/video_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .android-dark .incoming .bubble .fileView .icon.voice {
-      background-image: url("../images/voice_FFFFFF10.svg");
+      background-image: url("../images/voice_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
   .android-dark .outgoing .bubble .fileView .icon {
-    background-image: url("../images/file_CCCCCC10.svg");
+    background-image: url("../images/file_FFCCCCCC.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
     .android-dark .outgoing .bubble .fileView .icon.audio {
-      background-image: url("../images/audio_CCCCCC10.svg");
+      background-image: url("../images/audio_FFCCCCCC.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .android-dark .outgoing .bubble .fileView .icon.video {
-      background-image: url("../images/video_CCCCCC10.svg");
+      background-image: url("../images/video_FFCCCCCC.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .android-dark .outgoing .bubble .fileView .icon.voice {
-      background-image: url("../images/voice_CCCCCC10.svg");
+      background-image: url("../images/voice_FFCCCCCC.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -3719,7 +3723,7 @@ span.status {
     border-top: 1px solid #616161;
     border-bottom: 1px solid #616161; }
     .android-dark .embedded-contact .send-message .bubble-icon {
-      background-image: url("../images/chat-bubble-outline_2090EA10.svg");
+      background-image: url("../images/chat-bubble_FF2090EA.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -3749,29 +3753,32 @@ span.status {
     .android-dark .incoming .quoted-message .icon-container .icon.play.with-image {
       background-color: #cccccc; }
   .android-dark button.clock {
-    background-image: url("../images/clock_FFFFFF08.svg");
+    background-image: url("../images/clock_CCFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
     .android-dark button.clock:focus, .android-dark button.clock:hover {
-      background-image: url("../images/clock_FFFFFF10.svg");
+      background-image: url("../images/clock_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
   .android-dark button.hamburger {
-    background-image: url("../images/menu_FFFFFF08.svg");
+    background-image: url("../images/menu_CCFFFFFF.svg");
     background-size: 100%;
-    background-repeat: no-repeat; }
+    background-repeat: no-repeat;
+    background-position: center center; }
     .android-dark button.hamburger:focus, .android-dark button.hamburger:hover {
-      background-image: url("../images/menu_FFFFFF10.svg");
+      background-image: url("../images/menu_FFFFFFFF.svg");
       background-size: 100%;
-      background-repeat: no-repeat; }
+      background-repeat: no-repeat;
+      background-position: center center; }
   .android-dark button.back {
-    background-image: url("../images/back_FFFFFF08.svg");
+    background-image: url("../images/back_CCFFFFFF.svg");
     background-size: 100%;
-    background-repeat: no-repeat; }
+    background-repeat: no-repeat;
+    background-position: center center; }
     .android-dark button.back:focus, .android-dark button.back:hover {
-      background-image: url("../images/back_FFFFFF10.svg");
+      background-image: url("../images/back_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
@@ -3792,21 +3799,30 @@ span.status {
   .android-dark .discussion-container .scroll-down-button-view button {
     background-color: #8d8d8d; }
     .android-dark .discussion-container .scroll-down-button-view button .icon {
-      background-image: url("../images/down_00000010.svg");
+      background-image: url("../images/down_FF000000.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
     .android-dark .discussion-container .scroll-down-button-view button .icon:hover {
-      background-image: url("../images/down_FFFFFF10.svg"); }
+      background-image: url("../images/down_FFFFFFFF.svg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
     .android-dark .discussion-container .scroll-down-button-view button.new-messages {
-      background-image: url("../images/down_2090EA10.svg"); }
+      background-image: url("../images/down_FF2090EA.svg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
       .android-dark .discussion-container .scroll-down-button-view button.new-messages .icon {
-        background-image: url("../images/down_FFFFFF10.svg");
+        background-image: url("../images/down_FFFFFFFF.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
       .android-dark .discussion-container .scroll-down-button-view button.new-messages:hover {
-        background-image: url("../images/down_1472BD10.svg"); }
+        background-image: url("../images/down_FF1472BD.svg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
   .android-dark .choose-file button:hover {
     background-color: #333333; }
   .android-dark .capture-audio button:hover {
@@ -3814,7 +3830,7 @@ span.status {
   .android-dark button.emoji:hover {
     background-color: #333333; }
   .android-dark button.emoji:before {
-    background-image: url("../images/smile_FFFFFF10.svg");
+    background-image: url("../images/smile_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -3823,7 +3839,7 @@ span.status {
   .android-dark .emoji-panel-container .ep-emojies {
     background-color: #292929; }
   .android-dark .dots-horizontal-icon:hover {
-    background-image: url("../images/dots-horizontal_F3F3F310.svg");
+    background-image: url("../images/dots-horizontal_FFF3F3F3.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
