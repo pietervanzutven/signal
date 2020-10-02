@@ -109,6 +109,7 @@
       this.on('change:profileKey', this.onChangeProfileKey);
       this.on('destroy', this.revokeAvatarUrl);
 
+      this.on('newmessage', this.addSingleMessage);
       this.on('expired', this.onExpired);
       this.listenTo(
         this.messageCollection,
@@ -146,6 +147,7 @@
 
     addSingleMessage(message) {
       const model = this.messageCollection.add(message, { merge: true });
+      model.setToExpire();
       this.processQuotes(this.messageCollection);
       return model;
     },
