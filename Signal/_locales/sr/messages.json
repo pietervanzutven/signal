@@ -4,11 +4,11 @@
 		"description": "Button label to begin backup process"
 	},
 	"scrollDown": {
-		"message": "Scroll to bottom of conversation",
+		"message": "Иди на крај преписке",
 		"description": "Alt text for button to take user down to bottom of conversation, shown when user scrolls up"
 	},
 	"importChooserTitle": {
-		"message": "Choose directory with exported data",
+		"message": "Одаберите директоријум са извезеним подацима",
 		"description": "Title of the popup window used to select data previously exported"
 	},
 	"timerOption_10_seconds": {
@@ -16,11 +16,11 @@
 		"description": "Label for a selectable option in the message expiration timer menu"
 	},
 	"view": {
-		"message": "View",
+		"message": "Више",
 		"description": "Used as a label on a button allowing user to see more information"
 	},
 	"upgradingDatabase": {
-		"message": "Upgrading database. This may take some time...",
+		"message": "Унапређујем базу података. Ово може потрајати неко време...",
 		"description": "Message shown on the loading screen when we're changing database structure on first run of a new version"
 	},
 	"lastSynced": {
@@ -46,11 +46,11 @@
 		"description": "Displayed for incoming unsupported attachment"
 	},
 	"showSafetyNumber": {
-		"message": "Show safety number",
+		"message": "Прикажи шифру преписки",
 		"description": ""
 	},
 	"androidMessageLengthWarning": {
-		"message": "Android clients will only receive the first 2000 characters of this message.",
+		"message": "Андроид клијент ће примити само првих 2000 карактера ове поруке",
 		"description": "Warning that long messages could not get received completely by Android clients."
 	},
 	"leftTheGroup": {
@@ -102,7 +102,7 @@
 		"description": "Conversation menu option to enable disappearing messages"
 	},
 	"deleteWarning": {
-		"message": "Are you sure? Clicking 'delete' will permanently remove this message from this device.",
+		"message": "Да ли сте сигурни? Ако притиснете ''обриши' трајно ће те уклонити ову поруку са овог уређаја.",
 		"description": ""
 	},
 	"showMore": {
@@ -110,7 +110,7 @@
 		"description": "Displays the details of a key change"
 	},
 	"verifyHelp": {
-		"message": "If you wish to verify the security of your end-to-end encryption with $name$, compare the numbers above with the numbers on their device.",
+		"message": "Ако желите да проверите безбедност ваше end-to-end енкрипције са $name$, упоредите горе приказане бројеве са бројевима на њиховом уређају.",
 		"description": "",
 		"placeholders": {
 			"name": {
@@ -120,7 +120,7 @@
 		}
 	},
 	"membersNeedingVerification": {
-		"message": "Your safety numbers with these group members have changed since you last verified. Click a group member to see your new safety number with them.",
+		"message": "Ваше шифре преписки за више чланова ове групе су промењене од како сте последњи пут проверавали. Одаберите члана групе да би сте видели нову сигурносну шифру.",
 		"description": "When there are multiple previously-verified group members with safety number changes, a banner will be shown. The list of contacts with safety number changes is shown, and this text introduces that list."
 	},
 	"timerOption_5_minutes_abbreviated": {
@@ -140,7 +140,7 @@
 		"description": "Command in the tray icon menu, to quit the application"
 	},
 	"clickToSave": {
-		"message": "Click to save",
+		"message": "Притисните да би сте сачували",
 		"description": "Hover text for attachment filenames"
 	},
 	"fileABug": {
@@ -148,7 +148,7 @@
 		"description": "Item under the Help menu, takes you to GitHub new issue form"
 	},
 	"messagesBelow": {
-		"message": "New messages below",
+		"message": "Нове поруке испод",
 		"description": "Alt text for button to take user down to bottom of conversation with more than one message out of screen"
 	},
 	"installGeneratingKeys": {
@@ -196,7 +196,7 @@
 		"description": "Menu item for restarting the program."
 	},
 	"youLeftTheGroup": {
-		"message": "You left the group",
+		"message": "Напустили сте групу",
 		"description": "Displayed when a user can't send a message because they have left the group"
 	},
 	"deleteMessages": {
@@ -208,11 +208,11 @@
 		"description": ""
 	},
 	"delete": {
-		"message": "Delete",
+		"message": "Обриши",
 		"description": ""
 	},
 	"verified": {
-		"message": "Verified",
+		"message": "Проверено",
 		"description": ""
 	},
 	"trayTooltip": {
@@ -236,23 +236,11 @@
 		"description": "Displayed when waiting for the QR Code"
 	},
 	"selectedLocation": {
-		"message": "your selected location",
+		"message": "ваша одабрана локација",
 		"description": "Message shown as the export location if we didn't capture the target directory"
 	},
-	"verifyContact": {
-		"message": "Можда желите да $tag_start$ верификујете $tag_end$ шифру за овог дописника.",
-		"description": "Use $tag_start$ and $tag_end$ to wrap the word or phrase in this sentence that the user should click on in order to navigate to the verification screen. These placeholders will be replaced with appropriate HTML code.",
-		"placeholders": {
-			"tag_start": {
-				"content": "<a class='verify' href='#'>"
-			},
-			"tag_end": {
-				"content": "</a>"
-			}
-		}
-	},
 	"changedRecently": {
-		"message": "Your safety number with $name$ has changed recently. This could mean that someone is trying to intercept your communication or that $name$ has simply reinstalled Signal.",
+		"message": "Шифра преписке са $name$ је промењена. Ово значи или да неко пресреће вашу преписку, или је $name$ једноставно извршио поновну инсталацију Сигнал-а. ",
 		"description": "Shown on confirmation dialog when user attempts to send a message",
 		"placeholders": {
 			"name": {
@@ -284,7 +272,7 @@
 		"description": "Brief timestamp for messages sent less than a minute ago. Displayed in the conversation list and message bubble."
 	},
 	"changedRecentlyMultiple": {
-		"message": "Your safety numbers with multiple group members have changed recently. This could mean that someone is trying to intercept your communication or that they have simply reinstalled Signal.",
+		"message": "Ваше шифре преписки за више чланова ове групе су недавно промењене. Ово значи или да неко покушава да пресретне вашу преписку, или су једноставно извршили поновну инсталацију Сигнал-а.",
 		"description": "Shown on confirmation dialog when user attempts to send a message"
 	},
 	"timerOption_1_day": {
@@ -340,7 +328,7 @@
 		"description": "Placeholder for adding a new number to a contact"
 	},
 	"noLongerVerified": {
-		"message": "Your safety number with $name$ has changed and is no longer verified. Click to show.",
+		"message": "Ваша шифра за $name$ је промењена и није више проверена. Притисните да би сте приказали.",
 		"description": "Shown in converation banner when user's safety number has changed, but they were previously verified.",
 		"placeholders": {
 			"name": {
@@ -354,7 +342,7 @@
 		"description": "Placeholder text in the search input"
 	},
 	"someRecipientsFailed": {
-		"message": "Some recipients failed.",
+		"message": "Неки примаоци нису примили поруку",
 		"description": "When you send to multiple recipients via a group, and the message went to some recipients but not others."
 	},
 	"noNameOrMessage": {
@@ -396,7 +384,7 @@
 		"description": "Shown as we are loading the user's data from disk"
 	},
 	"unreadMessages": {
-		"message": "$count$ Unread Messages",
+		"message": "$count$ непрочитаних порука",
 		"description": "Text for unread message separator, with count",
 		"placeholders": {
 			"count": {
@@ -454,7 +442,7 @@
 		"description": "Very short format indicating current timer setting in the conversation header"
 	},
 	"loadingMessages": {
-		"message": "Loading messages. $count$ so far...",
+		"message": "Учитавање порука. $count$ до сад...",
 		"description": "Message shown on the loading screen when we're catching up on the backlog of messages",
 		"placeholders": {
 			"count": {
@@ -468,7 +456,7 @@
 		"description": "Item under the Edit menu, with 'start/stop speaking' items below it"
 	},
 	"changedSinceVerified": {
-		"message": "Your safety number with $name$ has changed since you last verified. This could mean that someone is trying to intercept your communication or that $name$ has simply reinstalled Signal.",
+		"message": "Шифра преписке са $name$ је промењена од како сте последњи пут проверавли. Ово значи или да неко пресреће вашу преписку, или је $name$ једноставно извршио поновну инсталацију Сигнал-а. ",
 		"description": "Shown on confirmation dialog when user attempts to send a message",
 		"placeholders": {
 			"name": {
@@ -482,7 +470,7 @@
 		"description": "Label text for button to upgrade the app to the latest version"
 	},
 	"yourSafetyNumberWith": {
-		"message": "Your safety number with $name$:",
+		"message": "Шифра преписки за $name$",
 		"description": "Heading for safety number view",
 		"placeholders": {
 			"name": {
@@ -516,7 +504,7 @@
 		"description": "Description for audio notification setting"
 	},
 	"isNotVerified": {
-		"message": "You have not verified your safety number with $name$.",
+		"message": "Нисте потврдили шифру преписке са $name$.",
 		"description": "Summary state shown at top of the safety number screen if user has not verified contact.",
 		"placeholders": {
 			"name": {
@@ -534,7 +522,7 @@
 		"description": "Label for a disabled sync button while sync is in progress."
 	},
 	"multipleNoLongerVerified": {
-		"message": "Your safety numbers with multiple members of this group have changed and are no longer verified. Click to show.",
+		"message": "Ваше шифре преписки за више чланова ове групе су промењене и нису више проверене. Притисните да би сте приказали.",
 		"description": "Shown in conversation banner when more than one group member's safety number has changed, but they were previously verified."
 	},
 	"acceptNewKey": {
@@ -550,7 +538,7 @@
 		"description": "Timestamp format string for displaying month and day (but not the year) of a date within the current year, ex: use 'MMM D' for 'Aug 8', or 'D MMM' for '8 Aug'."
 	},
 	"chooseDirectory": {
-		"message": "Choose folder",
+		"message": "Одаберите фолдер",
 		"description": "Button to allow the user to find a folder on disk"
 	},
 	"mainMenuEdit": {
@@ -594,7 +582,7 @@
 		"description": "Label for the time a message was received"
 	},
 	"youMarkedAsNotVerified": {
-		"message": "You marked your safety number with $name$ as unverified.",
+		"message": "Означили сте шифру преписки са $name$ као непроверену.",
 		"description": "Shown in the conversation history when the user marks a contact as not verified, whether on the safety number screen or by dismissing a banner or dialog.",
 		"placeholders": {
 			"name": {
@@ -604,7 +592,7 @@
 		}
 	},
 	"isVerified": {
-		"message": "You have verified your safety number with $name$.",
+		"message": "Потврдили сте вашу шифру преписки са $name$.",
 		"description": "Summary state shown at top of the safety number screen if user has verified contact.",
 		"placeholders": {
 			"name": {
@@ -622,7 +610,7 @@
 		"description": "Placeholder text in the message entry field"
 	},
 	"me": {
-		"message": "Me",
+		"message": "Ја",
 		"description": "The label for yourself when shown in a group member list"
 	},
 	"mediaMessage": {
@@ -630,7 +618,7 @@
 		"description": "Description of a message that has an attachment and no text, displayed in the conversation list as a preview."
 	},
 	"unreadMessage": {
-		"message": "1 Unread Message",
+		"message": "1 непрочитана порука",
 		"description": "Text for unread message separator, just one message"
 	},
 	"expiredWarning": {
@@ -642,7 +630,7 @@
 		"description": ""
 	},
 	"deleteMessage": {
-		"message": "Delete this message",
+		"message": "Обриши ову поруку",
 		"description": ""
 	},
 	"autoUpdateNewVersionInstructions": {
@@ -674,7 +662,7 @@
 		"description": "Welcome title on the install page"
 	},
 	"messageBelow": {
-		"message": "New message below",
+		"message": "Нова порука испод",
 		"description": "Alt text for button to take user down to bottom of conversation with a new message out of screen"
 	},
 	"exportComplete": {
@@ -692,7 +680,7 @@
 		"description": "Displayed when we can't connect to the server."
 	},
 	"unverify": {
-		"message": "Mark as not verified",
+		"message": "Означи као непроверено",
 		"description": ""
 	},
 	"messageNotSent": {
@@ -728,15 +716,15 @@
 		"description": "The label that is used for the Help menu in the program main menu. The '&' indicates that the following letter will be used as the keyboard 'shortcut letter' for accessing the menu with the Alt-<letter> combination."
 	},
 	"unnamedFile": {
-		"message": "Unnamed File",
+		"message": "Неименована датотека",
 		"description": "Hover text for attachment filenames"
 	},
 	"sendAnyway": {
-		"message": "Send Anyway",
+		"message": "Пошаљи свакако",
 		"description": "Used on a warning dialog to make it clear that it might be risky to send the message."
 	},
 	"youMarkedAsVerified": {
-		"message": "You marked your safety number with $name$ as verified.",
+		"message": "Означили сте вашу шифру преписки са $name$ као проверену.",
 		"description": "Shown in the conversation history when the user marks a contact as verified.",
 		"placeholders": {
 			"name": {
@@ -770,11 +758,11 @@
 		"description": "Label for a selectable option in the message expiration timer menu"
 	},
 	"showMembers": {
-		"message": "Show members",
+		"message": "Прикажи чланове",
 		"description": ""
 	},
 	"youMarkedAsNotVerifiedOtherDevice": {
-		"message": "You marked your safety number with $name$ as not verified from another device.",
+		"message": "Означили сте шифру преписки са $name$ као непроверену са другог уређаја.",
 		"description": "Shown in the conversation history when we discover that the user marked a contact as not verified on another device.",
 		"placeholders": {
 			"name": {
@@ -812,11 +800,11 @@
 		}
 	},
 	"groupMembers": {
-		"message": "Group members",
+		"message": "Чланови групе",
 		"description": ""
 	},
 	"loading": {
-		"message": "Loading...",
+		"message": "Учитавање...",
 		"description": "Message shown on the loading screen before we've loaded any messages"
 	},
 	"newMessages": {
@@ -832,7 +820,7 @@
 		"description": ""
 	},
 	"voiceMessage": {
-		"message": "Voice Message",
+		"message": "Гласовна порука",
 		"description": "Name for a voice message attachment"
 	},
 	"submit": {
@@ -840,7 +828,7 @@
 		"description": ""
 	},
 	"keychanged": {
-		"message": "Your safety number with $name$ has changed. Click to show.",
+		"message": "Ваша шифра за $name$ је промењена. Притисните за обраду.",
 		"description": "",
 		"placeholders": {
 			"name": {
@@ -854,7 +842,7 @@
 		"description": "Shown in the conversation history when someone updates the group"
 	},
 	"identityKeyErrorOnSend": {
-		"message": "Your safety number with $name$ has changed. This could either mean that someone is trying to intercept your communication or that $name$ has simply reinstalled Signal. You may wish to verify your saftey number with this contact.",
+		"message": "Шифра преписке са $name$ је промењена. Ово значи или да неко пресреће вашу преписку, или је $name$ једноставно извршио поновну инсталацију Сигнал-а. Можда би требало да пoтврдите шифру преписке са овим контактом.",
 		"description": "Shown when user clicks on a failed recipient in the message detail view after an identity key change",
 		"placeholders": {
 			"name": {
@@ -896,7 +884,7 @@
 		"description": "The label that is used for the File menu in the program main menu. The '&' indicates that the following letter will be used as the keyboard 'shortcut letter' for accessing the menu with the Alt-<letter> combination."
 	},
 	"verify": {
-		"message": "Mark as verified",
+		"message": "Означи као проверено",
 		"description": ""
 	},
 	"exportButton": {
@@ -924,11 +912,11 @@
 		"description": ""
 	},
 	"changedSinceVerifiedMultiple": {
-		"message": "Your safety numbers with multiple group members have changed since you last verified. This could mean that someone is trying to intercept your communication or that they have simply reinstalled Signal.",
+		"message": "Ваше шифре преписки за више чланова ове групе су промењене од како сте последњи пут проверавали. Ово значи или да неко пресреће вашу преписку, или су једноставно извршили поновну инсталацију Сигнал-а.",
 		"description": "Shown on confirmation dialog when user attempts to send a message"
 	},
 	"submitDebugLog": {
-		"message": "Debug log",
+		"message": "Извештај о грешкама",
 		"description": "Menu item and header text for debug log modal (sentence case)"
 	},
 	"error": {
@@ -946,7 +934,7 @@
 		}
 	},
 	"changedRightAfterVerify": {
-		"message": "The safety number you are trying to verify has changed. Please review your new safety number with $name$. Remember, this change could mean that someone is trying to intercept your communication or that $name$ has simply reinstalled Signal.",
+		"message": "Шифра преписке коју покушавате да проверите је промењена. Молимо да проверите вашу нову шифру преписке са $name$. Имајте у виду да ово може значити да неко покушава да пресретне вашу преписку или то да је $name$ једноставно извршио поновну инсталацију Сигнал-а.",
 		"description": "Shown on the safety number screen when the user has selected to verify/unverify a contact's safety number, and we immediately discover a safety number change",
 		"placeholders": {
 			"name": {
@@ -966,7 +954,7 @@
 		}
 	},
 	"autoUpdateNewVersionTitle": {
-		"message": "Signal update available",
+		"message": "Нова верзија Сигнал-а је доступна",
 		"description": ""
 	},
 	"timerOption_30_seconds_abbreviated": {
@@ -990,7 +978,7 @@
 		"description": ""
 	},
 	"youMarkedAsVerifiedOtherDevice": {
-		"message": "You marked your safety number with $name$ as verified from another device.",
+		"message": "Означили сте шифру преписки са $name$ као проверену са другог уређаја.",
 		"description": "Shown in the conversation history when we discover that the user marked a contact as verified on another device.",
 		"placeholders": {
 			"name": {
@@ -1024,7 +1012,7 @@
 		"description": "Section header in the media gallery"
 	},
 	"importCompleteHeader": {
-		"message": "Success!",
+		"message": "Успешно!",
 		"description": "Header shown on the screen at the end of a successful import process"
 	},
 	"deviceName": {
@@ -1081,10 +1069,6 @@
 			}
 		}
 	},
-	"messageCaption": {
-		"message": "Message caption",
-		"description": "Prefix of attachment alt tags in the media gallery"
-	},
 	"deleteAllDataButton": {
 		"message": "Delete all data",
 		"description": "Text of the button that deletes all data"
@@ -1094,11 +1078,11 @@
 		"description": "When the application is not yet set up, menu option to start up the import sequence"
 	},
 	"importErrorHeader": {
-		"message": "Something went wrong!",
+		"message": "Дошло је до грешке!",
 		"description": "Header of the error screen after a failed import"
 	},
 	"importAgain": {
-		"message": "Choose folder and try again",
+		"message": "Одаберите директоријум и покушајте поново",
 		"description": "Button shown if the user runs into an error during import, allowing them to start over"
 	},
 	"signalSettings": {
@@ -1206,5 +1190,99 @@
 	"audio": {
 		"message": "Audio",
 		"description": "Shown in a quotation of a message containing an audio attachment if no text was originally provided with that attachment"
+	},
+	"address": {
+		"message": "address",
+		"description": "Generic label shown if contact address has custom type but no label"
+	},
+	"you": {
+		"message": "You",
+		"description": "In Android theme, shown in quote if you or someone else replies to you"
+	},
+	"poBox": {
+		"message": "PO Box",
+		"description": "When rendering an address, used to provide context to a post office box"
+	},
+	"phone": {
+		"message": "phone",
+		"description": "Generic label shown if contact phone has custom type but no label"
+	},
+	"sendMessageToContact": {
+		"message": "Send Message",
+		"description": "Shown when you are sent a contact and that contact has a signal account"
+	},
+	"emojiAlt": {
+		"message": "Emoji image of '$title$'",
+		"description": "Used in the alt tag of all emoji images",
+		"placeholders": {
+			"title": {
+				"content": "$1",
+				"example": "grinning"
+			}
+		}
+	},
+	"quoteThumbnailAlt": {
+		"message": "Thumbnail of image from quoted message",
+		"description": "Used in alt tag of thumbnail images inside of an embedded message quote"
+	},
+	"mediaEmptyState": {
+		"message": "You don’t have any media in this conversation",
+		"description": "Message shown to user in the media gallery when there are no messages with media attachments (images or video)"
+	},
+	"notificationMostRecentFrom": {
+		"message": "Most recent from:",
+		"description": "Displayed in notifications when setting is 'name only' and more than one message is waiting"
+	},
+	"importErrorFirst": {
+		"message": "Make sure you have chosen the correct directory that contains your saved Signal data. Its name should begin with 'Signal Export.' You can also save a new copy of your data from the Chrome App.",
+		"description": "Message shown if the import went wrong; first paragraph"
+	},
+	"work": {
+		"message": "work",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"home": {
+		"message": "home",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"notificationMostRecent": {
+		"message": "Most recent:",
+		"description": "Displayed in notifications when setting is 'name and message' and more than one message is waiting"
+	},
+	"privacyPolicy": {
+		"message": "Terms & Privacy Policy",
+		"description": "Shown in the about box for the link to https://signal.org/legal"
+	},
+	"lightboxImageAlt": {
+		"message": "Image sent in conversation",
+		"description": "Used in the alt tag for the image shown in a full-screen lightbox view"
+	},
+	"mobile": {
+		"message": "mobile",
+		"description": "Shown on contact detail screen as a label for aa phone or email"
+	},
+	"notificationFrom": {
+		"message": "From:",
+		"description": "Displayed in notifications when setting is 'name only' and one message is waiting"
+	},
+	"contactAvatarAlt": {
+		"message": "Contact avatar",
+		"description": "Used in the alt tag for the image avatar of a contact"
+	},
+	"documentsEmptyState": {
+		"message": "You don’t have any documents in this conversation",
+		"description": "Message shown to user in the media gallery when there are no messages with document attachments (anything other than images or video)"
+	},
+	"fileIconAlt": {
+		"message": "File icon",
+		"description": "Used in the media gallery documents tab to visually represent a file"
+	},
+	"email": {
+		"message": "email",
+		"description": "Generic label shown if contact email has custom type but no label"
+	},
+	"importErrorSecond": {
+		"message": "If these steps don't work for you, please submit a debug log (View -> Debug Log) so that we can help you get migrated!",
+		"description": "Message shown if the import went wrong; second paragraph"
 	}
 }

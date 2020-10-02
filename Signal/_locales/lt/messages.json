@@ -239,18 +239,6 @@
 		"message": "jūsų pasirinkta vieta",
 		"description": "Message shown as the export location if we didn't capture the target directory"
 	},
-	"verifyContact": {
-		"message": "Jūs, tikriausiai, norėtumėte $tag_start$ patvirtinti $tag_end$ savo saugumo numerį su šiuo kontaktu.",
-		"description": "Use $tag_start$ and $tag_end$ to wrap the word or phrase in this sentence that the user should click on in order to navigate to the verification screen. These placeholders will be replaced with appropriate HTML code.",
-		"placeholders": {
-			"tag_start": {
-				"content": "<a class='verify' href='#'>"
-			},
-			"tag_end": {
-				"content": "</a>"
-			}
-		}
-	},
 	"changedRecently": {
 		"message": "Jūsų saugumo numeris su $name$ neseniai pasikeitė. Tai gali reikšti, kad kažkas bando perimti jūsų susirašinėjimą arba, kad $name$, tiesiog, iš naujo įdiegė Signal.",
 		"description": "Shown on confirmation dialog when user attempts to send a message",
@@ -1081,10 +1069,6 @@
 			}
 		}
 	},
-	"messageCaption": {
-		"message": "Žinutės paaiškinimas",
-		"description": "Prefix of attachment alt tags in the media gallery"
-	},
 	"deleteAllDataButton": {
 		"message": "Ištrinti visus duomenis",
 		"description": "Text of the button that deletes all data"
@@ -1206,5 +1190,99 @@
 	"audio": {
 		"message": "Garso įrašas",
 		"description": "Shown in a quotation of a message containing an audio attachment if no text was originally provided with that attachment"
+	},
+	"address": {
+		"message": "adresas",
+		"description": "Generic label shown if contact address has custom type but no label"
+	},
+	"you": {
+		"message": "Jūs",
+		"description": "In Android theme, shown in quote if you or someone else replies to you"
+	},
+	"poBox": {
+		"message": "Pašto dėžutė",
+		"description": "When rendering an address, used to provide context to a post office box"
+	},
+	"phone": {
+		"message": "telefonas",
+		"description": "Generic label shown if contact phone has custom type but no label"
+	},
+	"sendMessageToContact": {
+		"message": "Siųsti žinutę",
+		"description": "Shown when you are sent a contact and that contact has a signal account"
+	},
+	"emojiAlt": {
+		"message": "Šypsenėlė \"$title$\"",
+		"description": "Used in the alt tag of all emoji images",
+		"placeholders": {
+			"title": {
+				"content": "$1",
+				"example": "grinning"
+			}
+		}
+	},
+	"quoteThumbnailAlt": {
+		"message": "Paveikslo iš cituotos žinutės miniatiūra",
+		"description": "Used in alt tag of thumbnail images inside of an embedded message quote"
+	},
+	"mediaEmptyState": {
+		"message": "Šiame pokalbyje nėra jokios medijos",
+		"description": "Message shown to user in the media gallery when there are no messages with media attachments (images or video)"
+	},
+	"notificationMostRecentFrom": {
+		"message": "Paskiausi nuo:",
+		"description": "Displayed in notifications when setting is 'name only' and more than one message is waiting"
+	},
+	"importErrorFirst": {
+		"message": "Įsitikinkite, kad pasirinkote teisingą katalogą, kuriame yra jūsų įrašyti Signal duomenys. Jo pavadinimas turėtų prasidėti \"Signal Export.\" Taip pat galite įrašyti naują savo duomenų kopiją iš Chrome programėlės.",
+		"description": "Message shown if the import went wrong; first paragraph"
+	},
+	"work": {
+		"message": "darbo",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"home": {
+		"message": "namų",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"notificationMostRecent": {
+		"message": "Paskiausi:",
+		"description": "Displayed in notifications when setting is 'name and message' and more than one message is waiting"
+	},
+	"privacyPolicy": {
+		"message": "Sąlygos ir Privatumo politika",
+		"description": "Shown in the about box for the link to https://signal.org/legal"
+	},
+	"lightboxImageAlt": {
+		"message": "Pokalbyje išsiųstas paveikslas",
+		"description": "Used in the alt tag for the image shown in a full-screen lightbox view"
+	},
+	"mobile": {
+		"message": "mobilusis",
+		"description": "Shown on contact detail screen as a label for aa phone or email"
+	},
+	"notificationFrom": {
+		"message": "Nuo:",
+		"description": "Displayed in notifications when setting is 'name only' and one message is waiting"
+	},
+	"contactAvatarAlt": {
+		"message": "Kontakto avataras",
+		"description": "Used in the alt tag for the image avatar of a contact"
+	},
+	"documentsEmptyState": {
+		"message": "Šiame pokalbyje nėra jokių dokumentų",
+		"description": "Message shown to user in the media gallery when there are no messages with document attachments (anything other than images or video)"
+	},
+	"fileIconAlt": {
+		"message": "Failo piktograma",
+		"description": "Used in the media gallery documents tab to visually represent a file"
+	},
+	"email": {
+		"message": "el. paštas",
+		"description": "Generic label shown if contact email has custom type but no label"
+	},
+	"importErrorSecond": {
+		"message": "Jeigu šie žingsniai neveikia, pateikite derinimo žurnalą (Rodinys -> Derinimo žurnalas), kad galėtume jums padėti perkelti duomenis!",
+		"description": "Message shown if the import went wrong; second paragraph"
 	}
 }

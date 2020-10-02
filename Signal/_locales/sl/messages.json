@@ -239,18 +239,6 @@
 		"message": "izbrana lokacija",
 		"description": "Message shown as the export location if we didn't capture the target directory"
 	},
-	"verifyContact": {
-		"message": "Morda bi želeli $tag_start$ preveriti in potrditi $tag_end$ vajino varnostno število.",
-		"description": "Use $tag_start$ and $tag_end$ to wrap the word or phrase in this sentence that the user should click on in order to navigate to the verification screen. These placeholders will be replaced with appropriate HTML code.",
-		"placeholders": {
-			"tag_start": {
-				"content": "<a class='verify' href='#'>"
-			},
-			"tag_end": {
-				"content": "</a>"
-			}
-		}
-	},
 	"changedRecently": {
 		"message": "Vaše varnostno število z uporabnikom $name$ je bilo nedavno spremenjeno. To lahko pomeni, da skuša nekdo prestrezati vajino komunikacijo ali pa je uporabnik $name$ zgolj ponovno namestil aplikacijo Signal.",
 		"description": "Shown on confirmation dialog when user attempts to send a message",
@@ -1048,11 +1036,11 @@
 		"description": "Header of screen shown as data is import"
 	},
 	"mainMenuSettings": {
-		"message": "Nastavitve...",
+		"message": "Nastavitve ...",
 		"description": "The label that is used for the Preferences menu in the program main menu. This should be consistent with the standard naming for ‘Preferences’ on the operating system."
 	},
 	"importCompleteLinkButton": {
-		"message": "Povežite napravo z vašim telefonom",
+		"message": "Povežite napravo s svojim telefonom",
 		"description": "Button shown at end of successful 'light' import process, so the standard linking process still needs to happen"
 	},
 	"today": {
@@ -1080,10 +1068,6 @@
 				"example": "10m"
 			}
 		}
-	},
-	"messageCaption": {
-		"message": "Tekst sporočila",
-		"description": "Prefix of attachment alt tags in the media gallery"
 	},
 	"deleteAllDataButton": {
 		"message": "Izbris vseh podatkov",
@@ -1132,7 +1116,7 @@
 		"description": "Item under the Help menu, takes you to GitHub new issue form (title case)"
 	},
 	"loadDataDescription": {
-		"message": "Pravkar ste šli skozi fazo izvoza podatkov. Izvoženi stiki in sporočila čakajo na vašem računalniku. Izberite mapo kamor ste shranili te podatke.",
+		"message": "Pravkar ste šli skozi fazo izvoza podatkov. Izvoženi stiki in sporočila čakajo na vašem računalniku. Izberite mapo, kamor ste shranili te podatke.",
 		"description": "Introduction to the process of importing messages and contacts from disk"
 	},
 	"chooseDeviceName": {
@@ -1164,7 +1148,7 @@
 		"description": "Shown in a message bubble if we have nothing in the message to display, or a quote and nothing else"
 	},
 	"deleteAllDataBody": {
-		"message": "Ste pred korakom, s katerim boste izbrisali vse podatke v aplikaciji Signal, vključno s stiki in sporočili. Naknadno se boste lahko zopet povezali z vašo mobilno napravo, a to ne bo povrnilo izbrisanih sporočil.",
+		"message": "Ste pred korakom, s katerim boste izbrisali vse podatke v aplikaciji Signal, vključno s stiki in sporočili. Naknadno se boste lahko zopet povezali s svojo mobilno napravo, a to ne bo povrnilo izbrisanih sporočil.",
 		"description": "Text describing what exactly will happen if the user clicks the button to delete all data"
 	},
 	"finishLinkingPhone": {
@@ -1180,7 +1164,7 @@
 		"description": "Text describing what the clear data button will do."
 	},
 	"optimizingApplication": {
-		"message": "Optimiziranje nastavitev...",
+		"message": "Optimiziranje nastavitev ...",
 		"description": "Message shown on the loading screen while we are doing application optimizations"
 	},
 	"clearDataHeader": {
@@ -1200,11 +1184,105 @@
 		"description": "Header shown on the first screen in the data import process"
 	},
 	"startConversation": {
-		"message": "Začetek pogovora...",
+		"message": "Začetek pogovora ...",
 		"description": "Label underneath number a user enters that is not an existing contact"
 	},
 	"audio": {
 		"message": "Zvok",
 		"description": "Shown in a quotation of a message containing an audio attachment if no text was originally provided with that attachment"
+	},
+	"address": {
+		"message": "naslov",
+		"description": "Generic label shown if contact address has custom type but no label"
+	},
+	"you": {
+		"message": "Vi",
+		"description": "In Android theme, shown in quote if you or someone else replies to you"
+	},
+	"poBox": {
+		"message": "p. p.",
+		"description": "When rendering an address, used to provide context to a post office box"
+	},
+	"phone": {
+		"message": "telefon",
+		"description": "Generic label shown if contact phone has custom type but no label"
+	},
+	"sendMessageToContact": {
+		"message": "Pošlji sporočilo",
+		"description": "Shown when you are sent a contact and that contact has a signal account"
+	},
+	"emojiAlt": {
+		"message": "Emoji znak za '$title$'",
+		"description": "Used in the alt tag of all emoji images",
+		"placeholders": {
+			"title": {
+				"content": "$1",
+				"example": "grinning"
+			}
+		}
+	},
+	"quoteThumbnailAlt": {
+		"message": "Predogled slike citiranega sporočila",
+		"description": "Used in alt tag of thumbnail images inside of an embedded message quote"
+	},
+	"mediaEmptyState": {
+		"message": "V tem pogovoru ni nobene medijske datoteke",
+		"description": "Message shown to user in the media gallery when there are no messages with media attachments (images or video)"
+	},
+	"notificationMostRecentFrom": {
+		"message": "Najnovejše od:",
+		"description": "Displayed in notifications when setting is 'name only' and more than one message is waiting"
+	},
+	"importErrorFirst": {
+		"message": "Preverite, če ste izbrali pravo mapo s shranjenimi podatki. Ime mape bi moralo biti \"Signal Export\". Lahko tudi ponovno izvozite podatke iz aplikacije v brskalniku Chrome.",
+		"description": "Message shown if the import went wrong; first paragraph"
+	},
+	"work": {
+		"message": "služba",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"home": {
+		"message": "doma",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"notificationMostRecent": {
+		"message": "Najnovejše:",
+		"description": "Displayed in notifications when setting is 'name and message' and more than one message is waiting"
+	},
+	"privacyPolicy": {
+		"message": "Pogoji uporabe in Pravilnik o zasebnosti",
+		"description": "Shown in the about box for the link to https://signal.org/legal"
+	},
+	"lightboxImageAlt": {
+		"message": "Slika je bila poslana tekom pogovora",
+		"description": "Used in the alt tag for the image shown in a full-screen lightbox view"
+	},
+	"mobile": {
+		"message": "mobilni telefon",
+		"description": "Shown on contact detail screen as a label for aa phone or email"
+	},
+	"notificationFrom": {
+		"message": "Od:",
+		"description": "Displayed in notifications when setting is 'name only' and one message is waiting"
+	},
+	"contactAvatarAlt": {
+		"message": "Avatar stika",
+		"description": "Used in the alt tag for the image avatar of a contact"
+	},
+	"documentsEmptyState": {
+		"message": "V tem pogovoru ni nobenega dokumenta",
+		"description": "Message shown to user in the media gallery when there are no messages with document attachments (anything other than images or video)"
+	},
+	"fileIconAlt": {
+		"message": "Ikona datoteke",
+		"description": "Used in the media gallery documents tab to visually represent a file"
+	},
+	"email": {
+		"message": "e-pošta",
+		"description": "Generic label shown if contact email has custom type but no label"
+	},
+	"importErrorSecond": {
+		"message": "Če ti koraki ne bodo uspešni, nam prosim posredujte sistemsko zabeležbo (Pogled -> Sistemska zabeležba), da vam lahko pomagamo pri prehodu!",
+		"description": "Message shown if the import went wrong; second paragraph"
 	}
 }

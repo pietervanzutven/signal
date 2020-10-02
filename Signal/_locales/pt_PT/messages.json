@@ -239,18 +239,6 @@
 		"message": "a sua localização seleccionada",
 		"description": "Message shown as the export location if we didn't capture the target directory"
 	},
-	"verifyContact": {
-		"message": "Poderá querer $tag_start$ verificar $tag_end$ o número de segurança com este contacto.",
-		"description": "Use $tag_start$ and $tag_end$ to wrap the word or phrase in this sentence that the user should click on in order to navigate to the verification screen. These placeholders will be replaced with appropriate HTML code.",
-		"placeholders": {
-			"tag_start": {
-				"content": "<a class='verify' href='#'>"
-			},
-			"tag_end": {
-				"content": "</a>"
-			}
-		}
-	},
 	"changedRecently": {
 		"message": "O número de segurança com $name$ mudou recentemente. Isto poderá querer dizer que alguém está a tentar interceptar as suas comunicações ou que $name$ simplesmente reinstalou o Signal.",
 		"description": "Shown on confirmation dialog when user attempts to send a message",
@@ -1008,19 +996,19 @@
 		"description": "Used in the guidance to help people find the 'link new device' area of their Signal mobile app"
 	},
 	"yesterday": {
-		"message": "Yesterday",
+		"message": "Ontem",
 		"description": "Section header in the media gallery"
 	},
 	"replyingToYourself": {
-		"message": "Replying to Yourself",
+		"message": "A responder a si próprio",
 		"description": "Shown in iOS theme when you quote yourself"
 	},
 	"documents": {
-		"message": "Documents",
+		"message": "Documentos",
 		"description": "Header of the secondary pane in the media gallery, showing every non-media attachment"
 	},
 	"thisMonth": {
-		"message": "This Month",
+		"message": "Este Mês",
 		"description": "Section header in the media gallery"
 	},
 	"importCompleteHeader": {
@@ -1032,7 +1020,7 @@
 		"description": "The label in settings panel shown for the user-provided name for this desktop instance"
 	},
 	"replyingToYou": {
-		"message": "Replying to You",
+		"message": "A responder-lhe",
 		"description": "Shown in iOS theme when someone else quotes a message from you"
 	},
 	"clearDataButton": {
@@ -1040,7 +1028,7 @@
 		"description": "Button in the settings dialog starting process to delete all data"
 	},
 	"thisWeek": {
-		"message": "This Week",
+		"message": "Esta Semana",
 		"description": "Section header in the media gallery"
 	},
 	"importingHeader": {
@@ -1056,7 +1044,7 @@
 		"description": "Button shown at end of successful 'light' import process, so the standard linking process still needs to happen"
 	},
 	"today": {
-		"message": "Today",
+		"message": "Hoje",
 		"description": "Section header in the media gallery"
 	},
 	"linkYourPhone": {
@@ -1064,11 +1052,11 @@
 		"description": "Shown on the front page when the application first starst, above the QR code"
 	},
 	"viewAllMedia": {
-		"message": "View all media",
+		"message": "Ver todos os média",
 		"description": "This is a menu item for viewing all media (images + video) in a conversation, using the imperative case, as in a command."
 	},
 	"video": {
-		"message": "Video",
+		"message": "Vídeo",
 		"description": "Shown in a quotation of a message containing a video if no text was originally provided with that video"
 	},
 	"timerSetOnSync": {
@@ -1080,10 +1068,6 @@
 				"example": "10m"
 			}
 		}
-	},
-	"messageCaption": {
-		"message": "Message caption",
-		"description": "Prefix of attachment alt tags in the media gallery"
 	},
 	"deleteAllDataButton": {
 		"message": "Apagar todos os dados",
@@ -1110,7 +1094,7 @@
 		"description": "The button used in Signal Android to add a new linked device"
 	},
 	"replyingTo": {
-		"message": "Replying to $name$",
+		"message": "A responder a $name$",
 		"description": "Shown in iOS theme when you or someone quotes to a message which is not from you",
 		"placeholders": {
 			"name": {
@@ -1148,19 +1132,19 @@
 		"description": "Shown during initial link while contacts and groups are being pulled from mobile device"
 	},
 	"replyToMessage": {
-		"message": "Reply to Message",
+		"message": "Responder à Mensagem",
 		"description": "Shown in triple-dot menu next to message to allow user to start crafting a message with a quotation"
 	},
 	"photo": {
-		"message": "Photo",
+		"message": "Foto",
 		"description": "Shown in a quotation of a message containing a photo if no text was originally provided with that image"
 	},
 	"media": {
-		"message": "Media",
+		"message": "Média",
 		"description": "Header of the default pane in the media gallery, showing images and videos"
 	},
 	"noContents": {
-		"message": "No message contents",
+		"message": "Mensagem sem conteúdo",
 		"description": "Shown in a message bubble if we have nothing in the message to display, or a quote and nothing else"
 	},
 	"deleteAllDataBody": {
@@ -1204,7 +1188,101 @@
 		"description": "Label underneath number a user enters that is not an existing contact"
 	},
 	"audio": {
-		"message": "Audio",
+		"message": "Áudio",
 		"description": "Shown in a quotation of a message containing an audio attachment if no text was originally provided with that attachment"
+	},
+	"address": {
+		"message": "Endereço",
+		"description": "Generic label shown if contact address has custom type but no label"
+	},
+	"you": {
+		"message": "Tu",
+		"description": "In Android theme, shown in quote if you or someone else replies to you"
+	},
+	"poBox": {
+		"message": "Código Postal",
+		"description": "When rendering an address, used to provide context to a post office box"
+	},
+	"phone": {
+		"message": "telefone",
+		"description": "Generic label shown if contact phone has custom type but no label"
+	},
+	"sendMessageToContact": {
+		"message": "Enviar Mensagem",
+		"description": "Shown when you are sent a contact and that contact has a signal account"
+	},
+	"emojiAlt": {
+		"message": "Emoji de '$title$'",
+		"description": "Used in the alt tag of all emoji images",
+		"placeholders": {
+			"title": {
+				"content": "$1",
+				"example": "grinning"
+			}
+		}
+	},
+	"quoteThumbnailAlt": {
+		"message": "Thumbnail da imagem da mensagem",
+		"description": "Used in alt tag of thumbnail images inside of an embedded message quote"
+	},
+	"mediaEmptyState": {
+		"message": "Não tem média nesta conversa",
+		"description": "Message shown to user in the media gallery when there are no messages with media attachments (images or video)"
+	},
+	"notificationMostRecentFrom": {
+		"message": "Mais recente de:",
+		"description": "Displayed in notifications when setting is 'name only' and more than one message is waiting"
+	},
+	"importErrorFirst": {
+		"message": "Assegure-se que escolheu a pasta correcta onde se encontram os seus dados Signal. O nome da pasta deverá começar por 'Signal Export'. Também poderá copiar os seus dados desde a aplicação Chrome. ",
+		"description": "Message shown if the import went wrong; first paragraph"
+	},
+	"work": {
+		"message": "trabalho",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"home": {
+		"message": "Casa",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"notificationMostRecent": {
+		"message": "Mais recente:",
+		"description": "Displayed in notifications when setting is 'name and message' and more than one message is waiting"
+	},
+	"privacyPolicy": {
+		"message": "Termos e Política de Privacidade",
+		"description": "Shown in the about box for the link to https://signal.org/legal"
+	},
+	"lightboxImageAlt": {
+		"message": "Imagem enviada na conversa",
+		"description": "Used in the alt tag for the image shown in a full-screen lightbox view"
+	},
+	"mobile": {
+		"message": "telemóvel",
+		"description": "Shown on contact detail screen as a label for aa phone or email"
+	},
+	"notificationFrom": {
+		"message": "De:",
+		"description": "Displayed in notifications when setting is 'name only' and one message is waiting"
+	},
+	"contactAvatarAlt": {
+		"message": "Avatar de Contacto",
+		"description": "Used in the alt tag for the image avatar of a contact"
+	},
+	"documentsEmptyState": {
+		"message": "Não tem documentos nesta conversa",
+		"description": "Message shown to user in the media gallery when there are no messages with document attachments (anything other than images or video)"
+	},
+	"fileIconAlt": {
+		"message": "Ícone do Ficheiro",
+		"description": "Used in the media gallery documents tab to visually represent a file"
+	},
+	"email": {
+		"message": "e-mail",
+		"description": "Generic label shown if contact email has custom type but no label"
+	},
+	"importErrorSecond": {
+		"message": "Se estes passos não funcionarem, por favor envie um relatório de erros (Ver -> Relatório de Erros) para que possamos ajudar-lhe com a migração!",
+		"description": "Message shown if the import went wrong; second paragraph"
 	}
 }

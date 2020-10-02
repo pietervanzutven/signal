@@ -156,7 +156,7 @@
 		"description": ""
 	},
 	"resetSession": {
-		"message": "Verschlüsselung neu starten",
+		"message": "Session zurücksetzen",
 		"description": "This is a menu item for resetting the session, using the imperative case, as in a command."
 	},
 	"offline": {
@@ -176,7 +176,7 @@
 		"description": "Obvious instructions for when a user's computer loses its network connection"
 	},
 	"notificationSettingsDialog": {
-		"message": "Beim Eingang von Nachrichten Benachrichtigungen mit folgendem Inhalt anzeigen:",
+		"message": "Beim eintreffen von Nachrichten werden folgende Inhalte in der Benachrichtigung angezeigt:",
 		"description": "Explain the purpose of the notification settings"
 	},
 	"timestamp_h": {
@@ -238,18 +238,6 @@
 	"selectedLocation": {
 		"message": "dein ausgewählter Ort",
 		"description": "Message shown as the export location if we didn't capture the target directory"
-	},
-	"verifyContact": {
-		"message": "Vielleicht möchtest du deine Sicherheitsnummer mit diesem Kontakt $tag_start$ verifizieren $tag_end$.",
-		"description": "Use $tag_start$ and $tag_end$ to wrap the word or phrase in this sentence that the user should click on in order to navigate to the verification screen. These placeholders will be replaced with appropriate HTML code.",
-		"placeholders": {
-			"tag_start": {
-				"content": "<a class='verify' href='#'>"
-			},
-			"tag_end": {
-				"content": "</a>"
-			}
-		}
 	},
 	"changedRecently": {
 		"message": "Deine Sicherheitsnummer mit $name$hat sich kürzlich geändert. Dies könnte bedeuten, dass jemand versucht, eure Kommunikation abzuhören, oder aber $name$ hat Signal einfach erneut installiert.",
@@ -336,7 +324,7 @@
 		"description": ""
 	},
 	"newPhoneNumber": {
-		"message": "Rufnummer eingeben, um Kontakt hinzuzufügen.",
+		"message": "Gib zum Hinzufügen eines Kontakts eine Rufnummer ein.",
 		"description": "Placeholder for adding a new number to a contact"
 	},
 	"noLongerVerified": {
@@ -504,7 +492,7 @@
 		"description": "Header for a key change dialog"
 	},
 	"installTagline": {
-		"message": "Privatsphäre ist möglich. Signal macht sie einfach.",
+		"message": "Signal, Privatsphäre für jedermann.",
 		"description": "Tagline displayed under 'installWelcome' string on the install page"
 	},
 	"show": {
@@ -638,7 +626,7 @@
 		"description": "Warning notification that this version of the app has expired"
 	},
 	"fileSizeWarning": {
-		"message": "Entschuldigung, die ausgewählte Datei überschreitet die erlaubte Nachrichtengröße.",
+		"message": "Entschuldigung, die ausgewählte Datei überschreitet die maximale Dateigröße.",
 		"description": ""
 	},
 	"deleteMessage": {
@@ -646,7 +634,7 @@
 		"description": ""
 	},
 	"autoUpdateNewVersionInstructions": {
-		"message": "Klicke auf »Signal neu starten«, um die Aktualisierungen durchzuführen.",
+		"message": "Zum Durchführen der Aktualisierungen klicke auf »Signal neu starten«.",
 		"description": ""
 	},
 	"timerOption_0_seconds": {
@@ -674,7 +662,7 @@
 		"description": "Welcome title on the install page"
 	},
 	"messageBelow": {
-		"message": "Neue Nachricht unten",
+		"message": "Neue Nachricht weiter unten",
 		"description": "Alt text for button to take user down to bottom of conversation with a new message out of screen"
 	},
 	"exportComplete": {
@@ -716,7 +704,7 @@
 		"description": ""
 	},
 	"unblockToSend": {
-		"message": "Hebe die Blockierung für diesen Kontakt auf, um eine Nachricht zu senden.",
+		"message": "Hebe zum Senden einer Nachricht die Blockierung für diesen Kontakt auf.",
 		"description": "Brief message shown when trying to message a blocked number"
 	},
 	"installIHaveSignalButton": {
@@ -750,7 +738,7 @@
 		"description": "Displayed when the desktop client is currently connecting to the server."
 	},
 	"sessionEnded": {
-		"message": "Verschlüsselung zurückgesetzt",
+		"message": "Session zurückgesetzt",
 		"description": "This is a past tense, informational message. In other words, your secure session has been reset."
 	},
 	"installGetStartedButton": {
@@ -912,7 +900,7 @@
 		"description": "Label for setting notifications to display name and message text"
 	},
 	"failedToSend": {
-		"message": "Versand an einige Empfänger gescheitert. Überprüfe deine Netzwerkverbindung.",
+		"message": "Versand an einige Empfänger fehlgeschlagen. Überprüfe deine Netzwerkverbindung.",
 		"description": ""
 	},
 	"ok": {
@@ -966,7 +954,7 @@
 		}
 	},
 	"autoUpdateNewVersionTitle": {
-		"message": "Aktualisierung für Signal verfügbar",
+		"message": "Es ist eine Aktualisierung für Signal verfügbar",
 		"description": ""
 	},
 	"timerOption_30_seconds_abbreviated": {
@@ -1012,7 +1000,7 @@
 		"description": "Section header in the media gallery"
 	},
 	"replyingToYourself": {
-		"message": "Antwort auf dich selbst",
+		"message": "Zitiere dich selbst",
 		"description": "Shown in iOS theme when you quote yourself"
 	},
 	"documents": {
@@ -1032,7 +1020,7 @@
 		"description": "The label in settings panel shown for the user-provided name for this desktop instance"
 	},
 	"replyingToYou": {
-		"message": "Antwort auf dich",
+		"message": "Zitiere dich selbst",
 		"description": "Shown in iOS theme when someone else quotes a message from you"
 	},
 	"clearDataButton": {
@@ -1081,10 +1069,6 @@
 			}
 		}
 	},
-	"messageCaption": {
-		"message": "Message caption",
-		"description": "Prefix of attachment alt tags in the media gallery"
-	},
 	"deleteAllDataButton": {
 		"message": "Alle Daten löschen",
 		"description": "Text of the button that deletes all data"
@@ -1110,7 +1094,7 @@
 		"description": "The button used in Signal Android to add a new linked device"
 	},
 	"replyingTo": {
-		"message": "Antwort auf $name$",
+		"message": "Antworte auf $name$",
 		"description": "Shown in iOS theme when you or someone quotes to a message which is not from you",
 		"placeholders": {
 			"name": {
@@ -1148,7 +1132,7 @@
 		"description": "Shown during initial link while contacts and groups are being pulled from mobile device"
 	},
 	"replyToMessage": {
-		"message": "Auf Nachricht antworten",
+		"message": "Auf eine Nachricht antworten",
 		"description": "Shown in triple-dot menu next to message to allow user to start crafting a message with a quotation"
 	},
 	"photo": {
@@ -1206,5 +1190,99 @@
 	"audio": {
 		"message": "Audio",
 		"description": "Shown in a quotation of a message containing an audio attachment if no text was originally provided with that attachment"
+	},
+	"address": {
+		"message": "Adresse",
+		"description": "Generic label shown if contact address has custom type but no label"
+	},
+	"you": {
+		"message": "Du",
+		"description": "In Android theme, shown in quote if you or someone else replies to you"
+	},
+	"poBox": {
+		"message": "Postfach",
+		"description": "When rendering an address, used to provide context to a post office box"
+	},
+	"phone": {
+		"message": "Telefon",
+		"description": "Generic label shown if contact phone has custom type but no label"
+	},
+	"sendMessageToContact": {
+		"message": "Nachricht senden",
+		"description": "Shown when you are sent a contact and that contact has a signal account"
+	},
+	"emojiAlt": {
+		"message": "Emojibild von  »$title$«",
+		"description": "Used in the alt tag of all emoji images",
+		"placeholders": {
+			"title": {
+				"content": "$1",
+				"example": "grinning"
+			}
+		}
+	},
+	"quoteThumbnailAlt": {
+		"message": "Miniaturbild aus zitierter Nachricht",
+		"description": "Used in alt tag of thumbnail images inside of an embedded message quote"
+	},
+	"mediaEmptyState": {
+		"message": "In dieser Unterhaltung gibt es keine Medieninhalte",
+		"description": "Message shown to user in the media gallery when there are no messages with media attachments (images or video)"
+	},
+	"notificationMostRecentFrom": {
+		"message": "Letzte Nachricht von:",
+		"description": "Displayed in notifications when setting is 'name only' and more than one message is waiting"
+	},
+	"importErrorFirst": {
+		"message": "Achte darauf, dass du das korrekte Verzeichnis gewählt hast, das deine gespeicherten Signal-Daten enthält. Dessen Name sollte mit »Signal Export« beginnen. Auch kannst du eine neue Kopie deiner Daten aus der Chrome-App heraus speichern.",
+		"description": "Message shown if the import went wrong; first paragraph"
+	},
+	"work": {
+		"message": "Geschäftlich",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"home": {
+		"message": "Privat",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"notificationMostRecent": {
+		"message": "Letzte Nachricht:",
+		"description": "Displayed in notifications when setting is 'name and message' and more than one message is waiting"
+	},
+	"privacyPolicy": {
+		"message": "Bedingungen & Datenschutzerklärung",
+		"description": "Shown in the about box for the link to https://signal.org/legal"
+	},
+	"lightboxImageAlt": {
+		"message": "In Unterhaltung gesendetes Bild",
+		"description": "Used in the alt tag for the image shown in a full-screen lightbox view"
+	},
+	"mobile": {
+		"message": "Mobil",
+		"description": "Shown on contact detail screen as a label for aa phone or email"
+	},
+	"notificationFrom": {
+		"message": "Von:",
+		"description": "Displayed in notifications when setting is 'name only' and one message is waiting"
+	},
+	"contactAvatarAlt": {
+		"message": "Kontaktbild",
+		"description": "Used in the alt tag for the image avatar of a contact"
+	},
+	"documentsEmptyState": {
+		"message": "In dieser Unterhaltung gibt es keine Dokumente",
+		"description": "Message shown to user in the media gallery when there are no messages with document attachments (anything other than images or video)"
+	},
+	"fileIconAlt": {
+		"message": "Dateisymbol",
+		"description": "Used in the media gallery documents tab to visually represent a file"
+	},
+	"email": {
+		"message": "E-Mail",
+		"description": "Generic label shown if contact email has custom type but no label"
+	},
+	"importErrorSecond": {
+		"message": "Falls diese Schritte nicht helfen, übermittle bitte ein Diagnoseprotokoll (Ansicht >> Diagnoseprotokoll), sodass wir dir bei der Migration helfen können!",
+		"description": "Message shown if the import went wrong; second paragraph"
 	}
 }

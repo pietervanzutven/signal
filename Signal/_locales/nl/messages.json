@@ -239,18 +239,6 @@
 		"message": "je geselecteerde locatie",
 		"description": "Message shown as the export location if we didn't capture the target directory"
 	},
-	"verifyContact": {
-		"message": "Je $tag_start$verifieert$tag_end$ best je nieuwe veiligheidsnummer met dit contact.",
-		"description": "Use $tag_start$ and $tag_end$ to wrap the word or phrase in this sentence that the user should click on in order to navigate to the verification screen. These placeholders will be replaced with appropriate HTML code.",
-		"placeholders": {
-			"tag_start": {
-				"content": "<a class='verify' href='#'>"
-			},
-			"tag_end": {
-				"content": "</a>"
-			}
-		}
-	},
 	"changedRecently": {
 		"message": "Je veiligheidsnummer met $name$ is onlangs veranderd. Dit kan betekenen dat iemand je gesprekken probeert te onderscheppen, of gewoonweg dat $name$ Signal opnieuw heeft geïnstalleerd.",
 		"description": "Shown on confirmation dialog when user attempts to send a message",
@@ -1008,19 +996,19 @@
 		"description": "Used in the guidance to help people find the 'link new device' area of their Signal mobile app"
 	},
 	"yesterday": {
-		"message": "Yesterday",
+		"message": "Gisteren",
 		"description": "Section header in the media gallery"
 	},
 	"replyingToYourself": {
-		"message": "Replying to Yourself",
+		"message": "Antwoorden tegen jezelf",
 		"description": "Shown in iOS theme when you quote yourself"
 	},
 	"documents": {
-		"message": "Documents",
+		"message": "Documenten",
 		"description": "Header of the secondary pane in the media gallery, showing every non-media attachment"
 	},
 	"thisMonth": {
-		"message": "This Month",
+		"message": "Deze maand",
 		"description": "Section header in the media gallery"
 	},
 	"importCompleteHeader": {
@@ -1032,15 +1020,15 @@
 		"description": "The label in settings panel shown for the user-provided name for this desktop instance"
 	},
 	"replyingToYou": {
-		"message": "Replying to You",
+		"message": "Antwoorden op Jou",
 		"description": "Shown in iOS theme when someone else quotes a message from you"
 	},
 	"clearDataButton": {
-		"message": "Clear data",
+		"message": "Verwijder gegevens",
 		"description": "Button in the settings dialog starting process to delete all data"
 	},
 	"thisWeek": {
-		"message": "This Week",
+		"message": "Deze week",
 		"description": "Section header in the media gallery"
 	},
 	"importingHeader": {
@@ -1056,7 +1044,7 @@
 		"description": "Button shown at end of successful 'light' import process, so the standard linking process still needs to happen"
 	},
 	"today": {
-		"message": "Today",
+		"message": "Vandaag",
 		"description": "Section header in the media gallery"
 	},
 	"linkYourPhone": {
@@ -1064,7 +1052,7 @@
 		"description": "Shown on the front page when the application first starst, above the QR code"
 	},
 	"viewAllMedia": {
-		"message": "View all media",
+		"message": "Bekijk alle media",
 		"description": "This is a menu item for viewing all media (images + video) in a conversation, using the imperative case, as in a command."
 	},
 	"video": {
@@ -1081,12 +1069,8 @@
 			}
 		}
 	},
-	"messageCaption": {
-		"message": "Message caption",
-		"description": "Prefix of attachment alt tags in the media gallery"
-	},
 	"deleteAllDataButton": {
-		"message": "Delete all data",
+		"message": "Verwijder alle data",
 		"description": "Text of the button that deletes all data"
 	},
 	"menuSetupWithImport": {
@@ -1110,7 +1094,7 @@
 		"description": "The button used in Signal Android to add a new linked device"
 	},
 	"replyingTo": {
-		"message": "Replying to $name$",
+		"message": "Antwoorden op $name$",
 		"description": "Shown in iOS theme when you or someone quotes to a message which is not from you",
 		"placeholders": {
 			"name": {
@@ -1120,11 +1104,11 @@
 		}
 	},
 	"deleteAllDataHeader": {
-		"message": "Delete all data?",
+		"message": "Verwijder alle data?",
 		"description": "Header of the full-screen delete data confirmation screen"
 	},
 	"deleteAllDataProgress": {
-		"message": "Disconnecting and deleting all data",
+		"message": "Verbinding wordt verbroken en alle data wordt verwijderd",
 		"description": "Message shown to user when app is disconnected and data deleted"
 	},
 	"menuReportIssue": {
@@ -1148,11 +1132,11 @@
 		"description": "Shown during initial link while contacts and groups are being pulled from mobile device"
 	},
 	"replyToMessage": {
-		"message": "Reply to Message",
+		"message": "Antwoord op Bericht",
 		"description": "Shown in triple-dot menu next to message to allow user to start crafting a message with a quotation"
 	},
 	"photo": {
-		"message": "Photo",
+		"message": "Foto",
 		"description": "Shown in a quotation of a message containing a photo if no text was originally provided with that image"
 	},
 	"media": {
@@ -1160,11 +1144,11 @@
 		"description": "Header of the default pane in the media gallery, showing images and videos"
 	},
 	"noContents": {
-		"message": "No message contents",
+		"message": "Bericht heeft geen inhoud",
 		"description": "Shown in a message bubble if we have nothing in the message to display, or a quote and nothing else"
 	},
 	"deleteAllDataBody": {
-		"message": "You are about to delete all of this application's saved account information, including all contacts and all messages. You can always link with your mobile device again, but that will not restore deleted messages.",
+		"message": "Hierdoor verwijder je alle opgeslagen account gegevens van deze applicatie, waaronder alle contacten en berichten. Je kunt altijd nogmaals linken met je mobiele apparaat, maar je verwijderde berichten kunnen niet hersteld worden.",
 		"description": "Text describing what exactly will happen if the user clicks the button to delete all data"
 	},
 	"finishLinkingPhone": {
@@ -1176,15 +1160,15 @@
 		"description": "Button shown at end of successful import process, nothing left but a restart"
 	},
 	"clearDataExplanation": {
-		"message": "This will clear all data in the application, removing all messages and saved account information.",
+		"message": "Dit verwijderd alle gegevens in de applicatie, verwijderd alle berichten en opgeslagen account informatie.",
 		"description": "Text describing what the clear data button will do."
 	},
 	"optimizingApplication": {
-		"message": "Optimizing application...",
+		"message": "Applicatie optimaliseren...",
 		"description": "Message shown on the loading screen while we are doing application optimizations"
 	},
 	"clearDataHeader": {
-		"message": "Clear Data",
+		"message": "Verwijder Gegevens",
 		"description": "Header in the settings dialog for the section dealing with data deletion"
 	},
 	"linkNewDevice": {
@@ -1206,5 +1190,99 @@
 	"audio": {
 		"message": "Audio",
 		"description": "Shown in a quotation of a message containing an audio attachment if no text was originally provided with that attachment"
+	},
+	"address": {
+		"message": "adres",
+		"description": "Generic label shown if contact address has custom type but no label"
+	},
+	"you": {
+		"message": "Jij",
+		"description": "In Android theme, shown in quote if you or someone else replies to you"
+	},
+	"poBox": {
+		"message": "Postbus",
+		"description": "When rendering an address, used to provide context to a post office box"
+	},
+	"phone": {
+		"message": "telefoon",
+		"description": "Generic label shown if contact phone has custom type but no label"
+	},
+	"sendMessageToContact": {
+		"message": "Stuur Bericht",
+		"description": "Shown when you are sent a contact and that contact has a signal account"
+	},
+	"emojiAlt": {
+		"message": "Emoji image of '$title$'",
+		"description": "Used in the alt tag of all emoji images",
+		"placeholders": {
+			"title": {
+				"content": "$1",
+				"example": "grinning"
+			}
+		}
+	},
+	"quoteThumbnailAlt": {
+		"message": "Thumbnail of image from quoted message",
+		"description": "Used in alt tag of thumbnail images inside of an embedded message quote"
+	},
+	"mediaEmptyState": {
+		"message": "Je hebt geen media in deze conversatie",
+		"description": "Message shown to user in the media gallery when there are no messages with media attachments (images or video)"
+	},
+	"notificationMostRecentFrom": {
+		"message": "Meest recent van:",
+		"description": "Displayed in notifications when setting is 'name only' and more than one message is waiting"
+	},
+	"importErrorFirst": {
+		"message": "Make sure you have chosen the correct directory that contains your saved Signal data. Its name should begin with 'Signal Export.' You can also save a new copy of your data from the Chrome App.",
+		"description": "Message shown if the import went wrong; first paragraph"
+	},
+	"work": {
+		"message": "werk",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"home": {
+		"message": "thuis",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"notificationMostRecent": {
+		"message": "Meest recent:",
+		"description": "Displayed in notifications when setting is 'name and message' and more than one message is waiting"
+	},
+	"privacyPolicy": {
+		"message": "Terms & Privacy Policy",
+		"description": "Shown in the about box for the link to https://signal.org/legal"
+	},
+	"lightboxImageAlt": {
+		"message": "Image sent in conversation",
+		"description": "Used in the alt tag for the image shown in a full-screen lightbox view"
+	},
+	"mobile": {
+		"message": "mobiel",
+		"description": "Shown on contact detail screen as a label for aa phone or email"
+	},
+	"notificationFrom": {
+		"message": "Van:",
+		"description": "Displayed in notifications when setting is 'name only' and one message is waiting"
+	},
+	"contactAvatarAlt": {
+		"message": "Contact avatar",
+		"description": "Used in the alt tag for the image avatar of a contact"
+	},
+	"documentsEmptyState": {
+		"message": "Je hebt geen documenten in deze conversatie",
+		"description": "Message shown to user in the media gallery when there are no messages with document attachments (anything other than images or video)"
+	},
+	"fileIconAlt": {
+		"message": "File icon",
+		"description": "Used in the media gallery documents tab to visually represent a file"
+	},
+	"email": {
+		"message": "email",
+		"description": "Generic label shown if contact email has custom type but no label"
+	},
+	"importErrorSecond": {
+		"message": "If these steps don't work for you, please submit a debug log (View -> Debug Log) so that we can help you get migrated!",
+		"description": "Message shown if the import went wrong; second paragraph"
 	}
 }
