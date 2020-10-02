@@ -14,4 +14,8 @@
 
   window.config = Object.assign(window.config, JSON.parse(xhr.response));
   window.config.environment = environment;
+
+  window.config.get = name => config[name];
+  window.config.has = name => config.hasOwnProperty(name);
+
 })();

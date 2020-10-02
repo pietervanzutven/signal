@@ -57,18 +57,22 @@ window.matchMedia && window.matchMedia('(max-width: 600px)').addListener(() => {
             gutter.show();
             conversation.hide();
         }
-
     }
 });
 
-const process = { platform: 'win32' };
-
-var app = {
-    getVersion: () => {
-        var version = Windows.ApplicationModel.Package.current.id.version;
-        return version.major + '.' + version.minor + '.' + version.build
+const version = Windows.System.Profile.AnalyticsInfo.versionInfo.deviceFamilyVersion;
+const appInstance = Windows.System.Diagnostics.ProcessDiagnosticInfo.getForCurrentProcess().processId;
+const process = { 
+    platform: 'win32',
+    versions: {
+        uwp: version,
     },
-    getPath: () => 'ms-appdata:///local',
+    env: { 
+        UWP_ENV: 'production',
+        UWP_APP_INSTANCE: appInstance,
+        HTTPS_PROXY: null,
+    },
+    argv: [],
 };
 
 var ipc = {
@@ -78,46 +82,91 @@ var ipc = {
     },
 
     once: function (channel, listener) {
-        ipc.events[channel] = (event, args) => {
-            listener(event, args);
+        ipc.events[channel] = function () {
+            listener.apply(null, arguments);
             delete ipc.events[channel];
         }
     },
-    send: function (channel, args) {
-        var event = { channel: channel, returnValue: null, sender: { send: ipc.send } };
-        ipc.events[channel](event, args);
+    send: function () {
+        let args = Array.prototype.slice.call(arguments, 0);
+        const channel = args[0];
+        const event = { channel: channel, returnValue: null, sender: { send: ipc.send } };
+        args[0] = event;
+        ipc.events[channel].apply(null, args);
         return event.returnValue;
     },
-    sendSync: function (channel, args) {
-        return ipc.send(channel, args);
+    sendSync: function () {
+        return ipc.send.apply(null, arguments);
     }
 }
 
 window.requestIdleCallback = () => { };
 
+const url = window.url;
+
+const packageJson = { 
+    name: 'signal-desktop', 
+    productName: 'Signal',
+};
+
+const app = window.app;
+
 const Attachments = window.attachments;
 
+// Keep a global reference of the window object, if you don't, the window will
+//   be closed automatically when the JavaScript object is garbage collected.
+let mainWindow;
+
 let tray = null;
+
+window.config.name = Windows.ApplicationModel.Package.current.id.name;
+window.config.locale = Windows.Globalization.ApplicationLanguages.languages[0];
+window.config.version = app.getVersion();
+window.config.uwp_version = process.versions;
+window.config.hostname = 'Windows';
+window.config.appInstance = process.env.UWP_APP_INSTANCE;
+
+const importMode =
+  process.argv.some(arg => arg === '--import') || config.get('import');
+
+// Very important to put before the single instance check, since it is based on the
+//   userData directory.
+const userConfig = window.user_config;
 
 // Both of these will be set after app fires the 'ready' event
 let logger;
 let locale;
 
+function prepareURL(pathSegments) {
+    return url.format({
+        pathname: path.join.apply(null, pathSegments),
+        protocol: 'file:',
+        slashes: true,
+        query: {
+            name: packageJson.productName,
+            locale: locale.name,
+            version: app.getVersion(),
+            buildExpiration: config.get('buildExpiration'),
+            serverUrl: config.get('serverUrl'),
+            cdnUrl: config.get('cdnUrl'),
+            certificateAuthority: config.get('certificateAuthority'),
+            environment: config.environment,
+            node_version: process.versions.node,
+            hostname: os.hostname(),
+            appInstance: process.env.NODE_APP_INSTANCE,
+            proxyUrl: process.env.HTTPS_PROXY || process.env.https_proxy,
+            importMode: importMode ? true : undefined, // for stringify()
+        },
+    });
+}
+
 // Ingested in preload.js via a sendSync call
-ipc.on('locale-data', (event) => {
+ipc.on('locale-data', event => {
     // eslint-disable-next-line no-param-reassign
     event.returnValue = locale.messages;
 });
 
 ipc.on('show-window', () => { });
-
-function showSettings() {
-    ipc.send('show-settings');
-}
-
-function showDebugLog() {
-    ipc.send('debug-log');
-}
 
 function showBackupScreen() {
     ipc.send('backup');
@@ -151,46 +200,201 @@ function setupAsStandalone() {
     ipc.send('set-up-as-standalone');
 }
 
+let aboutWindow;
 function showAbout() {
-    ipc.send('about');
+    if (aboutWindow) {
+        aboutWindow.show();
+        return;
+    }
+
+    const options = {
+        width: 500,
+        height: 400,
+        resizable: false,
+        title: locale.messages.aboutSignalDesktop.message,
+        autoHideMenuBar: true,
+        backgroundColor: '#2090EA',
+        show: false,
+        webPreferences: {
+            nodeIntegration: false,
+            nodeIntegrationInWorker: false,
+            preload: path.join(__dirname, 'about_preload.js'),
+            // sandbox: true,
+            nativeWindowOpen: true,
+        },
+        parent: mainWindow,
+    };
+
+    aboutWindow = new BrowserWindow(options);
+
+    aboutWindow.loadURL(prepareURL([__dirname, 'about.html']));
+
+    aboutWindow.on('closed', () => {
+        aboutWindow = null;
+    });
+
+    aboutWindow.once('ready-to-show', () => {
+        aboutWindow.show();
+    });
 }
 
-function setupMenu(options) { }
+let settingsWindow;
+function showSettingsWindow() {
+    if (settingsWindow) {
+        settingsWindow.show();
+        return;
+    }
 
-window.config.name = Windows.ApplicationModel.Package.current.id.name;
+    const options = {
+        width: 500,
+        height: 400,
+        resizable: false,
+        title: locale.messages.signalDesktopPreferences.message,
+        autoHideMenuBar: true,
+        backgroundColor: '#FFFFFF',
+        show: false,
+        modal: true,
+        webPreferences: {
+            nodeIntegration: false,
+            nodeIntegrationInWorker: false,
+            preload: path.join(__dirname, 'settings_preload.js'),
+            // sandbox: true,
+            nativeWindowOpen: true,
+        },
+        parent: mainWindow,
+    };
 
-window.config.locale = Windows.Globalization.ApplicationLanguages.languages[0];
+    settingsWindow = new BrowserWindow(options);
 
-window.config.version = app.getVersion();
+    settingsWindow.loadURL(prepareURL([__dirname, 'settings.html']));
 
-var version = Windows.System.Profile.AnalyticsInfo.versionInfo.deviceFamilyVersion;
-window.config.uwp_version = ((version & 0x00000000FFFF0000) >> 16) + '.' + (version & 0x000000000000FFFF);
+    settingsWindow.on('closed', () => {
+        removeDarkOverlay();
+        settingsWindow = null;
+    });
 
-window.config.hostname = 'Windows';
+    settingsWindow.once('ready-to-show', () => {
+        addDarkOverlay();
+        settingsWindow.show();
+    });
+}
 
-window.config.appInstance = Windows.System.Diagnostics.ProcessDiagnosticInfo.getForCurrentProcess().processId;
+let debugLogWindow;
+function showDebugLogWindow() {
+    if (debugLogWindow) {
+        debugLogWindow.show();
+        return;
+    }
+
+    const options = {
+        width: 500,
+        height: 400,
+        resizable: false,
+        title: locale.messages.signalDesktopPreferences.message,
+        autoHideMenuBar: true,
+        backgroundColor: '#FFFFFF',
+        show: false,
+        modal: true,
+        webPreferences: {
+            nodeIntegration: false,
+            nodeIntegrationInWorker: false,
+            preload: path.join(__dirname, 'debug_log_preload.js'),
+            // sandbox: true,
+            nativeWindowOpen: true,
+        },
+        parent: mainWindow,
+    };
+
+    debugLogWindow = new BrowserWindow(options);
+
+    debugLogWindow.loadURL(prepareURL([__dirname, 'debug_log.html']));
+
+    debugLogWindow.on('closed', () => {
+        removeDarkOverlay();
+        debugLogWindow = null;
+    });
+
+    debugLogWindow.once('ready-to-show', () => {
+        addDarkOverlay();
+        debugLogWindow.show();
+    });
+}
+
+let permissionsPopupWindow;
+function showPermissionsPopupWindow() {
+    if (permissionsPopupWindow) {
+        permissionsPopupWindow.show();
+        return;
+    }
+    if (!mainWindow) {
+        return;
+    }
+
+    const size = mainWindow.getSize();
+    const options = {
+        width: Math.min(400, size[0]),
+        height: Math.min(150, size[1]),
+        resizable: false,
+        title: locale.messages.signalDesktopPreferences.message,
+        autoHideMenuBar: true,
+        backgroundColor: '#FFFFFF',
+        show: false,
+        modal: true,
+        webPreferences: {
+            nodeIntegration: false,
+            nodeIntegrationInWorker: false,
+            preload: path.join(__dirname, 'permissions_popup_preload.js'),
+            // sandbox: true,
+            nativeWindowOpen: true,
+        },
+        parent: mainWindow,
+    };
+
+    permissionsPopupWindow = new BrowserWindow(options);
+
+    permissionsPopupWindow.loadURL(
+      prepareURL([__dirname, 'permissions_popup.html'])
+    );
+
+    permissionsPopupWindow.on('closed', () => {
+        removeDarkOverlay();
+        permissionsPopupWindow = null;
+    });
+
+    permissionsPopupWindow.once('ready-to-show', () => {
+        addDarkOverlay();
+        permissionsPopupWindow.show();
+    });
+}
+
+const userDataPath = app.getPath('userData');
 
 let loggingSetupError;
-logging.initialize().catch((error) => {
-    loggingSetupError = error;
-}).then(async () => {
-    /* eslint-enable more/no-then */
-    logger = logging.getLogger();
-    logger.info('app ready');
+logging
+    .initialize()
+    .catch(error => {
+        loggingSetupError = error;
+    })
+    .then(async () => {
+        /* eslint-enable more/no-then */
+        logger = logging.getLogger();
+        logger.info('app ready');
 
-    if (loggingSetupError) {
-        logger.error('Problem setting up logging', loggingSetupError.stack);
-    }
+        if (loggingSetupError) {
+            logger.error('Problem setting up logging', loggingSetupError.stack);
+        }
 
-    if (!locale) {
-        const appLocale = Windows.Globalization.ApplicationLanguages.languages[0];
-        locale = loadLocale({ appLocale, logger });
-    }
+        if (!locale) {
+            const appLocale =
+                Windows.Globalization.ApplicationLanguages.languages[0];
+            locale = loadLocale({ appLocale, logger });
+        }
 
-    console.log('Ensure attachments directory exists');
-    const userDataPath = app.getPath('userData');
-    await Attachments.ensureDirectory(userDataPath);
-});
+        console.log('Ensure attachments directory exists');
+        await Attachments.ensureDirectory(userDataPath);
+    });
+
+function setupMenu(options) { }
 
 ipc.on('set-badge-count', (event, count) => {
     var Notifications = Windows.UI.Notifications;
@@ -215,19 +419,27 @@ ipc.on('draw-attention', () => {
     Windows.System.Launcher.launchUriAsync(new Windows.Foundation.Uri('signal://'));
 });
 
+ipc.on('set-media-permissions', (event, enabled) => {
+    userConfig.set('mediaPermissions', enabled);
+});
+ipc.on('get-media-permissions', event => {
+    // eslint-disable-next-line no-param-reassign
+    event.returnValue = userConfig.get('mediaPermissions') || false;
+});
+
 ipc.on('restart', () => {
     Windows.UI.WebUI.WebUIApplication.requestRestartAsync('');
 });
 
 ipc.on('set-auto-hide-menu-bar', (event, autoHide) => {
-    if (window.mainWindow) {
-        window.mainWindow.setAutoHideMenuBar(autoHide);
+    if (mainWindow) {
+        mainWindow.setAutoHideMenuBar(autoHide);
     }
 });
 
 ipc.on('set-menu-bar-visibility', (event, visibility) => {
-    if (window.mainWindow) {
-        window.mainWindow.setMenuBarVisibility(visibility);
+    if (mainWindow) {
+        mainWindow.setMenuBarVisibility(visibility);
     }
 });
 
@@ -242,3 +454,99 @@ ipc.on('update-tray-icon', (event, unreadCount) => {
         tray.updateIcon(unreadCount);
     }
 });
+
+// Debug Log-related IPC calls
+
+ipc.on('show-debug-log', showDebugLogWindow);
+ipc.on('close-debug-log', () => {
+    if (debugLogWindow) {
+        debugLogWindow.close();
+    }
+});
+
+// Permissions Popup-related IPC calls
+
+ipc.on('show-permissions-popup', showPermissionsPopupWindow);
+ipc.on('close-permissions-popup', () => {
+    if (permissionsPopupWindow) {
+        permissionsPopupWindow.close();
+    }
+});
+
+// Settings-related IPC calls
+
+function addDarkOverlay() {
+    ipc.send('add-dark-overlay');
+}
+function removeDarkOverlay() {
+    ipc.send('remove-dark-overlay');
+}
+
+ipc.on('show-settings', showSettingsWindow);
+ipc.on('close-settings', () => {
+    if (settingsWindow) {
+        settingsWindow.close();
+    }
+});
+
+installSettingsGetter('device-name');
+
+installSettingsGetter('theme-setting');
+installSettingsSetter('theme-setting');
+installSettingsGetter('hide-menu-bar');
+installSettingsSetter('hide-menu-bar');
+
+installSettingsGetter('notification-setting');
+installSettingsSetter('notification-setting');
+installSettingsGetter('audio-notification');
+installSettingsSetter('audio-notification');
+
+// This one is different because its single source of truth is userConfig, not IndexedDB
+ipc.on('get-media-permissions', event => {
+    event.sender.send(
+        'get-success-media-permissions',
+        null,
+        userConfig.get('mediaPermissions') || false
+    );
+});
+ipc.on('set-media-permissions', (event, value) => {
+    userConfig.set('mediaPermissions', value);
+
+    // We reinstall permissions handler to ensure that a revoked permission takes effect
+    installPermissionsHandler({ session, userConfig });
+
+    event.sender.send('set-success-media-permissions', null);
+});
+
+installSettingsGetter('is-primary');
+installSettingsGetter('sync-request');
+installSettingsGetter('sync-time');
+installSettingsSetter('sync-time');
+
+ipc.on('delete-all-data', () => {
+    if (mainWindow && mainWindow.webContents) {
+        mainWindow.webContents.send('delete-all-data');
+    }
+});
+
+function installSettingsGetter(name) {
+    ipc.on(`get-${name}`, event => {
+        if (mainWindow && mainWindow.webContents) {
+            ipc.once(`get-success-${name}`, (_event, error, value) =>
+                event.sender.send(`get-success-${name}`, error, value)
+            );
+            mainWindow.webContents.send(`get-${name}`);
+        }
+    });
+}
+
+function installSettingsSetter(name) {
+    ipc.on(`set-${name}`, (event, value) => {
+        if (mainWindow && mainWindow.webContents) {
+            ipc.once(`set-success-${name}`, (_event, error) =>
+                event.sender.send(`set-success-${name}`, error)
+            );
+            mainWindow.webContents.send(`set-${name}`, value);
+        }
+    });
+}

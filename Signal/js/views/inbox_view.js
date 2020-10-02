@@ -208,9 +208,9 @@
       'click #header': 'focusHeader',
       'click .conversation': 'focusConversation',
       'click .global-menu .hamburger': 'toggleMenu',
-      'click .show-debug-log': window.showDebugLog,
+      'click .show-debug-log': window.showDebugLogWindow,
       'click .backup': window.showBackupScreen,
-      'click .show-settings': 'showSettings',
+      'click .show-settings': window.showSettings,
       'click .open-release-notes': window.openReleaseNotes,
       'click .open-forums': window.openForums,
       'click .open-support-page': window.openSupportPage,
@@ -278,13 +278,6 @@
     },
     reloadBackgroundPage() {
       window.location.reload();
-    },
-    showSettings() {
-      if (this.$el.find('.settings').length) {
-        return;
-      }
-      const view = new Whisper.SettingsView();
-      view.$el.appendTo(this.el);
     },
     filterContacts(e) {
       this.searchView.filterContacts(e);
