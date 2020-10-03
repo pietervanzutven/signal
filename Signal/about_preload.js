@@ -1,6 +1,8 @@
+/* global window */
+
 (function () {
     'use strict';
-    
+
     const ipcRenderer = window.top.ipc;
     const url = window.top.url;
     const i18n = window.top.modules.i18n;

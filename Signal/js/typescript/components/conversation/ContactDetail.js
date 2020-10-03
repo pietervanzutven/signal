@@ -65,7 +65,11 @@
                 e.stopPropagation();
                 onSendMessage();
             };
-            return (react_1.default.createElement("div", { className: "module-contact-detail__send-message", role: "button", onClick: onClick },
+            return (react_1.default.createElement("div", {
+                className: "module-contact-detail__send-message", role: "button",
+                // tslint:disable-next-line react-this-binding-issue
+                onClick: onClick
+            },
                 react_1.default.createElement("button", { className: "module-contact-detail__send-message__inner" },
                     react_1.default.createElement("div", { className: "module-contact-detail__send-message__bubble-icon" }),
                     i18n('sendMessageToContact'))));

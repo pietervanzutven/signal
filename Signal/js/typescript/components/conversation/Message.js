@@ -22,17 +22,20 @@
     const moment_1 = __importDefault(window.moment);
     const lodash_1 = window.lodash;
     const formatRelativeTime_1 = window.ts.util.formatRelativeTime;
-    const MessageBody_1 = window.ts.components.conversation.MessageBody;
+    const GoogleChrome_1 = window.ts.util.GoogleChrome;
     const Emojify_1 = window.ts.components.conversation.Emojify;
     const Quote_1 = window.ts.components.conversation.Quote;
     const EmbeddedContact_1 = window.ts.components.conversation.EmbeddedContact;
     const MIME = __importStar(window.ts.types.MIME);
     function isImage(attachment) {
-        // TODO: exclude svg and tiff here
-        return (attachment && attachment.contentType && MIME.isImage(attachment.contentType));
+        return (attachment &&
+            attachment.contentType &&
+            GoogleChrome_1.isImageTypeSupported(attachment.contentType));
     }
     function isVideo(attachment) {
-        return (attachment && attachment.contentType && MIME.isVideo(attachment.contentType));
+        return (attachment &&
+            attachment.contentType &&
+            GoogleChrome_1.isVideoTypeSupported(attachment.contentType));
     }
     function isAudio(attachment) {
         return (attachment && attachment.contentType && MIME.isAudio(attachment.contentType));
@@ -122,6 +125,7 @@
                 " ",
                 profileElement));
         }
+        // tslint:disable-next-line max-func-body-length
         renderAttachment() {
             const { i18n, attachment, text, collapseMetadata, conversationType, direction, quote, onClickAttachment, } = this.props;
             if (!attachment) {
