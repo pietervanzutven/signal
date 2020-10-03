@@ -103,6 +103,7 @@ var ipc = {
 window.requestIdleCallback = () => { };
 
 const url = window.url;
+const pify = window.pify;
 
 const packageJson = { 
     name: 'signal-desktop', 
@@ -137,12 +138,12 @@ const userConfig = window.user_config;
 let logger;
 let locale;
 
-function prepareURL(pathSegments) {
+function prepareURL(pathSegments, moreKeys) {
     return url.format({
         pathname: path.join.apply(null, pathSegments),
         protocol: 'file:',
         slashes: true,
-        query: {
+        query: Object.assign({
             name: packageJson.productName,
             locale: locale.name,
             version: app.getVersion(),
@@ -156,9 +157,12 @@ function prepareURL(pathSegments) {
             appInstance: process.env.NODE_APP_INSTANCE,
             proxyUrl: process.env.HTTPS_PROXY || process.env.https_proxy,
             importMode: importMode ? true : undefined, // for stringify()
-        },
+        }, moreKeys),
     });
 }
+
+// Create the browser window.
+mainWindow = new BrowserWindow();
 
 // Ingested in preload.js via a sendSync call
 ipc.on('locale-data', event => {
@@ -239,12 +243,13 @@ function showAbout() {
 }
 
 let settingsWindow;
-function showSettingsWindow() {
+async function showSettingsWindow() {
     if (settingsWindow) {
         settingsWindow.show();
         return;
     }
 
+    const theme = await pify(getDataFromMainWindow)('theme-setting');
     const options = {
         width: 500,
         height: 400,
@@ -266,7 +271,7 @@ function showSettingsWindow() {
 
     settingsWindow = new BrowserWindow(options);
 
-    settingsWindow.loadURL(prepareURL([__dirname, 'settings.html']));
+    settingsWindow.loadURL(prepareURL([__dirname, 'settings.html'], { theme }));
 
     settingsWindow.on('closed', () => {
         removeDarkOverlay();
@@ -280,12 +285,13 @@ function showSettingsWindow() {
 }
 
 let debugLogWindow;
-function showDebugLogWindow() {
+async function showDebugLogWindow() {
     if (debugLogWindow) {
         debugLogWindow.show();
         return;
     }
 
+    const theme = await pify(getDataFromMainWindow)('theme-setting');
     const options = {
         width: 500,
         height: 400,
@@ -307,7 +313,7 @@ function showDebugLogWindow() {
 
     debugLogWindow = new BrowserWindow(options);
 
-    debugLogWindow.loadURL(prepareURL([__dirname, 'debug_log.html']));
+    debugLogWindow.loadURL(prepareURL([__dirname, 'debug_log.html'], { theme }));
 
     debugLogWindow.on('closed', () => {
         removeDarkOverlay();
@@ -321,7 +327,7 @@ function showDebugLogWindow() {
 }
 
 let permissionsPopupWindow;
-function showPermissionsPopupWindow() {
+async function showPermissionsPopupWindow() {
     if (permissionsPopupWindow) {
         permissionsPopupWindow.show();
         return;
@@ -330,10 +336,10 @@ function showPermissionsPopupWindow() {
         return;
     }
 
-    const size = mainWindow.getSize();
+    const theme = await pify(getDataFromMainWindow)('theme-setting');
     const options = {
-        width: Math.min(400, size[0]),
-        height: Math.min(150, size[1]),
+        width: 400,
+        height: 150,
         resizable: false,
         title: locale.messages.signalDesktopPreferences.message,
         autoHideMenuBar: true,
@@ -353,7 +359,7 @@ function showPermissionsPopupWindow() {
     permissionsPopupWindow = new BrowserWindow(options);
 
     permissionsPopupWindow.loadURL(
-      prepareURL([__dirname, 'permissions_popup.html'])
+      prepareURL([__dirname, 'permissions_popup.html'], { theme })
     );
 
     permissionsPopupWindow.on('closed', () => {
@@ -476,10 +482,14 @@ ipc.on('close-permissions-popup', () => {
 // Settings-related IPC calls
 
 function addDarkOverlay() {
-    ipc.send('add-dark-overlay');
+    if (mainWindow && mainWindow.webContents) {
+        mainWindow.webContents.send('add-dark-overlay');
+    }
 }
 function removeDarkOverlay() {
-    ipc.send('remove-dark-overlay');
+    if (mainWindow && mainWindow.webContents) {
+        mainWindow.webContents.send('remove-dark-overlay');
+    }
 }
 
 ipc.on('show-settings', showSettingsWindow);
@@ -529,13 +539,19 @@ ipc.on('delete-all-data', () => {
     }
 });
 
+function getDataFromMainWindow(name, callback) {
+    ipc.once(`get-success-${name}`, (_event, error, value) =>
+        callback(error, value)
+    );
+    mainWindow.webContents.send(`get-${name}`);
+}
+
 function installSettingsGetter(name) {
     ipc.on(`get-${name}`, event => {
         if (mainWindow && mainWindow.webContents) {
-            ipc.once(`get-success-${name}`, (_event, error, value) =>
+            getDataFromMainWindow(name, (error, value) =>
                 event.sender.send(`get-success-${name}`, error, value)
             );
-            mainWindow.webContents.send(`get-${name}`);
         }
     });
 }
