@@ -1,5 +1,6 @@
 (function () {
     "use strict";
+    // tslint:disable:react-this-binding-issue
 
     window.ts = window.ts || {};
     window.ts.components = window.ts.components || {};
@@ -38,24 +39,55 @@
         }
         return null;
     }
+    function getTypeLabel({ i18n, contentType, isVoiceMessage, }) {
+        if (GoogleChrome.isVideoTypeSupported(contentType)) {
+            return i18n('video');
+        }
+        if (GoogleChrome.isImageTypeSupported(contentType)) {
+            return i18n('photo');
+        }
+        if (MIME.isAudio(contentType) && isVoiceMessage) {
+            return i18n('voiceMessage');
+        }
+        if (MIME.isAudio(contentType)) {
+            return i18n('audio');
+        }
+        return null;
+    }
     class Quote extends react_1.default.Component {
-        renderImage(url, icon) {
-            const iconElement = icon ? (react_1.default.createElement("div", { className: classnames_1.default('icon', 'with-image', icon) })) : null;
-            return (react_1.default.createElement("div", { className: "icon-container" },
-                react_1.default.createElement("div", { className: "inner" },
-                    react_1.default.createElement("img", { src: url }),
-                    iconElement)));
+        renderImage(url, i18n, icon) {
+            const iconElement = icon ? (react_1.default.createElement("div", { className: "module-quote__icon-container__inner" },
+                react_1.default.createElement("div", { className: "module-quote__icon-container__circle-background" },
+                    react_1.default.createElement("div", { className: classnames_1.default('module-quote__icon-container__icon', `module-quote__icon-container__icon--${icon}`) })))) : null;
+            return (react_1.default.createElement("div", { className: "module-quote__icon-container" },
+                react_1.default.createElement("img", { src: url, alt: i18n('quoteThumbnailAlt') }),
+                iconElement));
         }
         renderIcon(icon) {
-            const { authorColor, isIncoming } = this.props;
-            const backgroundColor = isIncoming ? 'white' : authorColor;
-            const iconColor = isIncoming ? authorColor : 'white';
-            return (react_1.default.createElement("div", { className: "icon-container" },
-                react_1.default.createElement("div", { className: classnames_1.default('circle-background', backgroundColor) }),
-                react_1.default.createElement("div", { className: classnames_1.default('icon', icon, iconColor) })));
+            return (react_1.default.createElement("div", { className: "module-quote__icon-container" },
+                react_1.default.createElement("div", { className: "module-quote__icon-container__inner" },
+                    react_1.default.createElement("div", { className: "module-quote__icon-container__circle-background" },
+                        react_1.default.createElement("div", { className: classnames_1.default('module-quote__icon-container__icon', `module-quote__icon-container__icon--${icon}`) })))));
+        }
+        renderGenericFile() {
+            const { attachments } = this.props;
+            if (!attachments || !attachments.length) {
+                return;
+            }
+            const first = attachments[0];
+            const { fileName, contentType } = first;
+            const isGenericFile = !GoogleChrome.isVideoTypeSupported(contentType) &&
+                !GoogleChrome.isImageTypeSupported(contentType) &&
+                !MIME.isAudio(contentType);
+            if (!isGenericFile) {
+                return null;
+            }
+            return (react_1.default.createElement("div", { className: "module-quote__generic-file" },
+                react_1.default.createElement("div", { className: "module-quote__generic-file__icon" }),
+                react_1.default.createElement("div", { className: "module-quote__generic-file__text" }, fileName)));
         }
         renderIconContainer() {
-            const { attachments } = this.props;
+            const { attachments, i18n } = this.props;
             if (!attachments || attachments.length === 0) {
                 return null;
             }
@@ -64,52 +96,35 @@
             const objectUrl = getObjectUrl(thumbnail);
             if (GoogleChrome.isVideoTypeSupported(contentType)) {
                 return objectUrl
-                    ? this.renderImage(objectUrl, 'play')
+                    ? this.renderImage(objectUrl, i18n, 'play')
                     : this.renderIcon('movie');
             }
             if (GoogleChrome.isImageTypeSupported(contentType)) {
-                return objectUrl ? this.renderImage(objectUrl) : this.renderIcon('image');
+                return objectUrl
+                    ? this.renderImage(objectUrl, i18n)
+                    : this.renderIcon('image');
             }
             if (MIME.isAudio(contentType)) {
                 return this.renderIcon('microphone');
             }
-            return this.renderIcon('file');
+            return null;
         }
         renderText() {
             const { i18n, text, attachments } = this.props;
             if (text) {
-                return (react_1.default.createElement("div", { className: "text" },
-                    react_1.default.createElement(MessageBody_1.MessageBody, { text: text })));
+                return (react_1.default.createElement("div", { className: "module-quote__primary__text" },
+                    react_1.default.createElement(MessageBody_1.MessageBody, { text: text, i18n: i18n })));
             }
             if (!attachments || attachments.length === 0) {
                 return null;
             }
             const first = attachments[0];
-            const { contentType, fileName, isVoiceMessage } = first;
-            if (GoogleChrome.isVideoTypeSupported(contentType)) {
-                return react_1.default.createElement("div", { className: "type-label" }, i18n('video'));
+            const { contentType, isVoiceMessage } = first;
+            const typeLabel = getTypeLabel({ i18n, contentType, isVoiceMessage });
+            if (typeLabel) {
+                return (react_1.default.createElement("div", { className: "module-quote__primary__type-label" }, typeLabel));
             }
-            if (GoogleChrome.isImageTypeSupported(contentType)) {
-                return react_1.default.createElement("div", { className: "type-label" }, i18n('photo'));
-            }
-            if (MIME.isAudio(contentType) && isVoiceMessage) {
-                return react_1.default.createElement("div", { className: "type-label" }, i18n('voiceMessage'));
-            }
-            if (MIME.isAudio(contentType)) {
-                return react_1.default.createElement("div", { className: "type-label" }, i18n('audio'));
-            }
-            return react_1.default.createElement("div", { className: "filename-label" }, fileName);
-        }
-        renderIOSLabel() {
-            const { i18n, isIncoming, isFromMe, authorTitle, authorProfileName, } = this.props;
-            const profileString = authorProfileName ? ` ~${authorProfileName}` : '';
-            const authorName = `${authorTitle}${profileString}`;
-            const label = isFromMe
-                ? isIncoming
-                    ? i18n('replyingToYou')
-                    : i18n('replyingToYourself')
-                : i18n('replyingTo', [authorName]);
-            return react_1.default.createElement("div", { className: "ios-label" }, label);
+            return null;
         }
         renderClose() {
             const { onClose } = this.props;
@@ -123,29 +138,28 @@
                 onClose();
             };
             // We need the container to give us the flexibility to implement the iOS design.
-            return (react_1.default.createElement("div", { className: "close-container" },
-                react_1.default.createElement("div", { className: "close-button", onClick: onClick })));
+            return (react_1.default.createElement("div", { className: "module-quote__close-container" },
+                react_1.default.createElement("div", { className: "module-quote__close-button", role: "button", onClick: onClick })));
         }
         renderAuthor() {
-            const { authorColor, authorProfileName, authorTitle, i18n, isFromMe, } = this.props;
-            const authorProfileElement = authorProfileName ? (react_1.default.createElement("span", { className: "profile-name" },
+            const { authorProfileName, authorTitle, i18n, isFromMe } = this.props;
+            const authorProfileElement = authorProfileName ? (react_1.default.createElement("span", { className: "module-quote__primary__profile-name" },
                 "~",
-                react_1.default.createElement(Emojify_1.Emojify, { text: authorProfileName }))) : null;
-            return (react_1.default.createElement("div", { className: classnames_1.default(authorColor, 'author') }, isFromMe ? (i18n('you')) : (react_1.default.createElement("span", null,
-                react_1.default.createElement(Emojify_1.Emojify, { text: authorTitle }),
+                react_1.default.createElement(Emojify_1.Emojify, { text: authorProfileName, i18n: i18n }))) : null;
+            return (react_1.default.createElement("div", { className: "module-quote__primary__author" }, isFromMe ? (i18n('you')) : (react_1.default.createElement("span", null,
+                react_1.default.createElement(Emojify_1.Emojify, { text: authorTitle, i18n: i18n }),
                 " ",
                 authorProfileElement))));
         }
         render() {
-            const { authorColor, onClick, isFromMe } = this.props;
+            const { color, isIncoming, onClick, withContentAbove } = this.props;
             if (!validateQuote(this.props)) {
                 return null;
             }
-            const classes = classnames_1.default(authorColor, 'quoted-message', isFromMe ? 'from-me' : null, !onClick ? 'no-click' : null);
-            return (react_1.default.createElement("div", { onClick: onClick, className: classes },
-                react_1.default.createElement("div", { className: "primary" },
-                    this.renderIOSLabel(),
+            return (react_1.default.createElement("div", { onClick: onClick, role: "button", className: classnames_1.default('module-quote', isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing', !isIncoming ? `module-quote--outgoing-${color}` : null, !onClick ? 'module-quote--no-click' : null, withContentAbove ? 'module-quote--with-content-above' : null) },
+                react_1.default.createElement("div", { className: "module-quote__primary" },
                     this.renderAuthor(),
+                    this.renderGenericFile(),
                     this.renderText()),
                 this.renderIconContainer(),
                 this.renderClose()));

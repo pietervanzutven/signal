@@ -21,6 +21,7 @@
   const {
     ContactDetail,
   } = window.ts.components.conversation.ContactDetail;
+  const { ContactListItem } = window.ts.components.ContactListItem;
   const { ContactName } = window.ts.components.conversation.ContactName;
   const {
     ConversationTitle,
@@ -111,6 +112,7 @@
 
     const Components = {
       ContactDetail,
+      ContactListItem,
       ContactName,
       ConversationTitle,
       EmbeddedContact,
