@@ -825,6 +825,7 @@
     console.log('background onError:', Errors.toLogFormat(error));
 
     if (
+      error &&
       error.name === 'HTTPError' &&
       (error.code === 401 || error.code === 403)
     ) {
@@ -853,7 +854,7 @@
       return;
     }
 
-    if (error.name === 'HTTPError' && error.code === -1) {
+    if (error && error.name === 'HTTPError' && error.code === -1) {
       // Failed to connect to server
       if (navigator.onLine) {
         console.log('retrying in 1 minute');
@@ -865,7 +866,7 @@
     }
 
     if (ev.proto) {
-      if (error.name === 'MessageCounterError') {
+      if (error && error.name === 'MessageCounterError') {
         if (ev.confirm) {
           ev.confirm();
         }
@@ -876,7 +877,7 @@
       const envelope = ev.proto;
       const message = initIncomingMessage(envelope);
 
-      await message.saveErrors(error);
+      await message.saveErrors(error || new Error('Error was null'));
       const id = message.get('conversationId');
       const conversation = await ConversationController.getOrCreateAndWait(
         id,
