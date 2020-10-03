@@ -239,18 +239,6 @@
 		"message": "Carpeta seleccionada",
 		"description": "Message shown as the export location if we didn't capture the target directory"
 	},
-	"verifyContact": {
-		"message": "Tal vez desees $tag_start$ verificar $tag_end$ las cifras de seguridad con este contacto.",
-		"description": "Use $tag_start$ and $tag_end$ to wrap the word or phrase in this sentence that the user should click on in order to navigate to the verification screen. These placeholders will be replaced with appropriate HTML code.",
-		"placeholders": {
-			"tag_start": {
-				"content": "<a class='verify' href='#'>"
-			},
-			"tag_end": {
-				"content": "</a>"
-			}
-		}
-	},
 	"changedRecently": {
 		"message": "Las cifras de seguridad con $name$ han cambiado recientemente, lo que significaría que alguien ha tratado de interceptar la comunicación o que $name$ simplemente ha reinstalado Signal.",
 		"description": "Shown on confirmation dialog when user attempts to send a message",
@@ -1081,10 +1069,6 @@
 			}
 		}
 	},
-	"messageCaption": {
-		"message": "Extracto del mensaje",
-		"description": "Prefix of attachment alt tags in the media gallery"
-	},
 	"deleteAllDataButton": {
 		"message": "Borrar todos los datos",
 		"description": "Text of the button that deletes all data"
@@ -1206,5 +1190,99 @@
 	"audio": {
 		"message": "Audio",
 		"description": "Shown in a quotation of a message containing an audio attachment if no text was originally provided with that attachment"
+	},
+	"address": {
+		"message": "dirección",
+		"description": "Generic label shown if contact address has custom type but no label"
+	},
+	"you": {
+		"message": "Para ti",
+		"description": "In Android theme, shown in quote if you or someone else replies to you"
+	},
+	"poBox": {
+		"message": "apdo. de correos",
+		"description": "When rendering an address, used to provide context to a post office box"
+	},
+	"phone": {
+		"message": "teléfono",
+		"description": "Generic label shown if contact phone has custom type but no label"
+	},
+	"sendMessageToContact": {
+		"message": "Enviar mensaje",
+		"description": "Shown when you are sent a contact and that contact has a signal account"
+	},
+	"emojiAlt": {
+		"message": "Emoji representando '$title$'",
+		"description": "Used in the alt tag of all emoji images",
+		"placeholders": {
+			"title": {
+				"content": "$1",
+				"example": "grinning"
+			}
+		}
+	},
+	"quoteThumbnailAlt": {
+		"message": "Miniatura de una foto como cita de un mensaje",
+		"description": "Used in alt tag of thumbnail images inside of an embedded message quote"
+	},
+	"mediaEmptyState": {
+		"message": "No hay ingún adjunto en este chat",
+		"description": "Message shown to user in the media gallery when there are no messages with media attachments (images or video)"
+	},
+	"notificationMostRecentFrom": {
+		"message": "Más reciente de:",
+		"description": "Displayed in notifications when setting is 'name only' and more than one message is waiting"
+	},
+	"importErrorFirst": {
+		"message": "Asegúrate de haber seleccionado la carpeta correcta que contiene tus datos de Signal. El nombre suele comenzar por 'Signal Export'. También puedes guardar una copia nueva de tus datos desde la aplicación de Chrome.",
+		"description": "Message shown if the import went wrong; first paragraph"
+	},
+	"work": {
+		"message": "trabajo",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"home": {
+		"message": "casa",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"notificationMostRecent": {
+		"message": "Más reciente:",
+		"description": "Displayed in notifications when setting is 'name and message' and more than one message is waiting"
+	},
+	"privacyPolicy": {
+		"message": "Términos y política de privacidad",
+		"description": "Shown in the about box for the link to https://signal.org/legal"
+	},
+	"lightboxImageAlt": {
+		"message": "Foto enviada en el chat",
+		"description": "Used in the alt tag for the image shown in a full-screen lightbox view"
+	},
+	"mobile": {
+		"message": "móvil",
+		"description": "Shown on contact detail screen as a label for aa phone or email"
+	},
+	"notificationFrom": {
+		"message": "De:",
+		"description": "Displayed in notifications when setting is 'name only' and one message is waiting"
+	},
+	"contactAvatarAlt": {
+		"message": "Avatar del contacto",
+		"description": "Used in the alt tag for the image avatar of a contact"
+	},
+	"documentsEmptyState": {
+		"message": "No hay documentos en este chat",
+		"description": "Message shown to user in the media gallery when there are no messages with document attachments (anything other than images or video)"
+	},
+	"fileIconAlt": {
+		"message": "Icono de archivo",
+		"description": "Used in the media gallery documents tab to visually represent a file"
+	},
+	"email": {
+		"message": "email",
+		"description": "Generic label shown if contact email has custom type but no label"
+	},
+	"importErrorSecond": {
+		"message": "Si estos pasos no te funcionan, envía el registro de depuración (Ver > Registro de depuración) para que te podamos ayudar con la migración.",
+		"description": "Message shown if the import went wrong; second paragraph"
 	}
 }

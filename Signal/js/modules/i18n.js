@@ -2,9 +2,10 @@
 
 (function () {
   'use strict';
-
-  const exports = window.i18n = {};
-
+  
+  window.modules = window.modules || {};
+  const exports = window.modules.i18n = {};
+  
   exports.setup = (locale, messages) => {
     if (!locale) {
       throw new Error('i18n: locale parameter is required');

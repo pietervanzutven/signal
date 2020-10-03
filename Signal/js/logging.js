@@ -61,7 +61,7 @@
   function getHeader() {
     let header = window.navigator.userAgent;
 
-    header += ` uwp/${window.getNodeVersion()}`;
+    header += ` uwp/${window.getUWPVersion()}`;
     header += ` env/${window.getEnvironment()}`;
 
     return header;

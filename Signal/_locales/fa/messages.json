@@ -136,7 +136,7 @@
 		"description": "If user has already exported once, this button allows user to do it again if needed"
 	},
 	"quit": {
-		"message": "Quit",
+		"message": "خروج",
 		"description": "Command in the tray icon menu, to quit the application"
 	},
 	"clickToSave": {
@@ -160,7 +160,7 @@
 		"description": "This is a menu item for resetting the session, using the imperative case, as in a command."
 	},
 	"offline": {
-		"message": "Offline",
+		"message": "اتصال برقرار نیست",
 		"description": "Displayed when the desktop client has no network connection."
 	},
 	"hideMenuBar": {
@@ -176,7 +176,7 @@
 		"description": "Obvious instructions for when a user's computer loses its network connection"
 	},
 	"notificationSettingsDialog": {
-		"message": "هنگام دریافت پیام, جزئیات آگاه‌سازی را نمایش بده:",
+		"message": "هنگام دریافت پیام, این جزئیات را نمایش بده:",
 		"description": "Explain the purpose of the notification settings"
 	},
 	"timestamp_h": {
@@ -238,18 +238,6 @@
 	"selectedLocation": {
 		"message": "مکان انتخابی شما",
 		"description": "Message shown as the export location if we didn't capture the target directory"
-	},
-	"verifyContact": {
-		"message": "شاید لازم باشد شماره‌ی امنیتی این مخاطب را $tag_start$ بررسی کنید $tag_end$.",
-		"description": "Use $tag_start$ and $tag_end$ to wrap the word or phrase in this sentence that the user should click on in order to navigate to the verification screen. These placeholders will be replaced with appropriate HTML code.",
-		"placeholders": {
-			"tag_start": {
-				"content": "<a class='verify' href='#'>"
-			},
-			"tag_end": {
-				"content": "</a>"
-			}
-		}
 	},
 	"changedRecently": {
 		"message": "شماره امن شما با $name$به تازگی تغییر یافته است.این امر بدین معناست که شخصی در تلاش برای رهگیری ارتباط شماست یا اینکه $name$بار دیگر سیگنال را نصب کرده است.",
@@ -328,7 +316,7 @@
 		"description": "One of two choices presented on the screen shown on first launch"
 	},
 	"unlinkedWarning": {
-		"message": "Relink Signal Desktop to your mobile device to continue messaging.",
+		"message": "برای ادامه‌ی استفاده از ‌سیگنال دسکتاپ، دوباره این برنامه را به سیگنال موبایل خود متصل نمایید.",
 		"description": ""
 	},
 	"debugLogExplanation": {
@@ -504,7 +492,7 @@
 		"description": "Header for a key change dialog"
 	},
 	"installTagline": {
-		"message": "حفظ حریم خصوصی ممکن است. سیگنال کار را راحتتر میکند.",
+		"message": "حفظ حریم خصوصی ممکن است. سیگنال این کار را راحت‌تر میکند.",
 		"description": "Tagline displayed under 'installWelcome' string on the install page"
 	},
 	"show": {
@@ -550,7 +538,7 @@
 		"description": "Timestamp format string for displaying month and day (but not the year) of a date within the current year, ex: use 'MMM D' for 'Aug 8', or 'D MMM' for '8 Aug'."
 	},
 	"chooseDirectory": {
-		"message": "Choose folder",
+		"message": "انتخاب پوشه",
 		"description": "Button to allow the user to find a folder on disk"
 	},
 	"mainMenuEdit": {
@@ -912,7 +900,7 @@
 		"description": "Label for setting notifications to display name and message text"
 	},
 	"failedToSend": {
-		"message": "ارسال به چند مخاطب ناموفق بود. اتصال شبکه‌ی خود را بررسی کنید.",
+		"message": "ارسال به برخی مخاطبین ناموفق بود. اتصال شبکه‌ی خود را بررسی کنید.",
 		"description": ""
 	},
 	"ok": {
@@ -1008,7 +996,7 @@
 		"description": "Used in the guidance to help people find the 'link new device' area of their Signal mobile app"
 	},
 	"yesterday": {
-		"message": "Yesterday",
+		"message": "دیروز",
 		"description": "Section header in the media gallery"
 	},
 	"replyingToYourself": {
@@ -1020,7 +1008,7 @@
 		"description": "Header of the secondary pane in the media gallery, showing every non-media attachment"
 	},
 	"thisMonth": {
-		"message": "This Month",
+		"message": "این ماه",
 		"description": "Section header in the media gallery"
 	},
 	"importCompleteHeader": {
@@ -1036,15 +1024,15 @@
 		"description": "Shown in iOS theme when someone else quotes a message from you"
 	},
 	"clearDataButton": {
-		"message": "Clear data",
+		"message": "پاک کردن داده",
 		"description": "Button in the settings dialog starting process to delete all data"
 	},
 	"thisWeek": {
-		"message": "This Week",
+		"message": "این هفته",
 		"description": "Section header in the media gallery"
 	},
 	"importingHeader": {
-		"message": "Loading contacts and messages",
+		"message": "در حال بارگذاری مخاطب ها و پیام ها",
 		"description": "Header of screen shown as data is import"
 	},
 	"mainMenuSettings": {
@@ -1056,7 +1044,7 @@
 		"description": "Button shown at end of successful 'light' import process, so the standard linking process still needs to happen"
 	},
 	"today": {
-		"message": "Today",
+		"message": "امروز",
 		"description": "Section header in the media gallery"
 	},
 	"linkYourPhone": {
@@ -1068,7 +1056,7 @@
 		"description": "This is a menu item for viewing all media (images + video) in a conversation, using the imperative case, as in a command."
 	},
 	"video": {
-		"message": "Video",
+		"message": "ویدیو",
 		"description": "Shown in a quotation of a message containing a video if no text was originally provided with that video"
 	},
 	"timerSetOnSync": {
@@ -1081,12 +1069,8 @@
 			}
 		}
 	},
-	"messageCaption": {
-		"message": "Message caption",
-		"description": "Prefix of attachment alt tags in the media gallery"
-	},
 	"deleteAllDataButton": {
-		"message": "Delete all data",
+		"message": "پاک کردن تمام داده ها",
 		"description": "Text of the button that deletes all data"
 	},
 	"menuSetupWithImport": {
@@ -1098,11 +1082,11 @@
 		"description": "Header of the error screen after a failed import"
 	},
 	"importAgain": {
-		"message": "Choose folder and try again",
+		"message": "پوشه را انتخاب کنید و دوباره امتحان کنید",
 		"description": "Button shown if the user runs into an error during import, allowing them to start over"
 	},
 	"signalSettings": {
-		"message": "Signal Settings",
+		"message": "تنظیمات سیگنال",
 		"description": "Used in the guidance to help people find the 'link new device' area of their Signal mobile app"
 	},
 	"plusButton": {
@@ -1152,11 +1136,11 @@
 		"description": "Shown in triple-dot menu next to message to allow user to start crafting a message with a quotation"
 	},
 	"photo": {
-		"message": "Photo",
+		"message": "تصویر",
 		"description": "Shown in a quotation of a message containing a photo if no text was originally provided with that image"
 	},
 	"media": {
-		"message": "Media",
+		"message": "مدیا",
 		"description": "Header of the default pane in the media gallery, showing images and videos"
 	},
 	"noContents": {
@@ -1206,5 +1190,99 @@
 	"audio": {
 		"message": "Audio",
 		"description": "Shown in a quotation of a message containing an audio attachment if no text was originally provided with that attachment"
+	},
+	"address": {
+		"message": "آدرس",
+		"description": "Generic label shown if contact address has custom type but no label"
+	},
+	"you": {
+		"message": "شما",
+		"description": "In Android theme, shown in quote if you or someone else replies to you"
+	},
+	"poBox": {
+		"message": "PO Box",
+		"description": "When rendering an address, used to provide context to a post office box"
+	},
+	"phone": {
+		"message": "تلفن",
+		"description": "Generic label shown if contact phone has custom type but no label"
+	},
+	"sendMessageToContact": {
+		"message": "فرستادن پیام",
+		"description": "Shown when you are sent a contact and that contact has a signal account"
+	},
+	"emojiAlt": {
+		"message": "Emoji image of '$title$'",
+		"description": "Used in the alt tag of all emoji images",
+		"placeholders": {
+			"title": {
+				"content": "$1",
+				"example": "grinning"
+			}
+		}
+	},
+	"quoteThumbnailAlt": {
+		"message": "Thumbnail of image from quoted message",
+		"description": "Used in alt tag of thumbnail images inside of an embedded message quote"
+	},
+	"mediaEmptyState": {
+		"message": "You don’t have any media in this conversation",
+		"description": "Message shown to user in the media gallery when there are no messages with media attachments (images or video)"
+	},
+	"notificationMostRecentFrom": {
+		"message": "جدید ترین از:",
+		"description": "Displayed in notifications when setting is 'name only' and more than one message is waiting"
+	},
+	"importErrorFirst": {
+		"message": "Make sure you have chosen the correct directory that contains your saved Signal data. Its name should begin with 'Signal Export.' You can also save a new copy of your data from the Chrome App.",
+		"description": "Message shown if the import went wrong; first paragraph"
+	},
+	"work": {
+		"message": "کار",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"home": {
+		"message": "خانه",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"notificationMostRecent": {
+		"message": "جدید ترین:",
+		"description": "Displayed in notifications when setting is 'name and message' and more than one message is waiting"
+	},
+	"privacyPolicy": {
+		"message": "Terms & Privacy Policy",
+		"description": "Shown in the about box for the link to https://signal.org/legal"
+	},
+	"lightboxImageAlt": {
+		"message": "تصویر در مکالمه فرستاده شد",
+		"description": "Used in the alt tag for the image shown in a full-screen lightbox view"
+	},
+	"mobile": {
+		"message": "موبایل",
+		"description": "Shown on contact detail screen as a label for aa phone or email"
+	},
+	"notificationFrom": {
+		"message": "From:",
+		"description": "Displayed in notifications when setting is 'name only' and one message is waiting"
+	},
+	"contactAvatarAlt": {
+		"message": "آواتار مخاطب",
+		"description": "Used in the alt tag for the image avatar of a contact"
+	},
+	"documentsEmptyState": {
+		"message": "You don’t have any documents in this conversation",
+		"description": "Message shown to user in the media gallery when there are no messages with document attachments (anything other than images or video)"
+	},
+	"fileIconAlt": {
+		"message": "File icon",
+		"description": "Used in the media gallery documents tab to visually represent a file"
+	},
+	"email": {
+		"message": "ایمیل",
+		"description": "Generic label shown if contact email has custom type but no label"
+	},
+	"importErrorSecond": {
+		"message": "If these steps don't work for you, please submit a debug log (View -> Debug Log) so that we can help you get migrated!",
+		"description": "Message shown if the import went wrong; second paragraph"
 	}
 }

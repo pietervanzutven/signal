@@ -21,6 +21,10 @@
     }
 
     stop() {
+      if (!this.handle) {
+        return;
+      }
+
       console.log('Stop idle detector');
       this._clearScheduledCallbacks();
     }
@@ -28,10 +32,12 @@
     _clearScheduledCallbacks() {
       if (this.handle) {
         cancelIdleCallback(this.handle);
+        this.handle = null;
       }
 
       if (this.timeoutId) {
         clearTimeout(this.timeoutId);
+        this.timeoutId = null;
       }
     }
 
@@ -41,13 +47,13 @@
         const { didTimeout } = deadline;
         const timeRemaining = deadline.timeRemaining();
         const isIdle = timeRemaining >= IDLE_THRESHOLD_MS;
-        if (isIdle || didTimeout) {
-          this.emit('idle', { timestamp: Date.now(), didTimeout, timeRemaining });
-        }
         this.timeoutId = setTimeout(
           () => this._scheduleNextCallback(),
           POLL_INTERVAL_MS
         );
+        if (isIdle || didTimeout) {
+          this.emit('idle', { timestamp: Date.now(), didTimeout, timeRemaining });
+        }
       });
     }
   }

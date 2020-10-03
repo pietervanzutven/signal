@@ -16,7 +16,7 @@
   const Startup = window.startup;
   const Util = window.ts.util;
   const Metadata = window.metadata.SecretSessionCipher;
-    
+
   // Components
   const {
     ContactDetail,
@@ -61,32 +61,23 @@
   const { IdleDetector } = window.idle_detector;
   const MessageDataMigrator = window.messages_data_migrator;
 
-  exports.setup = (options = {}) => {
-    const { Attachments, userDataPath, getRegionCode } = options;
-
-    const Components = {
-      ContactDetail,
-      ContactName,
-      ConversationTitle,
-      EmbeddedContact,
-      Emojify,
-      Lightbox,
-      LightboxGallery,
-      MediaGallery,
-      MessageBody,
-      Types: {
-        Message: MediaGalleryMessage,
-      },
-      Quote,
-    };
+  function initializeMigrations({
+    Attachments,
+    userDataPath,
+    Type,
+    getRegionCode,
+  }) {
+    if (!Attachments) {
+      return null;
+    }
 
     const attachmentsPath = Attachments.getPath(userDataPath);
     const readAttachmentData = Attachments.createReader(attachmentsPath);
-    const loadAttachmentData = AttachmentType.loadData(readAttachmentData);
+    const loadAttachmentData = Type.loadData(readAttachmentData);
 
-    const Migrations = {
+    return {
       attachmentsPath,
-      deleteAttachmentData: AttachmentType.deleteData(
+      deleteAttachmentData: Type.deleteData(
         Attachments.createDeleter(attachmentsPath)
       ),
       getAbsoluteAttachmentPath: Attachments.createAbsolutePathGetter(
@@ -105,6 +96,33 @@
       writeMessageAttachments: Message.createAttachmentDataWriter(
         Attachments.createWriterForExisting(attachmentsPath)
       ),
+    };
+  }
+
+  exports.setup = (options = {}) => {
+    const { Attachments, userDataPath, getRegionCode } = options;
+
+    const Migrations = initializeMigrations({
+      Attachments,
+      userDataPath,
+      Type: AttachmentType,
+      getRegionCode,
+    });
+
+    const Components = {
+      ContactDetail,
+      ContactName,
+      ConversationTitle,
+      EmbeddedContact,
+      Emojify,
+      Lightbox,
+      LightboxGallery,
+      MediaGallery,
+      MessageBody,
+      Types: {
+        Message: MediaGalleryMessage,
+      },
+      Quote,
     };
 
     const Types = {

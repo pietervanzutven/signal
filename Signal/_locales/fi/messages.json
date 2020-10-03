@@ -239,18 +239,6 @@
 		"message": "valitsemasi kansio",
 		"description": "Message shown as the export location if we didn't capture the target directory"
 	},
-	"verifyContact": {
-		"message": "Saatat haluta $tag_start$ varmentaa $tag_end$ turvanumerosi tämän yhteystiedon kanssa.",
-		"description": "Use $tag_start$ and $tag_end$ to wrap the word or phrase in this sentence that the user should click on in order to navigate to the verification screen. These placeholders will be replaced with appropriate HTML code.",
-		"placeholders": {
-			"tag_start": {
-				"content": "<a class='verify' href='#'>"
-			},
-			"tag_end": {
-				"content": "</a>"
-			}
-		}
-	},
 	"changedRecently": {
 		"message": "Turvanumerosi yhteystiedon $name$ kanssa on vaihtunut hiljattain. Tämä voi tarkoittaa joko sitä, että joku yrittää kaapata viestiliikennettänne, tai sitä, että $name$ on yksinkertaisesti uudelleenasentanut Signalin.",
 		"description": "Shown on confirmation dialog when user attempts to send a message",
@@ -1081,10 +1069,6 @@
 			}
 		}
 	},
-	"messageCaption": {
-		"message": "Viestin kuvaus",
-		"description": "Prefix of attachment alt tags in the media gallery"
-	},
 	"deleteAllDataButton": {
 		"message": "Poista kaikki tiedot",
 		"description": "Text of the button that deletes all data"
@@ -1206,5 +1190,99 @@
 	"audio": {
 		"message": "Äänitiedosto",
 		"description": "Shown in a quotation of a message containing an audio attachment if no text was originally provided with that attachment"
+	},
+	"address": {
+		"message": "osoite",
+		"description": "Generic label shown if contact address has custom type but no label"
+	},
+	"you": {
+		"message": "Sinä",
+		"description": "In Android theme, shown in quote if you or someone else replies to you"
+	},
+	"poBox": {
+		"message": "Postilokero",
+		"description": "When rendering an address, used to provide context to a post office box"
+	},
+	"phone": {
+		"message": "puhelin",
+		"description": "Generic label shown if contact phone has custom type but no label"
+	},
+	"sendMessageToContact": {
+		"message": "Lähetä viesti",
+		"description": "Shown when you are sent a contact and that contact has a signal account"
+	},
+	"emojiAlt": {
+		"message": "Emoji kuva: '$title$'",
+		"description": "Used in the alt tag of all emoji images",
+		"placeholders": {
+			"title": {
+				"content": "$1",
+				"example": "grinning"
+			}
+		}
+	},
+	"quoteThumbnailAlt": {
+		"message": "Lainatun kuvaviestin pikkukuva",
+		"description": "Used in alt tag of thumbnail images inside of an embedded message quote"
+	},
+	"mediaEmptyState": {
+		"message": "Tässä keskustelussa ei ole yhtään dokumenttia",
+		"description": "Message shown to user in the media gallery when there are no messages with media attachments (images or video)"
+	},
+	"notificationMostRecentFrom": {
+		"message": "Viimeisimmät yhteystiedolta:",
+		"description": "Displayed in notifications when setting is 'name only' and more than one message is waiting"
+	},
+	"importErrorFirst": {
+		"message": "Varmista, että ole valinnut oikean hakemiston, joka sisältää Signalin tiedot. Hakemiston nimen tulisi alkaa sanoilla \"Signal Export\". Voit myös tallentaa uuden kopion tiedoistasi Signalin Chrome-sovelluksen kautta.",
+		"description": "Message shown if the import went wrong; first paragraph"
+	},
+	"work": {
+		"message": "työ",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"home": {
+		"message": "koti",
+		"description": "Shown on contact detail screen as a label for an address/phone/email"
+	},
+	"notificationMostRecent": {
+		"message": "Viimeisimmät:",
+		"description": "Displayed in notifications when setting is 'name and message' and more than one message is waiting"
+	},
+	"privacyPolicy": {
+		"message": "Käyttöehdot ja tietosuoja",
+		"description": "Shown in the about box for the link to https://signal.org/legal"
+	},
+	"lightboxImageAlt": {
+		"message": "Lähetetty kuva",
+		"description": "Used in the alt tag for the image shown in a full-screen lightbox view"
+	},
+	"mobile": {
+		"message": "matkapuh.",
+		"description": "Shown on contact detail screen as a label for aa phone or email"
+	},
+	"notificationFrom": {
+		"message": "Yhteystiedolta:",
+		"description": "Displayed in notifications when setting is 'name only' and one message is waiting"
+	},
+	"contactAvatarAlt": {
+		"message": "Yhteystiedon kuva",
+		"description": "Used in the alt tag for the image avatar of a contact"
+	},
+	"documentsEmptyState": {
+		"message": "Tässä keskustelussa ei ole yhtään tiedostoa",
+		"description": "Message shown to user in the media gallery when there are no messages with document attachments (anything other than images or video)"
+	},
+	"fileIconAlt": {
+		"message": "Tiedoston ikoni",
+		"description": "Used in the media gallery documents tab to visually represent a file"
+	},
+	"email": {
+		"message": "s-posti",
+		"description": "Generic label shown if contact email has custom type but no label"
+	},
+	"importErrorSecond": {
+		"message": "Jos nämä ohjeet eivät toimineet, lähetä meille virheenkorjausloki (Näytä -> Virheenkorjausloki) jotta voimme auttaa sinua siirtymisessä!",
+		"description": "Message shown if the import went wrong; second paragraph"
 	}
 }
