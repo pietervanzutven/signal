@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    
+
     const ipcRenderer = window.top.ipc;
     const url = window.top.url;
     const i18n = window.top.modules.i18n;
@@ -9,6 +9,7 @@
     const { locale } = config;
     const localeMessages = ipcRenderer.sendSync('locale-data');
 
+    window.theme = config.theme;
     window.i18n = i18n.setup(locale, localeMessages);
 
     window.getUWPVersion = () => config.uwp_version;

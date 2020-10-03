@@ -406,6 +406,7 @@
     <Content Include="node_modules\jquery\dist\jquery.js" />
     <Content Include="node_modules\lodash\compact.js" />
     <Content Include="node_modules\lodash\groupBy.js" />
+    <Content Include="node_modules\pify\index.js" />
     <Content Include="node_modules\punycode\punycode.js" />
     <Content Include="node_modules\querystring\decode.js" />
     <Content Include="node_modules\querystring\encode.js" />

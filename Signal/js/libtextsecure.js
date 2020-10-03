@@ -38874,7 +38874,7 @@ MessageReceiver.prototype.extend({
       .catch(error => {
         let errorToThrow = error;
 
-        if (error.message === 'Unknown identity key') {
+        if (error && error.message === 'Unknown identity key') {
           // create an error that the UI will pick up and ask the
           // user if they want to re-negotiate
           const buffer = dcodeIO.ByteBuffer.wrap(ciphertext);

@@ -30,6 +30,7 @@
 
   window.wrapDeferred = deferredToPromise;
 
+  const ipc = window.ipc;
   const localeMessages = ipc.sendSync('locale-data');
 
   window.setBadgeCount = count => ipc.send('set-badge-count', count);
@@ -62,14 +63,6 @@
 
   window.updateTrayIcon = unreadCount =>
     ipc.send('update-tray-icon', unreadCount);
-
-  ipc.on('debug-log', () => {
-    Whisper.events.trigger('showDebugLog');
-  });
-
-  ipc.on('backup', () => {
-    Whisper.events.trigger('showBackupScreen');
-  });
 
   ipc.on('set-up-with-import', () => {
     Whisper.events.trigger('setupWithImport');
