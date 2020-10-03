@@ -130,7 +130,7 @@
       },
       getHideMenuBar: () => storage.get('hide-menu-bar'),
       setHideMenuBar: value => {
-        storage.get('hide-menu-bar', value);
+        storage.put('hide-menu-bar', value);
         window.setAutoHideMenuBar(value);
         window.setMenuBarVisibility(!value);
       },
@@ -138,7 +138,7 @@
       getNotificationSetting: () =>
         storage.get('notification-setting', 'message'),
       setNotificationSetting: value =>
-        storage.get('notification-setting', value),
+        storage.put('notification-setting', value),
       getAudioNotification: () => storage.get('audio-notification'),
       setAudioNotification: value => storage.put('audio-notification', value),
 
