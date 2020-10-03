@@ -2730,492 +2730,104 @@ span.status {
         background-repeat: no-repeat;
         background-position: center center; }
 
-.ios #header {
-  height: 64px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  border-width: 0 1px 1px 0;
-  background-color: #f3f3f3;
-  color: #454545; }
-  .ios #header h1 {
-    display: none; }
-
-.ios .gutter {
-  border-right: 1px solid rgba(0, 0, 0, 0.1); }
-  .ios .gutter .content {
-    height: calc(100% - 64px);
-    background: rgba(0, 0, 0, 0.1); }
-  .ios .gutter .contact {
-    background: #f3f3f3;
-    margin-right: 0; }
-    .ios .gutter .contact.selected {
-      background: #2090ea;
-      color: white; }
-      .ios .gutter .contact.selected .last-timestamp {
-        color: white; }
-
-.ios .banner {
-  top: 15px; }
-
-.ios .tool-bar {
-  float: left;
-  padding: 15px; }
-
-.ios input[type='text']:active,
-.ios input[type='text']:focus,
-.ios input[type='search']:active,
-.ios input[type='search']:focus,
-.ios input[type='search'].active,
-.ios form.active {
-  outline-offset: 0;
-  outline: -webkit-focus-ring-color auto 5px; }
-
-.ios input.search {
-  border-radius: 5px;
-  width: 220px;
-  height: 34px;
-  padding-left: 30px;
-  line-height: 34px;
-  background-color: #dddddd; }
-  .ios input.search.active.rtl {
-    background-position: left 30px center; }
-
-.ios .conversation-header {
-  background-color: #f3f3f3;
-  color: #454545;
-  border-color: rgba(0, 0, 0, 0.05);
-  text-align: left;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 1; }
-  .ios .conversation-header .conversation-title {
-    line-height: 64px; }
-    .ios .conversation-header .conversation-title .verified-icon {
-      background-image: url("../images/verified-check_FF454545.svg");
-      background-size: 100%;
-      background-repeat: no-repeat;
-      background-position: center center; }
-  .ios .conversation-header .avatar {
-    display: none; }
-
-.ios .conversation .panel,
-.ios .conversation .react-wrapper {
-  position: absolute;
-  top: 64px;
-  bottom: 0;
-  width: 100%; }
-
-.ios .settings h3,
-.ios .menu-list li {
-  text-transform: capitalize; }
-
-.ios .bottom-bar {
-  padding: 15px;
-  min-height: 30px;
-  border-top: 1px solid rgba(0, 0, 0, 0.1); }
-  .ios .bottom-bar form.send {
-    border-radius: 5px;
-    border: 1px solid rgba(0, 0, 0, 0.1); }
-
-.ios .error-message.content,
-.ios .control .content {
-  padding: 10px; }
-
-.ios .message-container .bubble .content,
-.ios .message-list .bubble .content {
-  margin-top: 0px; }
-
-.ios .embedded-contact {
-  margin: 0;
-  color: white; }
-  .ios .embedded-contact .first-line {
-    margin: 0;
-    padding: 10px; }
-    .ios .embedded-contact .first-line .text-container .contact-name {
-      color: white; }
-  .ios .embedded-contact .send-message {
-    font-weight: normal;
-    border-bottom: none;
-    margin-top: 0;
-    color: white; }
-    .ios .embedded-contact .send-message .bubble-icon {
-      background-image: url("../images/chat-bubble-outline_FFFFFFFF.svg");
-      background-size: 100%;
-      background-repeat: no-repeat;
-      background-position: center center; }
-
-.ios .incoming .embedded-contact {
-  color: black; }
-  .ios .incoming .embedded-contact .first-line .text-container .contact-name {
-    color: #2090ea; }
-  .ios .incoming .embedded-contact .send-message {
-    color: #2090ea; }
-    .ios .incoming .embedded-contact .send-message .bubble-icon {
-      background-image: url("../images/chat-bubble-outline_FF2090EA.svg");
-      background-size: 100%;
-      background-repeat: no-repeat;
-      background-position: center center; }
-
-.ios .embedded-contact + .content {
-  border-bottom: 1px solid white; }
-
-.ios .quoted-message {
-  background-color: white !important;
-  border: none !important;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
-  margin-top: 0px !important;
-  margin-bottom: 0px;
-  margin-left: 0px;
-  margin-right: 0px; }
-  .ios .quoted-message .primary {
-    padding: 10px; }
-    .ios .quoted-message .primary .text,
-    .ios .quoted-message .primary .filename-label,
-    .ios .quoted-message .primary .type-label {
-      border-left: 2px solid #bdbdbd;
-      padding: 5px;
-      padding-left: 7px;
-      padding-bottom: 2px;
-      color: black; }
-      .ios .quoted-message .primary .text a,
-      .ios .quoted-message .primary .filename-label a,
-      .ios .quoted-message .primary .type-label a {
-        color: #2090ea; }
-    .ios .quoted-message .primary .author {
-      display: none; }
-    .ios .quoted-message .primary .ios-label {
-      display: block;
-      color: #bdbdbd;
-      font-size: smaller;
-      margin-bottom: 3px; }
-  .ios .quoted-message .icon-container {
-    height: 61px;
-    width: 61px;
-    min-width: 61px; }
-    .ios .quoted-message .icon-container .circle-background {
-      left: 12px;
-      right: 12px;
-      top: 12px;
-      bottom: 12px;
-      background-color: #2090ea !important; }
-    .ios .quoted-message .icon-container .icon {
-      left: 18px;
-      right: 18px;
-      top: 18px;
-      bottom: 18px;
-      background-color: white !important; }
-    .ios .quoted-message .icon-container .inner {
-      padding: 12px;
-      height: 61px;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center; }
-  .ios .quoted-message .close-container {
-    flex: initial;
-    min-width: 32px;
-    width: 32px;
-    height: 50px;
-    position: relative;
-    top: auto;
-    right: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    -webkit-mask: none;
-    background: none; }
-    .ios .quoted-message .close-container .close-button {
-      height: 20px;
-      width: 20px;
-      background-image: url("../images/close-circle_FF8D8D8D.svg");
-      background-size: 100%;
-      background-repeat: no-repeat;
-      background-position: center center; }
-  .ios .quoted-message .from-me .primary .text,
-  .ios .quoted-message .from-me .primary .filename-label,
-  .ios .quoted-message .from-me .primary .type-label {
-    border-left: 2px solid #2090ea; }
-
-.ios .incoming .quoted-message {
-  border-bottom: 1px solid lightgray !important; }
-
-.ios .quoted-message.from-me .primary .text,
-.ios .quoted-message.from-me .primary .filename-label,
-.ios .quoted-message.from-me .primary .type-label {
-  border-left: 2px solid #2090ea; }
-
-.ios .outgoing .quoted-message,
-.ios .private .incoming .quoted-message {
-  margin-top: 0px; }
-
-.ios .outgoing .quoted-message .icon-container .circle-background {
-  background-color: lightgray !important; }
-
-.ios .bottom-bar .quote-wrapper {
-  margin-right: 0px;
-  margin-bottom: 15px; }
-
-.ios .bottom-bar .quoted-message {
-  background: none !important;
-  border-radius: 0; }
-  .ios .bottom-bar .quoted-message .primary {
-    padding: 0px; }
-    .ios .bottom-bar .quoted-message .primary .ios-label {
-      color: #8d8d8d; }
-  .ios .bottom-bar .quoted-message .icon-container {
-    height: 50px;
-    width: 50px;
-    min-width: 50px; }
-    .ios .bottom-bar .quoted-message .icon-container .circle-background {
-      left: 6px;
-      right: 6px;
-      top: 6px;
-      bottom: 6px;
-      background-color: #2090ea !important; }
-    .ios .bottom-bar .quoted-message .icon-container .icon {
-      left: 12px;
-      right: 12px;
-      top: 12px;
-      bottom: 12px; }
-    .ios .bottom-bar .quoted-message .icon-container .inner {
-      padding: 0px;
-      height: 50px; }
-
-.ios .attachments .bubbled {
-  border-radius: 15px;
-  padding: 10px;
-  padding-top: 0px;
-  padding-bottom: 5px;
-  position: relative; }
-  .ios .attachments .bubbled video,
-  .ios .attachments .bubbled audio {
-    margin-bottom: 5px; }
-
-.ios .tail-wrapper {
-  margin-bottom: 5px; }
-
-.ios .inner-bubble {
-  border-radius: 15px;
-  overflow: hidden; }
-  .ios .inner-bubble .body {
-    margin-top: 0;
-    display: inline-block;
-    padding: 10px;
-    position: relative;
-    word-break: break-word; }
-
-.ios .tail-wrapper.with-tail {
-  position: relative; }
-  .ios .tail-wrapper.with-tail:before, .ios .tail-wrapper.with-tail:after {
-      content: '';
-      display: block;
-      border-radius: 20px;
-      position: absolute;
-      width: 10px; }
-  .ios .tail-wrapper.with-tail:before {
-      right: -1px;
-      bottom: -3px;
-      height: 10px;
-      border-radius: 20px;
-      background: #2090ea; }
-  .ios .tail-wrapper.with-tail:after {
-      height: 11px;
-      right: -6px;
-      bottom: -3px;
-      background: #eee; }
-
-.ios .meta {
-  clear: both; }
-
-.ios .outgoing .tail-wrapper {
-  float: right; }
-  .ios .outgoing .tail-wrapper .inner-bubble {
-  max-width: 100%; }
-
-.ios .incoming .tail-wrapper {
-  float: left; }
-  .ios .incoming .tail-wrapper .inner-bubble {
-  max-width: 100%; }
-
-.ios .outgoing .tail-wrapper .inner-bubble {
-      background-color: #2090ea; }
-
-.ios .outgoing .tail-wrapper,
-.ios .outgoing .tail-wrapper .body,
-.ios .outgoing .tail-wrapper a {
-      color: white; }
-  .ios .outgoing .tail-wrapper::selection,
-  .ios .outgoing .tail-wrapper .body::selection,
-  .ios .outgoing .tail-wrapper a::selection {
-        background: white;
-        color: #454545; }
-
-.ios .incoming .tail-wrapper.with-tail:before {
-    left: -1px;
-    background-color: white; }
-
-.ios .incoming .tail-wrapper.with-tail:after {
-    left: -6px; }
-
-.ios .incoming .tail-wrapper .inner-bubble {
-  background-color: white;
-  color: black; }
-
-.ios .outgoing .attachments .fileView .icon {
-  background-image: url("../images/file_FFFFFFFF.svg");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center; }
-  .ios .outgoing .attachments .fileView .icon.audio {
-    background-image: url("../images/audio_FFFFFFFF.svg");
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: center center; }
-  .ios .outgoing .attachments .fileView .icon.video {
-    background-image: url("../images/video_FFFFFFFF.svg");
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: center center; }
-  .ios .outgoing .attachments .fileView .icon.voice {
-    background-image: url("../images/voice_FFFFFFFF.svg");
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: center center; }
-
-  .ios .attachment a {
-    border-radius: 15px; }
-
-.ios .attachment img {
-  margin-right: auto;
-  margin-left: auto; }
-
-.ios .hourglass {
-  display: inline-block;
-  position: relative;
-  background-image: url("../images/hourglass_full_00000000.svg");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: 100%; }
-  .ios .hourglass,
-  .ios .hourglass .sand, .ios .hourglass:before, .ios .hourglass:after {
-    width: 13px;
-    height: 11px; }
-  .ios .hourglass .sand, .ios .hourglass:before, .ios .hourglass:after {
-    content: '';
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    left: 0; }
-  .ios .hourglass .sand {
-    background: #999; }
-  .ios .hourglass:after {
-    background-image: url("../images/hourglass_empty_FF999999.svg");
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: center center; }
-
-.android #header {
+.light-theme #header {
   background-color: #2090ea;
   color: white;
   transition: background-color 0.5s; }
-  .android #header.inactive {
+  .light-theme #header.inactive {
     background-color: #f3f3f3;
     color: #454545; }
 
-.android .contact-details .name {
+.light-theme .contact-details .name {
   font-weight: 400; }
 
-.android .conversation.placeholder .conversation-header {
+.light-theme .conversation.placeholder .conversation-header {
   display: none; }
 
-.android .conversation-header.red,
-.android .bubble.red {
+.light-theme .conversation-header.red,
+.light-theme .bubble.red {
   background-color: #ef5350; }
 
-.android .conversation-header.pink,
-.android .bubble.pink {
+.light-theme .conversation-header.pink,
+.light-theme .bubble.pink {
   background-color: #ec407a; }
 
-.android .conversation-header.purple,
-.android .bubble.purple {
+.light-theme .conversation-header.purple,
+.light-theme .bubble.purple {
   background-color: #ab47bc; }
 
-.android .conversation-header.deep_purple,
-.android .bubble.deep_purple {
+.light-theme .conversation-header.deep_purple,
+.light-theme .bubble.deep_purple {
   background-color: #7e57c2; }
 
-.android .conversation-header.indigo,
-.android .bubble.indigo {
+.light-theme .conversation-header.indigo,
+.light-theme .bubble.indigo {
   background-color: #5c6bc0; }
 
-.android .conversation-header.blue,
-.android .bubble.blue {
+.light-theme .conversation-header.blue,
+.light-theme .bubble.blue {
   background-color: #2196f3; }
 
-.android .conversation-header.light_blue,
-.android .bubble.light_blue {
+.light-theme .conversation-header.light_blue,
+.light-theme .bubble.light_blue {
   background-color: #03a9f4; }
 
-.android .conversation-header.cyan,
-.android .bubble.cyan {
+.light-theme .conversation-header.cyan,
+.light-theme .bubble.cyan {
   background-color: #00bcd4; }
 
-.android .conversation-header.teal,
-.android .bubble.teal {
+.light-theme .conversation-header.teal,
+.light-theme .bubble.teal {
   background-color: #009688; }
 
-.android .conversation-header.green,
-.android .bubble.green {
+.light-theme .conversation-header.green,
+.light-theme .bubble.green {
   background-color: #4caf50; }
 
-.android .conversation-header.light_green,
-.android .bubble.light_green {
+.light-theme .conversation-header.light_green,
+.light-theme .bubble.light_green {
   background-color: #7cb342; }
 
-.android .conversation-header.orange,
-.android .bubble.orange {
+.light-theme .conversation-header.orange,
+.light-theme .bubble.orange {
   background-color: #ff9800; }
 
-.android .conversation-header.deep_orange,
-.android .bubble.deep_orange {
+.light-theme .conversation-header.deep_orange,
+.light-theme .bubble.deep_orange {
   background-color: #ff5722; }
 
-.android .conversation-header.amber,
-.android .bubble.amber {
+.light-theme .conversation-header.amber,
+.light-theme .bubble.amber {
   background-color: #ffb300; }
 
-.android .conversation-header.blue_grey,
-.android .bubble.blue_grey {
+.light-theme .conversation-header.blue_grey,
+.light-theme .bubble.blue_grey {
   background-color: #607d8b; }
 
-.android .conversation-header.grey,
-.android .bubble.grey {
+.light-theme .conversation-header.grey,
+.light-theme .bubble.grey {
   background-color: #999999; }
 
-.android .conversation-header.brown, 
-.android .bubble.brown {
+.light-theme .conversation-header.brown, 
+.light-theme .bubble.brown {
   background-color: #746c53; }
 
-.android .conversation-header.default,
-.android .bubble.default {
+.light-theme .conversation-header.default,
+.light-theme .bubble.default {
   background-color: #2090ea; }
 
-.android .bottom-bar {
+.light-theme .bottom-bar {
   min-height: 10px; }
 
-.android .bubble {
+.light-theme .bubble {
   padding: 9px 12px;
   border-radius: 5px;
   box-shadow: 0 3px 3px -4px black; }
 
-.android .outgoing .bubble {
+.light-theme .outgoing .bubble {
   background-color: white; }
 
-.android .outgoing .hourglass {
+.light-theme .outgoing .hourglass {
   display: inline-block;
   position: relative;
   background-image: url("../images/hourglass_full_00000000.svg");
@@ -3223,25 +2835,25 @@ span.status {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 100%; }
-  .android .outgoing .hourglass,
-  .android .outgoing .hourglass .sand, .android .outgoing .hourglass:before, .android .outgoing .hourglass:after {
+  .light-theme .outgoing .hourglass,
+  .light-theme .outgoing .hourglass .sand, .light-theme .outgoing .hourglass:before, .light-theme .outgoing .hourglass:after {
     width: 13px;
     height: 11px; }
-  .android .outgoing .hourglass .sand, .android .outgoing .hourglass:before, .android .outgoing .hourglass:after {
+  .light-theme .outgoing .hourglass .sand, .light-theme .outgoing .hourglass:before, .light-theme .outgoing .hourglass:after {
     content: '';
     display: inline-block;
     position: absolute;
     top: 0;
     left: 0; }
-  .android .outgoing .hourglass .sand {
+  .light-theme .outgoing .hourglass .sand {
     background: #999; }
-  .android .outgoing .hourglass:after {
+  .light-theme .outgoing .hourglass:after {
     background-image: url("../images/hourglass_empty_FF999999.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
-.android .incoming .hourglass {
+.light-theme .incoming .hourglass {
   display: inline-block;
   position: relative;
   background-image: url("../images/hourglass_full_00000000.svg");
@@ -3249,333 +2861,329 @@ span.status {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 100%; }
-  .android .incoming .hourglass,
-  .android .incoming .hourglass .sand, .android .incoming .hourglass:before, .android .incoming .hourglass:after {
+  .light-theme .incoming .hourglass,
+  .light-theme .incoming .hourglass .sand, .light-theme .incoming .hourglass:before, .light-theme .incoming .hourglass:after {
     width: 13px;
     height: 11px; }
-  .android .incoming .hourglass .sand, .android .incoming .hourglass:before, .android .incoming .hourglass:after {
+  .light-theme .incoming .hourglass .sand, .light-theme .incoming .hourglass:before, .light-theme .incoming .hourglass:after {
     content: '';
     display: inline-block;
     position: absolute;
     top: 0;
     left: 0; }
-  .android .incoming .hourglass .sand {
+  .light-theme .incoming .hourglass .sand {
     background: #fff; }
-  .android .incoming .hourglass:after {
+  .light-theme .incoming .hourglass:after {
     background-image: url("../images/hourglass_empty_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
-.android .incoming .bubble .sender,
-.android .incoming .bubble .content,
-.android .incoming .bubble .body,
-.android .incoming .bubble .meta,
-.android .incoming .bubble a,
-.android .incoming .bubble .fileView {
+.light-theme .incoming .bubble .sender,
+.light-theme .incoming .bubble .content,
+.light-theme .incoming .bubble .body,
+.light-theme .incoming .bubble .meta,
+.light-theme .incoming .bubble a,
+.light-theme .incoming .bubble .fileView {
   color: white; }
-  .android .incoming .bubble .sender::selection,
-  .android .incoming .bubble .content::selection,
-  .android .incoming .bubble .body::selection,
-  .android .incoming .bubble .meta::selection,
-  .android .incoming .bubble a::selection,
-  .android .incoming .bubble .fileView::selection {
+  .light-theme .incoming .bubble .sender::selection,
+  .light-theme .incoming .bubble .content::selection,
+  .light-theme .incoming .bubble .body::selection,
+  .light-theme .incoming .bubble .meta::selection,
+  .light-theme .incoming .bubble a::selection,
+  .light-theme .incoming .bubble .fileView::selection {
     background: white;
     color: #454545; }
 
-.android .incoming .bubble .attachments a,
-.android .incoming .bubble .content a {
+.light-theme .incoming .bubble .attachments a,
+.light-theme .incoming .bubble .content a {
   color: #f3f3f3; }
 
-.android .incoming .bubble .fileView .icon {
+.light-theme .incoming .bubble .fileView .icon {
   background-image: url("../images/file_FFFFFFFF.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
-  .android .incoming .bubble .fileView .icon.audio {
+  .light-theme .incoming .bubble .fileView .icon.audio {
     background-image: url("../images/audio_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-  .android .incoming .bubble .fileView .icon.video {
+  .light-theme .incoming .bubble .fileView .icon.video {
     background-image: url("../images/video_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-  .android .incoming .bubble .fileView .icon.voice {
+  .light-theme .incoming .bubble .fileView .icon.voice {
     background-image: url("../images/voice_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
-.android button.clock {
+.light-theme button.clock {
   background-image: url("../images/clock_CCFFFFFF.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
-  .android button.clock:focus, .android button.clock:hover {
+  .light-theme button.clock:focus, .light-theme button.clock:hover {
     background-image: url("../images/clock_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
-.android .inactive button.clock {
+.light-theme .inactive button.clock {
   background-image: url("../images/clock_80000000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
-  .android .inactive button.clock:focus, .android .inactive button.clock:hover {
+  .light-theme .inactive button.clock:focus, .light-theme .inactive button.clock:hover {
     background-image: url("../images/clock_FF000000.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
-.android button.hamburger {
+.light-theme button.hamburger {
   background-image: url("../images/menu_CCFFFFFF.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
-  .android button.hamburger:focus, .android button.hamburger:hover {
+  .light-theme button.hamburger:focus, .light-theme button.hamburger:hover {
     background-image: url("../images/menu_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
-.android .inactive button.hamburger {
+.light-theme .inactive button.hamburger {
   background-image: url("../images/menu_80000000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
-  .android .inactive button.hamburger:focus, .android .inactive button.hamburger:hover {
+  .light-theme .inactive button.hamburger:focus, .light-theme .inactive button.hamburger:hover {
     background-image: url("../images/menu_FF000000.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
-.android button.back {
+.light-theme button.back {
   background-image: url("../images/back_CCFFFFFF.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
-  .android button.back:focus, .android button.back:hover {
+  .light-theme button.back:focus, .light-theme button.back:hover {
     background-image: url("../images/back_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
-.android .inactive button.back {
+.light-theme .inactive button.back {
   background-image: url("../images/back_80000000.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
-  .android .inactive button.back:focus, .android .inactive button.back:hover {
+  .light-theme .inactive button.back:focus, .light-theme .inactive button.back:hover {
     background-image: url("../images/back_FF000000.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
 
-body.android-dark {
+body.dark-theme {
   background-color: #333333; }
 
-.android-dark {
+.dark-theme {
   color: #cccccc; }
-  .android-dark .app-loading-screen {
+  .dark-theme .app-loading-screen {
     background-color: #333333; }
-  .android-dark .gutter .content {
+  .dark-theme .gutter .content {
     background-color: #333333; }
-  .android-dark a {
+  .dark-theme a {
     color: #57a5e5; }
-  .android-dark hr {
+  .dark-theme hr {
     border-color: #333333; }
-  .android-dark .expiredAlert {
+  .dark-theme .expiredAlert {
     color: #333333; }
-    .android-dark .expiredAlert button {
+    .dark-theme .expiredAlert button {
       color: #333333; }
-  .android-dark #header {
+  .dark-theme #header {
     background-color: #292929;
     color: white;
     transition: background-color 0.5s; }
-    .android-dark #header.inactive {
+    .dark-theme #header.inactive {
       background-color: #333333;
       color: #cccccc; }
-  .android-dark .confirmation-dialog .content .buttons button {
+  .dark-theme .confirmation-dialog .content .buttons button {
     background-color: #ccc;
     border: 1px solid #292929; }
-    .android-dark .confirmation-dialog .content .buttons button:hover {
+    .dark-theme .confirmation-dialog .content .buttons button:hover {
       background-color: #b8b8b8; }
-  .android-dark .message-detail,
-  .android-dark .message-container,
-  .android-dark .conversation,
-  .android-dark .discussion-container {
+  .dark-theme .message-detail,
+  .dark-theme .message-container,
+  .dark-theme .conversation,
+  .dark-theme .discussion-container {
     background-color: #171717; }
-  .android-dark .modal .content {
+  .dark-theme .modal .content {
     background-color: #333333; }
-  .android-dark .lightbox .content {
+  .dark-theme .lightbox .content {
     background-color: transparent; }
-  .android-dark .key-verification .key {
+  .dark-theme .key-verification .key {
     background-color: #030303;
     border-color: #292929; }
-  .android-dark .key-verification .icon.verified {
+  .dark-theme .key-verification .icon.verified {
     background-image: url("../images/verified-check_FFCCCCCC.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-  .android-dark .key-verification .icon.shield {
+  .dark-theme .key-verification .icon.shield {
     background-image: url("../images/shield_FFCCCCCC.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-  .android-dark .menu-list {
+  .dark-theme .menu-list {
     background-color: #292929;
     color: #cccccc; }
-    .android-dark .menu-list li:hover {
+    .dark-theme .menu-list li:hover {
       background-color: #333333; }
-  .android-dark .content textarea {
+  .dark-theme .content textarea {
     background-color: #171717;
     border-width: 0px;
     color: white; }
-    .android-dark .content textarea::selection {
+    .dark-theme .content textarea::selection {
       background: white;
       color: #454545; }
-  .android-dark .flex {
+  .dark-theme .flex {
     background-color: #171717; }
-    .android-dark .flex .send-message {
+    .dark-theme .flex .send-message {
       background-color: #171717;
       color: #cccccc; }
-  .android-dark .contact-details .name {
+  .dark-theme .contact-details .name {
     font-weight: 400; }
-  .android-dark .contact-details .number {
+  .dark-theme .contact-details .number {
     color: #807f7f; }
-    .android-dark .contact-details .number .verified-icon {
+    .dark-theme .contact-details .number .verified-icon {
       background-image: url("../images/verified-check_FF807F7F.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-  .android-dark .group-member-list .members .contact,
-  .android-dark .new-group-update .members .contact,
-  .android-dark .attachment-previews img {
+  .dark-theme .group-member-list .members .contact,
+  .dark-theme .new-group-update .members .contact,
+  .dark-theme .attachment-previews img {
     background-color: #171717;
     border-color: #333333; }
-  .android-dark .conversation.placeholder .conversation-header {
+  .dark-theme .conversation.placeholder .conversation-header {
     display: none; }
-  .android-dark .conversation .conversation-loading-screen {
+  .dark-theme .conversation .conversation-loading-screen {
     background-color: #171717; }
-  .android-dark .avatar.red,
-  .android-dark .conversation-header.red,
-  .android-dark .bubble.red {
+  .dark-theme .avatar.red,
+  .dark-theme .conversation-header.red,
+  .dark-theme .bubble.red {
     background-color: #d32f2f; }
-  .android-dark .avatar.pink,
-  .android-dark .conversation-header.pink,
-  .android-dark .bubble.pink {
+  .dark-theme .avatar.pink,
+  .dark-theme .conversation-header.pink,
+  .dark-theme .bubble.pink {
     background-color: #c2185b; }
-  .android-dark .avatar.purple,
-  .android-dark .conversation-header.purple,
-  .android-dark .bubble.purple {
+  .dark-theme .avatar.purple,
+  .dark-theme .conversation-header.purple,
+  .dark-theme .bubble.purple {
     background-color: #7b1fa2; }
-  .android-dark .avatar.deep_purple,
-  .android-dark .conversation-header.deep_purple,
-  .android-dark .bubble.deep_purple {
+  .dark-theme .avatar.deep_purple,
+  .dark-theme .conversation-header.deep_purple,
+  .dark-theme .bubble.deep_purple {
     background-color: #512da8; }
-  .android-dark .avatar.indigo,
-  .android-dark .conversation-header.indigo,
-  .android-dark .bubble.indigo {
+  .dark-theme .avatar.indigo,
+  .dark-theme .conversation-header.indigo,
+  .dark-theme .bubble.indigo {
     background-color: #303f9f; }
-  .android-dark .avatar.blue,
-  .android-dark .conversation-header.blue,
-  .android-dark .bubble.blue {
+  .dark-theme .avatar.blue,
+  .dark-theme .conversation-header.blue,
+  .dark-theme .bubble.blue {
     background-color: #1976d2; }
-  .android-dark .avatar.light_blue,
-  .android-dark .conversation-header.light_blue,
-  .android-dark .bubble.light_blue {
+  .dark-theme .avatar.light_blue,
+  .dark-theme .conversation-header.light_blue,
+  .dark-theme .bubble.light_blue {
     background-color: #0288d1; }
-  .android-dark .avatar.cyan,
-  .android-dark .conversation-header.cyan,
-  .android-dark .bubble.cyan {
+  .dark-theme .avatar.cyan,
+  .dark-theme .conversation-header.cyan,
+  .dark-theme .bubble.cyan {
     background-color: #0097a7; }
-  .android-dark .avatar.teal,
-  .android-dark .conversation-header.teal,
-  .android-dark .bubble.teal {
+  .dark-theme .avatar.teal,
+  .dark-theme .conversation-header.teal,
+  .dark-theme .bubble.teal {
     background-color: #00796b; }
-  .android-dark .avatar.green,
-  .android-dark .conversation-header.green,
-  .android-dark .bubble.green {
+  .dark-theme .avatar.green,
+  .dark-theme .conversation-header.green,
+  .dark-theme .bubble.green {
     background-color: #388e3c; }
-  .android-dark .avatar.light_green,
-  .android-dark .conversation-header.light_green,
-  .android-dark .bubble.light_green {
+  .dark-theme .avatar.light_green,
+  .dark-theme .conversation-header.light_green,
+  .dark-theme .bubble.light_green {
     background-color: #689f38; }
-  .android-dark .avatar.orange,
-  .android-dark .conversation-header.orange,
-  .android-dark .bubble.orange {
+  .dark-theme .avatar.orange,
+  .dark-theme .conversation-header.orange,
+  .dark-theme .bubble.orange {
     background-color: #f57c00; }
-  .android-dark .avatar.deep_orange,
-  .android-dark .conversation-header.deep_orange,
-  .android-dark .bubble.deep_orange {
+  .dark-theme .avatar.deep_orange,
+  .dark-theme .conversation-header.deep_orange,
+  .dark-theme .bubble.deep_orange {
     background-color: #e64a19; }
-  .android-dark .avatar.amber,
-  .android-dark .conversation-header.amber,
-  .android-dark .bubble.amber {
+  .dark-theme .avatar.amber,
+  .dark-theme .conversation-header.amber,
+  .dark-theme .bubble.amber {
     background-color: #ffa000; }
-  .android-dark .avatar.blue_grey,
-  .android-dark .conversation-header.blue_grey,
-  .android-dark .bubble.blue_grey {
+  .dark-theme .avatar.blue_grey,
+  .dark-theme .conversation-header.blue_grey,
+  .dark-theme .bubble.blue_grey {
     background-color: #455a64; }
-  .android-dark .avatar.grey,
-  .android-dark .conversation-header.grey,
-  .android-dark .bubble.grey {
+  .dark-theme .avatar.grey,
+  .dark-theme .conversation-header.grey,
+  .dark-theme .bubble.grey {
     background-color: #666666; }
-.android-dark .avatar.brown,
-.android-dark .conversation-header.brown,
-.android-dark .bubble.brown {
-    background-color: #58513c; }
-  .android-dark .avatar.default,
-  .android-dark .conversation-header.default,
-  .android-dark .bubble.default {
+  .dark-theme .avatar.default,
+  .dark-theme .conversation-header.default,
+  .dark-theme .bubble.default {
     background-color: #2090ea; }
-  .android-dark .message-list .advisory .content {
+  .dark-theme .message-list .advisory .content {
     background-color: #333333; }
-  .android-dark .message-list .advisory .shield {
+  .dark-theme .message-list .advisory .shield {
     background-image: url("../images/shield_FFCCCCCC.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-  .android-dark .message-list .advisory .verified {
+  .dark-theme .message-list .advisory .verified {
     background-image: url("../images/verified-check_FFCCCCCC.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-  .android-dark .message-list .advisory .clock {
+  .dark-theme .message-list .advisory .clock {
     background-image: url("../images/clock_FFCCCCCC.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-  .android-dark .inactive .conversation-header {
+  .dark-theme .inactive .conversation-header {
     background-color: #333333 !important;
     color: #cccccc; }
-    .android-dark .inactive .conversation-header .verified-icon {
+    .dark-theme .inactive .conversation-header .verified-icon {
       background-image: url("../images/verified-check_FFCCCCCC.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-  .android-dark .sent span.status {
+  .dark-theme .sent span.status {
     display: inline-block;
     background-image: url("../images/check_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-  .android-dark .delivered span.status {
+  .dark-theme .delivered span.status {
     display: inline-block;
     background-image: url("../images/double-check_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-  .android-dark .read span.status {
+  .dark-theme .read span.status {
     display: inline-block;
     background-image: url("../images/double-check_FF2090EA.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-  .android-dark .file-input .paperclip:before {
+  .dark-theme .file-input .paperclip:before {
     content: '';
     display: inline-block;
     width: 24px;
@@ -3585,42 +3193,42 @@ body.android-dark {
     background-repeat: no-repeat;
     background-position: center center;
     transform: rotateZ(-45deg); }
-  .android-dark .capture-audio .microphone:before {
+  .dark-theme .capture-audio .microphone:before {
     background-image: url("../images/microphone_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-  .android-dark .conversations {
+  .dark-theme .conversations {
     background-color: #292929; }
-    .android-dark .conversations .conversation-list-item {
+    .dark-theme .conversations .conversation-list-item {
       background-color: #171717;
       color: #cccccc; }
-  .android-dark .bottom-bar {
+  .dark-theme .bottom-bar {
     min-height: 10px;
     background-color: #292929; }
-    .android-dark .bottom-bar form.send {
+    .dark-theme .bottom-bar form.send {
       background: #171717; }
-  .android-dark .search {
+  .dark-theme .search {
     background-color: #171717;
     border-color: #292929;
     color: white; }
-    .android-dark .search::selection {
+    .dark-theme .search::selection {
       background: white;
       color: #454545; }
-    .android-dark .search.active.ltr, .android-dark .search.active.rtl {
+    .dark-theme .search.active.ltr, .dark-theme .search.active.rtl {
       background-image: url("../images/x_white.svg"); }
-  .android-dark .bubble {
+  .dark-theme .bubble {
     padding: 9px 12px;
     border-radius: 5px;
     box-shadow: 0 3px 3px -4px black; }
-  .android-dark .outgoing .bubble {
+  .dark-theme .outgoing .bubble {
     background-color: #333333;
     color: white;
     color: #cccccc; }
-    .android-dark .outgoing .bubble::selection {
+    .dark-theme .outgoing .bubble::selection {
       background: white;
       color: #454545; }
-  .android-dark .outgoing .hourglass {
+  .dark-theme .outgoing .hourglass {
     display: inline-block;
     position: relative;
     background-image: url("../images/hourglass_full_00000000.svg");
@@ -3628,24 +3236,24 @@ body.android-dark {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 100%; }
-    .android-dark .outgoing .hourglass,
-    .android-dark .outgoing .hourglass .sand, .android-dark .outgoing .hourglass:before, .android-dark .outgoing .hourglass:after {
+    .dark-theme .outgoing .hourglass,
+    .dark-theme .outgoing .hourglass .sand, .dark-theme .outgoing .hourglass:before, .dark-theme .outgoing .hourglass:after {
       width: 13px;
       height: 11px; }
-    .android-dark .outgoing .hourglass .sand, .android-dark .outgoing .hourglass:before, .android-dark .outgoing .hourglass:after {
+    .dark-theme .outgoing .hourglass .sand, .dark-theme .outgoing .hourglass:before, .dark-theme .outgoing .hourglass:after {
       content: '';
       display: inline-block;
       position: absolute;
       top: 0;
       left: 0; }
-    .android-dark .outgoing .hourglass .sand {
+    .dark-theme .outgoing .hourglass .sand {
       background: #999; }
-    .android-dark .outgoing .hourglass:after {
+    .dark-theme .outgoing .hourglass:after {
       background-image: url("../images/hourglass_empty_FF999999.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-  .android-dark .incoming .hourglass {
+  .dark-theme .incoming .hourglass {
     display: inline-block;
     position: relative;
     background-image: url("../images/hourglass_full_00000000.svg");
@@ -3653,206 +3261,197 @@ body.android-dark {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 100%; }
-    .android-dark .incoming .hourglass,
-    .android-dark .incoming .hourglass .sand, .android-dark .incoming .hourglass:before, .android-dark .incoming .hourglass:after {
+    .dark-theme .incoming .hourglass,
+    .dark-theme .incoming .hourglass .sand, .dark-theme .incoming .hourglass:before, .dark-theme .incoming .hourglass:after {
       width: 13px;
       height: 11px; }
-    .android-dark .incoming .hourglass .sand, .android-dark .incoming .hourglass:before, .android-dark .incoming .hourglass:after {
+    .dark-theme .incoming .hourglass .sand, .dark-theme .incoming .hourglass:before, .dark-theme .incoming .hourglass:after {
       content: '';
       display: inline-block;
       position: absolute;
       top: 0;
       left: 0; }
-    .android-dark .incoming .hourglass .sand {
+    .dark-theme .incoming .hourglass .sand {
       background: #fff; }
-    .android-dark .incoming .hourglass:after {
+    .dark-theme .incoming .hourglass:after {
       background-image: url("../images/hourglass_empty_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-  .android-dark .incoming .bubble .sender,
-  .android-dark .incoming .bubble .content,
-  .android-dark .incoming .bubble .body,
-  .android-dark .incoming .bubble .meta,
-  .android-dark .incoming .bubble a,
-  .android-dark .incoming .bubble .fileView {
+  .dark-theme .incoming .bubble .sender,
+  .dark-theme .incoming .bubble .content,
+  .dark-theme .incoming .bubble .body,
+  .dark-theme .incoming .bubble .meta,
+  .dark-theme .incoming .bubble a,
+  .dark-theme .incoming .bubble .fileView {
     color: white; }
-    .android-dark .incoming .bubble .sender::selection,
-    .android-dark .incoming .bubble .content::selection,
-    .android-dark .incoming .bubble .body::selection,
-    .android-dark .incoming .bubble .meta::selection,
-    .android-dark .incoming .bubble a::selection,
-    .android-dark .incoming .bubble .fileView::selection {
+    .dark-theme .incoming .bubble .sender::selection,
+    .dark-theme .incoming .bubble .content::selection,
+    .dark-theme .incoming .bubble .body::selection,
+    .dark-theme .incoming .bubble .meta::selection,
+    .dark-theme .incoming .bubble a::selection,
+    .dark-theme .incoming .bubble .fileView::selection {
       background: white;
       color: #454545; }
-  .android-dark .incoming .bubble .content a {
+  .dark-theme .incoming .bubble .content a {
     color: #f3f3f3; }
-  .android-dark .incoming .bubble .fileView .icon {
+  .dark-theme .incoming .bubble .fileView .icon {
     background-image: url("../images/file_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-    .android-dark .incoming .bubble .fileView .icon.audio {
+    .dark-theme .incoming .bubble .fileView .icon.audio {
       background-image: url("../images/audio_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-    .android-dark .incoming .bubble .fileView .icon.video {
+    .dark-theme .incoming .bubble .fileView .icon.video {
       background-image: url("../images/video_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-    .android-dark .incoming .bubble .fileView .icon.voice {
+    .dark-theme .incoming .bubble .fileView .icon.voice {
       background-image: url("../images/voice_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-  .android-dark .outgoing .bubble .fileView .icon {
+  .dark-theme .outgoing .bubble .fileView .icon {
     background-image: url("../images/file_FFCCCCCC.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-    .android-dark .outgoing .bubble .fileView .icon.audio {
+    .dark-theme .outgoing .bubble .fileView .icon.audio {
       background-image: url("../images/audio_FFCCCCCC.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-    .android-dark .outgoing .bubble .fileView .icon.video {
+    .dark-theme .outgoing .bubble .fileView .icon.video {
       background-image: url("../images/video_FFCCCCCC.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-    .android-dark .outgoing .bubble .fileView .icon.voice {
+    .dark-theme .outgoing .bubble .fileView .icon.voice {
       background-image: url("../images/voice_FFCCCCCC.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-  .android-dark .embedded-contact .first-line .image-container .default-avatar {
+  .dark-theme .embedded-contact .first-line .image-container .default-avatar {
     background-color: gray;
     color: white; }
-  .android-dark .embedded-contact .first-line .text-container .contact-name {
+  .dark-theme .embedded-contact .first-line .text-container .contact-name {
     color: #2090ea; }
-  .android-dark .embedded-contact .send-message {
+  .dark-theme .embedded-contact .send-message {
     color: #2090ea;
     border-top: 1px solid #616161;
     border-bottom: 1px solid #616161; }
-    .android-dark .embedded-contact .send-message .bubble-icon {
+    .dark-theme .embedded-contact .send-message .bubble-icon {
       background-image: url("../images/chat-bubble_FF2090EA.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-  .android-dark .incoming .embedded-contact {
+  .dark-theme .incoming .embedded-contact {
     color: white; }
-    .android-dark .incoming .embedded-contact .text-container .contact-name {
+    .dark-theme .incoming .embedded-contact .text-container .contact-name {
       color: white; }
-    .android-dark .incoming .embedded-contact .send-message {
+    .dark-theme .incoming .embedded-contact .send-message {
       color: white;
       border-top: 1px solid #e6e6e6;
       border-bottom: 1px solid #e6e6e6; }
-      .android-dark .incoming .embedded-contact .send-message .bubble-icon {
+      .dark-theme .incoming .embedded-contact .send-message .bubble-icon {
         background-color: white; }
-  .android-dark .contact-detail .additional-contact .type {
+  .dark-theme .contact-detail .additional-contact .type {
     color: rgba(255, 255, 255, 0.5); }
-  .android-dark .outgoing .quoted-message {
+  .dark-theme .outgoing .quoted-message {
     background: rgba(255, 255, 255, 0.38); }
-    .android-dark .outgoing .quoted-message .icon-container .icon {
+    .dark-theme .outgoing .quoted-message .icon-container .icon {
     background-color: black; }
-      .android-dark .outgoing .quoted-message .icon-container .icon.play.with-image {
+      .dark-theme .outgoing .quoted-message .icon-container .icon.play.with-image {
         background-color: #cccccc; }
-  .android-dark .incoming .quoted-message {
+  .dark-theme .incoming .quoted-message {
     border-left-color: #cccccc;
     background-color: rgba(0, 0, 0, 0.6); }
-    .android-dark .incoming .quoted-message .icon-container .circle-background {
+    .dark-theme .incoming .quoted-message .icon-container .circle-background {
       background-color: #cccccc; }
-    .android-dark .incoming .quoted-message .icon-container .icon.play.with-image {
+    .dark-theme .incoming .quoted-message .icon-container .icon.play.with-image {
       background-color: #cccccc; }
-  .android-dark button.clock {
+  .dark-theme button.clock {
     background-image: url("../images/clock_CCFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-    .android-dark button.clock:focus, .android-dark button.clock:hover {
+    .dark-theme button.clock:focus, .dark-theme button.clock:hover {
       background-image: url("../images/clock_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-  .android-dark button.hamburger {
+  .dark-theme button.hamburger {
     background-image: url("../images/menu_CCFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-    .android-dark button.hamburger:focus, .android-dark button.hamburger:hover {
+    .dark-theme button.hamburger:focus, .dark-theme button.hamburger:hover {
       background-image: url("../images/menu_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-  .android-dark button.back {
+  .dark-theme button.back {
     background-image: url("../images/back_CCFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-    .android-dark button.back:focus, .android-dark button.back:hover {
+    .dark-theme button.back:focus, .dark-theme button.back:hover {
       background-image: url("../images/back_FFFFFFFF.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-  .android-dark ::-webkit-scrollbar-thumb {
+  .dark-theme ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.15); }
-    .android-dark ::-webkit-scrollbar-thumb:hover {
+    .dark-theme ::-webkit-scrollbar-thumb:hover {
       background: rgba(255, 255, 255, 0.25); }
-  .android-dark ::-webkit-scrollbar-track {
+  .dark-theme ::-webkit-scrollbar-track {
     background-color: transparent; }
-  .android-dark .recorder {
+  .dark-theme .recorder {
     background: #292929; }
-  .android-dark .message-list .last-seen-indicator-view .bar {
+  .dark-theme .message-list .last-seen-indicator-view .bar {
     border-top: 1px solid rgba(255, 255, 255, 0.0625);
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     background-color: rgba(255, 255, 255, 0.1); }
-  .android-dark .message-list .last-seen-indicator-view .text {
+  .dark-theme .message-list .last-seen-indicator-view .text {
     background-color: #171717; }
-  .android-dark .discussion-container .scroll-down-button-view button {
+  .dark-theme .discussion-container .scroll-down-button-view button {
     background-color: #8d8d8d; }
-    .android-dark .discussion-container .scroll-down-button-view button .icon {
+    .dark-theme .discussion-container .scroll-down-button-view button .icon {
       background-image: url("../images/down_FF000000.svg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
-    .android-dark .discussion-container .scroll-down-button-view button .icon:hover {
-      background-image: url("../images/down_FFFFFFFF.svg");
-      background-size: 100%;
-      background-repeat: no-repeat;
-      background-position: center center; }
-    .android-dark .discussion-container .scroll-down-button-view button.new-messages {
-      background-image: url("../images/down_FF2090EA.svg");
-      background-size: 100%;
-      background-repeat: no-repeat;
-      background-position: center center; }
-      .android-dark .discussion-container .scroll-down-button-view button.new-messages .icon {
+    .dark-theme .discussion-container .scroll-down-button-view button .icon:hover {
+      background-color: white; }
+    .dark-theme .discussion-container .scroll-down-button-view button.new-messages {
+      background-color: #2090ea; }
+      .dark-theme .discussion-container .scroll-down-button-view button.new-messages .icon {
         background-image: url("../images/down_FFFFFFFF.svg");
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
-      .android-dark .discussion-container .scroll-down-button-view button.new-messages:hover {
-        background-image: url("../images/down_FF1472BD.svg");
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: center center; }
-  .android-dark .choose-file button:hover {
+      .dark-theme .discussion-container .scroll-down-button-view button.new-messages:hover {
+        background-color: #1472bd; }
+  .dark-theme .choose-file button:hover {
     background-color: #333333; }
-  .android-dark .capture-audio button:hover {
+  .dark-theme .capture-audio button:hover {
     background-color: #333333; }
-  .android-dark button.emoji:hover {
+  .dark-theme button.emoji:hover {
     background-color: #333333; }
-  .android-dark button.emoji:before {
+  .dark-theme button.emoji:before {
     background-image: url("../images/smile_FFFFFFFF.svg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
-  .android-dark .emoji-panel-container .ep-categories {
+  .dark-theme .emoji-panel-container .ep-categories {
     background-color: #171717; }
-  .android-dark .emoji-panel-container .ep-emojies {
+  .dark-theme .emoji-panel-container .ep-emojies {
     background-color: #292929; }
-  .android-dark .dots-horizontal-icon:hover {
+  .dark-theme .dots-horizontal-icon:hover {
     background-image: url("../images/dots-horizontal_FFF3F3F3.svg");
     background-size: 100%;
     background-repeat: no-repeat;

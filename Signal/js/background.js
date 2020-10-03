@@ -110,6 +110,17 @@
     }
   });
 
+  function mapOldThemeToNew(theme) {
+    switch (theme) {
+      case 'android-dark':
+        return 'dark';
+      case 'android':
+      case 'ios':
+      default:
+        return 'light';
+    }
+  }
+
   // We need this 'first' check because we don't want to start the app up any other time
   //   than the first time. And storage.fetch() will cause onready() to fire.
   let first = true;
@@ -166,6 +177,10 @@
         $('body').append(clearDataView.el);
       },
     };
+
+    const themeSetting = window.Events.getThemeSetting();
+    const newThemeSetting = mapOldThemeToNew(themeSetting);
+    window.Events.setThemeSetting(newThemeSetting);
 
     try {
       await ConversationController.load();
