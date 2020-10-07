@@ -161,6 +161,12 @@ function prepareURL(pathSegments, moreKeys) {
     });
 }
 
+const DEFAULT_WIDTH = 800;
+const DEFAULT_HEIGHT = 610;
+const MIN_WIDTH = 640;
+const MIN_HEIGHT = 360;
+const BOUNDS_BUFFER = 100;
+
 // Create the browser window.
 mainWindow = new BrowserWindow();
 
@@ -250,9 +256,10 @@ async function showSettingsWindow() {
     }
 
     const theme = await pify(getDataFromMainWindow)('theme-setting');
+    const size = mainWindow.getSize();
     const options = {
-        width: 500,
-        height: 400,
+        width: Math.min(500, size[0]),
+        height: Math.max(size[1] - 100, MIN_HEIGHT),
         resizable: false,
         title: locale.messages.signalDesktopPreferences.message,
         autoHideMenuBar: true,
@@ -292,9 +299,10 @@ async function showDebugLogWindow() {
     }
 
     const theme = await pify(getDataFromMainWindow)('theme-setting');
+    const size = mainWindow.getSize();
     const options = {
-        width: 500,
-        height: 400,
+        width: Math.max(size[0] - 100, MIN_WIDTH),
+        height: Math.max(size[1] - 100, MIN_HEIGHT),
         resizable: false,
         title: locale.messages.signalDesktopPreferences.message,
         autoHideMenuBar: true,
@@ -337,9 +345,10 @@ async function showPermissionsPopupWindow() {
     }
 
     const theme = await pify(getDataFromMainWindow)('theme-setting');
+    const size = mainWindow.getSize();
     const options = {
-        width: 400,
-        height: 150,
+        width: Math.min(400, size[0]),
+        height: Math.min(150, size[1]),
         resizable: false,
         title: locale.messages.signalDesktopPreferences.message,
         autoHideMenuBar: true,
