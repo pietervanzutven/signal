@@ -15,14 +15,14 @@
     const Contact_1 = window.ts.types.Contact;
     class EmbeddedContact extends react_1.default.Component {
         render() {
-            const { contact, i18n, isIncoming, onClickContact, withContentAbove, withContentBelow, } = this.props;
+            const { contact, i18n, isIncoming, onClick, withContentAbove, withContentBelow, } = this.props;
             const module = 'embedded-contact';
             return (react_1.default.createElement("div", {
                 className: classnames_1.default('module-embedded-contact', withContentAbove
                     ? 'module-embedded-contact--with-content-above'
                     : null, withContentBelow
                     ? 'module-embedded-contact--with-content-below'
-                    : null), role: "button", onClick: onClickContact
+                    : null), role: "button", onClick: onClick
             },
                 renderAvatar({ contact, i18n, module }),
                 react_1.default.createElement("div", { className: "module-embedded-contact__text-container" },

@@ -22,7 +22,9 @@
         }
         const img = emoji_1.findImage(result.value, result.variation);
         const title = emoji_1.getTitle(result.value);
-        return (react_1.default.createElement("img", { key: key, src: img.path, alt: i18n('emojiAlt', [title || '']), className: classnames_1.default('emoji', sizeClass), "data-codepoints": img.full_idx, title: `:${title}:` }));
+        return (
+            // tslint:disable-next-line react-a11y-img-has-alt
+            react_1.default.createElement("img", { key: key, src: img.path, "aria-label": i18n('emojiAlt', [title || '']), className: classnames_1.default('emoji', sizeClass), "data-codepoints": img.full_idx, title: `:${title}:` }));
     }
     class Emojify extends react_1.default.Component {
         render() {

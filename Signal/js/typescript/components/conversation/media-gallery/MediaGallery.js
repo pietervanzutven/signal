@@ -57,8 +57,12 @@
         },
     };
     const Tab = ({ isSelected, label, onSelect, type, }) => {
-        const handleClick = onSelect ? () => onSelect({ type }) : undefined;
-        return (react_1.default.createElement("div", { style: isSelected ? styles.tab.active : styles.tab.default, onClick: handleClick }, label));
+        const handleClick = onSelect
+            ? () => {
+                onSelect({ type });
+            }
+            : undefined;
+        return (react_1.default.createElement("div", { style: isSelected ? styles.tab.active : styles.tab.default, onClick: handleClick, role: "tab" }, label));
     };
     class MediaGallery extends react_1.default.Component {
         constructor() {

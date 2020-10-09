@@ -29,7 +29,7 @@
             return (react_1.default.createElement("div", { style: Object.assign({}, styles.container, styles.image, { backgroundImage: `url("${message.objectURL}")` }) }));
         }
         render() {
-            return (react_1.default.createElement("div", { style: styles.container, onClick: this.props.onClick }, this.renderContent()));
+            return (react_1.default.createElement("div", { style: styles.container, role: "button", onClick: this.props.onClick }, this.renderContent()));
         }
     }
     exports.MediaGridItem = MediaGridItem;

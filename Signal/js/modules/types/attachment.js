@@ -7,7 +7,9 @@
   const is = window.sindresorhus.is;
 
   const AttachmentTS = window.ts.types.Attachment;
+  const GoogleChrome = window.ts.util.GoogleChrome;
   const MIME = window.ts.types.MIME;
+  const { toLogFormat } = window.types.errors;
   const {
     arrayBufferToBlob,
     blobToArrayBuffer,
@@ -151,11 +153,7 @@
       }
 
       if (!is.string(attachment.path)) {
-        if (is.string(attachment.data)) {
-          attachment.path = '../' + attachment.data;
-        } else {
-          throw new TypeError('"attachment.path" is required');
-        }
+        throw new TypeError("'attachment.path' is required");
       }
 
       const data = await readAttachmentData(attachment.path);
@@ -182,11 +180,7 @@
       }
 
       if (!is.string(attachment.path)) {
-        if (is.string(attachment.data)) {
-          attachment.path = '../' + attachment.data;
-        } else {
-          throw new TypeError('"attachment.path" is required');
-        }
+        throw new TypeError("'attachment.path' is required");
       }
 
       await deleteAttachmentData(attachment.path);
@@ -195,5 +189,116 @@
 
   exports.isVoiceMessage = AttachmentTS.isVoiceMessage;
   exports.save = AttachmentTS.save;
-  
+
+  const THUMBNAIL_SIZE = 150;
+  const THUMBNAIL_CONTENT_TYPE = 'image/png';
+
+  exports.captureDimensionsAndScreenshot = async (
+    attachment,
+    {
+      writeNewAttachmentData,
+      getAbsoluteAttachmentPath,
+      makeObjectUrl,
+      revokeObjectUrl,
+      getImageDimensions,
+      makeImageThumbnail,
+      makeVideoScreenshot,
+    }
+  ) => {
+    const { contentType } = attachment;
+
+    if (
+      !GoogleChrome.isImageTypeSupported(contentType) &&
+      !GoogleChrome.isVideoTypeSupported(contentType)
+    ) {
+      return attachment;
+    }
+
+    const absolutePath = await getAbsoluteAttachmentPath(attachment.path);
+
+    if (GoogleChrome.isImageTypeSupported(contentType)) {
+      try {
+        const { width, height } = await getImageDimensions(absolutePath);
+        const thumbnailBuffer = await blobToArrayBuffer(
+          await makeImageThumbnail(
+            THUMBNAIL_SIZE,
+            absolutePath,
+            THUMBNAIL_CONTENT_TYPE
+          )
+        );
+
+        const thumbnailPath = await writeNewAttachmentData(thumbnailBuffer);
+        return Object.assign({},
+          attachment,
+          {
+            width,
+            height,
+            thumbnail: {
+              path: thumbnailPath,
+              contentType: THUMBNAIL_CONTENT_TYPE,
+              width: THUMBNAIL_SIZE,
+              height: THUMBNAIL_SIZE,
+            },
+          });
+      } catch (error) {
+        console.log(
+          'captureDimensionsAndScreenshot:',
+          'error processing image; skipping screenshot generation',
+          toLogFormat(error)
+        );
+        return attachment;
+      }
+    }
+
+    let screenshotObjectUrl;
+    try {
+      const screenshotBuffer = await blobToArrayBuffer(
+        await makeVideoScreenshot(absolutePath, THUMBNAIL_CONTENT_TYPE)
+      );
+      screenshotObjectUrl = makeObjectUrl(
+        screenshotBuffer,
+        THUMBNAIL_CONTENT_TYPE
+      );
+      const { width, height } = await getImageDimensions(screenshotObjectUrl);
+      const screenshotPath = await writeNewAttachmentData(screenshotBuffer);
+
+      const thumbnailBuffer = await blobToArrayBuffer(
+        await makeImageThumbnail(
+          THUMBNAIL_SIZE,
+          screenshotObjectUrl,
+          THUMBNAIL_CONTENT_TYPE
+        )
+      );
+
+      const thumbnailPath = await writeNewAttachmentData(thumbnailBuffer);
+
+      return Object.assign({},
+        attachment,
+        {
+          screenshot: {
+            contentType: THUMBNAIL_CONTENT_TYPE,
+            path: screenshotPath,
+            width,
+            height,
+          },
+          thumbnail: {
+            path: thumbnailPath,
+            contentType: THUMBNAIL_CONTENT_TYPE,
+            width: THUMBNAIL_SIZE,
+            height: THUMBNAIL_SIZE,
+          },
+          width,
+          height,
+        });
+    } catch (error) {
+      console.log(
+        'captureDimensionsAndScreenshot: error processing video; skipping screenshot generation',
+        toLogFormat(error)
+      );
+      return attachment;
+    } finally {
+      revokeObjectUrl(screenshotObjectUrl);
+    }
+  };
+
 })();

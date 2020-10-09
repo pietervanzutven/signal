@@ -141,7 +141,7 @@
     return path.join(prefix, name);
   };
 
-  //      createAbsolutePathGetter :: RoothPath -> RelativePath -> AbsolutePath
+  //      createAbsolutePathGetter :: RootPath -> RelativePath -> AbsolutePath
   exports.createAbsolutePathGetter = rootPath => relativePath => {
     const absolutePath = path.join(rootPath, relativePath);
     const normalized = path.normalize(absolutePath);

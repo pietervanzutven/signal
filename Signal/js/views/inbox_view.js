@@ -131,7 +131,9 @@
       const inboxCollection = getInboxCollection();
 
       inboxCollection.on('messageError', () => {
-        this.networkStatusView.render();
+        if (this.networkStatusView) {
+          this.networkStatusView.render();
+        }
       });
 
       this.inboxListView = new Whisper.ConversationListView({
@@ -207,7 +209,7 @@
       click: 'onClick',
       'click #header': 'focusHeader',
       'click .conversation': 'focusConversation',
-      'click .global-menu .hamburger': 'toggleMenu',
+      'click .react-contextmenu-wrapper .module-conversation-header__gear-icon': 'toggleMenu',
       'click .show-debug-log': window.showDebugLogWindow,
       'click .backup': window.showBackupScreen,
       'click .show-settings': window.showSettings,
@@ -304,7 +306,7 @@
       }
     },
     toggleMenu() {
-        this.$('.global-menu .menu-list').toggle();
+        this.$('.menu-list').toggle();
     },
     closeRecording(e) {
       if (e && this.$(e.target).closest('.capture-audio').length > 0) {
@@ -313,11 +315,11 @@
       this.$('.conversation:first .recorder').trigger('close');
     },
     closeMenu(e) {
-      if (e && this.$(e.target).parent('.global-menu').length > 0) {
+      if (e && this.$(e.target).parent('.react-contextmenu-wrapper').length > 0) {
         return;
       }
 
-      this.$('.global-menu .menu-list').hide();
+      this.$('.menu-list').hide();
     },
     onClick(e) {
       this.closeMenu(e);

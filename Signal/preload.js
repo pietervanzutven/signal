@@ -65,7 +65,7 @@
     ipc.send('update-tray-icon', unreadCount);
 
   ipc.on('backup', () => {
-      Whisper.events.trigger('showBackupScreen');
+    Whisper.events.trigger('showBackupScreen');
   });
 
   ipc.on('set-up-with-import', () => {
@@ -188,13 +188,6 @@
   window.libphonenumber = window.google_libphonenumber.PhoneNumberUtil.getInstance();
   window.libphonenumber.PhoneNumberFormat = window.google_libphonenumber.PhoneNumberFormat;
   window.loadImage = window.blueimp_load_image;
-
-  // Note: when modifying this file, consider whether our React Components or Backbone Views
-  //   will need these things to render in the Style Guide. If so, go update one of these
-  //   two locations:
-  //
-  //   1) test/styleguide/legacy_bridge.js
-  //   2) ts/styleguide/StyleGuideUtil.js
 
   window.React = window.react;
   window.ReactDOM = window.react_dom;

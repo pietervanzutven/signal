@@ -22,13 +22,13 @@
     const classnames_1 = __importDefault(window.classnames);
     const MIME = __importStar(window.ts.types.MIME);
     const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
-    const Emojify_1 = window.ts.components.conversation.Emojify;
     const MessageBody_1 = window.ts.components.conversation.MessageBody;
+    const ContactName_1 = window.ts.components.conversation.ContactName;
     function validateQuote(quote) {
         if (quote.text) {
             return true;
         }
-        if (quote.attachments && quote.attachments.length > 0) {
+        if (quote.attachment) {
             return true;
         }
         return false;
@@ -70,12 +70,11 @@
                         react_1.default.createElement("div", { className: classnames_1.default('module-quote__icon-container__icon', `module-quote__icon-container__icon--${icon}`) })))));
         }
         renderGenericFile() {
-            const { attachments } = this.props;
-            if (!attachments || !attachments.length) {
+            const { attachment } = this.props;
+            if (!attachment) {
                 return;
             }
-            const first = attachments[0];
-            const { fileName, contentType } = first;
+            const { fileName, contentType } = attachment;
             const isGenericFile = !GoogleChrome.isVideoTypeSupported(contentType) &&
                 !GoogleChrome.isImageTypeSupported(contentType) &&
                 !MIME.isAudio(contentType);
@@ -87,12 +86,11 @@
                 react_1.default.createElement("div", { className: "module-quote__generic-file__text" }, fileName)));
         }
         renderIconContainer() {
-            const { attachments, i18n } = this.props;
-            if (!attachments || attachments.length === 0) {
+            const { attachment, i18n } = this.props;
+            if (!attachment) {
                 return null;
             }
-            const first = attachments[0];
-            const { contentType, thumbnail } = first;
+            const { contentType, thumbnail } = attachment;
             const objectUrl = getObjectUrl(thumbnail);
             if (GoogleChrome.isVideoTypeSupported(contentType)) {
                 return objectUrl
@@ -110,16 +108,15 @@
             return null;
         }
         renderText() {
-            const { i18n, text, attachments } = this.props;
+            const { i18n, text, attachment } = this.props;
             if (text) {
                 return (react_1.default.createElement("div", { className: "module-quote__primary__text" },
                     react_1.default.createElement(MessageBody_1.MessageBody, { text: text, i18n: i18n })));
             }
-            if (!attachments || attachments.length === 0) {
+            if (!attachment) {
                 return null;
             }
-            const first = attachments[0];
-            const { contentType, isVoiceMessage } = first;
+            const { contentType, isVoiceMessage } = attachment;
             const typeLabel = getTypeLabel({ i18n, contentType, isVoiceMessage });
             if (typeLabel) {
                 return (react_1.default.createElement("div", { className: "module-quote__primary__type-label" }, typeLabel));
@@ -142,21 +139,19 @@
                 react_1.default.createElement("div", { className: "module-quote__close-button", role: "button", onClick: onClick })));
         }
         renderAuthor() {
-            const { authorProfileName, authorTitle, i18n, isFromMe } = this.props;
-            const authorProfileElement = authorProfileName ? (react_1.default.createElement("span", { className: "module-quote__primary__profile-name" },
-                "~",
-                react_1.default.createElement(Emojify_1.Emojify, { text: authorProfileName, i18n: i18n }))) : null;
-            return (react_1.default.createElement("div", { className: "module-quote__primary__author" }, isFromMe ? (i18n('you')) : (react_1.default.createElement("span", null,
-                react_1.default.createElement(Emojify_1.Emojify, { text: authorTitle, i18n: i18n }),
-                " ",
-                authorProfileElement))));
+            const { authorProfileName, authorPhoneNumber, authorName, authorColor, i18n, isFromMe, } = this.props;
+            return (react_1.default.createElement("div", { className: classnames_1.default('module-quote__primary__author', !isFromMe ? `module-quote__primary__author--${authorColor}` : null) }, isFromMe ? (i18n('you')) : (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, i18n: i18n }))));
         }
         render() {
-            const { color, isIncoming, onClick, withContentAbove } = this.props;
+            const { authorColor, isFromMe, isIncoming, onClick, withContentAbove, } = this.props;
             if (!validateQuote(this.props)) {
                 return null;
             }
-            return (react_1.default.createElement("div", { onClick: onClick, role: "button", className: classnames_1.default('module-quote', isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing', !isIncoming ? `module-quote--outgoing-${color}` : null, !onClick ? 'module-quote--no-click' : null, withContentAbove ? 'module-quote--with-content-above' : null) },
+            return (react_1.default.createElement("div", {
+                onClick: onClick, role: "button", className: classnames_1.default('module-quote', isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing', !isIncoming && !isFromMe
+                    ? `module-quote--outgoing-${authorColor}`
+                    : null, !isIncoming && isFromMe ? 'module-quote--outgoing-you' : null, !onClick ? 'module-quote--no-click' : null, withContentAbove ? 'module-quote--with-content-above' : null)
+            },
                 react_1.default.createElement("div", { className: "module-quote__primary" },
                     this.renderAuthor(),
                     this.renderGenericFile(),
