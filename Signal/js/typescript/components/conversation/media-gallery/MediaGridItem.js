@@ -12,24 +12,16 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
-    const size = {
-        width: 94,
-        height: 94,
-    };
-    const styles = {
-        container: Object.assign({}, size, { cursor: 'pointer', backgroundColor: '#f3f3f3', marginRight: 4, marginBottom: 4 }),
-        image: Object.assign({}, size, { backgroundSize: 'cover' }),
-    };
     class MediaGridItem extends react_1.default.Component {
         renderContent() {
-            const { message } = this.props;
+            const { message, i18n } = this.props;
             if (!message.objectURL) {
                 return null;
             }
-            return (react_1.default.createElement("div", { style: Object.assign({}, styles.container, styles.image, { backgroundImage: `url("${message.objectURL}")` }) }));
+            return (react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), className: "module-media-grid-item__image", src: message.objectURL }));
         }
         render() {
-            return (react_1.default.createElement("div", { style: styles.container, role: "button", onClick: this.props.onClick }, this.renderContent()));
+            return (react_1.default.createElement("div", { className: "module-media-grid-item", role: "button", onClick: this.props.onClick }, this.renderContent()));
         }
     }
     exports.MediaGridItem = MediaGridItem;

@@ -20,10 +20,19 @@
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
     const is_1 = __importDefault(window.sindresorhus.is);
-    const Colors = __importStar(window.ts.styles.Colors);
     const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
     const MIME = __importStar(window.ts.types.MIME);
-    const colorSVG_1 = window.ts.styles.colorSVG;
+    const Colors = {
+        TEXT_SECONDARY: '#bbb',
+        ICON_SECONDARY: '#ccc',
+    };
+    const colorSVG = (url, color) => {
+        return {
+            WebkitMask: `url(${url}) no-repeat center`,
+            WebkitMaskSize: '100%',
+            backgroundColor: color,
+        };
+    };
     const CONTROLS_WIDTH = 50;
     const CONTROLS_SPACING = 10;
     const styles = {
@@ -98,7 +107,7 @@
         return (react_1.default.createElement("a", { href: "#", onClick: clickHandler, className: classnames_1.default('iconButton', type), role: "button", style: style }));
     };
     const IconButtonPlaceholder = () => (react_1.default.createElement("div", { style: styles.iconButtonPlaceholder }));
-    const Icon = ({ onClick, url, }) => (react_1.default.createElement("div", { style: Object.assign({}, styles.object, colorSVG_1.colorSVG(url, Colors.ICON_SECONDARY), { maxWidth: 200 }), onClick: onClick, role: "button" }));
+    const Icon = ({ onClick, url, }) => (react_1.default.createElement("div", { style: Object.assign({}, styles.object, colorSVG(url, Colors.ICON_SECONDARY), { maxWidth: 200 }), onClick: onClick, role: "button" }));
     class Lightbox extends react_1.default.Component {
         constructor() {
             super(...arguments);
