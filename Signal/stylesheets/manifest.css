@@ -2582,12 +2582,6 @@ body.dark-theme {
   background-color: #000000;
   border-bottom: 1px solid #62656a; }
 
-/* .dark-theme .module-conversation-header__back-icon {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><path d='M30.83 14.83L28 12 16 24l12 12 2.83-2.83L21.66 24z' fill='%23EFEFEF'/></svg>");
-      background-size: 100%;
-      background-repeat: no-repeat;
-      background-position: center center; } */
-
 .dark-theme .module-conversation-header___default-avatar {
   background-color: #757575;
   color: #ffffff; }
@@ -4048,20 +4042,6 @@ body.dark-theme {
   color: #070c14;
   background-color: #ffffff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2); }
-
-/* .module-conversation-header__back-icon {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><path d='M30.83 14.83L28 12 16 24l12 12 2.83-2.83L21.66 24z' fill='%23070C14'/></svg>");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-  display: inline-block;
-  margin-left: -10px;
-  margin-right: -2px;
-  width: 35px;
-  height: 35px;
-  min-width: 35px;
-  vertical-align: text-bottom;
-  cursor: pointer; } */
 
 .module-conversation-header___avatar {
   height: 32px;
