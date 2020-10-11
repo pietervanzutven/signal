@@ -1091,6 +1091,7 @@
       }
       currentView.onbackrequested = function (event) {
         this.resetPanel();
+        this.updateHeader();
         event && (event.detail[0].handled = true);
       }.bind(this);
     },
