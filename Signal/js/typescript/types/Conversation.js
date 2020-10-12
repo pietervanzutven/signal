@@ -10,10 +10,11 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const is_1 = __importDefault(window.sindresorhus.is);
-    exports.createLastMessageUpdate = ({ currentLastMessageText, currentTimestamp, lastMessage, lastMessageNotificationText, }) => {
+    exports.createLastMessageUpdate = ({ currentLastMessageText, currentTimestamp, lastMessage, lastMessageStatus, lastMessageNotificationText, }) => {
         if (lastMessage === null) {
             return {
                 lastMessage: '',
+                lastMessageStatus: null,
                 timestamp: null,
             };
         }
@@ -30,6 +31,7 @@
             : currentLastMessageText;
         return {
             lastMessage: newLastMessageText,
+            lastMessageStatus,
             timestamp: newTimestamp,
         };
     };

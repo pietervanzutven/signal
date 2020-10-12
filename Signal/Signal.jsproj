@@ -227,6 +227,7 @@
     <Content Include="js\typescript\backbone\views\index.js" />
     <Content Include="js\typescript\backbone\views\Lightbox.js" />
     <Content Include="js\typescript\components\ContactListItem.js" />
+    <Content Include="js\typescript\components\ConversationListItem.js" />
     <Content Include="js\typescript\components\conversation\AddNewLines.js" />
     <Content Include="js\typescript\components\conversation\ContactDetail.js" />
     <Content Include="js\typescript\components\conversation\ContactName.js" />
@@ -259,7 +260,6 @@
     <Content Include="js\typescript\notifications\getStatus.js" />
     <Content Include="js\typescript\OS.js" />
     <Content Include="js\typescript\protobuf\protobuf.js" />
-    <Content Include="js\typescript\selectors\message.js" />
     <Content Include="js\typescript\styles\colorSVG.js" />
     <Content Include="js\typescript\types\Attachment.js" />
     <Content Include="js\typescript\types\Contact.js" />

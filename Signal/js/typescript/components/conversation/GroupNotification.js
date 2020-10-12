@@ -49,7 +49,7 @@
         }
         render() {
             const { changes } = this.props;
-            return (react_1.default.createElement("div", { className: "module-group-notification" }, (changes || []).map(change => (react_1.default.createElement("div", { className: "module-group-notification__change" }, this.renderChange(change))))));
+            return (react_1.default.createElement("div", { className: "module-group-notification" }, (changes || []).map((change, index) => (react_1.default.createElement("div", { key: index, className: "module-group-notification__change" }, this.renderChange(change))))));
         }
     }
     exports.GroupNotification = GroupNotification;

@@ -26,6 +26,9 @@
     ConversationHeader,
   } = window.ts.components.conversation.ConversationHeader;
   const {
+    ConversationListItem,
+  } = window.ts.components.ConversationListItem;
+  const {
     EmbeddedContact,
   } = window.ts.components.conversation.EmbeddedContact;
   const { Emojify } = window.ts.components.conversation.Emojify;
@@ -157,6 +160,7 @@
       ContactListItem,
       ContactName,
       ConversationHeader,
+      ConversationListItem,
       EmbeddedContact,
       Emojify,
       GroupNotification,

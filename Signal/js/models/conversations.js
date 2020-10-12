@@ -26,6 +26,7 @@
     Errors,
     Message,
     VisualAttachment,
+    PhoneNumber,
   } = window.Signal.Types;
   const { upgradeMessageSchema, loadAttachmentData } = window.Signal.Migrations;
 
@@ -111,6 +112,17 @@
       this.messageCollection.on('change:errors', this.handleMessageError, this);
       this.messageCollection.on('send-error', this.onMessageError, this);
 
+      const debouncedUpdateLastMessage = _.debounce(
+        this.updateLastMessage.bind(this),
+        1000
+      );
+      this.listenTo(
+        this.messageCollection,
+        'add remove',
+        debouncedUpdateLastMessage
+      );
+      this.listenTo(this.model, 'newmessage', debouncedUpdateLastMessage);
+
       this.on('change:avatar', this.updateAvatarUrl);
       this.on('change:profileAvatar', this.updateAvatarUrl);
       this.on('change:profileKey', this.onChangeProfileKey);
@@ -120,6 +132,7 @@
       this.on('newmessage', this.addSingleMessage);
       this.on('delivered', this.updateMessage);
       this.on('read', this.updateMessage);
+      this.on('sent', this.updateLastMessage);
       this.on('expired', this.onExpired);
       this.listenTo(
         this.messageCollection,
@@ -159,6 +172,7 @@
     // Used to update existing messages when updated from out-of-band db access,
     //   like read and delivery receipts.
     updateMessage(message) {
+      this.updateLastMessage();
       this.messageCollection.add(message, { merge: true });
     },
 
@@ -167,6 +181,43 @@
       model.setToExpire();
       this.processQuotes(this.messageCollection);
       return model;
+    },
+
+    format() {
+      const { format } = PhoneNumber;
+      const regionCode = storage.get('regionCode');
+
+      const avatar = this.getAvatar();
+      const color = this.getColor();
+
+      return {
+        phoneNumber: format(this.id, {
+          ourRegionCode: regionCode,
+        }),
+        color,
+        avatarPath: avatar ? avatar.url : null,
+        name: this.getName(),
+        profileName: this.getProfileName(),
+        title: this.getTitle(),
+      };
+    },
+    getPropsForListItem() {
+        const result = Object.assign({},
+        this.format(),
+        {
+          lastUpdated: this.get('timestamp'),
+          hasUnread: Boolean(this.get('unreadCount')),
+          isSelected: this.isSelected,
+
+          lastMessage: {
+              status: this.get('lastMessageStatus'),
+              text: this.get('lastMessage'),
+          },
+
+          onClick: () => this.trigger('select', this),
+        });
+
+      return result;
     },
 
     onMessageError() {
@@ -851,6 +902,7 @@
           active_at: now,
           timestamp: now,
           lastMessage: message.getNotificationText(),
+          lastMessageStatus: 'sending',
         });
 
         const conversationType = this.get('type');
@@ -890,10 +942,14 @@
       const lastMessage = collection.at(0);
 
       const lastMessageJSON = lastMessage ? lastMessage.toJSON() : null;
+      const lastMessageStatus = lastMessage
+        ? lastMessage.getMessagePropStatus()
+        : null;
       const lastMessageUpdate = Conversation.createLastMessageUpdate({
         currentLastMessageText: this.get('lastMessage') || null,
         currentTimestamp: this.get('timestamp') || null,
         lastMessage: lastMessageJSON,
+        lastMessageStatus,
         lastMessageNotificationText: lastMessage
           ? lastMessage.getNotificationText()
           : null,

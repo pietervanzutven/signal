@@ -148,7 +148,7 @@
                     className: classnames_1.default('module-message__metadata__date', `module-message__metadata__date--${direction}`, withImageNoCaption
                         ? 'module-message__metadata__date--with-image-no-caption'
                         : null)
-                }, i18n('sendFailed'))) : (react_1.default.createElement(Timestamp_1.Timestamp, { i18n: i18n, timestamp: timestamp, direction: direction, withImageNoCaption: withImageNoCaption, module: "module-message__metadata__date" })),
+                }, i18n('sendFailed'))) : (react_1.default.createElement(Timestamp_1.Timestamp, { i18n: i18n, timestamp: timestamp, extended: true, direction: direction, withImageNoCaption: withImageNoCaption, module: "module-message__metadata__date" })),
                 expirationLength && expirationTimestamp ? (react_1.default.createElement(ExpireTimer_1.ExpireTimer, { direction: direction, expirationLength: expirationLength, expirationTimestamp: expirationTimestamp, withImageNoCaption: withImageNoCaption })) : null,
                 react_1.default.createElement("span", { className: "module-message__metadata__spacer" }),
                 direction === 'outgoing' && status !== 'error' ? (react_1.default.createElement("div", {
