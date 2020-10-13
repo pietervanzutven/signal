@@ -1112,8 +1112,9 @@ input.search {
   color: #a4a6a9;
   position: relative;
   border-radius: 4px; }
+  input.search:focus {
+    outline: solid 1px #2090ea; }
   input.search.active {
-    outline: solid 1px #2090ea;
     background-image: url("../images/x.svg");
     background-repeat: no-repeat;
     background-size: 16px; }
@@ -1929,7 +1930,7 @@ body.dark-theme {
   border: 1px solid #62656a;
   color: #efefef;
   background-color: #000000; }
-  .dark-theme input.search.active {
+  .dark-theme input.search:focus {
     outline: solid 1px #2090ea; }
 
 .dark-theme .last-timestamp {
