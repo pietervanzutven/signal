@@ -1374,7 +1374,8 @@ input.search {
 
 .bottom-bar .quote-wrapper {
   margin-right: 5px;
-  margin-bottom: 5px; }
+  margin-bottom: 6px;
+  margin-top: 3px; }
 
 .send .quote-wrapper {
   margin-left: 37px;

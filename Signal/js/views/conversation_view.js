@@ -7,6 +7,7 @@
 /* global Signal: false */
 /* global storage: false */
 /* global Whisper: false */
+/* global wrapDeferred: false */
 
 // eslint-disable-next-line func-names
 (function() {
@@ -14,6 +15,11 @@
 
   window.Whisper = window.Whisper || {};
   const { Migrations } = Signal;
+  const { Message } = window.Signal.Types;
+  const {
+    upgradeMessageSchema,
+    getAbsoluteAttachmentPath,
+  } = window.Signal.Migrations;
 
   Whisper.ExpiredToast = Whisper.ToastView.extend({
     render_attributes() {
@@ -609,13 +615,29 @@
         }
       );
 
-      // NOTE: Could we show grid previews from disk as well?
-      const loadMessages = Signal.Components.Types.Message.loadWithObjectURL(
-        Migrations.loadMessage
-      );
-      const media = await loadMessages(rawMedia);
+      // First we upgrade these messages to ensure that they have thumbnails
+      for (let max = rawMedia.length, i = 0; i < max; i += 1) {
+        const message = rawMedia[i];
+        const { schemaVersion } = message;
 
-      const { getAbsoluteAttachmentPath } = Signal.Migrations;
+        if (schemaVersion < Message.CURRENT_SCHEMA_VERSION) {
+          // Yep, we really do want to wait for each of these
+          // eslint-disable-next-line no-await-in-loop
+          rawMedia[i] = await upgradeMessageSchema(message);
+          const model = new Whisper.Message(rawMedia[i]);
+          // eslint-disable-next-line no-await-in-loop
+          await wrapDeferred(model.save());
+        }
+      }
+
+      const media = rawMedia.map(mediaMessage =>
+        Object.assign({}, mediaMessage, {
+          objectURL: getAbsoluteAttachmentPath(
+            mediaMessage.attachments[0].path
+          ),
+        })
+      );
+
       const saveAttachment = async ({ message } = {}) => {
         const attachment = message.attachments[0];
         const timestamp = message.received_at;
@@ -635,13 +657,6 @@
           }
 
           case 'media': {
-            const mediaWithObjectURL = media.map(mediaMessage =>
-              Object.assign({}, mediaMessage, {
-                objectURL: getAbsoluteAttachmentPath(
-                  mediaMessage.attachments[0].path
-                ),
-              })
-            );
             const selectedIndex = media.findIndex(
               mediaMessage => mediaMessage.id === message.id
             );
@@ -649,7 +664,7 @@
               className: 'lightbox-wrapper',
               Component: Signal.Components.LightboxGallery,
               props: {
-                messages: mediaWithObjectURL,
+                messages: media,
                 onSave: () => saveAttachment({ message }),
                 selectedIndex,
               },
@@ -1061,6 +1076,7 @@
       });
 
       this.listenBack(view);
+      this.updateHeader();
     },
 
     async openConversation(number) {
