@@ -796,12 +796,12 @@
             const { contentType, fileName, thumbnail } = attachment;
 
             return {
-                contentType,
-                fileName,
-                thumbnail: thumbnail
-                  ? Object.assign({},
+              contentType,
+              fileName,
+              thumbnail: thumbnail
+                ? Object.assign({}
                     (await loadAttachmentData(thumbnail)),
-                    {path: getAbsoluteAttachmentPath(thumbnail.path)})
+                    {objectUrl: getAbsoluteAttachmentPath(thumbnail.path)})
                 : null,
             };
           })
