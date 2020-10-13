@@ -1474,10 +1474,7 @@
         }
 
         // 1. Load provided thumbnail
-        if (this.loadQuoteThumbnail(message, quote)) {
-          this.forceRender(message);
-          return;
-        }
+        const gotThumbnail = this.loadQuoteThumbnail(message, quote);
 
         // 2. Check to see if we've already loaded the target message into memory
         const { author, id } = quote;
@@ -1486,6 +1483,13 @@
 
         if (quotedMessage) {
           this.loadQuotedMessage(message, quotedMessage);
+          this.forceRender(message);
+          return;
+        }
+
+        // Even if we got the thumbnail locall, we wanted to populate the referenced
+        //   message so a click can navigate to it.
+        if (gotThumbnail) {
           this.forceRender(message);
           return;
         }
