@@ -54,7 +54,7 @@
 		"description": "Warning that long messages could not get received completely by Android clients."
 	},
 	"leftTheGroup": {
-		"message": "$name$ opuścił grupę.",
+		"message": "$name$ opuścił/a grupę",
 		"description": "Shown in the conversation history when a single person leaves the group",
 		"placeholders": {
 			"name": {
@@ -64,7 +64,7 @@
 		}
 	},
 	"youChangedTheTimer": {
-		"message": "Czas ustawiony na $time$",
+		"message": "Ustawiłeś/aś czas znikania wiadomości na $time$",
 		"description": "Message displayed when you change the message expiration timer in a conversation.",
 		"placeholders": {
 			"time": {
@@ -240,7 +240,7 @@
 		"description": "Message shown as the export location if we didn't capture the target directory"
 	},
 	"changedRecently": {
-		"message": "Numer bezpieczeństwa $name$ zmienił się. To może oznaczać, że ktoś próbuje przechwycić Twoją komunikację lub że po prostu $name$przeinstalował Signal. ",
+		"message": "Numer bezpieczeństwa $name$ zmienił się. To może oznaczać, że ktoś próbuje przechwycić Twoją komunikację lub że po prostu $name$ przeinstalował aplikację Signal. ",
 		"description": "Shown on confirmation dialog when user attempts to send a message",
 		"placeholders": {
 			"name": {
@@ -254,7 +254,7 @@
 		"description": "Label for the time a message was sent"
 	},
 	"theyChangedTheTimer": {
-		"message": "$name$ ustawił czas na $time$.",
+		"message": "$name$ ustawił/a czas znikania wiadomości na $time$",
 		"description": "Message displayed when someone else changes the message expiration timer in a conversation.",
 		"placeholders": {
 			"name": {
@@ -320,7 +320,7 @@
 		"description": ""
 	},
 	"debugLogExplanation": {
-		"message": "Ten log zostanie publicznie opublikowany autorom aplikacji. Możesz go przejrzeć i zedytować przed wysłaniem.",
+		"message": "Ten log zostanie publicznie opublikowany autorom aplikacji. Możesz go przejrzeć i edytować przed wysłaniem.",
 		"description": ""
 	},
 	"newPhoneNumber": {
@@ -328,7 +328,7 @@
 		"description": "Placeholder for adding a new number to a contact"
 	},
 	"noLongerVerified": {
-		"message": "Twój numer bezpieczeństwa z $name$zmienił się. Naciśnij, aby zobaczyć.",
+		"message": "Twój numer bezpieczeństwa z $name$ zmienił się. Naciśnij, aby zobaczyć.",
 		"description": "Shown in converation banner when user's safety number has changed, but they were previously verified.",
 		"placeholders": {
 			"name": {
@@ -412,7 +412,7 @@
 		}
 	},
 	"joinedTheGroup": {
-		"message": "$name$ dołączył do grupy.",
+		"message": "$name$ dołączył/a do grupy",
 		"description": "Shown in the conversation history when a single person joins the group",
 		"placeholders": {
 			"name": {
@@ -522,7 +522,7 @@
 		"description": "Label for a disabled sync button while sync is in progress."
 	},
 	"multipleNoLongerVerified": {
-		"message": "Twoje numery bezpieczeństwa z kilkoma członkami grupy zmieniły się i są niezweryfikowane . Naciśnij, aby zobaczyć.",
+		"message": "Twoje numery bezpieczeństwa z kilkoma członkami grupy zmieniły się i są niezweryfikowane. Naciśnij, aby zobaczyć.",
 		"description": "Shown in conversation banner when more than one group member's safety number has changed, but they were previously verified."
 	},
 	"acceptNewKey": {
@@ -582,8 +582,8 @@
 		"description": "Label for the time a message was received"
 	},
 	"youMarkedAsNotVerified": {
-		"message": "Oznaczyłeś numer bezpieczeństwa z $name$ jako niezweryfikowany.",
-		"description": "Shown in the conversation history when the user marks a contact as not verified, whether on the safety number screen or by dismissing a banner or dialog.",
+		"message": "Oznaczyłeś/aś Twój numer bezpieczeństwa $name$ jako niezweryfikowany",
+		"description": "Shown in the conversation history when the user marks a contact as not verified, whether on the Safety Number screen or by dismissing a banner or dialog.",
 		"placeholders": {
 			"name": {
 				"content": "$1",
@@ -592,7 +592,7 @@
 		}
 	},
 	"isVerified": {
-		"message": "Zweryfikowałeś(aś) numer bezpieczeństwa $name$.",
+		"message": "Zweryfikowałeś(aś) numer bezpieczeństwa z $name$.",
 		"description": "Summary state shown at top of the safety number screen if user has verified contact.",
 		"placeholders": {
 			"name": {
@@ -631,7 +631,7 @@
 	},
 	"deleteMessage": {
 		"message": "Usuń wiadomość",
-		"description": ""
+		"description": "Shown on the drop-down menu for an individual message, deletes single message"
 	},
 	"autoUpdateNewVersionInstructions": {
 		"message": "Naciśnij Uruchom ponownie, aby zastosować aktualizacje.",
@@ -712,7 +712,7 @@
 		"description": "Button for the user to confirm that they have Signal for Android"
 	},
 	"mainMenuHelp": {
-		"message": "&Wsparcie",
+		"message": "&Pomoc",
 		"description": "The label that is used for the Help menu in the program main menu. The '&' indicates that the following letter will be used as the keyboard 'shortcut letter' for accessing the menu with the Alt-<letter> combination."
 	},
 	"unnamedFile": {
@@ -724,7 +724,7 @@
 		"description": "Used on a warning dialog to make it clear that it might be risky to send the message."
 	},
 	"youMarkedAsVerified": {
-		"message": "Oznaczyłeś numer bezpieczeństwa $name$ jako zweryfikowany.",
+		"message": "Oznaczyłeś/aś Twój numer bezpieczeństwa $name$ jako zweryfikowany",
 		"description": "Shown in the conversation history when the user marks a contact as verified.",
 		"placeholders": {
 			"name": {
@@ -762,7 +762,7 @@
 		"description": ""
 	},
 	"youMarkedAsNotVerifiedOtherDevice": {
-		"message": "Oznaczyłeś Twój numer bezpieczeństwa z $name$ jako niezweryfikowany z innego urządzenia.",
+		"message": "Oznaczyłeś/aś Twój numer bezpieczeństwa z $name$ jako niezweryfikowany z innego urządzenia",
 		"description": "Shown in the conversation history when we discover that the user marked a contact as not verified on another device.",
 		"placeholders": {
 			"name": {
@@ -790,7 +790,7 @@
 		"description": "Item under the Help menu, takes you to the support page"
 	},
 	"multipleJoinedTheGroup": {
-		"message": "$names$ dołączyli do grupy.",
+		"message": "$names$ dołączyli do grupy",
 		"description": "Shown in the conversation history when more than one person joins the group",
 		"placeholders": {
 			"names": {
@@ -838,11 +838,11 @@
 		}
 	},
 	"updatedTheGroup": {
-		"message": "Zaktualizowano grupę.",
+		"message": "Grupa została uaktualniona",
 		"description": "Shown in the conversation history when someone updates the group"
 	},
 	"identityKeyErrorOnSend": {
-		"message": "Numer bezpieczeństwa z $name$ zmienił się. To może oznaczać, że ktoś próbuje przechwycić Twoją komunikację lub, że po prostu$name$ przeinstalował Signal. Możesz zweryfikować jego nowy numer bezpieczeństwa poniżej.",
+		"message": "Numer bezpieczeństwa z $name$ zmienił się. To może oznaczać, że ktoś próbuje przechwycić Twoją komunikację lub, że po prostu $name$ przeinstalował aplikację Signal. Możesz zweryfikować jego nowy numer bezpieczeństwa poniżej.",
 		"description": "Shown when user clicks on a failed recipient in the message detail view after an identity key change",
 		"placeholders": {
 			"name": {
@@ -924,7 +924,7 @@
 		"description": ""
 	},
 	"titleIsNow": {
-		"message": "Nazwa grupy jest teraz '$name$'.",
+		"message": "Title is now '$name$'",
 		"description": "Shown in the conversation history when someone changes the title of the group",
 		"placeholders": {
 			"name": {
@@ -934,7 +934,7 @@
 		}
 	},
 	"changedRightAfterVerify": {
-		"message": "Numer bezpieczeństwa, który próbujesz zweryfikować zmienił się. Proszę sprawdź go z $name$. Pamiętaj, że to może oznaczać, że ktoś próbuje przechwycić Twoją komunikację lub po prostu $name$przeinstalował Signal. ",
+		"message": "Numer bezpieczeństwa, który próbujesz zweryfikować zmienił się. Proszę sprawdź go z $name$. Pamiętaj, że to może oznaczać, że ktoś próbuje przechwycić Twoją komunikację lub po prostu $name$ przeinstalował aplikację Signal. ",
 		"description": "Shown on the safety number screen when the user has selected to verify/unverify a contact's safety number, and we immediately discover a safety number change",
 		"placeholders": {
 			"name": {
@@ -945,7 +945,7 @@
 	},
 	"timerSetTo": {
 		"message": "Czas ustawiony na $time$.",
-		"description": "Displayed in the conversation list when the timer is updated.",
+		"description": "Displayed in the conversation list when the timer is updated by some automatic action.",
 		"placeholders": {
 			"time": {
 				"content": "$1",
@@ -978,7 +978,7 @@
 		"description": ""
 	},
 	"youMarkedAsVerifiedOtherDevice": {
-		"message": "Oznaczyłeś Twój numer bezpieczeństwa z $name$ jako zweryfikowany z innego urządzenia.",
+		"message": "Oznaczyłeś/aś Twój numer bezpieczeństwa z $name$ jako zweryfikowany z innego urządzenia",
 		"description": "Shown in the conversation history when we discover that the user marked a contact as verified on another device.",
 		"placeholders": {
 			"name": {
@@ -1060,7 +1060,7 @@
 		"description": "Shown in a quotation of a message containing a video if no text was originally provided with that video"
 	},
 	"timerSetOnSync": {
-		"message": "Aktualizacja zegara do $time$.",
+		"message": "Zmieniono czas znikania wiadomości na $time$",
 		"description": "Message displayed when timer is set on initial link of desktop device.",
 		"placeholders": {
 			"time": {
@@ -1192,7 +1192,7 @@
 		"description": "Shown in a quotation of a message containing an audio attachment if no text was originally provided with that attachment"
 	},
 	"address": {
-		"message": "adres",
+		"message": "Adres",
 		"description": "Generic label shown if contact address has custom type but no label"
 	},
 	"you": {
@@ -1204,7 +1204,7 @@
 		"description": "When rendering an address, used to provide context to a post office box"
 	},
 	"phone": {
-		"message": "telefon",
+		"message": "Telefon",
 		"description": "Generic label shown if contact phone has custom type but no label"
 	},
 	"sendMessageToContact": {
@@ -1234,15 +1234,15 @@
 		"description": "Displayed in notifications when setting is 'name only' and more than one message is waiting"
 	},
 	"importErrorFirst": {
-		"message": "Make sure you have chosen the correct directory that contains your saved Signal data. Its name should begin with 'Signal Export.' You can also save a new copy of your data from the Chrome App.",
+		"message": "Upewnij się, że wybrałeś właściwy folder zawierający dane Signal. Jego nazwa powinna zaczynać się na \"Signal Export\". Możesz też zapisać nową kopię danych z aplikacji Chrome.",
 		"description": "Message shown if the import went wrong; first paragraph"
 	},
 	"work": {
-		"message": "praca",
+		"message": "Praca",
 		"description": "Shown on contact detail screen as a label for an address/phone/email"
 	},
 	"home": {
-		"message": "dom",
+		"message": "Dom",
 		"description": "Shown on contact detail screen as a label for an address/phone/email"
 	},
 	"notificationMostRecent": {
@@ -1250,7 +1250,7 @@
 		"description": "Displayed in notifications when setting is 'name and message' and more than one message is waiting"
 	},
 	"privacyPolicy": {
-		"message": "Terms & Privacy Policy",
+		"message": "Warunki korzystania & Polityka prywatności",
 		"description": "Shown in the about box for the link to https://signal.org/legal"
 	},
 	"lightboxImageAlt": {
@@ -1258,7 +1258,7 @@
 		"description": "Used in the alt tag for the image shown in a full-screen lightbox view"
 	},
 	"mobile": {
-		"message": "komórka",
+		"message": "Komórka",
 		"description": "Shown on contact detail screen as a label for aa phone or email"
 	},
 	"notificationFrom": {
@@ -1266,8 +1266,14 @@
 		"description": "Displayed in notifications when setting is 'name only' and one message is waiting"
 	},
 	"contactAvatarAlt": {
-		"message": "Contact avatar",
-		"description": "Used in the alt tag for the image avatar of a contact"
+		"message": "Avatar for contact $name$",
+		"description": "Used in the alt tag for the image avatar of a contact",
+		"placeholders": {
+			"name": {
+				"content": "$1",
+				"example": "John"
+			}
+		}
 	},
 	"documentsEmptyState": {
 		"message": "Nie masz żadnych dokumentów w tej rozmowie",
@@ -1278,11 +1284,243 @@
 		"description": "Used in the media gallery documents tab to visually represent a file"
 	},
 	"email": {
-		"message": "email",
+		"message": "Email",
 		"description": "Generic label shown if contact email has custom type but no label"
 	},
 	"importErrorSecond": {
-		"message": "If these steps don't work for you, please submit a debug log (View -> Debug Log) so that we can help you get migrated!",
+		"message": "Jeżeli te kroki nie będą dla Ciebie skuteczne, prześlij dziennik debugowania (Widok -> Dziennik debugowania), abyśmy mogli Ci pomóc w migracji!",
 		"description": "Message shown if the import went wrong; second paragraph"
+	},
+	"appMenuHideOthers": {
+		"message": "Ukryj pozostałe",
+		"description": "Application menu command to hide all other windows"
+	},
+	"appMenuQuit": {
+		"message": "Zamknij",
+		"description": "Application menu command to close the application"
+	},
+	"editMenuCut": {
+		"message": "Wytnij",
+		"description": "Edit menu command to remove selected text and add it to clipboard"
+	},
+	"verifyNewNumber": {
+		"message": "Verify New Number",
+		"description": "Label on button included with safety number change notification in the conversation"
+	},
+	"editMenuSelectAll": {
+		"message": "Zaznacz wszystko",
+		"description": "Edit menu comand to select all of the text in selected text box"
+	},
+	"imageFailedToLoad": {
+		"message": "Image failed to load",
+		"description": "When an image attachment is missing, this message is shown"
+	},
+	"themeLight": {
+		"message": "Jasny",
+		"description": "Label text for light theme (normal)"
+	},
+	"deleteThisMessage": {
+		"message": "Usuń wiadomość",
+		"description": ""
+	},
+	"editMenuPaste": {
+		"message": "Wklej",
+		"description": "Edit menu command to insert text from clipboard at cursor location"
+	},
+	"viewMenuZoomOut": {
+		"message": "Pomniejsz",
+		"description": "View menu command to make everything smaller"
+	},
+	"editMenuUndo": {
+		"message": "Cofnij",
+		"description": "Edit menu command to remove recently-typed text"
+	},
+	"justNow": {
+		"message": "teraz",
+		"description": "Shown if a message is very recent, less than 60 seconds old"
+	},
+	"mediaPermissionsDescription": {
+		"message": "Zezwól na dostęp do kamery i mikrofonu",
+		"description": "Description of the media permission description"
+	},
+	"safetyNumberChanged": {
+		"message": "Safety Number has changed",
+		"description": "A notification shown in the conversation when a contact reinstalls"
+	},
+	"multipleLeftTheGroup": {
+		"message": "$name$ opuścił/a grupę",
+		"description": "Shown in the conversation history when multiple people leave the group",
+		"placeholders": {
+			"name": {
+				"content": "$1",
+				"example": "Alice, Bob"
+			}
+		}
+	},
+	"viewMenuZoomIn": {
+		"message": "Powiększ",
+		"description": "View menu command to make everything bigger"
+	},
+	"windowMenuBringAllToFront": {
+		"message": "Bring All to Front",
+		"description": "Window menu command to bring all windows of current applicatinon to front"
+	},
+	"timerOption_1_hour": {
+		"message": "1 godzina",
+		"description": "Label for a selectable option in the message expiration timer menu"
+	},
+	"safetyNumberChangedGroup": {
+		"message": "Safety Number with $name$ has changed",
+		"description": "A notification shown in a group conversation when a contact reinstalls, showing the contact name",
+		"placeholders": {
+			"name": {
+				"content": "$1",
+				"example": "John"
+			}
+		}
+	},
+	"imageAttachmentAlt": {
+		"message": "Image attached to message",
+		"description": "Used in alt tag of image attachment"
+	},
+	"signalDesktopPreferences": {
+		"message": "Preferencje",
+		"description": "Title of the window that pops up with Signal Desktop preferences in it"
+	},
+	"allowAccess": {
+		"message": "Zezwól",
+		"description": "Button shown in popup asking to enable microphon/video permissions to send audio messages"
+	},
+	"videoScreenshotFailedToLoad": {
+		"message": "Video screenshot failed to load",
+		"description": "When a attachment video screenshot is missing, this message is shown"
+	},
+	"moreInfo": {
+		"message": "More Info...",
+		"description": "Shown on the drop-down menu for an individual message, takes you to message detail screen"
+	},
+	"windowMenuClose": {
+		"message": "Zamknij okno",
+		"description": "Window menu command to close the current window"
+	},
+	"editMenuPasteAndMatchStyle": {
+		"message": "Wklej i dopasuj styl",
+		"description": "Edit menu command to insert text from clipboard at cursor location, taking only text and not style information"
+	},
+	"timerOption_1_minute": {
+		"message": "1 minuta",
+		"description": "Label for a selectable option in the message expiration timer menu"
+	},
+	"permissions": {
+		"message": "Uprawnienia",
+		"description": "Header for permissions section of settings"
+	},
+	"editMenuRedo": {
+		"message": "Przywróć",
+		"description": "Edit menu command to restore previously undone typed text"
+	},
+	"hoursAgo": {
+		"message": "$hours$ hr ago",
+		"description": "Contracted form of 'X hours ago' which works both for singular and plural",
+		"placeholders": {
+			"hours": {
+				"content": "$1",
+				"example": "2"
+			}
+		}
+	},
+	"appMenuHide": {
+		"message": "Ukryj",
+		"description": "Application menu command to hide the window"
+	},
+	"timerOption_5_minutes": {
+		"message": "5 minut",
+		"description": "Label for a selectable option in the message expiration timer menu"
+	},
+	"viewMenuToggleDevTools": {
+		"message": "Narzędzia dla programistów",
+		"description": "View menu command to show or hide the developer tools"
+	},
+	"viewMenuResetZoom": {
+		"message": "Domyślny rozmiar",
+		"description": "View menu command to go back to the default zoom"
+	},
+	"audioPermissionNeeded": {
+		"message": "Aby wysyłać wiadomości audio, zezwól aplikacji Signal Desktop na dostęp do mikrofonu.",
+		"description": "Shown if the user attempts to send an audio message without audio permssions turned on"
+	},
+	"themeDark": {
+		"message": "Ciemny",
+		"description": "Label text for dark theme"
+	},
+	"windowMenuMinimize": {
+		"message": "Minimalizuj",
+		"description": "Window menu command to minimize the current window"
+	},
+	"editMenuStopSpeaking": {
+		"message": "Stop speaking",
+		"description": "Edit menu item under 'speech' to stop dictation"
+	},
+	"timerOption_12_hours": {
+		"message": "12 godzin",
+		"description": "Label for a selectable option in the message expiration timer menu"
+	},
+	"sendFailed": {
+		"message": "Send failed",
+		"description": "Shown on outgoing message if it fails to send"
+	},
+	"viewMenuToggleFullScreen": {
+		"message": "Pełny ekran",
+		"description": "View menu command to enter or leave Full Screen mode"
+	},
+	"timerOption_30_minutes": {
+		"message": "30 minut",
+		"description": "Label for a selectable option in the message expiration timer menu"
+	},
+	"appMenuUnhide": {
+		"message": "Pokaż wszystko",
+		"description": "Application menu command to show all application windows"
+	},
+	"showSettings": {
+		"message": "Pokaż ustawienia",
+		"description": "A button shown in dialog requesting the user to turn on audio permissions"
+	},
+	"editMenuCopy": {
+		"message": "Kopiuj",
+		"description": "Edit menu command to add selected text to clipboard"
+	},
+	"retrySend": {
+		"message": "Retry Send",
+		"description": "Shown on the drop-down menu for an indinvidaul message, but only if it is an outgoing message that failed to send"
+	},
+	"timerOption_6_hours": {
+		"message": "6 godzin",
+		"description": "Label for a selectable option in the message expiration timer menu"
+	},
+	"videoAttachmentAlt": {
+		"message": "Screenshot of video attached to message",
+		"description": "Used in alt tag of video attachment preview"
+	},
+	"editMenuDelete": {
+		"message": "Usuń",
+		"description": "Edit menu command to remove the selected text"
+	},
+	"windowMenuZoom": {
+		"message": "Powiększ",
+		"description": "Window menu command to make the current window the size of the whole screen"
+	},
+	"editMenuStartSpeaking": {
+		"message": "Start speaking",
+		"description": "Edit menu item under 'speech' to start dictation"
+	},
+	"minutesAgo": {
+		"message": "$minutes$ min ago",
+		"description": "Contracted form of 'X minutes ago' which works both for singular and plural",
+		"placeholders": {
+			"minutes": {
+				"content": "$1",
+				"example": "10"
+			}
+		}
 	}
 }

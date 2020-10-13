@@ -54,7 +54,7 @@
 		"description": "Warning that long messages could not get received completely by Android clients."
 	},
 	"leftTheGroup": {
-		"message": "$name$ opustil/a skupinu.",
+		"message": "$name$ opustil/a skupinu",
 		"description": "Shown in the conversation history when a single person leaves the group",
 		"placeholders": {
 			"name": {
@@ -64,7 +64,7 @@
 		}
 	},
 	"youChangedTheTimer": {
-		"message": "Nastavili ste časovač na $time$.",
+		"message": "Nastavili ste časovač miznúcich správ na $time$",
 		"description": "Message displayed when you change the message expiration timer in a conversation.",
 		"placeholders": {
 			"time": {
@@ -86,7 +86,7 @@
 		"description": "Text displayed before the input where the user can enter the name for this device."
 	},
 	"timestamp_m": {
-		"message": "minútou",
+		"message": "1 minútou",
 		"description": "Brief timestamp for messages sent about one minute ago. Displayed in the conversation list and message bubble."
 	},
 	"debugLog": {
@@ -156,7 +156,7 @@
 		"description": ""
 	},
 	"resetSession": {
-		"message": "Obnoviť spojenie",
+		"message": "Obnoviť reláciu",
 		"description": "This is a menu item for resetting the session, using the imperative case, as in a command."
 	},
 	"offline": {
@@ -204,7 +204,7 @@
 		"description": "Menu item for deleting messages, title case."
 	},
 	"incomingError": {
-		"message": "Chyba pri spracovaní prichádzajúcej správy.",
+		"message": "Chyba pri spracovaní prichádzajúcej správy",
 		"description": ""
 	},
 	"delete": {
@@ -254,7 +254,7 @@
 		"description": "Label for the time a message was sent"
 	},
 	"theyChangedTheTimer": {
-		"message": "$name$ nastavil/a časovač na $time$.",
+		"message": "$name$ nastavil/a časovač miznúcich správ na $time$",
 		"description": "Message displayed when someone else changes the message expiration timer in a conversation.",
 		"placeholders": {
 			"name": {
@@ -292,7 +292,7 @@
 		"description": "Displayed in notifications for only 1 message"
 	},
 	"nameOnly": {
-		"message": "Len meno",
+		"message": "Iba meno",
 		"description": "Label for setting notifications to display sender name only"
 	},
 	"autoUpdateLaterButtonLabel": {
@@ -354,7 +354,7 @@
 		"description": "Label for a button that syncs contacts and groups from your phone"
 	},
 	"syncFailed": {
-		"message": "Import zlyhal. Uistite sa, že váš počítač a mobilné zariadenie sú pripojené k internetu.",
+		"message": "Import zlyhal. Uistite sa, že váš počítač a mobilný telefón majú prístup k internetu.",
 		"description": "Informational text displayed if a sync operation times out."
 	},
 	"unlinked": {
@@ -394,7 +394,7 @@
 		}
 	},
 	"installTooManyDevices": {
-		"message": "Je nám ľúto, máte prepojený príliš veľa zariadení už. Skúste odstrániť niektoré z nich.",
+		"message": "Máte prepojených príliš veľa zariadení. Skúste odstrániť niektoré z nich.",
 		"description": ""
 	},
 	"installSignalLinks": {
@@ -412,7 +412,7 @@
 		}
 	},
 	"joinedTheGroup": {
-		"message": "$name$ sa pripojil/a k skupine.",
+		"message": "$name$ sa pripojil/a k skupine",
 		"description": "Shown in the conversation history when a single person joins the group",
 		"placeholders": {
 			"name": {
@@ -484,7 +484,7 @@
 		"description": "Hides the details of a key change"
 	},
 	"theme": {
-		"message": "Téma",
+		"message": "Motív",
 		"description": "Header for theme settings"
 	},
 	"newIdentity": {
@@ -500,7 +500,7 @@
 		"description": "Command under Window menu, to show the window"
 	},
 	"audioNotificationDescription": {
-		"message": "Prehrať zvukovú notifikáciu",
+		"message": "Prehrať zvuk upozornenia",
 		"description": "Description for audio notification setting"
 	},
 	"isNotVerified": {
@@ -582,8 +582,8 @@
 		"description": "Label for the time a message was received"
 	},
 	"youMarkedAsNotVerified": {
-		"message": "Označili ste bezpečnostné číslo s $name$ za neoverené.",
-		"description": "Shown in the conversation history when the user marks a contact as not verified, whether on the safety number screen or by dismissing a banner or dialog.",
+		"message": "Označili ste bezpečnostné číslo s $name$ za neoverené",
+		"description": "Shown in the conversation history when the user marks a contact as not verified, whether on the Safety Number screen or by dismissing a banner or dialog.",
 		"placeholders": {
 			"name": {
 				"content": "$1",
@@ -630,8 +630,8 @@
 		"description": ""
 	},
 	"deleteMessage": {
-		"message": "Vymazať túto správu",
-		"description": ""
+		"message": "Vymazať správu",
+		"description": "Shown on the drop-down menu for an individual message, deletes single message"
 	},
 	"autoUpdateNewVersionInstructions": {
 		"message": "Reštartujte Signal pre dokončenie aktualizácie.",
@@ -704,7 +704,7 @@
 		"description": ""
 	},
 	"unblockToSend": {
-		"message": "Pre odoslanie správy tento kontakt odblokujte.",
+		"message": "Pre odoslanie správy kontakt odblokujte.",
 		"description": "Brief message shown when trying to message a blocked number"
 	},
 	"installIHaveSignalButton": {
@@ -724,7 +724,7 @@
 		"description": "Used on a warning dialog to make it clear that it might be risky to send the message."
 	},
 	"youMarkedAsVerified": {
-		"message": "Označili ste bezpečnostné číslo s $name$ za overené.",
+		"message": "Označili ste bezpečnostné číslo s $name$ za overené",
 		"description": "Shown in the conversation history when the user marks a contact as verified.",
 		"placeholders": {
 			"name": {
@@ -746,7 +746,7 @@
 		"description": ""
 	},
 	"relink": {
-		"message": "Pripojiť znovu",
+		"message": "Prepojiť znovu",
 		"description": ""
 	},
 	"timerOption_1_week_abbreviated": {
@@ -762,7 +762,7 @@
 		"description": ""
 	},
 	"youMarkedAsNotVerifiedOtherDevice": {
-		"message": "Bezpečnostné číslo s $name$ ste označili ako neoverené z iného zariadenia. ",
+		"message": "Bezpečnostné číslo s $name$ ste označili ako neoverené z iného zariadenia",
 		"description": "Shown in the conversation history when we discover that the user marked a contact as not verified on another device.",
 		"placeholders": {
 			"name": {
@@ -790,7 +790,7 @@
 		"description": "Item under the Help menu, takes you to the support page"
 	},
 	"multipleJoinedTheGroup": {
-		"message": "$names$ sa pripojili k skupine.",
+		"message": "$names$ sa pripojili k skupine",
 		"description": "Shown in the conversation history when more than one person joins the group",
 		"placeholders": {
 			"names": {
@@ -838,7 +838,7 @@
 		}
 	},
 	"updatedTheGroup": {
-		"message": "Aktualizoval/a skupinu.",
+		"message": "Skupina bola aktualizovaná",
 		"description": "Shown in the conversation history when someone updates the group"
 	},
 	"identityKeyErrorOnSend": {
@@ -852,7 +852,7 @@
 		}
 	},
 	"to": {
-		"message": "Komu",
+		"message": "Pre",
 		"description": "Label for the receiver of a message"
 	},
 	"timerOption_1_hour_abbreviated": {
@@ -896,7 +896,7 @@
 		"description": "Very short format indicating current timer setting in the conversation header"
 	},
 	"nameAndMessage": {
-		"message": "Meno a správa",
+		"message": "Meno a správu",
 		"description": "Label for setting notifications to display name and message text"
 	},
 	"failedToSend": {
@@ -924,7 +924,7 @@
 		"description": ""
 	},
 	"titleIsNow": {
-		"message": "Názov skupiny sa zmenil na \"$name$\".",
+		"message": "Názov skupiny sa zmenil na \"$name$\"",
 		"description": "Shown in the conversation history when someone changes the title of the group",
 		"placeholders": {
 			"name": {
@@ -945,7 +945,7 @@
 	},
 	"timerSetTo": {
 		"message": "Časovač nastavený na $time$",
-		"description": "Displayed in the conversation list when the timer is updated.",
+		"description": "Displayed in the conversation list when the timer is updated by some automatic action.",
 		"placeholders": {
 			"time": {
 				"content": "$1",
@@ -978,7 +978,7 @@
 		"description": ""
 	},
 	"youMarkedAsVerifiedOtherDevice": {
-		"message": "Bezpečnostné číslo s $name$ ste označili ako overené z iného zariadenia.",
+		"message": "Bezpečnostné číslo s $name$ ste označili ako overené z iného zariadenia",
 		"description": "Shown in the conversation history when we discover that the user marked a contact as verified on another device.",
 		"placeholders": {
 			"name": {
@@ -992,7 +992,7 @@
 		"description": "Command in the tray icon menu, to hide the window"
 	},
 	"linkedDevices": {
-		"message": "Pripojené Zariadenia",
+		"message": "Pripojené zariadenia",
 		"description": "Used in the guidance to help people find the 'link new device' area of their Signal mobile app"
 	},
 	"yesterday": {
@@ -1040,7 +1040,7 @@
 		"description": "The label that is used for the Preferences menu in the program main menu. This should be consistent with the standard naming for ‘Preferences’ on the operating system."
 	},
 	"importCompleteLinkButton": {
-		"message": "Pripojte toto zariadenie k vášmu mobilnému zariadeniu",
+		"message": "Pripojte toto zariadenie k vašemu mobilnému telefónu",
 		"description": "Button shown at end of successful 'light' import process, so the standard linking process still needs to happen"
 	},
 	"today": {
@@ -1048,7 +1048,7 @@
 		"description": "Section header in the media gallery"
 	},
 	"linkYourPhone": {
-		"message": "Pripojte svoje mobilné zariadenie k Signal Desktop",
+		"message": "Pripojte svoj mobilný telefón k Signal Desktop",
 		"description": "Shown on the front page when the application first starst, above the QR code"
 	},
 	"viewAllMedia": {
@@ -1060,7 +1060,7 @@
 		"description": "Shown in a quotation of a message containing a video if no text was originally provided with that video"
 	},
 	"timerSetOnSync": {
-		"message": "Aktualizácia časovača na $time$.",
+		"message": "Časovač miznúcich správ nastavený na $time$",
 		"description": "Message displayed when timer is set on initial link of desktop device.",
 		"placeholders": {
 			"time": {
@@ -1074,7 +1074,7 @@
 		"description": "Text of the button that deletes all data"
 	},
 	"menuSetupWithImport": {
-		"message": "Nastaviť pomocou Importu",
+		"message": "Nastaviť  Importovaním",
 		"description": "When the application is not yet set up, menu option to start up the import sequence"
 	},
 	"importErrorHeader": {
@@ -1094,7 +1094,7 @@
 		"description": "The button used in Signal Android to add a new linked device"
 	},
 	"replyingTo": {
-		"message": "Odpovedáte $name$",
+		"message": "Odpoveď pre $name$",
 		"description": "Shown in iOS theme when you or someone quotes to a message which is not from you",
 		"placeholders": {
 			"name": {
@@ -1108,7 +1108,7 @@
 		"description": "Header of the full-screen delete data confirmation screen"
 	},
 	"deleteAllDataProgress": {
-		"message": "Odpojenie a mazanie dát",
+		"message": "Odpojovanie a mazanie dát",
 		"description": "Message shown to user when app is disconnected and data deleted"
 	},
 	"menuReportIssue": {
@@ -1152,7 +1152,7 @@
 		"description": "Text describing what exactly will happen if the user clicks the button to delete all data"
 	},
 	"finishLinkingPhone": {
-		"message": "Dokončiť pripojenie mobilného zariadenia",
+		"message": "Dokončiť pripojenie mobilného telefónu",
 		"description": "The text on the button to finish the linking process, after choosing the device name"
 	},
 	"importCompleteStartButton": {
@@ -1212,7 +1212,7 @@
 		"description": "Shown when you are sent a contact and that contact has a signal account"
 	},
 	"emojiAlt": {
-		"message": "Emoji image of '$title$'",
+		"message": "Emoji \"$title$\"",
 		"description": "Used in the alt tag of all emoji images",
 		"placeholders": {
 			"title": {
@@ -1222,7 +1222,7 @@
 		}
 	},
 	"quoteThumbnailAlt": {
-		"message": "Thumbnail of image from quoted message",
+		"message": "Náhľad obrázku z citovanej správy.",
 		"description": "Used in alt tag of thumbnail images inside of an embedded message quote"
 	},
 	"mediaEmptyState": {
@@ -1234,7 +1234,7 @@
 		"description": "Displayed in notifications when setting is 'name only' and more than one message is waiting"
 	},
 	"importErrorFirst": {
-		"message": "Make sure you have chosen the correct directory that contains your saved Signal data. Its name should begin with 'Signal Export.' You can also save a new copy of your data from the Chrome App.",
+		"message": "Uistite sa, že ste zvolili správny priečinok, ktorý obsahuje Vaše Signal dáta. Meno priečinka by mal začínať \"Signal Export\". Prípadne môžete vytvoriť novú kópiu Vašich dát v Chrome aplikácii.",
 		"description": "Message shown if the import went wrong; first paragraph"
 	},
 	"work": {
@@ -1250,11 +1250,11 @@
 		"description": "Displayed in notifications when setting is 'name and message' and more than one message is waiting"
 	},
 	"privacyPolicy": {
-		"message": "Terms & Privacy Policy",
+		"message": "Podmienky a Ochrana osobných údajov",
 		"description": "Shown in the about box for the link to https://signal.org/legal"
 	},
 	"lightboxImageAlt": {
-		"message": "Image sent in conversation",
+		"message": "Obrázok z konverzácie",
 		"description": "Used in the alt tag for the image shown in a full-screen lightbox view"
 	},
 	"mobile": {
@@ -1266,15 +1266,21 @@
 		"description": "Displayed in notifications when setting is 'name only' and one message is waiting"
 	},
 	"contactAvatarAlt": {
-		"message": "Contact avatar",
-		"description": "Used in the alt tag for the image avatar of a contact"
+		"message": "Avatar kontaktu $name$",
+		"description": "Used in the alt tag for the image avatar of a contact",
+		"placeholders": {
+			"name": {
+				"content": "$1",
+				"example": "John"
+			}
+		}
 	},
 	"documentsEmptyState": {
 		"message": "Táto konverzácia neobsahuje žiadne dokumenty",
 		"description": "Message shown to user in the media gallery when there are no messages with document attachments (anything other than images or video)"
 	},
 	"fileIconAlt": {
-		"message": "File icon",
+		"message": "Ikona súboru",
 		"description": "Used in the media gallery documents tab to visually represent a file"
 	},
 	"email": {
@@ -1282,7 +1288,239 @@
 		"description": "Generic label shown if contact email has custom type but no label"
 	},
 	"importErrorSecond": {
-		"message": "If these steps don't work for you, please submit a debug log (View -> Debug Log) so that we can help you get migrated!",
+		"message": "V prípade, že Vám tieto kroky nepomohli, pošlite nám ladiaci log (Zobraziť -> Ladiaci Log), aby sme Vám mohli pomôcť s migráciou.",
 		"description": "Message shown if the import went wrong; second paragraph"
+	},
+	"appMenuHideOthers": {
+		"message": "Skryť ostatné",
+		"description": "Application menu command to hide all other windows"
+	},
+	"appMenuQuit": {
+		"message": "Ukončiť Signal",
+		"description": "Application menu command to close the application"
+	},
+	"editMenuCut": {
+		"message": "Vystrihnúť",
+		"description": "Edit menu command to remove selected text and add it to clipboard"
+	},
+	"verifyNewNumber": {
+		"message": "Overiť nové číslo",
+		"description": "Label on button included with safety number change notification in the conversation"
+	},
+	"editMenuSelectAll": {
+		"message": "Vybrať všetko",
+		"description": "Edit menu comand to select all of the text in selected text box"
+	},
+	"imageFailedToLoad": {
+		"message": "Obrázok sa nepodarilo načítať",
+		"description": "When an image attachment is missing, this message is shown"
+	},
+	"themeLight": {
+		"message": "Svetlý",
+		"description": "Label text for light theme (normal)"
+	},
+	"deleteThisMessage": {
+		"message": "Vymazať túto správu",
+		"description": ""
+	},
+	"editMenuPaste": {
+		"message": "Vložiť",
+		"description": "Edit menu command to insert text from clipboard at cursor location"
+	},
+	"viewMenuZoomOut": {
+		"message": "Oddialiť",
+		"description": "View menu command to make everything smaller"
+	},
+	"editMenuUndo": {
+		"message": "Späť",
+		"description": "Edit menu command to remove recently-typed text"
+	},
+	"justNow": {
+		"message": "teraz",
+		"description": "Shown if a message is very recent, less than 60 seconds old"
+	},
+	"mediaPermissionsDescription": {
+		"message": "Povoliť prústup ku kamere a mikrofónu",
+		"description": "Description of the media permission description"
+	},
+	"safetyNumberChanged": {
+		"message": "Zmenilo sa bezpečnosné číslo",
+		"description": "A notification shown in the conversation when a contact reinstalls"
+	},
+	"multipleLeftTheGroup": {
+		"message": "$name$ opustil/a skupinu",
+		"description": "Shown in the conversation history when multiple people leave the group",
+		"placeholders": {
+			"name": {
+				"content": "$1",
+				"example": "Alice, Bob"
+			}
+		}
+	},
+	"viewMenuZoomIn": {
+		"message": "Priblížiť",
+		"description": "View menu command to make everything bigger"
+	},
+	"windowMenuBringAllToFront": {
+		"message": "Priviesť všetko do popredia",
+		"description": "Window menu command to bring all windows of current applicatinon to front"
+	},
+	"timerOption_1_hour": {
+		"message": "1 hodina",
+		"description": "Label for a selectable option in the message expiration timer menu"
+	},
+	"safetyNumberChangedGroup": {
+		"message": "Vaše bezpečnosné číslo s $name$ sa zmenilo",
+		"description": "A notification shown in a group conversation when a contact reinstalls, showing the contact name",
+		"placeholders": {
+			"name": {
+				"content": "$1",
+				"example": "John"
+			}
+		}
+	},
+	"imageAttachmentAlt": {
+		"message": "Obrázok pripojený k správe",
+		"description": "Used in alt tag of image attachment"
+	},
+	"signalDesktopPreferences": {
+		"message": "Nastavenia Signal Desktop",
+		"description": "Title of the window that pops up with Signal Desktop preferences in it"
+	},
+	"allowAccess": {
+		"message": "Povoliť prístup",
+		"description": "Button shown in popup asking to enable microphon/video permissions to send audio messages"
+	},
+	"videoScreenshotFailedToLoad": {
+		"message": "Náhľad videa sa nepodarilo načítať",
+		"description": "When a attachment video screenshot is missing, this message is shown"
+	},
+	"moreInfo": {
+		"message": "Viac informácii...",
+		"description": "Shown on the drop-down menu for an individual message, takes you to message detail screen"
+	},
+	"windowMenuClose": {
+		"message": "Zatvoriť okno",
+		"description": "Window menu command to close the current window"
+	},
+	"editMenuPasteAndMatchStyle": {
+		"message": "Vložiť a prispôsobiť štýl",
+		"description": "Edit menu command to insert text from clipboard at cursor location, taking only text and not style information"
+	},
+	"timerOption_1_minute": {
+		"message": "1 minúta",
+		"description": "Label for a selectable option in the message expiration timer menu"
+	},
+	"permissions": {
+		"message": "Povolenia",
+		"description": "Header for permissions section of settings"
+	},
+	"editMenuRedo": {
+		"message": "Znova",
+		"description": "Edit menu command to restore previously undone typed text"
+	},
+	"hoursAgo": {
+		"message": "pred $hours$ h",
+		"description": "Contracted form of 'X hours ago' which works both for singular and plural",
+		"placeholders": {
+			"hours": {
+				"content": "$1",
+				"example": "2"
+			}
+		}
+	},
+	"appMenuHide": {
+		"message": "Skryť",
+		"description": "Application menu command to hide the window"
+	},
+	"timerOption_5_minutes": {
+		"message": "5 minút",
+		"description": "Label for a selectable option in the message expiration timer menu"
+	},
+	"viewMenuToggleDevTools": {
+		"message": "Nástroje pre vývojárov",
+		"description": "View menu command to show or hide the developer tools"
+	},
+	"viewMenuResetZoom": {
+		"message": "Skutočná veľkosť",
+		"description": "View menu command to go back to the default zoom"
+	},
+	"audioPermissionNeeded": {
+		"message": "Pre posielanie zvukových správ, povoľte aplikácii Signal Desktop prístup k mikrofónu.",
+		"description": "Shown if the user attempts to send an audio message without audio permssions turned on"
+	},
+	"themeDark": {
+		"message": "Tmavý",
+		"description": "Label text for dark theme"
+	},
+	"windowMenuMinimize": {
+		"message": "Minimalizovať",
+		"description": "Window menu command to minimize the current window"
+	},
+	"editMenuStopSpeaking": {
+		"message": "Prestať hovoriť",
+		"description": "Edit menu item under 'speech' to stop dictation"
+	},
+	"timerOption_12_hours": {
+		"message": "12 hodín",
+		"description": "Label for a selectable option in the message expiration timer menu"
+	},
+	"sendFailed": {
+		"message": "Odoslanie zlyhalo",
+		"description": "Shown on outgoing message if it fails to send"
+	},
+	"viewMenuToggleFullScreen": {
+		"message": "Celá obrazovka",
+		"description": "View menu command to enter or leave Full Screen mode"
+	},
+	"timerOption_30_minutes": {
+		"message": "30 minút",
+		"description": "Label for a selectable option in the message expiration timer menu"
+	},
+	"appMenuUnhide": {
+		"message": "Ukázať všteky",
+		"description": "Application menu command to show all application windows"
+	},
+	"showSettings": {
+		"message": "Otvoriť nastavenia",
+		"description": "A button shown in dialog requesting the user to turn on audio permissions"
+	},
+	"editMenuCopy": {
+		"message": "Kopírovať",
+		"description": "Edit menu command to add selected text to clipboard"
+	},
+	"retrySend": {
+		"message": "Odoslať znovu",
+		"description": "Shown on the drop-down menu for an indinvidaul message, but only if it is an outgoing message that failed to send"
+	},
+	"timerOption_6_hours": {
+		"message": "6 hodín",
+		"description": "Label for a selectable option in the message expiration timer menu"
+	},
+	"videoAttachmentAlt": {
+		"message": "Náhľad videa pripojený k správe",
+		"description": "Used in alt tag of video attachment preview"
+	},
+	"editMenuDelete": {
+		"message": "Vymazať",
+		"description": "Edit menu command to remove the selected text"
+	},
+	"windowMenuZoom": {
+		"message": "Lupa",
+		"description": "Window menu command to make the current window the size of the whole screen"
+	},
+	"editMenuStartSpeaking": {
+		"message": "Začať hovoriť",
+		"description": "Edit menu item under 'speech' to start dictation"
+	},
+	"minutesAgo": {
+		"message": "pred $minutes$ min",
+		"description": "Contracted form of 'X minutes ago' which works both for singular and plural",
+		"placeholders": {
+			"minutes": {
+				"content": "$1",
+				"example": "10"
+			}
+		}
 	}
 }
