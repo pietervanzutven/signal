@@ -14,7 +14,6 @@
   'use strict';
 
   window.Whisper = window.Whisper || {};
-  const { Migrations } = Signal;
   const { Message } = window.Signal.Types;
   const {
     upgradeMessageSchema,
@@ -974,8 +973,6 @@
     },
 
     downloadAttachment({ attachment, message }) {
-      const { getAbsoluteAttachmentPath } = Migrations;
-
       Signal.Types.Attachment.save({
         attachment,
         document,
@@ -1000,7 +997,6 @@
     },
 
     showLightbox({ attachment, message }) {
-      const { getAbsoluteAttachmentPath } = Migrations;
       const { contentType, path } = attachment;
 
       if (
@@ -1050,7 +1046,6 @@
     showContactDetail({ contact, hasSignalAccount }) {
       const regionCode = storage.get('regionCode');
       const { contactSelector } = Signal.Types.Contact;
-      const { getAbsoluteAttachmentPath } = window.Signal.Migrations;
 
       const view = new Whisper.ReactWrapperView({
         Component: Signal.Components.ContactDetail,
