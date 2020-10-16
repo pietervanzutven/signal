@@ -14,7 +14,7 @@
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
     const moment_1 = __importDefault(window.moment);
-    const AttachmentSection_1 = window.ts.components.conversation.media_gallery.AttachmentSection;;
+    const AttachmentSection_1 = window.ts.components.conversation.media_gallery.AttachmentSection;
     const EmptyState_1 = window.ts.components.conversation.media_gallery.EmptyState;
     const groupMessagesByDate_1 = window.ts.components.conversation.media_gallery.groupMessagesByDate;
     const missingCaseError_1 = window.ts.util.missingCaseError;

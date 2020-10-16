@@ -4439,6 +4439,35 @@ body.dark-theme {
   width: 94px;
   object-fit: cover; }
 
+.module-media-grid-item__image-container {
+  height: 94px;
+  width: 94px;
+  object-fit: cover;
+  position: relative; }
+
+.module-media-grid-item__circle-overlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 42px;
+  height: 42px;
+  background-color: #ffffff;
+  border-radius: 21px; }
+
+.module-media-grid-item__play-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 36px;
+  width: 36px;
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' width='24' height='24' viewBox='0 0 24 24'><path d='M8,5.14V19.14L19,12.14L8,5.14Z' fill='%232090EA'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+/* Module: Empty State*/
 .module-empty-state {
   display: flex;
   justify-content: center;

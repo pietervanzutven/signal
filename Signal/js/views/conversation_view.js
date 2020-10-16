@@ -629,13 +629,22 @@
         }
       }
 
-      const media = rawMedia.map(mediaMessage =>
-        Object.assign({}, mediaMessage, {
-          objectURL: getAbsoluteAttachmentPath(
-            mediaMessage.attachments[0].path
-          ),
-        })
-      );
+      const media = rawMedia.map(mediaMessage => {
+        const { attachments } = mediaMessage;
+        const first = attachments && attachments[0];
+        const { thumbnail } = first;
+
+        return Object.assign({},
+          mediaMessage,
+          {
+            thumbnailObjectUrl: thumbnail
+              ? getAbsoluteAttachmentPath(thumbnail.path)
+              : null,
+            objectURL: getAbsoluteAttachmentPath(
+              mediaMessage.attachments[0].path
+            ),
+          });
+      });
 
       const saveAttachment = async ({ message } = {}) => {
         const attachment = message.attachments[0];

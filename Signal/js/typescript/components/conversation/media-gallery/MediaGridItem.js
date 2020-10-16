@@ -12,13 +12,29 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
+    const GoogleChrome_1 = window.ts.util.GoogleChrome;
     class MediaGridItem extends react_1.default.Component {
         renderContent() {
             const { message, i18n } = this.props;
-            if (!message.objectURL) {
+            const { attachments } = message;
+            if (!message.thumbnailObjectUrl) {
                 return null;
             }
-            return (react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), className: "module-media-grid-item__image", src: message.objectURL }));
+            if (!attachments || !attachments.length) {
+                return null;
+            }
+            const first = attachments[0];
+            const { contentType } = first;
+            if (contentType && GoogleChrome_1.isImageTypeSupported(contentType)) {
+                return (react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), className: "module-media-grid-item__image", src: message.thumbnailObjectUrl }));
+            }
+            else if (contentType && GoogleChrome_1.isVideoTypeSupported(contentType)) {
+                return (react_1.default.createElement("div", { className: "module-media-grid-item__image-container" },
+                    react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), className: "module-media-grid-item__image", src: message.thumbnailObjectUrl }),
+                    react_1.default.createElement("div", { className: "module-media-grid-item__circle-overlay" },
+                        react_1.default.createElement("div", { className: "module-media-grid-item__play-overlay" }))));
+            }
+            return null;
         }
         render() {
             return (react_1.default.createElement("div", { className: "module-media-grid-item", role: "button", onClick: this.props.onClick }, this.renderContent()));

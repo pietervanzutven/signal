@@ -27,46 +27,39 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * @prettier
-     */
     const is_1 = __importDefault(window.sindresorhus.is);
     const lodash_1 = window.lodash;
     const MIME = __importStar(window.ts.types.MIME);
     const arrayBufferToObjectURL_1 = window.ts.util.arrayBufferToObjectURL;
-    const DEFAULT_CONTENT_TYPE = 'application/octet-stream';
     exports.loadWithObjectURL = (loadMessage) => (messages) => __awaiter(this, void 0, void 0, function* () {
-        if (!is_1.default.function(loadMessage)) {
+        if (!is_1.default.function_(loadMessage)) {
             throw new TypeError("'loadMessage' must be a function");
         }
         if (!is_1.default.array(messages)) {
             throw new TypeError("'messages' must be an array");
         }
         // Messages with video are too expensive to load into memory, so we don’t:
-        const [, messagesWithoutVideo] = lodash_1.partition(messages, hasVideoAttachment);
+        const [messagesWithVideo, messagesWithoutVideo] = lodash_1.partition(messages, hasVideoAttachment);
         const loadedMessagesWithoutVideo = yield Promise.all(messagesWithoutVideo.map(loadMessage));
-        const loadedMessages = lodash_1.sortBy(
-            // // Only show images for MVP:
-            // [...messagesWithVideo, ...loadedMessagesWithoutVideo],
-            loadedMessagesWithoutVideo, message => -message.received_at);
-        return loadedMessages.map(withObjectURL);
+        const loadedMessages = lodash_1.sortBy([...messagesWithVideo, ...loadedMessagesWithoutVideo], message => -message.received_at);
+        return loadedMessages.map(exports.withObjectURL);
     });
     const hasVideoAttachment = (message) => message.attachments.some(attachment => !is_1.default.undefined(attachment.contentType) &&
         MIME.isVideo(attachment.contentType));
-    const withObjectURL = (message) => {
+    exports.withObjectURL = (message) => {
         if (message.attachments.length === 0) {
             throw new TypeError('`message.attachments` cannot be empty');
         }
         const attachment = message.attachments[0];
-        if (typeof attachment.contentType === 'undefined') {
+        if (is_1.default.undefined(attachment.contentType)) {
             throw new TypeError('`attachment.contentType` is required');
         }
-        if (MIME.isVideo(attachment.contentType)) {
+        if (is_1.default.undefined(attachment.data) && MIME.isVideo(attachment.contentType)) {
             return Object.assign({}, message, { objectURL: 'images/video.svg' });
         }
         const objectURL = arrayBufferToObjectURL_1.arrayBufferToObjectURL({
             data: attachment.data,
-            type: attachment.contentType || DEFAULT_CONTENT_TYPE,
+            type: attachment.contentType,
         });
         return Object.assign({}, message, { objectURL });
     };
