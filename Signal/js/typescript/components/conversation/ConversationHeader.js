@@ -47,6 +47,7 @@
                 phoneNumber ? phoneNumber : null,
                 ' ',
                 profileName && !name ? (react_1.default.createElement("span", { className: "module-conversation-header__title__profile-name" },
+                    "~",
                     react_1.default.createElement(Emojify_1.Emojify, { text: profileName, i18n: i18n }))) : null,
                 isVerified ? ' · ' : null,
                 isVerified ? (react_1.default.createElement("span", null,
@@ -84,9 +85,11 @@
             const { i18n, isMe, isGroup, onDeleteMessages, onResetSession, onSetDisappearingMessages, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, timerOptions, } = this.props;
             const title = i18n('disappearingMessages');
             return (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
-                react_1.default.createElement(react_contextmenu_1.SubMenu, { title: title }, (timerOptions || []).map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, { key: item.value, onClick: () => {
-                    onSetDisappearingMessages(item.value);
-                } }, item.name)))),
+                react_1.default.createElement(react_contextmenu_1.SubMenu, { title: title }, (timerOptions || []).map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                    key: item.value, onClick: () => {
+                        onSetDisappearingMessages(item.value);
+                    }
+                }, item.name)))),
                 react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowAllMedia }, i18n('viewAllMedia')),
                 isGroup ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowGroupMembers }, i18n('showMembers'))) : null,
                 !isGroup && !isMe ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowSafetyNumber }, i18n('showSafetyNumber'))) : null,
