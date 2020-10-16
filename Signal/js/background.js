@@ -156,6 +156,12 @@
       getAudioNotification: () => storage.get('audio-notification'),
       setAudioNotification: value => storage.put('audio-notification', value),
 
+      getSpellCheck: () => storage.get('spell-check', true),
+      setSpellCheck: value => {
+        storage.put('spell-check', value);
+        startSpellCheck();
+      },
+
       // eslint-disable-next-line eqeqeq
       isPrimary: () => textsecure.storage.user.getDeviceId() == '1',
       getSyncRequest: () =>
@@ -181,9 +187,14 @@
       },
     };
 
-    const themeSetting = window.Events.getThemeSetting();
-    const newThemeSetting = mapOldThemeToNew(themeSetting);
-    window.Events.setThemeSetting(newThemeSetting);
+    const startSpellCheck = () => {
+      if (window.Events.getSpellCheck()) {
+        window.enableSpellCheck();
+      } else {
+        window.disableSpellCheck();
+      }
+    };
+    startSpellCheck();
 
     try {
       await ConversationController.load();

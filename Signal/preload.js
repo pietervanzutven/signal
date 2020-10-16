@@ -110,6 +110,9 @@
   installGetter('audio-notification', 'getAudioNotification');
   installSetter('audio-notification', 'setAudioNotification');
 
+  installGetter('spell-check', 'getSpellCheck');
+  installSetter('spell-check', 'setSpellCheck');
+
   window.getMediaPermissions = () =>
     new Promise((resolve, reject) => {
       ipc.once('get-success-media-permissions', (_event, error, value) => {
