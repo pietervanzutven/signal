@@ -12,8 +12,6 @@
   window.theme = config.theme;
   window.i18n = i18n.setup(locale, localeMessages);
 
-  window.log = window.top.log;
-
   // So far we're only using this for Signal.Types
   const Signal = window.top.signal;
 
@@ -81,4 +79,7 @@
         ipcRenderer.send(`set-${name}`, value);
       });
   }
+
+  window.log = window.top.log;
+
 })();
