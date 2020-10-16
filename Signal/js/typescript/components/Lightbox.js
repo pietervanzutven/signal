@@ -191,6 +191,7 @@
                 return;
             }
             if (this.videoRef.paused) {
+                // tslint:disable-next-line no-floating-promises
                 this.videoRef.play();
             }
             else {
