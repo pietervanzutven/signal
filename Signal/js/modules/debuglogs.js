@@ -43,6 +43,9 @@
         'user-agent': USER_AGENT,
       },
     });
+    if (!signedForm.body) {
+      throw new Error('Failed to retrieve token');
+    }
     const { fields, url } = signedForm.body;
 
     const form = new FormData();
