@@ -4,14 +4,12 @@
 (function () {
   'use strict';
 
-  console.log('preload');
-
   const semver = window.semver;
 
   const { deferredToPromise } = window.deferred_to_promise;
 
   window.PROTO_ROOT = '/protos';
-  const config = window.config || {};
+  const config = window.app.config || {};
 
   let title = config.name;
   if (config.environment !== 'production') {
@@ -34,7 +32,7 @@
     try {
       return semver.lt(toCheck, baseVersion);
     } catch (error) {
-      console.log(
+      window.log.error(
         `isBeforeVersion error: toCheck: ${toCheck}, baseVersion: ${baseVersion}`,
         error && error.stack ? error.stack : error
       );
@@ -50,11 +48,11 @@
   window.setBadgeCount = count => ipc.send('set-badge-count', count);
 
   window.drawAttention = () => {
-    console.log('draw attention');
+    window.log.info('draw attention');
     ipc.send('draw-attention');
   };
   window.showWindow = () => {
-    console.log('show window');
+    window.log.info('show window');
     ipc.send('show-window');
   };
 
@@ -65,7 +63,7 @@
     ipc.send('set-menu-bar-visibility', visibility);
 
   window.restart = () => {
-    console.log('restart');
+    window.log.info('restart');
     ipc.send('restart');
   };
 
@@ -184,8 +182,10 @@
 
   // We pull these dependencies in now, from here, because they have Node.js dependencies
 
+  require_logging();
+
   if (config.proxyUrl) {
-    console.log('using proxy url', config.proxyUrl);
+    window.log.info('Using provided proxy url');
   }
 
   const { initialize: initializeWebAPI } = window.web_api;
@@ -212,8 +212,8 @@
 
   const Signal = window.signal;
   const i18n = window.modules.i18n;
-  const Attachments = window.attachments;
-
+  const Attachments = window.app.attachments;
+    
   const { locale } = config;
   window.i18n = i18n.setup(locale, localeMessages);
   window.moment.updateLocale(locale, {
@@ -229,6 +229,7 @@
     Attachments,
     userDataPath: app.getPath('userData'),
     getRegionCode: () => window.storage.get('regionCode'),
+    logger: window.log,
   });
 
   // Pulling these in separately since they access filesystem, electron

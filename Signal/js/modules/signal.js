@@ -92,6 +92,7 @@
     Attachments,
     Type,
     VisualType,
+    logger,
   }) {
     if (!Attachments) {
       return null;
@@ -137,15 +138,17 @@
           getImageDimensions,
           makeImageThumbnail,
           makeVideoScreenshot,
+          logger,
         }),
-      writeMessageAttachments: MessageType.createAttachmentDataWriter(
-        createWriterForExisting(attachmentsPath)
-      ),
+      writeMessageAttachments: MessageType.createAttachmentDataWriter({
+        writeExistingAttachmentData: createWriterForExisting(attachmentsPath),
+        logger,
+      }),
     };
   }
 
   exports.setup = (options = {}) => {
-    const { Attachments, userDataPath, getRegionCode } = options;
+    const { Attachments, userDataPath, getRegionCode, logger } = options;
 
     const Migrations = initializeMigrations({
       userDataPath,
@@ -153,6 +156,7 @@
       Attachments,
       Type: AttachmentType,
       VisualType: VisualAttachment,
+      logger,
     });
 
     const Components = {

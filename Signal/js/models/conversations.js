@@ -157,7 +157,7 @@
 
     async onExpiredCollection(message) {
       const removeMessage = () => {
-        console.log('Remove expired message from collection', {
+        window.log.info('Remove expired message from collection', {
           sentAt: message.get('sent_at'),
         });
         this.messageCollection.remove(message.id);
@@ -348,7 +348,7 @@
             return lookup;
           })
           .catch(error => {
-            console.log(
+            window.log.error(
               'getIdentityKeys error for conversation',
               this.idForLogging(),
               error && error.stack ? error.stack : error
@@ -362,7 +362,7 @@
             lookup[contact.id] = key;
           },
           error => {
-            console.log(
+            window.log.error(
               'getIdentityKeys error for group member',
               contact.idForLogging(),
               error && error.stack ? error.stack : error
@@ -376,7 +376,7 @@
     replay(error, message) {
       const replayable = new textsecure.ReplayableError(error);
       return replayable.replay(message.attributes).catch(e => {
-        console.log('replay error:', e && e.stack ? e.stack : e);
+        window.log.error('replay error:', e && e.stack ? e.stack : e);
       });
     },
     decryptOldIncomingKeyErrors() {
@@ -384,7 +384,10 @@
       if (this.get('decryptedOldIncomingKeyErrors')) {
         return Promise.resolve();
       }
-      console.log('decryptOldIncomingKeyErrors start for', this.idForLogging());
+      window.log.info(
+        'decryptOldIncomingKeyErrors start for',
+        this.idForLogging()
+      );
 
       const messages = this.messageCollection.filter(message => {
         const errors = message.get('errors');
@@ -400,7 +403,7 @@
       });
 
       const markComplete = () => {
-        console.log(
+        window.log.info(
           'decryptOldIncomingKeyErrors complete for',
           this.idForLogging()
         );
@@ -413,7 +416,7 @@
         return markComplete();
       }
 
-      console.log(
+      window.log.info(
         'decryptOldIncomingKeyErrors found',
         messages.length,
         'messages to process'
@@ -450,7 +453,7 @@
           )
         )
         .catch(error => {
-          console.log(
+          window.log.error(
             'decryptOldIncomingKeyErrors error:',
             error && error.stack ? error.stack : error
           );
@@ -584,7 +587,7 @@
     },
 
     addKeyChange(id) {
-      console.log(
+      window.log.info(
         'adding key change advisory for',
         this.idForLogging(),
         id,
@@ -607,7 +610,7 @@
       _.defaults(options, { local: true });
 
       if (this.isMe()) {
-        console.log(
+        window.log.info(
           'refusing to add verified change advisory for our own number'
         );
         return;
@@ -615,7 +618,7 @@
 
       const lastMessage = this.get('timestamp') || Date.now();
 
-      console.log(
+      window.log.info(
         'adding verified change advisory for',
         this.idForLogging(),
         id,
@@ -823,7 +826,7 @@
       this.queueJob(async () => {
         const now = Date.now();
 
-        console.log(
+        window.log.info(
           'Sending message to conversation',
           this.idForLogging(),
           'with timestamp',
@@ -933,7 +936,7 @@
         return Promise.resolve();
       }
 
-      console.log("Update conversation 'expireTimer'", {
+      window.log.info("Update conversation 'expireTimer'", {
         id: this.idForLogging(),
         expireTimer,
         source,
@@ -1085,7 +1088,7 @@
           if (this.messageCollection.get(m.id)) {
             m = this.messageCollection.get(m.id);
           } else {
-            console.log(
+            window.log.warn(
               'Marked a message as read in the database, but ' +
                 'it was not in messageCollection.'
             );
@@ -1117,7 +1120,7 @@
         read = read.filter(item => !item.hasErrors);
 
         if (read.length && options.sendReadReceipts) {
-          console.log('Sending', read.length, 'read receipts');
+          window.log.info('Sending', read.length, 'read receipts');
           promises.push(textsecure.messaging.syncReadMessages(read));
 
           if (storage.get('read-receipt-setting')) {
@@ -1173,7 +1176,7 @@
                 // save identity will close all sessions except for .1, so we
                 // must close that one manually.
                 const address = new libsignal.SignalProtocolAddress(id, 1);
-                console.log('closing session for', address.toString());
+                window.log.info('closing session for', address.toString());
                 const sessionCipher = new libsignal.SessionCipher(
                   textsecure.storage.protocol,
                   address
@@ -1197,7 +1200,7 @@
                 e => {
                   if (e.name === 'ProfileDecryptError') {
                     // probably the profile key has changed.
-                    console.log(
+                    window.log.error(
                       'decryptProfile error:',
                       id,
                       profile,
@@ -1209,7 +1212,7 @@
             });
         })
         .catch(error => {
-          console.log(
+          window.log.error(
             'getProfile error:',
             error && error.stack ? error.stack : error
           );
@@ -1365,7 +1368,7 @@
           await wrapDeferred(message.save());
         }
       } catch (error) {
-        console.log(
+        window.log.error(
           'Problem upgrading message quoted message from database',
           Errors.toLogFormat(error)
         );
@@ -1535,7 +1538,7 @@
         throw new Error('This conversation has no id!');
       }
       if (this.inProgressFetch) {
-        console.log('Attempting to start a parallel fetchMessages() call');
+        window.log.warn('Attempting to start a parallel fetchMessages() call');
         return;
       }
 
@@ -1553,7 +1556,7 @@
         //   one-time hit. We do this so we have guarantees about message structure.
         await this.upgradeMessages(this.messageCollection);
       } catch (error) {
-        console.log(
+        window.log.error(
           'fetchMessages: failed to upgrade messages',
           Errors.toLogFormat(error)
         );
@@ -1761,7 +1764,7 @@
           const messageId = message.id;
           const isExpiringMessage = Message.hasExpiration(messageJSON);
 
-          console.log('Add notification', {
+          window.log.info('Add notification', {
             conversationId: this.idForLogging(),
             isExpiringMessage,
             messageSentAt,

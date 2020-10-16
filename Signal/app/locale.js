@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  window.app = window.app || {};
+  window.app.locale = {};
+
   const path = window.path;
   const fs = window.fs;
   const _ = window.lodash;
@@ -75,5 +78,5 @@
     };
   }
 
-  window.loadLocale = load;
+  window.app.locale.load = load;
 })();

@@ -2,6 +2,7 @@
   'use strict';
 
   const exports = window.messages_data_migrator = {};
+
   // Module to upgrade the schema of messages, e.g. migrate attachments to disk.
   // `dangerouslyProcessAllWithoutIndex` purposely doesn’t rely on our Backbone
   // IndexedDB adapter to prevent automatic migrations. Rather, it uses direct
@@ -86,6 +87,7 @@
     minDatabaseVersion,
     numMessagesPerBatch,
     upgradeMessageSchema,
+    logger,
   } = {}) => {
     if (!isString(databaseName)) {
       throw new TypeError("'databaseName' must be a string");
@@ -106,7 +108,7 @@
     const connection = await database.open(databaseName);
     const databaseVersion = connection.version;
     const isValidDatabaseVersion = databaseVersion >= minDatabaseVersion;
-    console.log('Database status', {
+    logger.info('Database status', {
       databaseVersion,
       isValidDatabaseVersion,
       minDatabaseVersion,
@@ -137,7 +139,7 @@
         break;
       }
       numCumulativeMessagesProcessed += status.numMessagesProcessed;
-      console.log(
+      logger.info(
         'Upgrade message schema:',
         Object.assign({}, status, {
           numTotalMessages,
@@ -146,11 +148,11 @@
       );
     }
 
-    console.log('Close database connection');
+    logger.info('Close database connection');
     connection.close();
 
     const totalDuration = Date.now() - migrationStartTime;
-    console.log('Attachment migration complete:', {
+    logger.info('Attachment migration complete:', {
       totalDuration,
       totalMessagesProcessed: numCumulativeMessagesProcessed,
     });

@@ -22,10 +22,11 @@
 
   // Implicitly used in `indexeddb-backbonejs-adapter`:
   // https://github.com/signalapp/Signal-Desktop/blob/4033a9f8137e62ed286170ed5d4941982b1d3a64/components/indexeddb-backbonejs-adapter/backbone-indexeddb.js#L569
-  window.onInvalidStateError = e => console.log(e);
+  window.onInvalidStateError = error =>
+    window.log.error(error && error.stack ? error.stack : error);
 
-  console.log('background page reloaded');
-  console.log('environment:', window.getEnvironment());
+  window.log.info('background page reloaded');
+  window.log.info('environment:', window.getEnvironment());
 
   let initialLoadComplete = false;
   window.owsDesktopApp = {};
@@ -54,7 +55,7 @@
       accountManager = new textsecure.AccountManager(USERNAME, PASSWORD);
       accountManager.addEventListener('registration', () => {
         Whisper.Registration.markDone();
-        console.log('dispatching registration event');
+        window.log.info('dispatching registration event');
         Whisper.events.trigger('registration_done');
       });
     }
@@ -62,19 +63,22 @@
   };
 
   const cancelInitializationMessage = Views.Initialization.setMessage();
-  console.log('Start IndexedDB migrations');
+  window.log.info('Start IndexedDB migrations');
 
-  console.log('Run migrations on database with attachment data');
-  await Migrations0DatabaseWithAttachmentData.run({ Backbone });
+  window.log.info('Run migrations on database with attachment data');
+  await Migrations0DatabaseWithAttachmentData.run({
+    Backbone,
+    logger: window.log,
+  });
 
-  console.log('Storage fetch');
+  window.log.info('Storage fetch');
   storage.fetch();
 
   const idleDetector = new IdleDetector();
   let isMigrationWithIndexComplete = false;
   let isMigrationWithoutIndexComplete = false;
   idleDetector.on('idle', async () => {
-    console.log('Idle processing started');
+    window.log.info('Idle processing started');
     const NUM_MESSAGES_PER_BATCH = 1;
 
     if (!isMigrationWithIndexComplete) {
@@ -84,7 +88,7 @@
         numMessagesPerBatch: NUM_MESSAGES_PER_BATCH,
         upgradeMessageSchema,
       });
-      console.log('Upgrade message schema (with index):', batchWithIndex);
+      window.log.info('Upgrade message schema (with index):', batchWithIndex);
       isMigrationWithIndexComplete = batchWithIndex.done;
     }
 
@@ -98,14 +102,17 @@
           upgradeMessageSchema,
         }
       );
-      console.log('Upgrade message schema (without index):', batchWithoutIndex);
+      window.log.info(
+        'Upgrade message schema (without index):',
+        batchWithoutIndex
+      );
       isMigrationWithoutIndexComplete = batchWithoutIndex.done;
     }
 
     const areAllMigrationsComplete =
       isMigrationWithIndexComplete && isMigrationWithoutIndexComplete;
     if (areAllMigrationsComplete) {
-      console.log('All migrations are complete. Stopping idle detector.');
+      window.log.info('All migrations are complete. Stopping idle detector.');
       idleDetector.stop();
     }
   });
@@ -252,22 +259,22 @@
     if (newVersion) {
       if (
         lastVersion &&
-        window.isBeforeVersion(lastVersion, 'v1.15.0-beta.4')
+        window.isBeforeVersion(lastVersion, 'v1.15.0-beta.5')
       ) {
         await window.Signal.Logs.deleteAll();
         window.restart();
       }
 
-      console.log(
+      window.log.info(
         `New version detected: ${currentVersion}; previous: ${lastVersion}`
       );
     }
 
     window.dispatchEvent(new Event('storage_ready'));
 
-    console.log('listening for registration events');
+    window.log.info('listening for registration events');
     Whisper.events.on('registration_done', () => {
-      console.log('handling registration event');
+      window.log.info('handling registration event');
       Whisper.RotateSignedPreKeyListener.init(Whisper.events, newVersion);
       connect(true);
     });
@@ -282,7 +289,7 @@
     Whisper.ExpiringMessagesListener.init(Whisper.events);
 
     if (Whisper.Import.isIncomplete()) {
-      console.log('Import was interrupted, showing import error screen');
+      window.log.info('Import was interrupted, showing import error screen');
       appView.openImporter();
     } else if (Whisper.Registration.everDone()) {
       Whisper.RotateSignedPreKeyListener.init(Whisper.events, newVersion);
@@ -347,7 +354,7 @@
 
   let disconnectTimer = null;
   function onOffline() {
-    console.log('offline');
+    window.log.info('offline');
 
     window.removeEventListener('offline', onOffline);
     window.addEventListener('online', onOnline);
@@ -359,13 +366,13 @@
   }
 
   function onOnline() {
-    console.log('online');
+    window.log.info('online');
 
     window.removeEventListener('online', onOnline);
     window.addEventListener('offline', onOffline);
 
     if (disconnectTimer && isSocketOnline()) {
-      console.log('Already online. Had a blip in online/offline status.');
+      window.log.warn('Already online. Had a blip in online/offline status.');
       clearTimeout(disconnectTimer);
       disconnectTimer = null;
       return;
@@ -386,7 +393,7 @@
   }
 
   function disconnect() {
-    console.log('disconnect');
+    window.log.info('disconnect');
 
     // Clear timer, since we're only called when the timer is expired
     disconnectTimer = null;
@@ -398,14 +405,14 @@
 
   let connectCount = 0;
   async function connect(firstRun) {
-    console.log('connect');
+    window.log.info('connect');
 
     // Bootstrap our online/offline detection, only the first time we connect
     if (connectCount === 0 && navigator.onLine) {
       window.addEventListener('offline', onOffline);
     }
     if (connectCount === 0 && !navigator.onLine) {
-      console.log(
+      window.log.warn(
         'Starting up offline; will connect when we have network access'
       );
       window.addEventListener('online', onOnline);
@@ -431,7 +438,7 @@
     connectCount += 1;
     const options = {
       retryCached: connectCount === 1,
-      serverTrustRoot: window.config.serverTrustRoot,
+      serverTrustRoot: window.app.config.serverTrustRoot,
     };
 
     Whisper.Notifications.disable(); // avoid notification flood until empty
@@ -482,7 +489,7 @@
       sendRequestConfigurationSyncMessage,
       storage,
     });
-    console.log('Sync read receipt configuration status:', status);
+    window.log.info('Sync read receipt configuration status:', status);
 
     if (firstRun === true && deviceId !== '1') {
       const hasThemeSetting = Boolean(storage.get('theme-setting'));
@@ -496,19 +503,24 @@
       );
       Whisper.events.trigger('contactsync:begin');
       syncRequest.addEventListener('success', () => {
-        console.log('sync successful');
+        window.log.info('sync successful');
         storage.put('synced_at', Date.now());
         Whisper.events.trigger('contactsync');
       });
       syncRequest.addEventListener('timeout', () => {
-        console.log('sync timed out');
+        window.log.error('sync timed out');
         Whisper.events.trigger('contactsync');
       });
 
       if (Whisper.Import.isComplete()) {
-        textsecure.messaging.sendRequestConfigurationSyncMessage().catch(e => {
-          console.log(e);
-        });
+        textsecure.messaging
+          .sendRequestConfigurationSyncMessage()
+          .catch(error => {
+            window.log.error(
+              'Import complete, but failed to send sync message',
+              error && error.stack ? error.stack : error
+            );
+          });
       }
     }
 
@@ -573,7 +585,7 @@
     if (id === textsecure.storage.user.getNumber()) {
       // special case for syncing details about ourselves
       if (details.profileKey) {
-        console.log('Got sync message with our own profile key');
+        window.log.info('Got sync message with our own profile key');
         storage.put('profileKey', details.profileKey);
       }
     }
@@ -583,7 +595,7 @@
     });
     const validationError = c.validateNumber();
     if (validationError) {
-      console.log(
+      window.log.error(
         'Invalid contact received:',
         Errors.toLogFormat(validationError)
       );
@@ -653,7 +665,7 @@
 
       ev.confirm();
     } catch (error) {
-      console.log('onContactReceived error:', Errors.toLogFormat(error));
+      window.log.error('onContactReceived error:', Errors.toLogFormat(error));
     }
   }
 
@@ -688,7 +700,7 @@
     const { expireTimer } = details;
     const isValidExpireTimer = typeof expireTimer === 'number';
     if (!isValidExpireTimer) {
-      console.log(
+      window.log.error(
         'Ignore invalid expire timer.',
         'Expected numeric `expireTimer`, got:',
         expireTimer
@@ -743,7 +755,7 @@
       const message = createMessage(data);
       const isDuplicate = await isMessageDuplicate(message);
       if (isDuplicate) {
-        console.log('Received duplicate message', message.idForLogging());
+        window.log.warn('Received duplicate message', message.idForLogging());
         return event.confirm();
       }
 
@@ -837,7 +849,7 @@
         return resolve(false);
       });
     }).catch(error => {
-      console.log('isMessageDuplicate error:', Errors.toLogFormat(error));
+      window.log.error('isMessageDuplicate error:', Errors.toLogFormat(error));
       return false;
     });
   }
@@ -858,7 +870,7 @@
 
   async function onError(ev) {
     const { error } = ev;
-    console.log('background onError:', Errors.toLogFormat(error));
+    window.log.error('background onError:', Errors.toLogFormat(error));
 
     if (
       error &&
@@ -867,7 +879,7 @@
     ) {
       Whisper.events.trigger('unauthorized');
 
-      console.log(
+      window.log.warn(
         'Client is no longer authorized; deleting local configuration'
       );
       Whisper.Registration.remove();
@@ -879,9 +891,9 @@
         //   the conversation list, instead of showing just the QR code screen.
         Whisper.Registration.markEverDone();
         textsecure.storage.put('number_id', previousNumberId);
-        console.log('Successfully cleared local configuration');
+        window.log.info('Successfully cleared local configuration');
       } catch (eraseError) {
-        console.log(
+        window.log.error(
           'Something went wrong clearing local configuration',
           eraseError && eraseError.stack ? eraseError.stack : eraseError
         );
@@ -893,7 +905,7 @@
     if (error && error.name === 'HTTPError' && error.code === -1) {
       // Failed to connect to server
       if (navigator.onLine) {
-        console.log('retrying in 1 minute');
+        window.log.info('retrying in 1 minute');
         setTimeout(connect, 60000);
 
         Whisper.events.trigger('reconnectTimer');
@@ -947,7 +959,7 @@
     const readAt = ev.timestamp;
     const { timestamp } = ev.read;
     const { reader } = ev.read;
-    console.log('read receipt', reader, timestamp);
+    window.log.info('read receipt', reader, timestamp);
 
     if (!storage.get('read-receipt-setting')) {
       return ev.confirm();
@@ -969,7 +981,7 @@
     const readAt = ev.timestamp;
     const { timestamp } = ev.read;
     const { sender } = ev.read;
-    console.log('read sync', sender, timestamp);
+    window.log.info('read sync', sender, timestamp);
 
     const receipt = Whisper.ReadSyncs.add({
       sender,
@@ -993,7 +1005,10 @@
     });
     const error = c.validateNumber();
     if (error) {
-      console.log('Invalid verified sync received:', Errors.toLogFormat(error));
+      window.log.error(
+        'Invalid verified sync received:',
+        Errors.toLogFormat(error)
+      );
       return;
     }
 
@@ -1008,10 +1023,10 @@
         state = 'UNVERIFIED';
         break;
       default:
-        console.log(`Got unexpected verified state: ${ev.verified.state}`);
+        window.log.error(`Got unexpected verified state: ${ev.verified.state}`);
     }
 
-    console.log(
+    window.log.info(
       'got verified sync for',
       number,
       state,
@@ -1043,7 +1058,7 @@
 
   function onDeliveryReceipt(ev) {
     const { deliveryReceipt } = ev;
-    console.log(
+    window.log.info(
       'delivery receipt from',
       `${deliveryReceipt.source}.${deliveryReceipt.sourceDevice}`,
       deliveryReceipt.timestamp

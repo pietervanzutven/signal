@@ -240,7 +240,7 @@
             this.onEmpty();
             break;
           default:
-            console.log(
+            window.log.error(
               'Whisper.InboxView::startConnectionListener:',
               'Unknown web socket status:',
               status

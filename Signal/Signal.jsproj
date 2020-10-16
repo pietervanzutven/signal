@@ -69,6 +69,7 @@
     <Content Include="about.html" />
     <Content Include="about_preload.js" />
     <Content Include="app\attachments.js" />
+    <Content Include="app\global_errors.js" />
     <Content Include="app\logging.js" />
     <Content Include="app\config.js" />
     <Content Include="app\user_config.js" />
@@ -183,7 +184,6 @@
     <Content Include="js\modules\debug.js" />
     <Content Include="js\modules\debuglogs.js" />
     <Content Include="js\modules\deferred_to_promise.js" />
-    <Content Include="js\modules\global_errors.js" />
     <Content Include="js\modules\i18n.js" />
     <Content Include="js\modules\idle_detector.js" />
     <Content Include="js\modules\logs.js" />
@@ -329,6 +329,8 @@
     <Content Include="node_modules\jquery\dist\jquery.js" />
     <Content Include="node_modules\lodash\compact.js" />
     <Content Include="node_modules\lodash\groupBy.js" />
+    <Content Include="node_modules\lodash\filter.js" />
+    <Content Include="node_modules\lodash\map.js" />
     <Content Include="node_modules\pify\index.js" />
     <Content Include="node_modules\prop-types\prop-types.js" />
     <Content Include="node_modules\punycode\punycode.js" />

@@ -1,7 +1,8 @@
 (function () {
   'use strict';
 
-  const exports = window.global_errors = {};
+  window.app = window.app || {};
+  const exports = window.app.global_errors = {};
 
   const addUnhandledErrorHandler = () => { };
 

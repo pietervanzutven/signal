@@ -19,7 +19,7 @@
     contact,
     context = {}
   ) => {
-    const { message, regionCode } = context;
+    const { message, regionCode, logger } = context;
     const { avatar } = contact;
 
     // This is to ensure that an omit() call doesn't pull in prototype props/methods
@@ -41,7 +41,7 @@
       messageId: idForLogging(message),
     });
     if (error) {
-      console.log(
+      logger.error(
         'Contact.parseAndWriteAvatar: contact was malformed.',
         toLogFormat(error)
       );

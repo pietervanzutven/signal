@@ -259,7 +259,7 @@
     },
 
     unload(reason) {
-      console.log(
+      window.log.info(
         'unloading conversation',
         this.model.idForLogging(),
         'due to:',
@@ -329,7 +329,7 @@
         return;
       }
 
-      console.log(
+      window.log.info(
         'trimming conversation',
         this.model.idForLogging(),
         'of',
@@ -482,7 +482,7 @@
       const view = this.loadingScreen;
       if (view) {
         const openDelta = Date.now() - this.openStart;
-        console.log(
+        window.log.info(
           'Conversation',
           this.model.idForLogging(),
           'took',
@@ -513,7 +513,7 @@
         this.model.updateVerified().then(() => {
           this.onVerifiedChange();
           this.statusFetch = null;
-          console.log('done with status fetch');
+          window.log.info('done with status fetch');
         })
       );
 
@@ -793,10 +793,10 @@
     },
 
     fetchMessages() {
-      console.log('fetchMessages');
+      window.log.info('fetchMessages');
       this.$('.bar-container').show();
       if (this.inProgressFetch) {
-        console.log('Multiple fetchMessage calls!');
+        window.log.warn('Multiple fetchMessage calls!');
       }
 
       // Avoiding await, since we want to capture the promise and make it available via
@@ -813,7 +813,7 @@
           this.inProgressFetch = null;
         })
         .catch(error => {
-          console.log(
+          window.log.error(
             'fetchMessages error:',
             error && error.stack ? error.stack : error
           );
@@ -1221,7 +1221,7 @@
         this.showSendConfirmationDialog(e, contacts);
       } catch (error) {
         this.focusMessageFieldAndClearDisabled();
-        console.log(
+        window.log.error(
           'checkUnverifiedSendMessage error:',
           error && error.stack ? error.stack : error
         );
@@ -1247,7 +1247,7 @@
         this.showSendConfirmationDialog(e, contacts);
       } catch (error) {
         this.focusMessageFieldAndClearDisabled();
-        console.log(
+        window.log.error(
           'checkUntrustedSendMessage error:',
           error && error.stack ? error.stack : error
         );
@@ -1316,7 +1316,6 @@
 
       if (message) {
         const quote = await this.model.makeQuote(this.quotedMessage);
-        console.log('DEBUG', { quote });
         this.quote = quote;
 
         this.focusMessageFieldAndClearDisabled();
@@ -1397,7 +1396,7 @@
 
         const attachments = await this.fileInput.getFiles();
         const sendDelta = Date.now() - this.sendStart;
-        console.log('Send pre-checks took', sendDelta, 'milliseconds');
+        window.log.info('Send pre-checks took', sendDelta, 'milliseconds');
 
         this.model.sendMessage(message, attachments, this.quote);
 
@@ -1407,7 +1406,7 @@
         this.forceUpdateMessageFieldSize(e);
         this.fileInput.deleteFiles();
       } catch (error) {
-        console.log(
+        window.log.error(
           'Error pulling attached files before send',
           error && error.stack ? error.stack : error
         );

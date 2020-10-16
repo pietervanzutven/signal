@@ -16,7 +16,7 @@
     }
 
     start() {
-      console.log('Start idle detector');
+      window.log.info('Start idle detector');
       this._scheduleNextCallback();
     }
 
@@ -25,7 +25,7 @@
         return;
       }
 
-      console.log('Stop idle detector');
+      window.log.info('Stop idle detector');
       this._clearScheduledCallbacks();
     }
 

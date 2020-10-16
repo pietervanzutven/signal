@@ -1,7 +1,8 @@
 (function () {
   'use strict';
 
-  const exports = window.attachments = {};
+  window.app = window.app || {};
+  const exports = window.app.attachments = {};
 
   const crypto = window.crypto;
   const path = window.path;

@@ -23,6 +23,8 @@
             this.onImageErrorBound = this.onImageError.bind(this);
         }
         onImageError() {
+            // tslint:disable-next-line no-console
+            console.log('MediaGridItem: Image failed to load; failing over to placeholder');
             this.setState({
                 imageBroken: true,
             });

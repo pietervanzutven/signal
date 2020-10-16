@@ -5,6 +5,7 @@
 
   /* global Buffer: false */
   /* global setTimeout: false */
+  /* global log: false */
 
   /* eslint-disable more/no-then, no-bitwise, no-nested-ternary */
 
@@ -158,7 +159,7 @@
   function _promiseAjax(providedUrl, options) {
     return new Promise((resolve, reject) => {
       const url = providedUrl || `${options.host}/${options.path}`;
-      console.log(options.type, url);
+      log.info(options.type, url);
       const timeout =
         typeof options.timeout !== 'undefined' ? options.timeout : 10000;
 
@@ -176,7 +177,7 @@
         timeout,
       };
       if (options.data) {
-          fetchOptions.body = options.data;
+        fetchOptions.body = options.data;
       }
 
       if (fetchOptions.body instanceof ArrayBuffer) {
@@ -212,7 +213,7 @@
             if (options.responseType === 'json') {
               if (options.validateResponse) {
                 if (!_validateResponse(result, options.validateResponse)) {
-                  console.log(options.type, url, response.status, 'Error');
+                  log.error(options.type, url, response.status, 'Error');
                   reject(
                     HTTPError(
                       'promiseAjax: invalid response',
@@ -225,10 +226,10 @@
               }
             }
             if (response.status >= 0 && response.status < 400) {
-              console.log(options.type, url, response.status, 'Success');
+              log.info(options.type, url, response.status, 'Success');
               resolve(result, response.status);
             } else {
-              console.log(options.type, url, response.status, 'Error');
+              log.error(options.type, url, response.status, 'Error');
               reject(
                 HTTPError(
                   'promiseAjax: error response',
@@ -241,7 +242,7 @@
           });
         })
         .catch(e => {
-          console.log(options.type, url, 0, 'Error');
+          log.error(options.type, url, 0, 'Error');
           const stack = `${e.stack}\nInitial stack:\n${options.stack}`;
           reject(HTTPError('promiseAjax catch', 0, e.toString(), stack));
         });
@@ -642,7 +643,7 @@
       }
 
       function getMessageSocket() {
-        console.log('opening message socket', url);
+        log.info('opening message socket', url);
         const fixedScheme = url
           .replace('https://', 'wss://')
           .replace('http://', 'ws://');
@@ -656,7 +657,7 @@
       }
 
       function getProvisioningSocket() {
-        console.log('opening provisioning socket', url);
+        log.info('opening provisioning socket', url);
         const fixedScheme = url
           .replace('https://', 'wss://')
           .replace('http://', 'ws://');
