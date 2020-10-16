@@ -4536,6 +4536,7 @@ body.dark-theme {
 .module-conversation-list-item__content {
   flex-grow: 1;
   margin-left: 12px;
+  max-width: calc(100% - 64px);
   display: flex;
   flex-direction: column;
   align-items: stretch; }
