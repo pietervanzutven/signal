@@ -19,9 +19,16 @@
   // https://github.com/sindresorhus/got/pull/466
   const submitFormData = (form, url) =>
     new Promise((resolve, reject) => {
-      form.submit(url, error => {
+      form.submit(url, (error, response) => {
         if (error) {
           return reject(error);
+        }
+
+        const { statusCode } = response;
+        if (statusCode !== 204) {
+          return reject(
+            new Error(`Failed to upload to S3, got status ${statusCode}`)
+          );
         }
 
         return resolve();
