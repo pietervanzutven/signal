@@ -886,7 +886,7 @@
       messageDescriptor.id,
       messageDescriptor.type
     );
-    await conversation.save({ profileSharing: true });
+    await wrapDeferred(conversation.save({ profileSharing: true }));
     return confirm();
   }
 

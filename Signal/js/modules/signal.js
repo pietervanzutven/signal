@@ -116,12 +116,14 @@
     const readAttachmentData = createReader(attachmentsPath);
     const loadAttachmentData = Type.loadData(readAttachmentData);
     const getAbsoluteAttachmentPath = createAbsolutePathGetter(attachmentsPath);
+    const deleteOnDisk = Attachments.createDeleter(attachmentsPath);
 
     return {
       attachmentsPath,
-      deleteAttachmentData: Type.deleteData(
-        Attachments.createDeleter(attachmentsPath)
-      ),
+      deleteExternalMessageFiles: MessageType.deleteAllExternalFiles({
+        deleteAttachmentData: Type.deleteData(deleteOnDisk),
+        deleteOnDisk,
+      }),
       getAbsoluteAttachmentPath,
       getPlaceholderMigrations,
       loadAttachmentData,
