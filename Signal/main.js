@@ -123,7 +123,7 @@ let tray = null;
 window.config.name = Windows.ApplicationModel.Package.current.id.name;
 window.config.locale = Windows.Globalization.ApplicationLanguages.languages[0];
 window.config.version = app.getVersion();
-window.config.uwp_version = process.versions;
+window.config.uwp_version = process.versions.uwp;
 window.config.hostname = 'Windows';
 window.config.appInstance = process.env.UWP_APP_INSTANCE;
 
