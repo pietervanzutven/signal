@@ -30,7 +30,11 @@
         renderHeader() {
             const { unreadCount, i18n, lastUpdated, name, phoneNumber, profileName, } = this.props;
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__header" },
-                react_1.default.createElement("div", { className: "module-conversation-list-item__header__name" },
+                react_1.default.createElement("div", {
+                    className: classnames_1.default('module-conversation-list-item__header__name', unreadCount > 0
+                        ? 'module-conversation-list-item__header__name--with-unread'
+                        : null)
+                },
                     react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: phoneNumber, name: name, profileName: profileName, i18n: i18n })),
                 react_1.default.createElement("div", {
                     className: classnames_1.default('module-conversation-list-item__header__date', unreadCount > 0

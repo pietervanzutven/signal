@@ -101,8 +101,10 @@
             const { id } = this.props;
             return (react_1.default.createElement("div", { className: "module-conversation-header" },
                 this.renderBackButton(),
-                this.renderAvatar(),
-                this.renderTitle(),
+                react_1.default.createElement("div", { className: "module-conversation-header__title-container" },
+                    react_1.default.createElement("div", { className: "module-conversation-header__title-flex" },
+                        this.renderAvatar(),
+                        this.renderTitle())),
                 this.renderExpirationLength(),
                 this.renderGear(id),
                 this.renderMenu(id)));
