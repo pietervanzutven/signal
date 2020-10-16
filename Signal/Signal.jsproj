@@ -411,6 +411,7 @@
     <Content Include="node_modules\querystring\decode.js" />
     <Content Include="node_modules\querystring\encode.js" />
     <Content Include="node_modules\querystring\index.js" />
+    <Content Include="node_modules\semver\functions\lt.js" />
     <Content Include="node_modules\url\url.js" />
     <Content Include="node_modules\url\util.js" />
     <Content Include="node_modules\uuidv4\uuidv4.js" />

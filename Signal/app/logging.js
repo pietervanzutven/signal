@@ -23,6 +23,9 @@
       throw new Error('Already called initialize!');
     }
 
+    const basePath = app.getPath('userData');
+    const logPath = path.join(basePath, 'logs');
+
     return cleanupLogs('').then(() => {
       logger = {
         log: [],
