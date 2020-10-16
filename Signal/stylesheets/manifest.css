@@ -2153,8 +2153,8 @@ body.dark-theme {
 
 .dark-theme .module-message__send-message-button {
   color: #2090ea;
-  background-color: #f9fafa;
-  border: 1px solid rgba(0, 0, 0, 0.12); }
+  background-color: #414347;
+  border: 1px solid #797a7c; }
 
 .dark-theme .module-message__author-default-avatar--grey {
   background-color: #757575; }
@@ -2437,8 +2437,11 @@ body.dark-theme {
   background-repeat: no-repeat;
   background-position: center center; }
 
+.dark-theme .module-contact-detail__additional-contact {
+  border-top: 1px solid #414347; }
+
 .dark-theme .module-contact-detail__additional-contact__type {
-  color: rgba(0, 0, 0, 0.5); }
+  color: #8b8e91; }
 
 .dark-theme .module-group-notification {
   color: #a8a9aa; }
@@ -3836,12 +3839,12 @@ body.dark-theme {
 
 .module-contact-detail__additional-contact {
   text-align: left;
-  border-top: 1px solid #e6e6e6;
+  border-top: 1px solid #eeefef;
   margin-top: 15px;
   padding-top: 8px; }
 
 .module-contact-detail__additional-contact__type {
-  color: rgba(0, 0, 0, 0.5);
+  color: #8b8e91;
   font-size: 12px;
   margin-bottom: 3px; }
 
