@@ -1,4 +1,5 @@
 /* eslint-env node */
+/* global window */
 
 (function () {
   'use strict';
@@ -9,6 +10,8 @@
   const got = window.got;
 
   const BASE_URL = 'https://debuglogs.org';
+  const VERSION = window.getVersion();
+  const USER_AGENT = `Signal Desktop ${VERSION}`;
 
   // Workaround: Submitting `FormData` using native `FormData::submit` procedure
   // as integration with `got` results in S3 error saying we haven’t set the
@@ -27,7 +30,12 @@
 
   //      upload :: String -> Promise URL
   exports.upload = async content => {
-    const signedForm = await got.get(BASE_URL, { json: true });
+    const signedForm = await got.get(BASE_URL, {
+      json: true,
+      headers: {
+        'user-agent': USER_AGENT,
+      },
+    });
     const { fields, url } = signedForm.body;
 
     const form = new FormData();
@@ -41,10 +49,11 @@
 
     const contentBuffer = Buffer.from(content, 'utf8');
     const contentType = 'text/plain';
+    form.append('User-Agent', USER_AGENT);
     form.append('Content-Type', contentType);
     form.append('file', contentBuffer, {
       contentType,
-      filename: 'signal-desktop-debug-log.txt',
+      filename: `signal-desktop-debug-log-${VERSION}.txt`,
     });
 
     // WORKAROUND: See comment on `submitFormData`:
