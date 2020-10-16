@@ -64,7 +64,7 @@
 		}
 	},
 	"youChangedTheTimer": {
-		"message": "Sinä asetit viestien katoamisajaksi: $time$",
+		"message": "Sinä asetit viestien katoamisajan: $time$",
 		"description": "Message displayed when you change the message expiration timer in a conversation.",
 		"placeholders": {
 			"time": {
@@ -184,7 +184,7 @@
 		"description": "Brief timestamp for messages sent about one hour ago. Displayed in the conversation list and message bubble."
 	},
 	"timerOption_0_seconds_abbreviated": {
-		"message": "poissa päältä",
+		"message": "pois päältä",
 		"description": "Short format indicating current timer setting in the conversation list snippet"
 	},
 	"syncExplanation": {
@@ -254,7 +254,7 @@
 		"description": "Label for the time a message was sent"
 	},
 	"theyChangedTheTimer": {
-		"message": "$name$ asetti viestien katoamisajaksi: $time$",
+		"message": "$name$ asetti viestien katoamisajan: $time$",
 		"description": "Message displayed when someone else changes the message expiration timer in a conversation.",
 		"placeholders": {
 			"name": {
@@ -638,7 +638,7 @@
 		"description": ""
 	},
 	"timerOption_0_seconds": {
-		"message": "poissa päältä",
+		"message": "pois päältä",
 		"description": "Label for option to turn off message expiration in the timer menu"
 	},
 	"importError": {
@@ -1522,5 +1522,17 @@
 				"example": "10"
 			}
 		}
+	},
+	"spellCheckDescription": {
+		"message": "Ota käyttöön viestilaatikkoon kirjoitetun tekstin oikeinkirjoituksen tarkistus",
+		"description": "Description of the media permission description"
+	},
+	"spellCheck": {
+		"message": "Oikeinkirjoituksen tarkistus",
+		"description": "Description of the media permission description"
+	},
+	"debugLogError": {
+		"message": "Something went wrong with the upload! Please consider manually adding your log to the bug you file.",
+		"description": ""
 	}
 }

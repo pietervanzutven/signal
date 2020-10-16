@@ -1522,5 +1522,17 @@
 				"example": "10"
 			}
 		}
+	},
+	"spellCheckDescription": {
+		"message": "Enable spell check of text entered in message composition box",
+		"description": "Description of the media permission description"
+	},
+	"spellCheck": {
+		"message": "Spell Check",
+		"description": "Description of the media permission description"
+	},
+	"debugLogError": {
+		"message": "Something went wrong with the upload! Please consider manually adding your log to the bug you file.",
+		"description": ""
 	}
 }

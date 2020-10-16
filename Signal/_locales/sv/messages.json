@@ -74,7 +74,7 @@
 		"description": "Warning that long messages could not get received completely by Android clients."
 	},
 	"leftTheGroup": {
-		"message": "$name$ left the group",
+		"message": "$name$ lämnade gruppen",
 		"description": "Shown in the conversation history when a single person leaves the group",
 		"placeholders": {
 			"name": {
@@ -452,7 +452,7 @@
 		"description": "Shown as we are loading the user's data from disk"
 	},
 	"timerSetOnSync": {
-		"message": "Updated disappearing message timer to $time$",
+		"message": "Uppdaterade tidsgränsen för försvinnande meddelanden till $time$",
 		"description": "Message displayed when timer is set on initial link of desktop device.",
 		"placeholders": {
 			"time": {
@@ -494,7 +494,7 @@
 		}
 	},
 	"joinedTheGroup": {
-		"message": "$name$ joined the group",
+		"message": "$name$ gick med i gruppen",
 		"description": "Shown in the conversation history when a single person joins the group",
 		"placeholders": {
 			"name": {
@@ -758,7 +758,7 @@
 		"description": ""
 	},
 	"deleteMessage": {
-		"message": "Delete Message",
+		"message": "Radera meddelande",
 		"description": "Shown on the drop-down menu for an individual message, deletes single message"
 	},
 	"chooseDeviceName": {
@@ -954,7 +954,7 @@
 		"description": "The text on the button to finish the linking process, after choosing the device name"
 	},
 	"multipleJoinedTheGroup": {
-		"message": "$names$ joined the group",
+		"message": "$names$ gick med i gruppen",
 		"description": "Shown in the conversation history when more than one person joins the group",
 		"placeholders": {
 			"names": {
@@ -1006,7 +1006,7 @@
 		}
 	},
 	"updatedTheGroup": {
-		"message": "Group updated",
+		"message": "Grupp uppdaterad",
 		"description": "Shown in the conversation history when someone updates the group"
 	},
 	"identityKeyErrorOnSend": {
@@ -1120,7 +1120,7 @@
 		"description": ""
 	},
 	"titleIsNow": {
-		"message": "Title is now '$name$'",
+		"message": "Gruppnamnet är nu '$name$'",
 		"description": "Shown in the conversation history when someone changes the title of the group",
 		"placeholders": {
 			"name": {
@@ -1250,7 +1250,7 @@
 		"description": "Displayed in notifications when setting is 'name and message' and more than one message is waiting"
 	},
 	"privacyPolicy": {
-		"message": "Terms & Privacy Policy",
+		"message": "Licens- och sekretessvillkor",
 		"description": "Shown in the about box for the link to https://signal.org/legal"
 	},
 	"lightboxImageAlt": {
@@ -1292,23 +1292,23 @@
 		"description": "Message shown if the import went wrong; second paragraph"
 	},
 	"appMenuHideOthers": {
-		"message": "Hide Others",
+		"message": "Dölj andra",
 		"description": "Application menu command to hide all other windows"
 	},
 	"appMenuQuit": {
-		"message": "Quit Signal",
+		"message": "Stäng Signal",
 		"description": "Application menu command to close the application"
 	},
 	"editMenuCut": {
-		"message": "Cut",
+		"message": "Klistra",
 		"description": "Edit menu command to remove selected text and add it to clipboard"
 	},
 	"verifyNewNumber": {
-		"message": "Verify New Number",
+		"message": "Verifiera nytt nummer",
 		"description": "Label on button included with safety number change notification in the conversation"
 	},
 	"editMenuSelectAll": {
-		"message": "Select All",
+		"message": "Markera alla",
 		"description": "Edit menu comand to select all of the text in selected text box"
 	},
 	"imageFailedToLoad": {
@@ -1316,7 +1316,7 @@
 		"description": "When an image attachment is missing, this message is shown"
 	},
 	"themeLight": {
-		"message": "Light",
+		"message": "Ljus",
 		"description": "Label text for light theme (normal)"
 	},
 	"deleteThisMessage": {
@@ -1332,7 +1332,7 @@
 		"description": "View menu command to make everything smaller"
 	},
 	"editMenuUndo": {
-		"message": "Undo",
+		"message": "Ångra",
 		"description": "Edit menu command to remove recently-typed text"
 	},
 	"justNow": {
@@ -1340,15 +1340,15 @@
 		"description": "Shown if a message is very recent, less than 60 seconds old"
 	},
 	"mediaPermissionsDescription": {
-		"message": "Allow access to camera and microphone",
+		"message": "Tillåt åtkomst till kameran och mikrofonen",
 		"description": "Description of the media permission description"
 	},
 	"safetyNumberChanged": {
-		"message": "Safety Number has changed",
+		"message": "Säkerhetsnumret har ändrats",
 		"description": "A notification shown in the conversation when a contact reinstalls"
 	},
 	"multipleLeftTheGroup": {
-		"message": "$name$ left the group",
+		"message": "$name$ lämnade gruppen",
 		"description": "Shown in the conversation history when multiple people leave the group",
 		"placeholders": {
 			"name": {
@@ -1370,7 +1370,7 @@
 		"description": "Label for a selectable option in the message expiration timer menu"
 	},
 	"safetyNumberChangedGroup": {
-		"message": "Safety Number with $name$ has changed",
+		"message": "Säkerhetsnumret med $name$ har ändrats",
 		"description": "A notification shown in a group conversation when a contact reinstalls, showing the contact name",
 		"placeholders": {
 			"name": {
@@ -1380,7 +1380,7 @@
 		}
 	},
 	"imageAttachmentAlt": {
-		"message": "Image attached to message",
+		"message": "Bild bifogat till meddelande",
 		"description": "Used in alt tag of image attachment"
 	},
 	"signalDesktopPreferences": {
@@ -1400,7 +1400,7 @@
 		"description": "Shown on the drop-down menu for an individual message, takes you to message detail screen"
 	},
 	"windowMenuClose": {
-		"message": "Close Window",
+		"message": "Stäng fönster",
 		"description": "Window menu command to close the current window"
 	},
 	"editMenuPasteAndMatchStyle": {
@@ -1412,7 +1412,7 @@
 		"description": "Label for a selectable option in the message expiration timer menu"
 	},
 	"permissions": {
-		"message": "Permissions",
+		"message": "Behörigheter",
 		"description": "Header for permissions section of settings"
 	},
 	"editMenuRedo": {
@@ -1420,7 +1420,7 @@
 		"description": "Edit menu command to restore previously undone typed text"
 	},
 	"hoursAgo": {
-		"message": "$hours$ hr ago",
+		"message": "$hours$ t sen",
 		"description": "Contracted form of 'X hours ago' which works both for singular and plural",
 		"placeholders": {
 			"hours": {
@@ -1434,7 +1434,7 @@
 		"description": "Application menu command to hide the window"
 	},
 	"timerOption_5_minutes": {
-		"message": "5 minutes",
+		"message": "5 minuter",
 		"description": "Label for a selectable option in the message expiration timer menu"
 	},
 	"viewMenuToggleDevTools": {
@@ -1442,7 +1442,7 @@
 		"description": "View menu command to show or hide the developer tools"
 	},
 	"viewMenuResetZoom": {
-		"message": "Actual Size",
+		"message": "Aktuella storlek",
 		"description": "View menu command to go back to the default zoom"
 	},
 	"audioPermissionNeeded": {
@@ -1450,15 +1450,15 @@
 		"description": "Shown if the user attempts to send an audio message without audio permssions turned on"
 	},
 	"themeDark": {
-		"message": "Dark",
+		"message": "Mörk",
 		"description": "Label text for dark theme"
 	},
 	"windowMenuMinimize": {
-		"message": "Minimize",
+		"message": "Minimera",
 		"description": "Window menu command to minimize the current window"
 	},
 	"editMenuStopSpeaking": {
-		"message": "Stop speaking",
+		"message": "Sluta prata",
 		"description": "Edit menu item under 'speech' to stop dictation"
 	},
 	"timerOption_12_hours": {
@@ -1474,7 +1474,7 @@
 		"description": "View menu command to enter or leave Full Screen mode"
 	},
 	"timerOption_30_minutes": {
-		"message": "30 minutes",
+		"message": "30 minuter",
 		"description": "Label for a selectable option in the message expiration timer menu"
 	},
 	"appMenuUnhide": {
@@ -1486,7 +1486,7 @@
 		"description": "A button shown in dialog requesting the user to turn on audio permissions"
 	},
 	"editMenuCopy": {
-		"message": "Copy",
+		"message": "Kopiera",
 		"description": "Edit menu command to add selected text to clipboard"
 	},
 	"retrySend": {
@@ -1494,7 +1494,7 @@
 		"description": "Shown on the drop-down menu for an indinvidaul message, but only if it is an outgoing message that failed to send"
 	},
 	"timerOption_6_hours": {
-		"message": "6 hours",
+		"message": "6 timmar",
 		"description": "Label for a selectable option in the message expiration timer menu"
 	},
 	"videoAttachmentAlt": {
@@ -1510,11 +1510,11 @@
 		"description": "Window menu command to make the current window the size of the whole screen"
 	},
 	"editMenuStartSpeaking": {
-		"message": "Start speaking",
+		"message": "Börja prata",
 		"description": "Edit menu item under 'speech' to start dictation"
 	},
 	"minutesAgo": {
-		"message": "$minutes$ min ago",
+		"message": "$minutes$ minuter sen",
 		"description": "Contracted form of 'X minutes ago' which works both for singular and plural",
 		"placeholders": {
 			"minutes": {
@@ -1522,5 +1522,17 @@
 				"example": "10"
 			}
 		}
+	},
+	"spellCheckDescription": {
+		"message": "Enable spell check of text entered in message composition box",
+		"description": "Description of the media permission description"
+	},
+	"spellCheck": {
+		"message": "Spell Check",
+		"description": "Description of the media permission description"
+	},
+	"debugLogError": {
+		"message": "Something went wrong with the upload! Please consider manually adding your log to the bug you file.",
+		"description": ""
 	}
 }

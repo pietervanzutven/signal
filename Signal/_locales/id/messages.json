@@ -54,7 +54,7 @@
 		"description": "Warning that long messages could not get received completely by Android clients."
 	},
 	"leftTheGroup": {
-		"message": "$name$ left the group",
+		"message": "$name$ telah meninggalkan grup",
 		"description": "Shown in the conversation history when a single person leaves the group",
 		"placeholders": {
 			"name": {
@@ -204,7 +204,7 @@
 		"description": "Menu item for deleting messages, title case."
 	},
 	"incomingError": {
-		"message": "Error handling incoming message",
+		"message": "Gagal dalam menangani pesan masuk",
 		"description": ""
 	},
 	"delete": {
@@ -412,7 +412,7 @@
 		}
 	},
 	"joinedTheGroup": {
-		"message": "$name$ joined the group",
+		"message": "$name$ bergabung dengan grup.",
 		"description": "Shown in the conversation history when a single person joins the group",
 		"placeholders": {
 			"name": {
@@ -630,7 +630,7 @@
 		"description": ""
 	},
 	"deleteMessage": {
-		"message": "Delete Message",
+		"message": "Hapus Pesan",
 		"description": "Shown on the drop-down menu for an individual message, deletes single message"
 	},
 	"autoUpdateNewVersionInstructions": {
@@ -838,7 +838,7 @@
 		}
 	},
 	"updatedTheGroup": {
-		"message": "Group updated",
+		"message": "Grup diperbarui",
 		"description": "Shown in the conversation history when someone updates the group"
 	},
 	"identityKeyErrorOnSend": {
@@ -924,7 +924,7 @@
 		"description": ""
 	},
 	"titleIsNow": {
-		"message": "Title is now '$name$'",
+		"message": "Judul sekarang adalah '$name$'",
 		"description": "Shown in the conversation history when someone changes the title of the group",
 		"placeholders": {
 			"name": {
@@ -1292,31 +1292,31 @@
 		"description": "Message shown if the import went wrong; second paragraph"
 	},
 	"appMenuHideOthers": {
-		"message": "Hide Others",
+		"message": "Sembuyikan lainnya",
 		"description": "Application menu command to hide all other windows"
 	},
 	"appMenuQuit": {
-		"message": "Quit Signal",
+		"message": "Keluar dari Signal",
 		"description": "Application menu command to close the application"
 	},
 	"editMenuCut": {
-		"message": "Cut",
+		"message": "Potong",
 		"description": "Edit menu command to remove selected text and add it to clipboard"
 	},
 	"verifyNewNumber": {
-		"message": "Verify New Number",
+		"message": "Verifikasi Nomor Baru",
 		"description": "Label on button included with safety number change notification in the conversation"
 	},
 	"editMenuSelectAll": {
-		"message": "Select All",
+		"message": "Pilih Semua",
 		"description": "Edit menu comand to select all of the text in selected text box"
 	},
 	"imageFailedToLoad": {
-		"message": "Image failed to load",
+		"message": "Gambar gagal dimuat",
 		"description": "When an image attachment is missing, this message is shown"
 	},
 	"themeLight": {
-		"message": "Light",
+		"message": "Terang",
 		"description": "Label text for light theme (normal)"
 	},
 	"deleteThisMessage": {
@@ -1324,7 +1324,7 @@
 		"description": ""
 	},
 	"editMenuPaste": {
-		"message": "Paste",
+		"message": "Tempel",
 		"description": "Edit menu command to insert text from clipboard at cursor location"
 	},
 	"viewMenuZoomOut": {
@@ -1332,7 +1332,7 @@
 		"description": "View menu command to make everything smaller"
 	},
 	"editMenuUndo": {
-		"message": "Undo",
+		"message": "Kembali",
 		"description": "Edit menu command to remove recently-typed text"
 	},
 	"justNow": {
@@ -1340,15 +1340,15 @@
 		"description": "Shown if a message is very recent, less than 60 seconds old"
 	},
 	"mediaPermissionsDescription": {
-		"message": "Allow access to camera and microphone",
+		"message": "Izinkan akses ke kamera dan mikrofon",
 		"description": "Description of the media permission description"
 	},
 	"safetyNumberChanged": {
-		"message": "Safety Number has changed",
+		"message": "Angka keamanan telah diganti",
 		"description": "A notification shown in the conversation when a contact reinstalls"
 	},
 	"multipleLeftTheGroup": {
-		"message": "$name$ left the group",
+		"message": "$name$ telah meninggalkan grup",
 		"description": "Shown in the conversation history when multiple people leave the group",
 		"placeholders": {
 			"name": {
@@ -1362,7 +1362,7 @@
 		"description": "View menu command to make everything bigger"
 	},
 	"windowMenuBringAllToFront": {
-		"message": "Bring All to Front",
+		"message": "Bawa Semua ke Depan",
 		"description": "Window menu command to bring all windows of current applicatinon to front"
 	},
 	"timerOption_1_hour": {
@@ -1370,7 +1370,7 @@
 		"description": "Label for a selectable option in the message expiration timer menu"
 	},
 	"safetyNumberChangedGroup": {
-		"message": "Safety Number with $name$ has changed",
+		"message": "Angka keamanan dengan $name$ telah diganti",
 		"description": "A notification shown in a group conversation when a contact reinstalls, showing the contact name",
 		"placeholders": {
 			"name": {
@@ -1380,27 +1380,27 @@
 		}
 	},
 	"imageAttachmentAlt": {
-		"message": "Image attached to message",
+		"message": "Gambar dilampirkan kedalam pesan",
 		"description": "Used in alt tag of image attachment"
 	},
 	"signalDesktopPreferences": {
-		"message": "Signal Desktop Preferences",
+		"message": "Preferensi Signal Desktop",
 		"description": "Title of the window that pops up with Signal Desktop preferences in it"
 	},
 	"allowAccess": {
-		"message": "Allow Access",
+		"message": "Izinkan Akses",
 		"description": "Button shown in popup asking to enable microphon/video permissions to send audio messages"
 	},
 	"videoScreenshotFailedToLoad": {
-		"message": "Video screenshot failed to load",
+		"message": "Hasil tangkapan video gagal dimuat",
 		"description": "When a attachment video screenshot is missing, this message is shown"
 	},
 	"moreInfo": {
-		"message": "More Info...",
+		"message": "Informasi Selengkapnya...",
 		"description": "Shown on the drop-down menu for an individual message, takes you to message detail screen"
 	},
 	"windowMenuClose": {
-		"message": "Close Window",
+		"message": "Tutup Jendela",
 		"description": "Window menu command to close the current window"
 	},
 	"editMenuPasteAndMatchStyle": {
@@ -1412,7 +1412,7 @@
 		"description": "Label for a selectable option in the message expiration timer menu"
 	},
 	"permissions": {
-		"message": "Permissions",
+		"message": "Perizinan",
 		"description": "Header for permissions section of settings"
 	},
 	"editMenuRedo": {
@@ -1420,7 +1420,7 @@
 		"description": "Edit menu command to restore previously undone typed text"
 	},
 	"hoursAgo": {
-		"message": "$hours$ hr ago",
+		"message": "$hours$ jam yang lalu",
 		"description": "Contracted form of 'X hours ago' which works both for singular and plural",
 		"placeholders": {
 			"hours": {
@@ -1434,7 +1434,7 @@
 		"description": "Application menu command to hide the window"
 	},
 	"timerOption_5_minutes": {
-		"message": "5 minutes",
+		"message": "5 menit",
 		"description": "Label for a selectable option in the message expiration timer menu"
 	},
 	"viewMenuToggleDevTools": {
@@ -1442,31 +1442,31 @@
 		"description": "View menu command to show or hide the developer tools"
 	},
 	"viewMenuResetZoom": {
-		"message": "Actual Size",
+		"message": "Ukuran Sebenarnya",
 		"description": "View menu command to go back to the default zoom"
 	},
 	"audioPermissionNeeded": {
-		"message": "To send audio messages, allow Signal Desktop to access your microphone.",
+		"message": "Untuk mengirimkan pesan suara, izinkan Signal Desktop untuk mengakses mikrofon anda.",
 		"description": "Shown if the user attempts to send an audio message without audio permssions turned on"
 	},
 	"themeDark": {
-		"message": "Dark",
+		"message": "Gelap",
 		"description": "Label text for dark theme"
 	},
 	"windowMenuMinimize": {
-		"message": "Minimize",
+		"message": "Kecilkan",
 		"description": "Window menu command to minimize the current window"
 	},
 	"editMenuStopSpeaking": {
-		"message": "Stop speaking",
+		"message": "Berhenti berbicara",
 		"description": "Edit menu item under 'speech' to stop dictation"
 	},
 	"timerOption_12_hours": {
-		"message": "12 hours",
+		"message": "12 jam",
 		"description": "Label for a selectable option in the message expiration timer menu"
 	},
 	"sendFailed": {
-		"message": "Send failed",
+		"message": "Pengiriman gagal",
 		"description": "Shown on outgoing message if it fails to send"
 	},
 	"viewMenuToggleFullScreen": {
@@ -1474,31 +1474,31 @@
 		"description": "View menu command to enter or leave Full Screen mode"
 	},
 	"timerOption_30_minutes": {
-		"message": "30 minutes",
+		"message": "30 menit",
 		"description": "Label for a selectable option in the message expiration timer menu"
 	},
 	"appMenuUnhide": {
-		"message": "Show All",
+		"message": "Tampilkan Semua",
 		"description": "Application menu command to show all application windows"
 	},
 	"showSettings": {
-		"message": "Show Settings",
+		"message": "Tunjukkan Pengaturan",
 		"description": "A button shown in dialog requesting the user to turn on audio permissions"
 	},
 	"editMenuCopy": {
-		"message": "Copy",
+		"message": "Salin",
 		"description": "Edit menu command to add selected text to clipboard"
 	},
 	"retrySend": {
-		"message": "Retry Send",
+		"message": "Mencoba mengirim kembali",
 		"description": "Shown on the drop-down menu for an indinvidaul message, but only if it is an outgoing message that failed to send"
 	},
 	"timerOption_6_hours": {
-		"message": "6 hours",
+		"message": "6 jam",
 		"description": "Label for a selectable option in the message expiration timer menu"
 	},
 	"videoAttachmentAlt": {
-		"message": "Screenshot of video attached to message",
+		"message": "Hasil tangkapan layar dari video dilampirkan dalam pesan",
 		"description": "Used in alt tag of video attachment preview"
 	},
 	"editMenuDelete": {
@@ -1506,15 +1506,15 @@
 		"description": "Edit menu command to remove the selected text"
 	},
 	"windowMenuZoom": {
-		"message": "Zoom",
+		"message": "Perbesar",
 		"description": "Window menu command to make the current window the size of the whole screen"
 	},
 	"editMenuStartSpeaking": {
-		"message": "Start speaking",
+		"message": "Mulai bicara",
 		"description": "Edit menu item under 'speech' to start dictation"
 	},
 	"minutesAgo": {
-		"message": "$minutes$ min ago",
+		"message": "$minutes$ menit yang lalu",
 		"description": "Contracted form of 'X minutes ago' which works both for singular and plural",
 		"placeholders": {
 			"minutes": {
@@ -1522,5 +1522,17 @@
 				"example": "10"
 			}
 		}
+	},
+	"spellCheckDescription": {
+		"message": "Enable spell check of text entered in message composition box",
+		"description": "Description of the media permission description"
+	},
+	"spellCheck": {
+		"message": "Spell Check",
+		"description": "Description of the media permission description"
+	},
+	"debugLogError": {
+		"message": "Something went wrong with the upload! Please consider manually adding your log to the bug you file.",
+		"description": ""
 	}
 }

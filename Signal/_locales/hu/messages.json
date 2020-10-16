@@ -1522,5 +1522,17 @@
 				"example": "10"
 			}
 		}
+	},
+	"spellCheckDescription": {
+		"message": "Az üzenetíró dobozba gépelt szöveg helyesírás-ellenőrzésének engedélyezése",
+		"description": "Description of the media permission description"
+	},
+	"spellCheck": {
+		"message": "Helyesírás-ellenőrzés",
+		"description": "Description of the media permission description"
+	},
+	"debugLogError": {
+		"message": "Valamiért nem sikerült a feltöltés! Kérjük vedd fontolóra a naplófájl kézi feltöltését a hiba bejelentése során.",
+		"description": ""
 	}
 }
