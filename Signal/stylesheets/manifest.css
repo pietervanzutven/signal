@@ -3999,6 +3999,8 @@ body.dark-theme {
   margin-right: auto; }
 
 .module-contact-list-item {
+  padding-top: 5px;
+  padding-bottom: 5px;
   display: flex;
   flex-direction: row;
   align-items: center;
