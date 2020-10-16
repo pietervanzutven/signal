@@ -7,6 +7,7 @@
 
   const Backbone = window.ts.backbone;
   const Crypto = window.crypto;
+  const Data = window.data;
   const Database = window.database;
   const Emoji = window.ts.util.emoji;
   const Notifications = window.ts.notifications;
@@ -212,6 +213,7 @@
       Backbone,
       Components,
       Crypto,
+      Data,
       Database,
       Emoji,
       Migrations,

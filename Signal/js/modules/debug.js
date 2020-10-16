@@ -1,5 +1,5 @@
 /* eslint-env node */
-/* global log */
+/* global log, Signal */
 
 (function () {
   'use strict';
@@ -63,9 +63,8 @@
       range(0, numMessages).map(async index => {
         await sleep(index * 100);
         log.info(`Create message ${index + 1}`);
-        const messageAttributes = await createRandomMessage({ conversationId });
-        const message = new WhisperMessage(messageAttributes);
-        return deferredToPromise(message.save());
+        const message = await createRandomMessage({ conversationId });
+        return Signal.Data.saveMessage(message);
       })
     );
   };

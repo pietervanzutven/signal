@@ -180,6 +180,7 @@
     <Content Include="js\modules\auto_orient_image.js" />
     <Content Include="js\modules\backup.js" />
     <Content Include="js\modules\crypto.js" />
+    <Content Include="js\modules\data.js" />
     <Content Include="js\modules\database.js" />
     <Content Include="js\modules\debug.js" />
     <Content Include="js\modules\debuglogs.js" />
