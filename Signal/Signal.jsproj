@@ -311,7 +311,6 @@
     <Content Include="js\settings_start.js" />
     <Content Include="js\share.js" />
     <Content Include="js\signal_protocol_store.js" />
-    <Content Include="js\spell_check.js" />
     <Content Include="js\storage.js" />
     <Content Include="js\typescript\backbone\Conversation.js" />
     <Content Include="js\typescript\backbone\index.js" />
