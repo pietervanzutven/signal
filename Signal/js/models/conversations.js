@@ -321,7 +321,7 @@
             (beginningVerified !== verified && verified !== UNVERIFIED) ||
             (keychange && verified === VERIFIED)
           ) {
-            return this.addVerifiedChange(this.id, verified === VERIFIED, {
+            this.addVerifiedChange(this.id, verified === VERIFIED, {
               local: !options.viaSyncMessage,
             });
           }
