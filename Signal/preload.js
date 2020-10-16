@@ -6,6 +6,8 @@
 
   console.log('preload');
 
+  const semver = window.semver;
+
   const { deferredToPromise } = window.deferred_to_promise;
 
   window.PROTO_ROOT = '/protos';
@@ -27,6 +29,18 @@
   window.getExpiration = () => config.buildExpiration;
   window.getUWPVersion = () => config.uwp_version;
   window.getHostName = () => config.hostname;
+
+  window.isBeforeVersion = (toCheck, baseVersion) => {
+    try {
+      return semver.lt(toCheck, baseVersion);
+    } catch (error) {
+      console.log(
+        `isBeforeVersion error: toCheck: ${toCheck}, baseVersion: ${baseVersion}`,
+        error && error.stack ? error.stack : error
+      );
+      return true;
+    }
+  };
 
   window.wrapDeferred = deferredToPromise;
 

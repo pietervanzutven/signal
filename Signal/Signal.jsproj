@@ -345,6 +345,7 @@
     <Content Include="node_modules\react-contextmenu\index.js" />
     <Content Include="node_modules\react-contextmenu\MenuItem.js" />
     <Content Include="node_modules\react-contextmenu\SubMenu.js" />
+    <Content Include="node_modules\semver\functions\lt.js" />
     <Content Include="node_modules\url\url.js" />
     <Content Include="node_modules\url\util.js" />
     <Content Include="node_modules\uuidv4\uuidv4.js" />
