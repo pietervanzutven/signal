@@ -188,6 +188,10 @@
     };
 
     const startSpellCheck = () => {
+      if (!window.enableSpellCheck || !window.disableSpellCheck) {
+        return;
+      }
+
       if (window.Events.getSpellCheck()) {
         window.enableSpellCheck();
       } else {
