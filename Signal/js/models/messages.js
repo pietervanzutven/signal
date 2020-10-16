@@ -199,6 +199,10 @@
       }
       if (this.isExpirationTimerUpdate()) {
         const { expireTimer } = this.get('expirationTimerUpdate');
+        if (!expireTimer) {
+          return i18n('disappearingMessagesDisabled');
+        }
+
         return i18n(
           'timerSetTo',
           Whisper.ExpirationTimerOptions.getAbbreviated(expireTimer || 0)
@@ -308,11 +312,15 @@
         'expirationTimerUpdate'
       );
       const timespan = Whisper.ExpirationTimerOptions.getName(expireTimer || 0);
+      const disabled = !expireTimer;
 
       const basicProps = Object.assign({},
         { type: 'fromOther' },
         this.findAndFormatContact(source),
-        { timespan });
+        {
+          timespan,
+          disabled,
+        });
 
       if (source === this.OUR_NUMBER) {
         return Object.assign({},
