@@ -5,11 +5,7 @@
     window.ts.types = window.ts.types || {};
     const exports = window.ts.types.Conversation = {};
 
-    var __importDefault = (this && this.__importDefault) || function (mod) {
-        return (mod && mod.__esModule) ? mod : { "default": mod };
-    };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const is_1 = __importDefault(window.sindresorhus.is);
     exports.createLastMessageUpdate = ({ currentLastMessageText, currentTimestamp, lastMessage, lastMessageStatus, lastMessageNotificationText, }) => {
         if (lastMessage === null) {
             return {
@@ -18,10 +14,10 @@
                 timestamp: null,
             };
         }
-        const { type } = lastMessage;
+        const { type, expirationTimerUpdate } = lastMessage;
         const isVerifiedChangeMessage = type === 'verified-change';
-        const isExpiringMessage = is_1.default.object(lastMessage.expirationTimerUpdate);
-        const shouldUpdateTimestamp = !isVerifiedChangeMessage && !isExpiringMessage;
+        const isExpireTimerUpdateFromSync = expirationTimerUpdate && expirationTimerUpdate.fromSync;
+        const shouldUpdateTimestamp = !isVerifiedChangeMessage && !isExpireTimerUpdateFromSync;
         const newTimestamp = shouldUpdateTimestamp
             ? lastMessage.sent_at
             : currentTimestamp;

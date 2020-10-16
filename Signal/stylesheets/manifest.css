@@ -2356,6 +2356,8 @@ body.dark-theme {
 
 .dark-theme .module-quote__primary__text {
   color: #efefef; }
+  .dark-theme .module-quote__primary__text a {
+    color: #efefef; }
 
 .dark-theme .module-quote__primary__type-label {
   color: #efefef; }
@@ -2681,6 +2683,24 @@ body.dark-theme {
 
 .dark-theme .module-media-grid-item {
   background-color: #1a1c20; }
+
+.dark-theme .module-media-grid-item__icon-image {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' width='24' height='24' viewBox='0 0 24 24'><path d='M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z' fill='%23797A7C'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.dark-theme .module-media-grid-item__icon-video {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' width='24' height='24' viewBox='0 0 24 24'><path d='M18,4L20,8H17L15,4H13L15,8H12L10,4H8L10,8H7L5,4H4A2,2 0 0,0 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V4H18Z' fill='%23797A7C'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.dark-theme .module-media-grid-item__icon-generic {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><path d='M12 4C9.79 4 8.02 5.79 8.02 8L8 40c0 2.21 1.77 4 3.98 4H36c2.21 0 4-1.79 4-4V16L28 4H12zm14 14V7l11 11H26z' fill='%23797A7C'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
 
 .dark-theme .module-empty-state {
   color: #88898c; }
@@ -3557,6 +3577,8 @@ body.dark-theme {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical; }
+  .module-quote__primary__text a {
+    color: #070c14; }
 
 .module-quote__primary__type-label {
   font-style: italic;
@@ -4429,12 +4451,26 @@ body.dark-theme {
   cursor: pointer;
   background-color: #eeefef;
   margin-right: 4px;
-  margin-bottom: 4px; }
+  margin-bottom: 4px;
+  position: relative; }
 
 .module-media-grid-item__image {
   height: 94px;
   width: 94px;
   object-fit: cover; }
+
+.module-media-grid-item__icon {
+  position: absolute;
+  top: 15px;
+  bottom: 15px;
+  left: 15px;
+  right: 15px; }
+
+.module-media-grid-item__icon-image {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' width='24' height='24' viewBox='0 0 24 24'><path d='M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z' fill='%23A4A6A9'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
 
 .module-media-grid-item__image-container {
   height: 94px;
@@ -4460,6 +4496,18 @@ body.dark-theme {
   height: 36px;
   width: 36px;
   background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' width='24' height='24' viewBox='0 0 24 24'><path d='M8,5.14V19.14L19,12.14L8,5.14Z' fill='%232090EA'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.module-media-grid-item__icon-video {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' width='24' height='24' viewBox='0 0 24 24'><path d='M18,4L20,8H17L15,4H13L15,8H12L10,4H8L10,8H7L5,4H4A2,2 0 0,0 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V4H18Z' fill='%23A4A6A9'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.module-media-grid-item__icon-generic {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><path d='M12 4C9.79 4 8.02 5.79 8.02 8L8 40c0 2.21 1.77 4 3.98 4H36c2.21 0 4-1.79 4-4V16L28 4H12zm14 14V7l11 11H26z' fill='%23A4A6A9'/></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
@@ -4562,21 +4610,23 @@ body.dark-theme {
   font-size: 11px;
   line-height: 16px;
   letter-spacing: 0.3px;
-  font-weight: 300;
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   text-transform: uppercase; }
 
+.module-conversation-list-item__header__date--has-unread {
+  font-weight: 300; }
+
 .module-conversation-list-item__message {
   display: flex;
   flex-direction: row;
-  align-items: center; }
+  align-items: center;
+  margin-top: 3px; }
 
 .module-conversation-list-item__message__text {
   flex-grow: 1;
   flex-shrink: 1;
-  margin-top: 3px;
   font-size: 13px;
   line-height: 18px;
   height: 1.3em;
@@ -4585,6 +4635,19 @@ body.dark-theme {
 
 .module-conversation-list-item__message__text--has-unread {
   font-weight: 300; }
+
+.module-conversation-list-item__unread-count {
+  color: #ffffff;
+  background-color: #2090ea;
+  text-align: center;
+  margin-top: 1px;
+  font-size: 10px;
+  margin-left: 5px;
+  min-width: 20px;
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+  border-radius: 10px; }
 
 .module-conversation-list-item__message__status-icon {
   flex-shrink: 0;

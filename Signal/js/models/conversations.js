@@ -204,16 +204,16 @@
       };
     },
     getPropsForListItem() {
-        const result = Object.assign({},
+      const result = Object.assign({},
         this.format(),
         {
           lastUpdated: this.get('timestamp'),
-          hasUnread: Boolean(this.get('unreadCount')),
+          unreadCount: this.get('unreadCount') || 0,
           isSelected: this.isSelected,
 
           lastMessage: {
-              status: this.get('lastMessageStatus'),
-              text: this.get('lastMessage'),
+            status: this.get('lastMessageStatus'),
+            text: this.get('lastMessage'),
           },
 
           onClick: () => this.trigger('select', this),
@@ -796,7 +796,9 @@
 
             return {
               contentType,
-              fileName,
+              // Our protos library complains about this field being undefined, so we
+              //   force it to null
+              fileName: fileName || null,
               thumbnail: thumbnail
                 ? Object.assign({}
                     (await loadAttachmentData(thumbnail)),

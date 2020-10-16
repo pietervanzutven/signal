@@ -1216,30 +1216,52 @@
       "message": "1 hour",
     "description":
       "Brief timestamp for messages sent about one hour ago. Displayed in the conversation list and message bubble."
-    },
-    "hoursAgo": {
-      "message": "$hours$ hr ago",
+  },
+  "hoursAgoShort": {
+    "message": "$hours$ hr",
+    "description":
+      "Even further contracted form of 'X hours ago' which works both for singular and plural, used in the left pane",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "hoursAgo": {
+    "message": "$hours$ hr ago",
     "description":
       "Contracted form of 'X hours ago' which works both for singular and plural",
-      "placeholders": {
-        "hours": {
-          "content": "$1",
-          "example": "2"
-        }
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "2"
       }
-    },
-    "minutesAgo": {
-      "message": "$minutes$ min ago",
+    }
+  },
+  "minutesAgoShort": {
+    "message": "$minutes$ min",
+    "description":
+      "Even further contracted form of 'X minutes ago' which works both for singular and plural, used in the left pane",
+    "placeholders": {
+      "minutes": {
+        "content": "$1",
+        "example": "10"
+      }
+    }
+  },
+  "minutesAgo": {
+    "message": "$minutes$ min ago",
     "description":
       "Contracted form of 'X minutes ago' which works both for singular and plural",
-      "placeholders": {
-        "minutes": {
-          "content": "$1",
-          "example": "10"
-        }
+    "placeholders": {
+      "minutes": {
+        "content": "$1",
+        "example": "10"
       }
-    },
-    "justNow": {
+    }
+  },
+  "justNow": {
       "message": "now",
       "description": "Shown if a message is very recent, less than 60 seconds old"
   },
