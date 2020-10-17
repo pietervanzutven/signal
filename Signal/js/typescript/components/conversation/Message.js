@@ -288,7 +288,7 @@
                 return null;
             }
             return (react_1.default.createElement("div", {
-                className: classnames_1.default('module-message__text', `module-message__text--${direction}`, status === 'error' && direction === 'incoming'
+                dir: "auto", className: classnames_1.default('module-message__text', `module-message__text--${direction}`, status === 'error' && direction === 'incoming'
                     ? 'module-message__text--error'
                     : null)
             },

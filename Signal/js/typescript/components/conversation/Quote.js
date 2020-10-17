@@ -110,7 +110,7 @@
         renderText() {
             const { i18n, text, attachment } = this.props;
             if (text) {
-                return (react_1.default.createElement("div", { className: "module-quote__primary__text" },
+                return (react_1.default.createElement("div", { dir: "auto", className: "module-quote__primary__text" },
                     react_1.default.createElement(MessageBody_1.MessageBody, { text: text, i18n: i18n })));
             }
             if (!attachment) {
