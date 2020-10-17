@@ -259,7 +259,10 @@
     // erase everything in the database
   }
 
-  async function getMessagesNeedingUpgrade(limit, { MessageCollection }) {
+  async function getMessagesNeedingUpgrade(
+    limit,
+    { MessageCollection, maxVersion = MessageType.CURRENT_SCHEMA_VERSION }
+  ) {
     const messages = new MessageCollection();
 
     await deferredToPromise(
@@ -267,7 +270,7 @@
         limit,
         index: {
           name: 'schemaVersion',
-          upper: MessageType.CURRENT_SCHEMA_VERSION,
+          upper: maxVersion,
           excludeUpper: true,
           order: 'desc',
         },

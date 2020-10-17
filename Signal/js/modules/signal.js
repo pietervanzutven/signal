@@ -131,8 +131,10 @@
       loadMessage: MessageType.createAttachmentLoader(loadAttachmentData),
       Migrations0DatabaseWithAttachmentData,
       Migrations1DatabaseWithoutAttachmentData,
-      upgradeMessageSchema: message =>
-        MessageType.upgradeSchema(message, {
+      upgradeMessageSchema: (message, options = {}) => {
+        const { maxVersion } = options;
+
+        return MessageType.upgradeSchema(message, {
           writeNewAttachmentData: createWriterForNew(attachmentsPath),
           getRegionCode,
           getAbsoluteAttachmentPath,
@@ -142,7 +144,9 @@
           makeImageThumbnail,
           makeVideoScreenshot,
           logger,
-        }),
+          maxVersion,
+        });
+      },
       writeMessageAttachments: MessageType.createAttachmentDataWriter({
         writeExistingAttachmentData: createWriterForExisting(attachmentsPath),
         logger,

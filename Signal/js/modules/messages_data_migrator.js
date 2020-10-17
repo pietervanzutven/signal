@@ -26,6 +26,7 @@
     upgradeMessageSchema,
     getMessagesNeedingUpgrade,
     saveMessage,
+    maxVersion = Message.CURRENT_SCHEMA_VERSION,
   } = {}) => {
     if (!isFunction(BackboneMessage)) {
       throw new TypeError(
@@ -54,6 +55,7 @@
     const messagesRequiringSchemaUpgrade = await getMessagesNeedingUpgrade(
       numMessagesPerBatch,
       {
+        maxVersion,
         MessageCollection: BackboneMessageCollection,
       }
     );
@@ -61,7 +63,9 @@
 
     const upgradeStartTime = Date.now();
     const upgradedMessages = await Promise.all(
-      messagesRequiringSchemaUpgrade.map(upgradeMessageSchema)
+      messagesRequiringSchemaUpgrade.map(message =>
+        upgradeMessageSchema(message, { maxVersion })
+      )
     );
     const upgradeDuration = Date.now() - upgradeStartTime;
 
@@ -92,6 +96,9 @@
     numMessagesPerBatch,
     upgradeMessageSchema,
     logger,
+    maxVersion = Message.CURRENT_SCHEMA_VERSION,
+    saveMessage,
+    BackboneMessage,
   } = {}) => {
     if (!isString(databaseName)) {
       throw new TypeError("'databaseName' must be a string");
@@ -104,8 +111,13 @@
     if (!isNumber(numMessagesPerBatch)) {
       throw new TypeError("'numMessagesPerBatch' must be a number");
     }
-
     if (!isFunction(upgradeMessageSchema)) {
+      throw new TypeError("'upgradeMessageSchema' is required");
+    }
+    if (!isFunction(BackboneMessage)) {
+      throw new TypeError("'upgradeMessageSchema' is required");
+    }
+    if (!isFunction(saveMessage)) {
       throw new TypeError("'upgradeMessageSchema' is required");
     }
 
@@ -138,6 +150,9 @@
         connection,
         numMessagesPerBatch,
         upgradeMessageSchema,
+        maxVersion,
+        saveMessage,
+        BackboneMessage,
       });
       if (status.done) {
         break;
@@ -167,6 +182,9 @@
     minDatabaseVersion,
     numMessagesPerBatch,
     upgradeMessageSchema,
+    maxVersion,
+    BackboneMessage,
+    saveMessage,
   } = {}) => {
     if (!isFunction(upgradeMessageSchema)) {
       throw new TypeError("'upgradeMessageSchema' is required");
@@ -177,6 +195,9 @@
       connection,
       numMessagesPerBatch,
       upgradeMessageSchema,
+      maxVersion,
+      BackboneMessage,
+      saveMessage,
     });
     return batch;
   };
@@ -208,17 +229,29 @@
     connection,
     numMessagesPerBatch,
     upgradeMessageSchema,
+    maxVersion,
+    BackboneMessage,
+    saveMessage,
   } = {}) => {
     if (!isObject(connection)) {
-      throw new TypeError("'connection' must be a string");
+      throw new TypeError('_processBatch: connection must be a string');
     }
 
     if (!isFunction(upgradeMessageSchema)) {
-      throw new TypeError("'upgradeMessageSchema' is required");
+      throw new TypeError('_processBatch: upgradeMessageSchema is required');
     }
 
     if (!isNumber(numMessagesPerBatch)) {
-      throw new TypeError("'numMessagesPerBatch' is required");
+      throw new TypeError('_processBatch: numMessagesPerBatch is required');
+    }
+    if (!isNumber(maxVersion)) {
+      throw new TypeError('_processBatch: maxVersion is required');
+    }
+    if (!isFunction(BackboneMessage)) {
+      throw new TypeError('_processBatch: BackboneMessage is required');
+    }
+    if (!isFunction(saveMessage)) {
+      throw new TypeError('_processBatch: saveMessage is required');
     }
 
     const isAttachmentMigrationComplete = await settings.isAttachmentMigrationComplete(
@@ -246,14 +279,21 @@
 
     const upgradeStartTime = Date.now();
     const upgradedMessages = await Promise.all(
-      unprocessedMessages.map(upgradeMessageSchema)
+      unprocessedMessages.map(message =>
+        upgradeMessageSchema(message, { maxVersion })
+      )
     );
     const upgradeDuration = Date.now() - upgradeStartTime;
 
     const saveMessagesStartTime = Date.now();
     const transaction = connection.transaction(MESSAGES_STORE_NAME, 'readwrite');
     const transactionCompletion = database.completeTransaction(transaction);
-    await Promise.all(upgradedMessages.map(_saveMessage({ transaction })));
+    await Promise.all(
+      upgradedMessages.map(message =>
+        saveMessage(message, { Message: BackboneMessage })
+      )
+    );
+    console.log('done');
     await transactionCompletion;
     const saveDuration = Date.now() - saveMessagesStartTime;
 
@@ -284,19 +324,6 @@
       targetSchemaVersion: Message.CURRENT_SCHEMA_VERSION,
       upgradeDuration,
     };
-  };
-
-  const _saveMessage = ({ transaction } = {}) => message => {
-    if (!isObject(transaction)) {
-      throw new TypeError("'transaction' is required");
-    }
-
-    const messagesStore = transaction.objectStore(MESSAGES_STORE_NAME);
-    const request = messagesStore.put(message, message.id);
-    return new Promise((resolve, reject) => {
-      request.onsuccess = () => resolve();
-      request.onerror = event => reject(event.target.error);
-    });
   };
 
   // NOTE: Named ‘dangerous’ because it is not as efficient as using our

@@ -302,6 +302,7 @@
       makeImageThumbnail,
       makeVideoScreenshot,
       logger,
+      maxVersion = exports.CURRENT_SCHEMA_VERSION,
     } = {}
   ) => {
     if (!isFunction(writeNewAttachmentData)) {
@@ -334,7 +335,12 @@
 
     let message = rawMessage;
     // eslint-disable-next-line no-restricted-syntax
-    for (const currentVersion of VERSIONS) {
+    for (let index = 0, max = VERSIONS.length; index < max; index += 1) {
+      if (maxVersion < index) {
+        break;
+      }
+
+      const currentVersion = VERSIONS[index];
       // We really do want this intra-loop await because this is a chained async action,
       //   each step dependent on the previous
       // eslint-disable-next-line no-await-in-loop
