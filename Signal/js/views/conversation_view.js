@@ -158,7 +158,6 @@
           //   need a manual update call.
           onShowSafetyNumber: () => {
             this.showSafetyNumber();
-            this.updateHeader();
           },
           onShowAllMedia: async () => {
             await this.showAllMedia();
@@ -989,6 +988,7 @@
           model,
         });
         this.listenBack(view);
+        this.updateHeader();
       }
     },
 
