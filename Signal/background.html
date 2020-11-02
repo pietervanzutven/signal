@@ -735,6 +735,7 @@
   <script type='text/javascript' src='node_modules/core/events.js'></script>
   <script type='text/javascript' src='node_modules/core/fs_extra.js'></script>
   <script type='text/javascript' src='node_modules/core/indexedDB.js'></script>
+  <script type='text/javascript' src='node_modules/core/ipc.js'></script>
   <script type='text/javascript' src='node_modules/core/notification.js'></script>
   <script type='text/javascript' src='node_modules/core/os.js'></script>
   <script type='text/javascript' src='node_modules/core/path.js'></script>
@@ -743,8 +744,10 @@
   <script type='text/javascript' src='node_modules/lodash/escapeRegExp.js'></script>
   <script type='text/javascript' src='node_modules/lodash/filter.js'></script>
   <script type='text/javascript' src='node_modules/lodash/flowRight.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/forEach.js'></script>
   <script type='text/javascript' src='node_modules/lodash/groupBy.js'></script>
   <script type='text/javascript' src='node_modules/lodash/head.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/includes.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isArrayBuffer.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isFunction.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isNumber.js'></script>
@@ -811,7 +814,7 @@
   <script type='text/javascript' src='node_modules/linkify-it/re.js'></script>
   <script type='text/javascript' src='node_modules/linkify-it/linkify-it.js'></script>
   <script type='text/javascript' src='node_modules/filesize/filesize.js'></script>
-  <script type='text/javascript' src='node_modules/uuidv4/uuidv4.js'></script>
+  <script type='text/javascript' src='node_modules/uuid/v4.js'></script>
   <script type='text/javascript' src='node_modules/aes-js/index.js'></script>
   <script type='text/javascript' src='node_modules/querystring/decode.js'></script>
   <script type='text/javascript' src='node_modules/querystring/encode.js'></script>
@@ -820,6 +823,10 @@
   <script type='text/javascript' src='node_modules/url/util.js'></script>
   <script type='text/javascript' src='node_modules/url/url.js'></script>
   <script type='text/javascript' src='node_modules/pify/index.js'></script>
+  <script type='text/javascript' src='node_modules/sql/sql-asm.js'></script>
+  <script type='text/javascript' src='node_modules/journeyapps/sqlcipher.js'></script>
+  <script type='text/javascript' src='node_modules/mkdirp/index.js'></script>
+  <script type='text/javascript' src='node_modules/rimraf/index.js'></script>
 
   <script type='text/javascript' src='js/components.js'></script>
 
@@ -865,14 +872,12 @@
   <script type='text/javascript' src='js/modules/idle_detector.js'></script>
   <script type='text/javascript' src='js/modules/database.js'></script>
   <script type='text/javascript' src='js/modules/settings.js'></script>
-  <script type='text/javascript' src='js/modules/messages_data_migrator.js'></script>
   <script type='text/javascript' src='js/modules/sleep.js'></script>
   <script type='text/javascript' src='js/modules/startup.js'></script>
   <script type='text/javascript' src='js/modules/views/initialization.js'></script>
   <script type='text/javascript' src='js/modules/i18n.js'></script>
   <script type='text/javascript' src='js/modules/string_to_array_buffer.js'></script>
   <script type='text/javascript' src='js/modules/web_api.js'></script>
-  <script type='text/javascript' src='js/modules/data.js'></script>
   <script type='text/javascript' src='js/modules/metadata/CiphertextMessage.js'></script>
   <script type='text/javascript' src='js/modules/metadata/SecretSessionCipher.js'></script>
   <script type='text/javascript' src='js/typescript/components/Lightbox.js'></script>
@@ -918,15 +923,22 @@
   <script type='text/javascript' src='app/locale.js'></script>
   <script type='text/javascript' src='app/user_config.js'></script>
   <script type='text/javascript' src='app/global_errors.js'></script>
+  <script type='text/javascript' src='app/sql.js'></script>
+  <script type='text/javascript' src='app/sql_channel.js'></script>
+  <script type='text/javascript' src='app/attachment_channel.js'></script>
 
   <script type='text/javascript' src='js/modules/debug.js'></script>
-  <script type='text/javascript' src='js/modules/signal.js'></script>
 
   <script type='text/javascript' src='main.js'></script>
   
+  <script type='text/javascript' src='js/modules/data.js'></script>
+  <script type='text/javascript' src='js/modules/migrate_to_sql.js'></script>
+  <script type='text/javascript' src='js/modules/messages_data_migrator.js'></script>
   <script type='text/javascript' src='js/modules/logs.js'></script>
   <script type='text/javascript' src='js/modules/debuglogs.js'></script>
   <script type='text/javascript' src='js/logging.js'></script>
+
+  <script type='text/javascript' src='js/modules/signal.js'></script>
   
   <script type='text/javascript' src='preload.js'></script>
 

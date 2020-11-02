@@ -3,21 +3,7 @@
 
 // eslint-disable-next-line func-names
 (function() {
-  const registeredFunctions = {};
-  const Type = {
-    ENCRYPT_MESSAGE: 1,
-    INIT_SESSION: 2,
-    TRANSMIT_MESSAGE: 3,
-    REBUILD_MESSAGE: 4,
-    RETRY_SEND_MESSAGE_PROTO: 5,
-  };
   window.textsecure = window.textsecure || {};
-  window.textsecure.replay = {
-    Type,
-    registerFunction(func, functionCode) {
-      registeredFunctions[functionCode] = func;
-    },
-  };
 
   function inherit(Parent, Child) {
     // eslint-disable-next-line no-param-reassign
@@ -47,14 +33,8 @@
     }
 
     this.functionCode = options.functionCode;
-    this.args = options.args;
   }
   inherit(Error, ReplayableError);
-
-  ReplayableError.prototype.replay = function replay(...argumentsAsArray) {
-    const args = this.args.concat(argumentsAsArray);
-    return registeredFunctions[this.functionCode].apply(window, args);
-  };
 
   function IncomingIdentityKeyError(number, message, key) {
     // eslint-disable-next-line prefer-destructuring
@@ -62,8 +42,6 @@
     this.identityKey = key;
 
     ReplayableError.call(this, {
-      functionCode: Type.INIT_SESSION,
-      args: [number, message],
       name: 'IncomingIdentityKeyError',
       message: `The identity of ${this.number} has changed.`,
     });
@@ -76,8 +54,6 @@
     this.identityKey = identityKey;
 
     ReplayableError.call(this, {
-      functionCode: Type.ENCRYPT_MESSAGE,
-      args: [number, message, timestamp],
       name: 'OutgoingIdentityKeyError',
       message: `The identity of ${this.number} has changed.`,
     });
@@ -85,9 +61,10 @@
   inherit(ReplayableError, OutgoingIdentityKeyError);
 
   function OutgoingMessageError(number, message, timestamp, httpError) {
+    // eslint-disable-next-line prefer-destructuring
+    this.number = number.split('.')[0];
+
     ReplayableError.call(this, {
-      functionCode: Type.ENCRYPT_MESSAGE,
-      args: [number, message, timestamp],
       name: 'OutgoingMessageError',
       message: httpError ? httpError.message : 'no http error',
     });
@@ -99,13 +76,11 @@
   }
   inherit(ReplayableError, OutgoingMessageError);
 
-  function SendMessageNetworkError(number, jsonData, httpError, timestamp) {
+  function SendMessageNetworkError(number, jsonData, httpError) {
     this.number = number;
     this.code = httpError.code;
 
     ReplayableError.call(this, {
-      functionCode: Type.TRANSMIT_MESSAGE,
-      args: [number, jsonData, timestamp],
       name: 'SendMessageNetworkError',
       message: httpError.message,
     });
@@ -114,10 +89,8 @@
   }
   inherit(ReplayableError, SendMessageNetworkError);
 
-  function SignedPreKeyRotationError(numbers, message, timestamp) {
+  function SignedPreKeyRotationError() {
     ReplayableError.call(this, {
-      functionCode: Type.RETRY_SEND_MESSAGE_PROTO,
-      args: [numbers, message, timestamp],
       name: 'SignedPreKeyRotationError',
       message: 'Too many signed prekey rotation failures',
     });
@@ -128,8 +101,6 @@
     this.code = httpError.code;
 
     ReplayableError.call(this, {
-      functionCode: Type.REBUILD_MESSAGE,
-      args: [message],
       name: 'MessageError',
       message: httpError.message,
     });
@@ -38570,7 +38541,10 @@ MessageReceiver.prototype.extend({
   },
   stringToArrayBuffer(string) {
     // eslint-disable-next-line new-cap
-    return new dcodeIO.ByteBuffer.wrap(string, 'binary').toArrayBuffer();
+    return dcodeIO.ByteBuffer.wrap(string, 'binary').toArrayBuffer();
+  },
+  arrayBufferToString(arrayBuffer) {
+    return dcodeIO.ByteBuffer.wrap(arrayBuffer).toString('binary');
   },
   getAllFromCache() {
     window.log.info('getAllFromCache');
@@ -38609,7 +38583,7 @@ MessageReceiver.prototype.extend({
     const id = this.getEnvelopeId(envelope);
     const data = {
       id,
-      envelope: plaintext,
+      envelope: this.arrayBufferToString(plaintext),
       timestamp: Date.now(),
       attempts: 1,
     };
@@ -38618,7 +38592,7 @@ MessageReceiver.prototype.extend({
   updateCache(envelope, plaintext) {
     const id = this.getEnvelopeId(envelope);
     const data = {
-      decrypted: plaintext,
+      decrypted: this.arrayBufferToString(plaintext),
     };
     return textsecure.storage.unprocessed.update(id, data);
   },
@@ -39533,11 +39507,6 @@ textsecure.MessageReceiver = function MessageReceiverWrapper(
   this.getStatus = messageReceiver.getStatus.bind(messageReceiver);
   this.close = messageReceiver.close.bind(messageReceiver);
   messageReceiver.connect();
-
-  textsecure.replay.registerFunction(
-    messageReceiver.tryMessageAgain.bind(messageReceiver),
-    textsecure.replay.Type.INIT_SESSION
-  );
 };
 
 textsecure.MessageReceiver.prototype = {
@@ -40584,8 +40553,9 @@ MessageSender.prototype = {
     profileKey
   ) {
     return textsecure.storage.groups.getNumbers(groupId).then(targetNumbers => {
-      if (targetNumbers === undefined)
+      if (targetNumbers === undefined) {
           return Promise.reject(new Error('Unknown Group'));
+      }
 
       const me = textsecure.storage.user.getNumber();
       const numbers = targetNumbers.filter(number => number !== me);
@@ -40774,22 +40744,6 @@ textsecure.MessageSender = function MessageSenderWrapper(
   cdnUrl
 ) {
   const sender = new MessageSender(url, username, password, cdnUrl);
-  textsecure.replay.registerFunction(
-    sender.tryMessageAgain.bind(sender),
-    textsecure.replay.Type.ENCRYPT_MESSAGE
-  );
-  textsecure.replay.registerFunction(
-    sender.retransmitMessage.bind(sender),
-    textsecure.replay.Type.TRANSMIT_MESSAGE
-  );
-  textsecure.replay.registerFunction(
-    sender.sendMessage.bind(sender),
-    textsecure.replay.Type.REBUILD_MESSAGE
-  );
-  textsecure.replay.registerFunction(
-    sender.retrySendMessageProto.bind(sender),
-    textsecure.replay.Type.RETRY_SEND_MESSAGE_PROTO
-  );
 
   this.sendExpirationTimerUpdateToNumber = sender.sendExpirationTimerUpdateToNumber.bind(
     sender

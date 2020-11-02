@@ -77,36 +77,12 @@ const process = {
   argv: [],
 };
 
-var ipc = {
-  events: {},
-  on: function (channel, listener) {
-    ipc.events[channel] = listener;
-  },
-
-  once: function (channel, listener) {
-    ipc.events[channel] = function () {
-      listener.apply(null, arguments);
-      delete ipc.events[channel];
-    }
-  },
-  send: function () {
-    let args = Array.prototype.slice.call(arguments, 0);
-    const channel = args[0];
-    const event = { channel: channel, returnValue: null, sender: { send: ipc.send } };
-    args[0] = event;
-    ipc.events[channel].apply(null, args);
-    return event.returnValue;
-  },
-  sendSync: function () {
-    return ipc.send.apply(null, arguments);
-  }
-}
-
 window.requestIdleCallback = () => { };
 
 const path = window.path;
 const url = window.url;
 const os = window.os;
+const crypto = window.crypto;
 
 const pify = window.pify;
 
@@ -115,19 +91,35 @@ const packageJson = {
   productName: 'Signal',
 };
 
-const app = window.app;
-
-const Attachments = window.app.attachments;
+const sql = window.app.sql;
+const sqlChannels = window.app.sql_channel;
+const attachmentChannel = window.app.attachment_channel;
+const autoUpdate = window.app.auto_update;
+const createTrayIcon = window.app.tray_icon;
 const GlobalErrors = window.app.global_errors;
 const logging = window.app.logging;
+const windowState = window.app.window_state;
 
 GlobalErrors.addHandler();
+
+const appUserModelId = `org.whispersystems.${packageJson.name}`;
+console.log('Set Windows Application User Model ID (AUMID)', {
+  appUserModelId,
+});
 
 // Keep a global reference of the window object, if you don't, the window will
 //   be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
+function getMainWindow() {
+  return mainWindow;
+}
+
+// Tray icon and related objects
 let tray = null;
+const startInTray = process.argv.some(arg => arg === '--start-in-tray');
+const usingTrayIcon =
+  startInTray || process.argv.some(arg => arg === '--use-tray-icon');
 
 var config = window.app.config;
 config.name = Windows.ApplicationModel.Package.current.id.name;
@@ -146,6 +138,7 @@ const development = config.environment === 'development';
 //   userData directory.
 const userConfig = window.app.user_config;
 
+let windowConfig = userConfig.get('window');
 const loadLocale = window.app.locale.load;
 
 // Both of these will be set after app fires the 'ready' event
@@ -173,6 +166,11 @@ function prepareURL(pathSegments, moreKeys) {
       importMode: importMode ? true : undefined, // for stringify()
     }, moreKeys),
   });
+}
+
+function captureClicks(window) {
+  window.webContents.on('will-navigate', handleUrl);
+  window.webContents.on('new-window', handleUrl);
 }
 
 const DEFAULT_WIDTH = 800;
@@ -251,6 +249,8 @@ function showAbout() {
 
   aboutWindow = new BrowserWindow(options);
 
+  captureClicks(aboutWindow);
+
   aboutWindow.loadURL(prepareURL([__dirname, 'about.html']));
 
   aboutWindow.on('closed', () => {
@@ -266,6 +266,9 @@ let settingsWindow;
 async function showSettingsWindow() {
   if (settingsWindow) {
     settingsWindow.show();
+    return;
+  }
+  if (!mainWindow) {
     return;
   }
 
@@ -291,6 +294,8 @@ async function showSettingsWindow() {
   };
 
   settingsWindow = new BrowserWindow(options);
+
+  captureClicks(settingsWindow);
 
   settingsWindow.loadURL(prepareURL([__dirname, 'settings.html'], { theme }));
 
@@ -334,6 +339,8 @@ async function showDebugLogWindow() {
   };
 
   debugLogWindow = new BrowserWindow(options);
+
+  captureClicks(debugLogWindow);
 
   debugLogWindow.loadURL(prepareURL([__dirname, 'debug_log.html'], { theme }));
 
@@ -381,6 +388,8 @@ async function showPermissionsPopupWindow() {
 
   permissionsPopupWindow = new BrowserWindow(options);
 
+  captureClicks(permissionsPopupWindow);
+
   permissionsPopupWindow.loadURL(
     prepareURL([__dirname, 'permissions_popup.html'], { theme })
   );
@@ -396,34 +405,68 @@ async function showPermissionsPopupWindow() {
   });
 }
 
-const userDataPath = app.getPath('userData');
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+let ready = false;
+(async function () {
+  const userDataPath = app.getPath('userData');
 
-let loggingSetupError;
-logging
-  .initialize()
-  .catch(error => {
+  let loggingSetupError;
+  try {
+    await logging.initialize();
+  } catch (error) {
     loggingSetupError = error;
-  })
-  .then(async () => {
-    /* eslint-enable more/no-then */
-    logger = logging.getLogger();
-    logger.info('app ready');
+  }
 
-    if (loggingSetupError) {
-      logger.error('Problem setting up logging', loggingSetupError.stack);
-    }
+  logger = logging.getLogger();
+  logger.info('app ready');
 
-    if (!locale) {
-      const appLocale =
-        Windows.Globalization.ApplicationLanguages.languages[0];
-      locale = loadLocale({ appLocale, logger });
-    }
+  if (loggingSetupError) {
+    logger.error('Problem setting up logging', loggingSetupError.stack);
+  }
 
-    console.log('Ensure attachments directory exists');
-    await Attachments.ensureDirectory(userDataPath);
+  if (!locale) {
+    const appLocale = process.env.UWP_ENV === 'test' ? 'en' : Windows.Globalization.ApplicationLanguages.languages[0];
+    locale = loadLocale({ appLocale, logger });
+  }
+
+  await attachmentChannel.initialize({ configDir: userDataPath });
+
+  let key = userConfig.get('key');
+  if (!key) {
+    // https://www.zetetic.net/sqlcipher/sqlcipher-api/#key
+    key = crypto.randomBytes(32).toString('hex');
+    userConfig.set('key', key);
+  }
+
+  await sql.initialize({ configDir: userDataPath, key });
+  await sqlChannels.initialize({ userConfig });
+
+  ready = true;
+})();
+
+function setupMenu(options) {
+  const { platform } = process;
+  const menuOptions = Object.assign({}, options, {
+    development,
+    showDebugLog: showDebugLogWindow,
+    showWindow,
+    showAbout,
+    showSettings: showSettingsWindow,
+    openReleaseNotes,
+    openNewBugForm,
+    openSupportPage,
+    openForums,
+    platform,
+    setupWithImport,
+    setupAsNewDevice,
+    setupAsStandalone,
   });
-
-function setupMenu(options) { }
+  const template = createTemplate(menuOptions, locale.messages);
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+}
 
 ipc.on('set-badge-count', (event, count) => {
   var Notifications = Windows.UI.Notifications;

@@ -172,7 +172,7 @@
     const upgradeWithContext = attachment =>
       upgradeAttachment(attachment, context);
     const attachments = await Promise.all(
-      message.attachments.map(upgradeWithContext)
+      (message.attachments || []).map(upgradeWithContext)
     );
     return Object.assign({}, message, { attachments });
   };
@@ -362,7 +362,9 @@
 
   exports.createAttachmentLoader = loadAttachmentData => {
     if (!isFunction(loadAttachmentData)) {
-      throw new TypeError('`loadAttachmentData` is required');
+      throw new TypeError(
+        'createAttachmentLoader: loadAttachmentData is required'
+      );
     }
 
     return async message =>
@@ -371,6 +373,40 @@
           message.attachments.map(loadAttachmentData)
         ),
       });
+  };
+
+  exports.loadQuoteData = loadAttachmentData => {
+    if (!isFunction(loadAttachmentData)) {
+      throw new TypeError('loadQuoteData: loadAttachmentData is required');
+    }
+
+    return async quote => {
+      if (!quote) {
+        return null;
+      }
+
+      return Object.assign({},
+        quote,
+        {
+          attachments: await Promise.all(
+            (quote.attachments || []).map(async attachment => {
+              const { thumbnail } = attachment;
+
+              if (!thumbnail || !thumbnail.path) {
+                return attachment;
+              }
+
+              return Object.assign({},
+                attachment,
+                {
+                  thumbnail: await loadAttachmentData(thumbnail),
+                }
+              )
+            })
+          )
+        }
+      );
+    };
   };
 
   exports.deleteAllExternalFiles = ({ deleteAttachmentData, deleteOnDisk }) => {
@@ -398,7 +434,7 @@
           quote.attachments.map(async attachment => {
             const { thumbnail } = attachment;
 
-            if (thumbnail.path) {
+            if (thumbnail && thumbnail.path) {
               await deleteOnDisk(thumbnail.path);
             }
           })

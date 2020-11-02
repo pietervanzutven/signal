@@ -56,12 +56,12 @@
                 return null;
             }
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__message" },
-                lastMessage.text ? (react_1.default.createElement("div", {
+                react_1.default.createElement("div", {
                     className: classnames_1.default('module-conversation-list-item__message__text', unreadCount > 0
                         ? 'module-conversation-list-item__message__text--has-unread'
                         : null)
                 },
-                    react_1.default.createElement(MessageBody_1.MessageBody, { text: lastMessage.text, disableJumbomoji: true, disableLinks: true, i18n: i18n }))) : null,
+                    react_1.default.createElement(MessageBody_1.MessageBody, { text: lastMessage.text || '', disableJumbomoji: true, disableLinks: true, i18n: i18n })),
                 lastMessage.status ? (react_1.default.createElement("div", { className: classnames_1.default('module-conversation-list-item__message__status-icon', `module-conversation-list-item__message__status-icon--${lastMessage.status}`) })) : null,
                 this.renderUnread()));
         }

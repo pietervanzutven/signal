@@ -16,6 +16,7 @@
   const Startup = window.startup;
   const Util = window.ts.util;
   const Metadata = window.metadata.SecretSessionCipher;
+  const { migrateToSQL } = window.migrate_to_sql;
 
   // Components
   const {
@@ -116,6 +117,7 @@
     const attachmentsPath = getPath(userDataPath);
     const readAttachmentData = createReader(attachmentsPath);
     const loadAttachmentData = Type.loadData(readAttachmentData);
+    const loadQuoteData = MessageType.loadQuoteData(readAttachmentData);
     const getAbsoluteAttachmentPath = createAbsolutePathGetter(attachmentsPath);
     const deleteOnDisk = Attachments.createDeleter(attachmentsPath);
 
@@ -128,6 +130,7 @@
       getAbsoluteAttachmentPath,
       getPlaceholderMigrations,
       loadAttachmentData,
+      loadQuoteData,
       loadMessage: MessageType.createAttachmentLoader(loadAttachmentData),
       Migrations0DatabaseWithAttachmentData,
       Migrations1DatabaseWithoutAttachmentData,
@@ -229,6 +232,7 @@
       Util,
       Views,
       Workflow,
+      migrateToSQL,
     };
   };
 })();
