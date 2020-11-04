@@ -383,11 +383,17 @@
   }
 
   async function saveMessages(arrayOfMessages, { forceSave } = {}) {
-    await Promise.all([
-      db.run('BEGIN TRANSACTION;'),
-      ...map(arrayOfMessages, message => saveMessage(message, { forceSave })),
-      db.run('COMMIT TRANSACTION;'),
-    ]);
+    let promise;
+
+    db.serialize(() => {
+      promise = Promise.all([
+        db.run('BEGIN TRANSACTION;'),
+        ...map(arrayOfMessages, message => saveMessage(message, { forceSave })),
+        db.run('COMMIT TRANSACTION;'),
+      ]);
+    });
+
+    await promise;
   }
 
   async function removeMessage(id) {
@@ -576,13 +582,19 @@
   }
 
   async function saveUnprocesseds(arrayOfUnprocessed, { forceSave } = {}) {
-    await Promise.all([
-      db.run('BEGIN TRANSACTION;'),
-      ...map(arrayOfUnprocessed, unprocessed =>
-        saveUnprocessed(unprocessed, { forceSave })
-      ),
-      db.run('COMMIT TRANSACTION;'),
-    ]);
+    let promise;
+
+    db.serialize(() => {
+      promise = Promise.all([
+        db.run('BEGIN TRANSACTION;'),
+        ...map(arrayOfUnprocessed, unprocessed =>
+          saveUnprocessed(unprocessed, { forceSave })
+        ),
+        db.run('COMMIT TRANSACTION;'),
+      ]);
+    });
+
+    await promise;
   }
 
   async function getUnprocessedById(id) {
@@ -631,12 +643,18 @@
   }
 
   async function removeAll() {
-    await Promise.all([
-      db.run('BEGIN TRANSACTION;'),
-      db.run('DELETE FROM messages;'),
-      db.run('DELETE FROM unprocessed;'),
-      db.run('COMMIT TRANSACTION;'),
-    ]);
+    let promise;
+
+    db.serialize(() => {
+      promise = Promise.all([
+        db.run('BEGIN TRANSACTION;'),
+        db.run('DELETE FROM messages;'),
+        db.run('DELETE FROM unprocessed;'),
+        db.run('COMMIT TRANSACTION;'),
+      ]);
+    });
+
+    await promise;
   }
 
   async function getMessagesNeedingUpgrade(limit, { maxVersion }) {
