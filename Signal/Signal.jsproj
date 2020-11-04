@@ -181,7 +181,6 @@
     <Content Include="js\models\conversations.js" />
     <Content Include="js\models\messages.js" />
     <Content Include="js\modules\auto_orient_image.js" />
-    <Content Include="js\modules\backup.js" />
     <Content Include="js\modules\crypto.js" />
     <Content Include="js\modules\data.js" />
     <Content Include="js\modules\database.js" />
@@ -297,14 +296,11 @@
     <Content Include="js\views\conversation_search_view.js" />
     <Content Include="js\views\conversation_view.js" />
     <Content Include="js\views\debug_log_view.js" />
-    <Content Include="js\views\error_view.js" />
-    <Content Include="js\views\export_view.js" />
     <Content Include="js\views\file_input_view.js" />
     <Content Include="js\views\group_member_list_view.js" />
     <Content Include="js\views\group_update_view.js" />
     <Content Include="js\views\hint_view.js" />
     <Content Include="js\views\identicon_svg_view.js" />
-    <Content Include="js\views\import_view.js" />
     <Content Include="js\views\inbox_view.js" />
     <Content Include="js\views\install_view.js" />
     <Content Include="js\views\key_verification_view.js" />

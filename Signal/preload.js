@@ -76,14 +76,6 @@
   window.updateTrayIcon = unreadCount =>
     ipc.send('update-tray-icon', unreadCount);
 
-  ipc.on('backup', () => {
-    Whisper.events.trigger('showBackupScreen');
-  });
-
-  ipc.on('set-up-with-import', () => {
-    Whisper.events.trigger('setupWithImport');
-  });
-
   ipc.on('set-up-as-new-device', () => {
     Whisper.events.trigger('setupAsNewDevice');
   });

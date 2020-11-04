@@ -440,27 +440,19 @@
 
     Whisper.WallClockListener.init(Whisper.events);
     Whisper.ExpiringMessagesListener.init(Whisper.events);
-
-    if (Whisper.Import.isIncomplete()) {
-      window.log.info('Import was interrupted, showing import error screen');
-      appView.openImporter();
-    } else if (Whisper.Registration.everDone()) {
+    
+    if (Whisper.Registration.everDone()) {
       Whisper.RotateSignedPreKeyListener.init(Whisper.events, newVersion);
       connect();
       appView.openInbox({
         initialLoadComplete,
       });
-    } else if (window.isImportMode()) {
-      appView.openImporter();
     } else {
       appView.openInstaller();
     }
 
     Whisper.events.on('showDebugLog', () => {
       appView.openDebugLog();
-    });
-    Whisper.events.on('showBackupScreen', () => {
-      appView.openBackupScreen();
     });
     Whisper.events.on('unauthorized', () => {
       appView.inboxView.networkStatusView.update();
@@ -574,9 +566,6 @@
     }
 
     if (!Whisper.Registration.everDone()) {
-      return;
-    }
-    if (Whisper.Import.isIncomplete()) {
       return;
     }
 

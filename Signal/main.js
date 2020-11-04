@@ -129,9 +129,6 @@ config.uwp_version = process.versions.uwp;
 config.hostname = 'Windows';
 config.appInstance = process.env.UWP_APP_INSTANCE;
 
-const importMode =
-  process.argv.some(arg => arg === '--import') || config.get('import');
-
 const development = config.environment === 'development';
 
 // Very important to put before the single instance check, since it is based on the
@@ -190,10 +187,6 @@ ipc.on('locale-data', event => {
 
 ipc.on('show-window', () => { });
 
-function showBackupScreen() {
-  ipc.send('backup');
-}
-
 function openReleaseNotes() {
   Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/releases/tag/v' + app.getVersion()));
 }
@@ -208,10 +201,6 @@ function openSupportPage() {
 
 function openForums() {
   Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://community.signalusers.org/'));
-}
-
-function setupWithImport() {
-  ipc.send('set-up-with-import');
 }
 
 function setupAsNewDevice() {

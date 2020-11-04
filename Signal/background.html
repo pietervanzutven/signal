@@ -27,30 +27,6 @@
     When making changes to these templates, be sure to update test/index.html as well
   -->
 
-  <script type='text/x-tmpl-mustache' id='app-migration-screen'>
-    <div class='content'>
-      <img src='images/icon_128.png'>
-      {{ ^hideProgress }}
-        <div class='container'>
-          <span class='dot'></span>
-          <span class='dot'></span>
-          <span class='dot'></span>
-        </div>
-      {{ /hideProgress }}
-      <div class='message'>{{& message }}</div>
-      <div>
-        {{ #importButton }}
-          <button class='import grey'>{{ importButton }}</button>
-        {{ /importButton }}
-        {{ #restartButton }}
-          <button class='restart grey'>{{ restartButton }}</button>
-        {{ /restartButton }}
-        {{ #cancelButton }}
-          <button class='cancel grey'>{{ cancelButton }}</button>
-        {{ /cancelButton }}
-      </div>
-    </div>
-  </script>
   <script type='text/x-tmpl-mustache' id='app-loading-screen'>
     <div class='content'>
       <img src='images/icon_128.png'>
@@ -82,13 +58,11 @@
           <nav class='react-contextmenu menu-list'>
             <div class='react-contextmenu-item show-settings'>{{ settings }}</div>
             <div class='react-contextmenu-item show-debug-log'>{{ submitDebugLog }}</div>
-            <div class='react-contextmenu-item backup'>{{ backup }}</div>
             <div class='react-contextmenu-item open-release-notes'>{{ openReleaseNotes }}</div>
             <div class='react-contextmenu-item open-forums'>{{ openForums }}</div>
             <div class='react-contextmenu-item open-support-page'>{{ openSupportPage }}</div>
             <div class='react-contextmenu-item open-new-bug-form'>{{ openNewBugForm }}</div>
             <div class='react-contextmenu-item show-about'>{{ showAbout }}</div>
-            <div class='react-contextmenu-item setup-with-import'>{{ setupWithImport }}</div>
             <div class='react-contextmenu-item setup-as-new-device'>{{ setupAsNewDevice }}</div>
             <div class='react-contextmenu-item setup-as-standalone'>{{ setupAsStandalone }}</div>
           </nav>
@@ -424,186 +398,6 @@
         <button class='small blue {{ buttonClass }}'>{{ action }}</button>
       </div>
     {{/action }}
-  </script>
-
-  <script type='text/x-tmpl-mustache' id='export-flow-template'>
-    {{#isStep1}}
-    <div id='step1' class='step'>
-      <div class='inner'>
-        <div class='step-body'>
-          <img class='banner-image' src='/images/icon_128.png'>
-          <div class='header'>{{ startHeader }}</div>
-          <div class='body-text-wide'>{{ startParagraph1 }}</div>
-          <div class='body-text-wide'>{{ startParagraph2 }}</div>
-          <div class='body-text-wide red-text'>{{ startParagraph3 }} </div>
-        </div>
-        <div class='nav'>
-          <div>
-            <a class='button start'>{{ startButton }}</a>
-          </div>
-          <div>
-            <a class='link cancel'>{{ cancelButton }}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/isStep1}}
-    {{#isStep2}}
-    <div id='step2' class='step'>
-      <div class='inner'>
-        <div class='step-body'>
-          <span class='banner-icon folder-outline'></span>
-          <div class='header'>{{ chooseHeader }}</div>
-          <div class='body-text-wide'>{{ choose }}</div>
-        </div>
-        <div class='nav'>
-          <div>
-            <a class='button choose'>{{ chooseButton }}</a>
-          </div>
-          <div>
-            <a class='link cancel'>{{ cancelButton }}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/isStep2}}
-    {{#isStep3}}
-    <div id='step3' class='step'>
-      <div class='inner'>
-        <div class='step-body'>
-          <span class='banner-icon export'></span>
-          <div class='header'>{{ exportHeader }}</div>
-        </div>
-        <div class='progress'>
-          <div class='bar-container'>
-            <div class='bar progress-bar progress-bar-striped active'></div>
-          </div>
-        </div>
-        <div class='nav'>
-          <div>
-            <a class='link submit-debug-log'>{{ debugLogButton }}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/isStep3}}
-    {{#isStep4}}
-    <div id='step4' class='step'>
-      <div class='inner'>
-        <div class='step-body'>
-          <span class='banner-icon check-circle-outline'></span>
-          <div class='header'>{{ completeHeader }}</div>
-          <div class='body-text-wide center'>{{ completeIntro }}</div>
-          <div class='export-location'>{{ completeLocation }}</div>
-          <div class='body-text-wide'>{{ completeNextSteps }}</div>
-          <div class='body-text-wide'>{{ completeSignoff }}</div>
-        </div>
-        <div class='nav'>
-          <div>
-            <a class='button restart' href='#'>{{ installButton }}</a>
-          </div>
-          <div>
-            <a class='link submit-debug-log'>{{ debugLogButton }}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/isStep4}}
-    {{#isError}}
-    <div id='error' class='step'>
-      <div class='inner error-dialog clearfix'>
-        <div class='step-body'>
-          <span class='banner-icon alert-outline'></span>
-          <div class='header'>{{ errorHeader }}</div>
-          <div class='body-text-wide'>{{ error }}</div>
-        </div>
-        <div class='nav'>
-          <div>
-            <a class='button choose'>{{ tryAgain }}</a>
-          </div>
-          <div>
-            <a class='link submit-debug-log'>{{ debugLogButton }}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/isError}}
-  </script>
-
-  <script type='text/x-tmpl-mustache' id='import-flow-template'>
-    {{#isStep2}}
-    <div id='step2' class='step'>
-      <div class='inner'>
-        <div class='step-body'>
-          <span class='banner-icon folder-outline'></span>
-          <div class='header'>{{ chooseHeader }}</div>
-          <div class='body-text'>{{ choose }}</div>
-        </div>
-        <div class='nav'>
-          <div>
-            <a class='button choose'>{{ chooseButton }}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/isStep2}}
-    {{#isStep3}}
-    <div id='step3' class='step'>
-      <div class='inner'>
-        <div class='step-body'>
-          <span class='banner-icon import'></span>
-          <div class='header'>{{ importingHeader }}</div>
-        </div>
-        <div class='progress'>
-          <div class='bar-container'>
-            <div class='bar progress-bar progress-bar-striped active'></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/isStep3}}
-    {{#isStep4}}
-    <div id='step4' class='step'>
-      <div class='inner'>
-        <div class='step-body'>
-          <span class='banner-icon check-circle-outline'></span>
-          <div class='header'>{{ completeHeader }}</div>
-        </div>
-        <div class='nav'>
-          {{#restartButton}}
-          <div>
-            <a class='button restart'>{{ restartButton }}</a>
-          </div>
-          {{/restartButton}}
-          {{#registerButton}}
-          <div>
-            <a class='button register'>{{ registerButton }}</a>
-          </div>
-          {{/registerButton}}
-        </div>
-      </div>
-    </div>
-    {{/isStep4}}
-
-    {{#isError}}
-    <div id='error' class='step'>
-      <div class='inner error-dialog clearfix'>
-        <div class='step-body'>
-          <span class='banner-icon alert-outline'></span>
-          <div class='header'>{{ errorHeader }}</div>
-          <div class='body-text-wide'>
-            {{ errorMessageFirst }}
-            <p>{{ errorMessageSecond }}</p>
-          </div>
-        </div>
-        <div class='nav'>
-          <div>
-            <a class='button choose'>{{ chooseButton }}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/isError}}
   </script>
 
   <script type='text/x-tmpl-mustache' id='link-flow-template'>
@@ -992,11 +786,9 @@
   <script type='text/javascript' src='js/views/identicon_svg_view.js'></script>
   <script type='text/javascript' src='js/views/install_view.js'></script>
   <script type='text/javascript' src='js/views/banner_view.js'></script>
-  <script type='text/javascript' src='js/views/export_view.js'></script>
   <script type="text/javascript" src="js/views/phone-input-view.js"></script>
   <script type='text/javascript' src='js/views/standalone_registration_view.js'></script>
   <script type='text/javascript' src='js/views/app_view.js'></script>
-  <script type='text/javascript' src='js/views/import_view.js'></script>
   <script type='text/javascript' src='js/views/clear_data_view.js'></script>
 
   <script type='text/javascript' src='js/wall_clock_listener.js'></script>

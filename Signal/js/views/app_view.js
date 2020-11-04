@@ -48,17 +48,6 @@
         this.debugLogView = null;
       }
     },
-    openBackupScreen() {
-      this.closeBackupScreen();
-      this.backupView = new Whisper.ExportView();
-      this.backupView.$el.appendTo(this.el);
-    },
-    closeBackupScreen() {
-      if (this.backupView) {
-        this.backupView.remove();
-        this.backupView = null;
-      }
-    },
     openImporter() {
       window.addSetupMenuItems();
       this.resetViews();
