@@ -4,7 +4,12 @@
   'use strict';
 
   const { includes, isFunction, isString, last } = window.lodash;
-  const { saveMessages, saveUnprocesseds } = window.data;
+  const {
+    saveMessages,
+    _removeMessages,
+    saveUnprocesseds,
+    removeUnprocessed,
+  } = window.data;
   const {
     getMessageExportLastIndex,
     setMessageExportLastIndex,
@@ -37,6 +42,7 @@
       const status = await migrateStoreToSQLite({
         db,
         save: saveMessages,
+        remove: _removeMessages,
         storeName: 'messages',
         handleDOMException,
         lastIndex,
@@ -57,6 +63,7 @@
       const status = await migrateStoreToSQLite({
         db,
         save: saveUnprocesseds,
+        remove: removeUnprocessed,
         storeName: 'unprocessed',
         handleDOMException,
         lastIndex,
@@ -77,6 +84,7 @@
   async function migrateStoreToSQLite({
     db,
     save,
+    remove,
     storeName,
     handleDOMException,
     lastIndex = null,
@@ -87,6 +95,9 @@
     }
     if (!isFunction(save)) {
       throw new Error('Need save function!');
+    }
+    if (!isFunction(remove)) {
+      throw new Error('Need remove function!');
     }
     if (!isString(storeName)) {
       throw new Error('Need storeName!');
@@ -154,6 +165,11 @@
     const { items, complete } = await queryPromise;
 
     if (items.length) {
+      // Because of the force save and some failed imports, we're going to delete before
+      //   we attempt to insert.
+      const ids = items.map(item => item.id);
+      await remove(ids);
+
       // We need to pass forceSave parameter, because these items already have an
       //   id key. Normally, this call would be interpreted as an update request.
       await save(items, { forceSave: true });
