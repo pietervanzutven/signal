@@ -183,13 +183,20 @@
                 }
                 // Calculating height to prevent reflow when image loads
                 const height = Math.max(MINIMUM_IMG_HEIGHT, attachment.height || 0);
-                return (react_1.default.createElement("div", { onClick: onClickAttachment, role: "button", className: "module-message__attachment-container" },
-                    react_1.default.createElement("img", {
-                        onError: this.handleImageErrorBound, className: classnames_1.default('module-message__img-attachment', withCaption
-                            ? 'module-message__img-attachment--with-content-below'
+                return (react_1.default.createElement("div", {
+                    onClick: onClickAttachment, role: "button", className: classnames_1.default('module-message__attachment-container', withCaption
+                        ? 'module-message__attachment-container--with-content-below'
+                        : null, withContentAbove
+                        ? 'module-message__attachment-container--with-content-above'
+                        : null)
+                },
+                    react_1.default.createElement("img", { onError: this.handleImageErrorBound, className: "module-message__img-attachment", height: Math.min(MAXIMUM_IMG_HEIGHT, height), src: attachment.url, alt: i18n('imageAttachmentAlt') }),
+                    react_1.default.createElement("div", {
+                        className: classnames_1.default('module-message__img-border-overlay', withCaption
+                            ? 'module-message__img-border-overlay--with-content-below'
                             : null, withContentAbove
-                            ? 'module-message__img-attachment--with-content-above'
-                            : null), height: Math.min(MAXIMUM_IMG_HEIGHT, height), src: attachment.url, alt: i18n('imageAttachmentAlt')
+                            ? 'module-message__img-border-overlay--with-content-above'
+                            : null)
                     }),
                     !withCaption && !collapseMetadata ? (react_1.default.createElement("div", { className: "module-message__img-overlay" })) : null));
             }
@@ -200,13 +207,20 @@
                 }
                 // Calculating height to prevent reflow when image loads
                 const height = Math.max(MINIMUM_IMG_HEIGHT, screenshot.height || 0);
-                return (react_1.default.createElement("div", { onClick: onClickAttachment, role: "button", className: "module-message__attachment-container" },
-                    react_1.default.createElement("img", {
-                        onError: this.handleImageErrorBound, className: classnames_1.default('module-message__img-attachment', withCaption
-                            ? 'module-message__img-attachment--with-content-below'
+                return (react_1.default.createElement("div", {
+                    onClick: onClickAttachment, role: "button", className: classnames_1.default('module-message__attachment-container', withCaption
+                        ? 'module-message__attachment-container--with-content-below'
+                        : null, withContentAbove
+                        ? 'module-message__attachment-container--with-content-above'
+                        : null)
+                },
+                    react_1.default.createElement("img", { onError: this.handleImageErrorBound, className: "module-message__img-attachment", alt: i18n('videoAttachmentAlt'), height: Math.min(MAXIMUM_IMG_HEIGHT, height), src: screenshot.url }),
+                    react_1.default.createElement("div", {
+                        className: classnames_1.default('module-message__img-border-overlay', withCaption
+                            ? 'module-message__img-border-overlay--with-content-below'
                             : null, withContentAbove
-                            ? 'module-message__img-attachment--with-content-above'
-                            : null), alt: i18n('videoAttachmentAlt'), height: Math.min(MAXIMUM_IMG_HEIGHT, height), src: screenshot.url
+                            ? 'module-message__img-border-overlay--with-content-above'
+                            : null)
                     }),
                     !withCaption && !collapseMetadata ? (react_1.default.createElement("div", { className: "module-message__img-overlay" })) : null,
                     react_1.default.createElement("div", { className: "module-message__video-overlay__circle" },
