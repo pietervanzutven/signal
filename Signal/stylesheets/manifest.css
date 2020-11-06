@@ -154,13 +154,13 @@ a {
 
 .avatar {
   display: inline-block;
-  height: 44px;
-  width: 44px;
+  height: 48px;
+  width: 48px;
   border-radius: 50%;
   background-size: cover;
   vertical-align: middle;
   text-align: center;
-  line-height: 44px;
+  line-height: 48px;
   overflow-x: hidden;
   text-overflow: ellipsis;
   color: #ffffff;
@@ -239,11 +239,14 @@ a {
     background-repeat: no-repeat;
     background-position: center center; }
 
+.new-contact .avatar {
+  margin-left: 16px; }
+
 .contact-details {
   vertical-align: middle;
   display: inline-block;
-  margin: 0 0 0 8px;
-  width: calc(100% - 44px - 8px - 0.2857142857em);
+  margin: 0 0 0 12px;
+  width: calc( 100% - 48px - 16px - 12px - 0.2857142857em);
   text-align: left; }
   .contact-details p {
     overflow-x: hidden;
@@ -258,7 +261,7 @@ a {
     overflow-x: hidden;
     text-align: left; }
   .contact-details .number {
-    color: #616161;
+    color: #62656a;
     font-size: 0.9285714286em; }
   .contact-details.clickable {
     cursor: pointer; }
@@ -1771,7 +1774,7 @@ body.dark-theme {
     background-position: center center; }
 
 .dark-theme .contact-details .number {
-  color: #616161; }
+  color: #a8a9aa; }
 
 .dark-theme .contact-details .verified-icon {
   background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8' standalone='no'?><svg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'><path d='M11 21.34L2.66 13l-2.83 2.83L11 27 31.736 6.425 28.83 3.8' fill-rule='nonzero' fill='%23616161'/></svg>");
