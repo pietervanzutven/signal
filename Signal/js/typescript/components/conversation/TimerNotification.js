@@ -43,7 +43,7 @@
             return (react_1.default.createElement("div", { className: "module-timer-notification" },
                 react_1.default.createElement("div", { className: "module-timer-notification__icon-container" },
                     react_1.default.createElement("div", { className: classnames_1.default('module-timer-notification__icon', disabled ? 'module-timer-notification__icon--disabled' : null) }),
-                    disabled ? null : (react_1.default.createElement("div", { className: "module-timer-notification__icon-label" }, timespan))),
+                    react_1.default.createElement("div", { className: "module-timer-notification__icon-label" }, timespan)),
                 react_1.default.createElement("div", { className: "module-timer-notification__message" }, this.renderContents())));
         }
     }
