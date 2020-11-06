@@ -83,9 +83,9 @@
         /* tslint:disable:jsx-no-lambda react-this-binding-issue */
         renderMenu(triggerId) {
             const { i18n, isMe, isGroup, onDeleteMessages, onResetSession, onSetDisappearingMessages, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, timerOptions, } = this.props;
-            const title = i18n('disappearingMessages');
+            const disappearingTitle = i18n('disappearingMessages');
             return (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
-                react_1.default.createElement(react_contextmenu_1.SubMenu, { title: title }, (timerOptions || []).map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                react_1.default.createElement(react_contextmenu_1.SubMenu, { title: disappearingTitle }, (timerOptions || []).map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     key: item.value, onClick: () => {
                         onSetDisappearingMessages(item.value);
                     }
