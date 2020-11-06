@@ -9,6 +9,7 @@
   const LAST_PROCESSED_INDEX_KEY = 'attachmentMigration_lastProcessedIndex';
   const IS_MIGRATION_COMPLETE_KEY = 'attachmentMigration_isComplete';
   const MESSAGE_LAST_INDEX_KEY = 'sqlMigration_messageLastIndex';
+  const MESSAGE_COUNT_KEY = 'sqlMigration_messageCount';
   const UNPROCESSED_LAST_INDEX_KEY = 'sqlMigration_unprocessedLastIndex';
 
   // Public API
@@ -30,6 +31,10 @@
     exports._getItem(connection, MESSAGE_LAST_INDEX_KEY);
   exports.setMessageExportLastIndex = (connection, lastIndex) =>
     exports._setItem(connection, MESSAGE_LAST_INDEX_KEY, lastIndex);
+  exports.getMessageExportCount = connection =>
+    exports._getItem(connection, MESSAGE_COUNT_KEY);
+  exports.setMessageExportCount = (connection, count) =>
+    exports._setItem(connection, MESSAGE_COUNT_KEY, count);
 
   exports.getUnprocessedExportLastIndex = connection =>
     exports._getItem(connection, UNPROCESSED_LAST_INDEX_KEY);
