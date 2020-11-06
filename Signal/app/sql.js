@@ -432,7 +432,7 @@
 
   // eslint-disable-next-line camelcase
   async function getMessageBySender({ source, sourceDevice, sent_at }) {
-    const rows = db.all(
+    const rows = await db.all(
       `SELECT json FROM messages WHERE
       source = $source AND
       sourceDevice = $sourceDevice AND
