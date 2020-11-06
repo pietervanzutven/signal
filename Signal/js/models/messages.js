@@ -1310,7 +1310,6 @@
           });
         }
 
-        Whisper.ExpiringMessagesListener.update();
         window.log.info('Set message expiration', {
           expiresAt,
           sentAt: this.get('sent_at'),
@@ -1318,6 +1317,9 @@
       }
     },
   });
+
+  Whisper.Message.refreshExpirationTimer = () =>
+    Whisper.ExpiringMessagesListener.update();
 
   Whisper.MessageCollection = Backbone.Collection.extend({
     model: Whisper.Message,
