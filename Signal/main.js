@@ -129,6 +129,8 @@ config.uwp_version = process.versions.uwp;
 config.hostname = 'Windows';
 config.appInstance = process.env.UWP_APP_INSTANCE;
 
+const importMode = false;
+
 const development = config.environment === 'development';
 
 // Very important to put before the single instance check, since it is based on the
@@ -165,10 +167,7 @@ function prepareURL(pathSegments, moreKeys) {
   });
 }
 
-function captureClicks(window) {
-  window.webContents.on('will-navigate', handleUrl);
-  window.webContents.on('new-window', handleUrl);
-}
+function captureClicks(window) { }
 
 const DEFAULT_WIDTH = 800;
 const DEFAULT_HEIGHT = 610;
