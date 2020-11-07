@@ -4,10 +4,12 @@
 (function () {
   'use strict';
 
+  window.app = window.app || {};
+
   const LEVELS = ['fatal', 'error', 'warn', 'info', 'debug', 'trace'];
   let logger;
 
-  window.logging = {
+  window.app.logging = {
     initialize,
     getLogger,
     // for tests only:

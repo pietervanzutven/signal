@@ -1,24 +1,12 @@
 ;(function() {
-(function() {
-  'use strict';
+/* global window */
 
-  var registeredFunctions = {};
-  var Type = {
-    ENCRYPT_MESSAGE: 1,
-    INIT_SESSION: 2,
-    TRANSMIT_MESSAGE: 3,
-    REBUILD_MESSAGE: 4,
-    RETRY_SEND_MESSAGE_PROTO: 5,
-  };
+// eslint-disable-next-line func-names
+(function() {
   window.textsecure = window.textsecure || {};
-  window.textsecure.replay = {
-    Type: Type,
-    registerFunction: function(func, functionCode) {
-      registeredFunctions[functionCode] = func;
-    },
-  };
 
   function inherit(Parent, Child) {
+    // eslint-disable-next-line no-param-reassign
     Child.prototype = Object.create(Parent.prototype, {
       constructor: {
         value: Child,
@@ -28,11 +16,11 @@
     });
   }
   function appendStack(newError, originalError) {
-    newError.stack += '\nOriginal stack:\n' + originalError.stack;
+    // eslint-disable-next-line no-param-reassign
+    newError.stack += `\nOriginal stack:\n${originalError.stack}`;
   }
 
-  function ReplayableError(options) {
-    options = options || {};
+  function ReplayableError(options = {}) {
     this.name = options.name || 'ReplayableError';
     this.message = options.message;
 
@@ -45,46 +33,38 @@
     }
 
     this.functionCode = options.functionCode;
-    this.args = options.args;
   }
   inherit(Error, ReplayableError);
 
-  ReplayableError.prototype.replay = function() {
-    var argumentsAsArray = Array.prototype.slice.call(arguments, 0);
-    var args = this.args.concat(argumentsAsArray);
-    return registeredFunctions[this.functionCode].apply(window, args);
-  };
-
   function IncomingIdentityKeyError(number, message, key) {
+    // eslint-disable-next-line prefer-destructuring
     this.number = number.split('.')[0];
     this.identityKey = key;
 
     ReplayableError.call(this, {
-      functionCode: Type.INIT_SESSION,
-      args: [number, message],
       name: 'IncomingIdentityKeyError',
-      message: 'The identity of ' + this.number + ' has changed.',
+      message: `The identity of ${this.number} has changed.`,
     });
   }
   inherit(ReplayableError, IncomingIdentityKeyError);
 
   function OutgoingIdentityKeyError(number, message, timestamp, identityKey) {
+    // eslint-disable-next-line prefer-destructuring
     this.number = number.split('.')[0];
     this.identityKey = identityKey;
 
     ReplayableError.call(this, {
-      functionCode: Type.ENCRYPT_MESSAGE,
-      args: [number, message, timestamp],
       name: 'OutgoingIdentityKeyError',
-      message: 'The identity of ' + this.number + ' has changed.',
+      message: `The identity of ${this.number} has changed.`,
     });
   }
   inherit(ReplayableError, OutgoingIdentityKeyError);
 
   function OutgoingMessageError(number, message, timestamp, httpError) {
+    // eslint-disable-next-line prefer-destructuring
+    this.number = number.split('.')[0];
+
     ReplayableError.call(this, {
-      functionCode: Type.ENCRYPT_MESSAGE,
-      args: [number, message, timestamp],
       name: 'OutgoingMessageError',
       message: httpError ? httpError.message : 'no http error',
     });
@@ -96,13 +76,11 @@
   }
   inherit(ReplayableError, OutgoingMessageError);
 
-  function SendMessageNetworkError(number, jsonData, httpError, timestamp) {
+  function SendMessageNetworkError(number, jsonData, httpError) {
     this.number = number;
     this.code = httpError.code;
 
     ReplayableError.call(this, {
-      functionCode: Type.TRANSMIT_MESSAGE,
-      args: [number, jsonData, timestamp],
       name: 'SendMessageNetworkError',
       message: httpError.message,
     });
@@ -111,10 +89,8 @@
   }
   inherit(ReplayableError, SendMessageNetworkError);
 
-  function SignedPreKeyRotationError(numbers, message, timestamp) {
+  function SignedPreKeyRotationError() {
     ReplayableError.call(this, {
-      functionCode: Type.RETRY_SEND_MESSAGE_PROTO,
-      args: [numbers, message, timestamp],
       name: 'SignedPreKeyRotationError',
       message: 'Too many signed prekey rotation failures',
     });
@@ -125,8 +101,6 @@
     this.code = httpError.code;
 
     ReplayableError.call(this, {
-      functionCode: Type.REBUILD_MESSAGE,
-      args: [message],
       name: 'MessageError',
       message: httpError.message,
     });
@@ -36716,8 +36690,10 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
 
 
 })();
+/* global window, textsecure, SignalProtocolStore, libsignal */
+
+// eslint-disable-next-line func-names
 (function() {
-  'use strict';
   window.textsecure = window.textsecure || {};
   window.textsecure.storage = window.textsecure.storage || {};
 
@@ -36728,28 +36704,26 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
   textsecure.stopWorker = libsignal.worker.stopWorker;
 })();
 
+/* global libsignal, crypto, textsecure, dcodeIO, window */
+
+/* eslint-disable more/no-then, no-bitwise */
+
+// eslint-disable-next-line func-names
 (function() {
-  'use strict';
+  const { encrypt, decrypt, calculateMAC, verifyMAC } = libsignal.crypto;
 
-  var encrypt = libsignal.crypto.encrypt;
-  var decrypt = libsignal.crypto.decrypt;
-  var calculateMAC = libsignal.crypto.calculateMAC;
-  var verifyMAC = libsignal.crypto.verifyMAC;
-
-  var PROFILE_IV_LENGTH = 12; // bytes
-  var PROFILE_KEY_LENGTH = 32; // bytes
-  var PROFILE_TAG_LENGTH = 128; // bits
-  var PROFILE_NAME_PADDED_LENGTH = 26; // bytes
+  const PROFILE_IV_LENGTH = 12; // bytes
+  const PROFILE_KEY_LENGTH = 32; // bytes
+  const PROFILE_TAG_LENGTH = 128; // bits
+  const PROFILE_NAME_PADDED_LENGTH = 26; // bytes
 
   function verifyDigest(data, theirDigest) {
-    return crypto.subtle
-      .digest({ name: 'SHA-256' }, data)
-      .then(function(ourDigest) {
-        var a = new Uint8Array(ourDigest);
-        var b = new Uint8Array(theirDigest);
-        var result = 0;
-        for (var i = 0; i < theirDigest.byteLength; ++i) {
-          result = result | (a[i] ^ b[i]);
+    return crypto.subtle.digest({ name: 'SHA-256' }, data).then(ourDigest => {
+      const a = new Uint8Array(ourDigest);
+      const b = new Uint8Array(theirDigest);
+      let result = 0;
+      for (let i = 0; i < theirDigest.byteLength; i += 1) {
+        result |= a[i] ^ b[i];
         }
         if (result !== 0) {
           throw new Error('Bad digest');
@@ -36763,127 +36737,127 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
   window.textsecure = window.textsecure || {};
   window.textsecure.crypto = {
     // Decrypts message into a raw string
-    decryptWebsocketMessage: function(message, signaling_key) {
-      var decodedMessage = message.toArrayBuffer();
+    decryptWebsocketMessage(message, signalingKey) {
+      const decodedMessage = message.toArrayBuffer();
 
-      if (signaling_key.byteLength != 52) {
-        throw new Error('Got invalid length signaling_key');
+      if (signalingKey.byteLength !== 52) {
+        throw new Error('Got invalid length signalingKey');
       }
       if (decodedMessage.byteLength < 1 + 16 + 10) {
         throw new Error('Got invalid length message');
       }
-      if (new Uint8Array(decodedMessage)[0] != 1) {
-        throw new Error('Got bad version number: ' + decodedMessage[0]);
+      if (new Uint8Array(decodedMessage)[0] !== 1) {
+        throw new Error(`Got bad version number: ${decodedMessage[0]}`);
       }
 
-      var aes_key = signaling_key.slice(0, 32);
-      var mac_key = signaling_key.slice(32, 32 + 20);
+      const aesKey = signalingKey.slice(0, 32);
+      const macKey = signalingKey.slice(32, 32 + 20);
 
-      var iv = decodedMessage.slice(1, 1 + 16);
-      var ciphertext = decodedMessage.slice(
+      const iv = decodedMessage.slice(1, 1 + 16);
+      const ciphertext = decodedMessage.slice(
         1 + 16,
         decodedMessage.byteLength - 10
       );
-      var ivAndCiphertext = decodedMessage.slice(
+      const ivAndCiphertext = decodedMessage.slice(
         0,
         decodedMessage.byteLength - 10
       );
-      var mac = decodedMessage.slice(
+      const mac = decodedMessage.slice(
         decodedMessage.byteLength - 10,
         decodedMessage.byteLength
       );
 
-      return verifyMAC(ivAndCiphertext, mac_key, mac, 10).then(function() {
-        return decrypt(aes_key, ciphertext, iv);
-      });
+      return verifyMAC(ivAndCiphertext, macKey, mac, 10).then(() =>
+        decrypt(aesKey, ciphertext, iv)
+      );
     },
 
-    decryptAttachment: function(encryptedBin, keys, theirDigest) {
-      if (keys.byteLength != 64) {
+    decryptAttachment(encryptedBin, keys, theirDigest) {
+      if (keys.byteLength !== 64) {
         throw new Error('Got invalid length attachment keys');
       }
       if (encryptedBin.byteLength < 16 + 32) {
         throw new Error('Got invalid length attachment');
       }
 
-      var aes_key = keys.slice(0, 32);
-      var mac_key = keys.slice(32, 64);
+      const aesKey = keys.slice(0, 32);
+      const macKey = keys.slice(32, 64);
 
-      var iv = encryptedBin.slice(0, 16);
-      var ciphertext = encryptedBin.slice(16, encryptedBin.byteLength - 32);
-      var ivAndCiphertext = encryptedBin.slice(0, encryptedBin.byteLength - 32);
-      var mac = encryptedBin.slice(
+      const iv = encryptedBin.slice(0, 16);
+      const ciphertext = encryptedBin.slice(16, encryptedBin.byteLength - 32);
+      const ivAndCiphertext = encryptedBin.slice(
+        0,
+        encryptedBin.byteLength - 32
+      );
+      const mac = encryptedBin.slice(
         encryptedBin.byteLength - 32,
         encryptedBin.byteLength
       );
 
-      return verifyMAC(ivAndCiphertext, mac_key, mac, 32)
-        .then(function() {
+      return verifyMAC(ivAndCiphertext, macKey, mac, 32)
+        .then(() => {
           if (theirDigest !== null) {
             return verifyDigest(encryptedBin, theirDigest);
           }
+          return null;
         })
-        .then(function() {
-          return decrypt(aes_key, ciphertext, iv);
-        });
+        .then(() => decrypt(aesKey, ciphertext, iv));
     },
 
-    encryptAttachment: function(plaintext, keys, iv) {
+    encryptAttachment(plaintext, keys, iv) {
       if (
         !(plaintext instanceof ArrayBuffer) &&
         !ArrayBuffer.isView(plaintext)
       ) {
         throw new TypeError(
-          '`plaintext` must be an `ArrayBuffer` or `ArrayBufferView`; got: ' +
-            typeof plaintext
+          `\`plaintext\` must be an \`ArrayBuffer\` or \`ArrayBufferView\`; got: ${typeof plaintext}`
         );
       }
 
-      if (keys.byteLength != 64) {
+      if (keys.byteLength !== 64) {
         throw new Error('Got invalid length attachment keys');
       }
-      if (iv.byteLength != 16) {
+      if (iv.byteLength !== 16) {
         throw new Error('Got invalid length attachment iv');
       }
-      var aes_key = keys.slice(0, 32);
-      var mac_key = keys.slice(32, 64);
+      const aesKey = keys.slice(0, 32);
+      const macKey = keys.slice(32, 64);
 
-      return encrypt(aes_key, plaintext, iv).then(function(ciphertext) {
-        var ivAndCiphertext = new Uint8Array(16 + ciphertext.byteLength);
+      return encrypt(aesKey, plaintext, iv).then(ciphertext => {
+        const ivAndCiphertext = new Uint8Array(16 + ciphertext.byteLength);
         ivAndCiphertext.set(new Uint8Array(iv));
         ivAndCiphertext.set(new Uint8Array(ciphertext), 16);
 
-        return calculateMAC(mac_key, ivAndCiphertext.buffer).then(function(
-          mac
-        ) {
-          var encryptedBin = new Uint8Array(16 + ciphertext.byteLength + 32);
+        return calculateMAC(macKey, ivAndCiphertext.buffer).then(mac => {
+          const encryptedBin = new Uint8Array(16 + ciphertext.byteLength + 32);
           encryptedBin.set(ivAndCiphertext);
           encryptedBin.set(new Uint8Array(mac), 16 + ciphertext.byteLength);
-          return calculateDigest(encryptedBin.buffer).then(function(digest) {
-            return { ciphertext: encryptedBin.buffer, digest: digest };
+          return calculateDigest(encryptedBin.buffer).then(digest => ({
+            ciphertext: encryptedBin.buffer,
+            digest,
+          }));
           });
         });
-      });
     },
-    encryptProfile: function(data, key) {
-      var iv = libsignal.crypto.getRandomBytes(PROFILE_IV_LENGTH);
-      if (key.byteLength != PROFILE_KEY_LENGTH) {
+    encryptProfile(data, key) {
+      const iv = libsignal.crypto.getRandomBytes(PROFILE_IV_LENGTH);
+      if (key.byteLength !== PROFILE_KEY_LENGTH) {
         throw new Error('Got invalid length profile key');
       }
-      if (iv.byteLength != PROFILE_IV_LENGTH) {
+      if (iv.byteLength !== PROFILE_IV_LENGTH) {
         throw new Error('Got invalid length profile iv');
       }
       return crypto.subtle
         .importKey('raw', key, { name: 'AES-GCM' }, false, ['encrypt'])
-        .then(function(key) {
-          return crypto.subtle
+        .then(keyForEncryption =>
+          crypto.subtle
             .encrypt(
-              { name: 'AES-GCM', iv: iv, tagLength: PROFILE_TAG_LENGTH },
-              key,
+              { name: 'AES-GCM', iv, tagLength: PROFILE_TAG_LENGTH },
+              keyForEncryption,
               data
             )
-            .then(function(ciphertext) {
-              var ivAndCiphertext = new Uint8Array(
+            .then(ciphertext => {
+              const ivAndCiphertext = new Uint8Array(
                 PROFILE_IV_LENGTH + ciphertext.byteLength
               );
               ivAndCiphertext.set(new Uint8Array(iv));
@@ -36892,32 +36866,32 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
                 PROFILE_IV_LENGTH
               );
               return ivAndCiphertext.buffer;
-            });
-        });
+            })
+        );
     },
-    decryptProfile: function(data, key) {
+    decryptProfile(data, key) {
       if (data.byteLength < 12 + 16 + 1) {
-        throw new Error('Got too short input: ' + data.byteLength);
+        throw new Error(`Got too short input: ${data.byteLength}`);
       }
-      var iv = data.slice(0, PROFILE_IV_LENGTH);
-      var ciphertext = data.slice(PROFILE_IV_LENGTH, data.byteLength);
-      if (key.byteLength != PROFILE_KEY_LENGTH) {
+      const iv = data.slice(0, PROFILE_IV_LENGTH);
+      const ciphertext = data.slice(PROFILE_IV_LENGTH, data.byteLength);
+      if (key.byteLength !== PROFILE_KEY_LENGTH) {
         throw new Error('Got invalid length profile key');
       }
-      if (iv.byteLength != PROFILE_IV_LENGTH) {
+      if (iv.byteLength !== PROFILE_IV_LENGTH) {
         throw new Error('Got invalid length profile iv');
       }
-      var error = new Error(); // save stack
+      const error = new Error(); // save stack
       return crypto.subtle
         .importKey('raw', key, { name: 'AES-GCM' }, false, ['decrypt'])
-        .then(function(key) {
-          return crypto.subtle
+        .then(keyForEncryption =>
+          crypto.subtle
             .decrypt(
-              { name: 'AES-GCM', iv: iv, tagLength: PROFILE_TAG_LENGTH },
-              key,
+              { name: 'AES-GCM', iv, tagLength: PROFILE_TAG_LENGTH },
+              keyForEncryption,
               ciphertext
             )
-            .catch(function(e) {
+            .catch(e => {
               if (e.name === 'OperationError') {
                 // bad mac, basically.
                 error.message =
@@ -36925,26 +36899,24 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
                 error.name = 'ProfileDecryptError';
                 throw error;
               }
-            });
-        });
+            })
+        );
     },
-    encryptProfileName: function(name, key) {
-      var padded = new Uint8Array(PROFILE_NAME_PADDED_LENGTH);
+    encryptProfileName(name, key) {
+      const padded = new Uint8Array(PROFILE_NAME_PADDED_LENGTH);
       padded.set(new Uint8Array(name));
       return textsecure.crypto.encryptProfile(padded.buffer, key);
     },
-    decryptProfileName: function(encryptedProfileName, key) {
-      var data = dcodeIO.ByteBuffer.wrap(
+    decryptProfileName(encryptedProfileName, key) {
+      const data = dcodeIO.ByteBuffer.wrap(
         encryptedProfileName,
         'base64'
       ).toArrayBuffer();
-      return textsecure.crypto
-        .decryptProfile(data, key)
-        .then(function(decrypted) {
+      return textsecure.crypto.decryptProfile(data, key).then(decrypted => {
           // unpad
-          var name = '';
-          var padded = new Uint8Array(decrypted);
-          for (var i = padded.length; i > 0; i--) {
+        const padded = new Uint8Array(decrypted);
+        let i;
+        for (i = padded.length; i > 0; i -= 1) {
             if (padded[i - 1] !== 0x00) {
               break;
             }
@@ -36956,119 +36928,116 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
         });
     },
 
-    getRandomBytes: function(size) {
+    getRandomBytes(size) {
       return libsignal.crypto.getRandomBytes(size);
     },
   };
 })();
 
-'use strict';
+/* global window, textsecure, localStorage */
 
+// eslint-disable-next-line func-names
 (function() {
-  /************************************************
+  /** **********************************************
    *** Utilities to store data in local storage ***
-   ************************************************/
+   *********************************************** */
   window.textsecure = window.textsecure || {};
   window.textsecure.storage = window.textsecure.storage || {};
 
   // Overrideable storage implementation
   window.textsecure.storage.impl = window.textsecure.storage.impl || {
-    /*****************************
+    /** ***************************
      *** Base Storage Routines ***
-     *****************************/
-    put: function(key, value) {
+     **************************** */
+    put(key, value) {
       if (value === undefined) throw new Error('Tried to store undefined');
-      localStorage.setItem('' + key, textsecure.utils.jsonThing(value));
+      localStorage.setItem(`${key}`, textsecure.utils.jsonThing(value));
     },
 
-    get: function(key, defaultValue) {
-      var value = localStorage.getItem('' + key);
+    get(key, defaultValue) {
+      const value = localStorage.getItem(`${key}`);
       if (value === null) return defaultValue;
       return JSON.parse(value);
     },
 
-    remove: function(key) {
-      localStorage.removeItem('' + key);
+    remove(key) {
+      localStorage.removeItem(`${key}`);
     },
   };
 
-  window.textsecure.storage.put = function(key, value) {
-    return textsecure.storage.impl.put(key, value);
-  };
-
-  window.textsecure.storage.get = function(key, defaultValue) {
-    return textsecure.storage.impl.get(key, defaultValue);
-  };
-
-  window.textsecure.storage.remove = function(key) {
-    return textsecure.storage.impl.remove(key);
-  };
+  window.textsecure.storage.put = (key, value) =>
+    textsecure.storage.impl.put(key, value);
+  window.textsecure.storage.get = (key, defaultValue) =>
+    textsecure.storage.impl.get(key, defaultValue);
+  window.textsecure.storage.remove = key => textsecure.storage.impl.remove(key);
 })();
 
-'use strict';
+/* global textsecure, window */
 
+// eslint-disable-next-line func-names
 (function() {
-  /*********************************************
+  /** *******************************************
    *** Utilities to store data about the user ***
-   **********************************************/
+   ********************************************* */
   window.textsecure = window.textsecure || {};
   window.textsecure.storage = window.textsecure.storage || {};
 
   window.textsecure.storage.user = {
-    setNumberAndDeviceId: function(number, deviceId, deviceName) {
-      textsecure.storage.put('number_id', number + '.' + deviceId);
+    setNumberAndDeviceId(number, deviceId, deviceName) {
+      textsecure.storage.put('number_id', `${number}.${deviceId}`);
       if (deviceName) {
         textsecure.storage.put('device_name', deviceName);
       }
     },
 
-    getNumber: function(key, defaultValue) {
-      var number_id = textsecure.storage.get('number_id');
-      if (number_id === undefined) return undefined;
-      return textsecure.utils.unencodeNumber(number_id)[0];
+    getNumber() {
+      const numberId = textsecure.storage.get('number_id');
+      if (numberId === undefined) return undefined;
+      return textsecure.utils.unencodeNumber(numberId)[0];
     },
 
-    getDeviceId: function(key) {
-      var number_id = textsecure.storage.get('number_id');
-      if (number_id === undefined) return undefined;
-      return textsecure.utils.unencodeNumber(number_id)[1];
+    getDeviceId() {
+      const numberId = textsecure.storage.get('number_id');
+      if (numberId === undefined) return undefined;
+      return textsecure.utils.unencodeNumber(numberId)[1];
     },
 
-    getDeviceName: function(key) {
+    getDeviceName() {
       return textsecure.storage.get('device_name');
     },
   };
 })();
 
-(function() {
-  'use strict';
+/* global window, getString, libsignal, textsecure */
 
-  /*********************
+/* eslint-disable more/no-then */
+
+// eslint-disable-next-line func-names
+(function() {
+  /** *******************
    *** Group Storage ***
-   *********************/
+   ******************** */
   window.textsecure = window.textsecure || {};
   window.textsecure.storage = window.textsecure.storage || {};
 
   // create a random group id that we haven't seen before.
   function generateNewGroupId() {
-    var groupId = getString(libsignal.crypto.getRandomBytes(16));
-    return textsecure.storage.protocol.getGroup(groupId).then(function(group) {
+    const groupId = getString(libsignal.crypto.getRandomBytes(16));
+    return textsecure.storage.protocol.getGroup(groupId).then(group => {
       if (group === undefined) {
         return groupId;
-      } else {
-        console.warn('group id collision'); // probably a bad sign.
-        return generateNewGroupId();
       }
+      window.log.warn('group id collision'); // probably a bad sign.
+      return generateNewGroupId();
     });
   }
 
   window.textsecure.storage.groups = {
-    createNewGroup: function(numbers, groupId) {
-      var groupId = groupId;
-      return new Promise(function(resolve) {
+    createNewGroup(numbers, groupId) {
+      return new Promise(resolve => {
         if (groupId !== undefined) {
           resolve(
-            textsecure.storage.protocol.getGroup(groupId).then(function(group) {
+            textsecure.storage.protocol.getGroup(groupId).then(group => {
               if (group !== undefined) {
                 throw new Error('Tried to recreate group');
               }
@@ -37076,128 +37045,121 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
           );
         } else {
           resolve(
-            generateNewGroupId().then(function(newGroupId) {
+            generateNewGroupId().then(newGroupId => {
+              // eslint-disable-next-line no-param-reassign
               groupId = newGroupId;
             })
           );
         }
-      }).then(function() {
-        var me = textsecure.storage.user.getNumber();
-        var haveMe = false;
-        var finalNumbers = [];
-        for (var i in numbers) {
-          var number = numbers[i];
+      }).then(() => {
+        const me = textsecure.storage.user.getNumber();
+        let haveMe = false;
+        const finalNumbers = [];
+        // eslint-disable-next-line no-restricted-syntax, guard-for-in
+        for (const i in numbers) {
+          const number = numbers[i];
           if (!textsecure.utils.isNumberSane(number))
             throw new Error('Invalid number in group');
-          if (number == me) haveMe = true;
+          if (number === me) haveMe = true;
           if (finalNumbers.indexOf(number) < 0) finalNumbers.push(number);
         }
 
         if (!haveMe) finalNumbers.push(me);
 
-        var groupObject = { numbers: finalNumbers, numberRegistrationIds: {} };
-        for (var i in finalNumbers)
+        const groupObject = {
+          numbers: finalNumbers,
+          numberRegistrationIds: {},
+        };
+        // eslint-disable-next-line no-restricted-syntax, guard-for-in
+        for (const i in finalNumbers) {
           groupObject.numberRegistrationIds[finalNumbers[i]] = {};
+        }
 
         return textsecure.storage.protocol
           .putGroup(groupId, groupObject)
-          .then(function() {
-            return { id: groupId, numbers: finalNumbers };
+          .then(() => ({ id: groupId, numbers: finalNumbers }));
           });
-      });
     },
 
-    getNumbers: function(groupId) {
-      return textsecure.storage.protocol
-        .getGroup(groupId)
-        .then(function(group) {
+    getNumbers(groupId) {
+      return textsecure.storage.protocol.getGroup(groupId).then(group => {
           if (group === undefined) return undefined;
 
           return group.numbers;
         });
     },
 
-    removeNumber: function(groupId, number) {
-      return textsecure.storage.protocol
-        .getGroup(groupId)
-        .then(function(group) {
+    removeNumber(groupId, number) {
+      return textsecure.storage.protocol.getGroup(groupId).then(group => {
           if (group === undefined) return undefined;
 
-          var me = textsecure.storage.user.getNumber();
-          if (number == me)
+        const me = textsecure.storage.user.getNumber();
+        if (number === me)
             throw new Error(
               'Cannot remove ourselves from a group, leave the group instead'
             );
 
-          var i = group.numbers.indexOf(number);
+        const i = group.numbers.indexOf(number);
           if (i > -1) {
             group.numbers.splice(i, 1);
+          // eslint-disable-next-line no-param-reassign
             delete group.numberRegistrationIds[number];
             return textsecure.storage.protocol
               .putGroup(groupId, group)
-              .then(function() {
-                return group.numbers;
-              });
+            .then(() => group.numbers);
           }
 
           return group.numbers;
         });
     },
 
-    addNumbers: function(groupId, numbers) {
-      return textsecure.storage.protocol
-        .getGroup(groupId)
-        .then(function(group) {
+    addNumbers(groupId, numbers) {
+      return textsecure.storage.protocol.getGroup(groupId).then(group => {
           if (group === undefined) return undefined;
 
-          for (var i in numbers) {
-            var number = numbers[i];
+        // eslint-disable-next-line no-restricted-syntax, guard-for-in
+        for (const i in numbers) {
+          const number = numbers[i];
             if (!textsecure.utils.isNumberSane(number))
               throw new Error('Invalid number in set to add to group');
             if (group.numbers.indexOf(number) < 0) {
               group.numbers.push(number);
+            // eslint-disable-next-line no-param-reassign
               group.numberRegistrationIds[number] = {};
             }
           }
 
           return textsecure.storage.protocol
             .putGroup(groupId, group)
-            .then(function() {
-              return group.numbers;
+          .then(() => group.numbers);
             });
-        });
     },
 
-    deleteGroup: function(groupId) {
+    deleteGroup(groupId) {
       return textsecure.storage.protocol.removeGroup(groupId);
     },
 
-    getGroup: function(groupId) {
-      return textsecure.storage.protocol
-        .getGroup(groupId)
-        .then(function(group) {
+    getGroup(groupId) {
+      return textsecure.storage.protocol.getGroup(groupId).then(group => {
           if (group === undefined) return undefined;
 
           return { id: groupId, numbers: group.numbers };
         });
     },
 
-    updateNumbers: function(groupId, numbers) {
-      return textsecure.storage.protocol
-        .getGroup(groupId)
-        .then(function(group) {
+    updateNumbers(groupId, numbers) {
+      return textsecure.storage.protocol.getGroup(groupId).then(group => {
           if (group === undefined)
             throw new Error('Tried to update numbers for unknown group');
 
           if (
-            numbers.filter(textsecure.utils.isNumberSane).length <
-            numbers.length
+          numbers.filter(textsecure.utils.isNumberSane).length < numbers.length
           )
             throw new Error('Invalid number in new group members');
 
-          var added = numbers.filter(function(number) {
-            return group.numbers.indexOf(number) < 0;
-          });
+        const added = numbers.filter(
+          number => group.numbers.indexOf(number) < 0
+        );
 
           return textsecure.storage.groups.addNumbers(groupId, added);
         });
@@ -37205,63 +37167,60 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
   };
 })();
 
-(function() {
-  'use strict';
+/* global window, textsecure */
 
-  /*****************************************
+// eslint-disable-next-line func-names
+(function() {
+  /** ***************************************
    *** Not-yet-processed message storage ***
-   *****************************************/
+   **************************************** */
   window.textsecure = window.textsecure || {};
   window.textsecure.storage = window.textsecure.storage || {};
 
   window.textsecure.storage.unprocessed = {
-    getAll: function() {
+    getAll() {
       return textsecure.storage.protocol.getAllUnprocessed();
     },
-    add: function(data) {
+    add(data) {
       return textsecure.storage.protocol.addUnprocessed(data);
     },
-    update: function(id, updates) {
+    update(id, updates) {
       return textsecure.storage.protocol.updateUnprocessed(id, updates);
     },
-    remove: function(id) {
+    remove(id) {
       return textsecure.storage.protocol.removeUnprocessed(id);
     },
   };
 })();
 
+/* global window, dcodeIO, textsecure */
+
+// eslint-disable-next-line func-names
 (function() {
-  'use strict';
   window.textsecure = window.textsecure || {};
   window.textsecure.protobuf = {};
 
   function loadProtoBufs(filename) {
     return dcodeIO.ProtoBuf.loadProtoFile(
       { root: window.PROTO_ROOT, file: filename },
-      function(error, result) {
+      (error, result) => {
         if (error) {
-          var text =
-            'Error loading protos from ' +
-            filename +
-            ' (root: ' +
-            window.PROTO_ROOT +
-            ') ' +
-            (error && error.stack ? error.stack : error);
-          console.log(text);
+          const text = `Error loading protos from ${filename} (root: ${
+            window.PROTO_ROOT
+          }) ${error && error.stack ? error.stack : error}`;
+          window.log.error(text);
           throw error;
         }
-        var protos = result.build('signalservice');
+        const protos = result.build('signalservice');
         if (!protos) {
-          var text =
-            'Error loading protos from ' +
-            filename +
-            ' (root: ' +
-            window.PROTO_ROOT +
-            ')';
-          console.log(text);
+          const text = `Error loading protos from ${filename} (root: ${
+            window.PROTO_ROOT
+          })`;
+          window.log.error(text);
           throw new Error(text);
         }
-        for (var protoName in protos) {
+        // eslint-disable-next-line no-restricted-syntax, guard-for-in
+        for (const protoName in protos) {
           textsecure.protobuf[protoName] = protos[protoName];
         }
       }
@@ -37280,24 +37239,28 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
   loadProtoBufs('UnidentifiedDelivery.proto');
 })();
 
+/* global window, dcodeIO */
+
+/* eslint-disable no-proto, no-restricted-syntax, guard-for-in */
+
 window.textsecure = window.textsecure || {};
 
-/*********************************
+/** *******************************
  *** Type conversion utilities ***
- *********************************/
+ ******************************** */
 // Strings/arrays
-//TODO: Throw all this shit in favor of consistent types
-//TODO: Namespace
-var StaticByteBufferProto = new dcodeIO.ByteBuffer().__proto__;
-var StaticArrayBufferProto = new ArrayBuffer().__proto__;
-var StaticUint8ArrayProto = new Uint8Array().__proto__;
+// TODO: Throw all this shit in favor of consistent types
+// TODO: Namespace
+const StaticByteBufferProto = new dcodeIO.ByteBuffer().__proto__;
+const StaticArrayBufferProto = new ArrayBuffer().__proto__;
+const StaticUint8ArrayProto = new Uint8Array().__proto__;
 function getString(thing) {
   if (thing === Object(thing)) {
-    if (thing.__proto__ == StaticUint8ArrayProto)
+    if (thing.__proto__ === StaticUint8ArrayProto)
       return String.fromCharCode.apply(null, thing);
-    if (thing.__proto__ == StaticArrayBufferProto)
+    if (thing.__proto__ === StaticArrayBufferProto)
       return getString(new Uint8Array(thing));
-    if (thing.__proto__ == StaticByteBufferProto)
+    if (thing.__proto__ === StaticByteBufferProto)
       return thing.toString('binary');
   }
   return thing;
@@ -37305,56 +37268,54 @@ function getString(thing) {
 
 function getStringable(thing) {
   return (
-    typeof thing == 'string' ||
-    typeof thing == 'number' ||
-    typeof thing == 'boolean' ||
+    typeof thing === 'string' ||
+    typeof thing === 'number' ||
+    typeof thing === 'boolean' ||
     (thing === Object(thing) &&
-      (thing.__proto__ == StaticArrayBufferProto ||
-        thing.__proto__ == StaticUint8ArrayProto ||
-        thing.__proto__ == StaticByteBufferProto))
+      (thing.__proto__ === StaticArrayBufferProto ||
+        thing.__proto__ === StaticUint8ArrayProto ||
+        thing.__proto__ === StaticByteBufferProto))
   );
 }
 
 // Number formatting utils
-window.textsecure.utils = (function() {
-  var self = {};
-  self.unencodeNumber = function(number) {
-    return number.split('.');
-  };
+window.textsecure.utils = (() => {
+  const self = {};
+  self.unencodeNumber = number => number.split('.');
+  self.isNumberSane = number =>
+    number[0] === '+' && /^[0-9]+$/.test(number.substring(1));
 
-  self.isNumberSane = function(number) {
-    return number[0] == '+' && /^[0-9]+$/.test(number.substring(1));
-  };
-
-  /**************************
+  /** ************************
    *** JSON'ing Utilities ***
-   **************************/
+   ************************* */
   function ensureStringed(thing) {
     if (getStringable(thing)) return getString(thing);
     else if (thing instanceof Array) {
-      var res = [];
-      for (var i = 0; i < thing.length; i++) res[i] = ensureStringed(thing[i]);
+      const res = [];
+      for (let i = 0; i < thing.length; i += 1)
+        res[i] = ensureStringed(thing[i]);
       return res;
     } else if (thing === Object(thing)) {
-      var res = {};
-      for (var key in thing) res[key] = ensureStringed(thing[key]);
+      const res = {};
+      for (const key in thing) res[key] = ensureStringed(thing[key]);
       return res;
     } else if (thing === null) {
       return null;
     }
-    throw new Error('unsure of how to jsonify object of type ' + typeof thing);
+    throw new Error(`unsure of how to jsonify object of type ${typeof thing}`);
   }
 
-  self.jsonThing = function(thing) {
-    return JSON.stringify(ensureStringed(thing));
-  };
+  self.jsonThing = thing => JSON.stringify(ensureStringed(thing));
 
   return self;
 })();
 
-(function() {
-  'use strict';
+/* global window, StringView */
 
+/* eslint-disable no-bitwise, no-nested-ternary */
+
+// eslint-disable-next-line func-names
+(function() {
   window.StringView = {
     /*
       * These functions from the Mozilla Developer Network
@@ -37363,7 +37324,7 @@ window.textsecure.utils = (function() {
       * https://developer.mozilla.org/en-US/docs/MDN/About#Copyrights_and_licenses
       */
 
-    b64ToUint6: function(nChr) {
+    b64ToUint6(nChr) {
       return nChr > 64 && nChr < 91
         ? nChr - 65
         : nChr > 96 && nChr < 123
@@ -37377,25 +37338,31 @@ window.textsecure.utils = (function() {
                 : 0;
     },
 
-    base64ToBytes: function(sBase64, nBlocksSize) {
-      var sB64Enc = sBase64.replace(/[^A-Za-z0-9\+\/]/g, ''),
-        nInLen = sB64Enc.length,
-        nOutLen = nBlocksSize
+    base64ToBytes(sBase64, nBlocksSize) {
+      const sB64Enc = sBase64.replace(/[^A-Za-z0-9+/]/g, '');
+      const nInLen = sB64Enc.length;
+      const nOutLen = nBlocksSize
           ? Math.ceil(((nInLen * 3 + 1) >> 2) / nBlocksSize) * nBlocksSize
           : (nInLen * 3 + 1) >> 2;
-      var aBBytes = new ArrayBuffer(nOutLen);
-      var taBytes = new Uint8Array(aBBytes);
+      const aBBytes = new ArrayBuffer(nOutLen);
+      const taBytes = new Uint8Array(aBBytes);
 
+      let nMod3;
+      let nMod4;
       for (
-        var nMod3, nMod4, nUint24 = 0, nOutIdx = 0, nInIdx = 0;
+        let nUint24 = 0, nOutIdx = 0, nInIdx = 0;
         nInIdx < nInLen;
-        nInIdx++
+        nInIdx += 1
       ) {
         nMod4 = nInIdx & 3;
         nUint24 |=
           StringView.b64ToUint6(sB64Enc.charCodeAt(nInIdx)) << (18 - 6 * nMod4);
         if (nMod4 === 3 || nInLen - nInIdx === 1) {
-          for (nMod3 = 0; nMod3 < 3 && nOutIdx < nOutLen; nMod3++, nOutIdx++) {
+          for (
+            nMod3 = 0;
+            nMod3 < 3 && nOutIdx < nOutLen;
+            nMod3 += 1, nOutIdx += 1
+          ) {
             taBytes[nOutIdx] = (nUint24 >>> ((16 >>> nMod3) & 24)) & 255;
           }
           nUint24 = 0;
@@ -37404,7 +37371,7 @@ window.textsecure.utils = (function() {
       return aBBytes;
     },
 
-    uint6ToB64: function(nUint6) {
+    uint6ToB64(nUint6) {
       return nUint6 < 26
         ? nUint6 + 65
         : nUint6 < 52
@@ -37418,13 +37385,13 @@ window.textsecure.utils = (function() {
                 : 65;
     },
 
-    bytesToBase64: function(aBytes) {
-      var nMod3,
-        sB64Enc = '';
+    bytesToBase64(aBytes) {
+      let nMod3;
+      let sB64Enc = '';
       for (
-        var nLen = aBytes.length, nUint24 = 0, nIdx = 0;
+        let nLen = aBytes.length, nUint24 = 0, nIdx = 0;
         nIdx < nLen;
-        nIdx++
+        nIdx += 1
       ) {
         nMod3 = nIdx % 3;
         if (nIdx > 0 && (nIdx * 4 / 3) % 76 === 0) {
@@ -37446,30 +37413,32 @@ window.textsecure.utils = (function() {
   };
 })();
 
+/* global window, Event, textsecure */
+
 /*
  * Implements EventTarget
  * https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
  */
+// eslint-disable-next-line func-names
 (function() {
-  'use strict';
   window.textsecure = window.textsecure || {};
 
   function EventTarget() {}
 
   EventTarget.prototype = {
     constructor: EventTarget,
-    dispatchEvent: function(ev) {
+    dispatchEvent(ev) {
       if (!(ev instanceof Event)) {
         throw new Error('Expects an event');
       }
       if (this.listeners === null || typeof this.listeners !== 'object') {
         this.listeners = {};
       }
-      var listeners = this.listeners[ev.type];
-      var results = [];
+      const listeners = this.listeners[ev.type];
+      const results = [];
       if (typeof listeners === 'object') {
-        for (var i = 0, max = listeners.length; i < max; i += 1) {
-          var listener = listeners[i];
+        for (let i = 0, max = listeners.length; i < max; i += 1) {
+          const listener = listeners[i];
           if (typeof listener === 'function') {
             results.push(listener.call(null, ev));
           }
@@ -37477,7 +37446,7 @@ window.textsecure.utils = (function() {
       }
       return results;
     },
-    addEventListener: function(eventName, callback) {
+    addEventListener(eventName, callback) {
       if (typeof eventName !== 'string') {
         throw new Error('First argument expects a string');
       }
@@ -37487,14 +37456,14 @@ window.textsecure.utils = (function() {
       if (this.listeners === null || typeof this.listeners !== 'object') {
         this.listeners = {};
       }
-      var listeners = this.listeners[eventName];
+      let listeners = this.listeners[eventName];
       if (typeof listeners !== 'object') {
         listeners = [];
       }
       listeners.push(callback);
       this.listeners[eventName] = listeners;
     },
-    removeEventListener: function(eventName, callback) {
+    removeEventListener(eventName, callback) {
       if (typeof eventName !== 'string') {
         throw new Error('First argument expects a string');
       }
@@ -37504,9 +37473,9 @@ window.textsecure.utils = (function() {
       if (this.listeners === null || typeof this.listeners !== 'object') {
         this.listeners = {};
       }
-      var listeners = this.listeners[eventName];
+      const listeners = this.listeners[eventName];
       if (typeof listeners === 'object') {
-        for (var i = 0; i < listeners.length; ++i) {
+        for (let i = 0; i < listeners.length; i += 1) {
           if (listeners[i] === callback) {
             listeners.splice(i, 1);
             return;
@@ -37515,8 +37484,9 @@ window.textsecure.utils = (function() {
       }
       this.listeners[eventName] = listeners;
     },
-    extend: function(obj) {
-      for (var prop in obj) {
+    extend(obj) {
+      // eslint-disable-next-line no-restricted-syntax, guard-for-in
+      for (const prop in obj) {
         this[prop] = obj[prop];
       }
       return this;
@@ -37526,11 +37496,24 @@ window.textsecure.utils = (function() {
   textsecure.EventTarget = EventTarget;
 })();
 
+/* global
+  window,
+  textsecure,
+  libsignal,
+  WebSocketResource,
+  btoa,
+  getString,
+  libphonenumber,
+  Event
+*/
+
+/* eslint-disable more/no-then */
+
+// eslint-disable-next-line func-names
 (function() {
-  'use strict';
   window.textsecure = window.textsecure || {};
 
-  var ARCHIVE_AGE = 7 * 24 * 60 * 60 * 1000;
+  const ARCHIVE_AGE = 7 * 24 * 60 * 60 * 1000;
 
   function AccountManager(username, password) {
     this.server = window.WebAPI.connect({ username, password });
@@ -37542,7 +37525,7 @@ window.textsecure.utils = (function() {
       return numberId;
     }
 
-    var parts = numberId.split('.');
+    const parts = numberId.split('.');
     if (!parts.length) {
       return numberId;
     }
@@ -37553,24 +37536,22 @@ window.textsecure.utils = (function() {
   AccountManager.prototype = new textsecure.EventTarget();
   AccountManager.prototype.extend({
     constructor: AccountManager,
-    requestVoiceVerification: function(number) {
+    requestVoiceVerification(number) {
       return this.server.requestVerificationVoice(number);
     },
-    requestSMSVerification: function(number) {
+    requestSMSVerification(number) {
       return this.server.requestVerificationSMS(number);
     },
-    registerSingleDevice: function(number, verificationCode) {
-      var registerKeys = this.server.registerKeys.bind(this.server);
-      var createAccount = this.createAccount.bind(this);
-      var clearSessionsAndPreKeys = this.clearSessionsAndPreKeys.bind(this);
-      var generateKeys = this.generateKeys.bind(this, 100);
-      var confirmKeys = this.confirmKeys.bind(this);
-      var registrationDone = this.registrationDone.bind(this);
-      return this.queueTask(function() {
-        return libsignal.KeyHelper.generateIdentityKeyPair().then(function(
-          identityKeyPair
-        ) {
-          var profileKey = textsecure.crypto.getRandomBytes(32);
+    registerSingleDevice(number, verificationCode) {
+      const registerKeys = this.server.registerKeys.bind(this.server);
+      const createAccount = this.createAccount.bind(this);
+      const clearSessionsAndPreKeys = this.clearSessionsAndPreKeys.bind(this);
+      const generateKeys = this.generateKeys.bind(this, 100);
+      const confirmKeys = this.confirmKeys.bind(this);
+      const registrationDone = this.registrationDone.bind(this);
+      return this.queueTask(() =>
+        libsignal.KeyHelper.generateIdentityKeyPair().then(identityKeyPair => {
+          const profileKey = textsecure.crypto.getRandomBytes(32);
           return createAccount(
             number,
             verificationCode,
@@ -37579,47 +37560,40 @@ window.textsecure.utils = (function() {
           )
             .then(clearSessionsAndPreKeys)
             .then(generateKeys)
-            .then(function(keys) {
-              return registerKeys(keys).then(function() {
-                return confirmKeys(keys);
-              });
-            })
+            .then(keys => registerKeys(keys).then(() => confirmKeys(keys)))
             .then(registrationDone);
-        });
-      });
+        })
+      );
     },
-    registerSecondDevice: function(
-      setProvisioningUrl,
-      confirmNumber,
-      progressCallback
-    ) {
-      var createAccount = this.createAccount.bind(this);
-      var clearSessionsAndPreKeys = this.clearSessionsAndPreKeys.bind(this);
-      var generateKeys = this.generateKeys.bind(this, 100, progressCallback);
-      var confirmKeys = this.confirmKeys.bind(this);
-      var registrationDone = this.registrationDone.bind(this);
-      var registerKeys = this.server.registerKeys.bind(this.server);
-      var getSocket = this.server.getProvisioningSocket.bind(this.server);
-      var queueTask = this.queueTask.bind(this);
-      var provisioningCipher = new libsignal.ProvisioningCipher();
-      var gotProvisionEnvelope = false;
-      return provisioningCipher.getPublicKey().then(function(pubKey) {
-        return new Promise(function(resolve, reject) {
-          var socket = getSocket();
-          socket.onclose = function(e) {
-            console.log('provisioning socket closed', e.code);
+    registerSecondDevice(setProvisioningUrl, confirmNumber, progressCallback) {
+      const createAccount = this.createAccount.bind(this);
+      const clearSessionsAndPreKeys = this.clearSessionsAndPreKeys.bind(this);
+      const generateKeys = this.generateKeys.bind(this, 100, progressCallback);
+      const confirmKeys = this.confirmKeys.bind(this);
+      const registrationDone = this.registrationDone.bind(this);
+      const registerKeys = this.server.registerKeys.bind(this.server);
+      const getSocket = this.server.getProvisioningSocket.bind(this.server);
+      const queueTask = this.queueTask.bind(this);
+      const provisioningCipher = new libsignal.ProvisioningCipher();
+      let gotProvisionEnvelope = false;
+      return provisioningCipher.getPublicKey().then(
+        pubKey =>
+          new Promise((resolve, reject) => {
+            const socket = getSocket();
+            socket.onclose = event => {
+            window.log.info('provisioning socket closed. Code:', event.code);
             if (!gotProvisionEnvelope) {
               reject(new Error('websocket closed'));
             }
           };
-          socket.onopen = function(e) {
-            console.log('provisioning socket open');
+            socket.onopen = () => {
+            window.log.info('provisioning socket open');
           };
-          var wsr = new WebSocketResource(socket, {
+            const wsr = new WebSocketResource(socket, {
             keepalive: { path: '/v1/keepalive/provisioning' },
-            handleRequest: function(request) {
+              handleRequest(request) {
               if (request.path === '/v1/address' && request.verb === 'PUT') {
-                var proto = textsecure.protobuf.ProvisioningUuid.decode(
+                  const proto = textsecure.protobuf.ProvisioningUuid.decode(
                   request.body
                 );
                 setProvisioningUrl(
@@ -37635,7 +37609,7 @@ window.textsecure.utils = (function() {
                 request.path === '/v1/message' &&
                 request.verb === 'PUT'
               ) {
-                var envelope = textsecure.protobuf.ProvisionEnvelope.decode(
+                  const envelope = textsecure.protobuf.ProvisionEnvelope.decode(
                   request.body,
                   'binary'
                 );
@@ -37645,10 +37619,10 @@ window.textsecure.utils = (function() {
                 resolve(
                   provisioningCipher
                     .decrypt(envelope)
-                    .then(function(provisionMessage) {
-                      return queueTask(function() {
-                        return confirmNumber(provisionMessage.number).then(
-                          function(deviceName) {
+                      .then(provisionMessage =>
+                        queueTask(() =>
+                          confirmNumber(provisionMessage.number).then(
+                            deviceName => {
                             if (
                               typeof deviceName !== 'string' ||
                               deviceName.length === 0
@@ -37666,74 +37640,70 @@ window.textsecure.utils = (function() {
                             )
                               .then(clearSessionsAndPreKeys)
                               .then(generateKeys)
-                              .then(function(keys) {
-                                return registerKeys(keys).then(function() {
-                                  return confirmKeys(keys);
-                                });
-                              })
+                                .then(keys =>
+                                  registerKeys(keys).then(() =>
+                                    confirmKeys(keys)
+                                  )
+                                )
                               .then(registrationDone);
                           }
+                          )
+                        )
+                      )
                         );
-                      });
-                    })
-                );
               } else {
-                console.log('Unknown websocket message', request.path);
+                window.log.error('Unknown websocket message', request.path);
               }
             },
           });
-        });
-      });
+          })
+      );
     },
-    refreshPreKeys: function() {
-      var generateKeys = this.generateKeys.bind(this, 100);
-      var registerKeys = this.server.registerKeys.bind(this.server);
+    refreshPreKeys() {
+      const generateKeys = this.generateKeys.bind(this, 100);
+      const registerKeys = this.server.registerKeys.bind(this.server);
 
-      return this.queueTask(
-        function() {
-          return this.server.getMyKeys().then(function(preKeyCount) {
-            console.log('prekey count ' + preKeyCount);
+      return this.queueTask(() =>
+        this.server.getMyKeys().then(preKeyCount => {
+          window.log.info(`prekey count ${preKeyCount}`);
             if (preKeyCount < 10) {
               return generateKeys().then(registerKeys);
             }
-          });
-        }.bind(this)
+          return null;
+        })
       );
     },
-    rotateSignedPreKey: function() {
-      return this.queueTask(
-        function() {
-          var signedKeyId = textsecure.storage.get('signedKeyId', 1);
-          if (typeof signedKeyId != 'number') {
+    rotateSignedPreKey() {
+      return this.queueTask(() => {
+        const signedKeyId = textsecure.storage.get('signedKeyId', 1);
+        if (typeof signedKeyId !== 'number') {
             throw new Error('Invalid signedKeyId');
           }
 
-          var store = textsecure.storage.protocol;
-          var server = this.server;
-          var cleanSignedPreKeys = this.cleanSignedPreKeys;
+        const store = textsecure.storage.protocol;
+        const { server, cleanSignedPreKeys } = this;
 
           // TODO: harden this against missing identity key? Otherwise, we get
           //   retries every five seconds.
           return store
             .getIdentityKeyPair()
             .then(
-              function(identityKey) {
-                return libsignal.KeyHelper.generateSignedPreKey(
+            identityKey =>
+              libsignal.KeyHelper.generateSignedPreKey(
                   identityKey,
                   signedKeyId
-                );
-              },
-              function(error) {
-                console.log(
+              ),
+            () => {
+                window.log.error(
                   'Failed to get identity key. Canceling key rotation.'
                 );
               }
             )
-            .then(function(res) {
+          .then(res => {
               if (!res) {
-                return;
+              return null;
               }
-              console.log('Saving new signed prekey', res.keyId);
+              window.log.info('Saving new signed prekey', res.keyId);
               return Promise.all([
                 textsecure.storage.put('signedKeyId', signedKeyId + 1),
                 store.storeSignedPreKey(res.keyId, res.keyPair),
@@ -37743,68 +37713,61 @@ window.textsecure.utils = (function() {
                   signature: res.signature,
                 }),
               ])
-                .then(function() {
-                  var confirmed = true;
-                  console.log('Confirming new signed prekey', res.keyId);
+              .then(() => {
+                const confirmed = true;
+                  window.log.info('Confirming new signed prekey', res.keyId);
                   return Promise.all([
                     textsecure.storage.remove('signedKeyRotationRejected'),
                     store.storeSignedPreKey(res.keyId, res.keyPair, confirmed),
                   ]);
                 })
-                .then(function() {
-                  return cleanSignedPreKeys();
-                });
+              .then(() => cleanSignedPreKeys());
             })
-            .catch(function(e) {
-              console.log(
+          .catch(e => {
+              window.log.error(
                 'rotateSignedPrekey error:',
                 e && e.stack ? e.stack : e
               );
 
               if (
                 e instanceof Error &&
-                e.name == 'HTTPError' &&
+              e.name === 'HTTPError' &&
                 e.code >= 400 &&
                 e.code <= 599
               ) {
-                var rejections =
+              const rejections =
                   1 + textsecure.storage.get('signedKeyRotationRejected', 0);
                 textsecure.storage.put('signedKeyRotationRejected', rejections);
-                console.log('Signed key rotation rejected count:', rejections);
+                window.log.error(
+                  'Signed key rotation rejected count:',
+                  rejections
+                );
               } else {
                 throw e;
               }
             });
-        }.bind(this)
-      );
+      });
     },
-    queueTask: function(task) {
-      var taskWithTimeout = textsecure.createTaskWithTimeout(task);
-      return (this.pending = this.pending.then(
-        taskWithTimeout,
-        taskWithTimeout
-      ));
-    },
-    cleanSignedPreKeys: function() {
-      var MINIMUM_KEYS = 3;
-      var store = textsecure.storage.protocol;
-      return store.loadSignedPreKeys().then(function(allKeys) {
-        allKeys.sort(function(a, b) {
-          return (a.created_at || 0) - (b.created_at || 0);
-        });
-        allKeys.reverse(); // we want the most recent first
-        var confirmed = allKeys.filter(function(key) {
-          return key.confirmed;
-        });
-        var unconfirmed = allKeys.filter(function(key) {
-          return !key.confirmed;
-        });
+    queueTask(task) {
+      const taskWithTimeout = textsecure.createTaskWithTimeout(task);
+      this.pending = this.pending.then(taskWithTimeout, taskWithTimeout);
 
-        var recent = allKeys[0] ? allKeys[0].keyId : 'none';
-        var recentConfirmed = confirmed[0] ? confirmed[0].keyId : 'none';
-        console.log('Most recent signed key: ' + recent);
-        console.log('Most recent confirmed signed key: ' + recentConfirmed);
-        console.log(
+      return this.pending;
+    },
+    cleanSignedPreKeys() {
+      const MINIMUM_KEYS = 3;
+      const store = textsecure.storage.protocol;
+      return store.loadSignedPreKeys().then(allKeys => {
+        allKeys.sort((a, b) => (a.created_at || 0) - (b.created_at || 0));
+        allKeys.reverse(); // we want the most recent first
+        let confirmed = allKeys.filter(key => key.confirmed);
+        const unconfirmed = allKeys.filter(key => !key.confirmed);
+
+        const recent = allKeys[0] ? allKeys[0].keyId : 'none';
+        const recentConfirmed = confirmed[0] ? confirmed[0].keyId : 'none';
+        window.log.info(`Most recent signed key: ${recent}`);
+        window.log.info(`Most recent confirmed signed key: ${recentConfirmed}`);
+        window.log.info(
           'Total signed key count:',
           allKeys.length,
           '-',
@@ -37812,51 +37775,52 @@ window.textsecure.utils = (function() {
           'confirmed'
         );
 
-        var confirmedCount = confirmed.length;
+        let confirmedCount = confirmed.length;
 
         // Keep MINIMUM_KEYS confirmed keys, then drop if older than a week
-        confirmed = confirmed.forEach(function(key, index) {
+        confirmed = confirmed.forEach((key, index) => {
           if (index < MINIMUM_KEYS) {
             return;
           }
-          var created_at = key.created_at || 0;
-          var age = Date.now() - created_at;
+          const createdAt = key.created_at || 0;
+          const age = Date.now() - createdAt;
+
           if (age > ARCHIVE_AGE) {
-            console.log(
+            window.log.info(
               'Removing confirmed signed prekey:',
               key.keyId,
               'with timestamp:',
-              created_at
+              createdAt
             );
             store.removeSignedPreKey(key.keyId);
-            confirmedCount--;
+            confirmedCount -= 1;
           }
         });
 
-        var stillNeeded = MINIMUM_KEYS - confirmedCount;
+        const stillNeeded = MINIMUM_KEYS - confirmedCount;
 
         // If we still don't have enough total keys, we keep as many unconfirmed
         // keys as necessary. If not necessary, and over a week old, we drop.
-        unconfirmed.forEach(function(key, index) {
+        unconfirmed.forEach((key, index) => {
           if (index < stillNeeded) {
             return;
           }
 
-          var created_at = key.created_at || 0;
-          var age = Date.now() - created_at;
+          const createdAt = key.created_at || 0;
+          const age = Date.now() - createdAt;
           if (age > ARCHIVE_AGE) {
-            console.log(
+            window.log.info(
               'Removing unconfirmed signed prekey:',
               key.keyId,
               'with timestamp:',
-              created_at
+              createdAt
             );
             store.removeSignedPreKey(key.keyId);
           }
         });
       });
     },
-    createAccount: function(
+    createAccount(
       number,
       verificationCode,
       identityKeyPair,
@@ -37865,12 +37829,12 @@ window.textsecure.utils = (function() {
       userAgent,
       readReceipts
     ) {
-      var signalingKey = libsignal.crypto.getRandomBytes(32 + 20);
-      var password = btoa(getString(libsignal.crypto.getRandomBytes(16)));
+      const signalingKey = libsignal.crypto.getRandomBytes(32 + 20);
+      let password = btoa(getString(libsignal.crypto.getRandomBytes(16)));
       password = password.substring(0, password.length - 2);
-      var registrationId = libsignal.KeyHelper.generateRegistrationId();
+      const registrationId = libsignal.KeyHelper.generateRegistrationId();
 
-      var previousNumber = getNumber(textsecure.storage.get('number_id'));
+      const previousNumber = getNumber(textsecure.storage.get('number_id'));
 
       return this.server
         .confirmCode(
@@ -37881,19 +37845,19 @@ window.textsecure.utils = (function() {
           registrationId,
           deviceName
         )
-        .then(function(response) {
+        .then(response => {
           if (previousNumber && previousNumber !== number) {
-            console.log(
+            window.log.warn(
               'New number is different from old number; deleting all previous data'
             );
 
             return textsecure.storage.protocol.removeAllData().then(
-              function() {
-                console.log('Successfully deleted previous data');
+              () => {
+                window.log.info('Successfully deleted previous data');
                 return response;
               },
-              function(error) {
-                console.log(
+              error => {
+                window.log.error(
                   'Something went wrong deleting data from previous number',
                   error && error.stack ? error.stack : error
                 );
@@ -37905,8 +37869,7 @@ window.textsecure.utils = (function() {
 
           return response;
         })
-        .then(
-          function(response) {
+        .then(response => {
             textsecure.storage.remove('identityKey');
             textsecure.storage.remove('signaling_key');
             textsecure.storage.remove('password');
@@ -37954,13 +37917,12 @@ window.textsecure.utils = (function() {
               'regionCode',
               libphonenumber.util.getRegionCodeForNumber(number)
             );
-          }.bind(this)
-        );
+        });
     },
-    clearSessionsAndPreKeys: function() {
-      var store = textsecure.storage.protocol;
+    clearSessionsAndPreKeys() {
+      const store = textsecure.storage.protocol;
 
-      console.log('clearing all sessions, prekeys, and signed prekeys');
+      window.log.info('clearing all sessions, prekeys, and signed prekeys');
       return Promise.all([
         store.clearPreKeyStore(),
         store.clearSignedPreKeysStore(),
@@ -37968,37 +37930,37 @@ window.textsecure.utils = (function() {
       ]);
     },
     // Takes the same object returned by generateKeys
-    confirmKeys: function(keys) {
-      var store = textsecure.storage.protocol;
-      var key = keys.signedPreKey;
-      var confirmed = true;
+    confirmKeys(keys) {
+      const store = textsecure.storage.protocol;
+      const key = keys.signedPreKey;
+      const confirmed = true;
 
-      console.log('confirmKeys: confirming key', key.keyId);
+      window.log.info('confirmKeys: confirming key', key.keyId);
       return store.storeSignedPreKey(key.keyId, key.keyPair, confirmed);
     },
-    generateKeys: function(count, progressCallback) {
-      if (typeof progressCallback !== 'function') {
-        progressCallback = undefined;
-      }
-      var startId = textsecure.storage.get('maxPreKeyId', 1);
-      var signedKeyId = textsecure.storage.get('signedKeyId', 1);
+    generateKeys(count, providedProgressCallback) {
+      const progressCallback =
+        typeof providedProgressCallback === 'function'
+          ? providedProgressCallback
+          : null;
+      const startId = textsecure.storage.get('maxPreKeyId', 1);
+      const signedKeyId = textsecure.storage.get('signedKeyId', 1);
 
-      if (typeof startId != 'number') {
+      if (typeof startId !== 'number') {
         throw new Error('Invalid maxPreKeyId');
       }
-      if (typeof signedKeyId != 'number') {
+      if (typeof signedKeyId !== 'number') {
         throw new Error('Invalid signedKeyId');
       }
 
-      var store = textsecure.storage.protocol;
-      return store.getIdentityKeyPair().then(
-        function(identityKey) {
-          var result = { preKeys: [], identityKey: identityKey.pubKey };
-          var promises = [];
+      const store = textsecure.storage.protocol;
+      return store.getIdentityKeyPair().then(identityKey => {
+        const result = { preKeys: [], identityKey: identityKey.pubKey };
+        const promises = [];
 
-          for (var keyId = startId; keyId < startId + count; ++keyId) {
+        for (let keyId = startId; keyId < startId + count; keyId += 1) {
             promises.push(
-              libsignal.KeyHelper.generatePreKey(keyId).then(function(res) {
+            libsignal.KeyHelper.generatePreKey(keyId).then(res => {
                 store.storePreKey(res.keyId, res.keyPair);
                 result.preKeys.push({
                   keyId: res.keyId,
@@ -38015,7 +37977,7 @@ window.textsecure.utils = (function() {
             libsignal.KeyHelper.generateSignedPreKey(
               identityKey,
               signedKeyId
-            ).then(function(res) {
+          ).then(res => {
               store.storeSignedPreKey(res.keyId, res.keyPair);
               result.signedPreKey = {
                 keyId: res.keyId,
@@ -38029,28 +37991,24 @@ window.textsecure.utils = (function() {
 
           textsecure.storage.put('maxPreKeyId', startId + count);
           textsecure.storage.put('signedKeyId', signedKeyId + 1);
-          return Promise.all(promises).then(
-            function() {
+        return Promise.all(promises).then(() =>
               // This is primarily for the signed prekey summary it logs out
-              return this.cleanSignedPreKeys().then(function() {
-                return result;
-              });
-            }.bind(this)
+          this.cleanSignedPreKeys().then(() => result)
           );
-        }.bind(this)
-      );
+      });
     },
-    registrationDone: function() {
-      console.log('registration done');
+    registrationDone() {
+      window.log.info('registration done');
       this.dispatchEvent(new Event('registration'));
     },
   });
   textsecure.AccountManager = AccountManager;
 })();
 
-(function() {
-  'use strict';
+/* global window, dcodeIO, Event, textsecure, FileReader, WebSocketResource */
 
+// eslint-disable-next-line func-names
+(function() {
   /*
      * WebSocket-Resources
      *
@@ -38073,7 +38031,7 @@ window.textsecure.utils = (function() {
      *
      */
 
-  var Request = function(options) {
+  const Request = function Request(options) {
     this.verb = options.verb || options.type;
     this.path = options.path || options.url;
     this.body = options.body || options.data;
@@ -38082,7 +38040,7 @@ window.textsecure.utils = (function() {
     this.id = options.id;
 
     if (this.id === undefined) {
-      var bits = new Uint32Array(2);
+      const bits = new Uint32Array(2);
       window.crypto.getRandomValues(bits);
       this.id = dcodeIO.Long.fromBits(bits[0], bits[1], true);
     }
@@ -38092,19 +38050,19 @@ window.textsecure.utils = (function() {
     }
   };
 
-  var IncomingWebSocketRequest = function(options) {
-    var request = new Request(options);
-    var socket = options.socket;
+  const IncomingWebSocketRequest = function IncomingWebSocketRequest(options) {
+    const request = new Request(options);
+    const { socket } = options;
 
     this.verb = request.verb;
     this.path = request.path;
     this.body = request.body;
 
-    this.respond = function(status, message) {
+    this.respond = (status, message) => {
       socket.send(
         new textsecure.protobuf.WebSocketMessage({
           type: textsecure.protobuf.WebSocketMessage.Type.RESPONSE,
-          response: { id: request.id, message: message, status: status },
+          response: { id: request.id, message, status },
         })
           .encode()
           .toArrayBuffer()
@@ -38112,9 +38070,12 @@ window.textsecure.utils = (function() {
     };
   };
 
-  var outgoing = {};
-  var OutgoingWebSocketRequest = function(options, socket) {
-    var request = new Request(options);
+  const outgoing = {};
+  const OutgoingWebSocketRequest = function OutgoingWebSocketRequest(
+    options,
+    socket
+  ) {
+    const request = new Request(options);
     outgoing[request.id] = request;
     socket.send(
       new textsecure.protobuf.WebSocketMessage({
@@ -38131,22 +38092,18 @@ window.textsecure.utils = (function() {
     );
   };
 
-  window.WebSocketResource = function(socket, opts) {
-    opts = opts || {};
-    var handleRequest = opts.handleRequest;
+  window.WebSocketResource = function WebSocketResource(socket, opts = {}) {
+    let { handleRequest } = opts;
     if (typeof handleRequest !== 'function') {
-      handleRequest = function(request) {
-        request.respond(404, 'Not found');
-      };
+      handleRequest = request => request.respond(404, 'Not found');
     }
-    this.sendRequest = function(options) {
-      return new OutgoingWebSocketRequest(options, socket);
-    };
+    this.sendRequest = options => new OutgoingWebSocketRequest(options, socket);
 
-    socket.onmessage = function(socketMessage) {
-      var blob = socketMessage.data;
-      var handleArrayBuffer = function(buffer) {
-        var message = textsecure.protobuf.WebSocketMessage.decode(buffer);
+    // eslint-disable-next-line no-param-reassign
+    socket.onmessage = socketMessage => {
+      const blob = socketMessage.data;
+      const handleArrayBuffer = buffer => {
+        const message = textsecure.protobuf.WebSocketMessage.decode(buffer);
         if (
           message.type === textsecure.protobuf.WebSocketMessage.Type.REQUEST
         ) {
@@ -38156,17 +38113,17 @@ window.textsecure.utils = (function() {
               path: message.request.path,
               body: message.request.body,
               id: message.request.id,
-              socket: socket,
+              socket,
             })
           );
         } else if (
           message.type === textsecure.protobuf.WebSocketMessage.Type.RESPONSE
         ) {
-          var response = message.response;
-          var request = outgoing[response.id];
+          const { response } = message;
+          const request = outgoing[response.id];
           if (request) {
             request.response = response;
-            var callback = request.error;
+            let callback = request.error;
             if (response.status >= 200 && response.status < 300) {
               callback = request.success;
             }
@@ -38175,8 +38132,9 @@ window.textsecure.utils = (function() {
               callback(response.message, response.status, request);
             }
           } else {
-            throw 'Received response for unknown request ' +
-              message.response.id;
+            throw new Error(
+              `Received response for unknown request ${message.response.id}`
+            );
           }
         }
       };
@@ -38184,10 +38142,8 @@ window.textsecure.utils = (function() {
       if (blob instanceof ArrayBuffer) {
         handleArrayBuffer(blob);
       } else {
-        var reader = new FileReader();
-        reader.onload = function() {
-          handleArrayBuffer(reader.result);
-        };
+        const reader = new FileReader();
+        reader.onload = () => handleArrayBuffer(reader.result);
         reader.readAsArrayBuffer(blob);
       }
     };
@@ -38197,7 +38153,7 @@ window.textsecure.utils = (function() {
         path: opts.keepalive.path,
         disconnect: opts.keepalive.disconnect,
       });
-      var resetKeepAliveTimer = this.keepalive.reset.bind(this.keepalive);
+      const resetKeepAliveTimer = this.keepalive.reset.bind(this.keepalive);
       socket.addEventListener('open', resetKeepAliveTimer);
       socket.addEventListener('message', resetKeepAliveTimer);
       socket.addEventListener(
@@ -38206,54 +38162,45 @@ window.textsecure.utils = (function() {
       );
     }
 
-    socket.addEventListener(
-      'close',
-      function() {
+    socket.addEventListener('close', () => {
         this.closed = true;
-      }.bind(this)
-    );
+    });
 
-    this.close = function(code, reason) {
+    this.close = (code = 3000, reason) => {
       if (this.closed) {
         return;
       }
 
-      console.log('WebSocketResource.close()');
-      if (!code) {
-        code = 3000;
-      }
+      window.log.info('WebSocketResource.close()');
       if (this.keepalive) {
         this.keepalive.stop();
       }
 
       socket.close(code, reason);
+      // eslint-disable-next-line no-param-reassign
       socket.onmessage = null;
 
       // On linux the socket can wait a long time to emit its close event if we've
       //   lost the internet connection. On the order of minutes. This speeds that
       //   process up.
-      setTimeout(
-        function() {
+      setTimeout(() => {
           if (this.closed) {
             return;
           }
           this.closed = true;
 
-          console.log('Dispatching our own socket close event');
-          var ev = new Event('close');
+          window.log.warn('Dispatching our own socket close event');
+        const ev = new Event('close');
           ev.code = code;
           ev.reason = reason;
           this.dispatchEvent(ev);
-        }.bind(this),
-        1000
-      );
+      }, 1000);
     };
   };
   window.WebSocketResource.prototype = new textsecure.EventTarget();
 
-  function KeepAlive(websocketResource, opts) {
+  function KeepAlive(websocketResource, opts = {}) {
     if (websocketResource instanceof WebSocketResource) {
-      opts = opts || {};
       this.path = opts.path;
       if (this.path === undefined) {
         this.path = '/';
@@ -38270,36 +38217,30 @@ window.textsecure.utils = (function() {
 
   KeepAlive.prototype = {
     constructor: KeepAlive,
-    stop: function() {
+    stop() {
       clearTimeout(this.keepAliveTimer);
       clearTimeout(this.disconnectTimer);
     },
-    reset: function() {
+    reset() {
       clearTimeout(this.keepAliveTimer);
       clearTimeout(this.disconnectTimer);
-      this.keepAliveTimer = setTimeout(
-        function() {
+      this.keepAliveTimer = setTimeout(() => {
           if (this.disconnect) {
             // automatically disconnect if server doesn't ack
-            this.disconnectTimer = setTimeout(
-              function() {
+          this.disconnectTimer = setTimeout(() => {
                 clearTimeout(this.keepAliveTimer);
                 this.wsr.close(3001, 'No response to keepalive request');
-              }.bind(this),
-              1000
-            );
+          }, 1000);
           } else {
             this.reset();
           }
-          console.log('Sending a keepalive message');
+          window.log.info('Sending a keepalive message');
           this.wsr.sendRequest({
             verb: 'GET',
             path: this.path,
             success: this.reset.bind(this),
           });
-        }.bind(this),
-        55000
-      );
+      }, 55000);
     },
   };
 })();
@@ -38394,7 +38335,7 @@ MessageReceiver.prototype.extend({
     }
   },
   close() {
-    console.log('MessageReceiver.close()');
+    window.log.info('MessageReceiver.close()');
     this.calledClose = true;
 
     // Our WebSocketResource instance will close the socket and emit a 'close' event
@@ -38406,16 +38347,16 @@ MessageReceiver.prototype.extend({
     return this.drain();
   },
   onopen() {
-    console.log('websocket open');
+    window.log.info('websocket open');
   },
   onerror() {
-    console.log('websocket error');
+    window.log.error('websocket error');
   },
   dispatchAndWait(event) {
     return Promise.all(this.dispatchEvent(event));
   },
   onclose(ev) {
-    console.log(
+    window.log.info(
       'websocket closed',
       ev.code,
       ev.reason || '',
@@ -38446,12 +38387,14 @@ MessageReceiver.prototype.extend({
   },
   handleRequest(request) {
     this.incoming = this.incoming || [];
+    const lastPromise = _.last(this.incoming);
+
     // We do the message decryption here, instead of in the ordered pending queue,
     // to avoid exposing the time it took us to process messages through the time-to-ack.
 
     // TODO: handle different types of requests.
     if (request.path !== '/api/v1/message') {
-      console.log('got request', request.verb, request.path);
+      window.log.info('got request', request.verb, request.path);
       request.respond(200, 'OK');
 
       if (request.verb === 'PUT' && request.path === '/api/v1/queue/empty') {
@@ -38473,12 +38416,15 @@ MessageReceiver.prototype.extend({
         }
 
         return this.addToCache(envelope, plaintext).then(
-          () => {
+          async () => {
             request.respond(200, 'OK');
+
+            // To ensure that we queue in the same order we receive messages
+            await lastPromise;
             this.queueEnvelope(envelope);
           },
           error => {
-            console.log(
+            window.log.error(
               'handleRequest error trying to add message to cache:',
               error && error.stack ? error.stack : error
             );
@@ -38487,7 +38433,7 @@ MessageReceiver.prototype.extend({
       })
       .catch(e => {
         request.respond(500, 'Bad encrypted websocket message');
-        console.log(
+        window.log.error(
           'Error handling incoming message:',
           e && e.stack ? e.stack : e
         );
@@ -38523,7 +38469,7 @@ MessageReceiver.prototype.extend({
     this.incoming = [];
 
     const dispatchEmpty = () => {
-      console.log("MessageReceiver: emitting 'empty' event");
+      window.log.info("MessageReceiver: emitting 'empty' event");
       const ev = new Event('empty');
       return this.dispatchAndWait(ev);
     };
@@ -38546,7 +38492,7 @@ MessageReceiver.prototype.extend({
 
     const queueDispatch = () =>
       this.addToQueue(() => {
-        console.log('drained');
+        window.log.info('drained');
       });
 
     // This promise will resolve when there are no more messages to be processed.
@@ -38590,7 +38536,7 @@ MessageReceiver.prototype.extend({
         this.queueEnvelope(envelope);
       }
     } catch (error) {
-      console.log('queueCached error handling item', item.id);
+      window.log.error('queueCached error handling item', item.id);
     }
   },
   getEnvelopeId(envelope) {
@@ -38600,18 +38546,28 @@ MessageReceiver.prototype.extend({
   },
   stringToArrayBuffer(string) {
     // eslint-disable-next-line new-cap
-    return new dcodeIO.ByteBuffer.wrap(string, 'binary').toArrayBuffer();
+    return dcodeIO.ByteBuffer.wrap(string, 'binary').toArrayBuffer();
+  },
+  arrayBufferToString(arrayBuffer) {
+    return dcodeIO.ByteBuffer.wrap(arrayBuffer).toString('binary');
   },
   getAllFromCache() {
-    console.log('getAllFromCache');
+    window.log.info('getAllFromCache');
     return textsecure.storage.unprocessed.getAll().then(items => {
-      console.log('getAllFromCache loaded', items.length, 'saved envelopes');
+      window.log.info(
+        'getAllFromCache loaded',
+        items.length,
+        'saved envelopes'
+      );
 
       return Promise.all(
         _.map(items, item => {
           const attempts = 1 + (item.attempts || 0);
           if (attempts >= 5) {
-            console.log('getAllFromCache final attempt for envelope', item.id);
+            window.log.warn(
+              'getAllFromCache final attempt for envelope',
+              item.id
+            );
             return textsecure.storage.unprocessed.remove(item.id);
           }
           return textsecure.storage.unprocessed.update(item.id, { attempts });
@@ -38619,7 +38575,7 @@ MessageReceiver.prototype.extend({
       ).then(
         () => items,
         error => {
-          console.log(
+          window.log.error(
             'getAllFromCache error updating items after load:',
             error && error.stack ? error.stack : error
           );
@@ -38632,7 +38588,7 @@ MessageReceiver.prototype.extend({
     const id = this.getEnvelopeId(envelope);
     const data = {
       id,
-      envelope: plaintext,
+      envelope: this.arrayBufferToString(plaintext),
       timestamp: Date.now(),
       attempts: 1,
     };
@@ -38641,7 +38597,7 @@ MessageReceiver.prototype.extend({
   updateCache(envelope, plaintext) {
     const id = this.getEnvelopeId(envelope);
     const data = {
-      decrypted: plaintext,
+      decrypted: this.arrayBufferToString(plaintext),
     };
     return textsecure.storage.unprocessed.update(id, data);
   },
@@ -38651,7 +38607,7 @@ MessageReceiver.prototype.extend({
   },
   queueDecryptedEnvelope(envelope, plaintext) {
     const id = this.getEnvelopeId(envelope);
-    console.log('queueing decrypted envelope', id);
+    window.log.info('queueing decrypted envelope', id);
 
     const task = this.handleDecryptedEnvelope.bind(this, envelope, plaintext);
     const taskWithTimeout = textsecure.createTaskWithTimeout(
@@ -38661,7 +38617,7 @@ MessageReceiver.prototype.extend({
     const promise = this.addToQueue(taskWithTimeout);
 
     return promise.catch(error => {
-      console.log(
+      window.log.error(
         'queueDecryptedEnvelope error handling envelope',
         id,
         ':',
@@ -38671,7 +38627,7 @@ MessageReceiver.prototype.extend({
   },
   queueEnvelope(envelope) {
     const id = this.getEnvelopeId(envelope);
-    console.log('queueing envelope', id);
+    window.log.info('queueing envelope', id);
 
     const task = this.handleEnvelope.bind(this, envelope);
     const taskWithTimeout = textsecure.createTaskWithTimeout(
@@ -38681,7 +38637,7 @@ MessageReceiver.prototype.extend({
     const promise = this.addToQueue(taskWithTimeout);
 
     return promise.catch(error => {
-      console.log(
+      window.log.error(
         'queueEnvelope error handling envelope',
         id,
         ':',
@@ -38788,13 +38744,13 @@ MessageReceiver.prototype.extend({
 
     switch (envelope.type) {
       case textsecure.protobuf.Envelope.Type.CIPHERTEXT:
-        console.log('message from', this.getEnvelopeId(envelope));
+        window.log.info('message from', this.getEnvelopeId(envelope));
         promise = sessionCipher
           .decryptWhisperMessage(ciphertext)
           .then(this.unpad);
         break;
       case textsecure.protobuf.Envelope.Type.PREKEY_BUNDLE:
-        console.log('prekey message from', this.getEnvelopeId(envelope));
+        window.log.info('prekey message from', this.getEnvelopeId(envelope));
         promise = this.decryptPreKeyWhisperMessage(
           ciphertext,
           sessionCipher,
@@ -38863,7 +38819,7 @@ MessageReceiver.prototype.extend({
         this.updateCache(envelope, plaintext).then(
           () => plaintext,
           error => {
-            console.log(
+            window.log.error(
               'decrypt failed to save decrypted message contents to cache:',
               error && error.stack ? error.stack : error
             );
@@ -38942,7 +38898,7 @@ MessageReceiver.prototype.extend({
     );
   },
   handleDataMessage(envelope, msg) {
-    console.log('data message from', this.getEnvelopeId(envelope));
+    window.log.info('data message from', this.getEnvelopeId(envelope));
     let p = Promise.resolve();
     // eslint-disable-next-line no-bitwise
     if (msg.flags & textsecure.protobuf.DataMessage.Flags.END_SESSION) {
@@ -38996,7 +38952,7 @@ MessageReceiver.prototype.extend({
     throw new Error('Unsupported content message');
   },
   handleCallMessage(envelope) {
-    console.log('call message from', this.getEnvelopeId(envelope));
+    window.log.info('call message from', this.getEnvelopeId(envelope));
     this.removeFromCache(envelope);
   },
   handleReceiptMessage(envelope, receiptMessage) {
@@ -39068,7 +39024,7 @@ MessageReceiver.prototype.extend({
     return this.dispatchEvent(ev);
   },
   handleNullMessage(envelope) {
-    console.log('null message from', this.getEnvelopeId(envelope));
+    window.log.info('null message from', this.getEnvelopeId(envelope));
     this.removeFromCache(envelope);
   },
   handleSyncMessage(envelope, syncMessage) {
@@ -39085,7 +39041,7 @@ MessageReceiver.prototype.extend({
         ? `group(${sentMessage.message.group.id.toBinary()})`
         : sentMessage.destination;
 
-      console.log(
+      window.log.info(
         'sent message to',
         to,
         sentMessage.timestamp.toNumber(),
@@ -39106,10 +39062,10 @@ MessageReceiver.prototype.extend({
     } else if (syncMessage.blocked) {
       return this.handleBlocked(envelope, syncMessage.blocked);
     } else if (syncMessage.request) {
-      console.log('Got SyncMessage Request');
+      window.log.info('Got SyncMessage Request');
       return this.removeFromCache(envelope);
     } else if (syncMessage.read && syncMessage.read.length) {
-      console.log('read messages from', this.getEnvelopeId(envelope));
+      window.log.info('read messages from', this.getEnvelopeId(envelope));
       return this.handleRead(envelope, syncMessage.read);
     } else if (syncMessage.verified) {
       return this.handleVerified(envelope, syncMessage.verified);
@@ -39151,7 +39107,7 @@ MessageReceiver.prototype.extend({
     return Promise.all(results);
   },
   handleContacts(envelope, contacts) {
-    console.log('contact sync');
+    window.log.info('contact sync');
     const attachmentPointer = contacts.blob;
     return this.handleAttachment(attachmentPointer).then(() => {
       const results = [];
@@ -39174,7 +39130,7 @@ MessageReceiver.prototype.extend({
     });
   },
   handleGroups(envelope, groups) {
-    console.log('group sync');
+    window.log.info('group sync');
     const attachmentPointer = groups.blob;
     return this.handleAttachment(attachmentPointer).then(() => {
       const groupBuffer = new GroupBuffer(attachmentPointer.data);
@@ -39212,7 +39168,7 @@ MessageReceiver.prototype.extend({
             return this.dispatchAndWait(ev);
           })
           .catch(e => {
-            console.log('error processing group', e);
+            window.log.error('error processing group', e);
           });
         groupDetails = groupBuffer.next();
         promises.push(promise);
@@ -39226,7 +39182,7 @@ MessageReceiver.prototype.extend({
     });
   },
   handleBlocked(envelope, blocked) {
-    console.log('Setting these numbers as blocked:', blocked.numbers);
+    window.log.info('Setting these numbers as blocked:', blocked.numbers);
     textsecure.storage.put('blocked', blocked.numbers);
   },
   isBlocked(number) {
@@ -39310,7 +39266,7 @@ MessageReceiver.prototype.extend({
       address,
       options
     );
-    console.log('retrying prekey whisper message');
+    window.log.info('retrying prekey whisper message');
     return this.decryptPreKeyWhisperMessage(
       ciphertext,
       sessionCipher,
@@ -39356,7 +39312,7 @@ MessageReceiver.prototype.extend({
     });
   },
   async handleEndSession(number) {
-    console.log('got end session');
+    window.log.info('got end session');
     const deviceIds = await textsecure.storage.protocol.getDeviceIds(number);
 
     return Promise.all(
@@ -39367,7 +39323,7 @@ MessageReceiver.prototype.extend({
           address
         );
 
-        console.log('deleting sessions for', address.toString());
+        window.log.info('deleting sessions for', address.toString());
         return sessionCipher.deleteAllSessionsForDevice();
       })
     );
@@ -39426,7 +39382,7 @@ MessageReceiver.prototype.extend({
               textsecure.protobuf.GroupContext.Type.UPDATE
             ) {
               decrypted.group.members = [source];
-              console.log('Got message for unknown group');
+              window.log.warn('Got message for unknown group');
             }
             return textsecure.storage.groups.createNewGroup(
               decrypted.group.members,
@@ -39437,7 +39393,7 @@ MessageReceiver.prototype.extend({
 
           if (fromIndex < 0) {
             // TODO: This could be indication of a race...
-            console.log(
+            window.log.warn(
               'Sender was not a member of the group they were sending from'
             );
           }
@@ -39492,7 +39448,7 @@ MessageReceiver.prototype.extend({
           //   this message entirely, like we do for full attachments.
           promises.push(
             this.handleAttachment(avatar.avatar).catch(error => {
-              console.log(
+              window.log.error(
                 'Problem loading avatar for contact',
                 error && error.stack ? error.stack : error
               );
@@ -39518,7 +39474,7 @@ MessageReceiver.prototype.extend({
           //   this message entirely, like we do for full attachments.
           promises.push(
             this.handleAttachment(thumbnail).catch(error => {
-              console.log(
+              window.log.error(
                 'Problem loading thumbnail for quote',
                 error && error.stack ? error.stack : error
               );
@@ -39556,16 +39512,15 @@ textsecure.MessageReceiver = function MessageReceiverWrapper(
   this.getStatus = messageReceiver.getStatus.bind(messageReceiver);
   this.close = messageReceiver.close.bind(messageReceiver);
   messageReceiver.connect();
-
-  textsecure.replay.registerFunction(
-    messageReceiver.tryMessageAgain.bind(messageReceiver),
-    textsecure.replay.Type.INIT_SESSION
-  );
 };
 
 textsecure.MessageReceiver.prototype = {
   constructor: textsecure.MessageReceiver,
 };
+
+/* global textsecure, libsignal, window, btoa */
+
+/* eslint-disable more/no-then */
 
 function OutgoingMessage(
   server,
@@ -39576,8 +39531,9 @@ function OutgoingMessage(
   callback
 ) {
   if (message instanceof textsecure.protobuf.DataMessage) {
-    var content = new textsecure.protobuf.Content();
+    const content = new textsecure.protobuf.Content();
     content.dataMessage = message;
+    // eslint-disable-next-line no-param-reassign
     message = content;
   }
   this.server = server;
@@ -39594,8 +39550,8 @@ function OutgoingMessage(
 
 OutgoingMessage.prototype = {
   constructor: OutgoingMessage,
-  numberCompleted: function() {
-    this.numbersCompleted++;
+  numberCompleted() {
+    this.numbersCompleted += 1;
     if (this.numbersCompleted >= this.numbers.length) {
       this.callback({
         successfulNumbers: this.successfulNumbers,
@@ -39603,8 +39559,9 @@ OutgoingMessage.prototype = {
       });
     }
   },
-  registerError: function(number, reason, error) {
+  registerError(number, reason, error) {
     if (!error || (error.name === 'HTTPError' && error.code !== 404)) {
+      // eslint-disable-next-line no-param-reassign
       error = new textsecure.OutgoingMessageError(
         number,
         this.message.toArrayBuffer(),
@@ -39613,16 +39570,17 @@ OutgoingMessage.prototype = {
       );
     }
 
+    // eslint-disable-next-line no-param-reassign
     error.number = number;
+    // eslint-disable-next-line no-param-reassign
     error.reason = reason;
     this.errors[this.errors.length] = error;
     this.numberCompleted();
   },
-  reloadDevicesAndSend: function(number, recurse) {
-    return function() {
-      return textsecure.storage.protocol.getDeviceIds(number).then(
-        function(deviceIds) {
-          if (deviceIds.length == 0) {
+  reloadDevicesAndSend(number, recurse) {
+    return () =>
+      textsecure.storage.protocol.getDeviceIds(number).then(deviceIds => {
+        if (deviceIds.length === 0) {
             return this.registerError(
               number,
               'Got empty device list when loading device keys',
@@ -39630,85 +39588,76 @@ OutgoingMessage.prototype = {
             );
           }
           return this.doSendMessage(number, deviceIds, recurse);
-        }.bind(this)
-      );
-    }.bind(this);
+      });
   },
 
-  getKeysForNumber: function(number, updateDevices) {
-    var handleResult = function(response) {
-      return Promise.all(
-        response.devices.map(
-          function(device) {
+  getKeysForNumber(number, updateDevices) {
+    const handleResult = response =>
+      Promise.all(
+        response.devices.map(device => {
+          // eslint-disable-next-line no-param-reassign
             device.identityKey = response.identityKey;
             if (
               updateDevices === undefined ||
               updateDevices.indexOf(device.deviceId) > -1
             ) {
-              var address = new libsignal.SignalProtocolAddress(
+            const address = new libsignal.SignalProtocolAddress(
                 number,
                 device.deviceId
               );
-              var builder = new libsignal.SessionBuilder(
+            const builder = new libsignal.SessionBuilder(
                 textsecure.storage.protocol,
                 address
               );
               if (device.registrationId === 0) {
-                console.log('device registrationId 0!');
+                window.log.info('device registrationId 0!');
               }
-              return builder.processPreKey(device).catch(
-                function(error) {
+            return builder.processPreKey(device).catch(error => {
                   if (error.message === 'Identity key changed') {
+                // eslint-disable-next-line no-param-reassign
                     error.timestamp = this.timestamp;
+                // eslint-disable-next-line no-param-reassign
                     error.originalMessage = this.message.toArrayBuffer();
+                // eslint-disable-next-line no-param-reassign
                     error.identityKey = device.identityKey;
                   }
                   throw error;
-                }.bind(this)
-              );
+            });
             }
-          }.bind(this)
-        )
+
+          return null;
+        })
       );
-    }.bind(this);
 
     if (updateDevices === undefined) {
       return this.server.getKeysForNumber(number).then(handleResult);
-    } else {
-      var promise = Promise.resolve();
-      updateDevices.forEach(
-        function(device) {
-          promise = promise.then(
-            function() {
-              return this.server
+    }
+    let promise = Promise.resolve();
+    updateDevices.forEach(device => {
+      promise = promise.then(() =>
+        this.server
                 .getKeysForNumber(number, device)
                 .then(handleResult)
-                .catch(
-                  function(e) {
+          .catch(e => {
                     if (e.name === 'HTTPError' && e.code === 404) {
                       if (device !== 1) {
                         return this.removeDeviceIdsForNumber(number, [device]);
-                      } else {
+              }
                         throw new textsecure.UnregisteredUserError(number, e);
-                      }
                     } else {
                       throw e;
                     }
-                  }.bind(this)
-                );
-            }.bind(this)
-          );
-        }.bind(this)
+          })
       );
+    });
 
       return promise;
-    }
   },
 
-  transmitMessage: function(number, jsonData, timestamp) {
+  transmitMessage(number, jsonData, timestamp) {
     return this.server
       .sendMessages(number, jsonData, timestamp, this.silent)
-      .catch(function(e) {
+      .catch(e => {
         if (e.name === 'HTTPError' && (e.code !== 409 && e.code !== 410)) {
           // 409 and 410 should bubble and be handled by doSendMessage
           // 404 should throw UnregisteredUserError
@@ -39727,20 +39676,20 @@ OutgoingMessage.prototype = {
       });
   },
 
-  getPaddedMessageLength: function(messageLength) {
-    var messageLengthWithTerminator = messageLength + 1;
-    var messagePartCount = Math.floor(messageLengthWithTerminator / 160);
+  getPaddedMessageLength(messageLength) {
+    const messageLengthWithTerminator = messageLength + 1;
+    let messagePartCount = Math.floor(messageLengthWithTerminator / 160);
 
     if (messageLengthWithTerminator % 160 !== 0) {
-      messagePartCount++;
+      messagePartCount += 1;
     }
 
     return messagePartCount * 160;
   },
 
-  getPlaintext: function() {
+  getPlaintext() {
     if (!this.plaintext) {
-      var messageBuffer = this.message.toArrayBuffer();
+      const messageBuffer = this.message.toArrayBuffer();
       this.plaintext = new Uint8Array(
         this.getPaddedMessageLength(messageBuffer.byteLength + 1) - 1
       );
@@ -39750,56 +39699,47 @@ OutgoingMessage.prototype = {
     return this.plaintext;
   },
 
-  doSendMessage: function(number, deviceIds, recurse) {
-    var ciphers = {};
-    var plaintext = this.getPlaintext();
+  doSendMessage(number, deviceIds, recurse) {
+    const ciphers = {};
+    const plaintext = this.getPlaintext();
 
     return Promise.all(
-      deviceIds.map(
-        function(deviceId) {
-          var address = new libsignal.SignalProtocolAddress(number, deviceId);
+      deviceIds.map(deviceId => {
+        const address = new libsignal.SignalProtocolAddress(number, deviceId);
 
-          var ourNumber = textsecure.storage.user.getNumber();
-          var options = {};
+        const ourNumber = textsecure.storage.user.getNumber();
+        const options = {};
 
           // No limit on message keys if we're communicating with our other devices
           if (ourNumber === number) {
             options.messageKeysLimit = false;
           }
 
-          var sessionCipher = new libsignal.SessionCipher(
+        const sessionCipher = new libsignal.SessionCipher(
             textsecure.storage.protocol,
             address,
             options
           );
           ciphers[address.getDeviceId()] = sessionCipher;
-          return sessionCipher.encrypt(plaintext).then(function(ciphertext) {
-            return {
+        return sessionCipher.encrypt(plaintext).then(ciphertext => ({
               type: ciphertext.type,
               destinationDeviceId: address.getDeviceId(),
               destinationRegistrationId: ciphertext.registrationId,
               content: btoa(ciphertext.body),
-            };
-          });
-        }.bind(this)
-      )
+        }));
+      })
     )
-      .then(
-        function(jsonData) {
-          return this.transmitMessage(number, jsonData, this.timestamp).then(
-            function() {
+      .then(jsonData =>
+        this.transmitMessage(number, jsonData, this.timestamp).then(() => {
               this.successfulNumbers[this.successfulNumbers.length] = number;
               this.numberCompleted();
-            }.bind(this)
-          );
-        }.bind(this)
+        })
       )
-      .catch(
-        function(error) {
+      .catch(error => {
           if (
             error instanceof Error &&
-            error.name == 'HTTPError' &&
-            (error.code == 410 || error.code == 409)
+          error.name === 'HTTPError' &&
+          (error.code === 410 || error.code === 409)
           ) {
             if (!recurse)
               return this.registerError(
@@ -39808,97 +39748,90 @@ OutgoingMessage.prototype = {
                 error
               );
 
-            var p;
-            if (error.code == 409) {
+          let p;
+          if (error.code === 409) {
               p = this.removeDeviceIdsForNumber(
                 number,
                 error.response.extraDevices
               );
             } else {
               p = Promise.all(
-                error.response.staleDevices.map(function(deviceId) {
-                  return ciphers[deviceId].closeOpenSessionForDevice();
-                })
+              error.response.staleDevices.map(deviceId =>
+                ciphers[deviceId].closeOpenSessionForDevice()
+              )
               );
             }
 
-            return p.then(
-              function() {
-                var resetDevices =
-                  error.code == 410
+          return p.then(() => {
+            const resetDevices =
+              error.code === 410
                     ? error.response.staleDevices
                     : error.response.missingDevices;
                 return this.getKeysForNumber(number, resetDevices).then(
-                  this.reloadDevicesAndSend(number, error.code == 409)
-                );
-              }.bind(this)
+              this.reloadDevicesAndSend(number, error.code === 409)
             );
+          });
           } else if (error.message === 'Identity key changed') {
+          // eslint-disable-next-line no-param-reassign
             error.timestamp = this.timestamp;
+          // eslint-disable-next-line no-param-reassign
             error.originalMessage = this.message.toArrayBuffer();
-            console.log(
+            window.log.error(
               'Got "key changed" error from encrypt - no identityKey for application layer',
               number,
               deviceIds
             );
             throw error;
           } else {
-            this.registerError(
-              number,
-              'Failed to create or send message',
-              error
-            );
+          this.registerError(number, 'Failed to create or send message', error);
           }
-        }.bind(this)
-      );
+
+        return null;
+      });
   },
 
-  getStaleDeviceIdsForNumber: function(number) {
-    return textsecure.storage.protocol
-      .getDeviceIds(number)
-      .then(function(deviceIds) {
+  getStaleDeviceIdsForNumber(number) {
+    return textsecure.storage.protocol.getDeviceIds(number).then(deviceIds => {
         if (deviceIds.length === 0) {
           return [1];
         }
-        var updateDevices = [];
+      const updateDevices = [];
         return Promise.all(
-          deviceIds.map(function(deviceId) {
-            var address = new libsignal.SignalProtocolAddress(number, deviceId);
-            var sessionCipher = new libsignal.SessionCipher(
+        deviceIds.map(deviceId => {
+          const address = new libsignal.SignalProtocolAddress(number, deviceId);
+          const sessionCipher = new libsignal.SessionCipher(
               textsecure.storage.protocol,
               address
             );
-            return sessionCipher.hasOpenSession().then(function(hasSession) {
+          return sessionCipher.hasOpenSession().then(hasSession => {
               if (!hasSession) {
                 updateDevices.push(deviceId);
               }
             });
           })
-        ).then(function() {
-          return updateDevices;
-        });
+      ).then(() => updateDevices);
       });
   },
 
-  removeDeviceIdsForNumber: function(number, deviceIdsToRemove) {
-    var promise = Promise.resolve();
-    for (var j in deviceIdsToRemove) {
-      promise = promise.then(function() {
-        var encodedNumber = number + '.' + deviceIdsToRemove[j];
+  removeDeviceIdsForNumber(number, deviceIdsToRemove) {
+    let promise = Promise.resolve();
+    // eslint-disable-next-line no-restricted-syntax, guard-for-in
+    for (const j in deviceIdsToRemove) {
+      promise = promise.then(() => {
+        const encodedNumber = `${number}.${deviceIdsToRemove[j]}`;
         return textsecure.storage.protocol.removeSession(encodedNumber);
       });
     }
     return promise;
   },
 
-  sendToNumber: function(number) {
-    return this.getStaleDeviceIdsForNumber(number).then(
-      function(updateDevices) {
-        return this.getKeysForNumber(number, updateDevices)
+  sendToNumber(number) {
+    return this.getStaleDeviceIdsForNumber(number).then(updateDevices =>
+      this.getKeysForNumber(number, updateDevices)
           .then(this.reloadDevicesAndSend(number, true))
-          .catch(
-            function(error) {
+        .catch(error => {
               if (error.message === 'Identity key changed') {
+            // eslint-disable-next-line no-param-reassign
                 error = new textsecure.OutgoingIdentityKeyError(
                   number,
                   error.originalMessage,
@@ -39909,24 +39842,26 @@ OutgoingMessage.prototype = {
               } else {
                 this.registerError(
                   number,
-                  'Failed to retrieve new device keys for number ' + number,
+              `Failed to retrieve new device keys for number ${number}`,
                   error
                 );
               }
-            }.bind(this)
-          );
-      }.bind(this)
+        })
     );
   },
 };
+
+/* global textsecure, WebAPI, libsignal, OutgoingMessage, window */
+
+/* eslint-disable more/no-then, no-bitwise */
 
 function stringToArrayBuffer(str) {
   if (typeof str !== 'string') {
     throw new Error('Passed non-string to stringToArrayBuffer');
   }
-  var res = new ArrayBuffer(str.length);
-  var uint = new Uint8Array(res);
-  for (var i = 0; i < str.length; i++) {
+  const res = new ArrayBuffer(str.length);
+  const uint = new Uint8Array(res);
+  for (let i = 0; i < str.length; i += 1) {
     uint[i] = str.charCodeAt(i);
   }
   return res;
@@ -40000,14 +39935,14 @@ function Message(options) {
 
 Message.prototype = {
   constructor: Message,
-  isEndSession: function() {
+  isEndSession() {
     return this.flags & textsecure.protobuf.DataMessage.Flags.END_SESSION;
   },
-  toProto: function() {
+  toProto() {
     if (this.dataMessage instanceof textsecure.protobuf.DataMessage) {
       return this.dataMessage;
     }
-    var proto = new textsecure.protobuf.DataMessage();
+    const proto = new textsecure.protobuf.DataMessage();
     if (this.body) {
       proto.body = this.body;
     }
@@ -40021,20 +39956,17 @@ Message.prototype = {
       proto.group.type = this.group.type;
     }
     if (this.quote) {
-      var QuotedAttachment =
-        textsecure.protobuf.DataMessage.Quote.QuotedAttachment;
-      var Quote = textsecure.protobuf.DataMessage.Quote;
+      const { QuotedAttachment } = textsecure.protobuf.DataMessage.Quote;
+      const { Quote } = textsecure.protobuf.DataMessage;
 
       proto.quote = new Quote();
-      var quote = proto.quote;
+      const { quote } = proto;
 
       quote.id = this.quote.id;
       quote.author = this.quote.author;
       quote.text = this.quote.text;
-      quote.attachments = (this.quote.attachments || []).map(function(
-        attachment
-      ) {
-        var quotedAttachment = new QuotedAttachment();
+      quote.attachments = (this.quote.attachments || []).map(attachment => {
+        const quotedAttachment = new QuotedAttachment();
 
         quotedAttachment.contentType = attachment.contentType;
         quotedAttachment.fileName = attachment.fileName;
@@ -40056,7 +39988,7 @@ Message.prototype = {
     this.dataMessage = proto;
     return proto;
   },
-  toArrayBuffer: function() {
+  toArrayBuffer() {
     return this.toProto().toArrayBuffer();
   },
 };
@@ -40070,7 +40002,7 @@ MessageSender.prototype = {
   constructor: MessageSender,
 
   //  makeAttachmentPointer :: Attachment -> Promise AttachmentPointerProto
-  makeAttachmentPointer: function(attachment) {
+  makeAttachmentPointer(attachment) {
     if (typeof attachment !== 'object' || attachment == null) {
       return Promise.resolve(undefined);
     }
@@ -40081,23 +40013,19 @@ MessageSender.prototype = {
     ) {
       return Promise.reject(
         new TypeError(
-          '`attachment.data` must be an `ArrayBuffer` or `ArrayBufferView`; got: ' +
-            typeof attachment.data
+          `\`attachment.data\` must be an \`ArrayBuffer\` or \`ArrayBufferView\`; got: ${typeof attachment.data}`
         )
       );
     }
 
-    var proto = new textsecure.protobuf.AttachmentPointer();
+    const proto = new textsecure.protobuf.AttachmentPointer();
     proto.key = libsignal.crypto.getRandomBytes(64);
 
-    var iv = libsignal.crypto.getRandomBytes(16);
+    const iv = libsignal.crypto.getRandomBytes(16);
     return textsecure.crypto
       .encryptAttachment(attachment.data, proto.key, iv)
-      .then(
-        function(result) {
-          return this.server
-            .putAttachment(result.ciphertext)
-            .then(function(id) {
+      .then(result =>
+        this.server.putAttachment(result.ciphertext).then(id => {
               proto.id = id;
               proto.contentType = attachment.contentType;
               proto.digest = result.digest;
@@ -40111,19 +40039,18 @@ MessageSender.prototype = {
                 proto.flags = attachment.flags;
               }
               return proto;
-            });
-        }.bind(this)
+        })
       );
   },
 
-  retransmitMessage: function(number, jsonData, timestamp) {
-    var outgoing = new OutgoingMessage(this.server);
+  retransmitMessage(number, jsonData, timestamp) {
+    const outgoing = new OutgoingMessage(this.server);
     return outgoing.transmitMessage(number, jsonData, timestamp);
   },
 
-  validateRetryContentMessage: function(content) {
+  validateRetryContentMessage(content) {
     // We want at least one field set, but not more than one
-    var count = 0;
+    let count = 0;
     count += content.syncMessage ? 1 : 0;
     count += content.dataMessage ? 1 : 0;
     count += content.callMessage ? 1 : 0;
@@ -40133,7 +40060,7 @@ MessageSender.prototype = {
     }
 
     // It's most likely that dataMessage will be populated, so we look at it in detail
-    var data = content.dataMessage;
+    const data = content.dataMessage;
     if (
       data &&
       !data.attachments.length &&
@@ -40148,12 +40075,13 @@ MessageSender.prototype = {
     return true;
   },
 
-  getRetryProto: function(message, timestamp) {
-    // If message was sent before v0.41.3 was released on Aug 7, then it was most certainly a DataMessage
+  getRetryProto(message, timestamp) {
+    // If message was sent before v0.41.3 was released on Aug 7, then it was most
+    //   certainly a DataMessage
     //
     // var d = new Date('2017-08-07T07:00:00.000Z');
     // d.getTime();
-    var august7 = 1502089200000;
+    const august7 = 1502089200000;
     if (timestamp < august7) {
       return textsecure.protobuf.DataMessage.decode(message);
     }
@@ -40161,7 +40089,7 @@ MessageSender.prototype = {
     // This is ugly. But we don't know what kind of proto we need to decode...
     try {
       // Simply decoding as a Content message may throw
-      var proto = textsecure.protobuf.Content.decode(message);
+      const proto = textsecure.protobuf.Content.decode(message);
 
       // But it might also result in an invalid object, so we try to detect that
       if (this.validateRetryContentMessage(proto)) {
@@ -40175,39 +40103,40 @@ MessageSender.prototype = {
     }
   },
 
-  tryMessageAgain: function(number, encodedMessage, timestamp) {
-    var proto = this.getRetryProto(encodedMessage, timestamp);
+  tryMessageAgain(number, encodedMessage, timestamp) {
+    const proto = this.getRetryProto(encodedMessage, timestamp);
     return this.sendIndividualProto(number, proto, timestamp);
   },
 
-  queueJobForNumber: function(number, runJob) {
-    var taskWithTimeout = textsecure.createTaskWithTimeout(
+  queueJobForNumber(number, runJob) {
+    const taskWithTimeout = textsecure.createTaskWithTimeout(
       runJob,
-      'queueJobForNumber ' + number
+      `queueJobForNumber ${number}`
     );
 
-    var runPrevious = this.pendingMessages[number] || Promise.resolve();
-    var runCurrent = (this.pendingMessages[number] = runPrevious.then(
+    const runPrevious = this.pendingMessages[number] || Promise.resolve();
+    this.pendingMessages[number] = runPrevious.then(
       taskWithTimeout,
       taskWithTimeout
-    ));
-    runCurrent.then(
-      function() {
+    );
+
+    const runCurrent = this.pendingMessages[number];
+    runCurrent.then(() => {
         if (this.pendingMessages[number] === runCurrent) {
           delete this.pendingMessages[number];
         }
-      }.bind(this)
-    );
+    });
   },
 
-  uploadAttachments: function(message) {
+  uploadAttachments(message) {
     return Promise.all(
       message.attachments.map(this.makeAttachmentPointer.bind(this))
     )
-      .then(function(attachmentPointers) {
+      .then(attachmentPointers => {
+        // eslint-disable-next-line no-param-reassign
         message.attachmentPointers = attachmentPointers;
       })
-      .catch(function(error) {
+      .catch(error => {
         if (error instanceof Error && error.name === 'HTTPError') {
           throw new textsecure.MessageError(message, error);
         } else {
@@ -40216,26 +40145,27 @@ MessageSender.prototype = {
       });
   },
 
-  uploadThumbnails: function(message) {
-    var makePointer = this.makeAttachmentPointer.bind(this);
-    var quote = message.quote;
+  uploadThumbnails(message) {
+    const makePointer = this.makeAttachmentPointer.bind(this);
+    const { quote } = message;
 
     if (!quote || !quote.attachments || quote.attachments.length === 0) {
       return Promise.resolve();
     }
 
     return Promise.all(
-      quote.attachments.map(function(attachment) {
-        const thumbnail = attachment.thumbnail;
+      quote.attachments.map(attachment => {
+        const { thumbnail } = attachment;
         if (!thumbnail) {
-          return;
+          return null;
         }
 
-        return makePointer(thumbnail).then(function(pointer) {
+        return makePointer(thumbnail).then(pointer => {
+          // eslint-disable-next-line no-param-reassign
           attachment.attachmentPointer = pointer;
         });
       })
-    ).catch(function(error) {
+    ).catch(error => {
       if (error instanceof Error && error.name === 'HTTPError') {
         throw new textsecure.MessageError(message, error);
       } else {
@@ -40244,20 +40174,19 @@ MessageSender.prototype = {
     });
   },
 
-  sendMessage: function(attrs) {
-    var message = new Message(attrs);
+  sendMessage(attrs) {
+    const message = new Message(attrs);
     return Promise.all([
       this.uploadAttachments(message),
       this.uploadThumbnails(message),
     ]).then(
-      function() {
-        return new Promise(
-          function(resolve, reject) {
+      () =>
+        new Promise((resolve, reject) => {
             this.sendMessageProto(
               message.timestamp,
               message.recipients,
               message.toProto(),
-              function(res) {
+            res => {
                 res.dataMessage = message.toArrayBuffer();
                 if (res.errors.length > 0) {
                   reject(res);
@@ -40266,13 +40195,11 @@ MessageSender.prototype = {
                 }
               }
             );
-          }.bind(this)
-        );
-      }.bind(this)
+        })
     );
   },
-  sendMessageProto: function(timestamp, numbers, message, callback, silent) {
-    var rejections = textsecure.storage.get('signedKeyRotationRejected', 0);
+  sendMessageProto(timestamp, numbers, message, callback, silent) {
+    const rejections = textsecure.storage.get('signedKeyRotationRejected', 0);
     if (rejections > 5) {
       throw new textsecure.SignedPreKeyRotationError(
         numbers,
@@ -40281,7 +40208,7 @@ MessageSender.prototype = {
       );
     }
 
-    var outgoing = new OutgoingMessage(
+    const outgoing = new OutgoingMessage(
       this.server,
       timestamp,
       numbers,
@@ -40290,34 +40217,27 @@ MessageSender.prototype = {
       callback
     );
 
-    numbers.forEach(
-      function(number) {
-        this.queueJobForNumber(number, function() {
-          return outgoing.sendToNumber(number);
+    numbers.forEach(number => {
+      this.queueJobForNumber(number, () => outgoing.sendToNumber(number));
         });
-      }.bind(this)
-    );
   },
 
-  retrySendMessageProto: function(numbers, encodedMessage, timestamp) {
-    var proto = textsecure.protobuf.DataMessage.decode(encodedMessage);
-    return new Promise(
-      function(resolve, reject) {
-        this.sendMessageProto(timestamp, numbers, proto, function(res) {
+  retrySendMessageProto(numbers, encodedMessage, timestamp) {
+    const proto = textsecure.protobuf.DataMessage.decode(encodedMessage);
+    return new Promise((resolve, reject) => {
+      this.sendMessageProto(timestamp, numbers, proto, res => {
           if (res.errors.length > 0) {
             reject(res);
           } else {
             resolve(res);
           }
         });
-      }.bind(this)
-    );
+    });
   },
 
-  sendIndividualProto: function(number, proto, timestamp, silent) {
-    return new Promise(
-      function(resolve, reject) {
-        var callback = function(res) {
+  sendIndividualProto(number, proto, timestamp, silent) {
+    return new Promise((resolve, reject) => {
+      const callback = res => {
           if (res.errors.length > 0) {
             reject(res);
           } else {
@@ -40325,16 +40245,15 @@ MessageSender.prototype = {
           }
         };
         this.sendMessageProto(timestamp, [number], proto, callback, silent);
-      }.bind(this)
-    );
+    });
   },
 
-  createSyncMessage: function() {
-    var syncMessage = new textsecure.protobuf.SyncMessage();
+  createSyncMessage() {
+    const syncMessage = new textsecure.protobuf.SyncMessage();
 
     // Generate a random int from 1 and 512
-    var buffer = libsignal.crypto.getRandomBytes(1);
-    var paddingLength = (new Uint8Array(buffer)[0] & 0x1ff) + 1;
+    const buffer = libsignal.crypto.getRandomBytes(1);
+    const paddingLength = (new Uint8Array(buffer)[0] & 0x1ff) + 1;
 
     // Generate a random padding buffer of the chosen size
     syncMessage.padding = libsignal.crypto.getRandomBytes(paddingLength);
@@ -40342,22 +40261,22 @@ MessageSender.prototype = {
     return syncMessage;
   },
 
-  sendSyncMessage: function(
+  sendSyncMessage(
     encodedDataMessage,
     timestamp,
     destination,
     expirationStartTimestamp
   ) {
-    var myNumber = textsecure.storage.user.getNumber();
-    var myDevice = textsecure.storage.user.getDeviceId();
-    if (myDevice == 1) {
+    const myNumber = textsecure.storage.user.getNumber();
+    const myDevice = textsecure.storage.user.getDeviceId();
+    if (myDevice === 1 || myDevice === '1') {
       return Promise.resolve();
     }
 
-    var dataMessage = textsecure.protobuf.DataMessage.decode(
+    const dataMessage = textsecure.protobuf.DataMessage.decode(
       encodedDataMessage
     );
-    var sentMessage = new textsecure.protobuf.SyncMessage.Sent();
+    const sentMessage = new textsecure.protobuf.SyncMessage.Sent();
     sentMessage.timestamp = timestamp;
     sentMessage.message = dataMessage;
     if (destination) {
@@ -40366,12 +40285,12 @@ MessageSender.prototype = {
     if (expirationStartTimestamp) {
       sentMessage.expirationStartTimestamp = expirationStartTimestamp;
     }
-    var syncMessage = this.createSyncMessage();
+    const syncMessage = this.createSyncMessage();
     syncMessage.sent = sentMessage;
-    var contentMessage = new textsecure.protobuf.Content();
+    const contentMessage = new textsecure.protobuf.Content();
     contentMessage.syncMessage = syncMessage;
 
-    var silent = true;
+    const silent = true;
     return this.sendIndividualProto(
       myNumber,
       contentMessage,
@@ -40380,25 +40299,25 @@ MessageSender.prototype = {
     );
   },
 
-  getProfile: function(number) {
+  getProfile(number) {
     return this.server.getProfile(number);
   },
-  getAvatar: function(path) {
+  getAvatar(path) {
     return this.server.getAvatar(path);
   },
 
-  sendRequestConfigurationSyncMessage: function() {
-    var myNumber = textsecure.storage.user.getNumber();
-    var myDevice = textsecure.storage.user.getDeviceId();
-    if (myDevice != 1) {
-      var request = new textsecure.protobuf.SyncMessage.Request();
+  sendRequestConfigurationSyncMessage() {
+    const myNumber = textsecure.storage.user.getNumber();
+    const myDevice = textsecure.storage.user.getDeviceId();
+    if (myDevice !== 1 && myDevice !== '1') {
+      const request = new textsecure.protobuf.SyncMessage.Request();
       request.type = textsecure.protobuf.SyncMessage.Request.Type.CONFIGURATION;
-      var syncMessage = this.createSyncMessage();
+      const syncMessage = this.createSyncMessage();
       syncMessage.request = request;
-      var contentMessage = new textsecure.protobuf.Content();
+      const contentMessage = new textsecure.protobuf.Content();
       contentMessage.syncMessage = syncMessage;
 
-      var silent = true;
+      const silent = true;
       return this.sendIndividualProto(
         myNumber,
         contentMessage,
@@ -40409,18 +40328,18 @@ MessageSender.prototype = {
 
     return Promise.resolve();
   },
-  sendRequestGroupSyncMessage: function() {
-    var myNumber = textsecure.storage.user.getNumber();
-    var myDevice = textsecure.storage.user.getDeviceId();
-    if (myDevice != 1) {
-      var request = new textsecure.protobuf.SyncMessage.Request();
+  sendRequestGroupSyncMessage() {
+    const myNumber = textsecure.storage.user.getNumber();
+    const myDevice = textsecure.storage.user.getDeviceId();
+    if (myDevice !== 1 && myDevice !== '1') {
+      const request = new textsecure.protobuf.SyncMessage.Request();
       request.type = textsecure.protobuf.SyncMessage.Request.Type.GROUPS;
-      var syncMessage = this.createSyncMessage();
+      const syncMessage = this.createSyncMessage();
       syncMessage.request = request;
-      var contentMessage = new textsecure.protobuf.Content();
+      const contentMessage = new textsecure.protobuf.Content();
       contentMessage.syncMessage = syncMessage;
 
-      var silent = true;
+      const silent = true;
       return this.sendIndividualProto(
         myNumber,
         contentMessage,
@@ -40432,18 +40351,18 @@ MessageSender.prototype = {
     return Promise.resolve();
   },
 
-  sendRequestContactSyncMessage: function() {
-    var myNumber = textsecure.storage.user.getNumber();
-    var myDevice = textsecure.storage.user.getDeviceId();
-    if (myDevice != 1) {
-      var request = new textsecure.protobuf.SyncMessage.Request();
+  sendRequestContactSyncMessage() {
+    const myNumber = textsecure.storage.user.getNumber();
+    const myDevice = textsecure.storage.user.getDeviceId();
+    if (myDevice !== 1 && myDevice !== '1') {
+      const request = new textsecure.protobuf.SyncMessage.Request();
       request.type = textsecure.protobuf.SyncMessage.Request.Type.CONTACTS;
-      var syncMessage = this.createSyncMessage();
+      const syncMessage = this.createSyncMessage();
       syncMessage.request = request;
-      var contentMessage = new textsecure.protobuf.Content();
+      const contentMessage = new textsecure.protobuf.Content();
       contentMessage.syncMessage = syncMessage;
 
-      var silent = true;
+      const silent = true;
       return this.sendIndividualProto(
         myNumber,
         contentMessage,
@@ -40454,33 +40373,33 @@ MessageSender.prototype = {
 
     return Promise.resolve();
   },
-  sendReadReceipts: function(sender, timestamps) {
-    var receiptMessage = new textsecure.protobuf.ReceiptMessage();
+  sendReadReceipts(sender, timestamps) {
+    const receiptMessage = new textsecure.protobuf.ReceiptMessage();
     receiptMessage.type = textsecure.protobuf.ReceiptMessage.Type.READ;
     receiptMessage.timestamp = timestamps;
 
-    var contentMessage = new textsecure.protobuf.Content();
+    const contentMessage = new textsecure.protobuf.Content();
     contentMessage.receiptMessage = receiptMessage;
 
-    var silent = true;
+    const silent = true;
     return this.sendIndividualProto(sender, contentMessage, Date.now(), silent);
   },
-  syncReadMessages: function(reads) {
-    var myNumber = textsecure.storage.user.getNumber();
-    var myDevice = textsecure.storage.user.getDeviceId();
-    if (myDevice != 1) {
-      var syncMessage = this.createSyncMessage();
+  syncReadMessages(reads) {
+    const myNumber = textsecure.storage.user.getNumber();
+    const myDevice = textsecure.storage.user.getDeviceId();
+    if (myDevice !== 1 && myDevice !== '1') {
+      const syncMessage = this.createSyncMessage();
       syncMessage.read = [];
-      for (var i = 0; i < reads.length; ++i) {
-        var read = new textsecure.protobuf.SyncMessage.Read();
+      for (let i = 0; i < reads.length; i += 1) {
+        const read = new textsecure.protobuf.SyncMessage.Read();
         read.timestamp = reads[i].timestamp;
         read.sender = reads[i].sender;
         syncMessage.read.push(read);
       }
-      var contentMessage = new textsecure.protobuf.Content();
+      const contentMessage = new textsecure.protobuf.Content();
       contentMessage.syncMessage = syncMessage;
 
-      var silent = true;
+      const silent = true;
       return this.sendIndividualProto(
         myNumber,
         contentMessage,
@@ -40491,79 +40410,72 @@ MessageSender.prototype = {
 
     return Promise.resolve();
   },
-  syncVerification: function(destination, state, identityKey) {
-    var myNumber = textsecure.storage.user.getNumber();
-    var myDevice = textsecure.storage.user.getDeviceId();
-    var now = Date.now();
+  syncVerification(destination, state, identityKey) {
+    const myNumber = textsecure.storage.user.getNumber();
+    const myDevice = textsecure.storage.user.getDeviceId();
+    const now = Date.now();
 
-    if (myDevice == 1) {
+    if (myDevice === 1 || myDevice === '1') {
       return Promise.resolve();
     }
 
     // First send a null message to mask the sync message.
-    var nullMessage = new textsecure.protobuf.NullMessage();
+    const nullMessage = new textsecure.protobuf.NullMessage();
 
     // Generate a random int from 1 and 512
-    var buffer = libsignal.crypto.getRandomBytes(1);
-    var paddingLength = (new Uint8Array(buffer)[0] & 0x1ff) + 1;
+    const buffer = libsignal.crypto.getRandomBytes(1);
+    const paddingLength = (new Uint8Array(buffer)[0] & 0x1ff) + 1;
 
     // Generate a random padding buffer of the chosen size
     nullMessage.padding = libsignal.crypto.getRandomBytes(paddingLength);
 
-    var contentMessage = new textsecure.protobuf.Content();
+    const contentMessage = new textsecure.protobuf.Content();
     contentMessage.nullMessage = nullMessage;
 
     // We want the NullMessage to look like a normal outgoing message; not silent
     const promise = this.sendIndividualProto(destination, contentMessage, now);
 
-    return promise.then(
-      function() {
-        var verified = new textsecure.protobuf.Verified();
+    return promise.then(() => {
+      const verified = new textsecure.protobuf.Verified();
         verified.state = state;
         verified.destination = destination;
         verified.identityKey = identityKey;
         verified.nullMessage = nullMessage.padding;
 
-        var syncMessage = this.createSyncMessage();
+      const syncMessage = this.createSyncMessage();
         syncMessage.verified = verified;
 
-        var contentMessage = new textsecure.protobuf.Content();
-        contentMessage.syncMessage = syncMessage;
+      const secondMessage = new textsecure.protobuf.Content();
+      secondMessage.syncMessage = syncMessage;
 
-        var silent = true;
-        return this.sendIndividualProto(myNumber, contentMessage, now, silent);
-      }.bind(this)
-    );
+      const silent = true;
+      return this.sendIndividualProto(myNumber, secondMessage, now, silent);
+    });
   },
 
-  sendGroupProto: function(numbers, proto, timestamp) {
-    timestamp = timestamp || Date.now();
-    var me = textsecure.storage.user.getNumber();
-    numbers = numbers.filter(function(number) {
-      return number != me;
-    });
+  sendGroupProto(providedNumbers, proto, timestamp = Date.now()) {
+    const me = textsecure.storage.user.getNumber();
+    const numbers = providedNumbers.filter(number => number !== me);
     if (numbers.length === 0) {
       return Promise.reject(new Error('No other members in the group'));
     }
 
-    return new Promise(
-      function(resolve, reject) {
-        var silent = true;
-        var callback = function(res) {
+    return new Promise((resolve, reject) => {
+      const silent = true;
+      const callback = res => {
           res.dataMessage = proto.toArrayBuffer();
           if (res.errors.length > 0) {
             reject(res);
           } else {
             resolve(res);
           }
-        }.bind(this);
+      };
 
         this.sendMessageProto(timestamp, numbers, proto, callback, silent);
-      }.bind(this)
-    );
+    });
   },
 
-  sendMessageToNumber: function(
+  sendMessageToNumber(
     number,
     messageText,
     attachments,
@@ -40575,75 +40487,68 @@ MessageSender.prototype = {
     return this.sendMessage({
       recipients: [number],
       body: messageText,
-      timestamp: timestamp,
-      attachments: attachments,
-      quote: quote,
+      timestamp,
+      attachments,
+      quote,
       needsSync: true,
-      expireTimer: expireTimer,
-      profileKey: profileKey,
+      expireTimer,
+      profileKey,
     });
   },
 
-  resetSession: function(number, timestamp) {
-    console.log('resetting secure session');
-    var proto = new textsecure.protobuf.DataMessage();
+  resetSession(number, timestamp) {
+    window.log.info('resetting secure session');
+    const proto = new textsecure.protobuf.DataMessage();
     proto.body = 'TERMINATE';
     proto.flags = textsecure.protobuf.DataMessage.Flags.END_SESSION;
 
-    var logError = function(prefix) {
-      return function(error) {
-        console.log(prefix, error && error.stack ? error.stack : error);
+    const logError = prefix => error => {
+        window.log.error(prefix, error && error.stack ? error.stack : error);
         throw error;
       };
-    };
-    var deleteAllSessions = function(number) {
-      return textsecure.storage.protocol
-        .getDeviceIds(number)
-        .then(function(deviceIds) {
-          return Promise.all(
-            deviceIds.map(function(deviceId) {
-              var address = new libsignal.SignalProtocolAddress(
-                number,
+    const deleteAllSessions = targetNumber =>
+      textsecure.storage.protocol.getDeviceIds(targetNumber).then(deviceIds =>
+        Promise.all(
+          deviceIds.map(deviceId => {
+            const address = new libsignal.SignalProtocolAddress(
+              targetNumber,
                 deviceId
               );
-              console.log('deleting sessions for', address.toString());
-              var sessionCipher = new libsignal.SessionCipher(
+              window.log.info('deleting sessions for', address.toString());
+            const sessionCipher = new libsignal.SessionCipher(
                 textsecure.storage.protocol,
                 address
               );
               return sessionCipher.deleteAllSessionsForDevice();
             })
+        )
           );
-        });
-    };
 
-    var sendToContact = deleteAllSessions(number)
+    const sendToContact = deleteAllSessions(number)
       .catch(logError('resetSession/deleteAllSessions1 error:'))
-      .then(
-        function() {
-          console.log(
+      .then(() => {
+          window.log.info(
             'finished closing local sessions, now sending to contact'
           );
           return this.sendIndividualProto(number, proto, timestamp).catch(
             logError('resetSession/sendToContact error:')
           );
-        }.bind(this)
-      )
-      .then(function() {
-        return deleteAllSessions(number).catch(
+      })
+      .then(() =>
+        deleteAllSessions(number).catch(
           logError('resetSession/deleteAllSessions2 error:')
+      )
         );
-      });
 
-    var buffer = proto.toArrayBuffer();
-    var sendSync = this.sendSyncMessage(buffer, timestamp, number).catch(
+    const buffer = proto.toArrayBuffer();
+    const sendSync = this.sendSyncMessage(buffer, timestamp, number).catch(
       logError('resetSession/sendSync error:')
     );
 
     return Promise.all([sendToContact, sendSync]);
   },
 
-  sendMessageToGroup: function(
+  sendMessageToGroup(
     groupId,
     messageText,
     attachments,
@@ -40652,15 +40557,13 @@ MessageSender.prototype = {
     expireTimer,
     profileKey
   ) {
-    return textsecure.storage.groups.getNumbers(groupId).then(
-      function(numbers) {
-        if (numbers === undefined)
+    return textsecure.storage.groups.getNumbers(groupId).then(targetNumbers => {
+      if (targetNumbers === undefined) {
           return Promise.reject(new Error('Unknown Group'));
+      }
 
-        var me = textsecure.storage.user.getNumber();
-        numbers = numbers.filter(function(number) {
-          return number != me;
-        });
+      const me = textsecure.storage.user.getNumber();
+      const numbers = targetNumbers.filter(number => number !== me);
         if (numbers.length === 0) {
           return Promise.reject(new Error('No other members in the group'));
         }
@@ -40668,194 +40571,170 @@ MessageSender.prototype = {
         return this.sendMessage({
           recipients: numbers,
           body: messageText,
-          timestamp: timestamp,
-          attachments: attachments,
-          quote: quote,
+        timestamp,
+        attachments,
+        quote,
           needsSync: true,
-          expireTimer: expireTimer,
-          profileKey: profileKey,
+        expireTimer,
+        profileKey,
           group: {
             id: groupId,
             type: textsecure.protobuf.GroupContext.Type.DELIVER,
           },
         });
-      }.bind(this)
-    );
+    });
   },
 
-  createGroup: function(numbers, name, avatar) {
-    var proto = new textsecure.protobuf.DataMessage();
+  createGroup(targetNumbers, name, avatar) {
+    const proto = new textsecure.protobuf.DataMessage();
     proto.group = new textsecure.protobuf.GroupContext();
 
-    return textsecure.storage.groups.createNewGroup(numbers).then(
-      function(group) {
+    return textsecure.storage.groups
+      .createNewGroup(targetNumbers)
+      .then(group => {
         proto.group.id = stringToArrayBuffer(group.id);
-        var numbers = group.numbers;
+        const { numbers } = group;
 
         proto.group.type = textsecure.protobuf.GroupContext.Type.UPDATE;
         proto.group.members = numbers;
         proto.group.name = name;
 
-        return this.makeAttachmentPointer(avatar).then(
-          function(attachment) {
+        return this.makeAttachmentPointer(avatar).then(attachment => {
             proto.group.avatar = attachment;
-            return this.sendGroupProto(numbers, proto).then(function() {
-              return proto.group.id;
+          return this.sendGroupProto(numbers, proto).then(() => proto.group.id);
+        });
             });
-          }.bind(this)
-        );
-      }.bind(this)
-    );
   },
 
-  updateGroup: function(groupId, name, avatar, numbers) {
-    var proto = new textsecure.protobuf.DataMessage();
+  updateGroup(groupId, name, avatar, targetNumbers) {
+    const proto = new textsecure.protobuf.DataMessage();
     proto.group = new textsecure.protobuf.GroupContext();
 
     proto.group.id = stringToArrayBuffer(groupId);
     proto.group.type = textsecure.protobuf.GroupContext.Type.UPDATE;
     proto.group.name = name;
 
-    return textsecure.storage.groups.addNumbers(groupId, numbers).then(
-      function(numbers) {
+    return textsecure.storage.groups
+      .addNumbers(groupId, targetNumbers)
+      .then(numbers => {
         if (numbers === undefined) {
           return Promise.reject(new Error('Unknown Group'));
         }
         proto.group.members = numbers;
 
-        return this.makeAttachmentPointer(avatar).then(
-          function(attachment) {
+        return this.makeAttachmentPointer(avatar).then(attachment => {
             proto.group.avatar = attachment;
-            return this.sendGroupProto(numbers, proto).then(function() {
-              return proto.group.id;
+          return this.sendGroupProto(numbers, proto).then(() => proto.group.id);
+        });
             });
-          }.bind(this)
-        );
-      }.bind(this)
-    );
   },
 
-  addNumberToGroup: function(groupId, number) {
-    var proto = new textsecure.protobuf.DataMessage();
+  addNumberToGroup(groupId, number) {
+    const proto = new textsecure.protobuf.DataMessage();
     proto.group = new textsecure.protobuf.GroupContext();
     proto.group.id = stringToArrayBuffer(groupId);
     proto.group.type = textsecure.protobuf.GroupContext.Type.UPDATE;
 
-    return textsecure.storage.groups.addNumbers(groupId, [number]).then(
-      function(numbers) {
+    return textsecure.storage.groups
+      .addNumbers(groupId, [number])
+      .then(numbers => {
         if (numbers === undefined)
           return Promise.reject(new Error('Unknown Group'));
         proto.group.members = numbers;
 
         return this.sendGroupProto(numbers, proto);
-      }.bind(this)
-    );
+      });
   },
 
-  setGroupName: function(groupId, name) {
-    var proto = new textsecure.protobuf.DataMessage();
+  setGroupName(groupId, name) {
+    const proto = new textsecure.protobuf.DataMessage();
     proto.group = new textsecure.protobuf.GroupContext();
     proto.group.id = stringToArrayBuffer(groupId);
     proto.group.type = textsecure.protobuf.GroupContext.Type.UPDATE;
     proto.group.name = name;
 
-    return textsecure.storage.groups.getNumbers(groupId).then(
-      function(numbers) {
+    return textsecure.storage.groups.getNumbers(groupId).then(numbers => {
         if (numbers === undefined)
           return Promise.reject(new Error('Unknown Group'));
         proto.group.members = numbers;
 
         return this.sendGroupProto(numbers, proto);
-      }.bind(this)
-    );
+    });
   },
 
-  setGroupAvatar: function(groupId, avatar) {
-    var proto = new textsecure.protobuf.DataMessage();
+  setGroupAvatar(groupId, avatar) {
+    const proto = new textsecure.protobuf.DataMessage();
     proto.group = new textsecure.protobuf.GroupContext();
     proto.group.id = stringToArrayBuffer(groupId);
     proto.group.type = textsecure.protobuf.GroupContext.Type.UPDATE;
 
-    return textsecure.storage.groups.getNumbers(groupId).then(
-      function(numbers) {
+    return textsecure.storage.groups.getNumbers(groupId).then(numbers => {
         if (numbers === undefined)
           return Promise.reject(new Error('Unknown Group'));
         proto.group.members = numbers;
 
-        return this.makeAttachmentPointer(avatar).then(
-          function(attachment) {
+      return this.makeAttachmentPointer(avatar).then(attachment => {
             proto.group.avatar = attachment;
             return this.sendGroupProto(numbers, proto);
-          }.bind(this)
-        );
-      }.bind(this)
-    );
+      });
+    });
   },
 
-  leaveGroup: function(groupId) {
-    var proto = new textsecure.protobuf.DataMessage();
+  leaveGroup(groupId) {
+    const proto = new textsecure.protobuf.DataMessage();
     proto.group = new textsecure.protobuf.GroupContext();
     proto.group.id = stringToArrayBuffer(groupId);
     proto.group.type = textsecure.protobuf.GroupContext.Type.QUIT;
 
-    return textsecure.storage.groups
-      .getNumbers(groupId)
-      .then(function(numbers) {
+    return textsecure.storage.groups.getNumbers(groupId).then(numbers => {
         if (numbers === undefined)
           return Promise.reject(new Error('Unknown Group'));
-        return textsecure.storage.groups.deleteGroup(groupId).then(
-          function() {
-            return this.sendGroupProto(numbers, proto);
-          }.bind(this)
-        );
+      return textsecure.storage.groups
+        .deleteGroup(groupId)
+        .then(() => this.sendGroupProto(numbers, proto));
       });
   },
-  sendExpirationTimerUpdateToGroup: function(
+  sendExpirationTimerUpdateToGroup(
     groupId,
     expireTimer,
     timestamp,
     profileKey
   ) {
-    return textsecure.storage.groups.getNumbers(groupId).then(
-      function(numbers) {
-        if (numbers === undefined)
+    return textsecure.storage.groups.getNumbers(groupId).then(targetNumbers => {
+      if (targetNumbers === undefined)
           return Promise.reject(new Error('Unknown Group'));
 
-        var me = textsecure.storage.user.getNumber();
-        numbers = numbers.filter(function(number) {
-          return number != me;
-        });
+      const me = textsecure.storage.user.getNumber();
+      const numbers = targetNumbers.filter(number => number !== me);
         if (numbers.length === 0) {
           return Promise.reject(new Error('No other members in the group'));
         }
         return this.sendMessage({
           recipients: numbers,
-          timestamp: timestamp,
+        timestamp,
           needsSync: true,
-          expireTimer: expireTimer,
-          profileKey: profileKey,
+        expireTimer,
+        profileKey,
           flags: textsecure.protobuf.DataMessage.Flags.EXPIRATION_TIMER_UPDATE,
           group: {
             id: groupId,
             type: textsecure.protobuf.GroupContext.Type.DELIVER,
           },
         });
-      }.bind(this)
-    );
+    });
   },
-  sendExpirationTimerUpdateToNumber: function(
+  sendExpirationTimerUpdateToNumber(
     number,
     expireTimer,
     timestamp,
     profileKey
   ) {
-    var proto = new textsecure.protobuf.DataMessage();
     return this.sendMessage({
       recipients: [number],
-      timestamp: timestamp,
+      timestamp,
       needsSync: true,
-      expireTimer: expireTimer,
-      profileKey: profileKey,
+      expireTimer,
+      profileKey,
       flags: textsecure.protobuf.DataMessage.Flags.EXPIRATION_TIMER_UPDATE,
     });
   },
@@ -40863,24 +40742,13 @@ MessageSender.prototype = {
 
 window.textsecure = window.textsecure || {};
 
-textsecure.MessageSender = function(url, username, password, cdn_url) {
-  var sender = new MessageSender(url, username, password, cdn_url);
-  textsecure.replay.registerFunction(
-    sender.tryMessageAgain.bind(sender),
-    textsecure.replay.Type.ENCRYPT_MESSAGE
-  );
-  textsecure.replay.registerFunction(
-    sender.retransmitMessage.bind(sender),
-    textsecure.replay.Type.TRANSMIT_MESSAGE
-  );
-  textsecure.replay.registerFunction(
-    sender.sendMessage.bind(sender),
-    textsecure.replay.Type.REBUILD_MESSAGE
-  );
-  textsecure.replay.registerFunction(
-    sender.retrySendMessageProto.bind(sender),
-    textsecure.replay.Type.RETRY_SEND_MESSAGE_PROTO
-  );
+textsecure.MessageSender = function MessageSenderWrapper(
+  url,
+  username,
+  password,
+  cdnUrl
+) {
+  const sender = new MessageSender(url, username, password, cdnUrl);
 
   this.sendExpirationTimerUpdateToNumber = sender.sendExpirationTimerUpdateToNumber.bind(
     sender
@@ -40918,8 +40786,12 @@ textsecure.MessageSender.prototype = {
   constructor: textsecure.MessageSender,
 };
 
+/* global Event, textsecure, window */
+
+/* eslint-disable more/no-then */
+
+// eslint-disable-next-line func-names
 (function() {
-  'use strict';
   window.textsecure = window.textsecure || {};
 
   function SyncRequest(sender, receiver) {
@@ -40939,15 +40811,15 @@ textsecure.MessageSender.prototype = {
     this.ongroup = this.onGroupSyncComplete.bind(this);
     receiver.addEventListener('groupsync', this.ongroup);
 
-    console.log('SyncRequest created. Sending contact sync message...');
+    window.log.info('SyncRequest created. Sending contact sync message...');
     sender
       .sendRequestContactSyncMessage()
-      .then(function() {
-        console.log('SyncRequest now sending group sync messsage...');
+      .then(() => {
+        window.log.info('SyncRequest now sending group sync messsage...');
         return sender.sendRequestGroupSyncMessage();
       })
-      .catch(function(error) {
-        console.log(
+      .catch(error => {
+        window.log.error(
           'SyncRequest error:',
           error && error.stack ? error.stack : error
         );
@@ -40958,21 +40830,21 @@ textsecure.MessageSender.prototype = {
   SyncRequest.prototype = new textsecure.EventTarget();
   SyncRequest.prototype.extend({
     constructor: SyncRequest,
-    onContactSyncComplete: function() {
+    onContactSyncComplete() {
       this.contactSync = true;
       this.update();
     },
-    onGroupSyncComplete: function() {
+    onGroupSyncComplete() {
       this.groupSync = true;
       this.update();
     },
-    update: function() {
+    update() {
       if (this.contactSync && this.groupSync) {
         this.dispatchEvent(new Event('success'));
         this.cleanup();
       }
     },
-    onTimeout: function() {
+    onTimeout() {
       if (this.contactSync || this.groupSync) {
         this.dispatchEvent(new Event('success'));
       } else {
@@ -40980,7 +40852,7 @@ textsecure.MessageSender.prototype = {
       }
       this.cleanup();
     },
-    cleanup: function() {
+    cleanup() {
       clearTimeout(this.timeout);
       this.receiver.removeEventListener('contactsync', this.oncontact);
       this.receiver.removeEventListener('groupSync', this.ongroup);
@@ -40988,8 +40860,8 @@ textsecure.MessageSender.prototype = {
     },
   });
 
-  textsecure.SyncRequest = function(sender, receiver) {
-    var syncRequest = new SyncRequest(sender, receiver);
+  textsecure.SyncRequest = function SyncRequestWrapper(sender, receiver) {
+    const syncRequest = new SyncRequest(sender, receiver);
     this.addEventListener = syncRequest.addEventListener.bind(syncRequest);
     this.removeEventListener = syncRequest.removeEventListener.bind(
       syncRequest
@@ -41001,6 +40873,8 @@ textsecure.MessageSender.prototype = {
   };
 })();
 
+/* global dcodeIO, window, textsecure */
+
 function ProtoParser(arrayBuffer, protobuf) {
   this.protobuf = protobuf;
   this.buffer = new dcodeIO.ByteBuffer();
@@ -41010,23 +40884,23 @@ function ProtoParser(arrayBuffer, protobuf) {
 }
 ProtoParser.prototype = {
   constructor: ProtoParser,
-  next: function() {
+  next() {
     try {
       if (this.buffer.limit === this.buffer.offset) {
         return undefined; // eof
       }
-      var len = this.buffer.readVarint32();
-      var nextBuffer = this.buffer
+      const len = this.buffer.readVarint32();
+      const nextBuffer = this.buffer
         .slice(this.buffer.offset, this.buffer.offset + len)
         .toArrayBuffer();
       // TODO: de-dupe ByteBuffer.js includes in libaxo/libts
       // then remove this toArrayBuffer call.
 
-      var proto = this.protobuf.decode(nextBuffer);
+      const proto = this.protobuf.decode(nextBuffer);
       this.buffer.skip(len);
 
       if (proto.avatar) {
-        var attachmentLen = proto.avatar.length;
+        const attachmentLen = proto.avatar.length;
         proto.avatar.data = this.buffer
           .slice(this.buffer.offset, this.buffer.offset + attachmentLen)
           .toArrayBuffer();
@@ -41038,66 +40912,70 @@ ProtoParser.prototype = {
       }
 
       return proto;
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      window.log.error(
+        'ProtoParser.next error:',
+        error && error.stack ? error.stack : error
+      );
     }
+
+    return null;
   },
 };
-var GroupBuffer = function(arrayBuffer) {
+const GroupBuffer = function Constructor(arrayBuffer) {
   ProtoParser.call(this, arrayBuffer, textsecure.protobuf.GroupDetails);
 };
 GroupBuffer.prototype = Object.create(ProtoParser.prototype);
 GroupBuffer.prototype.constructor = GroupBuffer;
-var ContactBuffer = function(arrayBuffer) {
+const ContactBuffer = function Constructor(arrayBuffer) {
   ProtoParser.call(this, arrayBuffer, textsecure.protobuf.ContactDetails);
 };
 ContactBuffer.prototype = Object.create(ProtoParser.prototype);
 ContactBuffer.prototype.constructor = ContactBuffer;
 
-(function() {
-  'use strict';
+/* global libsignal, textsecure */
 
+/* eslint-disable more/no-then */
+
+// eslint-disable-next-line func-names
+(function() {
   function ProvisioningCipher() {}
 
   ProvisioningCipher.prototype = {
-    decrypt: function(provisionEnvelope) {
-      var masterEphemeral = provisionEnvelope.publicKey.toArrayBuffer();
-      var message = provisionEnvelope.body.toArrayBuffer();
-      if (new Uint8Array(message)[0] != 1) {
+    decrypt(provisionEnvelope) {
+      const masterEphemeral = provisionEnvelope.publicKey.toArrayBuffer();
+      const message = provisionEnvelope.body.toArrayBuffer();
+      if (new Uint8Array(message)[0] !== 1) {
         throw new Error('Bad version number on ProvisioningMessage');
       }
 
-      var iv = message.slice(1, 16 + 1);
-      var mac = message.slice(message.byteLength - 32, message.byteLength);
-      var ivAndCiphertext = message.slice(0, message.byteLength - 32);
-      var ciphertext = message.slice(16 + 1, message.byteLength - 32);
+      const iv = message.slice(1, 16 + 1);
+      const mac = message.slice(message.byteLength - 32, message.byteLength);
+      const ivAndCiphertext = message.slice(0, message.byteLength - 32);
+      const ciphertext = message.slice(16 + 1, message.byteLength - 32);
 
       return libsignal.Curve.async
         .calculateAgreement(masterEphemeral, this.keyPair.privKey)
-        .then(function(ecRes) {
-          return libsignal.HKDF.deriveSecrets(
+        .then(ecRes =>
+          libsignal.HKDF.deriveSecrets(
             ecRes,
             new ArrayBuffer(32),
             'TextSecure Provisioning Message'
-          );
-        })
-        .then(function(keys) {
-          return libsignal.crypto
+          )
+        )
+        .then(keys =>
+          libsignal.crypto
             .verifyMAC(ivAndCiphertext, keys[1], mac, 32)
-            .then(function() {
-              return libsignal.crypto.decrypt(keys[0], ciphertext, iv);
-            });
-        })
-        .then(function(plaintext) {
-          var provisionMessage = textsecure.protobuf.ProvisionMessage.decode(
+            .then(() => libsignal.crypto.decrypt(keys[0], ciphertext, iv))
+        )
+        .then(plaintext => {
+          const provisionMessage = textsecure.protobuf.ProvisionMessage.decode(
             plaintext
           );
-          var privKey = provisionMessage.identityKeyPrivate.toArrayBuffer();
+          const privKey = provisionMessage.identityKeyPrivate.toArrayBuffer();
 
-          return libsignal.Curve.async
-            .createKeyPair(privKey)
-            .then(function(keyPair) {
-              var ret = {
+          return libsignal.Curve.async.createKeyPair(privKey).then(keyPair => {
+            const ret = {
                 identityKeyPair: keyPair,
                 number: provisionMessage.number,
                 provisioningCode: provisionMessage.provisioningCode,
@@ -41111,69 +40989,66 @@ ContactBuffer.prototype.constructor = ContactBuffer;
             });
         });
     },
-    getPublicKey: function() {
+    getPublicKey() {
       return Promise.resolve()
-        .then(
-          function() {
+        .then(() => {
             if (!this.keyPair) {
-              return libsignal.Curve.async.generateKeyPair().then(
-                function(keyPair) {
+            return libsignal.Curve.async.generateKeyPair().then(keyPair => {
                   this.keyPair = keyPair;
-                }.bind(this)
-              );
+            });
             }
-          }.bind(this)
-        )
-        .then(
-          function() {
-            return this.keyPair.pubKey;
-          }.bind(this)
-        );
+
+          return null;
+        })
+        .then(() => this.keyPair.pubKey);
     },
   };
 
-  libsignal.ProvisioningCipher = function() {
-    var cipher = new ProvisioningCipher();
+  libsignal.ProvisioningCipher = function ProvisioningCipherWrapper() {
+    const cipher = new ProvisioningCipher();
 
     this.decrypt = cipher.decrypt.bind(cipher);
     this.getPublicKey = cipher.getPublicKey.bind(cipher);
   };
 })();
 
+/* global window */
+
+/* eslint-disable more/no-then */
+
+// eslint-disable-next-line func-names
 (function() {
   window.textsecure = window.textsecure || {};
 
-  window.textsecure.createTaskWithTimeout = function(task, id, options) {
-    options = options || {};
-    options.timeout = options.timeout || 1000 * 60 * 2; // two minutes
+  window.textsecure.createTaskWithTimeout = (task, id, options = {}) => {
+    const timeout = options.timeout || 1000 * 60 * 2; // two minutes
 
-    var errorForStack = new Error('for stack');
-    return function() {
-      return new Promise(function(resolve, reject) {
-        var complete = false;
-        var timer = setTimeout(
-          function() {
+    const errorForStack = new Error('for stack');
+    return () =>
+      new Promise((resolve, reject) => {
+        let complete = false;
+        let timer = setTimeout(() => {
             if (!complete) {
-              var message =
-                (id || '') +
-                ' task did not complete in time. Calling stack: ' +
-                errorForStack.stack;
+            const message = `${id ||
+              ''} task did not complete in time. Calling stack: ${
+              errorForStack.stack
+            }`;
 
-              console.log(message);
+              window.log.error(message);
               return reject(new Error(message));
             }
-          }.bind(this),
-          options.timeout
-        );
-        var clearTimer = function() {
+
+          return null;
+        }, timeout);
+        const clearTimer = () => {
           try {
-            var localTimer = timer;
+            const localTimer = timer;
             if (localTimer) {
               timer = null;
               clearTimeout(localTimer);
             }
           } catch (error) {
-            console.log(
+            window.log.error(
               id || '',
               'task ran into problem canceling timer. Calling stack:',
               errorForStack.stack
@@ -41181,18 +41056,18 @@ ContactBuffer.prototype.constructor = ContactBuffer;
           }
         };
 
-        var success = function(result) {
+        const success = result => {
           clearTimer();
           complete = true;
           return resolve(result);
         };
-        var failure = function(error) {
+        const failure = error => {
           clearTimer();
           complete = true;
           return reject(error);
         };
 
-        var promise;
+        let promise;
         try {
           promise = task();
         } catch (error) {
@@ -41208,6 +41083,5 @@ ContactBuffer.prototype.constructor = ContactBuffer;
         return promise.then(success, failure);
       });
     };
-  };
 })();
 })();

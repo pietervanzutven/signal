@@ -16,7 +16,7 @@
   //                                 Promise Attachment
   exports.migrateDataToFileSystem = async (
     attachment,
-    { writeNewAttachmentData } = {}
+    { writeNewAttachmentData, logger } = {}
   ) => {
     if (!isFunction(writeNewAttachmentData)) {
       throw new TypeError("'writeNewAttachmentData' must be a function");
@@ -26,7 +26,7 @@
     const hasData = !isUndefined(data);
     const shouldSkipSchemaUpgrade = !hasData;
     if (shouldSkipSchemaUpgrade) {
-      console.log('WARNING: `attachment.data` is `undefined`');
+      logger.warn('WARNING: `attachment.data` is `undefined`');
       return attachment;
     }
 

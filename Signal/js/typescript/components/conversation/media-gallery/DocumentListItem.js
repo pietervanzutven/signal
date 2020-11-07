@@ -12,63 +12,27 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
+    const classnames_1 = __importDefault(window.classnames);
     const moment_1 = __importDefault(window.moment);
+    // tslint:disable-next-line:match-default-export-name
     const filesize_1 = __importDefault(window.filesize);
-    const styles = {
-        container: {
-            width: '100%',
-            height: 72,
-        },
-        containerSeparator: {
-            borderBottomWidth: 1,
-            borderBottomColor: '#ccc',
-            borderBottomStyle: 'solid',
-        },
-        itemContainer: {
-            cursor: 'pointer',
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'nowrap',
-            alignItems: 'center',
-            height: '100%',
-        },
-        itemMetadata: {
-            display: 'inline-flex',
-            flexDirection: 'column',
-            flexGrow: 1,
-            flexShrink: 0,
-            marginLeft: 8,
-            marginRight: 8,
-        },
-        itemDate: {
-            display: 'inline-block',
-            flexShrink: 0,
-        },
-        itemIcon: {
-            flexShrink: 0,
-        },
-        itemFileName: {
-            fontWeight: 'bold',
-        },
-        itemFileSize: {
-            display: 'inline-block',
-            marginTop: 8,
-            fontSize: '80%',
-        },
-    };
     class DocumentListItem extends react_1.default.Component {
         render() {
             const { shouldShowSeparator } = this.props;
-            return (react_1.default.createElement("div", { style: Object.assign({}, styles.container, (shouldShowSeparator ? styles.containerSeparator : {})) }, this.renderContent()));
+            return (react_1.default.createElement("div", {
+                className: classnames_1.default('module-document-list-item', shouldShowSeparator
+                    ? 'module-document-list-item--with-separator'
+                    : null)
+            }, this.renderContent()));
         }
         renderContent() {
             const { fileName, fileSize, timestamp } = this.props;
-            return (react_1.default.createElement("div", { style: styles.itemContainer, onClick: this.props.onClick },
-                react_1.default.createElement("img", { src: "images/file.svg", width: "48", height: "48", style: styles.itemIcon }),
-                react_1.default.createElement("div", { style: styles.itemMetadata },
-                    react_1.default.createElement("span", { style: styles.itemFileName }, fileName),
-                    react_1.default.createElement("span", { style: styles.itemFileSize }, typeof fileSize === 'number' ? filesize_1.default(fileSize) : '')),
-                react_1.default.createElement("div", { style: styles.itemDate }, moment_1.default(timestamp).format('ddd, MMM D, Y'))));
+            return (react_1.default.createElement("div", { className: "module-document-list-item__content", role: "button", onClick: this.props.onClick },
+                react_1.default.createElement("div", { className: "module-document-list-item__icon" }),
+                react_1.default.createElement("div", { className: "module-document-list-item__metadata" },
+                    react_1.default.createElement("span", { className: "module-document-list-item__file-name" }, fileName),
+                    react_1.default.createElement("span", { className: "module-document-list-item__file-size" }, typeof fileSize === 'number' ? filesize_1.default(fileSize) : '')),
+                react_1.default.createElement("div", { className: "module-document-list-item__date" }, moment_1.default(timestamp).format('ddd, MMM D, Y'))));
         }
     }
     DocumentListItem.defaultProps = {

@@ -50,7 +50,7 @@
         }
     }
     Linkify.defaultProps = {
-        renderNonLink: ({ text, key }) => react_1.default.createElement("span", { key: key }, text),
+        renderNonLink: ({ text }) => text,
     };
     exports.Linkify = Linkify;
 })();

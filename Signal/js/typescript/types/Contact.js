@@ -21,12 +21,15 @@
         AddressType[AddressType["CUSTOM"] = 3] = "CUSTOM";
     })(AddressType = exports.AddressType || (exports.AddressType = {}));
     function contactSelector(contact, options) {
-        const { regionCode, getAbsoluteAttachmentPath } = options;
+        const { getAbsoluteAttachmentPath, hasSignalAccount, onClick, onSendMessage, regionCode, } = options;
         let { avatar } = contact;
         if (avatar && avatar.avatar && avatar.avatar.path) {
             avatar = Object.assign({}, avatar, { avatar: Object.assign({}, avatar.avatar, { path: getAbsoluteAttachmentPath(avatar.avatar.path) }) });
         }
         return Object.assign({}, contact, {
+            hasSignalAccount,
+            onSendMessage,
+            onClick,
             avatar, number: contact.number &&
                 contact.number.map(item => (Object.assign({}, item, {
                     value: PhoneNumber_1.format(item.value, {

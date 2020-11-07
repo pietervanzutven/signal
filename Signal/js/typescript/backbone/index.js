@@ -13,8 +13,6 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const Conversation = __importStar(window.ts.backbone.Conversation);
-    exports.Conversation = Conversation;
     const Views = __importStar(window.ts.backbone.views);
     exports.Views = Views;
 })();

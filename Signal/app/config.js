@@ -1,21 +1,23 @@
 (function () {
   'use strict';
 
+  window.app = window.app || {};
+
   const environment = 'production';
 
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'config/default.json', false);
   xhr.send(null);
 
-  window.config = JSON.parse(xhr.response);
+  window.app.config = JSON.parse(xhr.response);
 
   xhr.open('GET', 'config/' + environment + '.json', false);
   xhr.send(null);
 
-  window.config = Object.assign(window.config, JSON.parse(xhr.response));
-  window.config.environment = environment;
+  window.app.config = Object.assign(window.app.config, JSON.parse(xhr.response));
+  window.app.config.environment = environment;
 
-  window.config.get = name => config[name];
-  window.config.has = name => config.hasOwnProperty(name);
+  window.app.config.get = name => window.app.config[name];
+  window.app.config.has = name => window.app.config.hasOwnProperty(name);
 
 })();

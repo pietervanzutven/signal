@@ -1,9 +1,10 @@
+/* eslint-env node */
+/* global log, Signal, Whisper */
+
 (function () {
   'use strict';
 
   const exports = window.debug = {};
-
-  /* eslint-env node */
 
   const fs = window.fs_extra;
   const path = window.path;
@@ -18,7 +19,7 @@
     sample,
   } = window.lodash;
 
-  const Attachments = window.attachments;
+  const Attachments = window.app.attachments;
   const Message = window.types.message;
   const { deferredToPromise } = window.deferred_to_promise;
   const { sleep } = window.sleep;
@@ -61,10 +62,9 @@
     await Promise.all(
       range(0, numMessages).map(async index => {
         await sleep(index * 100);
-        console.log(`Create message ${index + 1}`);
-        const messageAttributes = await createRandomMessage({ conversationId });
-        const message = new WhisperMessage(messageAttributes);
-        return deferredToPromise(message.save());
+        log.info(`Create message ${index + 1}`);
+        const message = await createRandomMessage({ conversationId });
+        return Signal.Data.saveMessage(message, { Message: Whisper.Message });
       })
     );
   };
@@ -112,7 +112,7 @@
     };
 
     const message = _createMessage({ commonProperties, conversationId, type });
-    return Message.initializeSchemaVersion(message);
+    return Message.initializeSchemaVersion({ message, logger: log });
   };
 
   const _createMessage = ({ commonProperties, conversationId, type } = {}) => {

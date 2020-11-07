@@ -1,11 +1,12 @@
 /* eslint-env node */
+/* global log */
 
 (function () {
   'use strict';
-  
+
   window.modules = window.modules || {};
   const exports = window.modules.i18n = {};
-  
+
   exports.setup = (locale, messages) => {
     if (!locale) {
       throw new Error('i18n: locale parameter is required');
@@ -17,7 +18,7 @@
     function getMessage(key, substitutions) {
       const entry = messages[key];
       if (!entry) {
-        console.error(
+        log.error(
           `i18n: Attempted to get translation for nonexistent key '${key}'`
         );
         return '';

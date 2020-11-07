@@ -11,63 +11,52 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
+    const classnames_1 = __importDefault(window.classnames);
     const Contact_1 = window.ts.types.Contact;
     class EmbeddedContact extends react_1.default.Component {
         render() {
-            const { contact, hasSignalAccount, i18n, onOpenContact, onSendMessage, } = this.props;
-            return (react_1.default.createElement("div", { className: "embedded-contact", onClick: onOpenContact },
-                react_1.default.createElement("div", { className: "first-line" },
-                    renderAvatar(contact),
-                    react_1.default.createElement("div", { className: "text-container" },
-                        renderName(contact),
-                        renderContactShorthand(contact))),
-                renderSendMessage({ hasSignalAccount, i18n, onSendMessage })));
+            const { contact, i18n, isIncoming, onClick, withContentAbove, withContentBelow, } = this.props;
+            const module = 'embedded-contact';
+            return (react_1.default.createElement("div", {
+                className: classnames_1.default('module-embedded-contact', withContentAbove
+                    ? 'module-embedded-contact--with-content-above'
+                    : null, withContentBelow
+                    ? 'module-embedded-contact--with-content-below'
+                    : null), role: "button", onClick: onClick
+            },
+                renderAvatar({ contact, i18n, module }),
+                react_1.default.createElement("div", { className: "module-embedded-contact__text-container" },
+                    renderName({ contact, isIncoming, module }),
+                    renderContactShorthand({ contact, isIncoming, module }))));
         }
     }
     exports.EmbeddedContact = EmbeddedContact;
     // Note: putting these below the main component so style guide picks up EmbeddedContact
-    function getInitials(name) {
+    function getInitial(name) {
         return name.trim()[0] || '#';
     }
-    function renderAvatar(contact) {
+    function renderAvatar({ contact, i18n, module, }) {
         const { avatar } = contact;
         const path = avatar && avatar.avatar && avatar.avatar.path;
+        const name = Contact_1.getName(contact) || '';
         if (!path) {
-            const name = Contact_1.getName(contact);
-            const initials = getInitials(name || '');
-            return (react_1.default.createElement("div", { className: "image-container" },
-                react_1.default.createElement("div", { className: "default-avatar" }, initials)));
+            const initials = getInitial(name);
+            return (react_1.default.createElement("div", { className: `module-${module}__image-container` },
+                react_1.default.createElement("div", { className: `module-${module}__image-container__default-avatar` }, initials)));
         }
-        return (react_1.default.createElement("div", { className: "image-container" },
-            react_1.default.createElement("img", { src: path })));
+        return (react_1.default.createElement("div", { className: `module-${module}__image-container` },
+            react_1.default.createElement("img", { src: path, alt: i18n('contactAvatarAlt', [name]) })));
     }
     exports.renderAvatar = renderAvatar;
-    function renderName(contact) {
-        return react_1.default.createElement("div", { className: "contact-name" }, Contact_1.getName(contact));
+    function renderName({ contact, isIncoming, module, }) {
+        return (react_1.default.createElement("div", { className: classnames_1.default(`module-${module}__contact-name`, isIncoming ? `module-${module}__contact-name--incoming` : null) }, Contact_1.getName(contact)));
     }
     exports.renderName = renderName;
-    function renderContactShorthand(contact) {
+    function renderContactShorthand({ contact, isIncoming, module, }) {
         const { number: phoneNumber, email } = contact;
         const firstNumber = phoneNumber && phoneNumber[0] && phoneNumber[0].value;
         const firstEmail = email && email[0] && email[0].value;
-        return react_1.default.createElement("div", { className: "contact-method" }, firstNumber || firstEmail);
+        return (react_1.default.createElement("div", { className: classnames_1.default(`module-${module}__contact-method`, isIncoming ? `module-${module}__contact-method--incoming` : null) }, firstNumber || firstEmail));
     }
     exports.renderContactShorthand = renderContactShorthand;
-    function renderSendMessage(props) {
-        const { hasSignalAccount, i18n, onSendMessage } = props;
-        if (!hasSignalAccount) {
-            return null;
-        }
-        // We don't want the overall click handler for this element to fire, so we stop
-        //   propagation before handing control to the caller's callback.
-        const onClick = (e) => {
-            e.stopPropagation();
-            onSendMessage();
-        };
-        return (react_1.default.createElement("div", { className: "send-message", onClick: onClick },
-            react_1.default.createElement("button", { className: "inner" },
-                react_1.default.createElement("div", { className: "icon bubble-icon" }),
-                i18n('sendMessageToContact'))));
-    }
-    exports.renderSendMessage = renderSendMessage;
 })();

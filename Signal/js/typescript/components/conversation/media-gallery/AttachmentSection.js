@@ -15,23 +15,6 @@
     const DocumentListItem_1 = window.ts.components.conversation.media_gallery.DocumentListItem;
     const MediaGridItem_1 = window.ts.components.conversation.media_gallery.MediaGridItem;
     const missingCaseError_1 = window.ts.util.missingCaseError;
-    const styles = {
-        container: {
-            width: '100%',
-        },
-        header: {
-            fontSize: 14,
-            fontWeight: 'normal',
-            lineHeight: '28px',
-        },
-        itemContainer: {
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
-        },
-    };
     class AttachmentSection extends react_1.default.Component {
         constructor() {
             super(...arguments);
@@ -45,9 +28,9 @@
         }
         render() {
             const { header } = this.props;
-            return (react_1.default.createElement("div", { style: styles.container },
-                react_1.default.createElement("h2", { style: styles.header }, header),
-                react_1.default.createElement("div", { style: styles.itemContainer }, this.renderItems())));
+            return (react_1.default.createElement("div", { className: "module-attachment-section" },
+                react_1.default.createElement("h2", { className: "module-attachment-section__header" }, header),
+                react_1.default.createElement("div", { className: "module-attachment-section__items" }, this.renderItems())));
         }
         renderItems() {
             const { i18n, messages, type } = this.props;
@@ -58,9 +41,9 @@
                 const onClick = this.createClickHandler(message);
                 switch (type) {
                     case 'media':
-                        return (react_1.default.createElement(MediaGridItem_1.MediaGridItem, { key: message.id, message: message, onClick: onClick }));
+                        return (react_1.default.createElement(MediaGridItem_1.MediaGridItem, { key: message.id, message: message, onClick: onClick, i18n: i18n }));
                     case 'documents':
-                        return (react_1.default.createElement(DocumentListItem_1.DocumentListItem, { key: message.id, fileName: firstAttachment.fileName, fileSize: firstAttachment.size, i18n: i18n, shouldShowSeparator: shouldShowSeparator, onClick: onClick, timestamp: message.received_at }));
+                        return (react_1.default.createElement(DocumentListItem_1.DocumentListItem, { key: message.id, fileName: firstAttachment.fileName, fileSize: firstAttachment.size, shouldShowSeparator: shouldShowSeparator, onClick: onClick, timestamp: message.received_at }));
                     default:
                         return missingCaseError_1.missingCaseError(type);
                 }

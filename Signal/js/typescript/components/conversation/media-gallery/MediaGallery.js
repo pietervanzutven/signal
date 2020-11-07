@@ -12,53 +12,20 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
+    const classnames_1 = __importDefault(window.classnames);
     const moment_1 = __importDefault(window.moment);
-    const AttachmentSection_1 = window.ts.components.conversation.media_gallery.AttachmentSection;;
+    const AttachmentSection_1 = window.ts.components.conversation.media_gallery.AttachmentSection;
     const EmptyState_1 = window.ts.components.conversation.media_gallery.EmptyState;
     const groupMessagesByDate_1 = window.ts.components.conversation.media_gallery.groupMessagesByDate;
     const missingCaseError_1 = window.ts.util.missingCaseError;
     const MONTH_FORMAT = 'MMMM YYYY';
-    const COLOR_GRAY = '#f3f3f3';
-    const tabStyle = {
-        width: '100%',
-        backgroundColor: COLOR_GRAY,
-        padding: 20,
-        textAlign: 'center',
-    };
-    const styles = {
-        container: {
-            display: 'flex',
-            flexDirection: 'column',
-            flexGrow: 1,
-            width: '100%',
-            height: '100%',
-        },
-        tabContainer: {
-            display: 'flex',
-            flexGrow: 0,
-            flexShrink: 0,
-            cursor: 'pointer',
-            width: '100%',
-        },
-        tab: {
-            default: tabStyle,
-            active: Object.assign({}, tabStyle, { borderBottom: '2px solid #08f' }),
-        },
-        contentContainer: {
-            display: 'flex',
-            flexGrow: 1,
-            overflowY: 'auto',
-            padding: 20,
-        },
-        sectionContainer: {
-            display: 'flex',
-            flexGrow: 1,
-            flexDirection: 'column',
-        },
-    };
     const Tab = ({ isSelected, label, onSelect, type, }) => {
-        const handleClick = onSelect ? () => onSelect({ type }) : undefined;
-        return (react_1.default.createElement("div", { style: isSelected ? styles.tab.active : styles.tab.default, onClick: handleClick }, label));
+        const handleClick = onSelect
+            ? () => {
+                onSelect({ type });
+            }
+            : undefined;
+        return (react_1.default.createElement("div", { className: classnames_1.default('module-media-gallery__tab', isSelected ? 'module-media-gallery__tab--active' : null), onClick: handleClick, role: "tab" }, label));
     };
     class MediaGallery extends react_1.default.Component {
         constructor() {
@@ -72,11 +39,11 @@
         }
         render() {
             const { selectedTab } = this.state;
-            return (react_1.default.createElement("div", { style: styles.container },
-                react_1.default.createElement("div", { style: styles.tabContainer },
+            return (react_1.default.createElement("div", { className: "module-media-gallery" },
+                react_1.default.createElement("div", { className: "module-media-gallery__tab-container" },
                     react_1.default.createElement(Tab, { label: "Media", type: "media", isSelected: selectedTab === 'media', onSelect: this.handleTabSelect }),
                     react_1.default.createElement(Tab, { label: "Documents", type: "documents", isSelected: selectedTab === 'documents', onSelect: this.handleTabSelect })),
-                react_1.default.createElement("div", { style: styles.contentContainer }, this.renderSections())));
+                react_1.default.createElement("div", { className: "module-media-gallery__content" }, this.renderSections())));
         }
         renderSections() {
             const { i18n, media, documents, onItemClick } = this.props;
@@ -105,7 +72,7 @@
                     : i18n(section.type);
                 return (react_1.default.createElement(AttachmentSection_1.AttachmentSection, { key: header, header: header, i18n: i18n, type: type, messages: section.messages, onItemClick: onItemClick }));
             });
-            return react_1.default.createElement("div", { style: styles.sectionContainer }, sections);
+            return react_1.default.createElement("div", { className: "module-media-gallery__sections" }, sections);
         }
     }
     exports.MediaGallery = MediaGallery;

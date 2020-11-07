@@ -130,9 +130,12 @@
 
       const inboxCollection = getInboxCollection();
 
-      inboxCollection.on('messageError', () => {
-        this.networkStatusView.render();
+      this.listenTo(inboxCollection, 'messageError', () => {
+        if (this.networkStatusView) {
+          this.networkStatusView.render();
+        }
       });
+      this.listenTo(inboxCollection, 'select', this.openConversation);
 
       this.inboxListView = new Whisper.ConversationListView({
         el: this.$('.inbox'),
@@ -165,11 +168,7 @@
         this.searchView.$el.show();
         this.inboxListView.$el.hide();
       });
-      this.listenTo(
-        this.searchView,
-        'open',
-        this.openConversation.bind(this, null)
-      );
+      this.listenTo(this.searchView, 'open', this.openConversation);
 
       this.networkStatusView = new Whisper.NetworkStatusView();
       this.$el
@@ -207,7 +206,7 @@
       click: 'onClick',
       'click #header': 'focusHeader',
       'click .conversation': 'focusConversation',
-      'click .global-menu .hamburger': 'toggleMenu',
+      'click .react-contextmenu-wrapper .module-conversation-header__gear-icon': 'toggleMenu',
       'click .show-debug-log': window.showDebugLogWindow,
       'click .backup': window.showBackupScreen,
       'click .show-settings': window.showSettings,
@@ -241,7 +240,7 @@
             this.onEmpty();
             break;
           default:
-            console.log(
+            window.log.error(
               'Whisper.InboxView::startConnectionListener:',
               'Unknown web socket status:',
               status
@@ -294,9 +293,10 @@
         input.removeClass('active');
       }
     },
-    openConversation(e, conversation) {
+    openConversation(conversation) {
       this.searchView.hideHints();
       if (conversation) {
+        ConversationController.markAsSelected(conversation);
         this.conversation_stack.open(
           ConversationController.get(conversation.id)
         );
@@ -304,7 +304,7 @@
       }
     },
     toggleMenu() {
-        this.$('.global-menu .menu-list').toggle();
+        this.$('.menu-list').toggle();
     },
     closeRecording(e) {
       if (e && this.$(e.target).closest('.capture-audio').length > 0) {
@@ -313,11 +313,11 @@
       this.$('.conversation:first .recorder').trigger('close');
     },
     closeMenu(e) {
-      if (e && this.$(e.target).parent('.global-menu').length > 0) {
+      if (e && this.$(e.target).parent('.react-contextmenu-wrapper').length > 0) {
         return;
       }
 
-      this.$('.global-menu .menu-list').hide();
+      this.$('.menu-list').hide();
     },
     onClick(e) {
       this.closeMenu(e);

@@ -44,7 +44,7 @@
         }
     }
     AddNewLines.defaultProps = {
-        renderNonNewLine: ({ text, key }) => react_1.default.createElement("span", { key: key }, text),
+        renderNonNewLine: ({ text }) => text,
     };
     exports.AddNewLines = AddNewLines;
 })();
