@@ -384,18 +384,6 @@
       e.preventDefault();
       this.$el.removeClass('dropoff');
     },
-    onPaste(e) {
-      const { items } = e.originalEvent.clipboardData;
-      let imgBlob = null;
-      for (let i = 0; i < items.length; i += 1) {
-        if (items[i].type.split('/')[0] === 'image') {
-          imgBlob = items[i].getAsFile();
-        }
-      }
-      if (imgBlob !== null) {
-        this.file = imgBlob;
-        this.previewImages();
-      }
-    },
+    onPaste(e) { },
   });
 })();
