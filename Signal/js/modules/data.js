@@ -182,8 +182,8 @@
         });
 
         setTimeout(
-          () => resolve(new Error(`Request to ${fnName} timed out`)),
-          5000
+          () => reject(new Error(`Request to ${fnName} timed out`)),
+          10000
         );
       });
     };
