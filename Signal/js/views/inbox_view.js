@@ -195,7 +195,7 @@
       openReleaseNotes: i18n('goToReleaseNotes'),
       openForums: i18n('goToForums'),
       openSupportPage: i18n('goToSupportPage'),
-      openNewBugForm: i18n('fileABug'),
+      openNewBugForm: i18n('menuReportIssue'),
       showAbout: i18n('aboutSignalDesktop'),
       setupWithImport: i18n('menuSetupWithImport'),
       setupAsNewDevice: i18n('menuSetupAsNewDevice'),
