@@ -1041,7 +1041,7 @@ img.emoji.jumbo {
   overflow: auto; }
 
 .gutter {
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: #ededed;
   float: left;
   width: 300px; }
   .gutter .content {
@@ -4592,14 +4592,14 @@ body.dark-theme {
   align-items: center;
   cursor: pointer; }
   .module-conversation-list-item:hover {
-    background-color: rgba(0, 0, 0, 0.08); }
+    background-color: #d9d9d9; }
 
 .module-conversation-list-item--has-unread {
   padding-left: 12px;
   border-left: 4px solid #2090ea; }
 
 .module-conversation-list-item--is-selected {
-  background-color: rgba(0, 0, 0, 0.08); }
+  background-color: #d9d9d9; }
 
 .module-conversation-list-item__avatar {
   margin-top: 8px;
