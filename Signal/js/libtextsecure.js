@@ -39535,6 +39535,11 @@ textsecure.MessageReceiver.prototype = {
   constructor: textsecure.MessageReceiver,
 };
 
+textsecure.MessageReceiver.stringToArrayBuffer =
+  MessageReceiver.stringToArrayBuffer;
+textsecure.MessageReceiver.arrayBufferToString =
+  MessageReceiver.arrayBufferToString;
+
 /* global textsecure, libsignal, window, btoa */
 
 /* eslint-disable more/no-then */
