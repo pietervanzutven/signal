@@ -36,6 +36,7 @@
     close,
     removeDB,
 
+    getMessageCount,
     saveMessage,
     saveLegacyMessage,
     saveMessages,
@@ -182,8 +183,8 @@
         });
 
         setTimeout(
-          () => resolve(new Error(`Request to ${fnName} timed out`)),
-          5000
+          () => reject(new Error(`Request to ${fnName} timed out`)),
+          10000
         );
       });
     };
@@ -203,6 +204,10 @@
   // Note: will need to restart the app after calling this, to set up afresh
   async function removeDB() {
     await channels.removeDB();
+  }
+
+  async function getMessageCount() {
+    return channels.getMessageCount();
   }
 
   async function saveMessage(data, { forceSave, Message } = {}) {

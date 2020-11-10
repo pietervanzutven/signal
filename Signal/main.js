@@ -93,6 +93,7 @@ const packageJson = {
 
 const sql = window.app.sql;
 const sqlChannels = window.app.sql_channel;
+const attachments = window.app.attachments
 const attachmentChannel = window.app.attachment_channel;
 const autoUpdate = window.app.auto_update;
 const createTrayIcon = window.app.tray_icon;
@@ -430,6 +431,13 @@ let ready = false;
 
   await sql.initialize({ configDir: userDataPath, key });
   await sqlChannels.initialize({ userConfig });
+
+  const allAttachments = await attachments.getAllAttachments(userDataPath);
+  const orphanedAttachments = await sql.removeKnownAttachments(allAttachments);
+  await attachments.deleteAll({
+    userDataPath,
+    attachments: orphanedAttachments,
+  });
 
   ready = true;
 })();

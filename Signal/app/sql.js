@@ -9,7 +9,7 @@
   const sql = window.journeyapps.sqlcipher;
   const pify = window.pify;
   const uuidv4 = window.uuid.v4;
-  const { map, isString } = window.lodash;
+  const { map, isString, fromPairs, forEach, last } = window.lodash;
 
   // To get long stack traces
   //   https://github.com/mapbox/node-sqlite3/wiki/API#sqlite3verbose
@@ -20,6 +20,7 @@
     close,
     removeDB,
 
+    getMessageCount,
     saveMessage,
     saveMessages,
     removeMessage,
@@ -44,6 +45,8 @@
     getMessagesNeedingUpgrade,
     getMessagesWithVisualMediaAttachments,
     getMessagesWithFileAttachments,
+
+    removeKnownAttachments,
   };
 
   function generateUUID() {
@@ -263,6 +266,16 @@
     }
 
     rimraf.sync(filePath);
+  }
+
+  async function getMessageCount() {
+    const row = await db.get('SELECT count(*) from messages;');
+
+    if (!row) {
+      throw new Error('getMessageCount: Unable to get count of messages');
+    }
+
+    return row['count(*)'];
   }
 
   async function saveMessage(data, { forceSave } = {}) {
@@ -716,5 +729,94 @@
     }
 
     return map(rows, row => jsonToObject(row.json));
+  }
+
+  function getExternalFilesForMessage(message) {
+    const { attachments, contact, quote } = message;
+    const files = [];
+
+    forEach(attachments, attachment => {
+      const { path: file, thumbnail, screenshot } = attachment;
+      if (file) {
+        files.push(file);
+      }
+
+      if (thumbnail && thumbnail.path) {
+        files.push(thumbnail.path);
+      }
+
+      if (screenshot && screenshot.path) {
+        files.push(screenshot.path);
+      }
+    });
+
+    if (quote && quote.attachments && quote.attachments.length) {
+      forEach(quote.attachments, attachment => {
+        const { thumbnail } = attachment;
+
+        if (thumbnail && thumbnail.path) {
+          files.push(thumbnail.path);
+        }
+      });
+    }
+
+    if (contact && contact.length) {
+      forEach(contact, item => {
+        const { avatar } = item;
+
+        if (avatar && avatar.avatar && avatar.avatar.path) {
+          files.push(avatar.avatar.path);
+        }
+      });
+    }
+
+    return files;
+  }
+
+  async function removeKnownAttachments(allAttachments) {
+    const lookup = fromPairs(map(allAttachments, file => [file, true]));
+    const chunkSize = 50;
+
+    const total = await getMessageCount();
+    console.log(
+      `removeKnownAttachments: About to iterate through ${total} messages`
+    );
+
+    let count = 0;
+    let complete = false;
+    let id = '';
+
+    while (!complete) {
+      // eslint-disable-next-line no-await-in-loop
+      const rows = await db.all(
+        `SELECT json FROM messages
+       WHERE id > $id
+       ORDER BY id ASC
+       LIMIT $chunkSize;`,
+        {
+          $id: id,
+          $chunkSize: chunkSize,
+        }
+      );
+
+      const messages = map(rows, row => jsonToObject(row.json));
+      forEach(messages, message => {
+        const externalFiles = getExternalFilesForMessage(message);
+        forEach(externalFiles, file => {
+          delete lookup[file];
+        });
+      });
+
+      const lastMessage = last(messages);
+      if (lastMessage) {
+        ({ id } = lastMessage);
+      }
+      complete = messages.length < chunkSize;
+      count += messages.length;
+    }
+
+    console.log(`removeKnownAttachments: Done processing ${count} messages`);
+
+    return Object.keys(lookup);
   }
 })();
