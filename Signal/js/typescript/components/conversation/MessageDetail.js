@@ -64,7 +64,7 @@
                     react_1.default.createElement(Message_1.Message, Object.assign({ i18n: i18n }, message))),
                 react_1.default.createElement("table", { className: "module-message-detail__info" },
                     react_1.default.createElement("tbody", null,
-                        (errors || []).map(error => (react_1.default.createElement("tr", null,
+                        (errors || []).map((error, index) => (react_1.default.createElement("tr", { key: index },
                             react_1.default.createElement("td", { className: "module-message-detail__label" }, i18n('error')),
                             react_1.default.createElement("td", null,
                                 ' ',
