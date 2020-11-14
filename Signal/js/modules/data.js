@@ -24,6 +24,7 @@
   const SQL_CHANNEL_KEY = 'sql-channel';
   const ERASE_SQL_KEY = 'erase-sql-key';
   const ERASE_ATTACHMENTS_KEY = 'erase-attachments';
+  const CLEANUP_ORPHANED_ATTACHMENTS_KEY = 'cleanup-orphaned-attachments';
 
   const _jobs = Object.create(null);
   const _DEBUG = false;
@@ -66,6 +67,7 @@
 
     removeAll,
     removeOtherData,
+    cleanupOrphanedAttachments,
 
     // Returning plain JSON
     getMessagesNeedingUpgrade,
@@ -390,6 +392,10 @@
 
   async function removeAll() {
     await channels.removeAll();
+  }
+
+  async function cleanupOrphanedAttachments() {
+    await callChannel(CLEANUP_ORPHANED_ATTACHMENTS_KEY);
   }
 
   // Note: will need to restart the app after calling this, to set up afresh
