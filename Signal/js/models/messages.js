@@ -1268,6 +1268,7 @@
             'error:',
             errorForLog
           );
+          throw error;
         }
       });
     },
