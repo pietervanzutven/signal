@@ -1479,15 +1479,22 @@ input.search {
 
 .toast {
   position: absolute;
-  bottom: 0;
-  margin: 0 2em 3em;
-  padding: 0.5em 1.5em;
-  background: rgba(0, 0, 0, 0.75);
+  left: 50%;
+  transform: translate(-50%, 0);
+  bottom: 62px;
+  text-align: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-radius: 4px;
+  z-index: 100;
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: 0;
+  background-color: #62656a;
   color: #ffffff;
-  box-shadow: 0 0 5px 0 black;
-  border-radius: 5px;
-  font-size: 0.9285714286em;
-  z-index: 100; }
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.08); }
 
 .confirmation-dialog .content {
   max-width: 350px;
@@ -1655,9 +1662,9 @@ body.dark-theme {
   outline: 0; }
 
 .dark-theme .toast {
-  background: rgba(0, 0, 0, 0.75);
+  background-color: #62656a;
   color: #ffffff;
-  box-shadow: 0 0 5px 0 black; }
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.08); }
 
 .dark-theme .confirmation-dialog .content {
   background: #000000;
@@ -2458,6 +2465,18 @@ body.dark-theme {
 .dark-theme .module-quote__generic-file__text {
   color: #efefef; }
 
+.dark-theme .module-quote__reference-warning {
+  background-color: rgba(0, 0, 0, 0.6); }
+
+.dark-theme .module-quote__reference-warning__icon {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->    <title>Link/broken-link-16</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Link/broken-link-16' stroke='none' stroke-width='1' fill='%23A8A9AA' fill-rule='evenodd'>        <path d='M9.49509379,9.33333333 L12.6666667,9.33333333 C13.4030463,9.33333333 14,8.73637967 14,8 C14,7.26362033 13.4030463,6.66666667 12.6666667,6.66666667 L12.1617605,6.66666667 L13.3945435,5.43388365 C14.5135095,5.75065459 15.3333333,6.77958724 15.3333333,8 C15.3333333,9.47275933 14.139426,10.6666667 12.6666667,10.6666667 L8.66666667,10.6666667 C8.5081988,10.6666667 8.35295937,10.6528441 8.20208831,10.6263388 L9.49509379,9.33333333 Z' id='Combined-Shape' fill='%23A8A9AA' fill-rule='nonzero'></path>        <path d='M6.50490621,6.66666667 L3.33333333,6.66666667 C2.59695367,6.66666667 2,7.26362033 2,8 C2,8.73637967 2.59695367,9.33333333 3.33333333,9.33333333 L3.83823954,9.33333333 L2.60545653,10.5661163 C1.48649049,10.2493454 0.666666667,9.22041276 0.666666667,8 C0.666666667,6.52724067 1.860574,5.33333333 3.33333333,5.33333333 L7.33333333,5.33333333 C7.4918012,5.33333333 7.64704063,5.34715592 7.79791169,5.37366118 L6.50490621,6.66666667 Z' id='Combined-Shape' fill='%23A8A9AA' fill-rule='nonzero'></path>        <rect id='Rectangle-8' fill='%23A8A9AA' fill-rule='nonzero' transform='translate(8.000000, 8.000000) rotate(45.000000) translate(-8.000000, -8.000000) ' x='7.33333333' y='1.33333333' width='1.33333333' height='13.3333333'></rect>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.dark-theme .module-quote__reference-warning__text {
+  color: #efefef; }
+
 .dark-theme .module-embedded-contact__image-container__default-avatar {
   background-color: #757575;
   color: #ffffff; }
@@ -3095,6 +3114,9 @@ body.dark-theme {
 .ios-theme .module-quote__primary__author--teal {
   color: #070c14; }
 
+.ios-theme .module-quote__reference-warning--incoming {
+  background-color: rgba(160, 208, 246, 0.325); }
+
 .ios-theme .bottom-bar .module-quote {
   background-color: rgba(32, 144, 234, 0.25);
   border-left-color: #2090ea; }
@@ -3214,6 +3236,30 @@ body.dark-theme {
 
 .ios-theme.dark-theme .module-quote__generic-file__text--incoming {
   color: #ffffff; }
+
+.ios-theme.dark-theme .module-quote__reference-warning {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.ios-theme.dark-theme .module-quote__reference-warning--incoming {
+  background-color: rgba(32, 144, 234, 0.5); }
+
+.ios-theme.dark-theme .module-quote__reference-warning__text {
+  color: #070c14; }
+
+.ios-theme.dark-theme .module-quote__reference-warning__text--incoming {
+  color: #ffffff; }
+
+.ios-theme.dark-theme .module-quote__reference-warning__icon {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->    <title>Link/broken-link-16</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Link/broken-link-16' stroke='none' stroke-width='1' fill='%2362656A' fill-rule='evenodd'>        <path d='M9.49509379,9.33333333 L12.6666667,9.33333333 C13.4030463,9.33333333 14,8.73637967 14,8 C14,7.26362033 13.4030463,6.66666667 12.6666667,6.66666667 L12.1617605,6.66666667 L13.3945435,5.43388365 C14.5135095,5.75065459 15.3333333,6.77958724 15.3333333,8 C15.3333333,9.47275933 14.139426,10.6666667 12.6666667,10.6666667 L8.66666667,10.6666667 C8.5081988,10.6666667 8.35295937,10.6528441 8.20208831,10.6263388 L9.49509379,9.33333333 Z' id='Combined-Shape' fill='%2362656A' fill-rule='nonzero'></path>        <path d='M6.50490621,6.66666667 L3.33333333,6.66666667 C2.59695367,6.66666667 2,7.26362033 2,8 C2,8.73637967 2.59695367,9.33333333 3.33333333,9.33333333 L3.83823954,9.33333333 L2.60545653,10.5661163 C1.48649049,10.2493454 0.666666667,9.22041276 0.666666667,8 C0.666666667,6.52724067 1.860574,5.33333333 3.33333333,5.33333333 L7.33333333,5.33333333 C7.4918012,5.33333333 7.64704063,5.34715592 7.79791169,5.37366118 L6.50490621,6.66666667 Z' id='Combined-Shape' fill='%2362656A' fill-rule='nonzero'></path>        <rect id='Rectangle-8' fill='%2362656A' fill-rule='nonzero' transform='translate(8.000000, 8.000000) rotate(45.000000) translate(-8.000000, -8.000000) ' x='7.33333333' y='1.33333333' width='1.33333333' height='13.3333333'></rect>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.ios-theme.dark-theme .module-quote__reference-warning__icon--incoming {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->    <title>Link/broken-link-16</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Link/broken-link-16' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M9.49509379,9.33333333 L12.6666667,9.33333333 C13.4030463,9.33333333 14,8.73637967 14,8 C14,7.26362033 13.4030463,6.66666667 12.6666667,6.66666667 L12.1617605,6.66666667 L13.3945435,5.43388365 C14.5135095,5.75065459 15.3333333,6.77958724 15.3333333,8 C15.3333333,9.47275933 14.139426,10.6666667 12.6666667,10.6666667 L8.66666667,10.6666667 C8.5081988,10.6666667 8.35295937,10.6528441 8.20208831,10.6263388 L9.49509379,9.33333333 Z' id='Combined-Shape' fill='%23FFFFFF' fill-rule='nonzero'></path>        <path d='M6.50490621,6.66666667 L3.33333333,6.66666667 C2.59695367,6.66666667 2,7.26362033 2,8 C2,8.73637967 2.59695367,9.33333333 3.33333333,9.33333333 L3.83823954,9.33333333 L2.60545653,10.5661163 C1.48649049,10.2493454 0.666666667,9.22041276 0.666666667,8 C0.666666667,6.52724067 1.860574,5.33333333 3.33333333,5.33333333 L7.33333333,5.33333333 C7.4918012,5.33333333 7.64704063,5.34715592 7.79791169,5.37366118 L6.50490621,6.66666667 Z' id='Combined-Shape' fill='%23FFFFFF' fill-rule='nonzero'></path>        <rect id='Rectangle-8' fill='%23FFFFFF' fill-rule='nonzero' transform='translate(8.000000, 8.000000) rotate(45.000000) translate(-8.000000, -8.000000) ' x='7.33333333' y='1.33333333' width='1.33333333' height='13.3333333'></rect>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
 
 .ios-theme.dark-theme .bottom-bar .module-quote__primary__author {
   color: #ffffff; }
@@ -3852,15 +3898,20 @@ body.dark-theme {
 .module-expire-timer--with-image-no-caption {
   background-color: #ffffff; }
 
+.module-quote-container {
+  margin-left: -6px;
+  margin-right: -6px;
+  margin-top: -4px;
+  margin-bottom: 5px; }
+
+.module-quote-container--with-content-above {
+  margin-top: 3px; }
+
 .module-quote {
   position: relative;
   border-radius: 4px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  margin-left: -6px;
-  margin-right: -6px;
-  margin-top: -4px;
-  margin-bottom: 5px;
   cursor: pointer;
   display: flex;
   flex-direction: row;
@@ -3873,9 +3924,12 @@ body.dark-theme {
   cursor: auto; }
 
 .module-quote--with-content-above {
-  margin-top: 3px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px; }
+
+.module-quote--with-reference-warning {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px; }
 
 .module-quote--incoming {
   background-color: rgba(255, 255, 255, 0.75);
@@ -4104,6 +4158,31 @@ body.dark-theme {
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis; }
+
+.module-quote__reference-warning {
+  height: 26px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.85);
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  padding-left: 8px;
+  padding-right: 8px; }
+
+.module-quote__reference-warning__icon {
+  height: 16px;
+  width: 16px;
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->    <title>Link/broken-link-16</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Link/broken-link-16' stroke='none' stroke-width='1' fill='%2362656A' fill-rule='evenodd'>        <path d='M9.49509379,9.33333333 L12.6666667,9.33333333 C13.4030463,9.33333333 14,8.73637967 14,8 C14,7.26362033 13.4030463,6.66666667 12.6666667,6.66666667 L12.1617605,6.66666667 L13.3945435,5.43388365 C14.5135095,5.75065459 15.3333333,6.77958724 15.3333333,8 C15.3333333,9.47275933 14.139426,10.6666667 12.6666667,10.6666667 L8.66666667,10.6666667 C8.5081988,10.6666667 8.35295937,10.6528441 8.20208831,10.6263388 L9.49509379,9.33333333 Z' id='Combined-Shape' fill='%2362656A' fill-rule='nonzero'></path>        <path d='M6.50490621,6.66666667 L3.33333333,6.66666667 C2.59695367,6.66666667 2,7.26362033 2,8 C2,8.73637967 2.59695367,9.33333333 3.33333333,9.33333333 L3.83823954,9.33333333 L2.60545653,10.5661163 C1.48649049,10.2493454 0.666666667,9.22041276 0.666666667,8 C0.666666667,6.52724067 1.860574,5.33333333 3.33333333,5.33333333 L7.33333333,5.33333333 C7.4918012,5.33333333 7.64704063,5.34715592 7.79791169,5.37366118 L6.50490621,6.66666667 Z' id='Combined-Shape' fill='%2362656A' fill-rule='nonzero'></path>        <rect id='Rectangle-8' fill='%2362656A' fill-rule='nonzero' transform='translate(8.000000, 8.000000) rotate(45.000000) translate(-8.000000, -8.000000) ' x='7.33333333' y='1.33333333' width='1.33333333' height='13.3333333'></rect>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.module-quote__reference-warning__text {
+  margin-left: 6px;
+  color: #070c14;
+  font-size: 13px;
+  line-height: 18px; }
 
 .module-embedded-contact {
   cursor: pointer;

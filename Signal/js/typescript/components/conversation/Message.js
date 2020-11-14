@@ -258,7 +258,7 @@
                 return null;
             }
             const withContentAbove = conversationType === 'group' && direction === 'incoming';
-            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: quote.onClick, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quote.authorColor, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
+            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: quote.onClick, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quote.authorColor, referencedMessageNotFound: quote.referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
         }
         renderEmbeddedContact() {
             const { collapseMetadata, contact, conversationType, direction, i18n, text, } = this.props;
