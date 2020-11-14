@@ -16,15 +16,11 @@
   const SQL_CHANNEL_KEY = 'sql-channel';
   const ERASE_SQL_KEY = 'erase-sql-key';
 
-  function initialize({ userConfig }) {
+  function initialize() {
     if (initialized) {
       throw new Error('sqlChannels: already initialized!');
     }
     initialized = true;
-
-    if (!userConfig) {
-      throw new Error('initialize: userConfig is required!');
-    }
 
     ipcMain.on(SQL_CHANNEL_KEY, async (event, jobId, callName, ...args) => {
       try {
@@ -48,7 +44,7 @@
 
     ipcMain.on(ERASE_SQL_KEY, async event => {
       try {
-        userConfig.set('key', null);
+        remove();
         event.sender.send(`${ERASE_SQL_KEY}-done`);
       } catch (error) {
         const errorForDisplay = error && error.stack ? error.stack : error;

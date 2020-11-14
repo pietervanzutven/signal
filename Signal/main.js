@@ -82,7 +82,6 @@ window.requestIdleCallback = () => { };
 const path = window.path;
 const url = window.url;
 const os = window.os;
-const crypto = window.crypto;
 
 const pify = window.pify;
 
@@ -90,16 +89,7 @@ const packageJson = {
   name: 'signal-desktop',
   productName: 'Signal',
 };
-
-const sql = window.app.sql;
-const sqlChannels = window.app.sql_channel;
-const attachments = window.app.attachments
-const attachmentChannel = window.app.attachment_channel;
-const autoUpdate = window.app.auto_update;
-const createTrayIcon = window.app.tray_icon;
 const GlobalErrors = window.app.global_errors;
-const logging = window.app.logging;
-const windowState = window.app.window_state;
 
 GlobalErrors.addHandler();
 
@@ -130,13 +120,25 @@ config.uwp_version = process.versions.uwp;
 config.hostname = 'Windows';
 config.appInstance = process.env.UWP_APP_INSTANCE;
 
+// Very important to put before the single instance check, since it is based on the
+//   userData directory.
+const userConfig = window.app.user_config;
+
 const importMode = false;
 
 const development = config.environment === 'development';
 
-// Very important to put before the single instance check, since it is based on the
-//   userData directory.
-const userConfig = window.app.user_config;
+// We generally want to pull in our own modules after this point, after the user
+//   data directory has been set.
+const attachments = window.app.attachments
+const attachmentChannel = window.app.attachment_channel;
+const autoUpdate = window.app.auto_update;
+const createTrayIcon = window.app.tray_icon;
+const keyManagement = window.app.key_management;
+const logging = window.app.logging;
+const sql = window.app.sql;
+const sqlChannels = window.app.sql_channel;
+const windowState = window.app.window_state;
 
 let windowConfig = userConfig.get('window');
 const loadLocale = window.app.locale.load;
@@ -420,15 +422,9 @@ let ready = false;
     locale = loadLocale({ appLocale, logger });
   }
 
-  let key = userConfig.get('key');
-  if (!key) {
-    // https://www.zetetic.net/sqlcipher/sqlcipher-api/#key
-    key = crypto.randomBytes(32).toString('hex');
-    userConfig.set('key', key);
-  }
-
+  const key = '';
   await sql.initialize({ configDir: userDataPath, key });
-  await sqlChannels.initialize({ userConfig });
+  await sqlChannels.initialize();
 
   async function cleanupOrphanedAttachments() {
     const allAttachments = await attachments.getAllAttachments(userDataPath);
