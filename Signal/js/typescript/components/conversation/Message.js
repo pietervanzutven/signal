@@ -103,13 +103,19 @@
                 clearTimeout(this.expiredTimeout);
             }
         }
+        componentDidUpdate() {
+            this.checkExpired();
+        }
         checkExpired() {
             const now = Date.now();
-            const { expirationTimestamp, expirationLength } = this.props;
+            const { isExpired, expirationTimestamp, expirationLength } = this.props;
             if (!expirationTimestamp || !expirationLength) {
                 return;
             }
-            if (now >= expirationTimestamp) {
+            if (this.expiredTimeout) {
+                return;
+            }
+            if (isExpired || now >= expirationTimestamp) {
                 this.setState({
                     expiring: true,
                 });
