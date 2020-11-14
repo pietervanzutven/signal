@@ -38284,13 +38284,13 @@ function MessageReceiver(username, password, signalingKey, options = {}) {
 }
 
 MessageReceiver.stringToArrayBuffer = string =>
-  dcodeIO.ByteBuffer.wrap(string, 'binary').toArrayBuffer();
+  Promise.resolve(dcodeIO.ByteBuffer.wrap(string, 'binary').toArrayBuffer());
 MessageReceiver.arrayBufferToString = arrayBuffer =>
-  dcodeIO.ByteBuffer.wrap(arrayBuffer).toString('binary');
+  Promise.resolve(dcodeIO.ByteBuffer.wrap(arrayBuffer).toString('binary'));
 MessageReceiver.stringToArrayBufferBase64 = string =>
-  dcodeIO.ByteBuffer.wrap(string, 'base64').toArrayBuffer();
+  Promise.resolve(dcodeIO.ByteBuffer.wrap(string, 'base64').toArrayBuffer());
 MessageReceiver.arrayBufferToStringBase64 = arrayBuffer =>
-  dcodeIO.ByteBuffer.wrap(arrayBuffer).toString('base64');
+  Promise.resolve(dcodeIO.ByteBuffer.wrap(arrayBuffer).toString('base64'));
 
 MessageReceiver.prototype = new textsecure.EventTarget();
 MessageReceiver.prototype.extend({
@@ -38523,27 +38523,22 @@ MessageReceiver.prototype.extend({
   async queueAllCached() {
     const items = await this.getAllFromCache();
     for (let i = 0, max = items.length; i < max; i += 1) {
-      if (i > 0 && i % 20 === 0) {
-        window.log.info('queueAllCached: Giving event loop a rest');
         // eslint-disable-next-line no-await-in-loop
-        await new Promise(resolve => setTimeout(resolve, 2000));
+      await this.queueCached(items[i]);
       }
-
-      this.queueCached(items[i]);
-    }
   },
   async queueCached(item) {
     try {
       let envelopePlaintext = item.envelope;
 
       if (item.version === 2) {
-        envelopePlaintext = MessageReceiver.stringToArrayBufferBase64(
+        envelopePlaintext = await MessageReceiver.stringToArrayBufferBase64(
           envelopePlaintext
         );
       }
 
       if (typeof envelopePlaintext === 'string') {
-        envelopePlaintext = MessageReceiver.stringToArrayBuffer(
+        envelopePlaintext = await MessageReceiver.stringToArrayBuffer(
           envelopePlaintext
         );
       }
@@ -38554,13 +38549,13 @@ MessageReceiver.prototype.extend({
         let payloadPlaintext = decrypted;
 
         if (item.version === 2) {
-          payloadPlaintext = MessageReceiver.stringToArrayBufferBase64(
+          payloadPlaintext = await MessageReceiver.stringToArrayBufferBase64(
             payloadPlaintext
           );
         }
 
         if (typeof payloadPlaintext === 'string') {
-          payloadPlaintext = MessageReceiver.stringToArrayBuffer(
+          payloadPlaintext = await MessageReceiver.stringToArrayBuffer(
             payloadPlaintext
           );
         }
@@ -38627,12 +38622,12 @@ MessageReceiver.prototype.extend({
       );
     });
   },
-  addToCache(envelope, plaintext) {
+  async addToCache(envelope, plaintext) {
     const id = this.getEnvelopeId(envelope);
     const data = {
       id,
       version: 2,
-      envelope: MessageReceiver.arrayBufferToStringBase64(plaintext),
+      envelope: await MessageReceiver.arrayBufferToStringBase64(plaintext),
       timestamp: Date.now(),
       attempts: 1,
     };
@@ -38651,10 +38646,13 @@ MessageReceiver.prototype.extend({
     if (item.get('version') === 2) {
       item.set(
         'decrypted',
-        MessageReceiver.arrayBufferToStringBase64(plaintext)
+        await MessageReceiver.arrayBufferToStringBase64(plaintext)
       );
     } else {
-      item.set('decrypted', MessageReceiver.arrayBufferToString(plaintext));
+      item.set(
+        'decrypted',
+        await MessageReceiver.arrayBufferToString(plaintext)
+      );
     }
 
     return textsecure.storage.unprocessed.save(item.attributes);
