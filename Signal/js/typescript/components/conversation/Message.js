@@ -335,18 +335,40 @@
                 react_1.default.createElement("div", { role: "button", onClick: this.showMenuBound, className: classnames_1.default('module-message__buttons__menu', `module-message__buttons__download--${direction}`) })));
             const first = direction === 'incoming' ? downloadButton : menuButton;
             const last = direction === 'incoming' ? menuButton : downloadButton;
-            return (react_1.default.createElement("div", { className: "module-message__buttons" },
+            return (react_1.default.createElement("div", { className: classnames_1.default('module-message__buttons', `module-message__buttons--${direction}`) },
                 first,
                 replyButton,
                 last));
         }
         renderContextMenu(triggerId) {
-            const { direction, status, onDelete, onRetrySend, onShowDetail, i18n, } = this.props;
+            const { attachment, direction, status, onDelete, onDownload, onReply, onRetrySend, onShowDetail, i18n, } = this.props;
             const showRetry = status === 'error' && direction === 'outgoing';
             return (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
-                react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowDetail }, i18n('moreInfo')),
-                showRetry ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onRetrySend }, i18n('retrySend'))) : null,
-                react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onDelete }, i18n('deleteMessage'))));
+                attachment ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                    attributes: {
+                        className: 'module-message__context__download',
+                    }, onClick: onDownload
+                }, i18n('downloadAttachment'))) : null,
+                react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                    attributes: {
+                        className: 'module-message__context__reply',
+                    }, onClick: onReply
+                }, i18n('replyToMessage')),
+                react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                    attributes: {
+                        className: 'module-message__context__more-info',
+                    }, onClick: onShowDetail
+                }, i18n('moreInfo')),
+                showRetry ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                    attributes: {
+                        className: 'module-message__context__retry-send',
+                    }, onClick: onRetrySend
+                }, i18n('retrySend'))) : null,
+                react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                    attributes: {
+                        className: 'module-message__context__delete-message',
+                    }, onClick: onDelete
+                }, i18n('deleteMessage'))));
         }
         render() {
             const { authorPhoneNumber, authorColor, direction, id, timestamp, } = this.props;

@@ -1280,13 +1280,15 @@ input.search {
     .conversation .main.panel .discussion-container .bar-container {
       height: 5px; }
     .conversation .main.panel .discussion-container .message-list {
+      -webkit-padding-start: 0px;
       position: absolute;
       top: 0;
       height: 100%;
       width: 100%;
       margin: 0;
       padding: 10px 0 0 0;
-      overflow-y: auto; }
+      overflow-y: auto;
+      overflow-x: hidden; }
 
 .message-detail-wrapper {
   height: calc(100% - 48px);
@@ -1366,9 +1368,6 @@ input.search {
   list-style: none; }
   .message-container li,
   .message-list li {
-    max-width: 736px;
-    margin-left: auto;
-    margin-right: auto;
     margin-bottom: 10px; }
     .message-container li .message-wrapper,
     .message-list li .message-wrapper {
@@ -3282,6 +3281,7 @@ body.dark-theme {
   font-style: italic; }
 
 .module-message {
+  position: relative;
   display: inline-flex;
   flex-direction: row;
   align-items: stretch; }
@@ -3301,10 +3301,19 @@ body.dark-theme {
   100% {
     transform: translateX(0px); } }
 
+.module-message--incoming {
+  margin-left: 0;
+  margin-right: 32px; }
+
 .module-message--outgoing {
-  float: right; }
+  float: right;
+  margin-right: 0;
+  margin-left: 32px; }
 
 .module-message__buttons {
+  position: absolute;
+  top: 0;
+  bottom: 0;
   display: inline-flex;
   flex-direction: row;
   align-items: center;
@@ -3312,6 +3321,12 @@ body.dark-theme {
 
 .module-message:hover .module-message__buttons {
   opacity: 1; }
+
+.module-message__buttons--incoming {
+  left: 100%; }
+
+.module-message__buttons--outgoing {
+  right: 100%; }
 
 .module-message__buttons__download {
   height: 24px;
@@ -3404,8 +3419,7 @@ body.dark-theme {
   padding-right: 12px;
   padding-left: 12px;
   padding-top: 10px;
-  padding-bottom: 10px;
-  max-width: 386px; }
+  padding-bottom: 10px; }
 
 .module-message__container--outgoing {
   background-color: #eeefef; }
@@ -3484,7 +3498,6 @@ body.dark-theme {
   border-top-right-radius: 0px; }
 
 .module-message__img-attachment {
-  max-width: 386px;
   object-fit: cover;
   width: 100%;
   min-width: 200px;
@@ -5272,6 +5285,49 @@ body.dark-theme {
 .react-contextmenu-item.react-contextmenu-submenu
 > .react-contextmenu-item.react-contextmenu-item--selected:after {
   color: #ffffff; }
+
+.module-message__buttons__download {
+  display: none; }
+
+.module-message__buttons__reply {
+  display: none; }
+
+/* Spec: container > 438px and container < 593px*/
+@media (min-width: 800px) and (max-width: 925px) {
+  .module-message {
+    max-width: 374px; }
+  .module-message--incoming {
+    margin-left: 0;
+    margin-right: auto; }
+  .module-message--outgoing {
+    margin-right: 0;
+    margin-left: auto; }
+  .module-message__buttons__download {
+    display: inline-block; }
+  .module-message__buttons__reply {
+    display: inline-block; }
+  .module-message__context__download {
+    display: none; }
+  .module-message__context__reply {
+    display: none; } }
+
+@media (min-width: 926px) {
+  .module-message {
+    max-width: 66%; }
+  .module-message--incoming {
+    margin-left: 0;
+    margin-right: auto; }
+  .module-message--outgoing {
+    margin-right: 0;
+    margin-left: auto; }
+  .module-message__buttons__download {
+    display: inline-block; }
+  .module-message__buttons__reply {
+    display: inline-block; }
+  .module-message__context__download {
+    display: none; }
+  .module-message__context__reply {
+    display: none; } }
 
 /**
  * Variables declared here can be overridden by consuming applications, with
