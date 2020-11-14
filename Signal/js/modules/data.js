@@ -258,6 +258,10 @@
 
   async function getMessageById(id, { Message }) {
     const message = await channels.getMessageById(id);
+    if (!message) {
+      return null;
+    }
+
     return new Message(message);
   }
 
@@ -356,6 +360,10 @@
 
   async function getUnprocessedById(id, { Unprocessed }) {
     const unprocessed = await channels.getUnprocessedById(id);
+    if (!unprocessed) {
+      return null;
+    }
+
     return new Unprocessed(unprocessed);
   }
 
