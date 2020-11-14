@@ -170,7 +170,7 @@
       const job = _getJob(jobId);
       if (!job) {
         throw new Error(
-          `Received job reply to job ${jobId}, but did not have it in our registry!`
+          `Received SQL channel reply to job ${jobId}, but did not have it in our registry!`
         );
       }
 
@@ -178,7 +178,9 @@
 
       if (errorForDisplay) {
         return reject(
-          new Error(`Error calling channel ${fnName}: ${errorForDisplay}`)
+          new Error(
+            `Error received from SQL channel job ${jobId} (${fnName}): ${errorForDisplay}`
+          )
         );
       }
 
@@ -200,7 +202,8 @@
         });
 
         setTimeout(
-          () => reject(new Error(`Request to ${fnName} timed out`)),
+          () =>
+            reject(new Error(`SQL channel job ${jobId} (${fnName}) timed out`)),
           DATABASE_UPDATE_TIMEOUT
         );
       });

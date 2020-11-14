@@ -283,6 +283,7 @@
     <Content Include="js\typescript\util\migrateColor.js" />
     <Content Include="js\typescript\util\missingCaseError.js" />
     <Content Include="js\typescript\util\saveURLAsFile.js" />
+    <Content Include="js\util_worker.js" />
     <Content Include="js\views\about_view.js" />
     <Content Include="js\views\app_view.js" />
     <Content Include="js\views\attachment_preview_view.js" />
