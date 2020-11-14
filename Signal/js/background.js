@@ -855,19 +855,17 @@
       );
       const { expireTimer } = details;
       const isValidExpireTimer = typeof expireTimer === 'number';
-      if (!isValidExpireTimer) {
-        return;
+      if (isValidExpireTimer) {
+        const source = textsecure.storage.user.getNumber();
+        const receivedAt = Date.now();
+
+        await conversation.updateExpirationTimer(
+          expireTimer,
+          source,
+          receivedAt,
+          { fromSync: true }
+        );
       }
-
-      const source = textsecure.storage.user.getNumber();
-      const receivedAt = Date.now();
-
-      await conversation.updateExpirationTimer(
-        expireTimer,
-        source,
-        receivedAt,
-        { fromSync: true }
-      );
 
       if (details.verified) {
         const { verified } = details;
@@ -880,8 +878,6 @@
         verifiedEvent.viaContactSync = true;
         await onVerified(verifiedEvent);
       }
-
-      ev.confirm();
     } catch (error) {
       window.log.error('onContactReceived error:', Errors.toLogFormat(error));
     }
