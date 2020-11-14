@@ -1,5 +1,4 @@
 /* global window, IDBKeyRange */
-
 (function () {
   'use strict';
 
@@ -89,6 +88,11 @@
           forEach(array, item => {
             // In the new database, we can't store ArrayBuffers, so we turn these two fields
             //   into strings like MessageReceiver now does before save.
+
+            // Need to set it to version two, since we're using Base64 strings now
+            // eslint-disable-next-line no-param-reassign
+            item.version = 2;
+
             if (item.envelope) {
               // eslint-disable-next-line no-param-reassign
               item.envelope = arrayBufferToString(item.envelope);
