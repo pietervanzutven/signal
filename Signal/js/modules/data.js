@@ -19,6 +19,8 @@
   //   .save(
   //   .destroy(
 
+  const DATABASE_UPDATE_TIMEOUT = 2 * 60 * 1000; // two minutes
+
   const SQL_CHANNEL_KEY = 'sql-channel';
   const ERASE_SQL_KEY = 'erase-sql-key';
   const ERASE_ATTACHMENTS_KEY = 'erase-attachments';
@@ -59,7 +61,6 @@
     getUnprocessedById,
     saveUnprocessed,
     saveUnprocesseds,
-    updateUnprocessed,
     removeUnprocessed,
     removeAllUnprocessed,
 
@@ -110,8 +111,12 @@
     _jobCounter += 1;
     const id = _jobCounter;
 
+    if (_DEBUG) {
+      window.log.info(`SQL channel job ${id} (${fnName}) started`);
+    }
     _jobs[id] = {
       fnName,
+      start: Date.now(),
     };
 
     return id;
@@ -119,6 +124,7 @@
 
   function _updateJob(id, data) {
     const { resolve, reject } = data;
+    const { fnName, start } = _jobs[id];
 
     _jobs[id] = Object.assign({},
       _jobs[id],
@@ -126,10 +132,18 @@
       {
         resolve: value => {
           _removeJob(id);
+          const end = Date.now();
+          window.log.info(
+            `SQL channel job ${id} (${fnName}) succeeded in ${end - start}ms`
+          );
           return resolve(value);
         },
         reject: error => {
           _removeJob(id);
+          const end = Date.now();
+          window.log.info(
+            `SQL channel job ${id} (${fnName}) failed in ${end - start}ms`
+          );
           return reject(error);
         },
       }
@@ -185,7 +199,7 @@
 
         setTimeout(
           () => reject(new Error(`Request to ${fnName} timed out`)),
-          10000
+          DATABASE_UPDATE_TIMEOUT
         );
       });
     };
@@ -246,6 +260,10 @@
 
   async function getMessageById(id, { Message }) {
     const message = await channels.getMessageById(id);
+    if (!message) {
+      return null;
+    }
+
     return new Message(message);
   }
 
@@ -344,6 +362,10 @@
 
   async function getUnprocessedById(id, { Unprocessed }) {
     const unprocessed = await channels.getUnprocessedById(id);
+    if (!unprocessed) {
+      return null;
+    }
+
     return new Unprocessed(unprocessed);
   }
 
@@ -356,19 +378,6 @@
     await channels.saveUnprocesseds(_cleanData(arrayOfUnprocessed), {
       forceSave,
     });
-  }
-
-  async function updateUnprocessed(id, updates) {
-    const existing = await channels.getUnprocessedById(id);
-    if (!existing) {
-      throw new Error(`Unprocessed id ${id} does not exist in the database!`);
-    }
-    const toSave = Object.assign({},
-      existing,
-      updates,
-    );
-
-    await saveUnprocessed(toSave);
   }
 
   async function removeUnprocessed(id) {

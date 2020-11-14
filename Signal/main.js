@@ -487,14 +487,6 @@ ipc.on('draw-attention', () => {
   Windows.System.Launcher.launchUriAsync(new Windows.Foundation.Uri('signal://'));
 });
 
-ipc.on('set-media-permissions', (event, enabled) => {
-  userConfig.set('mediaPermissions', enabled);
-});
-ipc.on('get-media-permissions', event => {
-  // eslint-disable-next-line no-param-reassign
-  event.returnValue = userConfig.get('mediaPermissions') || false;
-});
-
 ipc.on('restart', () => {
   Windows.UI.WebUI.WebUIApplication.requestRestartAsync('');
 });
