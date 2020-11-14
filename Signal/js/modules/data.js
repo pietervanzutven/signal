@@ -253,8 +253,7 @@
     //   it needs to delete all associated on-disk files along with the database delete.
     if (message) {
       await channels.removeMessage(id);
-      const model = new Message(message);
-      await model.cleanup();
+      await message.cleanup();
     }
   }
 
