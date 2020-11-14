@@ -1559,6 +1559,7 @@ input.search {
   color: #070c14; }
 
 .module-scroll-down {
+  z-index: 100;
   position: absolute;
   right: 20px;
   bottom: 10px; }
