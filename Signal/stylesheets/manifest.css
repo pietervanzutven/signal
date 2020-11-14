@@ -3035,6 +3035,12 @@ body.dark-theme {
 .ios-theme .module-message__generic-attachment__file-size--incoming {
   color: #070c14; }
 
+.ios-theme .module-expire-timer {
+  background-color: rgba(255, 255, 255, 0.7); }
+
+.ios-theme .module-expire-timer--incoming {
+  background-color: #8b8e91; }
+
 .ios-theme .module-quote--incoming {
   background-color: rgba(32, 144, 234, 0.25);
   border-left-color: #2090ea; }
@@ -3177,6 +3183,9 @@ body.dark-theme {
 
 .ios-theme.dark-theme .module-message__generic-attachment__file-size--incoming {
   color: #ffffff; }
+
+.ios-theme.dark-theme .module-expire-timer--incoming {
+  background-color: rgba(255, 255, 255, 0.7); }
 
 .ios-theme.dark-theme .module-quote__primary__author {
   color: #070c14; }
