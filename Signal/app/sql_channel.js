@@ -4,6 +4,8 @@
   window.app = window.app || {};
 
   const sql = window.app.sql;
+  const { remove: removeUserConfig } = window.app.user_config;
+  const { remove: removeEphemeralConfig } = window.app.ephemeral_config;
 
   const { ipcMain } = window.ipc;
 
@@ -16,15 +18,11 @@
   const SQL_CHANNEL_KEY = 'sql-channel';
   const ERASE_SQL_KEY = 'erase-sql-key';
 
-  function initialize({ userConfig }) {
+  function initialize() {
     if (initialized) {
       throw new Error('sqlChannels: already initialized!');
     }
     initialized = true;
-
-    if (!userConfig) {
-      throw new Error('initialize: userConfig is required!');
-    }
 
     ipcMain.on(SQL_CHANNEL_KEY, async (event, jobId, callName, ...args) => {
       try {
@@ -48,7 +46,8 @@
 
     ipcMain.on(ERASE_SQL_KEY, async event => {
       try {
-        userConfig.set('key', null);
+        removeUserConfig();
+        removeEphemeralConfig();
         event.sender.send(`${ERASE_SQL_KEY}-done`);
       } catch (error) {
         const errorForDisplay = error && error.stack ? error.stack : error;
