@@ -3529,18 +3529,6 @@ body.dark-theme {
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px; }
 
-.module-message__broken-image {
-  font-size: 11px;
-  line-height: 16px;
-  letter-spacing: 0.3px;
-  padding: 10px;
-  text-align: center;
-  text-transform: uppercase;
-  color: #070c14; }
-
-.module-message__broken-image--incoming {
-  color: #ffffff; }
-
 .module-message__video-overlay__circle {
   position: absolute;
   top: 50%;
@@ -3562,19 +3550,6 @@ body.dark-theme {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
-
-.module-message__broken-video-screenshot {
-  font-size: 11px;
-  line-height: 16px;
-  letter-spacing: 0.3px;
-  padding: 10px;
-  text-align: center;
-  text-transform: uppercase;
-  color: #070c14;
-  cursor: pointer; }
-
-.module-message__broken-video-screenshot--incoming {
-  color: #ffffff; }
 
 .module-message__audio-attachment {
   margin-top: 2px; }
