@@ -4,6 +4,8 @@
   window.app = window.app || {};
 
   const sql = window.app.sql;
+  const { remove: removeUserConfig } = window.app.user_config;
+  const { remove: removeEphemeralConfig } = window.app.ephemeral_config;
 
   const { ipcMain } = window.ipc;
 
@@ -44,7 +46,8 @@
 
     ipcMain.on(ERASE_SQL_KEY, async event => {
       try {
-        remove();
+        removeUserConfig();
+        removeEphemeralConfig();
         event.sender.send(`${ERASE_SQL_KEY}-done`);
       } catch (error) {
         const errorForDisplay = error && error.stack ? error.stack : error;

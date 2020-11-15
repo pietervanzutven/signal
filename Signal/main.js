@@ -82,6 +82,8 @@ window.requestIdleCallback = () => { };
 const path = window.path;
 const url = window.url;
 const os = window.os;
+const fs = window.fs;
+const crypte = window.crypto;
 
 const pify = window.pify;
 
@@ -134,13 +136,20 @@ const attachments = window.app.attachments
 const attachmentChannel = window.app.attachment_channel;
 const autoUpdate = window.app.auto_update;
 const createTrayIcon = window.app.tray_icon;
-const keyManagement = window.app.key_management;
+const ephemeralConfig = window.app.ephemeral_config;
 const logging = window.app.logging;
 const sql = window.app.sql;
 const sqlChannels = window.app.sql_channel;
 const windowState = window.app.window_state;
 
-let windowConfig = userConfig.get('window');
+const windowFromUserConfig = userConfig.get('window');
+const windowFromEphemeral = ephemeralConfig.get('window');
+let windowConfig = windowFromEphemeral || windowFromUserConfig;
+if (windowFromUserConfig) {
+  userConfig.set('window', null);
+  ephemeralConfig.set('window', windowConfig);
+}
+
 const loadLocale = window.app.locale.load;
 
 // Both of these will be set after app fires the 'ready' event
@@ -422,7 +431,15 @@ let ready = false;
     locale = loadLocale({ appLocale, logger });
   }
 
-  const key = '';
+  let key = userConfig.get('key');
+  if (!key) {
+    console.log(
+      'key/initialize: Generating new encryption key, since we did not find it on disk'
+    );
+    // https://www.zetetic.net/sqlcipher/sqlcipher-api/#key
+    key = crypto.randomBytes(32).toString('hex');
+    userConfig.set('key', key);
+  }
   await sql.initialize({ configDir: userDataPath, key });
   await sqlChannels.initialize();
 

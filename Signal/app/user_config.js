@@ -1,28 +1,29 @@
-﻿(function () {
-    'use strict';
+(function () {
+  'use strict';
 
-    window.app = window.app || {};
-    
-    const path = window.path;
+  window.app = window.app || {};
 
-    const UWPConfig = window.uwp_config;
+  const path = window.path;
 
-    const config = window.app.config;
+  const { start } = window.app.base_config;
+  const config = window.app.config;
 
-    // use a separate data directory for development
-    if (config.has('storageProfile')) {
-        const userData = path.join(
-          app.getPath('appData'),
-          `Signal-${config.get('storageProfile')}`
-        );
+  // Use separate data directory for development
+  if (config.has('storageProfile')) {
+    const userData = path.join(
+      app.getPath('appData'),
+      `Signal-${config.get('storageProfile')}`
+    );
 
-        app.setPath('userData', userData);
-    }
+    app.setPath('userData', userData);
+  }
 
-    console.log(`userData: ${app.getPath('userData')}`);
+  console.log(`userData: ${app.getPath('userData')}`);
 
-    // this needs to be below our update to the appData path
-    const userConfig = new UWPConfig();
+  const userDataPath = app.getPath('userData');
+  const targetPath = path.join(userDataPath, 'config.json');
 
-    window.app.user_config = userConfig;
+  const userConfig = start('user', targetPath);
+
+  window.app.user_config = userConfig;
 })();

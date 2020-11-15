@@ -70,6 +70,8 @@
     <Content Include="about_preload.js" />
     <Content Include="app\attachments.js" />
     <Content Include="app\attachment_channel.js" />
+    <Content Include="app\base_config.js" />
+    <Content Include="app\ephemeral_config.js" />
     <Content Include="app\global_errors.js" />
     <Content Include="app\logging.js" />
     <Content Include="app\config.js" />
@@ -327,6 +329,7 @@
     <Content Include="main.js" />
     <Content Include="node_modules\core\app.js" />
     <Content Include="node_modules\core\browserwindow.js" />
+    <Content Include="node_modules\core\fs.js" />
     <Content Include="node_modules\core\ipc.js" />
     <Content Include="node_modules\core\uwp-config.js" />
     <Content Include="node_modules\glob\glob.js" />
@@ -335,10 +338,12 @@
     <Content Include="node_modules\lodash\compact.js" />
     <Content Include="node_modules\lodash\forEach.js" />
     <Content Include="node_modules\lodash\fromPairs.js" />
+    <Content Include="node_modules\lodash\get.js" />
     <Content Include="node_modules\lodash\groupBy.js" />
     <Content Include="node_modules\lodash\filter.js" />
     <Content Include="node_modules\lodash\includes.js" />
     <Content Include="node_modules\lodash\map.js" />
+    <Content Include="node_modules\lodash\set.js" />
     <Content Include="node_modules\mkdirp\index.js" />
     <Content Include="node_modules\pify\index.js" />
     <Content Include="node_modules\prop-types\prop-types.js" />
