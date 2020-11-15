@@ -3126,6 +3126,18 @@ body.dark-theme {
   background-color: rgba(32, 144, 234, 0.25);
   border-left-color: #2090ea; }
 
+.ios-theme .module-embedded-contact__contact-name {
+  color: #ffffff; }
+
+.ios-theme .module-embedded-contact__contact-method {
+  color: rgba(255, 255, 255, 0.7); }
+
+.ios-theme .module-embedded-contact__contact-name--incoming {
+  color: #070c14; }
+
+.ios-theme .module-embedded-contact__contact-method--incoming {
+  color: #62656a; }
+
 .ios-theme.dark-theme .module-message__container--incoming {
   background-color: #414347;
   color: #ffffff; }
@@ -3170,7 +3182,7 @@ body.dark-theme {
     color: #ffffff; }
 
 .ios-theme.dark-theme .module-message__metadata__date--incoming {
-  color: #ffffff; }
+  color: rgba(255, 255, 255, 0.7); }
 
 .ios-theme.dark-theme .module-message__broken-image--incoming {
   color: #ffffff; }
@@ -3283,7 +3295,10 @@ body.dark-theme {
   .ios-theme.dark-theme .bottom-bar .module-quote__primary__text a {
     color: #ffffff; }
 
-.ios-theme.dark-theme .module-embedded-contact__contact-method {
+.ios-theme.dark-theme .module-embedded-contact__contact-name--incoming {
+  color: #ffffff; }
+
+.ios-theme.dark-theme .module-embedded-contact__contact-method--incoming {
   color: rgba(255, 255, 255, 0.7); }
 
 .module-contact-name__profile-name {
@@ -3529,18 +3544,6 @@ body.dark-theme {
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px; }
 
-.module-message__broken-image {
-  font-size: 11px;
-  line-height: 16px;
-  letter-spacing: 0.3px;
-  padding: 10px;
-  text-align: center;
-  text-transform: uppercase;
-  color: #070c14; }
-
-.module-message__broken-image--incoming {
-  color: #ffffff; }
-
 .module-message__video-overlay__circle {
   position: absolute;
   top: 50%;
@@ -3562,19 +3565,6 @@ body.dark-theme {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
-
-.module-message__broken-video-screenshot {
-  font-size: 11px;
-  line-height: 16px;
-  letter-spacing: 0.3px;
-  padding: 10px;
-  text-align: center;
-  text-transform: uppercase;
-  color: #070c14;
-  cursor: pointer; }
-
-.module-message__broken-video-screenshot--incoming {
-  color: #ffffff; }
 
 .module-message__audio-attachment {
   margin-top: 2px; }

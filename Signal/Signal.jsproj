@@ -249,6 +249,8 @@
     <Content Include="js\typescript\components\conversation\media-gallery\groupMessagesByDate.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\MediaGallery.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\MediaGridItem.js" />
+    <Content Include="js\typescript\components\conversation\media-gallery\types\AttachmentType.js" />
+    <Content Include="js\typescript\components\conversation\media-gallery\types\ItemClickEvent.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\types\Message.js" />
     <Content Include="js\typescript\components\conversation\Message.js" />
     <Content Include="js\typescript\components\conversation\MessageBody.js" />
