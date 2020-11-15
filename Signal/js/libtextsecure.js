@@ -39047,9 +39047,12 @@ MessageReceiver.prototype.extend({
         const groupId = message.group && message.group.id;
         const isBlocked = this.isGroupBlocked(groupId);
         const isMe = envelope.source === textsecure.storage.user.getNumber();
-        const hasGroupMetadata = Boolean(message.group);
+        const isLeavingGroup = Boolean(
+          message.group &&
+            message.group.type === textsecure.protobuf.GroupContext.Type.QUIT
+        );
 
-        if (groupId && isBlocked && !(isMe && hasGroupMetadata)) {
+        if (groupId && isBlocked && !(isMe && isLeavingGroup)) {
           window.log.warn(
             `Message ${this.getEnvelopeId(
               envelope
@@ -39085,9 +39088,12 @@ MessageReceiver.prototype.extend({
         const groupId = message.group && message.group.id;
         const isBlocked = this.isGroupBlocked(groupId);
         const isMe = envelope.source === textsecure.storage.user.getNumber();
-        const hasGroupMetadata = Boolean(message.group);
+        const isLeavingGroup = Boolean(
+          message.group &&
+            message.group.type === textsecure.protobuf.GroupContext.Type.QUIT
+        );
 
-        if (groupId && isBlocked && !(isMe && hasGroupMetadata)) {
+        if (groupId && isBlocked && !(isMe && isLeavingGroup)) {
           window.log.warn(
             `Message ${this.getEnvelopeId(
               envelope

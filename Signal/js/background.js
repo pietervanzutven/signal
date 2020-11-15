@@ -915,9 +915,9 @@
       updates.left = true;
     }
 
-    if (details.blocked === true) {
+    if (details.blocked) {
       storage.addBlockedGroup(id);
-    } else if (details.blocked === false) {
+    } else {
       storage.removeBlockedGroup(id);
     }
 
