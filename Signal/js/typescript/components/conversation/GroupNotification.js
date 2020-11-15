@@ -34,11 +34,11 @@
                     }
                     return (react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: contacts.length > 1 ? 'multipleJoinedTheGroup' : 'joinedTheGroup', components: [people] }));
                 case 'remove':
-                    if (!contacts || !contacts.length) {
-                        throw new Error('Group update is missing contacts');
-                    }
                     if (isMe) {
                         return i18n('youLeftTheGroup');
+                    }
+                    if (!contacts || !contacts.length) {
+                        throw new Error('Group update is missing contacts');
                     }
                     return (react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: contacts.length > 1 ? 'multipleLeftTheGroup' : 'leftTheGroup', components: [people] }));
                 case 'general':
