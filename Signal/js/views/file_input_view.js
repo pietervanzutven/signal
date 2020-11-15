@@ -24,6 +24,12 @@
       };
     },
   });
+  Whisper.UnableToLoadToast = Whisper.ToastView.extend({
+    render_attributes() {
+      return { toastMessage: i18n('unableToLoadAttachment') };
+    },
+  });
+
   Whisper.UnsupportedFileTypeToast = Whisper.ToastView.extend({
     template: i18n('unsupportedFileType'),
   });
@@ -85,15 +91,22 @@
       this.thumb.$('img')[0].onload = () => {
         this.$el.trigger('force-resize');
       };
+      this.thumb.$('img')[0].onerror = () => {
+        this.unableToLoadAttachment();
+      };
+    },
+
+    unableToLoadAttachment() {
+      const toast = new Whisper.UnableToLoadToast();
+      toast.$el.insertAfter(this.$el);
+      toast.render();
+
+      this.deleteFiles();
     },
 
     autoScale(file) {
       var contentType = file.contentType || file.type;
-      if (
-        contentType.split('/')[0] !== 'image' ||
-        contentType === 'image/gif' ||
-        contentType === 'image/tiff'
-      ) {
+      if (contentType.split('/')[0] !== 'image' || contentType === 'image/tiff') {
         // nothing to do
         return Promise.resolve(file);
       }
@@ -109,11 +122,16 @@
           const maxHeight = 4096;
           const maxWidth = 4096;
           if (
-            img.width <= maxWidth &&
-            img.height <= maxHeight &&
+            img.naturalWidth <= maxWidth &&
+            img.naturalHeight <= maxHeight &&
             file.size <= maxSize
           ) {
             resolve(file);
+            return;
+          }
+
+          if (file.type === 'image/gif') {
+            reject(new Error('GIF is too large'));
             return;
           }
 
@@ -178,6 +196,9 @@
       const renderImagePreview = async () => {
         if (!MIME.isJPEG(file.type)) {
           this.previewObjectUrl = URL.createObjectURL(file);
+          if (!this.previewObjectUrl) {
+            throw new Error('Failed to create object url for image!');
+          }
           this.addThumb(this.previewObjectUrl);
           return;
         }
@@ -204,42 +225,51 @@
         this.addThumb('images/file.svg');
       }
 
-      const blob = await this.autoScale(file);
-      let limitKb = 1000000;
-      const blobType =
-        file.type === 'image/gif' ? 'gif' : contentType.split('/')[0];
+      try {
+        const blob = await this.autoScale(file);
+        let limitKb = 1000000;
+        const blobType =
+          file.type === 'image/gif' ? 'gif' : contentType.split('/')[0];
 
-      switch (blobType) {
-        case 'image':
-          limitKb = 6000;
-          break;
-        case 'gif':
-          limitKb = 25000;
-          break;
-        case 'audio':
-          limitKb = 100000;
-          break;
-        case 'video':
-          limitKb = 100000;
-          break;
-        default:
-          limitKb = 100000;
-          break;
-      }
-      if ((blob.size / 1024).toFixed(4) >= limitKb) {
-        const units = ['kB', 'MB', 'GB'];
-        let u = -1;
-        let limit = limitKb * 1000;
-        do {
-          limit /= 1000;
-          u += 1;
-        } while (limit >= 1000 && u < units.length - 1);
-        const toast = new Whisper.FileSizeToast({
-          model: { limit, units: units[u] },
-        });
-        toast.$el.insertAfter(this.$el);
-        toast.render();
-        this.deleteFiles();
+        switch (blobType) {
+          case 'image':
+            limitKb = 6000;
+            break;
+          case 'gif':
+            limitKb = 25000;
+            break;
+          case 'audio':
+            limitKb = 100000;
+            break;
+          case 'video':
+            limitKb = 100000;
+            break;
+          default:
+            limitKb = 100000;
+            break;
+        }
+        if ((blob.size / 1024).toFixed(4) >= limitKb) {
+          const units = ['kB', 'MB', 'GB'];
+          let u = -1;
+          let limit = limitKb * 1000;
+          do {
+            limit /= 1000;
+            u += 1;
+          } while (limit >= 1000 && u < units.length - 1);
+          const toast = new Whisper.FileSizeToast({
+            model: { limit, units: units[u] },
+          });
+          toast.$el.insertAfter(this.$el);
+          toast.render();
+          this.deleteFiles();
+        }
+      } catch (error) {
+        window.log.error(
+          'Error ensuring that image is properly sized:',
+          error && error.message ? error.message : error
+        );
+
+        this.unableToLoadAttachment();
       }
     },
 
