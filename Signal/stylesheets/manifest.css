@@ -3126,6 +3126,18 @@ body.dark-theme {
   background-color: rgba(32, 144, 234, 0.25);
   border-left-color: #2090ea; }
 
+.ios-theme .module-embedded-contact__contact-name {
+  color: #ffffff; }
+
+.ios-theme .module-embedded-contact__contact-method {
+  color: rgba(255, 255, 255, 0.7); }
+
+.ios-theme .module-embedded-contact__contact-name--incoming {
+  color: #070c14; }
+
+.ios-theme .module-embedded-contact__contact-method--incoming {
+  color: #62656a; }
+
 .ios-theme.dark-theme .module-message__container--incoming {
   background-color: #414347;
   color: #ffffff; }
@@ -3170,7 +3182,7 @@ body.dark-theme {
     color: #ffffff; }
 
 .ios-theme.dark-theme .module-message__metadata__date--incoming {
-  color: #ffffff; }
+  color: rgba(255, 255, 255, 0.7); }
 
 .ios-theme.dark-theme .module-message__broken-image--incoming {
   color: #ffffff; }
@@ -3283,7 +3295,10 @@ body.dark-theme {
   .ios-theme.dark-theme .bottom-bar .module-quote__primary__text a {
     color: #ffffff; }
 
-.ios-theme.dark-theme .module-embedded-contact__contact-method {
+.ios-theme.dark-theme .module-embedded-contact__contact-name--incoming {
+  color: #ffffff; }
+
+.ios-theme.dark-theme .module-embedded-contact__contact-method--incoming {
   color: rgba(255, 255, 255, 0.7); }
 
 .module-contact-name__profile-name {
