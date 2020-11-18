@@ -1058,13 +1058,13 @@ img.emoji.jumbo {
   overflow: auto; }
 
 .gutter {
-  background-color: #ededed;
+  background-color: #f8f9f9;
   float: left;
   width: 300px; }
   .gutter ::-webkit-scrollbar-track {
-    background: #ededed; }
+    background: #f8f9f9; }
   .gutter ::-webkit-scrollbar-thumb {
-    border: 2px solid #ededed; }
+    border: 2px solid #f8f9f9; }
   .gutter .content {
     overflow-y: scroll;
     max-height: calc(100% - 88px); }
@@ -1617,13 +1617,13 @@ input.search {
 
 body.dark-theme {
   background-color: #000000;
-  color: #efefef; }
+  color: #0f1012; }
 
 .dark-theme .conversation {
-  background-color: #000000; }
+  background-color: #0f1012; }
 
 .dark-theme .discussion-container {
-  background-color: #000000; }
+  background-color: #0f1012; }
 
 .dark-theme .key-verification .key {
   color: #efefef;
@@ -1647,7 +1647,7 @@ body.dark-theme {
   border: solid 1px #2090ea; }
 
 .dark-theme .bottom-bar form.send {
-  background-color: #000000; }
+  background-color: #0f1012; }
   .dark-theme .bottom-bar form.send.video-attachment .outer .play.icon {
     background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' width='24' height='24' viewBox='0 0 24 24'><path d='M8,5.14V19.14L19,12.14L8,5.14Z' fill='%23FFFFFF'/></svg>");
     background-size: 100%;
@@ -1678,7 +1678,7 @@ body.dark-theme {
       border-color: #88898c; }
 
 .dark-theme .conversation-loading-screen {
-  background-color: #000000; }
+  background-color: #0f1012; }
 
 .dark-theme .module-last-seen-indicator__bar {
   background-color: #a8a9aa; }
@@ -1730,7 +1730,7 @@ body.dark-theme {
   background-color: #1a1c20; }
 
 .dark-theme .ep-emojies {
-  background-color: #000000; }
+  background-color: #0f1012; }
 
 .dark-theme .ep-categories {
   background-color: #1a1c20; }
@@ -1759,7 +1759,7 @@ body.dark-theme {
   background: #000000; }
 
 .dark-theme .dark-overlay {
-  background-color: #000000; }
+  background-color: #0f1012; }
 
 .dark-theme .title-bar {
   color: #efefef; }
@@ -1866,7 +1866,7 @@ body.dark-theme {
     background: #2090ea; }
 
 .dark-theme .app-loading-screen {
-  background-color: #000000; }
+  background-color: #0f1012; }
   .dark-theme .app-loading-screen .dot {
     border: 3px solid #2090ea; }
 
@@ -1981,7 +1981,7 @@ body.dark-theme {
 .dark-theme input.search {
   border: 1px solid #62656a;
   color: #efefef;
-  background-color: #000000; }
+  background-color: #0f1012; }
   .dark-theme input.search:focus {
     outline: solid 1px #2090ea; }
 
@@ -2039,7 +2039,7 @@ body.dark-theme {
 .dark-theme .modal {
   background-color: rgba(0, 0, 0, 0.3); }
   .dark-theme .modal .content {
-    background-color: #000000;
+    background-color: #0f1012;
     box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2); }
 
 .dark-theme .module-message__buttons__download {
@@ -2081,50 +2081,53 @@ body.dark-theme {
   background-repeat: no-repeat;
   background-position: center center; }
 
-.dark-theme .module-message__container--outgoing {
+.dark-theme .module-message__container--incoming {
   background-color: #414347; }
 
-.dark-theme .module-message__container--incoming {
-  background-color: #757575; }
+.dark-theme .module-message__container--outgoing {
+  background-color: #6b6b78; }
 
-.dark-theme .module-message__container--incoming-grey {
-  background-color: #757575; }
+.dark-theme .module-message__container--outgoing-red {
+  background-color: #cc163d; }
 
-.dark-theme .module-message__container--incoming-blue {
-  background-color: #1976d2; }
+.dark-theme .module-message__container--outgoing-deep_orange {
+  background-color: #c73800; }
 
-.dark-theme .module-message__container--incoming-cyan {
-  background-color: #00838f; }
+.dark-theme .module-message__container--outgoing-brown {
+  background-color: #746c53; }
 
-.dark-theme .module-message__container--incoming-deep_orange {
-  background-color: #bf360c; }
+.dark-theme .module-message__container--outgoing-pink {
+  background-color: #a23474; }
 
-.dark-theme .module-message__container--incoming-green {
-  background-color: #2e7d32; }
+.dark-theme .module-message__container--outgoing-purple {
+  background-color: #862caf; }
 
-.dark-theme .module-message__container--incoming-indigo {
-  background-color: #3949ab; }
+.dark-theme .module-message__container--outgoing-indigo {
+  background-color: #5951c8; }
 
-.dark-theme .module-message__container--incoming-pink {
-  background-color: #d81b60; }
+.dark-theme .module-message__container--outgoing-blue {
+  background-color: #336ba3; }
 
-.dark-theme .module-message__container--incoming-purple {
-  background-color: #8e24aa; }
+.dark-theme .module-message__container--outgoing-teal {
+  background-color: #067589; }
 
-.dark-theme .module-message__container--incoming-red {
-  background-color: #d32f2f; }
+.dark-theme .module-message__container--outgoing-green {
+  background-color: #3b7845; }
 
-.dark-theme .module-message__container--incoming-teal {
-  background-color: #00796b; }
+.dark-theme .module-message__container--outgoing-light_green {
+  background-color: #1c8260; }
+
+.dark-theme .module-message__container--outgoing-blue_grey {
+  background-color: #895d66; }
 
 .dark-theme .module-message__attachment-container {
-  background-color: #000000; }
+  background-color: #0f1012; }
 
 .dark-theme .module-message__img-border-overlay {
-  box-shadow: inset 0px 0px 0px 1px rgba(168, 169, 170, 0.25); }
+  box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.15); }
 
 .dark-theme .module-message__img-overlay {
-  background-image: linear-gradient(to bottom, transparent, transparent 9%, rgba(0, 0, 0, 0.02) 17%, rgba(0, 0, 0, 0.05) 24%, rgba(0, 0, 0, 0.08) 31%, rgba(0, 0, 0, 0.12) 37%, rgba(0, 0, 0, 0.16) 44%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.24) 56%, rgba(0, 0, 0, 0.28) 63%, rgba(0, 0, 0, 0.32) 69%, rgba(0, 0, 0, 0.35) 76%, rgba(0, 0, 0, 0.38) 83%, rgba(0, 0, 0, 0.4) 91%, rgba(0, 0, 0, 0.4)); }
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 9%, rgba(0, 0, 0, 0.02) 17%, rgba(0, 0, 0, 0.05) 24%, rgba(0, 0, 0, 0.08) 31%, rgba(0, 0, 0, 0.12) 37%, rgba(0, 0, 0, 0.16) 44%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.24) 56%, rgba(0, 0, 0, 0.28) 63%, rgba(0, 0, 0, 0.32) 69%, rgba(0, 0, 0, 0.35) 76%, rgba(0, 0, 0, 0.38) 83%, rgba(0, 0, 0, 0.4) 91%, rgba(0, 0, 0, 0.4)); }
 
 .dark-theme .module-message__broken-image {
   color: #efefef; }
@@ -2173,34 +2176,34 @@ body.dark-theme {
     color: #ffffff; }
 
 .dark-theme .module-message__metadata__date {
-  color: #a8a9aa; }
+  color: rgba(255, 255, 255, 0.8); }
 
 .dark-theme .module-message__metadata__date--incoming {
-  color: rgba(255, 255, 255, 0.7); }
+  color: rgba(255, 255, 255, 0.8); }
 
 .dark-theme .module-message__metadata__date--with-image-no-caption {
-  color: #efefef; }
+  color: rgba(255, 255, 255, 0.8); }
 
 .dark-theme .module-message__metadata__status-icon--sending {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>sending</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='iOS-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='iOS-Light/Message/Status/Sending' transform='translate(-6.000000, 0.000000)' fill='%23000000'>            <path d='M11.5,0 L12.5,0 L12.5,1 L11.5,1 L11.5,0 Z M11.5,11 L12.5,11 L12.5,12 L11.5,12 L11.5,11 Z M6,5.5 L7,5.5 L7,6.5 L6,6.5 L6,5.5 Z M17,5.5 L18,5.5 L18,6.5 L17,6.5 L17,5.5 Z M16.9461524,2.5669873 L17.4461524,3.4330127 L16.580127,3.9330127 L16.080127,3.0669873 L16.9461524,2.5669873 Z M7.41987298,8.0669873 L7.91987298,8.9330127 L7.05384758,9.4330127 L6.55384758,8.5669873 L7.41987298,8.0669873 Z M9.4330127,0.553847577 L9.9330127,1.41987298 L9.0669873,1.91987298 L8.5669873,1.05384758 L9.4330127,0.553847577 Z M14.9330127,10.080127 L15.4330127,10.9461524 L14.5669873,11.4461524 L14.0669873,10.580127 L14.9330127,10.080127 Z M14.5669873,0.553847577 L15.4330127,1.05384758 L14.9330127,1.91987298 L14.0669873,1.41987298 L14.5669873,0.553847577 Z M9.0669873,10.080127 L9.9330127,10.580127 L9.4330127,11.4461524 L8.5669873,10.9461524 L9.0669873,10.080127 Z M7.05384758,2.5669873 L7.91987298,3.0669873 L7.41987298,3.9330127 L6.55384758,3.4330127 L7.05384758,2.5669873 Z M16.580127,8.0669873 L17.4461524,8.5669873 L16.9461524,9.4330127 L16.080127,8.9330127 L16.580127,8.0669873 Z' id='sending' fill='%23A4A6A9'></path>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>sending</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='iOS-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='iOS-Light/Message/Status/Sending' transform='translate(-6.000000, 0.000000)' fill='%23000000'>            <path d='M11.5,0 L12.5,0 L12.5,1 L11.5,1 L11.5,0 Z M11.5,11 L12.5,11 L12.5,12 L11.5,12 L11.5,11 Z M6,5.5 L7,5.5 L7,6.5 L6,6.5 L6,5.5 Z M17,5.5 L18,5.5 L18,6.5 L17,6.5 L17,5.5 Z M16.9461524,2.5669873 L17.4461524,3.4330127 L16.580127,3.9330127 L16.080127,3.0669873 L16.9461524,2.5669873 Z M7.41987298,8.0669873 L7.91987298,8.9330127 L7.05384758,9.4330127 L6.55384758,8.5669873 L7.41987298,8.0669873 Z M9.4330127,0.553847577 L9.9330127,1.41987298 L9.0669873,1.91987298 L8.5669873,1.05384758 L9.4330127,0.553847577 Z M14.9330127,10.080127 L15.4330127,10.9461524 L14.5669873,11.4461524 L14.0669873,10.580127 L14.9330127,10.080127 Z M14.5669873,0.553847577 L15.4330127,1.05384758 L14.9330127,1.91987298 L14.0669873,1.41987298 L14.5669873,0.553847577 Z M9.0669873,10.080127 L9.9330127,10.580127 L9.4330127,11.4461524 L8.5669873,10.9461524 L9.0669873,10.080127 Z M7.05384758,2.5669873 L7.91987298,3.0669873 L7.41987298,3.9330127 L6.55384758,3.4330127 L7.05384758,2.5669873 Z M16.580127,8.0669873 L17.4461524,8.5669873 L16.9461524,9.4330127 L16.080127,8.9330127 L16.580127,8.0669873 Z' id='sending' fill='%23FFFFFF'></path>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .dark-theme .module-message__metadata__status-icon--sent {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>check</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Sent' transform='translate(-6.000000, 0.000000)' fill='%23000000' fill-rule='nonzero'>            <path d='M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='check' fill='%23A4A6A9'></path>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>check</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Sent' transform='translate(-6.000000, 0.000000)' fill='%23000000' fill-rule='nonzero'>            <path d='M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='check' fill='%23FFFFFF'></path>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .dark-theme .module-message__metadata__status-icon--delivered {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>double check</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C7.58941091,0.549084144 7.28273546,0.812570593 7.00070199,1.10030099 C6.67734551,1.03453102 6.34268082,1 6,1 C3.24,1 1,3.24 1,6 C1,8.76 3.24,11 6,11 C6.34268082,11 6.67734551,10.965469 7.00070199,10.899699 C7.28273546,11.1874294 7.58941091,11.4509159 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M5.07266453,7.01233547 C5.12977459,7.4065842 5.21974274,7.79019382 5.33970233,8.16029767 L5,8.5 L2.5,6 L3.205,5.295 L5,7.085 L5.07266453,7.01233547 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='path-1' fill='%23A4A6A9'></path>    </defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Delivered'>            <mask id='mask-2' fill='white'>                <use xlink:href='%23path-1'></use>            </mask>            <use id='double-check' fill='%23000000' fill-rule='nonzero' xlink:href='%23path-1'></use>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>double check</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C7.58941091,0.549084144 7.28273546,0.812570593 7.00070199,1.10030099 C6.67734551,1.03453102 6.34268082,1 6,1 C3.24,1 1,3.24 1,6 C1,8.76 3.24,11 6,11 C6.34268082,11 6.67734551,10.965469 7.00070199,10.899699 C7.28273546,11.1874294 7.58941091,11.4509159 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M5.07266453,7.01233547 C5.12977459,7.4065842 5.21974274,7.79019382 5.33970233,8.16029767 L5,8.5 L2.5,6 L3.205,5.295 L5,7.085 L5.07266453,7.01233547 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='path-1' fill='%23FFFFFF'></path>    </defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Delivered'>            <mask id='mask-2' fill='white'>                <use xlink:href='%23path-1'></use>            </mask>            <use id='double-check' fill='%23000000' fill-rule='nonzero' xlink:href='%23path-1'></use>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .dark-theme .module-message__metadata__status-icon--read {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Read/read-18x12</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C6.15053376,1.58392424 5,3.65760134 5,6 C5,6.343797 5.0247846,6.68180525 5.07266453,7.01233547 L5,7.085 L3.205,5.295 L2.5,6 L5,8.5 L5.33970233,8.16029767 C5.80439817,9.59399486 6.71914823,10.8250231 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M11,8.5 L15.5,4 L14.795,3.29 L11,7.085 L9.205,5.295 L8.5,6 L11,8.5 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='18' height='12'></rect>    </defs>    <g id='Icons/Read/read-18x12' stroke='none' stroke-width='1' fill='%23A4A6A9' fill-rule='evenodd'>        <mask id='mask-2' fill='%23A4A6A9'>            <use xlink:href='%23path-1'></use>        </mask>        <g id='double-check' fill-rule='nonzero'></g>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%23A4A6A9'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%23A4A6A9' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Read/read-18x12</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C6.15053376,1.58392424 5,3.65760134 5,6 C5,6.343797 5.0247846,6.68180525 5.07266453,7.01233547 L5,7.085 L3.205,5.295 L2.5,6 L5,8.5 L5.33970233,8.16029767 C5.80439817,9.59399486 6.71914823,10.8250231 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M11,8.5 L15.5,4 L14.795,3.29 L11,7.085 L9.205,5.295 L8.5,6 L11,8.5 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='18' height='12'></rect>    </defs>    <g id='Icons/Read/read-18x12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <mask id='mask-2' fill='%23FFFFFF'>            <use xlink:href='%23path-1'></use>        </mask>        <g id='double-check' fill-rule='nonzero'></g>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%23FFFFFF'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%23FFFFFF' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
@@ -2213,35 +2216,38 @@ body.dark-theme {
   background-color: #414347;
   border: 1px solid #797a7c; }
 
-.dark-theme .module-message__author-default-avatar--grey {
-  background-color: #757575; }
-
-.dark-theme .module-message__author-default-avatar--blue {
-  background-color: #1976d2; }
-
-.dark-theme .module-message__author-default-avatar--cyan {
-  background-color: #00838f; }
+.dark-theme .module-message__author-default-avatar--red {
+  background-color: #cc163d; }
 
 .dark-theme .module-message__author-default-avatar--deep_orange {
-  background-color: #bf360c; }
+  background-color: #c73800; }
 
-.dark-theme .module-message__author-default-avatar--green {
-  background-color: #2e7d32; }
-
-.dark-theme .module-message__author-default-avatar--indigo {
-  background-color: #3949ab; }
+.dark-theme .module-message__author-default-avatar--brown {
+  background-color: #746c53; }
 
 .dark-theme .module-message__author-default-avatar--pink {
-  background-color: #d81b60; }
+  background-color: #a23474; }
 
 .dark-theme .module-message__author-default-avatar--purple {
-  background-color: #8e24aa; }
+  background-color: #862caf; }
 
-.dark-theme .module-message__author-default-avatar--red {
-  background-color: #d32f2f; }
+.dark-theme .module-message__author-default-avatar--indigo {
+  background-color: #5951c8; }
+
+.dark-theme .module-message__author-default-avatar--blue {
+  background-color: #336ba3; }
 
 .dark-theme .module-message__author-default-avatar--teal {
-  background-color: #00796b; }
+  background-color: #067589; }
+
+.dark-theme .module-message__author-default-avatar--green {
+  background-color: #3b7845; }
+
+.dark-theme .module-message__author-default-avatar--light_green {
+  background-color: #1c8260; }
+
+.dark-theme .module-message__author-default-avatar--blue_grey {
+  background-color: #895d66; }
 
 .dark-theme .module-message__author-default-avatar__label {
   color: #ffffff; }
@@ -2331,84 +2337,124 @@ body.dark-theme {
   background-color: #efefef; }
 
 .dark-theme .module-quote--incoming {
-  background-color: rgba(0, 0, 0, 0.4);
-  border-left-color: #000000; }
+  border-left-color: #6b6b78;
+  background-color: #5a5a63; }
 
-.dark-theme .module-quote--outgoing-you {
-  border-left-color: #a4a6a9;
-  background-color: #797a7c; }
+.dark-theme .module-quote--incoming-red {
+  border-left-color: #cc163d;
+  background-color: #8a0f29; }
 
-.dark-theme .module-quote--outgoing-grey {
-  border-left-color: #757575;
-  background-color: rgba(117, 117, 117, 0.6); }
+.dark-theme .module-quote--incoming-deep_orange {
+  border-left-color: #c73800;
+  background-color: #872600; }
 
-.dark-theme .module-quote--outgoing-blue {
-  border-left-color: #1976d2;
-  background-color: rgba(25, 118, 210, 0.6); }
+.dark-theme .module-quote--incoming-brown {
+  border-left-color: #746c53;
+  background-color: #58513c; }
 
-.dark-theme .module-quote--outgoing-cyan {
-  border-left-color: #00838f;
-  background-color: rgba(0, 131, 143, 0.6); }
+.dark-theme .module-quote--incoming-pink {
+  border-left-color: #a23474;
+  background-color: #881b5b; }
 
-.dark-theme .module-quote--outgoing-deep_orange {
-  border-left-color: #bf360c;
-  background-color: rgba(191, 54, 12, 0.6); }
+.dark-theme .module-quote--incoming-purple {
+  border-left-color: #862caf;
+  background-color: #6b248a; }
 
-.dark-theme .module-quote--outgoing-green {
-  border-left-color: #2e7d32;
-  background-color: rgba(46, 125, 50, 0.6); }
+.dark-theme .module-quote--incoming-indigo {
+  border-left-color: #5951c8;
+  background-color: #4840a0; }
 
-.dark-theme .module-quote--outgoing-indigo {
-  border-left-color: #3949ab;
-  background-color: rgba(57, 73, 171, 0.6); }
+.dark-theme .module-quote--incoming-blue {
+  border-left-color: #336ba3;
+  background-color: #285480; }
 
-.dark-theme .module-quote--outgoing-pink {
-  border-left-color: #d81b60;
-  background-color: rgba(216, 27, 96, 0.6); }
+.dark-theme .module-quote--incoming-teal {
+  border-left-color: #067589;
+  background-color: #055968; }
 
-.dark-theme .module-quote--outgoing-purple {
-  border-left-color: #8e24aa;
-  background-color: rgba(142, 36, 170, 0.6); }
+.dark-theme .module-quote--incoming-green {
+  border-left-color: #3b7845;
+  background-color: #2b5934; }
+
+.dark-theme .module-quote--incoming-light_green {
+  border-left-color: #1c8260;
+  background-color: #36544a; }
+
+.dark-theme .module-quote--incoming-blue_grey {
+  border-left-color: #895d66;
+  background-color: #6a4e54; }
+
+.dark-theme .module-quote--outgoing {
+  border-left-color: #000000;
+  background-color: #5a5a63; }
 
 .dark-theme .module-quote--outgoing-red {
-  border-left-color: #d32f2f;
-  background-color: rgba(211, 47, 47, 0.6); }
+  background-color: #8a0f29; }
+
+.dark-theme .module-quote--outgoing-deep_orange {
+  background-color: #872600; }
+
+.dark-theme .module-quote--outgoing-brown {
+  background-color: #58513c; }
+
+.dark-theme .module-quote--outgoing-pink {
+  background-color: #881b5b; }
+
+.dark-theme .module-quote--outgoing-purple {
+  background-color: #6b248a; }
+
+.dark-theme .module-quote--outgoing-indigo {
+  background-color: #4840a0; }
+
+.dark-theme .module-quote--outgoing-blue {
+  background-color: #285480; }
 
 .dark-theme .module-quote--outgoing-teal {
-  border-left-color: #00796b;
-  background-color: rgba(0, 121, 107, 0.6); }
+  background-color: #055968; }
+
+.dark-theme .module-quote--outgoing-green {
+  background-color: #2b5934; }
+
+.dark-theme .module-quote--outgoing-light_green {
+  background-color: #36544a; }
+
+.dark-theme .module-quote--outgoing-blue_grey {
+  background-color: #6a4e54; }
 
 .dark-theme .module-quote__primary__author {
   color: #efefef; }
 
-.dark-theme .module-quote__primary__author--grey {
+.dark-theme .module-quote__primary__author-red {
   color: #efefef; }
 
-.dark-theme .module-quote__primary__author--blue {
+.dark-theme .module-quote__primary__author-deep_orange {
   color: #efefef; }
 
-.dark-theme .module-quote__primary__author--cyan {
+.dark-theme .module-quote__primary__author-brown {
   color: #efefef; }
 
-.dark-theme .module-quote__primary__author--deep_orange {
+.dark-theme .module-quote__primary__author-pink {
   color: #efefef; }
 
-.dark-theme .module-quote__primary__author--green {
+.dark-theme .module-quote__primary__author-purple {
   color: #efefef; }
 
-.dark-theme .module-quote__primary__author--indigo {
+.dark-theme .module-quote__primary__author-indigo {
   color: #efefef; }
 
-.dark-theme .module-quote__primary__author--pink {
+.dark-theme .module-quote__primary__author-blue {
   color: #efefef; }
 
-.dark-theme .module-quote__primary__author--purple {
+.dark-theme .module-quote__primary__author-teal {
   color: #efefef; }
 
-.dark-theme .module-quote__primary__author--red {
+.dark-theme .module-quote__primary__author-green {
   color: #efefef; }
 
-.dark-theme .module-quote__primary__author--teal {
+.dark-theme .module-quote__primary__author-light_green {
+  color: #efefef; }
+
+.dark-theme .module-quote__primary__author-blue_grey {
   color: #efefef; }
 
 .dark-theme .module-quote__primary__text {
@@ -2477,7 +2523,7 @@ body.dark-theme {
   color: #efefef; }
 
 .dark-theme .module-embedded-contact__image-container__default-avatar {
-  background-color: #757575;
+  background-color: #6b6b78;
   color: #ffffff; }
 
 .dark-theme .module-embedded-contact__contact-name {
@@ -2487,13 +2533,13 @@ body.dark-theme {
   color: #ffffff; }
 
 .dark-theme .module-embedded-contact__contact-method {
-  color: #a8a9aa; }
+  color: rgba(255, 255, 255, 0.7); }
 
 .dark-theme .module-embedded-contact__contact-method--incoming {
   color: rgba(255, 255, 255, 0.7); }
 
 .dark-theme .module-contact-detail__image-container__default-avatar {
-  background-color: #757575;
+  background-color: #6b6b78;
   color: #ffffff; }
 
 .dark-theme .module-contact-detail__send-message {
@@ -2565,37 +2611,40 @@ body.dark-theme {
   color: #a8a9aa; }
 
 .dark-theme .module-contact-list-item__avatar-default {
-  background-color: #757575; }
-
-.dark-theme .module-contact-list-item__avatar-default--grey {
-  background-color: #757575; }
-
-.dark-theme .module-contact-list-item__avatar-default--blue {
-  background-color: #1976d2; }
-
-.dark-theme .module-contact-list-item__avatar-default--cyan {
-  background-color: #00838f; }
-
-.dark-theme .module-contact-list-item__avatar-default--deep_orange {
-  background-color: #bf360c; }
-
-.dark-theme .module-contact-list-item__avatar-default--green {
-  background-color: #2e7d32; }
-
-.dark-theme .module-contact-list-item__avatar-default--indigo {
-  background-color: #3949ab; }
-
-.dark-theme .module-contact-list-item__avatar-default--pink {
-  background-color: #d81b60; }
-
-.dark-theme .module-contact-list-item__avatar-default--purple {
-  background-color: #8e24aa; }
+  background-color: #6b6b78; }
 
 .dark-theme .module-contact-list-item__avatar-default--red {
-  background-color: #d32f2f; }
+  background-color: #cc163d; }
+
+.dark-theme .module-contact-list-item__avatar-default--deep_orange {
+  background-color: #c73800; }
+
+.dark-theme .module-contact-list-item__avatar-default--brown {
+  background-color: #746c53; }
+
+.dark-theme .module-contact-list-item__avatar-default--pink {
+  background-color: #a23474; }
+
+.dark-theme .module-contact-list-item__avatar-default--purple {
+  background-color: #862caf; }
+
+.dark-theme .module-contact-list-item__avatar-default--indigo {
+  background-color: #5951c8; }
+
+.dark-theme .module-contact-list-item__avatar-default--blue {
+  background-color: #336ba3; }
 
 .dark-theme .module-contact-list-item__avatar-default--teal {
-  background-color: #00796b; }
+  background-color: #067589; }
+
+.dark-theme .module-contact-list-item__avatar-default--green {
+  background-color: #3b7845; }
+
+.dark-theme .module-contact-list-item__avatar-default--light_green {
+  background-color: #1c8260; }
+
+.dark-theme .module-contact-list-item__avatar-default--blue_grey {
+  background-color: #895d66; }
 
 .dark-theme .module-contact-list-item__avatar-default__label {
   color: #ffffff; }
@@ -2608,39 +2657,45 @@ body.dark-theme {
 
 .dark-theme .module-conversation-header {
   color: #efefef;
-  background-color: #000000;
+  background-color: #0f1012;
   border-bottom: 1px solid #62656a; }
 
 .dark-theme .module-conversation-header___default-avatar {
-  background-color: #757575;
+  background-color: #6b6b78;
   color: #ffffff; }
 
-.dark-theme .module-conversation-header___default-avatar--blue {
-  background-color: #1976d2; }
-
-.dark-theme .module-conversation-header___default-avatar--cyan {
-  background-color: #00838f; }
+.dark-theme .module-conversation-header___default-avatar--red {
+  background-color: #cc163d; }
 
 .dark-theme .module-conversation-header___default-avatar--deep_orange {
-  background-color: #bf360c; }
+  background-color: #c73800; }
 
-.dark-theme .module-conversation-header___default-avatar--green {
-  background-color: #2e7d32; }
-
-.dark-theme .module-conversation-header___default-avatar--indigo {
-  background-color: #3949ab; }
+.dark-theme .module-conversation-header___default-avatar--brown {
+  background-color: #746c53; }
 
 .dark-theme .module-conversation-header___default-avatar--pink {
-  background-color: #d81b60; }
+  background-color: #a23474; }
 
 .dark-theme .module-conversation-header___default-avatar--purple {
-  background-color: #8e24aa; }
+  background-color: #862caf; }
 
-.dark-theme .module-conversation-header___default-avatar--red {
-  background-color: #d32f2f; }
+.dark-theme .module-conversation-header___default-avatar--indigo {
+  background-color: #5951c8; }
+
+.dark-theme .module-conversation-header___default-avatar--blue {
+  background-color: #336ba3; }
 
 .dark-theme .module-conversation-header___default-avatar--teal {
-  background-color: #00796b; }
+  background-color: #067589; }
+
+.dark-theme .module-conversation-header___default-avatar--green {
+  background-color: #3b7845; }
+
+.dark-theme .module-conversation-header___default-avatar--light_green {
+  background-color: #1c8260; }
+
+.dark-theme .module-conversation-header___default-avatar--blue_grey {
+  background-color: #895d66; }
 
 .dark-theme .module-conversation-header__title {
   color: #efefef; }
@@ -2673,35 +2728,41 @@ body.dark-theme {
   border: solid 1px #a4a6a9; }
 
 .dark-theme .module-message-detail__contact__default-avatar {
-  background-color: #757575;
+  background-color: #6b6b78;
   color: #ffffff; }
 
-.dark-theme .module-message-detail__contact__default-avatar--blue {
-  background-color: #1976d2; }
-
-.dark-theme .module-message-detail__contact__default-avatar--cyan {
-  background-color: #00838f; }
+.dark-theme .module-message-detail__contact__default-avatar--red {
+  background-color: #cc163d; }
 
 .dark-theme .module-message-detail__contact__default-avatar--deep_orange {
-  background-color: #bf360c; }
+  background-color: #c73800; }
 
-.dark-theme .module-message-detail__contact__default-avatar--green {
-  background-color: #2e7d32; }
-
-.dark-theme .module-message-detail__contact__default-avatar--indigo {
-  background-color: #3949ab; }
+.dark-theme .module-message-detail__contact__default-avatar--brown {
+  background-color: #746c53; }
 
 .dark-theme .module-message-detail__contact__default-avatar--pink {
-  background-color: #d81b60; }
+  background-color: #a23474; }
 
 .dark-theme .module-message-detail__contact__default-avatar--purple {
-  background-color: #8e24aa; }
+  background-color: #862caf; }
 
-.dark-theme .module-message-detail__contact__default-avatar--red {
-  background-color: #d32f2f; }
+.dark-theme .module-message-detail__contact__default-avatar--indigo {
+  background-color: #5951c8; }
+
+.dark-theme .module-message-detail__contact__default-avatar--blue {
+  background-color: #336ba3; }
 
 .dark-theme .module-message-detail__contact__default-avatar--teal {
-  background-color: #00796b; }
+  background-color: #067589; }
+
+.dark-theme .module-message-detail__contact__default-avatar--green {
+  background-color: #3b7845; }
+
+.dark-theme .module-message-detail__contact__default-avatar--light_green {
+  background-color: #1c8260; }
+
+.dark-theme .module-message-detail__contact__default-avatar--blue_grey {
+  background-color: #895d66; }
 
 .dark-theme .module-message-detail__contact__error {
   color: #f44336; }
@@ -2794,34 +2855,40 @@ body.dark-theme {
 
 .dark-theme .module-conversation-list-item__default-avatar {
   color: white;
-  background-color: #757575; }
-
-.dark-theme .module-conversation-list-item__default-avatar--blue {
-  background-color: #1976d2; }
-
-.dark-theme .module-conversation-list-item__default-avatar--cyan {
-  background-color: #00838f; }
-
-.dark-theme .module-conversation-list-item__default-avatar--deep_orange {
-  background-color: #bf360c; }
-
-.dark-theme .module-conversation-list-item__default-avatar--green {
-  background-color: #2e7d32; }
-
-.dark-theme .module-conversation-list-item__default-avatar--indigo {
-  background-color: #3949ab; }
-
-.dark-theme .module-conversation-list-item__default-avatar--pink {
-  background-color: #d81b60; }
-
-.dark-theme .module-conversation-list-item__default-avatar--purple {
-  background-color: #8e24aa; }
+  background-color: #6b6b78; }
 
 .dark-theme .module-conversation-list-item__default-avatar--red {
-  background-color: #d32f2f; }
+  background-color: #cc163d; }
+
+.dark-theme .module-conversation-list-item__default-avatar--deep_orange {
+  background-color: #c73800; }
+
+.dark-theme .module-conversation-list-item__default-avatar--brown {
+  background-color: #746c53; }
+
+.dark-theme .module-conversation-list-item__default-avatar--pink {
+  background-color: #a23474; }
+
+.dark-theme .module-conversation-list-item__default-avatar--purple {
+  background-color: #862caf; }
+
+.dark-theme .module-conversation-list-item__default-avatar--indigo {
+  background-color: #5951c8; }
+
+.dark-theme .module-conversation-list-item__default-avatar--blue {
+  background-color: #336ba3; }
 
 .dark-theme .module-conversation-list-item__default-avatar--teal {
-  background-color: #00796b; }
+  background-color: #067589; }
+
+.dark-theme .module-conversation-list-item__default-avatar--green {
+  background-color: #3b7845; }
+
+.dark-theme .module-conversation-list-item__default-avatar--light_green {
+  background-color: #1c8260; }
+
+.dark-theme .module-conversation-list-item__default-avatar--blue_grey {
+  background-color: #895d66; }
 
 .dark-theme .module-conversation-list-item__message__status-icon--sending {
   background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>sending</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='iOS-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='iOS-Light/Message/Status/Sending' transform='translate(-6.000000, 0.000000)' fill='%23000000'>            <path d='M11.5,0 L12.5,0 L12.5,1 L11.5,1 L11.5,0 Z M11.5,11 L12.5,11 L12.5,12 L11.5,12 L11.5,11 Z M6,5.5 L7,5.5 L7,6.5 L6,6.5 L6,5.5 Z M17,5.5 L18,5.5 L18,6.5 L17,6.5 L17,5.5 Z M16.9461524,2.5669873 L17.4461524,3.4330127 L16.580127,3.9330127 L16.080127,3.0669873 L16.9461524,2.5669873 Z M7.41987298,8.0669873 L7.91987298,8.9330127 L7.05384758,9.4330127 L6.55384758,8.5669873 L7.41987298,8.0669873 Z M9.4330127,0.553847577 L9.9330127,1.41987298 L9.0669873,1.91987298 L8.5669873,1.05384758 L9.4330127,0.553847577 Z M14.9330127,10.080127 L15.4330127,10.9461524 L14.5669873,11.4461524 L14.0669873,10.580127 L14.9330127,10.080127 Z M14.5669873,0.553847577 L15.4330127,1.05384758 L14.9330127,1.91987298 L14.0669873,1.41987298 L14.5669873,0.553847577 Z M9.0669873,10.080127 L9.9330127,10.580127 L9.4330127,11.4461524 L8.5669873,10.9461524 L9.0669873,10.080127 Z M7.05384758,2.5669873 L7.91987298,3.0669873 L7.41987298,3.9330127 L6.55384758,3.4330127 L7.05384758,2.5669873 Z M16.580127,8.0669873 L17.4461524,8.5669873 L16.9461524,9.4330127 L16.080127,8.9330127 L16.580127,8.0669873 Z' id='sending' fill='%23A4A6A9'></path>        </g>    </g></svg>");
@@ -2920,386 +2987,6 @@ body.dark-theme {
 .dark-theme .clear-data-settings .destructive {
   background-color: red;
   color: white; }
-
-.ios-theme .module-message__container--outgoing {
-  background-color: #2090ea;
-  color: #ffffff; }
-
-.ios-theme .module-message__container--incoming {
-  background-color: #eeefef;
-  color: #070c14; }
-
-.ios-theme .module-message__container--incoming-grey {
-  background-color: #eeefef; }
-
-.ios-theme .module-message__container--incoming-blue {
-  background-color: #eeefef; }
-
-.ios-theme .module-message__container--incoming-cyan {
-  background-color: #eeefef; }
-
-.ios-theme .module-message__container--incoming-deep_orange {
-  background-color: #eeefef; }
-
-.ios-theme .module-message__container--incoming-green {
-  background-color: #eeefef; }
-
-.ios-theme .module-message__container--incoming-indigo {
-  background-color: #eeefef; }
-
-.ios-theme .module-message__container--incoming-pink {
-  background-color: #eeefef; }
-
-.ios-theme .module-message__container--incoming-purple {
-  background-color: #eeefef; }
-
-.ios-theme .module-message__container--incoming-red {
-  background-color: #eeefef; }
-
-.ios-theme .module-message__container--incoming-teal {
-  background-color: #eeefef; }
-
-.ios-theme .module-message__author {
-  color: #070c14; }
-
-.ios-theme .module-message__text {
-  color: #ffffff;
-  font-size: 14px; }
-  .ios-theme .module-message__text a {
-    text-decoration: underline;
-    color: #ffffff; }
-
-.ios-theme .module-message__text--incoming {
-  color: #070c14; }
-  .ios-theme .module-message__text--incoming a {
-    text-decoration: underline;
-    color: #070c14; }
-
-.ios-theme .module-message__metadata__date {
-  color: rgba(255, 255, 255, 0.7); }
-
-.ios-theme .module-message__metadata__date--incoming {
-  color: #8b8e91; }
-
-.ios-theme .module-message__metadata__date--with-image-no-caption {
-  color: #ffffff; }
-
-.ios-theme .module-message__metadata__status-icon--sending {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>sending</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='iOS-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='iOS-Light/Message/Status/Sending' transform='translate(-6.000000, 0.000000)' fill='%23000000'>            <path d='M11.5,0 L12.5,0 L12.5,1 L11.5,1 L11.5,0 Z M11.5,11 L12.5,11 L12.5,12 L11.5,12 L11.5,11 Z M6,5.5 L7,5.5 L7,6.5 L6,6.5 L6,5.5 Z M17,5.5 L18,5.5 L18,6.5 L17,6.5 L17,5.5 Z M16.9461524,2.5669873 L17.4461524,3.4330127 L16.580127,3.9330127 L16.080127,3.0669873 L16.9461524,2.5669873 Z M7.41987298,8.0669873 L7.91987298,8.9330127 L7.05384758,9.4330127 L6.55384758,8.5669873 L7.41987298,8.0669873 Z M9.4330127,0.553847577 L9.9330127,1.41987298 L9.0669873,1.91987298 L8.5669873,1.05384758 L9.4330127,0.553847577 Z M14.9330127,10.080127 L15.4330127,10.9461524 L14.5669873,11.4461524 L14.0669873,10.580127 L14.9330127,10.080127 Z M14.5669873,0.553847577 L15.4330127,1.05384758 L14.9330127,1.91987298 L14.0669873,1.41987298 L14.5669873,0.553847577 Z M9.0669873,10.080127 L9.9330127,10.580127 L9.4330127,11.4461524 L8.5669873,10.9461524 L9.0669873,10.080127 Z M7.05384758,2.5669873 L7.91987298,3.0669873 L7.41987298,3.9330127 L6.55384758,3.4330127 L7.05384758,2.5669873 Z M16.580127,8.0669873 L17.4461524,8.5669873 L16.9461524,9.4330127 L16.080127,8.9330127 L16.580127,8.0669873 Z' id='sending' fill='%23FFFFFF'></path>        </g>    </g></svg>");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center; }
-
-.ios-theme .module-message__metadata__status-icon--sent {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>check</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Sent' transform='translate(-6.000000, 0.000000)' fill='%23000000' fill-rule='nonzero'>            <path d='M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='check' fill='%23FFFFFF'></path>        </g>    </g></svg>");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center; }
-
-.ios-theme .module-message__metadata__status-icon--delivered {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>double check</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C7.58941091,0.549084144 7.28273546,0.812570593 7.00070199,1.10030099 C6.67734551,1.03453102 6.34268082,1 6,1 C3.24,1 1,3.24 1,6 C1,8.76 3.24,11 6,11 C6.34268082,11 6.67734551,10.965469 7.00070199,10.899699 C7.28273546,11.1874294 7.58941091,11.4509159 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M5.07266453,7.01233547 C5.12977459,7.4065842 5.21974274,7.79019382 5.33970233,8.16029767 L5,8.5 L2.5,6 L3.205,5.295 L5,7.085 L5.07266453,7.01233547 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='path-1' fill='%23FFFFFF'></path>    </defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Delivered'>            <mask id='mask-2' fill='white'>                <use xlink:href='%23path-1'></use>            </mask>            <use id='double-check' fill='%23000000' fill-rule='nonzero' xlink:href='%23path-1'></use>        </g>    </g></svg>");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center; }
-
-.ios-theme .module-message__metadata__status-icon--read {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Read/read-18x12</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C6.15053376,1.58392424 5,3.65760134 5,6 C5,6.343797 5.0247846,6.68180525 5.07266453,7.01233547 L5,7.085 L3.205,5.295 L2.5,6 L5,8.5 L5.33970233,8.16029767 C5.80439817,9.59399486 6.71914823,10.8250231 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M11,8.5 L15.5,4 L14.795,3.29 L11,7.085 L9.205,5.295 L8.5,6 L11,8.5 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='18' height='12'></rect>    </defs>    <g id='Icons/Read/read-18x12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <mask id='mask-2' fill='%23FFFFFF'>            <use xlink:href='%23path-1'></use>        </mask>        <g id='double-check' fill-rule='nonzero'></g>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%23FFFFFF'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%23FFFFFF' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center; }
-
-.ios-theme .module-message__metadata__status-icon--with-image-no-caption {
-  background-color: #ffffff; }
-
-.ios-theme .module-message__broken-image {
-  color: #ffffff; }
-
-.ios-theme .module-message__broken-image--incoming {
-  color: #070c14; }
-
-.ios-theme .module-message__broken-video-screenshot {
-  color: #ffffff; }
-
-.ios-theme .module-message__broken-video-screenshot--incoming {
-  color: #070c14; }
-
-.ios-theme .module-message__generic-attachment__file-name {
-  color: #ffffff; }
-
-.ios-theme .module-message__generic-attachment__file-name--incoming {
-  color: #070c14; }
-
-.ios-theme .module-message__generic-attachment__file-size {
-  color: #ffffff; }
-
-.ios-theme .module-message__generic-attachment__file-size--incoming {
-  color: #070c14; }
-
-.ios-theme .module-expire-timer {
-  background-color: rgba(255, 255, 255, 0.7); }
-
-.ios-theme .module-expire-timer--incoming {
-  background-color: #8b8e91; }
-
-.ios-theme .module-quote--incoming {
-  background-color: rgba(32, 144, 234, 0.25);
-  border-left-color: #2090ea; }
-
-.ios-theme .module-quote--outgoing-you {
-  border-left-color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.6); }
-
-.ios-theme .module-quote--outgoing-grey {
-  border-left-color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.6); }
-
-.ios-theme .module-quote--outgoing-blue {
-  border-left-color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.6); }
-
-.ios-theme .module-quote--outgoing-cyan {
-  border-left-color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.6); }
-
-.ios-theme .module-quote--outgoing-deep_orange {
-  border-left-color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.6); }
-
-.ios-theme .module-quote--outgoing-green {
-  border-left-color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.6); }
-
-.ios-theme .module-quote--outgoing-indigo {
-  border-left-color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.6); }
-
-.ios-theme .module-quote--outgoing-pink {
-  border-left-color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.6); }
-
-.ios-theme .module-quote--outgoing-purple {
-  border-left-color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.6); }
-
-.ios-theme .module-quote--outgoing-red {
-  border-left-color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.6); }
-
-.ios-theme .module-quote--outgoing-teal {
-  border-left-color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.6); }
-
-.ios-theme .module-quote__primary__author--grey {
-  color: #070c14; }
-
-.ios-theme .module-quote__primary__author--blue {
-  color: #070c14; }
-
-.ios-theme .module-quote__primary__author--cyan {
-  color: #070c14; }
-
-.ios-theme .module-quote__primary__author--deep_orange {
-  color: #070c14; }
-
-.ios-theme .module-quote__primary__author--green {
-  color: #070c14; }
-
-.ios-theme .module-quote__primary__author--indigo {
-  color: #070c14; }
-
-.ios-theme .module-quote__primary__author--pink {
-  color: #070c14; }
-
-.ios-theme .module-quote__primary__author--purple {
-  color: #070c14; }
-
-.ios-theme .module-quote__primary__author--red {
-  color: #070c14; }
-
-.ios-theme .module-quote__primary__author--teal {
-  color: #070c14; }
-
-.ios-theme .module-quote__reference-warning--incoming {
-  background-color: rgba(160, 208, 246, 0.325); }
-
-.ios-theme .bottom-bar .module-quote {
-  background-color: rgba(32, 144, 234, 0.25);
-  border-left-color: #2090ea; }
-
-.ios-theme .module-embedded-contact__contact-name {
-  color: #ffffff; }
-
-.ios-theme .module-embedded-contact__contact-method {
-  color: rgba(255, 255, 255, 0.7); }
-
-.ios-theme .module-embedded-contact__contact-name--incoming {
-  color: #070c14; }
-
-.ios-theme .module-embedded-contact__contact-method--incoming {
-  color: #62656a; }
-
-.ios-theme.dark-theme .module-message__container--incoming {
-  background-color: #414347;
-  color: #ffffff; }
-
-.ios-theme.dark-theme .module-message__container--incoming-grey {
-  background-color: #414347; }
-
-.ios-theme.dark-theme .module-message__container--incoming-blue {
-  background-color: #414347; }
-
-.ios-theme.dark-theme .module-message__container--incoming-cyan {
-  background-color: #414347; }
-
-.ios-theme.dark-theme .module-message__container--incoming-deep_orange {
-  background-color: #414347; }
-
-.ios-theme.dark-theme .module-message__container--incoming-green {
-  background-color: #414347; }
-
-.ios-theme.dark-theme .module-message__container--incoming-indigo {
-  background-color: #414347; }
-
-.ios-theme.dark-theme .module-message__container--incoming-pink {
-  background-color: #414347; }
-
-.ios-theme.dark-theme .module-message__container--incoming-purple {
-  background-color: #414347; }
-
-.ios-theme.dark-theme .module-message__container--incoming-red {
-  background-color: #414347; }
-
-.ios-theme.dark-theme .module-message__container--incoming-teal {
-  background-color: #414347; }
-
-.ios-theme.dark-theme .module-message__author {
-  color: #ffffff; }
-
-.ios-theme.dark-theme .module-message__text--incoming {
-  color: #ffffff; }
-  .ios-theme.dark-theme .module-message__text--incoming a {
-    text-decoration: underline;
-    color: #ffffff; }
-
-.ios-theme.dark-theme .module-message__metadata__date--incoming {
-  color: rgba(255, 255, 255, 0.7); }
-
-.ios-theme.dark-theme .module-message__broken-image--incoming {
-  color: #ffffff; }
-
-.ios-theme.dark-theme .module-message__broken-video-screenshot--incoming {
-  color: #ffffff; }
-
-.ios-theme.dark-theme .module-message__generic-attachment__file-name--incoming {
-  color: #ffffff; }
-
-.ios-theme.dark-theme .module-message__generic-attachment__file-size--incoming {
-  color: #ffffff; }
-
-.ios-theme.dark-theme .module-expire-timer--incoming {
-  background-color: rgba(255, 255, 255, 0.7); }
-
-.ios-theme.dark-theme .module-quote__primary__author {
-  color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__primary__author--grey {
-  color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__primary__author--blue {
-  color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__primary__author--cyan {
-  color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__primary__author--deep_orange {
-  color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__primary__author--green {
-  color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__primary__author--indigo {
-  color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__primary__author--pink {
-  color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__primary__author--purple {
-  color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__primary__author--red {
-  color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__primary__author--teal {
-  color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__primary__text {
-  color: #070c14; }
-  .ios-theme.dark-theme .module-quote__primary__text a {
-    color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__primary__type-label {
-  color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__primary__type-label--incoming {
-  color: #ffffff; }
-
-.ios-theme.dark-theme .module-quote__primary__author--incoming {
-  color: #ffffff; }
-
-.ios-theme.dark-theme .module-quote__primary__text--incoming {
-  color: #ffffff; }
-  .ios-theme.dark-theme .module-quote__primary__text--incoming a {
-    color: #ffffff; }
-
-.ios-theme.dark-theme .module-quote__generic-file__text {
-  color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__generic-file__text--incoming {
-  color: #ffffff; }
-
-.ios-theme.dark-theme .module-quote__reference-warning {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.ios-theme.dark-theme .module-quote__reference-warning--incoming {
-  background-color: rgba(32, 144, 234, 0.5); }
-
-.ios-theme.dark-theme .module-quote__reference-warning__text {
-  color: #070c14; }
-
-.ios-theme.dark-theme .module-quote__reference-warning__text--incoming {
-  color: #ffffff; }
-
-.ios-theme.dark-theme .module-quote__reference-warning__icon {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->    <title>Link/broken-link-16</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Link/broken-link-16' stroke='none' stroke-width='1' fill='%2362656A' fill-rule='evenodd'>        <path d='M9.49509379,9.33333333 L12.6666667,9.33333333 C13.4030463,9.33333333 14,8.73637967 14,8 C14,7.26362033 13.4030463,6.66666667 12.6666667,6.66666667 L12.1617605,6.66666667 L13.3945435,5.43388365 C14.5135095,5.75065459 15.3333333,6.77958724 15.3333333,8 C15.3333333,9.47275933 14.139426,10.6666667 12.6666667,10.6666667 L8.66666667,10.6666667 C8.5081988,10.6666667 8.35295937,10.6528441 8.20208831,10.6263388 L9.49509379,9.33333333 Z' id='Combined-Shape' fill='%2362656A' fill-rule='nonzero'></path>        <path d='M6.50490621,6.66666667 L3.33333333,6.66666667 C2.59695367,6.66666667 2,7.26362033 2,8 C2,8.73637967 2.59695367,9.33333333 3.33333333,9.33333333 L3.83823954,9.33333333 L2.60545653,10.5661163 C1.48649049,10.2493454 0.666666667,9.22041276 0.666666667,8 C0.666666667,6.52724067 1.860574,5.33333333 3.33333333,5.33333333 L7.33333333,5.33333333 C7.4918012,5.33333333 7.64704063,5.34715592 7.79791169,5.37366118 L6.50490621,6.66666667 Z' id='Combined-Shape' fill='%2362656A' fill-rule='nonzero'></path>        <rect id='Rectangle-8' fill='%2362656A' fill-rule='nonzero' transform='translate(8.000000, 8.000000) rotate(45.000000) translate(-8.000000, -8.000000) ' x='7.33333333' y='1.33333333' width='1.33333333' height='13.3333333'></rect>    </g></svg>");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center; }
-
-.ios-theme.dark-theme .module-quote__reference-warning__icon--incoming {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->    <title>Link/broken-link-16</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Link/broken-link-16' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M9.49509379,9.33333333 L12.6666667,9.33333333 C13.4030463,9.33333333 14,8.73637967 14,8 C14,7.26362033 13.4030463,6.66666667 12.6666667,6.66666667 L12.1617605,6.66666667 L13.3945435,5.43388365 C14.5135095,5.75065459 15.3333333,6.77958724 15.3333333,8 C15.3333333,9.47275933 14.139426,10.6666667 12.6666667,10.6666667 L8.66666667,10.6666667 C8.5081988,10.6666667 8.35295937,10.6528441 8.20208831,10.6263388 L9.49509379,9.33333333 Z' id='Combined-Shape' fill='%23FFFFFF' fill-rule='nonzero'></path>        <path d='M6.50490621,6.66666667 L3.33333333,6.66666667 C2.59695367,6.66666667 2,7.26362033 2,8 C2,8.73637967 2.59695367,9.33333333 3.33333333,9.33333333 L3.83823954,9.33333333 L2.60545653,10.5661163 C1.48649049,10.2493454 0.666666667,9.22041276 0.666666667,8 C0.666666667,6.52724067 1.860574,5.33333333 3.33333333,5.33333333 L7.33333333,5.33333333 C7.4918012,5.33333333 7.64704063,5.34715592 7.79791169,5.37366118 L6.50490621,6.66666667 Z' id='Combined-Shape' fill='%23FFFFFF' fill-rule='nonzero'></path>        <rect id='Rectangle-8' fill='%23FFFFFF' fill-rule='nonzero' transform='translate(8.000000, 8.000000) rotate(45.000000) translate(-8.000000, -8.000000) ' x='7.33333333' y='1.33333333' width='1.33333333' height='13.3333333'></rect>    </g></svg>");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center; }
-
-.ios-theme.dark-theme .bottom-bar .module-quote__primary__author {
-  color: #ffffff; }
-
-.ios-theme.dark-theme .bottom-bar .module-quote__primary__type-label {
-  color: #ffffff; }
-
-.ios-theme.dark-theme .bottom-bar .module-quote__generic-file__text {
-  color: #ffffff; }
-
-.ios-theme.dark-theme .bottom-bar .module-quote__primary__text {
-  color: #ffffff; }
-  .ios-theme.dark-theme .bottom-bar .module-quote__primary__text a {
-    color: #ffffff; }
-
-.ios-theme.dark-theme .module-embedded-contact__contact-name--incoming {
-  color: #ffffff; }
-
-.ios-theme.dark-theme .module-embedded-contact__contact-method--incoming {
-  color: rgba(255, 255, 255, 0.7); }
 
 .module-contact-name__profile-name {
   font-style: italic; }
@@ -3445,41 +3132,44 @@ body.dark-theme {
   padding-top: 10px;
   padding-bottom: 10px; }
 
-.module-message__container--outgoing {
+.module-message__container--incoming {
   background-color: #eeefef; }
 
-.module-message__container--incoming {
-  background-color: #757575; }
+.module-message__container--outgoing {
+  background-color: #6b6b78; }
 
-.module-message__container--incoming-grey {
-  background-color: #757575; }
+.module-message__container--outgoing-red {
+  background-color: #cc163d; }
 
-.module-message__container--incoming-blue {
-  background-color: #1976d2; }
+.module-message__container--outgoing-deep_orange {
+  background-color: #c73800; }
 
-.module-message__container--incoming-cyan {
-  background-color: #00838f; }
+.module-message__container--outgoing-brown {
+  background-color: #746c53; }
 
-.module-message__container--incoming-deep_orange {
-  background-color: #bf360c; }
+.module-message__container--outgoing-pink {
+  background-color: #a23474; }
 
-.module-message__container--incoming-green {
-  background-color: #2e7d32; }
+.module-message__container--outgoing-purple {
+  background-color: #862caf; }
 
-.module-message__container--incoming-indigo {
-  background-color: #3949ab; }
+.module-message__container--outgoing-indigo {
+  background-color: #5951c8; }
 
-.module-message__container--incoming-pink {
-  background-color: #d81b60; }
+.module-message__container--outgoing-blue {
+  background-color: #336ba3; }
 
-.module-message__container--incoming-purple {
-  background-color: #8e24aa; }
+.module-message__container--outgoing-teal {
+  background-color: #067589; }
 
-.module-message__container--incoming-red {
-  background-color: #d32f2f; }
+.module-message__container--outgoing-green {
+  background-color: #3b7845; }
 
-.module-message__container--incoming-teal {
-  background-color: #00796b; }
+.module-message__container--outgoing-light_green {
+  background-color: #1c8260; }
+
+.module-message__container--outgoing-blue_grey {
+  background-color: #895d66; }
 
 .module-message__attachment-container {
   text-align: center;
@@ -3511,7 +3201,7 @@ body.dark-theme {
   left: 0;
   right: 0;
   border-radius: 16px;
-  box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.2); }
+  box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.15); }
 
 .module-message__img-border-overlay--with-content-below {
   border-bottom-left-radius: 0px;
@@ -3532,7 +3222,7 @@ body.dark-theme {
 
 .module-message__img-overlay {
   height: 48px;
-  background-image: linear-gradient(to bottom, transparent, transparent 9%, rgba(0, 0, 0, 0.02) 17%, rgba(0, 0, 0, 0.05) 24%, rgba(0, 0, 0, 0.08) 31%, rgba(0, 0, 0, 0.12) 37%, rgba(0, 0, 0, 0.16) 44%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.24) 56%, rgba(0, 0, 0, 0.28) 63%, rgba(0, 0, 0, 0.32) 69%, rgba(0, 0, 0, 0.35) 76%, rgba(0, 0, 0, 0.38) 83%, rgba(0, 0, 0, 0.4) 91%, rgba(0, 0, 0, 0.4));
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 9%, rgba(0, 0, 0, 0.02) 17%, rgba(0, 0, 0, 0.05) 24%, rgba(0, 0, 0, 0.08) 31%, rgba(0, 0, 0, 0.12) 37%, rgba(0, 0, 0, 0.16) 44%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.24) 56%, rgba(0, 0, 0, 0.28) 63%, rgba(0, 0, 0, 0.32) 69%, rgba(0, 0, 0, 0.35) 76%, rgba(0, 0, 0, 0.38) 83%, rgba(0, 0, 0, 0.4) 91%, rgba(0, 0, 0, 0.4));
   position: absolute;
   bottom: 0;
   z-index: 2;
@@ -3616,7 +3306,7 @@ body.dark-theme {
   max-width: calc(100% - 37px); }
 
 .module-message__generic-attachment__file-name {
-  color: #070c14;
+  color: #ffffff;
   font-size: 14px;
   line-height: 18px;
   font-weight: 300;
@@ -3626,20 +3316,20 @@ body.dark-theme {
   text-overflow: ellipsis; }
 
 .module-message__generic-attachment__file-name--incoming {
-  color: #ffffff; }
+  color: #070c14; }
 
 .module-message__generic-attachment__file-size {
-  color: #070c14;
+  color: #ffffff;
   font-size: 11px;
   line-height: 16px;
   letter-spacing: 0.3px;
   margin-top: 3px; }
 
 .module-message__generic-attachment__file-size--incoming {
-  color: #ffffff; }
+  color: #070c14; }
 
 .module-message__author {
-  color: #ffffff;
+  color: #070c14;
   font-size: 13px;
   font-weight: 300;
   line-height: 18px;
@@ -3653,7 +3343,7 @@ body.dark-theme {
   font-style: italic; }
 
 .module-message__text {
-  color: #070c14;
+  color: #ffffff;
   font-size: 14px;
   line-height: 18px;
   text-align: start;
@@ -3663,13 +3353,13 @@ body.dark-theme {
   white-space: pre-wrap; }
   .module-message__text a {
     text-decoration: underline;
-    color: #070c14; }
+    color: #ffffff; }
 
 .module-message__text--incoming {
-  color: #ffffff; }
+  color: #070c14; }
   .module-message__text--incoming a {
     text-decoration: underline;
-    color: #ffffff; }
+    color: #070c14; }
 
 .module-message__text--error {
   font-style: italic; }
@@ -3692,11 +3382,11 @@ body.dark-theme {
   font-size: 11px;
   line-height: 16px;
   letter-spacing: 0.3px;
-  color: #62656a;
+  color: rgba(255, 255, 255, 0.8);
   text-transform: uppercase; }
 
 .module-message__metadata__date--incoming {
-  color: rgba(255, 255, 255, 0.7); }
+  color: #62656a; }
 
 .module-message__metadata__date--with-image-no-caption {
   color: #ffffff; }
@@ -3724,20 +3414,20 @@ body.dark-theme {
     transform: rotate(360deg); } }
 
 .module-message__metadata__status-icon--sent {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>check</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Sent' transform='translate(-6.000000, 0.000000)' fill='%23000000' fill-rule='nonzero'>            <path d='M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='check' fill='%23A4A6A9'></path>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>check</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Sent' transform='translate(-6.000000, 0.000000)' fill='%23000000' fill-rule='nonzero'>            <path d='M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='check' fill='%23FFFFFF'></path>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-message__metadata__status-icon--delivered {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>double check</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C7.58941091,0.549084144 7.28273546,0.812570593 7.00070199,1.10030099 C6.67734551,1.03453102 6.34268082,1 6,1 C3.24,1 1,3.24 1,6 C1,8.76 3.24,11 6,11 C6.34268082,11 6.67734551,10.965469 7.00070199,10.899699 C7.28273546,11.1874294 7.58941091,11.4509159 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M5.07266453,7.01233547 C5.12977459,7.4065842 5.21974274,7.79019382 5.33970233,8.16029767 L5,8.5 L2.5,6 L3.205,5.295 L5,7.085 L5.07266453,7.01233547 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='path-1' fill='%23A4A6A9'></path>    </defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Delivered'>            <mask id='mask-2' fill='white'>                <use xlink:href='%23path-1'></use>            </mask>            <use id='double-check' fill='%23000000' fill-rule='nonzero' xlink:href='%23path-1'></use>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>double check</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C7.58941091,0.549084144 7.28273546,0.812570593 7.00070199,1.10030099 C6.67734551,1.03453102 6.34268082,1 6,1 C3.24,1 1,3.24 1,6 C1,8.76 3.24,11 6,11 C6.34268082,11 6.67734551,10.965469 7.00070199,10.899699 C7.28273546,11.1874294 7.58941091,11.4509159 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M5.07266453,7.01233547 C5.12977459,7.4065842 5.21974274,7.79019382 5.33970233,8.16029767 L5,8.5 L2.5,6 L3.205,5.295 L5,7.085 L5.07266453,7.01233547 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='path-1' fill='%23FFFFFF'></path>    </defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Delivered'>            <mask id='mask-2' fill='white'>                <use xlink:href='%23path-1'></use>            </mask>            <use id='double-check' fill='%23000000' fill-rule='nonzero' xlink:href='%23path-1'></use>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
   width: 18px; }
 
 .module-message__metadata__status-icon--read {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Read/read-18x12</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C6.15053376,1.58392424 5,3.65760134 5,6 C5,6.343797 5.0247846,6.68180525 5.07266453,7.01233547 L5,7.085 L3.205,5.295 L2.5,6 L5,8.5 L5.33970233,8.16029767 C5.80439817,9.59399486 6.71914823,10.8250231 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M11,8.5 L15.5,4 L14.795,3.29 L11,7.085 L9.205,5.295 L8.5,6 L11,8.5 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='18' height='12'></rect>    </defs>    <g id='Icons/Read/read-18x12' stroke='none' stroke-width='1' fill='%23A4A6A9' fill-rule='evenodd'>        <mask id='mask-2' fill='%23A4A6A9'>            <use xlink:href='%23path-1'></use>        </mask>        <g id='double-check' fill-rule='nonzero'></g>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%23A4A6A9'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%23A4A6A9' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Read/read-18x12</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C6.15053376,1.58392424 5,3.65760134 5,6 C5,6.343797 5.0247846,6.68180525 5.07266453,7.01233547 L5,7.085 L3.205,5.295 L2.5,6 L5,8.5 L5.33970233,8.16029767 C5.80439817,9.59399486 6.71914823,10.8250231 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M11,8.5 L15.5,4 L14.795,3.29 L11,7.085 L9.205,5.295 L8.5,6 L11,8.5 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='18' height='12'></rect>    </defs>    <g id='Icons/Read/read-18x12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <mask id='mask-2' fill='%23FFFFFF'>            <use xlink:href='%23path-1'></use>        </mask>        <g id='double-check' fill-rule='nonzero'></g>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%23FFFFFF'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%23FFFFFF' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -3783,37 +3473,41 @@ body.dark-theme {
   display: flex;
   flex-direction: row;
   align-items: center;
-  text-align: center; }
-
-.module-message__author-default-avatar--grey {
-  background-color: #757575; }
-
-.module-message__author-default-avatar--blue {
-  background-color: #1976d2; }
-
-.module-message__author-default-avatar--cyan {
-  background-color: #00838f; }
-
-.module-message__author-default-avatar--deep_orange {
-  background-color: #bf360c; }
-
-.module-message__author-default-avatar--green {
-  background-color: #2e7d32; }
-
-.module-message__author-default-avatar--indigo {
-  background-color: #3949ab; }
-
-.module-message__author-default-avatar--pink {
-  background-color: #d81b60; }
-
-.module-message__author-default-avatar--purple {
-  background-color: #8e24aa; }
+  text-align: center;
+  background-color: #6b6b78; }
 
 .module-message__author-default-avatar--red {
-  background-color: #d32f2f; }
+  background-color: #cc163d; }
+
+.module-message__author-default-avatar--deep_orange {
+  background-color: #c73800; }
+
+.module-message__author-default-avatar--brown {
+  background-color: #746c53; }
+
+.module-message__author-default-avatar--pink {
+  background-color: #a23474; }
+
+.module-message__author-default-avatar--purple {
+  background-color: #862caf; }
+
+.module-message__author-default-avatar--indigo {
+  background-color: #5951c8; }
+
+.module-message__author-default-avatar--blue {
+  background-color: #336ba3; }
 
 .module-message__author-default-avatar--teal {
-  background-color: #00796b; }
+  background-color: #067589; }
+
+.module-message__author-default-avatar--green {
+  background-color: #3b7845; }
+
+.module-message__author-default-avatar--light_green {
+  background-color: #1c8260; }
+
+.module-message__author-default-avatar--blue_grey {
+  background-color: #895d66; }
 
 .module-message__author-default-avatar__label {
   width: 100%;
@@ -3944,52 +3638,89 @@ body.dark-theme {
   border-bottom-right-radius: 0px; }
 
 .module-quote--incoming {
-  background-color: rgba(255, 255, 255, 0.75);
-  border-left-color: #ffffff; }
+  border-left-color: #6b6b78;
+  background-color: #bebec6; }
 
-.module-quote--outgoing-you {
-  border-left-color: #a4a6a9;
-  background-color: #f9fafa; }
+.module-quote--incoming-red {
+  border-left-color: #cc163d;
+  background-color: #eda6ae; }
 
-.module-quote--outgoing-grey {
-  border-left-color: #757575;
-  background-color: rgba(117, 117, 117, 0.25); }
+.module-quote--incoming-deep_orange {
+  border-left-color: #c73800;
+  background-color: #eba78e; }
 
-.module-quote--outgoing-blue {
-  border-left-color: #1976d2;
-  background-color: rgba(25, 118, 210, 0.25); }
+.module-quote--incoming-brown {
+  border-left-color: #746c53;
+  background-color: #c4b997; }
 
-.module-quote--outgoing-cyan {
-  border-left-color: #00838f;
-  background-color: rgba(0, 131, 143, 0.25); }
+.module-quote--incoming-pink {
+  border-left-color: #a23474;
+  background-color: #dcb2ca; }
 
-.module-quote--outgoing-deep_orange {
-  border-left-color: #bf360c;
-  background-color: rgba(191, 54, 12, 0.25); }
+.module-quote--incoming-purple {
+  border-left-color: #862caf;
+  background-color: #cdaddc; }
 
-.module-quote--outgoing-green {
-  border-left-color: #2e7d32;
-  background-color: rgba(46, 125, 50, 0.25); }
+.module-quote--incoming-indigo {
+  border-left-color: #5951c8;
+  background-color: #c2c1e7; }
 
-.module-quote--outgoing-indigo {
-  border-left-color: #3949ab;
-  background-color: rgba(57, 73, 171, 0.25); }
+.module-quote--incoming-blue {
+  border-left-color: #336ba3;
+  background-color: #adc8e1; }
 
-.module-quote--outgoing-pink {
-  border-left-color: #d81b60;
-  background-color: rgba(216, 27, 96, 0.25); }
+.module-quote--incoming-teal {
+  border-left-color: #067589;
+  background-color: #a5cad5; }
 
-.module-quote--outgoing-purple {
-  border-left-color: #8e24aa;
-  background-color: rgba(142, 36, 170, 0.25); }
+.module-quote--incoming-green {
+  border-left-color: #3b7845;
+  background-color: #8fcc9a; }
+
+.module-quote--incoming-light_green {
+  border-left-color: #1c8260;
+  background-color: #9bcfbd; }
+
+.module-quote--incoming-blue_grey {
+  border-left-color: #895d66;
+  background-color: #cfb5bb; }
+
+.module-quote--outgoing {
+  border-left-color: #ffffff;
+  background-color: #bebec6; }
 
 .module-quote--outgoing-red {
-  border-left-color: #d32f2f;
-  background-color: rgba(211, 47, 47, 0.25); }
+  background-color: #eda6ae; }
+
+.module-quote--outgoing-deep_orange {
+  background-color: #eba78e; }
+
+.module-quote--outgoing-brown {
+  background-color: #c4b997; }
+
+.module-quote--outgoing-pink {
+  background-color: #dcb2ca; }
+
+.module-quote--outgoing-purple {
+  background-color: #cdaddc; }
+
+.module-quote--outgoing-indigo {
+  background-color: #c2c1e7; }
+
+.module-quote--outgoing-blue {
+  background-color: #adc8e1; }
 
 .module-quote--outgoing-teal {
-  border-left-color: #00796b;
-  background-color: rgba(0, 121, 107, 0.25); }
+  background-color: #a5cad5; }
+
+.module-quote--outgoing-green {
+  background-color: #8fcc9a; }
+
+.module-quote--outgoing-light_green {
+  background-color: #9bcfbd; }
+
+.module-quote--outgoing-blue_grey {
+  background-color: #cfb5bb; }
 
 .module-quote__primary {
   flex-grow: 1;
@@ -4007,36 +3738,6 @@ body.dark-theme {
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis; }
-
-.module-quote__primary__author--grey {
-  color: #757575; }
-
-.module-quote__primary__author--blue {
-  color: #1976d2; }
-
-.module-quote__primary__author--cyan {
-  color: #00838f; }
-
-.module-quote__primary__author--deep_orange {
-  color: #bf360c; }
-
-.module-quote__primary__author--green {
-  color: #2e7d32; }
-
-.module-quote__primary__author--indigo {
-  color: #3949ab; }
-
-.module-quote__primary__author--pink {
-  color: #d81b60; }
-
-.module-quote__primary__author--purple {
-  color: #8e24aa; }
-
-.module-quote__primary__author--red {
-  color: #d32f2f; }
-
-.module-quote__primary__author--teal {
-  color: #00796b; }
 
 .module-quote__primary__profile-name {
   font-style: italic; }
@@ -4228,7 +3929,7 @@ body.dark-theme {
   border-radius: 50%;
   width: 100%;
   height: 100%;
-  background-color: #757575;
+  background-color: #6b6b78;
   color: #ffffff;
   font-size: 25px;
   line-height: 52px; }
@@ -4243,28 +3944,28 @@ body.dark-theme {
   line-height: 18px;
   font-weight: 300;
   margin-top: 6px;
-  color: #070c14;
+  color: #ffffff;
   max-width: 100%;
   white-space: nowrap;
   overflow-x: hidden;
   text-overflow: ellipsis; }
 
 .module-embedded-contact__contact-name--incoming {
-  color: #ffffff; }
+  color: #070c14; }
 
 .module-embedded-contact__contact-method {
   font-size: 11px;
   line-height: 16px;
   letter-spacing: 0.3px;
   margin-top: 3px;
-  color: #62656a;
+  color: rgba(255, 255, 255, 0.7);
   max-width: 100%;
   white-space: nowrap;
   overflow-x: hidden;
   text-overflow: ellipsis; }
 
 .module-embedded-contact__contact-method--incoming {
-  color: rgba(255, 255, 255, 0.7); }
+  color: #62656a; }
 
 .module-contact-detail {
   text-align: center;
@@ -4289,7 +3990,7 @@ body.dark-theme {
   border-radius: 50%;
   width: 100%;
   height: 100%;
-  background-color: #757575;
+  background-color: #6b6b78;
   color: #ffffff;
   font-size: 50px;
   line-height: 82px; }
@@ -4516,37 +4217,40 @@ body.dark-theme {
   flex-direction: row;
   align-items: center;
   text-align: center;
-  background-color: #757575; }
-
-.module-contact-list-item__avatar-default--grey {
-  background-color: #757575; }
-
-.module-contact-list-item__avatar-default--blue {
-  background-color: #1976d2; }
-
-.module-contact-list-item__avatar-default--cyan {
-  background-color: #00838f; }
-
-.module-contact-list-item__avatar-default--deep_orange {
-  background-color: #bf360c; }
-
-.module-contact-list-item__avatar-default--green {
-  background-color: #2e7d32; }
-
-.module-contact-list-item__avatar-default--indigo {
-  background-color: #3949ab; }
-
-.module-contact-list-item__avatar-default--pink {
-  background-color: #d81b60; }
-
-.module-contact-list-item__avatar-default--purple {
-  background-color: #8e24aa; }
+  background-color: #6b6b78; }
 
 .module-contact-list-item__avatar-default--red {
-  background-color: #d32f2f; }
+  background-color: #cc163d; }
+
+.module-contact-list-item__avatar-default--deep_orange {
+  background-color: #c73800; }
+
+.module-contact-list-item__avatar-default--brown {
+  background-color: #746c53; }
+
+.module-contact-list-item__avatar-default--pink {
+  background-color: #a23474; }
+
+.module-contact-list-item__avatar-default--purple {
+  background-color: #862caf; }
+
+.module-contact-list-item__avatar-default--indigo {
+  background-color: #5951c8; }
+
+.module-contact-list-item__avatar-default--blue {
+  background-color: #336ba3; }
 
 .module-contact-list-item__avatar-default--teal {
-  background-color: #00796b; }
+  background-color: #067589; }
+
+.module-contact-list-item__avatar-default--green {
+  background-color: #3b7845; }
+
+.module-contact-list-item__avatar-default--light_green {
+  background-color: #1c8260; }
+
+.module-contact-list-item__avatar-default--blue_grey {
+  background-color: #895d66; }
 
 .module-contact-list-item__avatar-default__label {
   width: 100%;
@@ -4613,38 +4317,44 @@ body.dark-theme {
   border-radius: 16px; }
 
 .module-conversation-header___default-avatar {
-  background-color: #757575;
+  background-color: #6b6b78;
   line-height: 32px;
   font-size: 16px;
   color: #ffffff;
   text-align: center; }
 
-.module-conversation-header___default-avatar--blue {
-  background-color: #1976d2; }
-
-.module-conversation-header___default-avatar--cyan {
-  background-color: #00838f; }
+.module-conversation-header___default-avatar--red {
+  background-color: #cc163d; }
 
 .module-conversation-header___default-avatar--deep_orange {
-  background-color: #bf360c; }
+  background-color: #c73800; }
 
-.module-conversation-header___default-avatar--green {
-  background-color: #2e7d32; }
-
-.module-conversation-header___default-avatar--indigo {
-  background-color: #3949ab; }
+.module-conversation-header___default-avatar--brown {
+  background-color: #746c53; }
 
 .module-conversation-header___default-avatar--pink {
-  background-color: #d81b60; }
+  background-color: #a23474; }
 
 .module-conversation-header___default-avatar--purple {
-  background-color: #8e24aa; }
+  background-color: #862caf; }
 
-.module-conversation-header___default-avatar--red {
-  background-color: #d32f2f; }
+.module-conversation-header___default-avatar--indigo {
+  background-color: #5951c8; }
+
+.module-conversation-header___default-avatar--blue {
+  background-color: #336ba3; }
 
 .module-conversation-header___default-avatar--teal {
-  background-color: #00796b; }
+  background-color: #067589; }
+
+.module-conversation-header___default-avatar--green {
+  background-color: #3b7845; }
+
+.module-conversation-header___default-avatar--light_green {
+  background-color: #1c8260; }
+
+.module-conversation-header___default-avatar--blue_grey {
+  background-color: #895d66; }
 
 .module-conversation-header__title {
   margin-left: 8px;
@@ -4762,38 +4472,44 @@ body.dark-theme {
   border-radius: 22px; }
 
 .module-message-detail__contact__default-avatar {
-  background-color: #757575;
+  background-color: #6b6b78;
   line-height: 44px;
   font-size: 20px;
   color: #ffffff;
   text-align: center; }
 
-.module-message-detail__contact__default-avatar--blue {
-  background-color: #1976d2; }
-
-.module-message-detail__contact__default-avatar--cyan {
-  background-color: #00838f; }
+.module-message-detail__contact__default-avatar--red {
+  background-color: #cc163d; }
 
 .module-message-detail__contact__default-avatar--deep_orange {
-  background-color: #bf360c; }
+  background-color: #c73800; }
 
-.module-message-detail__contact__default-avatar--green {
-  background-color: #2e7d32; }
-
-.module-message-detail__contact__default-avatar--indigo {
-  background-color: #3949ab; }
+.module-message-detail__contact__default-avatar--brown {
+  background-color: #746c53; }
 
 .module-message-detail__contact__default-avatar--pink {
-  background-color: #d81b60; }
+  background-color: #a23474; }
 
 .module-message-detail__contact__default-avatar--purple {
-  background-color: #8e24aa; }
+  background-color: #862caf; }
 
-.module-message-detail__contact__default-avatar--red {
-  background-color: #d32f2f; }
+.module-message-detail__contact__default-avatar--indigo {
+  background-color: #5951c8; }
+
+.module-message-detail__contact__default-avatar--blue {
+  background-color: #336ba3; }
 
 .module-message-detail__contact__default-avatar--teal {
-  background-color: #00796b; }
+  background-color: #067589; }
+
+.module-message-detail__contact__default-avatar--green {
+  background-color: #3b7845; }
+
+.module-message-detail__contact__default-avatar--light_green {
+  background-color: #1c8260; }
+
+.module-message-detail__contact__default-avatar--blue_grey {
+  background-color: #895d66; }
 
 .module-message-detail__contact__text {
   margin-left: 10px;
@@ -5056,14 +4772,14 @@ body.dark-theme {
   align-items: center;
   cursor: pointer; }
   .module-conversation-list-item:hover {
-    background-color: #d9d9d9; }
+    background-color: #eeefef; }
 
 .module-conversation-list-item--has-unread {
   padding-left: 12px;
   border-left: 4px solid #2090ea; }
 
 .module-conversation-list-item--is-selected {
-  background-color: #d9d9d9; }
+  background-color: #eeefef; }
 
 .module-conversation-list-item__avatar {
   margin-top: 8px;
@@ -5079,34 +4795,40 @@ body.dark-theme {
   font-size: 26px;
   line-height: 48px;
   text-align: center;
-  background-color: #757575; }
-
-.module-conversation-list-item__default-avatar--blue {
-  background-color: #1976d2; }
-
-.module-conversation-list-item__default-avatar--cyan {
-  background-color: #00838f; }
-
-.module-conversation-list-item__default-avatar--deep_orange {
-  background-color: #bf360c; }
-
-.module-conversation-list-item__default-avatar--green {
-  background-color: #2e7d32; }
-
-.module-conversation-list-item__default-avatar--indigo {
-  background-color: #3949ab; }
-
-.module-conversation-list-item__default-avatar--pink {
-  background-color: #d81b60; }
-
-.module-conversation-list-item__default-avatar--purple {
-  background-color: #8e24aa; }
+  background-color: #6b6b78; }
 
 .module-conversation-list-item__default-avatar--red {
-  background-color: #d32f2f; }
+  background-color: #cc163d; }
+
+.module-conversation-list-item__default-avatar--deep_orange {
+  background-color: #c73800; }
+
+.module-conversation-list-item__default-avatar--brown {
+  background-color: #746c53; }
+
+.module-conversation-list-item__default-avatar--pink {
+  background-color: #a23474; }
+
+.module-conversation-list-item__default-avatar--purple {
+  background-color: #862caf; }
+
+.module-conversation-list-item__default-avatar--indigo {
+  background-color: #5951c8; }
+
+.module-conversation-list-item__default-avatar--blue {
+  background-color: #336ba3; }
 
 .module-conversation-list-item__default-avatar--teal {
-  background-color: #00796b; }
+  background-color: #067589; }
+
+.module-conversation-list-item__default-avatar--green {
+  background-color: #3b7845; }
+
+.module-conversation-list-item__default-avatar--light_green {
+  background-color: #1c8260; }
+
+.module-conversation-list-item__default-avatar--blue_grey {
+  background-color: #895d66; }
 
 .module-conversation-list-item__content {
   flex-grow: 1;
@@ -5158,6 +4880,7 @@ body.dark-theme {
   flex-shrink: 1;
   font-size: 13px;
   line-height: 18px;
+  color: #636467;
   height: 1.3em;
   overflow: hidden;
   text-overflow: ellipsis; }

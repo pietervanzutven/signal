@@ -399,7 +399,6 @@
       const contact = this.findAndFormatContact(phoneNumber);
       const contactModel = this.findContact(phoneNumber);
 
-      const authorColor = contactModel ? contactModel.getColor() : null;
       const authorAvatar = contactModel ? contactModel.getAvatar() : null;
       const authorAvatarPath = authorAvatar ? authorAvatar.url : null;
 
@@ -412,6 +411,7 @@
 
       const conversation = this.getConversation();
       const isGroup = conversation && !conversation.isPrivate();
+      const conversationColor = conversation && conversation.getColor();
 
       const attachments = this.get('attachments');
       const firstAttachment = attachments && attachments[0];
@@ -426,7 +426,7 @@
         authorName: contact.name,
         authorProfileName: contact.profileName,
         authorPhoneNumber: contact.phoneNumber,
-        authorColor,
+        conversationColor,
         conversationType: isGroup ? 'group' : 'direct',
         attachment: this.getPropsForAttachment(firstAttachment),
         quote: this.getPropsForQuote(),
@@ -541,7 +541,6 @@
       const authorPhoneNumber = author;
       const authorProfileName = contact ? contact.getProfileName() : null;
       const authorName = contact ? contact.getName() : null;
-      const authorColor = contact ? contact.getColor() : 'grey';
       const isFromMe = contact ? contact.id === this.OUR_NUMBER : false;
       const onClick = () => {
         this.trigger('scroll-to-message', {
@@ -562,7 +561,6 @@
         authorPhoneNumber,
         authorProfileName,
         authorName,
-        authorColor,
         onClick,
         referencedMessageNotFound,
       };

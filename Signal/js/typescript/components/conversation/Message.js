@@ -264,12 +264,12 @@
             }
         }
         renderQuote() {
-            const { conversationType, direction, i18n, quote } = this.props;
+            const { conversationType, conversationColor, direction, i18n, quote, } = this.props;
             if (!quote) {
                 return null;
             }
             const withContentAbove = conversationType === 'group' && direction === 'incoming';
-            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: quote.onClick, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quote.authorColor, referencedMessageNotFound: quote.referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
+            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: quote.onClick, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, conversationColor: conversationColor, referencedMessageNotFound: quote.referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
         }
         renderEmbeddedContact() {
             const { collapseMetadata, contact, conversationType, direction, i18n, text, } = this.props;
@@ -289,7 +289,7 @@
             return (react_1.default.createElement("div", { role: "button", onClick: contact.onSendMessage, className: "module-message__send-message-button" }, i18n('sendMessageToContact')));
         }
         renderAvatar() {
-            const { authorName, authorPhoneNumber, authorProfileName, authorAvatarPath, authorColor, collapseMetadata, conversationType, direction, i18n, } = this.props;
+            const { authorName, authorPhoneNumber, authorProfileName, authorAvatarPath, conversationColor, collapseMetadata, conversationType, direction, i18n, } = this.props;
             const title = `${authorName || authorPhoneNumber}${!authorName && authorProfileName ? ` ~${authorProfileName}` : ''}`;
             if (collapseMetadata ||
                 conversationType !== 'group' ||
@@ -298,7 +298,7 @@
             }
             if (!authorAvatarPath) {
                 const label = authorName ? getInitial(authorName) : '#';
-                return (react_1.default.createElement("div", { className: classnames_1.default('module-message__author-default-avatar', `module-message__author-default-avatar--${authorColor}`) },
+                return (react_1.default.createElement("div", { className: classnames_1.default('module-message__author-default-avatar', `module-message__author-default-avatar--${conversationColor}`) },
                     react_1.default.createElement("div", { className: "module-message__author-default-avatar__label" }, label)));
             }
             return (react_1.default.createElement("div", { className: "module-message__author-avatar" },
@@ -382,7 +382,7 @@
                 }, i18n('deleteMessage'))));
         }
         render() {
-            const { authorPhoneNumber, authorColor, direction, id, timestamp, } = this.props;
+            const { authorPhoneNumber, conversationColor, direction, id, timestamp, } = this.props;
             const { expired, expiring } = this.state;
             // This id is what connects our triple-dot click with our associated pop-up menu.
             //   It needs to be unique.
@@ -394,8 +394,8 @@
                 this.renderError(direction === 'incoming'),
                 this.renderMenu(direction === 'outgoing', triggerId),
                 react_1.default.createElement("div", {
-                    className: classnames_1.default('module-message__container', `module-message__container--${direction}`, direction === 'incoming'
-                        ? `module-message__container--incoming-${authorColor}`
+                    className: classnames_1.default('module-message__container', `module-message__container--${direction}`, direction === 'outgoing'
+                        ? `module-message__container--outgoing-${conversationColor}`
                         : null)
                 },
                     this.renderAuthor(),
