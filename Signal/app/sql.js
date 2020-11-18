@@ -20,6 +20,18 @@
     close,
     removeDB,
 
+    getConversationCount,
+    saveConversation,
+    saveConversations,
+    getConversationById,
+    updateConversation,
+    removeConversation,
+    getAllConversations,
+    getAllConversationIds,
+    getAllPrivateConversations,
+    getAllGroupsInvolvingId,
+    searchConversations,
+
     getMessageCount,
     saveMessage,
     saveMessages,
@@ -27,6 +39,7 @@
     getUnreadByConversation,
     getMessageBySender,
     getMessageById,
+    getAllMessages,
     getAllMessageIds,
     getMessagesBySentAt,
     getExpiredMessages,
@@ -275,10 +288,47 @@
     console.log('updateToSchemaVersion3: success!');
   }
 
+  async function updateToSchemaVersion4(currentVersion, instance) {
+    if (currentVersion >= 4) {
+      return;
+    }
+
+    console.log('updateToSchemaVersion4: starting...');
+
+    await instance.run('BEGIN TRANSACTION;');
+
+    await instance.run(
+      `CREATE TABLE conversations(
+      id STRING PRIMARY KEY ASC,
+      json TEXT,
+
+      active_at INTEGER,
+      type STRING,
+      members TEXT,
+      name TEXT,
+      profileName TEXT
+    );`
+    );
+
+    await instance.run(`CREATE INDEX conversations_active ON conversations (
+      active_at
+    ) WHERE active_at IS NOT NULL;`);
+
+    await instance.run(`CREATE INDEX conversations_type ON conversations (
+      type
+    ) WHERE type IS NOT NULL;`);
+
+    await instance.run('PRAGMA schema_version = 4;');
+    await instance.run('COMMIT TRANSACTION;');
+
+    console.log('updateToSchemaVersion4: success!');
+  }
+
   const SCHEMA_VERSIONS = [
     updateToSchemaVersion1,
     updateToSchemaVersion2,
     updateToSchemaVersion3,
+    updateToSchemaVersion4,
   ];
 
   async function updateSchema(instance) {
@@ -351,6 +401,190 @@
     }
 
     rimraf.sync(filePath);
+  }
+
+  async function getConversationCount() {
+    const row = await db.get('SELECT count(*) from conversations;');
+
+    if (!row) {
+      throw new Error('getMessageCount: Unable to get count of conversations');
+    }
+
+    return row['count(*)'];
+  }
+
+  async function saveConversation(data) {
+    // eslint-disable-next-line camelcase
+    const { id, active_at, type, members, name, profileName } = data;
+
+    await db.run(
+      `INSERT INTO conversations (
+    id,
+    json,
+
+    active_at,
+    type,
+    members,
+    name,
+    profileName
+  ) values (
+    $id,
+    $json,
+
+    $active_at,
+    $type,
+    $members,
+    $name,
+    $profileName
+  );`,
+      {
+        $id: id,
+        $json: objectToJSON(data),
+
+        $active_at: active_at,
+        $type: type,
+        $members: members ? members.join(' ') : null,
+        $name: name,
+        $profileName: profileName,
+      }
+    );
+  }
+
+  async function saveConversations(arrayOfConversations) {
+    let promise;
+
+    db.serialize(() => {
+      promise = Promise.all([
+        db.run('BEGIN TRANSACTION;'),
+        ...map(arrayOfConversations, conversation =>
+          saveConversation(conversation)
+        ),
+        db.run('COMMIT TRANSACTION;'),
+      ]);
+    });
+
+    await promise;
+  }
+
+  async function updateConversation(data) {
+    // eslint-disable-next-line camelcase
+    const { id, active_at, type, members, name, profileName } = data;
+
+    await db.run(
+      `UPDATE conversations SET
+    json = $json,
+
+    active_at = $active_at,
+    type = $type,
+    members = $members,
+    name = $name,
+    profileName = $profileName
+  WHERE id = $id;`,
+      {
+        $id: id,
+        $json: objectToJSON(data),
+
+        $active_at: active_at,
+        $type: type,
+        $members: members ? members.join(' ') : null,
+        $name: name,
+        $profileName: profileName,
+      }
+    );
+  }
+
+  async function removeConversation(id) {
+    if (!Array.isArray(id)) {
+      await db.run('DELETE FROM conversations WHERE id = $id;', { $id: id });
+      return;
+    }
+
+    if (!id.length) {
+      throw new Error('removeConversation: No ids to delete!');
+    }
+
+    // Our node interface doesn't seem to allow you to replace one single ? with an array
+    await db.run(
+      `DELETE FROM conversations WHERE id IN ( ${id
+        .map(() => '?')
+        .join(', ')} );`,
+      id
+    );
+  }
+
+  async function getConversationById(id) {
+    const row = await db.get('SELECT * FROM conversations WHERE id = $id;', {
+      $id: id,
+    });
+
+    if (!row) {
+      return null;
+    }
+
+    return jsonToObject(row.json);
+  }
+
+  async function getAllConversations() {
+    const rows = await db.all('SELECT json FROM conversations ORDER BY id ASC;');
+    return map(rows, row => jsonToObject(row.json));
+  }
+
+  async function getAllConversationIds() {
+    const rows = await db.all('SELECT id FROM conversations ORDER BY id ASC;');
+    return map(rows, row => row.id);
+  }
+
+  async function getAllPrivateConversations() {
+    const rows = await db.all(
+      `SELECT json FROM conversations WHERE
+      type = 'private'
+     ORDER BY id ASC;`
+    );
+
+    if (!rows) {
+      return null;
+    }
+
+    return map(rows, row => jsonToObject(row.json));
+  }
+
+  async function getAllGroupsInvolvingId(id) {
+    const rows = await db.all(
+      `SELECT json FROM conversations WHERE
+      type = 'group' AND
+      members LIKE $id
+     ORDER BY id ASC;`,
+      {
+        $id: `%${id}%`,
+      }
+    );
+
+    if (!rows) {
+      return null;
+    }
+
+    return map(rows, row => jsonToObject(row.json));
+  }
+
+  async function searchConversations(query) {
+    const rows = await db.all(
+      `SELECT json FROM conversations WHERE
+      id LIKE $id OR
+      name LIKE $name OR
+      profileName LIKE $profileName
+     ORDER BY id ASC;`,
+      {
+        $id: `%${query}%`,
+        $name: `%${query}%`,
+        $profileName: `%${query}%`,
+      }
+    );
+
+    if (!rows) {
+      return null;
+    }
+
+    return map(rows, row => jsonToObject(row.json));
   }
 
   async function getMessageCount() {
@@ -529,6 +763,11 @@
     }
 
     return jsonToObject(row.json);
+  }
+
+  async function getAllMessages() {
+    const rows = await db.all('SELECT json FROM messages ORDER BY id ASC;');
+    return map(rows, row => jsonToObject(row.json));
   }
 
   async function getAllMessageIds() {
@@ -773,6 +1012,7 @@
         db.run('BEGIN TRANSACTION;'),
         db.run('DELETE FROM messages;'),
         db.run('DELETE FROM unprocessed;'),
+        db.run('DELETE from conversations;'),
         db.run('COMMIT TRANSACTION;'),
       ]);
     });
@@ -883,6 +1123,21 @@
     return files;
   }
 
+  function getExternalFilesForConversation(conversation) {
+    const { avatar, profileAvatar } = conversation;
+    const files = [];
+
+    if (avatar && avatar.path) {
+      files.push(avatar.path);
+    }
+
+    if (profileAvatar && profileAvatar.path) {
+      files.push(profileAvatar.path);
+    }
+
+    return files;
+  }
+
   async function removeKnownAttachments(allAttachments) {
     const lookup = fromPairs(map(allAttachments, file => [file, true]));
     const chunkSize = 50;
@@ -926,6 +1181,48 @@
     }
 
     console.log(`removeKnownAttachments: Done processing ${count} messages`);
+
+    complete = false;
+    count = 0;
+    // Though conversations.id is a string, this ensures that, when coerced, this
+    //   value is still a string but it's smaller than every other string.
+    id = 0;
+
+    const conversationTotal = await getConversationCount();
+    console.log(
+      `removeKnownAttachments: About to iterate through ${conversationTotal} conversations`
+    );
+
+    while (!complete) {
+      // eslint-disable-next-line no-await-in-loop
+      const rows = await db.all(
+        `SELECT json FROM conversations
+       WHERE id > $id
+       ORDER BY id ASC
+       LIMIT $chunkSize;`,
+        {
+          $id: id,
+          $chunkSize: chunkSize,
+        }
+      );
+
+      const conversations = map(rows, row => jsonToObject(row.json));
+      forEach(conversations, conversation => {
+        const externalFiles = getExternalFilesForConversation(conversation);
+        forEach(externalFiles, file => {
+          delete lookup[file];
+        });
+      });
+
+      const lastMessage = last(conversations);
+      if (lastMessage) {
+        ({ id } = lastMessage);
+      }
+      complete = conversations.length < chunkSize;
+      count += conversations.length;
+    }
+
+    console.log(`removeKnownAttachments: Done processing ${count} conversations`);
 
     return Object.keys(lookup);
   }

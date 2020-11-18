@@ -1,3 +1,5 @@
+/* global window, Whisper */
+
 (function () {
   'use strict';
 
@@ -5,17 +7,13 @@
   const exports = window.migrations.get_placeholder_migrations = {};
 
   const Migrations0DatabaseWithAttachmentData = window.migrations.migrations_0_database_with_attachment_data;
-  const Migrations1DatabaseWithoutAttachmentData = window.migrations.migrations_1_database_without_attachment_data;
 
   exports.getPlaceholderMigrations = () => {
     const last0MigrationVersion = Migrations0DatabaseWithAttachmentData.getLatestVersion();
-    const last1MigrationVersion = Migrations1DatabaseWithoutAttachmentData.getLatestVersion();
-
-    const lastMigrationVersion = last1MigrationVersion || last0MigrationVersion;
 
     return [
       {
-        version: lastMigrationVersion,
+        version: last0MigrationVersion,
         migrate() {
           throw new Error(
             'Unexpected invocation of placeholder migration!' +
@@ -26,4 +24,19 @@
       },
     ];
   };
+
+  exports.getCurrentVersion = () =>
+    new Promise((resolve, reject) => {
+      const request = window.indexedDB.open(Whisper.Database.id);
+
+      request.onerror = reject;
+      request.onupgradeneeded = reject;
+
+      request.onsuccess = () => {
+        const db = request.result;
+        const { version } = db;
+
+        return resolve(version);
+      };
+    });
 })();

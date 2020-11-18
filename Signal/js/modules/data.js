@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  const { forEach, isFunction, isObject } = window.lodash;
+  const { forEach, isFunction, isObject, merge } = window.lodash;
 
   const { deferredToPromise } = window.deferred_to_promise;
   const MessageType = window.types.message;
@@ -39,6 +39,20 @@
     close,
     removeDB,
 
+    getConversationCount,
+    saveConversation,
+    saveConversations,
+    getConversationById,
+    updateConversation,
+    removeConversation,
+    _removeConversations,
+
+    getAllConversations,
+    getAllConversationIds,
+    getAllPrivateConversations,
+    getAllGroupsInvolvingId,
+    searchConversations,
+
     getMessageCount,
     saveMessage,
     saveLegacyMessage,
@@ -51,6 +65,7 @@
 
     getMessageBySender,
     getMessageById,
+    getAllMessages,
     getAllMessageIds,
     getMessagesBySentAt,
     getExpiredMessages,
@@ -226,6 +241,86 @@
     await channels.removeDB();
   }
 
+  async function getConversationCount() {
+    return channels.getConversationCount();
+  }
+
+  async function saveConversation(data) {
+    await channels.saveConversation(data);
+  }
+
+  async function saveConversations(data) {
+    await channels.saveConversations(data);
+  }
+
+  async function getConversationById(id, { Conversation }) {
+    const data = await channels.getConversationById(id);
+    return new Conversation(data);
+  }
+
+  async function updateConversation(id, data, { Conversation }) {
+    const existing = await getConversationById(id, { Conversation });
+    if (!existing) {
+      throw new Error(`Conversation ${id} does not exist!`);
+    }
+
+    const merged = merge({}, existing.attributes, data);
+    await channels.updateConversation(merged);
+  }
+
+  async function removeConversation(id, { Conversation }) {
+    const existing = await getConversationById(id, { Conversation });
+
+    // Note: It's important to have a fully database-hydrated model to delete here because
+    //   it needs to delete all associated on-disk files along with the database delete.
+    if (existing) {
+      await channels.removeConversation(id);
+      await existing.cleanup();
+    }
+  }
+
+  // Note: this method will not clean up external files, just delete from SQL
+  async function _removeConversations(ids) {
+    await channels.removeConversation(ids);
+  }
+
+  async function getAllConversations({ ConversationCollection }) {
+    const conversations = await channels.getAllConversations();
+
+    const collection = new ConversationCollection();
+    collection.add(conversations);
+    return collection;
+  }
+
+  async function getAllConversationIds() {
+    const ids = await channels.getAllConversationIds();
+    return ids;
+  }
+
+  async function getAllPrivateConversations({ ConversationCollection }) {
+    const conversations = await channels.getAllPrivateConversations();
+
+    const collection = new ConversationCollection();
+    collection.add(conversations);
+    return collection;
+  }
+
+  async function getAllGroupsInvolvingId(id, { ConversationCollection }) {
+    const conversations = await channels.getAllGroupsInvolvingId(id);
+
+    const collection = new ConversationCollection();
+    collection.add(conversations);
+    return collection;
+  }
+
+  async function searchConversations(query, { ConversationCollection }) {
+    const conversations = await channels.searchConversations(query);
+
+    const collection = new ConversationCollection();
+    collection.add(conversations);
+    return collection;
+  }
+
   async function getMessageCount() {
     return channels.getMessageCount();
   }
@@ -269,6 +364,12 @@
     }
 
     return new Message(message);
+  }
+
+  // For testing only
+  async function getAllMessages({ MessageCollection }) {
+    const messages = await channels.getAllMessages();
+    return new MessageCollection(messages);
   }
 
   async function getAllMessageIds() {
