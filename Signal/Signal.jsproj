@@ -233,6 +233,7 @@
     <Content Include="js\typescript\backbone\index.js" />
     <Content Include="js\typescript\backbone\views\index.js" />
     <Content Include="js\typescript\backbone\views\Lightbox.js" />
+    <Content Include="js\typescript\components\Avatar.js" />
     <Content Include="js\typescript\components\ContactListItem.js" />
     <Content Include="js\typescript\components\ConversationListItem.js" />
     <Content Include="js\typescript\components\conversation\AddNewLines.js" />
@@ -282,6 +283,7 @@
     <Content Include="js\typescript\util\arrayBufferToObjectURL.js" />
     <Content Include="js\typescript\util\emoji.js" />
     <Content Include="js\typescript\util\formatRelativeTime.js" />
+    <Content Include="js\typescript\util\getInitials.js" />
     <Content Include="js\typescript\util\GoogleChrome.js" />
     <Content Include="js\typescript\util\index.js" />
     <Content Include="js\typescript\util\libphonenumberInstance.js" />

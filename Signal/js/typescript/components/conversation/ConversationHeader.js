@@ -11,12 +11,9 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
     const Emojify_1 = window.ts.components.conversation.Emojify;
+    const Avatar_1 = window.ts.components.Avatar;
     const react_contextmenu_1 = window.react_contextmenu;
-    function getInitial(name) {
-        return name.trim()[0] || '#';
-    }
     class ConversationHeader extends react_1.default.Component {
         constructor(props) {
             super(props);
@@ -55,13 +52,9 @@
                     i18n('verified'))) : null));
         }
         renderAvatar() {
-            const { avatarPath, color, i18n, name, phoneNumber, profileName, } = this.props;
-            if (!avatarPath) {
-                const initial = getInitial(name || '');
-                return (react_1.default.createElement("div", { className: classnames_1.default('module-conversation-header___avatar', 'module-conversation-header___default-avatar', `module-conversation-header___default-avatar--${color}`) }, initial));
-            }
-            const title = `${name || phoneNumber}${!name && profileName ? ` ~${profileName}` : ''}`;
-            return (react_1.default.createElement("img", { className: "module-conversation-header___avatar", alt: i18n('contactAvatarAlt', [title]), src: avatarPath }));
+            const { avatarPath, color, i18n, isGroup, name, phoneNumber, profileName, } = this.props;
+            return (react_1.default.createElement("span", { className: "module-conversation-header__avatar" },
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: isGroup ? 'group' : 'direct', i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28 })));
         }
         renderExpirationLength() {
             const { expirationSettingName } = this.props;

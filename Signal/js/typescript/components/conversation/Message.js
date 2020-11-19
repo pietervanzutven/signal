@@ -20,6 +20,7 @@
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
     const GoogleChrome_1 = window.ts.util.GoogleChrome;
+    const Avatar_1 = window.ts.components.Avatar;
     const MessageBody_1 = window.ts.components.conversation.MessageBody;
     const ExpireTimer_1 = window.ts.components.conversation.ExpireTimer;
     const Timestamp_1 = window.ts.components.conversation.Timestamp;
@@ -50,9 +51,6 @@
     function canDisplayImage(attachment) {
         const { height, width } = attachment || { height: 0, width: 0 };
         return height > 0 && height <= 4096 && width > 0 && width <= 4096;
-    }
-    function getInitial(name) {
-        return name.trim()[0] || '#';
     }
     function getExtension({ fileName, contentType, }) {
         if (fileName && fileName.indexOf('.') >= 0) {
@@ -289,20 +287,14 @@
             return (react_1.default.createElement("div", { role: "button", onClick: contact.onSendMessage, className: "module-message__send-message-button" }, i18n('sendMessageToContact')));
         }
         renderAvatar() {
-            const { authorName, authorPhoneNumber, authorProfileName, authorAvatarPath, conversationColor, collapseMetadata, conversationType, direction, i18n, } = this.props;
-            const title = `${authorName || authorPhoneNumber}${!authorName && authorProfileName ? ` ~${authorProfileName}` : ''}`;
+            const { authorAvatarPath, authorName, authorPhoneNumber, authorProfileName, collapseMetadata, conversationColor, conversationType, direction, i18n, } = this.props;
             if (collapseMetadata ||
                 conversationType !== 'group' ||
                 direction === 'outgoing') {
                 return;
             }
-            if (!authorAvatarPath) {
-                const label = authorName ? getInitial(authorName) : '#';
-                return (react_1.default.createElement("div", { className: classnames_1.default('module-message__author-default-avatar', `module-message__author-default-avatar--${conversationColor}`) },
-                    react_1.default.createElement("div", { className: "module-message__author-default-avatar__label" }, label)));
-            }
             return (react_1.default.createElement("div", { className: "module-message__author-avatar" },
-                react_1.default.createElement("img", { alt: i18n('contactAvatarAlt', [title]), src: authorAvatarPath })));
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: authorAvatarPath, color: conversationColor, conversationType: "direct", i18n: i18n, name: authorName, phoneNumber: authorPhoneNumber, profileName: authorProfileName, size: 36 })));
         }
         renderText() {
             const { text, i18n, direction, status } = this.props;

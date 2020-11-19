@@ -175,8 +175,6 @@
     format() {
       const { format } = PhoneNumber;
       const regionCode = storage.get('regionCode');
-
-      const avatar = this.getAvatar();
       const color = this.getColor();
 
       return {
@@ -184,7 +182,7 @@
           ourRegionCode: regionCode,
         }),
         color,
-        avatarPath: avatar ? avatar.url : null,
+        avatarPath: this.getAvatarPath(),
         name: this.getName(),
         profileName: this.getProfileName(),
         title: this.getTitle(),
@@ -194,6 +192,8 @@
       const result = Object.assign({},
         this.format(),
         {
+          conversationType: this.isPrivate() ? 'direct' : 'group',
+
           lastUpdated: this.get('timestamp'),
           unreadCount: this.get('unreadCount') || 0,
           isSelected: this.isSelected,
@@ -204,8 +204,8 @@
           },
 
           onClick: () => this.trigger('select', this),
-        });
-
+        }
+      );
       return result;
     },
 
@@ -1368,6 +1368,15 @@
     getColor() {
       const { migrateColor } = Util;
       return migrateColor(this.get('color'));
+    },
+    getAvatarPath() {
+      const avatar = this.get('avatar') || this.get('profileAvatar');
+
+      if (avatar && avatar.path) {
+        return getAbsoluteAttachmentPath(avatar.path);
+      }
+
+      return null;
     },
     getAvatar() {
       const title = this.get('name');

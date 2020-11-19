@@ -11,24 +11,15 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
+    const Avatar_1 = window.ts.components.Avatar;
     const MessageBody_1 = window.ts.components.conversation.MessageBody;
     const Timestamp_1 = window.ts.components.conversation.Timestamp;
     const ContactName_1 = window.ts.components.conversation.ContactName;
-    function getInitial(name) {
-        return name.trim()[0] || '#';
-    }
     class ConversationListItem extends react_1.default.Component {
         renderAvatar() {
-            const { avatarPath, color, i18n, name, phoneNumber, profileName, } = this.props;
-            if (!avatarPath) {
-                const initial = getInitial(name || '');
-                return (react_1.default.createElement("div", { className: "module-conversation-list-item__avatar-container" },
-                    react_1.default.createElement("div", { className: classnames_1.default('module-conversation-list-item__avatar', 'module-conversation-list-item__default-avatar', `module-conversation-list-item__default-avatar--${color}`) }, initial),
-                    this.renderUnread()));
-            }
-            const title = `${name || phoneNumber}${!name && profileName ? ` ~${profileName}` : ''}`;
+            const { avatarPath, color, conversationType, i18n, name, phoneNumber, profileName, } = this.props;
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__avatar-container" },
-                react_1.default.createElement("img", { className: "module-conversation-list-item__avatar", alt: i18n('contactAvatarAlt', [title]), src: avatarPath }),
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: conversationType, i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 48 }),
                 this.renderUnread()));
         }
         renderUnread() {
