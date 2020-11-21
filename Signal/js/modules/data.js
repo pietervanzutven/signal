@@ -73,6 +73,7 @@
     getNextExpiringMessage,
     getMessagesByConversation,
 
+    getUnprocessedCount,
     getAllUnprocessed,
     getUnprocessedById,
     saveUnprocessed,
@@ -459,6 +460,10 @@
   async function getNextExpiringMessage({ MessageCollection }) {
     const messages = await channels.getNextExpiringMessage();
     return new MessageCollection(messages);
+  }
+
+  async function getUnprocessedCount() {
+    return channels.getUnprocessedCount();
   }
 
   async function getAllUnprocessed() {
