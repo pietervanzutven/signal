@@ -266,6 +266,7 @@
     <Content Include="js\typescript\components\Intl.js" />
     <Content Include="js\typescript\components\Lightbox.js" />
     <Content Include="js\typescript\components\LightboxGallery.js" />
+    <Content Include="js\typescript\components\MainHeader.js" />
     <Content Include="js\typescript\components\styles\Colors.js" />
     <Content Include="js\typescript\notifications\getStatus.js" />
     <Content Include="js\typescript\OS.js" />

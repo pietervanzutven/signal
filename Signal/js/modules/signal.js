@@ -42,6 +42,7 @@
   const {
     MediaGallery,
   } = window.ts.components.conversation.media_gallery.MediaGallery;
+  const { MainHeader } = window.ts.components.MainHeader;
   const { Message } = window.ts.components.conversation.Message;
   const { MessageBody } = window.ts.components.conversation.MessageBody;
   const {
@@ -184,6 +185,7 @@
       GroupNotification,
       Lightbox,
       LightboxGallery,
+      MainHeader,
       MediaGallery,
       Message,
       MessageBody,
