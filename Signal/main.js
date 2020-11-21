@@ -214,6 +214,10 @@ function openForums() {
   Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://community.signalusers.org/'));
 }
 
+function setupWithImport() {
+  ipc.send('set-up-with-import');
+}
+
 function setupAsNewDevice() {
   ipc.send('set-up-as-new-device');
 }
@@ -479,9 +483,6 @@ function setupMenu(options) {
     setupAsNewDevice,
     setupAsStandalone,
   });
-  const template = createTemplate(menuOptions, locale.messages);
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
 }
 
 ipc.on('set-badge-count', (event, count) => {
