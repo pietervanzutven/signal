@@ -1486,7 +1486,7 @@ input.search {
   font-size: 13px;
   line-height: 18px;
   letter-spacing: 0;
-  background-color: #62656a;
+  background-color: #3d3e44;
   color: #ffffff;
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.08); }
 
@@ -1656,7 +1656,7 @@ body.dark-theme {
   outline: 0; }
 
 .dark-theme .toast {
-  background-color: #62656a;
+  background-color: #898a8c;
   color: #ffffff;
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.08); }
 
@@ -3148,6 +3148,9 @@ body.dark-theme {
 .module-message__generic-attachment--with-content-above {
   padding-top: 4px; }
 
+.module-message__generic-attachment__icon-container {
+  position: relative; }
+
 .module-message__generic-attachment__icon {
   background: url("../images/file-gradient.svg") no-repeat center;
   height: 44px;
@@ -3158,6 +3161,23 @@ body.dark-theme {
   display: flex;
   flex-direction: row;
   align-items: center; }
+
+.module-message__generic-attachment__icon-dangerous-container {
+  position: absolute;
+  top: -1px;
+  right: -4px;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background-color: #ffffff; }
+
+.module-message__generic-attachment__icon-dangerous {
+  height: 16px;
+  width: 16px;
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->    <title>Error/error-filled-16</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M8,1 C11.864,1 15,4.136 15,8 C15,11.864 11.864,15 8,15 C4.136,15 1,11.864 1,8 C1,4.136 4.136,1 8,1 Z M8,3.5 C7.98736684,3.5 7.9747349,3.50024902 7.96211155,3.50074693 C7.43159364,3.52167214 7.01848713,3.96870512 7.03941235,4.49922303 L7.20654214,8.7364722 C7.22336326,9.16293903 7.57398102,9.5 8.00077946,9.5 C8.42754697,9.5 8.77810943,9.16290468 8.79481871,8.73646441 L8.96084687,4.49923322 C8.96133837,4.48668956 8.96158419,4.47413748 8.96158419,4.46158419 C8.96158419,3.93051591 8.53106829,3.5 8,3.5 Z M8,10.5 C7.44771525,10.5 7,10.9477153 7,11.5 C7,12.0522847 7.44771525,12.5 8,12.5 C8.55228475,12.5 9,12.0522847 9,11.5 C9,10.9477153 8.55228475,10.5 8,10.5 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='16.1006289' height='16.1006289'></rect>    </defs>    <g id='Error/error-filled-16' stroke='none' stroke-width='1' fill='%23F44336' fill-rule='evenodd'>        <mask id='mask-2' fill='%23F44336'>            <use xlink:href='%23path-1'></use>        </mask>        <use id='Combined-Shape' fill='%23FF261F' fill-rule='nonzero' xlink:href='%23path-1'></use>        <g id='Color/UI/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%23F44336'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%23F44336' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
 
 .module-message__generic-attachment__icon__extension {
   font-size: 10px;

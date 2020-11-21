@@ -287,6 +287,7 @@
     <Content Include="js\typescript\util\getInitials.js" />
     <Content Include="js\typescript\util\GoogleChrome.js" />
     <Content Include="js\typescript\util\index.js" />
+    <Content Include="js\typescript\util\isFileDangerous.js" />
     <Content Include="js\typescript\util\libphonenumberInstance.js" />
     <Content Include="js\typescript\util\migrateColor.js" />
     <Content Include="js\typescript\util\missingCaseError.js" />

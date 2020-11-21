@@ -27,6 +27,7 @@
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const Quote_1 = window.ts.components.conversation.Quote;
     const EmbeddedContact_1 = window.ts.components.conversation.EmbeddedContact;
+    const isFileDangerous_1 = window.ts.util.isFileDangerous;
     const react_contextmenu_1 = window.react_contextmenu;
     const MIME = __importStar(window.ts.types.MIME);
     function isImage(attachment) {
@@ -176,7 +177,7 @@
             return (react_1.default.createElement("div", { className: "module-message__author" },
                 react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, module: "module-message__author", i18n: i18n })));
         }
-        // tslint:disable-next-line max-func-body-length cyclomatic-complexity
+        // tslint:disable-next-line max-func-body-length cyclomatic-complexity jsx-no-lambda react-this-binding-issue
         renderAttachment() {
             const { i18n, attachment, text, collapseMetadata, conversationType, direction, quote, onClickAttachment, } = this.props;
             const { imageBroken } = this.state;
@@ -248,6 +249,7 @@
             else {
                 const { fileName, fileSize, contentType } = attachment;
                 const extension = getExtension({ contentType, fileName });
+                const isDangerous = isFileDangerous_1.isFileDangerous(fileName);
                 return (react_1.default.createElement("div", {
                     className: classnames_1.default('module-message__generic-attachment', withContentBelow
                         ? 'module-message__generic-attachment--with-content-below'
@@ -255,7 +257,10 @@
                         ? 'module-message__generic-attachment--with-content-above'
                         : null)
                 },
-                    react_1.default.createElement("div", { className: "module-message__generic-attachment__icon" }, extension ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon__extension" }, extension)) : null),
+                    react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-container" },
+                        react_1.default.createElement("div", { className: "module-message__generic-attachment__icon" }, extension ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon__extension" }, extension)) : null),
+                        isDangerous ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous-container" },
+                            react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous" }))) : null),
                     react_1.default.createElement("div", { className: "module-message__generic-attachment__text" },
                         react_1.default.createElement("div", { className: classnames_1.default('module-message__generic-attachment__file-name', `module-message__generic-attachment__file-name--${direction}`) }, fileName),
                         react_1.default.createElement("div", { className: classnames_1.default('module-message__generic-attachment__file-size', `module-message__generic-attachment__file-size--${direction}`) }, fileSize))));
@@ -332,7 +337,15 @@
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
-            const downloadButton = attachment ? (react_1.default.createElement("div", { onClick: onDownload, role: "button", className: classnames_1.default('module-message__buttons__download', `module-message__buttons__download--${direction}`) })) : null;
+            const fileName = attachment && attachment.fileName;
+            const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
+            const downloadButton = attachment ? (react_1.default.createElement("div", {
+                onClick: () => {
+                    if (onDownload) {
+                        onDownload(isDangerous);
+                    }
+                }, role: "button", className: classnames_1.default('module-message__buttons__download', `module-message__buttons__download--${direction}`)
+            })) : null;
             const replyButton = (react_1.default.createElement("div", { onClick: onReply, role: "button", className: classnames_1.default('module-message__buttons__reply', `module-message__buttons__download--${direction}`) }));
             const menuButton = (react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, { id: triggerId, ref: this.captureMenuTriggerBound },
                 react_1.default.createElement("div", { role: "button", onClick: this.showMenuBound, className: classnames_1.default('module-message__buttons__menu', `module-message__buttons__download--${direction}`) })));
