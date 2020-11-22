@@ -34,6 +34,7 @@
     getNextExpiringMessage,
     getMessagesByConversation,
 
+    getUnprocessedCount,
     getAllUnprocessed,
     saveUnprocessed,
     getUnprocessedById,
@@ -730,6 +731,16 @@
     }
 
     return jsonToObject(row.json);
+  }
+
+  async function getUnprocessedCount() {
+    const row = await db.get('SELECT count(*) from unprocessed;');
+
+    if (!row) {
+      throw new Error('getMessageCount: Unable to get count of unprocessed');
+    }
+
+    return row['count(*)'];
   }
 
   async function getAllUnprocessed() {
