@@ -11,21 +11,23 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
+    const Avatar_1 = window.ts.components.Avatar;
     const MessageBody_1 = window.ts.components.conversation.MessageBody;
     const Timestamp_1 = window.ts.components.conversation.Timestamp;
     const ContactName_1 = window.ts.components.conversation.ContactName;
-    function getInitial(name) {
-        return name.trim()[0] || '#';
-    }
     class ConversationListItem extends react_1.default.Component {
         renderAvatar() {
-            const { avatarPath, color, i18n, name, phoneNumber, profileName, } = this.props;
-            if (!avatarPath) {
-                const initial = getInitial(name || '');
-                return (react_1.default.createElement("div", { className: classnames_1.default('module-conversation-list-item__avatar', 'module-conversation-list-item__default-avatar', `module-conversation-list-item__default-avatar--${color}`) }, initial));
+            const { avatarPath, color, conversationType, i18n, name, phoneNumber, profileName, } = this.props;
+            return (react_1.default.createElement("div", { className: "module-conversation-list-item__avatar-container" },
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: conversationType, i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 48 }),
+                this.renderUnread()));
+        }
+        renderUnread() {
+            const { unreadCount } = this.props;
+            if (unreadCount > 0) {
+                return (react_1.default.createElement("div", { className: "module-conversation-list-item__unread-count" }, unreadCount));
             }
-            const title = `${name || phoneNumber}${!name && profileName ? ` ~${profileName}` : ''}`;
-            return (react_1.default.createElement("img", { className: "module-conversation-list-item__avatar", alt: i18n('contactAvatarAlt', [title]), src: avatarPath }));
+            return null;
         }
         renderHeader() {
             const { unreadCount, i18n, lastUpdated, name, phoneNumber, profileName, } = this.props;
@@ -43,13 +45,6 @@
                 },
                     react_1.default.createElement(Timestamp_1.Timestamp, { timestamp: lastUpdated, extended: false, module: "module-conversation-list-item__header__timestamp", i18n: i18n }))));
         }
-        renderUnread() {
-            const { unreadCount } = this.props;
-            if (unreadCount > 0) {
-                return (react_1.default.createElement("div", { className: "module-conversation-list-item__unread-count" }, unreadCount));
-            }
-            return null;
-        }
         renderMessage() {
             const { lastMessage, unreadCount, i18n } = this.props;
             if (!lastMessage) {
@@ -62,8 +57,7 @@
                         : null)
                 },
                     react_1.default.createElement(MessageBody_1.MessageBody, { text: lastMessage.text || '', disableJumbomoji: true, disableLinks: true, i18n: i18n })),
-                lastMessage.status ? (react_1.default.createElement("div", { className: classnames_1.default('module-conversation-list-item__message__status-icon', `module-conversation-list-item__message__status-icon--${lastMessage.status}`) })) : null,
-                this.renderUnread()));
+                lastMessage.status ? (react_1.default.createElement("div", { className: classnames_1.default('module-conversation-list-item__message__status-icon', `module-conversation-list-item__message__status-icon--${lastMessage.status}`) })) : null));
         }
         render() {
             const { unreadCount, onClick, isSelected } = this.props;

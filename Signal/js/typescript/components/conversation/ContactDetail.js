@@ -139,7 +139,7 @@
             const isIncoming = false;
             const module = 'contact-detail';
             return (react_1.default.createElement("div", { className: "module-contact-detail" },
-                EmbeddedContact_1.renderAvatar({ contact, i18n, module }),
+                react_1.default.createElement("div", { className: "module-contact-detail__avatar" }, EmbeddedContact_1.renderAvatar({ contact, i18n, size: 80 })),
                 EmbeddedContact_1.renderName({ contact, isIncoming, module }),
                 EmbeddedContact_1.renderContactShorthand({ contact, isIncoming, module }),
                 this.renderSendMessage({ hasSignalAccount, i18n, onSendMessage }),

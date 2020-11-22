@@ -51,8 +51,8 @@
   <script type='text/x-tmpl-mustache' id='two-column'>
     <div class='gutter'>
       <div class='network-status-container'></div>
-      <div class='title-bar active'>
-        <div class='logo'>Signal</div>
+      <div class='main-header'>
+        <div class='main-header-placeholder'></div>
         <div class='react-contextmenu-wrapper'>
           <div class='module-conversation-header__gear-icon' alt='signal menu' role='button'></div>
           <nav class='react-contextmenu menu-list'>
@@ -636,7 +636,9 @@
   <script type='text/javascript' src='js/typescript/util/arrayBufferToObjectURL.js'></script>
   <script type='text/javascript' src='js/typescript/util/emoji.js'></script>
   <script type='text/javascript' src='js/typescript/util/formatRelativeTime.js'></script>
+  <script type='text/javascript' src='js/typescript/util/getInitials.js'></script>
   <script type='text/javascript' src='js/typescript/util/GoogleChrome.js'></script>
+  <script type='text/javascript' src='js/typescript/util/isFileDangerous.js'></script>
   <script type='text/javascript' src='js/typescript/util/migrateColor.js'></script>
   <script type='text/javascript' src='js/typescript/util/missingCaseError.js'></script>
   <script type='text/javascript' src='js/typescript/util/saveURLAsFile.js'></script>
@@ -656,16 +658,12 @@
   <script type='text/javascript' src='js/modules/types/attachment/migrate_data_to_file_system.js'></script>
   <script type='text/javascript' src='js/modules/types/attachment.js'></script>
   <script type='text/javascript' src='js/modules/types/contact.js'></script>
+  <script type='text/javascript' src='js/modules/types/conversation.js'></script>
   <script type='text/javascript' src='js/modules/types/message.js'></script>
   <script type='text/javascript' src='js/modules/types/visual_attachment.js'></script>
   <script type='text/javascript' src='js/modules/privacy.js'></script>
   <script type='text/javascript' src='js/modules/deferred_to_promise.js'></script>
   <script type='text/javascript' src='js/modules/database.js'></script>
-  <script type='text/javascript' src='js/modules/migrations/run_migrations.js'></script>
-  <script type='text/javascript' src='js/modules/migrations/18/index.js'></script>
-  <script type='text/javascript' src='js/modules/migrations/migrations_0_database_with_attachment_data.js'></script>
-  <script type='text/javascript' src='js/modules/migrations/migrations_1_database_without_attachment_data.js'></script>
-  <script type='text/javascript' src='js/modules/migrations/get_placeholder_migrations.js'></script>
   <script type='text/javascript' src='js/modules/backup.js'></script>
   <script type='text/javascript' src='js/modules/crypto.js'></script>
   <script type='text/javascript' src='js/modules/idle_detector.js'></script>
@@ -677,10 +675,17 @@
   <script type='text/javascript' src='js/modules/i18n.js'></script>
   <script type='text/javascript' src='js/modules/string_to_array_buffer.js'></script>
   <script type='text/javascript' src='js/modules/web_api.js'></script>
+  <script type='text/javascript' src='js/modules/migrations/run_migrations.js'></script>
+  <script type='text/javascript' src='js/modules/migrations/18/index.js'></script>
+  <script type='text/javascript' src='js/modules/migrations/migrations_0_database_with_attachment_data.js'></script>
+  <script type='text/javascript' src='js/modules/migrations/migrations_1_database_without_attachment_data.js'></script>
+  <script type='text/javascript' src='js/modules/migrations/get_placeholder_migrations.js'></script>
   <script type='text/javascript' src='js/modules/metadata/CiphertextMessage.js'></script>
   <script type='text/javascript' src='js/modules/metadata/SecretSessionCipher.js'></script>
+  <script type='text/javascript' src='js/typescript/components/Avatar.js'></script>
   <script type='text/javascript' src='js/typescript/components/Lightbox.js'></script>
   <script type='text/javascript' src='js/typescript/components/LightboxGallery.js'></script>
+  <script type='text/javascript' src='js/typescript/components/MainHeader.js'></script>
   <script type='text/javascript' src='js/typescript/components/styles/Colors.js'></script>
   <script type='text/javascript' src='js/typescript/components/Intl.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/DocumentListItem.js'></script>

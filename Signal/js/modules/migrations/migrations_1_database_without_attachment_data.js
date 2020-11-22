@@ -1,3 +1,5 @@
+/* global window */
+
 (function () {
   'use strict';
 
@@ -10,19 +12,33 @@
   const settings = window.settings;
   const { runMigrations } = window.migrations.run_migrations;
 
-  // IMPORTANT: Add new migrations that need to traverse entire database, e.g.
-  // messages store, below. Whenever we need this, we need to force attachment
-  // migration on startup:
-  const migrations = [
-    // {
-    //   version: 0,
-    //   migrate(transaction, next) {
-    //     next();
-    //   },
-    // },
+  // These are migrations for after the SQLCipher migration, currently not running
+  exports.migrations = [
+    {
+      version: 20,
+      migrate(transaction, next) {
+        window.log.info('Migration 20');
+        window.log.info(
+          'Removing messages, unprocessed, and conversations object stores'
+        );
+
+        // This should be run after things are migrated to SQLCipher
+        transaction.db.deleteObjectStore('messages');
+        transaction.db.deleteObjectStore('unprocessed');
+        transaction.db.deleteObjectStore('conversations');
+
+        next();
+      },
+    },
   ];
 
-  exports.run = async ({ Backbone, database, logger } = {}) => {
+  exports.run = async ({ Backbone, logger } = {}) => {
+    const database = {
+      id: 'signal',
+      nolog: true,
+      migrations: exports.migrations,
+    };
+
     const { canRun } = await exports.getStatus({ database });
     if (!canRun) {
       throw new Error(
@@ -30,7 +46,11 @@
       );
     }
 
-    await runMigrations({ Backbone, database, logger });
+    await runMigrations({
+      Backbone,
+      logger,
+      database,
+    });
   };
 
   exports.getStatus = async ({ database } = {}) => {
@@ -38,7 +58,7 @@
     const isAttachmentMigrationComplete = await settings.isAttachmentMigrationComplete(
       connection
     );
-    const hasMigrations = migrations.length > 0;
+    const hasMigrations = exports.migrations.length > 0;
 
     const canRun = isAttachmentMigrationComplete && hasMigrations;
     return {
@@ -49,7 +69,7 @@
   };
 
   exports.getLatestVersion = () => {
-    const lastMigration = last(migrations);
+    const lastMigration = last(exports.migrations);
     if (!lastMigration) {
       return null;
     }

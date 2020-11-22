@@ -21,7 +21,6 @@
 
   const Attachments = window.app.attachments;
   const Message = window.types.message;
-  const { deferredToPromise } = window.deferred_to_promise;
   const { sleep } = window.sleep;
 
   // See: https://en.wikipedia.org/wiki/Fictitious_telephone_number#North_American_Numbering_Plan
@@ -55,9 +54,12 @@
       active_at: Date.now(),
       unread: numMessages,
     });
-    await deferredToPromise(conversation.save());
-
     const conversationId = conversation.get('id');
+    await Signal.Data.updateConversation(
+      conversationId,
+      conversation.attributes,
+      { Conversation: Whisper.Conversation }
+    );
 
     await Promise.all(
       range(0, numMessages).map(async index => {

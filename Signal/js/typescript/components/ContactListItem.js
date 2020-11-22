@@ -11,20 +11,12 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
+    const Avatar_1 = window.ts.components.Avatar;
     const Emojify_1 = window.ts.components.conversation.Emojify;
-    function getInitial(name) {
-        return name.trim()[0] || '#';
-    }
     class ContactListItem extends react_1.default.Component {
-        renderAvatar({ displayName }) {
-            const { avatarPath, i18n, color, name } = this.props;
-            if (avatarPath) {
-                return (react_1.default.createElement("div", { className: "module-contact-list-item__avatar" },
-                    react_1.default.createElement("img", { alt: i18n('contactAvatarAlt', [displayName]), src: avatarPath })));
-            }
-            const title = name ? getInitial(name) : '#';
-            return (react_1.default.createElement("div", { className: classnames_1.default('module-contact-list-item__avatar-default', `module-contact-list-item__avatar-default--${color}`) },
-                react_1.default.createElement("div", { className: "module-contact-list-item__avatar-default__label" }, title)));
+        renderAvatar() {
+            const { avatarPath, i18n, color, name, phoneNumber, profileName, } = this.props;
+            return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 48 }));
         }
         render() {
             const { i18n, name, onClick, isMe, phoneNumber, profileName, verified, } = this.props;
@@ -36,7 +28,7 @@
             const showNumber = isMe || name;
             const showVerified = !isMe && verified;
             return (react_1.default.createElement("div", { role: "button", onClick: onClick, className: classnames_1.default('module-contact-list-item', onClick ? 'module-contact-list-item--with-click-handler' : null) },
-                this.renderAvatar({ displayName }),
+                this.renderAvatar(),
                 react_1.default.createElement("div", { className: "module-contact-list-item__text" },
                     react_1.default.createElement("div", { className: "module-contact-list-item__text__name" },
                         react_1.default.createElement(Emojify_1.Emojify, { text: displayName, i18n: i18n }),

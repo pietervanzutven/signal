@@ -20,12 +20,14 @@
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
     const GoogleChrome_1 = window.ts.util.GoogleChrome;
+    const Avatar_1 = window.ts.components.Avatar;
     const MessageBody_1 = window.ts.components.conversation.MessageBody;
     const ExpireTimer_1 = window.ts.components.conversation.ExpireTimer;
     const Timestamp_1 = window.ts.components.conversation.Timestamp;
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const Quote_1 = window.ts.components.conversation.Quote;
     const EmbeddedContact_1 = window.ts.components.conversation.EmbeddedContact;
+    const isFileDangerous_1 = window.ts.util.isFileDangerous;
     const react_contextmenu_1 = window.react_contextmenu;
     const MIME = __importStar(window.ts.types.MIME);
     function isImage(attachment) {
@@ -50,9 +52,6 @@
     function canDisplayImage(attachment) {
         const { height, width } = attachment || { height: 0, width: 0 };
         return height > 0 && height <= 4096 && width > 0 && width <= 4096;
-    }
-    function getInitial(name) {
-        return name.trim()[0] || '#';
     }
     function getExtension({ fileName, contentType, }) {
         if (fileName && fileName.indexOf('.') >= 0) {
@@ -250,6 +249,7 @@
             else {
                 const { fileName, fileSize, contentType } = attachment;
                 const extension = getExtension({ contentType, fileName });
+                const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
                 return (react_1.default.createElement("div", {
                     className: classnames_1.default('module-message__generic-attachment', withContentBelow
                         ? 'module-message__generic-attachment--with-content-below'
@@ -257,19 +257,23 @@
                         ? 'module-message__generic-attachment--with-content-above'
                         : null)
                 },
-                    react_1.default.createElement("div", { className: "module-message__generic-attachment__icon" }, extension ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon__extension" }, extension)) : null),
+                    react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-container" },
+                        react_1.default.createElement("div", { className: "module-message__generic-attachment__icon" }, extension ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon__extension" }, extension)) : null),
+                        isDangerous ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous-container" },
+                            react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous" }))) : null),
                     react_1.default.createElement("div", { className: "module-message__generic-attachment__text" },
                         react_1.default.createElement("div", { className: classnames_1.default('module-message__generic-attachment__file-name', `module-message__generic-attachment__file-name--${direction}`) }, fileName),
                         react_1.default.createElement("div", { className: classnames_1.default('module-message__generic-attachment__file-size', `module-message__generic-attachment__file-size--${direction}`) }, fileSize))));
             }
         }
         renderQuote() {
-            const { conversationType, direction, i18n, quote } = this.props;
+            const { conversationType, authorColor, direction, i18n, quote, } = this.props;
             if (!quote) {
                 return null;
             }
             const withContentAbove = conversationType === 'group' && direction === 'incoming';
-            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: quote.onClick, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quote.authorColor, referencedMessageNotFound: quote.referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
+            const quoteColor = direction === 'incoming' ? authorColor : quote.authorColor;
+            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: quote.onClick, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quoteColor, referencedMessageNotFound: quote.referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
         }
         renderEmbeddedContact() {
             const { collapseMetadata, contact, conversationType, direction, i18n, text, } = this.props;
@@ -289,20 +293,14 @@
             return (react_1.default.createElement("div", { role: "button", onClick: contact.onSendMessage, className: "module-message__send-message-button" }, i18n('sendMessageToContact')));
         }
         renderAvatar() {
-            const { authorName, authorPhoneNumber, authorProfileName, authorAvatarPath, authorColor, collapseMetadata, conversationType, direction, i18n, } = this.props;
-            const title = `${authorName || authorPhoneNumber}${!authorName && authorProfileName ? ` ~${authorProfileName}` : ''}`;
+            const { authorAvatarPath, authorName, authorPhoneNumber, authorProfileName, collapseMetadata, authorColor, conversationType, direction, i18n, } = this.props;
             if (collapseMetadata ||
                 conversationType !== 'group' ||
                 direction === 'outgoing') {
                 return;
             }
-            if (!authorAvatarPath) {
-                const label = authorName ? getInitial(authorName) : '#';
-                return (react_1.default.createElement("div", { className: classnames_1.default('module-message__author-default-avatar', `module-message__author-default-avatar--${authorColor}`) },
-                    react_1.default.createElement("div", { className: "module-message__author-default-avatar__label" }, label)));
-            }
             return (react_1.default.createElement("div", { className: "module-message__author-avatar" },
-                react_1.default.createElement("img", { alt: i18n('contactAvatarAlt', [title]), src: authorAvatarPath })));
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: authorAvatarPath, color: authorColor, conversationType: "direct", i18n: i18n, name: authorName, phoneNumber: authorPhoneNumber, profileName: authorProfileName, size: 36 })));
         }
         renderText() {
             const { text, i18n, direction, status } = this.props;
@@ -340,7 +338,15 @@
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
-            const downloadButton = attachment ? (react_1.default.createElement("div", { onClick: onDownload, role: "button", className: classnames_1.default('module-message__buttons__download', `module-message__buttons__download--${direction}`) })) : null;
+            const fileName = attachment ? attachment.fileName : null;
+            const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
+            const downloadButton = attachment ? (react_1.default.createElement("div", {
+                onClick: () => {
+                    if (onDownload) {
+                        onDownload(isDangerous);
+                    }
+                }, role: "button", className: classnames_1.default('module-message__buttons__download', `module-message__buttons__download--${direction}`)
+            })) : null;
             const replyButton = (react_1.default.createElement("div", { onClick: onReply, role: "button", className: classnames_1.default('module-message__buttons__reply', `module-message__buttons__download--${direction}`) }));
             const menuButton = (react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, { id: triggerId, ref: this.captureMenuTriggerBound },
                 react_1.default.createElement("div", { role: "button", onClick: this.showMenuBound, className: classnames_1.default('module-message__buttons__menu', `module-message__buttons__download--${direction}`) })));

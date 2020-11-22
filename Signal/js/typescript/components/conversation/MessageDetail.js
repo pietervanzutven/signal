@@ -13,21 +13,14 @@
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
     const moment_1 = __importDefault(window.moment);
+    const Avatar_1 = window.ts.components.Avatar;
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const Message_1 = window.ts.components.conversation.Message;
-    function getInitial(name) {
-        return name.trim()[0] || '#';
-    }
     class MessageDetail extends react_1.default.Component {
         renderAvatar(contact) {
             const { i18n } = this.props;
             const { avatarPath, color, phoneNumber, name, profileName } = contact;
-            if (!avatarPath) {
-                const initial = getInitial(name || '');
-                return (react_1.default.createElement("div", { className: classnames_1.default('module-message-detail__contact__avatar', 'module-message-detail__contact__default-avatar', `module-message-detail__contact__default-avatar--${color}`) }, initial));
-            }
-            const title = `${name || phoneNumber}${!name && profileName ? ` ~${profileName}` : ''}`;
-            return (react_1.default.createElement("img", { className: "module-message-detail__contact__avatar", alt: i18n('contactAvatarAlt', [title]), src: avatarPath }));
+            return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 48 }));
         }
         renderDeleteButton() {
             const { i18n, message } = this.props;

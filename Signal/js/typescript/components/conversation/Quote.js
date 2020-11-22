@@ -139,8 +139,8 @@
                 react_1.default.createElement("div", { className: "module-quote__close-button", role: "button", onClick: onClick })));
         }
         renderAuthor() {
-            const { authorProfileName, authorPhoneNumber, authorName, authorColor, i18n, isFromMe, isIncoming, } = this.props;
-            return (react_1.default.createElement("div", { className: classnames_1.default('module-quote__primary__author', !isFromMe ? `module-quote__primary__author--${authorColor}` : null, isIncoming ? 'module-quote__primary__author--incoming' : null) }, isFromMe ? (i18n('you')) : (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, i18n: i18n }))));
+            const { authorProfileName, authorPhoneNumber, authorName, i18n, isFromMe, isIncoming, } = this.props;
+            return (react_1.default.createElement("div", { className: classnames_1.default('module-quote__primary__author', isIncoming ? 'module-quote__primary__author--incoming' : null) }, isFromMe ? (i18n('you')) : (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, i18n: i18n }))));
         }
         renderReferenceWarning() {
             const { i18n, isIncoming, referencedMessageNotFound } = this.props;
@@ -148,24 +148,30 @@
                 return null;
             }
             return (react_1.default.createElement("div", { className: classnames_1.default('module-quote__reference-warning', isIncoming ? 'module-quote__reference-warning--incoming' : null) },
-            react_1.default.createElement("div", { className: classnames_1.default('module-quote__reference-warning__icon', isIncoming
+                react_1.default.createElement("div", {
+                    className: classnames_1.default('module-quote__reference-warning__icon', isIncoming
                         ? 'module-quote__reference-warning__icon--incoming'
-                    : null) }),
-            react_1.default.createElement("div", { className: classnames_1.default('module-quote__reference-warning__text', isIncoming
+                        : null)
+                }),
+                react_1.default.createElement("div", {
+                    className: classnames_1.default('module-quote__reference-warning__text', isIncoming
                         ? 'module-quote__reference-warning__text--incoming'
-                    : null) }, i18n('originalMessageNotFound'))));
+                        : null)
+                }, i18n('originalMessageNotFound'))));
         }
         render() {
-            const { authorColor, isFromMe, isIncoming, onClick, referencedMessageNotFound, withContentAbove, } = this.props;
+            const { authorColor, isIncoming, onClick, referencedMessageNotFound, withContentAbove, } = this.props;
             if (!validateQuote(this.props)) {
                 return null;
             }
             return (react_1.default.createElement("div", { className: classnames_1.default('module-quote-container', withContentAbove ? 'module-quote-container--with-content-above' : null) },
-            react_1.default.createElement("div", { onClick: onClick, role: "button", className: classnames_1.default('module-quote', isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing', !isIncoming && !isFromMe
-                        ? `module-quote--outgoing-${authorColor}`
-                        : null, !isIncoming && isFromMe ? 'module-quote--outgoing-you' : null, !onClick ? 'module-quote--no-click' : null, withContentAbove ? 'module-quote--with-content-above' : null, referencedMessageNotFound
+                react_1.default.createElement("div", {
+                    onClick: onClick, role: "button", className: classnames_1.default('module-quote', isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing', isIncoming
+                        ? `module-quote--incoming-${authorColor}`
+                        : `module-quote--outgoing-${authorColor}`, !onClick ? 'module-quote--no-click' : null, withContentAbove ? 'module-quote--with-content-above' : null, referencedMessageNotFound
                         ? 'module-quote--with-reference-warning'
-                    : null) },
+                        : null)
+                },
                     react_1.default.createElement("div", { className: "module-quote__primary" },
                         this.renderAuthor(),
                         this.renderGenericFile(),

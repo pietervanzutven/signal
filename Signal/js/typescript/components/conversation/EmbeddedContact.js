@@ -12,6 +12,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
+    const Avatar_1 = window.ts.components.Avatar;
     const Contact_1 = window.ts.types.Contact;
     class EmbeddedContact extends react_1.default.Component {
         render() {
@@ -24,7 +25,7 @@
                     ? 'module-embedded-contact--with-content-below'
                     : null), role: "button", onClick: onClick
             },
-                renderAvatar({ contact, i18n, module }),
+                renderAvatar({ contact, i18n, size: 48 }),
                 react_1.default.createElement("div", { className: "module-embedded-contact__text-container" },
                     renderName({ contact, isIncoming, module }),
                     renderContactShorthand({ contact, isIncoming, module }))));
@@ -32,20 +33,11 @@
     }
     exports.EmbeddedContact = EmbeddedContact;
     // Note: putting these below the main component so style guide picks up EmbeddedContact
-    function getInitial(name) {
-        return name.trim()[0] || '#';
-    }
-    function renderAvatar({ contact, i18n, module, }) {
+    function renderAvatar({ contact, i18n, size, }) {
         const { avatar } = contact;
-        const path = avatar && avatar.avatar && avatar.avatar.path;
+        const avatarPath = avatar && avatar.avatar && avatar.avatar.path;
         const name = Contact_1.getName(contact) || '';
-        if (!path) {
-            const initials = getInitial(name);
-            return (react_1.default.createElement("div", { className: `module-${module}__image-container` },
-                react_1.default.createElement("div", { className: `module-${module}__image-container__default-avatar` }, initials)));
-        }
-        return (react_1.default.createElement("div", { className: `module-${module}__image-container` },
-            react_1.default.createElement("img", { src: path, alt: i18n('contactAvatarAlt', [name]) })));
+        return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: "grey", conversationType: "direct", i18n: i18n, name: name, size: size }));
     }
     exports.renderAvatar = renderAvatar;
     function renderName({ contact, isIncoming, module, }) {

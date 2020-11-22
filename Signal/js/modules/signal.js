@@ -42,6 +42,7 @@
   const {
     MediaGallery,
   } = window.ts.components.conversation.media_gallery.MediaGallery;
+  const { MainHeader } = window.ts.components.MainHeader;
   const { Message } = window.ts.components.conversation.Message;
   const { MessageBody } = window.ts.components.conversation.MessageBody;
   const {
@@ -64,6 +65,7 @@
   // Migrations
   const {
     getPlaceholderMigrations,
+    getCurrentVersion,
   } = window.migrations.get_placeholder_migrations;
 
   const Migrations0DatabaseWithAttachmentData = window.migrations.migrations_0_database_with_attachment_data;
@@ -73,7 +75,7 @@
   const AttachmentType = window.types.attachment;
   const VisualAttachment = window.types.visual_attachment;
   const Contact = window.ts.types.Contact;
-  const Conversation = window.ts.types.Conversation;
+  const Conversation = window.types.conversation;
   const Errors = window.types.errors;
   const MediaGalleryMessage = window.ts.components.conversation.media_gallery.types.Message;
   const MessageType = window.types.message;
@@ -129,11 +131,14 @@
       }),
       getAbsoluteAttachmentPath,
       getPlaceholderMigrations,
+      getCurrentVersion,
       loadAttachmentData,
       loadQuoteData,
       loadMessage: MessageType.createAttachmentLoader(loadAttachmentData),
       Migrations0DatabaseWithAttachmentData,
       Migrations1DatabaseWithoutAttachmentData,
+      writeNewAttachmentData: createWriterForNew(attachmentsPath),
+      deleteAttachmentData: deleteOnDisk,
       upgradeMessageSchema: (message, options = {}) => {
         const { maxVersion } = options;
 
@@ -180,6 +185,7 @@
       GroupNotification,
       Lightbox,
       LightboxGallery,
+      MainHeader,
       MediaGallery,
       Message,
       MessageBody,

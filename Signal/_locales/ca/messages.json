@@ -1,142 +1,142 @@
 {
     "mainMenuFile": {
-        "message": "&File",
+        "message": "&Fitxer",
         "description": "The label that is used for the File menu in the program main menu. The '&' indicates that the following letter will be used as the keyboard 'shortcut letter' for accessing the menu with the Alt-<letter> combination."
     },
     "mainMenuEdit": {
-        "message": "&Edit",
+        "message": "&Edita",
         "description": "The label that is used for the Edit menu in the program main menu. The '&' indicates that the following letter will be used as the keyboard 'shortcut letter' for accessing the menu with the Alt-<letter> combination."
     },
     "mainMenuView": {
-        "message": "&View",
+        "message": "&Visualitza",
         "description": "The label that is used for the View menu in the program main menu. The '&' indicates that the following letter will be used as the keyboard 'shortcut letter' for accessing the menu with the Alt-<letter> combination."
     },
     "mainMenuWindow": {
-        "message": "&Window",
+        "message": "Fines&tra",
         "description": "The label that is used for the Window menu in the program main menu. The '&' indicates that the following letter will be used as the keyboard 'shortcut letter' for accessing the menu with the Alt-<letter> combination."
     },
     "mainMenuHelp": {
-        "message": "&Help",
+        "message": "&Ajuda",
         "description": "The label that is used for the Help menu in the program main menu. The '&' indicates that the following letter will be used as the keyboard 'shortcut letter' for accessing the menu with the Alt-<letter> combination."
     },
     "mainMenuSettings": {
-        "message": "Preferences…",
+        "message": "Preferències...",
         "description": "The label that is used for the Preferences menu in the program main menu. This should be consistent with the standard naming for ‘Preferences’ on the operating system."
     },
     "appMenuHide": {
-        "message": "Hide",
+        "message": "Amaga",
         "description": "Application menu command to hide the window"
     },
     "appMenuHideOthers": {
-        "message": "Hide Others",
+        "message": "Amaga les altres",
         "description": "Application menu command to hide all other windows"
     },
     "appMenuUnhide": {
-        "message": "Show All",
+        "message": "Mostra-ho tot",
         "description": "Application menu command to show all application windows"
     },
     "appMenuQuit": {
-        "message": "Quit Signal",
+        "message": "Surt del Signal",
         "description": "Application menu command to close the application"
     },
     "editMenuUndo": {
-        "message": "Undo",
+        "message": "Desfés",
         "description": "Edit menu command to remove recently-typed text"
     },
     "editMenuRedo": {
-        "message": "Redo",
+        "message": "Refés",
         "description": "Edit menu command to restore previously undone typed text"
     },
     "editMenuCut": {
-        "message": "Cut",
+        "message": "Retalla",
         "description": "Edit menu command to remove selected text and add it to clipboard"
     },
     "editMenuCopy": {
-        "message": "Copy",
+        "message": "Copia",
         "description": "Edit menu command to add selected text to clipboard"
     },
     "editMenuPaste": {
-        "message": "Paste",
+        "message": "Enganxa",
         "description": "Edit menu command to insert text from clipboard at cursor location"
     },
     "editMenuPasteAndMatchStyle": {
-        "message": "Paste and Match Style",
+        "message": "Enganxa sense format",
         "description": "Edit menu command to insert text from clipboard at cursor location, taking only text and not style information"
     },
     "editMenuDelete": {
-        "message": "Delete",
+        "message": "Suprimeix",
         "description": "Edit menu command to remove the selected text"
     },
     "editMenuSelectAll": {
-        "message": "Select All",
+        "message": "Selecciona-ho tot",
         "description": "Edit menu comand to select all of the text in selected text box"
     },
     "editMenuStartSpeaking": {
-        "message": "Start speaking",
+        "message": "Comenceu a parlar",
         "description": "Edit menu item under 'speech' to start dictation"
     },
     "editMenuStopSpeaking": {
-        "message": "Stop speaking",
+        "message": "Deixeu de parlar",
         "description": "Edit menu item under 'speech' to stop dictation"
     },
     "windowMenuClose": {
-        "message": "Close Window",
+        "message": "Tanca la finestra",
         "description": "Window menu command to close the current window"
     },
     "windowMenuMinimize": {
-        "message": "Minimize",
+        "message": "Minimitza",
         "description": "Window menu command to minimize the current window"
     },
     "windowMenuZoom": {
-        "message": "Zoom",
+        "message": "Escala",
         "description": "Window menu command to make the current window the size of the whole screen"
     },
     "windowMenuBringAllToFront": {
-        "message": "Bring All to Front",
+        "message": "Porta al front",
         "description": "Window menu command to bring all windows of current applicatinon to front"
     },
     "viewMenuResetZoom": {
-        "message": "Actual Size",
+        "message": "Mida actual",
         "description": "View menu command to go back to the default zoom"
     },
     "viewMenuZoomIn": {
-        "message": "Zoom In",
+        "message": "Apropa't",
         "description": "View menu command to make everything bigger"
     },
     "viewMenuZoomOut": {
-        "message": "Zoom Out",
+        "message": "Allunya't",
         "description": "View menu command to make everything smaller"
     },
     "viewMenuToggleFullScreen": {
-        "message": "Toggle Full Screen",
+        "message": "Activa o desactiva la pantalla completa",
         "description": "View menu command to enter or leave Full Screen mode"
     },
     "viewMenuToggleDevTools": {
-        "message": "Toggle Developer Tools",
+        "message": "Activa o desactiva les eines de desenvolupament",
         "description": "View menu command to show or hide the developer tools"
     },
     "menuSetupWithImport": {
-        "message": "Set Up with Import",
+        "message": "Configura amb una importació",
         "description": "When the application is not yet set up, menu option to start up the import sequence"
     },
     "menuSetupAsNewDevice": {
-        "message": "Set Up as New Device",
+        "message": "Configura com a aparell nou",
         "description": "When the application is not yet set up, menu option to start up the set up as fresh device"
     },
     "menuSetupAsStandalone": {
-        "message": "Set Up as Standalone Device",
+        "message": "Configura com a aparell únic",
         "description": "Only available on development modes, menu option to open up the standalone device setup sequence"
     },
     "loading": {
-        "message": "Loading...",
+        "message": "S'està carregant...",
         "description": "Message shown on the loading screen before we've loaded any messages"
     },
     "optimizingApplication": {
-        "message": "Optimizing application...",
+        "message": "S'està optimitzant l'aplicació...",
         "description": "Message shown on the loading screen while we are doing application optimizations"
     },
     "migratingToSQLCipher": {
-        "message": "Optimizing messages... $status$ complete.",
+        "message": "S'estan optimitzant els missatges... $status$ finalitzat.",
         "description": "Message shown on the loading screen while we are doing application optimizations",
         "placeholders": {
             "status": {
@@ -146,11 +146,11 @@
         }
     },
     "chooseDirectory": {
-        "message": "Choose folder",
+        "message": "Trieu una carpeta",
         "description": "Button to allow the user to find a folder on disk"
     },
     "loadDataHeader": {
-        "message": "Load your data",
+        "message": "Carregueu les dades",
         "description": "Header shown on the first screen in the data import process"
     },
     "loadDataDescription": {
@@ -158,15 +158,15 @@
         "description": "Introduction to the process of importing messages and contacts from disk"
     },
     "importChooserTitle": {
-        "message": "Choose directory with exported data",
+        "message": "Trieu el directori amb les dades exportades",
         "description": "Title of the popup window used to select data previously exported"
     },
     "importErrorHeader": {
-        "message": "Something went wrong!",
+        "message": "Quelcom ha anat malament!",
         "description": "Header of the error screen after a failed import"
     },
     "importingHeader": {
-        "message": "Loading contacts and messages",
+        "message": "Càrrega de contactes i missatges",
         "description": "Header of screen shown as data is import"
     },
     "importErrorFirst": {
@@ -178,31 +178,31 @@
         "description": "Message shown if the import went wrong; second paragraph"
     },
     "importAgain": {
-        "message": "Choose folder and try again",
+        "message": "Trieu un carpeta i torneu a intentar-ho",
         "description": "Button shown if the user runs into an error during import, allowing them to start over"
     },
     "importCompleteHeader": {
-        "message": "Success!",
+        "message": "Finalitzat!",
         "description": "Header shown on the screen at the end of a successful import process"
     },
     "importCompleteStartButton": {
-        "message": "Start using Signal Desktop",
+        "message": "Comenceu a usar el Signal Desktop",
         "description": "Button shown at end of successful import process, nothing left but a restart"
     },
     "importCompleteLinkButton": {
-        "message": "Link this device to your phone",
+        "message": "Enllaçeu aquest aparell amb el vostre telèfon",
         "description": "Button shown at end of successful 'light' import process, so the standard linking process still needs to happen"
     },
     "selectedLocation": {
-        "message": "your selected location",
+        "message": "la ubicació seleccionada",
         "description": "Message shown as the export location if we didn't capture the target directory"
     },
     "upgradingDatabase": {
-        "message": "Upgrading database. This may take some time...",
+        "message": "S'està actualitzant la base de dades. Això pot trigar una mica...",
         "description": "Message shown on the loading screen when we're changing database structure on first run of a new version"
     },
     "loadingMessages": {
-        "message": "Loading messages. $count$ so far...",
+        "message": "S'estan carregant els missatges. Manquen $count$...",
         "description": "Message shown on the loading screen when we're catching up on the backlog of messages",
         "placeholders": {
             "count": {
@@ -212,15 +212,15 @@
         }
     },
     "me": {
-        "message": "Me",
+        "message": "Jo",
         "description": "The label for yourself when shown in a group member list"
     },
     "view": {
-        "message": "View",
+        "message": "Mostra",
         "description": "Used as a label on a button allowing user to see more information"
     },
     "youLeftTheGroup": {
-        "message": "You left the group",
+        "message": "Heu abandonat el grup",
         "description": "Displayed when a user can't send a message because they have left the group"
     },
     "scrollDown": {
@@ -236,11 +236,11 @@
         "description": "Alt text for button to take user down to bottom of conversation with more than one message out of screen"
     },
     "unreadMessage": {
-        "message": "1 Unread Message",
+        "message": "1 missatge per llegir",
         "description": "Text for unread message separator, just one message"
     },
     "unreadMessages": {
-        "message": "$count$ Unread Messages",
+        "message": "$count$ missatges per llegir",
         "description": "Text for unread message separator, with count",
         "placeholders": {
             "count": {
@@ -342,7 +342,7 @@
         }
     },
     "sendAnyway": {
-        "message": "Send Anyway",
+        "message": "Tot i així, envia'l",
         "description": "Used on a warning dialog to make it clear that it might be risky to send the message."
     },
     "noLongerVerified": {
@@ -360,7 +360,7 @@
         "description": "Shown in conversation banner when more than one group member's safety number has changed, but they were previously verified."
     },
     "debugLogExplanation": {
-        "message": "Овој лог ќе биде објавен јавно онлајн за сите придонесувачи. Можете да го прегледате и уредите пред да го испратите.",
+        "message": "This log will be posted publicly online for contributors to view. You may examine and edit it before submitting.",
         "description": ""
     },
     "debugLogError": {
@@ -368,31 +368,31 @@
         "description": ""
     },
     "reportIssue": {
-        "message": "Report an issue",
+        "message": "Informeu d'un error",
         "description": "Link to open the issue tracker"
     },
     "gotIt": {
-        "message": "Ок!",
+        "message": "Entès!",
         "description": "Label for a button that dismisses a dialog. The user clicks it to confirm that they understand the message in the dialog."
     },
     "submit": {
-        "message": "Испрати",
+        "message": "Tramet",
         "description": ""
     },
     "acceptNewKey": {
-        "message": "Accept",
+        "message": "Ho accepto",
         "description": "Label for a button to accept a new safety number"
     },
     "verify": {
-        "message": "Mark as verified",
+        "message": "Marca com a verificat",
         "description": ""
     },
     "unverify": {
-        "message": "Mark as not verified",
+        "message": "Marca com a no verificat",
         "description": ""
     },
     "isVerified": {
-        "message": "You have verified your safety number with $name$.",
+        "message": "Heu verificat el número de seguretat amb $name$.",
         "description": "Summary state shown at top of the safety number screen if user has verified contact.",
         "placeholders": {
             "name": {
@@ -402,7 +402,7 @@
         }
     },
     "isNotVerified": {
-        "message": "You have not verified your safety number with $name$.",
+        "message": "No heu verificat el número de seguretat amb $name$.",
         "description": "Summary state shown at top of the safety number screen if user has not verified contact.",
         "placeholders": {
             "name": {
@@ -412,11 +412,11 @@
         }
     },
     "verified": {
-        "message": "Verified",
+        "message": "Verificat",
         "description": ""
     },
     "newIdentity": {
-        "message": "New safety number",
+        "message": "Número de seguretat nou",
         "description": "Header for a key change dialog"
     },
     "identityChanged": {
@@ -428,11 +428,11 @@
         "description": ""
     },
     "media": {
-        "message": "Media",
+        "message": "Elements multimèdia",
         "description": "Header of the default pane in the media gallery, showing images and videos"
     },
     "mediaEmptyState": {
-        "message": "You don’t have any media in this conversation",
+        "message": "No teniu cap element multimèdia en aquesta conversa",
         "description": "Message shown to user in the media gallery when there are no messages with media attachments (images or video)"
     },
     "documents": {
@@ -440,43 +440,43 @@
         "description": "Header of the secondary pane in the media gallery, showing every non-media attachment"
     },
     "documentsEmptyState": {
-        "message": "You don’t have any documents in this conversation",
+        "message": "No teniu cap document en aquesta conversa",
         "description": "Message shown to user in the media gallery when there are no messages with document attachments (anything other than images or video)"
     },
     "today": {
-        "message": "Today",
+        "message": "Avui",
         "description": "Section header in the media gallery"
     },
     "yesterday": {
-        "message": "Yesterday",
+        "message": "Ahir",
         "description": "Section header in the media gallery"
     },
     "thisWeek": {
-        "message": "This Week",
+        "message": "Aquesta setmana",
         "description": "Section header in the media gallery"
     },
     "thisMonth": {
-        "message": "This Month",
+        "message": "Aquest mes",
         "description": "Section header in the media gallery"
     },
     "unsupportedAttachment": {
-        "message": "Неподдржан тип на прилог. Кликнете за зачувување.",
+        "message": "Tipus d'adjunt no admès. Feu clic per a desar.",
         "description": "Displayed for incoming unsupported attachment"
     },
     "clickToSave": {
-        "message": "Click to save",
+        "message": "Feu clic per a desar",
         "description": "Hover text for attachment filenames"
     },
     "unnamedFile": {
-        "message": "Unnamed File",
+        "message": "Fitxer sense nom",
         "description": "Hover text for attachment filenames"
     },
     "voiceMessage": {
-        "message": "Voice Message",
+        "message": "Missatge de veu",
         "description": "Name for a voice message attachment"
     },
     "unsupportedFileType": {
-        "message": "Неподдржан тип на датотека",
+        "message": "Tipus de fitxer no suportat",
         "description": "Displayed for outgoing unsupported attachment"
     },
     "dangerousFileType": {
@@ -484,7 +484,7 @@
         "description": "Shown in toast when user attempts to send .exe file, for example"
     },
     "fileSizeWarning": {
-        "message": "Извинете, избраната датотека ги надминува рестрикциите за големина.",
+        "message": "Sorry, the selected file exceeds message size restrictions.",
         "description": ""
     },
     "unableToLoadAttachment": {
@@ -492,23 +492,23 @@
         "description": ""
     },
     "disconnected": {
-        "message": "Неповрзан",
+        "message": "Desconnectat",
         "description": "Displayed when the desktop client cannot connect to the server."
     },
     "connecting": {
-        "message": "Connecting",
+        "message": "S'està connectant",
         "description": "Displayed when the desktop client is currently connecting to the server."
     },
     "offline": {
-        "message": "Offline",
+        "message": "Fora de línia",
         "description": "Displayed when the desktop client has no network connection."
     },
     "checkNetworkConnection": {
-        "message": "Check your network connection.",
+        "message": "Comproveu la connexió a xarxa.",
         "description": "Obvious instructions for when a user's computer loses its network connection"
     },
     "attemptingReconnection": {
-        "message": "Attempting reconnect in $reconnect_duration_in_seconds$ seconds",
+        "message": "S'intentarà de reconnectar en $reconnect_duration_in_seconds$ segons",
         "description": "",
         "placeholders": {
             "reconnect_duration_in_seconds": {
@@ -518,35 +518,35 @@
         }
     },
     "submitDebugLog": {
-        "message": "Debug log",
+        "message": "Registre de depuració",
         "description": "Menu item and header text for debug log modal (sentence case)"
     },
     "debugLog": {
-        "message": "Debug Log",
+        "message": "Registre de depuració",
         "description": "View menu item to open the debug log (title case)"
     },
     "goToReleaseNotes": {
-        "message": "Go to Release Notes",
+        "message": "Vés a les notes de versió",
         "description": ""
     },
     "goToForums": {
-        "message": "Go to Forums",
+        "message": "Vés als fòrums",
         "description": "Item under the Help menu, takes you to the forums"
     },
     "goToSupportPage": {
-        "message": "Go to Support Page",
+        "message": "Vés a la pàgina de suport",
         "description": "Item under the Help menu, takes you to the support page"
     },
     "menuReportIssue": {
-        "message": "Report an Issue",
+        "message": "Informeu d'un error",
         "description": "Item under the Help menu, takes you to GitHub new issue form (title case)"
     },
     "signalDesktopPreferences": {
-        "message": "Signal Desktop Preferences",
+        "message": "Preferències del Signal Desktop",
         "description": "Title of the window that pops up with Signal Desktop preferences in it"
     },
     "aboutSignalDesktop": {
-        "message": "About Signal Desktop",
+        "message": "Quan al Signal Desktop",
         "description": "Item under the Help menu, which opens a small about window"
     },
     "speech": {
@@ -554,15 +554,15 @@
         "description": "Item under the Edit menu, with 'start/stop speaking' items below it"
     },
     "show": {
-        "message": "Show",
+        "message": "Mostra",
         "description": "Command under Window menu, to show the window"
     },
     "hide": {
-        "message": "Hide",
+        "message": "Amaga",
         "description": "Command in the tray icon menu, to hide the window"
     },
     "quit": {
-        "message": "Quit",
+        "message": "Surt",
         "description": "Command in the tray icon menu, to quit the application"
     },
     "trayTooltip": {
@@ -570,19 +570,19 @@
         "description": "Tooltip for the tray icon"
     },
     "searchForPeopleOrGroups": {
-        "message": "Enter name or number",
+        "message": "Introduïu un nom o número",
         "description": "Placeholder text in the search input"
     },
     "welcomeToSignal": {
-        "message": "Добредојдовте во Signal",
+        "message": "Benvingut al Signal",
         "description": ""
     },
     "selectAContact": {
-        "message": "Избери контакт или група за разговор",
+        "message": "Seleccioneu un contacte o grup per a començar el xat.",
         "description": ""
     },
     "contactAvatarAlt": {
-        "message": "Avatar for contact $name$",
+        "message": "Avatar per al contacte $name$",
         "description": "Used in the alt tag for the image avatar of a contact",
         "placeholders": {
             "name": {
@@ -592,31 +592,31 @@
         }
     },
     "sendMessageToContact": {
-        "message": "Send Message",
+        "message": "Envia un missatge",
         "description": "Shown when you are sent a contact and that contact has a signal account"
     },
     "home": {
-        "message": "home",
+        "message": "casa",
         "description": "Shown on contact detail screen as a label for an address/phone/email"
     },
     "work": {
-        "message": "work",
+        "message": "feina",
         "description": "Shown on contact detail screen as a label for an address/phone/email"
     },
     "mobile": {
-        "message": "mobile",
+        "message": "mòbil",
         "description": "Shown on contact detail screen as a label for aa phone or email"
     },
     "email": {
-        "message": "email",
+        "message": "a/e",
         "description": "Generic label shown if contact email has custom type but no label"
     },
     "phone": {
-        "message": "phone",
+        "message": "telèfon",
         "description": "Generic label shown if contact phone has custom type but no label"
     },
     "address": {
-        "message": "address",
+        "message": "adreça",
         "description": "Generic label shown if contact address has custom type but no label"
     },
     "poBox": {
@@ -624,27 +624,27 @@
         "description": "When rendering an address, used to provide context to a post office box"
     },
     "downloadAttachment": {
-        "message": "Download Attachment",
+        "message": "Baixa l'adjunt",
         "description": "Shown in a message's triple-dot menu if there isn't room for a dedicated download button"
     },
     "replyToMessage": {
-        "message": "Reply to Message",
+        "message": "Respon el missatge",
         "description": "Shown in triple-dot menu next to message to allow user to start crafting a message with a quotation"
     },
     "originalMessageNotFound": {
-        "message": "Original message not found",
+        "message": "No s'ha trobat el missatge original",
         "description": "Shown in quote if reference message was not found as message was initially downloaded and processed"
     },
     "originalMessageNotAvailable": {
-        "message": "Original message no longer available",
+        "message": "El missatge original ja no és disponible",
         "description": "Shown in toast if user clicks on quote that references message no longer in database"
     },
     "messageFoundButNotLoaded": {
-        "message": "Original message found, but not loaded. Scroll up to load it.",
+        "message": "S'ha trobat el missatge original, però no s'ha carregat. Desplaceu-vos amunt per a carregar-lo.",
         "description": "Shown in toast if user clicks on quote references messages not loaded in view, but in database"
     },
     "you": {
-        "message": "You",
+        "message": "Vós",
         "description": "In Android theme, shown in quote if you or someone else replies to you"
     },
     "replyingTo": {
@@ -662,31 +662,31 @@
         "description": "Shown if the user attempts to send an audio message without audio permssions turned on"
     },
     "allowAccess": {
-        "message": "Allow Access",
+        "message": "Permet l'accés",
         "description": "Button shown in popup asking to enable microphon/video permissions to send audio messages"
     },
     "showSettings": {
-        "message": "Show Settings",
+        "message": "Mostra la configuració",
         "description": "A button shown in dialog requesting the user to turn on audio permissions"
     },
     "audio": {
-        "message": "Audio",
+        "message": "Àudio",
         "description": "Shown in a quotation of a message containing an audio attachment if no text was originally provided with that attachment"
     },
     "video": {
-        "message": "Video",
+        "message": "Vídeo",
         "description": "Shown in a quotation of a message containing a video if no text was originally provided with that video"
     },
     "photo": {
-        "message": "Photo",
+        "message": "Foto",
         "description": "Shown in a quotation of a message containing a photo if no text was originally provided with that image"
     },
     "ok": {
-        "message": "Во ред",
+        "message": "D'acord",
         "description": ""
     },
     "cancel": {
-        "message": "Откажи",
+        "message": "Cancel·la",
         "description": ""
     },
     "failedToSend": {
@@ -694,63 +694,63 @@
         "description": ""
     },
     "error": {
-        "message": "Грешка",
+        "message": "Error",
         "description": ""
     },
     "messageDetail": {
-        "message": "Детали за пораката",
+        "message": "Detall del missatge",
         "description": ""
     },
     "delete": {
-        "message": "Delete",
+        "message": "Suprimeix",
         "description": ""
     },
     "deleteWarning": {
-        "message": "Are you sure? Clicking 'delete' will permanently remove this message from this device only.",
+        "message": "N'esteu segur? Si feu clic en «Suprimeix» aquest missatge s'esborrarà només en aquest aparell.",
         "description": ""
     },
     "deleteThisMessage": {
-        "message": "Delete this message",
+        "message": "Suprimeix aquest missatge",
         "description": ""
     },
     "from": {
-        "message": "From",
+        "message": "De",
         "description": "Label for the sender of a message"
     },
     "to": {
-        "message": "To",
+        "message": "A",
         "description": "Label for the receiver of a message"
     },
     "sent": {
-        "message": "Испратено",
+        "message": "Enviament",
         "description": "Label for the time a message was sent"
     },
     "received": {
-        "message": "Примено",
+        "message": "Rebut",
         "description": "Label for the time a message was received"
     },
     "sendMessage": {
-        "message": "Испрати порака",
+        "message": "Envia un missatge",
         "description": "Placeholder text in the message entry field"
     },
     "groupMembers": {
-        "message": "Group members",
+        "message": "Membres del grup",
         "description": ""
     },
     "showMembers": {
-        "message": "Show members",
+        "message": "Mostra els membres",
         "description": ""
     },
     "resetSession": {
-        "message": "Reset session",
+        "message": "Reinicialitza la sessió",
         "description": "This is a menu item for resetting the session, using the imperative case, as in a command."
     },
     "showSafetyNumber": {
-        "message": "View safety number",
+        "message": "Mostra el número de seguretat",
         "description": ""
     },
     "viewAllMedia": {
-        "message": "View all media",
+        "message": "Mostra tots els elements multimèdia",
         "description": "This is a menu item for viewing all media (images + video) in a conversation, using the imperative case, as in a command."
     },
     "verifyHelp": {
@@ -768,23 +768,23 @@
         "description": ""
     },
     "moreInfo": {
-        "message": "More Info...",
+        "message": "Més informació...",
         "description": "Shown on the drop-down menu for an individual message, takes you to message detail screen"
     },
     "retrySend": {
-        "message": "Retry Send",
+        "message": "Reintenta l'enviament",
         "description": "Shown on the drop-down menu for an indinvidaul message, but only if it is an outgoing message that failed to send"
     },
     "deleteMessage": {
-        "message": "Delete Message",
+        "message": "Suprimeix el missatge",
         "description": "Shown on the drop-down menu for an individual message, deletes single message"
     },
     "deleteMessages": {
-        "message": "Избриши пораки",
+        "message": "Suprimeix els missatges",
         "description": "Menu item for deleting messages, title case."
     },
     "deleteConversationConfirmation": {
-        "message": "Permanently delete this conversation?",
+        "message": "Voleu suprimir aquesta conversa de forma permanent?",
         "description": "Confirmation dialog text that asks the user if they really wish to delete the conversation. Answer buttons use the strings 'ok' and 'cancel'. The deletion is permanent, i.e. it cannot be undone."
     },
     "sessionEnded": {
@@ -796,7 +796,7 @@
         "description": "Used in alt tag of thumbnail images inside of an embedded message quote"
     },
     "imageAttachmentAlt": {
-        "message": "Image attached to message",
+        "message": "Imatge adjunta al missatge",
         "description": "Used in alt tag of image attachment"
     },
     "videoAttachmentAlt": {
@@ -808,11 +808,11 @@
         "description": "Used in the alt tag for the image shown in a full-screen lightbox view"
     },
     "fileIconAlt": {
-        "message": "File icon",
+        "message": "Icona del fitxer",
         "description": "Used in the media gallery documents tab to visually represent a file"
     },
     "emojiAlt": {
-        "message": "Emoji image of '$title$'",
+        "message": "Imatge emoji de «$title$»",
         "description": "Used in the alt tag of all emoji images",
         "placeholders": {
             "title": {
@@ -822,39 +822,39 @@
         }
     },
     "installWelcome": {
-        "message": "Welcome to Signal Desktop",
+        "message": "Us donem la benvinguda al Signal Desktop",
         "description": "Welcome title on the install page"
     },
     "installTagline": {
-        "message": "Privacy is possible. Signal makes it easy.",
+        "message": "La privadesa és possible. El Signla la fa fàcil.",
         "description": "Tagline displayed under 'installWelcome' string on the install page"
     },
     "linkYourPhone": {
-        "message": "Link your phone to Signal Desktop",
+        "message": "Enllaceu el mòbil amb el Signal Desktop",
         "description": "Shown on the front page when the application first starst, above the QR code"
     },
     "signalSettings": {
-        "message": "Signal Settings",
+        "message": "Configuració del Signal",
         "description": "Used in the guidance to help people find the 'link new device' area of their Signal mobile app"
     },
     "linkedDevices": {
-        "message": "Linked Devices",
+        "message": "Aparells enllaçats",
         "description": "Used in the guidance to help people find the 'link new device' area of their Signal mobile app"
     },
     "plusButton": {
-        "message": "'+' Button",
+        "message": "Botó «+»",
         "description": "The button used in Signal Android to add a new linked device"
     },
     "linkNewDevice": {
-        "message": "Link New Device",
+        "message": "Enllaça un aparell nou",
         "description": "The menu option shown in Signal iOS to add a new linked device"
     },
     "deviceName": {
-        "message": "Device name",
+        "message": "Nom de l'aparell",
         "description": "The label in settings panel shown for the user-provided name for this desktop instance"
     },
     "chooseDeviceName": {
-        "message": "Choose this device's name",
+        "message": "Trieu el nom d'aquest aparell",
         "description": "The header shown on the 'choose device name' screen in the device linking process"
     },
     "finishLinkingPhone": {
@@ -862,99 +862,99 @@
         "description": "The text on the button to finish the linking process, after choosing the device name"
     },
     "initialSync": {
-        "message": "Syncing contacts and groups",
+        "message": "Sincronització de contactes i grups",
         "description": "Shown during initial link while contacts and groups are being pulled from mobile device"
     },
     "installConnectionFailed": {
-        "message": "Failed to connect to server.",
+        "message": "No s'ha pogut connectar al servidor.",
         "description": "Displayed when we can't connect to the server."
     },
     "installTooManyDevices": {
-        "message": "Sorry, you have too many devices linked already. Try removing some.",
+        "message": "Teniu massa aparells enllaçats. Proveu d'eliminar-ne algun.",
         "description": ""
     },
     "settings": {
-        "message": "Settings",
+        "message": "Configuració",
         "description": "Menu item and header for global settings"
     },
     "theme": {
-        "message": "Theme",
+        "message": "Tema",
         "description": "Header for theme settings"
     },
     "permissions": {
-        "message": "Permissions",
+        "message": "Permisos",
         "description": "Header for permissions section of settings"
     },
     "mediaPermissionsDescription": {
-        "message": "Allow access to camera and microphone",
+        "message": "Permet l'accés a la càmera i el micròfon",
         "description": "Description of the media permission description"
     },
     "spellCheck": {
-        "message": "Spell Check",
+        "message": "Comprovació ortogràfica",
         "description": "Description of the media permission description"
     },
     "spellCheckDescription": {
-        "message": "Enable spell check of text entered in message composition box",
+        "message": "Activa la comprovació ortogràfica del text introduït en el quadre d'edició de missatges",
         "description": "Description of the media permission description"
     },
     "clearDataHeader": {
-        "message": "Clear Data",
+        "message": "Buida les dades",
         "description": "Header in the settings dialog for the section dealing with data deletion"
     },
     "clearDataExplanation": {
-        "message": "This will clear all data in the application, removing all messages and saved account information.",
+        "message": "Això buidarà les dades en l'aplicació, suprimint-ne tots els missatges i informació del compte desat.",
         "description": "Text describing what the clear data button will do."
     },
     "clearDataButton": {
-        "message": "Clear data",
+        "message": "Buida les dades",
         "description": "Button in the settings dialog starting process to delete all data"
     },
     "deleteAllDataHeader": {
-        "message": "Delete all data?",
+        "message": "Voleu suprimir totes les dades?",
         "description": "Header of the full-screen delete data confirmation screen"
     },
     "deleteAllDataBody": {
-        "message": "You are about to delete all of this application's saved account information, including all contacts and all messages. You can always link with your mobile device again, but that will not restore deleted messages.",
+        "message": "Esteu apunt de suprimir tota la informació del compte desada en aquesta aplicació, incloent-hi tots els contactes i missatges. Sempre podeu enllaçar-ho amb el vostre aparell mòbil una altra vegada, però això no recuperarà els missatges suprimits.",
         "description": "Text describing what exactly will happen if the user clicks the button to delete all data"
     },
     "deleteAllDataButton": {
-        "message": "Delete all data",
+        "message": "Suprimeix totes les dades",
         "description": "Text of the button that deletes all data"
     },
     "deleteAllDataProgress": {
-        "message": "Disconnecting and deleting all data",
+        "message": "Desconnexió i supressió de dades",
         "description": "Message shown to user when app is disconnected and data deleted"
     },
     "notifications": {
-        "message": "Notifications",
+        "message": "Notificacions",
         "description": "Header for notification settings"
     },
     "notificationSettingsDialog": {
-        "message": "When messages arrive, display notifications that reveal:",
+        "message": "Si arriben missatges, mostra notificacions que revelen:",
         "description": "Explain the purpose of the notification settings"
     },
     "disableNotifications": {
-        "message": "Disable notifications",
+        "message": "Desactiva les notificacions",
         "description": "Label for disabling notifications"
     },
     "nameAndMessage": {
-        "message": "Both sender name and message",
+        "message": "El nom de l'emissor i el missatge",
         "description": "Label for setting notifications to display name and message text"
     },
     "noNameOrMessage": {
-        "message": "Neither name nor message",
+        "message": "Ni el nom de l'emissor ni el missatge",
         "description": "Label for setting notifications to display no name and no message text"
     },
     "nameOnly": {
-        "message": "Only sender name",
+        "message": "Només el nom de l'emissor",
         "description": "Label for setting notifications to display sender name only"
     },
     "newMessage": {
-        "message": "New Message",
+        "message": "Missatge nou",
         "description": "Displayed in notifications for only 1 message"
     },
     "newMessages": {
-        "message": "New Messages",
+        "message": "MIssatges nous",
         "description": "Displayed in notifications for multiple messages"
     },
     "notificationMostRecentFrom": {
@@ -962,51 +962,51 @@
         "description": "Displayed in notifications when setting is 'name only' and more than one message is waiting"
     },
     "notificationFrom": {
-        "message": "From:",
+        "message": "De:",
         "description": "Displayed in notifications when setting is 'name only' and one message is waiting"
     },
     "notificationMostRecent": {
-        "message": "Most recent:",
+        "message": "Més recent:",
         "description": "Displayed in notifications when setting is 'name and message' and more than one message is waiting"
     },
     "sendFailed": {
-        "message": "Send failed",
+        "message": "L'enviament ha fallat",
         "description": "Shown on outgoing message if it fails to send"
     },
     "showMore": {
-        "message": "Details",
+        "message": "Detalls",
         "description": "Displays the details of a key change"
     },
     "showLess": {
-        "message": "Hide details",
+        "message": "Amaga els detalls",
         "description": "Hides the details of a key change"
     },
     "learnMore": {
-        "message": "Learn more about verifying safety numbers",
+        "message": "Apreneu-ne més sobre la verificació dels números de seguretat",
         "description": "Text that links to a support article on verifying safety numbers"
     },
     "expiredWarning": {
-        "message": "This version of Signal Desktop has expired. Please upgrade to the latest version to continue messaging.",
+        "message": "Aquesta versió del Signal Desktop ha expirat. Actualitzeu a l'última versió per a poder seguir enviant i rebent missatges.",
         "description": "Warning notification that this version of the app has expired"
     },
     "androidMessageLengthWarning": {
-        "message": "Android clients will only receive the first 2000 characters of this message.",
+        "message": "Els clients d'Android només rebran els primers 2000 caràcters d'aquest missatge.",
         "description": "Warning that long messages could not get received completely by Android clients."
     },
     "upgrade": {
-        "message": "Upgrade",
+        "message": "Actualitza",
         "description": "Label text for button to upgrade the app to the latest version"
     },
     "mediaMessage": {
-        "message": "Media message",
+        "message": "Missatge multimèdia",
         "description": "Description of a message that has an attachment and no text, displayed in the conversation list as a preview."
     },
     "unregisteredUser": {
-        "message": "Number is not registered",
+        "message": "El número no està enregistrat.",
         "description": "Error message displayed when sending to an unregistered user."
     },
     "sync": {
-        "message": "Contacts",
+        "message": "Contactes",
         "description": "Label for contact and group sync settings"
     },
     "syncExplanation": {
@@ -1014,35 +1014,35 @@
         "description": "Explanatory text for sync settings"
     },
     "lastSynced": {
-        "message": "Last import at",
+        "message": "Última importació feta",
         "description": "Label for date and time of last sync operation"
     },
     "syncNow": {
-        "message": "Import now",
+        "message": "Importa-ho ara",
         "description": "Label for a button that syncs contacts and groups from your phone"
     },
     "syncing": {
-        "message": "Importing...",
+        "message": "S'està important...",
         "description": "Label for a disabled sync button while sync is in progress."
     },
     "syncFailed": {
-        "message": "Import failed. Make sure your computer and your phone are connected to the internet.",
+        "message": "La importació ha fallat. Assegureu-vos que l'ordinador i el telèfon estan connectats a internet.",
         "description": "Informational text displayed if a sync operation times out."
     },
     "timestamp_s": {
-        "message": "now",
+        "message": "ara",
         "description": "Brief timestamp for messages sent less than a minute ago. Displayed in the conversation list and message bubble."
     },
     "timestamp_m": {
-        "message": "1 minute",
+        "message": "1 minut",
         "description": "Brief timestamp for messages sent about one minute ago. Displayed in the conversation list and message bubble."
     },
     "timestamp_h": {
-        "message": "1 hour",
+        "message": "1 hora",
         "description": "Brief timestamp for messages sent about one hour ago. Displayed in the conversation list and message bubble."
     },
     "hoursAgoShort": {
-        "message": "$hours$ hr",
+        "message": "$hours$ h",
         "description": "Even further contracted form of 'X hours ago' which works both for singular and plural, used in the left pane",
         "placeholders": {
             "hours": {
@@ -1052,7 +1052,7 @@
         }
     },
     "hoursAgo": {
-        "message": "$hours$ hr ago",
+        "message": "fa $hours$ h",
         "description": "Contracted form of 'X hours ago' which works both for singular and plural",
         "placeholders": {
             "hours": {
@@ -1072,7 +1072,7 @@
         }
     },
     "minutesAgo": {
-        "message": "$minutes$ min ago",
+        "message": "fa $minutes$ min",
         "description": "Contracted form of 'X minutes ago' which works both for singular and plural",
         "placeholders": {
             "minutes": {
@@ -1082,19 +1082,19 @@
         }
     },
     "justNow": {
-        "message": "now",
+        "message": "ara",
         "description": "Shown if a message is very recent, less than 60 seconds old"
     },
     "timestampFormat_M": {
-        "message": "MMM D",
+        "message": "D MMM",
         "description": "Timestamp format string for displaying month and day (but not the year) of a date within the current year, ex: use 'MMM D' for 'Aug 8', or 'D MMM' for '8 Aug'."
     },
     "unblockToSend": {
-        "message": "Unblock this contact to send a message.",
+        "message": "Desbloca aquest contacte per a enviar-li un missatge.",
         "description": "Brief message shown when trying to message a blocked number"
     },
     "unblockGroupToSend": {
-        "message": "Unblock this group to send a message.",
+        "message": "Desbloca aquest grup per a enviar-hi un missatge.",
         "description": "Brief message shown when trying to message a blocked group"
     },
     "youChangedTheTimer": {
@@ -1136,51 +1136,51 @@
         "description": "Label for option to turn off message expiration in the timer menu"
     },
     "timerOption_5_seconds": {
-        "message": "5 seconds",
+        "message": "5 segons",
         "description": "Label for a selectable option in the message expiration timer menu"
     },
     "timerOption_10_seconds": {
-        "message": "10 seconds",
+        "message": "10 segons",
         "description": "Label for a selectable option in the message expiration timer menu"
     },
     "timerOption_30_seconds": {
-        "message": "30 seconds",
+        "message": "30 segons",
         "description": "Label for a selectable option in the message expiration timer menu"
     },
     "timerOption_1_minute": {
-        "message": "1 minute",
+        "message": "1 minut",
         "description": "Label for a selectable option in the message expiration timer menu"
     },
     "timerOption_5_minutes": {
-        "message": "5 minutes",
+        "message": "5 minuts",
         "description": "Label for a selectable option in the message expiration timer menu"
     },
     "timerOption_30_minutes": {
-        "message": "30 minutes",
+        "message": "30 minuts",
         "description": "Label for a selectable option in the message expiration timer menu"
     },
     "timerOption_1_hour": {
-        "message": "1 hour",
+        "message": "1 hora",
         "description": "Label for a selectable option in the message expiration timer menu"
     },
     "timerOption_6_hours": {
-        "message": "6 hours",
+        "message": "6 hores",
         "description": "Label for a selectable option in the message expiration timer menu"
     },
     "timerOption_12_hours": {
-        "message": "12 hours",
+        "message": "12 hores",
         "description": "Label for a selectable option in the message expiration timer menu"
     },
     "timerOption_1_day": {
-        "message": "1 day",
+        "message": "1 dia",
         "description": "Label for a selectable option in the message expiration timer menu"
     },
     "timerOption_1_week": {
-        "message": "1 week",
+        "message": "1 setmana",
         "description": "Label for a selectable option in the message expiration timer menu"
     },
     "disappearingMessages": {
-        "message": "Disappearing messages",
+        "message": "Missatges efímers",
         "description": "Conversation menu option to enable disappearing messages"
     },
     "timerOption_0_seconds_abbreviated": {
@@ -1188,51 +1188,51 @@
         "description": "Short format indicating current timer setting in the conversation list snippet"
     },
     "timerOption_5_seconds_abbreviated": {
-        "message": "5s",
+        "message": "5 s",
         "description": "Very short format indicating current timer setting in the conversation header"
     },
     "timerOption_10_seconds_abbreviated": {
-        "message": "10s",
+        "message": "10 s",
         "description": "Very short format indicating current timer setting in the conversation header"
     },
     "timerOption_30_seconds_abbreviated": {
-        "message": "30s",
+        "message": "30 s",
         "description": "Very short format indicating current timer setting in the conversation header"
     },
     "timerOption_1_minute_abbreviated": {
-        "message": "1m",
+        "message": "1 min",
         "description": "Very short format indicating current timer setting in the conversation header"
     },
     "timerOption_5_minutes_abbreviated": {
-        "message": "5m",
+        "message": "5 min",
         "description": "Very short format indicating current timer setting in the conversation header"
     },
     "timerOption_30_minutes_abbreviated": {
-        "message": "30m",
+        "message": "30 min",
         "description": "Very short format indicating current timer setting in the conversation header"
     },
     "timerOption_1_hour_abbreviated": {
-        "message": "1h",
+        "message": "1 h",
         "description": "Very short format indicating current timer setting in the conversation header"
     },
     "timerOption_6_hours_abbreviated": {
-        "message": "6h",
+        "message": "6 h",
         "description": "Very short format indicating current timer setting in the conversation header"
     },
     "timerOption_12_hours_abbreviated": {
-        "message": "12h",
+        "message": "12 h",
         "description": "Very short format indicating current timer setting in the conversation header"
     },
     "timerOption_1_day_abbreviated": {
-        "message": "1d",
+        "message": "1 dia",
         "description": "Very short format indicating current timer setting in the conversation header"
     },
     "timerOption_1_week_abbreviated": {
-        "message": "1w",
+        "message": "1 set",
         "description": "Very short format indicating current timer setting in the conversation header"
     },
     "disappearingMessagesDisabled": {
-        "message": "Disappearing messages disabled",
+        "message": "S'han desactivat els missatges efímers",
         "description": "Displayed in the left pane when the timer is turned off"
     },
     "disabledDisappearingMessages": {
@@ -1246,7 +1246,7 @@
         }
     },
     "youDisabledDisappearingMessages": {
-        "message": "You disabled disappearing messages",
+        "message": "Heu desactivat els missatges efímers",
         "description": "Displayed in the conversation list when the timer is turned off"
     },
     "timerSetTo": {
@@ -1264,7 +1264,7 @@
         "description": "Description for audio notification setting"
     },
     "safetyNumberChanged": {
-        "message": "Safety Number has changed",
+        "message": "El número de seguretat ha canviat",
         "description": "A notification shown in the conversation when a contact reinstalls"
     },
     "safetyNumberChangedGroup": {
@@ -1292,15 +1292,15 @@
         }
     },
     "themeLight": {
-        "message": "Light",
+        "message": "Clar",
         "description": "Label text for light theme (normal)"
     },
     "themeDark": {
-        "message": "Dark",
+        "message": "Fosc",
         "description": "Label text for dark theme"
     },
     "hideMenuBar": {
-        "message": "Hide menu bar",
+        "message": "Amaga la barra de menú",
         "description": "Label text for menu bar visibility setting"
     },
     "startConversation": {
@@ -1308,11 +1308,11 @@
         "description": "Label underneath number a user enters that is not an existing contact"
     },
     "newPhoneNumber": {
-        "message": "Enter a phone number to add a contact.",
+        "message": "Introduïu un número de mòbil per a afegir un contacte.",
         "description": "Placeholder for adding a new number to a contact"
     },
     "invalidNumberError": {
-        "message": "Invalid number",
+        "message": "El número no és vàlid",
         "description": "When a person inputs a number that is invalid"
     },
     "unlinkedWarning": {
@@ -1320,11 +1320,11 @@
         "description": ""
     },
     "unlinked": {
-        "message": "Unlinked",
+        "message": "No enllaçat",
         "description": ""
     },
     "relink": {
-        "message": "Relink",
+        "message": "Torna a enllaçar",
         "description": ""
     },
     "autoUpdateNewVersionTitle": {
@@ -1348,7 +1348,7 @@
         "description": ""
     },
     "leftTheGroup": {
-        "message": "$name$ left the group",
+        "message": "$name$ ha abandonat el grup",
         "description": "Shown in the conversation history when a single person leaves the group",
         "placeholders": {
             "name": {
@@ -1358,7 +1358,7 @@
         }
     },
     "multipleLeftTheGroup": {
-        "message": "$name$ left the group",
+        "message": "$name$ ha abandonat el grup",
         "description": "Shown in the conversation history when multiple people leave the group",
         "placeholders": {
             "name": {
@@ -1368,11 +1368,11 @@
         }
     },
     "updatedTheGroup": {
-        "message": "Group updated",
+        "message": "S'ha actualitzat el grup",
         "description": "Shown in the conversation history when someone updates the group"
     },
     "titleIsNow": {
-        "message": "Title is now '$name$'",
+        "message": "El títol ara és «$name$»",
         "description": "Shown in the conversation history when someone changes the title of the group",
         "placeholders": {
             "name": {
@@ -1382,7 +1382,7 @@
         }
     },
     "joinedTheGroup": {
-        "message": "$name$ joined the group",
+        "message": "$name$ s'ha unit al grup",
         "description": "Shown in the conversation history when a single person joins the group",
         "placeholders": {
             "name": {
@@ -1392,7 +1392,7 @@
         }
     },
     "multipleJoinedTheGroup": {
-        "message": "$names$ joined the group",
+        "message": "$names$ s'ha unit al grup",
         "description": "Shown in the conversation history when more than one person joins the group",
         "placeholders": {
             "names": {
@@ -1402,7 +1402,7 @@
         }
     },
     "privacyPolicy": {
-        "message": "Terms & Privacy Policy",
+        "message": "Condicions de servei i política de privadesa",
         "description": "Shown in the about box for the link to https://signal.org/legal"
     }
 }

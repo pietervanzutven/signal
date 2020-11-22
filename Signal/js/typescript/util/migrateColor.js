@@ -10,32 +10,32 @@
     function migrateColor(color) {
         switch (color) {
             // These colors no longer exist
-            case 'brown':
-                return 'red';
+            case 'orange':
+            case 'amber':
+                return 'deep_orange';
+            case 'yellow':
+                return 'brown';
             case 'deep_purple':
                 return 'purple';
             case 'light_blue':
                 return 'blue';
-            case 'blue_grey':
-                return 'cyan';
-            case 'light_green':
-            case 'lime':
-                return 'green';
-            case 'orange':
-            case 'amber':
-            case 'yellow':
-                return 'deep_orange';
-            // These can stay as they are
-            case 'blue':
             case 'cyan':
+                return 'teal';
+            case 'lime':
+                return 'light_green';
+            // These can stay as they are
+            case 'red':
             case 'deep_orange':
-            case 'green':
-            case 'grey':
-            case 'indigo':
+            case 'brown':
             case 'pink':
             case 'purple':
-            case 'red':
+            case 'indigo':
+            case 'blue':
             case 'teal':
+            case 'green':
+            case 'light_green':
+            case 'blue_grey':
+            case 'grey':
                 return color;
             // Can uncomment this to ensure that we've covered all potential cases
             // default:

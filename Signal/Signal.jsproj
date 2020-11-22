@@ -210,6 +210,7 @@
     <Content Include="js\modules\types\attachment.js" />
     <Content Include="js\modules\types\attachment\migrate_data_to_file_system.js" />
     <Content Include="js\modules\types\contact.js" />
+    <Content Include="js\modules\types\conversation.js" />
     <Content Include="js\modules\types\errors.js" />
     <Content Include="js\modules\types\message.js" />
     <Content Include="js\modules\types\schema_version.js" />
@@ -232,6 +233,7 @@
     <Content Include="js\typescript\backbone\index.js" />
     <Content Include="js\typescript\backbone\views\index.js" />
     <Content Include="js\typescript\backbone\views\Lightbox.js" />
+    <Content Include="js\typescript\components\Avatar.js" />
     <Content Include="js\typescript\components\ContactListItem.js" />
     <Content Include="js\typescript\components\ConversationListItem.js" />
     <Content Include="js\typescript\components\conversation\AddNewLines.js" />
@@ -264,6 +266,7 @@
     <Content Include="js\typescript\components\Intl.js" />
     <Content Include="js\typescript\components\Lightbox.js" />
     <Content Include="js\typescript\components\LightboxGallery.js" />
+    <Content Include="js\typescript\components\MainHeader.js" />
     <Content Include="js\typescript\components\styles\Colors.js" />
     <Content Include="js\typescript\notifications\getStatus.js" />
     <Content Include="js\typescript\OS.js" />
@@ -281,8 +284,10 @@
     <Content Include="js\typescript\util\arrayBufferToObjectURL.js" />
     <Content Include="js\typescript\util\emoji.js" />
     <Content Include="js\typescript\util\formatRelativeTime.js" />
+    <Content Include="js\typescript\util\getInitials.js" />
     <Content Include="js\typescript\util\GoogleChrome.js" />
     <Content Include="js\typescript\util\index.js" />
+    <Content Include="js\typescript\util\isFileDangerous.js" />
     <Content Include="js\typescript\util\libphonenumberInstance.js" />
     <Content Include="js\typescript\util\migrateColor.js" />
     <Content Include="js\typescript\util\missingCaseError.js" />

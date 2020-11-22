@@ -38728,7 +38728,7 @@ MessageReceiver.prototype.extend({
             );
             await textsecure.storage.unprocessed.remove(item.id);
           } else {
-            await textsecure.storage.unprocessed.save(Object.assign({}, item, { attempts }));
+            await textsecure.storage.unprocessed.save(Object.assign({}, item, { attempts } ));
           }
         } catch (error) {
           window.log.error(

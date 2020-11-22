@@ -16,6 +16,8 @@
     exports.GoogleChrome = GoogleChrome;
     const arrayBufferToObjectURL_1 = window.ts.util.arrayBufferToObjectURL;
     exports.arrayBufferToObjectURL = arrayBufferToObjectURL_1.arrayBufferToObjectURL;
+    const isFileDangerous_1 = window.ts.util.isFileDangerous;
+    exports.isFileDangerous = isFileDangerous_1.isFileDangerous;
     const missingCaseError_1 = window.ts.util.missingCaseError;
     exports.missingCaseError = missingCaseError_1.missingCaseError;
     const migrateColor_1 = window.ts.util.migrateColor;
