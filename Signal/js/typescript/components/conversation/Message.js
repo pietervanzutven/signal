@@ -177,7 +177,7 @@
             return (react_1.default.createElement("div", { className: "module-message__author" },
                 react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, module: "module-message__author", i18n: i18n })));
         }
-        // tslint:disable-next-line max-func-body-length cyclomatic-complexity jsx-no-lambda react-this-binding-issue
+        // tslint:disable-next-line max-func-body-length cyclomatic-complexity
         renderAttachment() {
             const { i18n, attachment, text, collapseMetadata, conversationType, direction, quote, onClickAttachment, } = this.props;
             const { imageBroken } = this.state;
@@ -249,7 +249,7 @@
             else {
                 const { fileName, fileSize, contentType } = attachment;
                 const extension = getExtension({ contentType, fileName });
-                const isDangerous = isFileDangerous_1.isFileDangerous(fileName);
+                const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
                 return (react_1.default.createElement("div", {
                     className: classnames_1.default('module-message__generic-attachment', withContentBelow
                         ? 'module-message__generic-attachment--with-content-below'
@@ -337,7 +337,7 @@
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
-            const fileName = attachment && attachment.fileName;
+            const fileName = attachment ? attachment.fileName : null;
             const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
             const downloadButton = attachment ? (react_1.default.createElement("div", {
                 onClick: () => {
