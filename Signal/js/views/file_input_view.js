@@ -182,6 +182,8 @@
       }
       const { name } = file;
       if (window.Signal.Util.isFileDangerous(name)) {
+        this.deleteFiles();
+
         const toast = new Whisper.DangerousFileTypeToast();
         toast.$el.insertAfter(this.$el);
         toast.render();
