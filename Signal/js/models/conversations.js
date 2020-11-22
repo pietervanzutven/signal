@@ -1376,7 +1376,7 @@
 
     getColor() {
       if (!this.isPrivate()) {
-        return null;
+        return 'signal-blue';
       }
 
       const { migrateColor } = Util;
