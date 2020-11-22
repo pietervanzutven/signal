@@ -1610,6 +1610,250 @@ input.search {
   height: 100%;
   width: 100%; }
 
+.ios-theme .module-message__container--outgoing {
+  background-color: #2090ea;
+  color: #ffffff; }
+
+.ios-theme .module-message__container--incoming {
+  background-color: #eeefef;
+  color: #17191d; }
+
+.ios-theme .module-message__author {
+  color: #17191d; }
+
+.ios-theme .module-message__text {
+  color: #ffffff;
+  font-size: 14px; }
+  .ios-theme .module-message__text a {
+    text-decoration: underline;
+    color: #ffffff; }
+
+.ios-theme .module-message__text--incoming {
+  color: #17191d; }
+  .ios-theme .module-message__text--incoming a {
+    text-decoration: underline;
+    color: #17191d; }
+
+.ios-theme .module-message__metadata__date {
+  color: rgba(255, 255, 255, 0.8); }
+
+.ios-theme .module-message__metadata__date--incoming {
+  color: #6b6d70; }
+
+.ios-theme .module-message__metadata__date--with-image-no-caption {
+  color: #ffffff; }
+
+.ios-theme .module-message__metadata__status-icon--sending {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>sending</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='iOS-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='iOS-Light/Message/Status/Sending' transform='translate(-6.000000, 0.000000)' fill='%23000000'>            <path d='M11.5,0 L12.5,0 L12.5,1 L11.5,1 L11.5,0 Z M11.5,11 L12.5,11 L12.5,12 L11.5,12 L11.5,11 Z M6,5.5 L7,5.5 L7,6.5 L6,6.5 L6,5.5 Z M17,5.5 L18,5.5 L18,6.5 L17,6.5 L17,5.5 Z M16.9461524,2.5669873 L17.4461524,3.4330127 L16.580127,3.9330127 L16.080127,3.0669873 L16.9461524,2.5669873 Z M7.41987298,8.0669873 L7.91987298,8.9330127 L7.05384758,9.4330127 L6.55384758,8.5669873 L7.41987298,8.0669873 Z M9.4330127,0.553847577 L9.9330127,1.41987298 L9.0669873,1.91987298 L8.5669873,1.05384758 L9.4330127,0.553847577 Z M14.9330127,10.080127 L15.4330127,10.9461524 L14.5669873,11.4461524 L14.0669873,10.580127 L14.9330127,10.080127 Z M14.5669873,0.553847577 L15.4330127,1.05384758 L14.9330127,1.91987298 L14.0669873,1.41987298 L14.5669873,0.553847577 Z M9.0669873,10.080127 L9.9330127,10.580127 L9.4330127,11.4461524 L8.5669873,10.9461524 L9.0669873,10.080127 Z M7.05384758,2.5669873 L7.91987298,3.0669873 L7.41987298,3.9330127 L6.55384758,3.4330127 L7.05384758,2.5669873 Z M16.580127,8.0669873 L17.4461524,8.5669873 L16.9461524,9.4330127 L16.080127,8.9330127 L16.580127,8.0669873 Z' id='sending' fill='%23FFFFFF'></path>        </g>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.ios-theme .module-message__metadata__status-icon--sent {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>check</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Sent' transform='translate(-6.000000, 0.000000)' fill='%23000000' fill-rule='nonzero'>            <path d='M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='check' fill='%23FFFFFF'></path>        </g>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.ios-theme .module-message__metadata__status-icon--delivered {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>double check</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C7.58941091,0.549084144 7.28273546,0.812570593 7.00070199,1.10030099 C6.67734551,1.03453102 6.34268082,1 6,1 C3.24,1 1,3.24 1,6 C1,8.76 3.24,11 6,11 C6.34268082,11 6.67734551,10.965469 7.00070199,10.899699 C7.28273546,11.1874294 7.58941091,11.4509159 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M5.07266453,7.01233547 C5.12977459,7.4065842 5.21974274,7.79019382 5.33970233,8.16029767 L5,8.5 L2.5,6 L3.205,5.295 L5,7.085 L5.07266453,7.01233547 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='path-1' fill='%23FFFFFF'></path>    </defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Delivered'>            <mask id='mask-2' fill='white'>                <use xlink:href='%23path-1'></use>            </mask>            <use id='double-check' fill='%23000000' fill-rule='nonzero' xlink:href='%23path-1'></use>        </g>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.ios-theme .module-message__metadata__status-icon--read {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Read/read-18x12</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C6.15053376,1.58392424 5,3.65760134 5,6 C5,6.343797 5.0247846,6.68180525 5.07266453,7.01233547 L5,7.085 L3.205,5.295 L2.5,6 L5,8.5 L5.33970233,8.16029767 C5.80439817,9.59399486 6.71914823,10.8250231 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M11,8.5 L15.5,4 L14.795,3.29 L11,7.085 L9.205,5.295 L8.5,6 L11,8.5 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='18' height='12'></rect>    </defs>    <g id='Icons/Read/read-18x12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <mask id='mask-2' fill='%23FFFFFF'>            <use xlink:href='%23path-1'></use>        </mask>        <g id='double-check' fill-rule='nonzero'></g>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%23FFFFFF'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%23FFFFFF' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.ios-theme .module-message__metadata__status-icon--with-image-no-caption {
+  background-color: #ffffff; }
+
+.ios-theme .module-message__generic-attachment__file-name {
+  color: #ffffff; }
+
+.ios-theme .module-message__generic-attachment__file-name--incoming {
+  color: #17191d; }
+
+.ios-theme .module-message__generic-attachment__file-size {
+  color: #ffffff; }
+
+.ios-theme .module-message__generic-attachment__file-size--incoming {
+  color: #17191d; }
+
+.ios-theme .module-expire-timer {
+  background-color: rgba(255, 255, 255, 0.8); }
+
+.ios-theme .module-expire-timer--incoming {
+  background-color: #6b6d70; }
+
+.ios-theme .module-quote--outgoing {
+  border-left-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.6); }
+
+.ios-theme .module-quote--incoming {
+  background-color: rgba(32, 144, 234, 0.25);
+  border-left-color: #2090ea; }
+
+.ios-theme .module-quote__reference-warning--incoming {
+  background-color: rgba(160, 208, 246, 0.325); }
+
+.ios-theme .bottom-bar .module-quote {
+  background-color: rgba(32, 144, 234, 0.25);
+  border-left-color: #2090ea; }
+
+.ios-theme .module-embedded-contact__contact-name {
+  color: #ffffff; }
+
+.ios-theme .module-embedded-contact__contact-method {
+  color: rgba(255, 255, 255, 0.7); }
+
+.ios-theme .module-embedded-contact__contact-name--incoming {
+  color: #17191d; }
+
+.ios-theme .module-embedded-contact__contact-method--incoming {
+  color: #62656a; }
+
+.ios-theme.dark-theme .module-message__container--outgoing {
+  background-color: #2090ea;
+  color: #eeefef; }
+
+.ios-theme.dark-theme .module-message__container--incoming {
+  background-color: #3d3e44;
+  color: #eeefef; }
+
+.ios-theme.dark-theme .module-message__author {
+  color: #eeefef; }
+
+.ios-theme.dark-theme .module-message__text--incoming {
+  color: #eeefef; }
+  .ios-theme.dark-theme .module-message__text--incoming a {
+    text-decoration: underline;
+    color: #eeefef; }
+
+.ios-theme.dark-theme .module-message__metadata__status-icon--sending {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>sending</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='iOS-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='iOS-Light/Message/Status/Sending' transform='translate(-6.000000, 0.000000)' fill='%23000000'>            <path d='M11.5,0 L12.5,0 L12.5,1 L11.5,1 L11.5,0 Z M11.5,11 L12.5,11 L12.5,12 L11.5,12 L11.5,11 Z M6,5.5 L7,5.5 L7,6.5 L6,6.5 L6,5.5 Z M17,5.5 L18,5.5 L18,6.5 L17,6.5 L17,5.5 Z M16.9461524,2.5669873 L17.4461524,3.4330127 L16.580127,3.9330127 L16.080127,3.0669873 L16.9461524,2.5669873 Z M7.41987298,8.0669873 L7.91987298,8.9330127 L7.05384758,9.4330127 L6.55384758,8.5669873 L7.41987298,8.0669873 Z M9.4330127,0.553847577 L9.9330127,1.41987298 L9.0669873,1.91987298 L8.5669873,1.05384758 L9.4330127,0.553847577 Z M14.9330127,10.080127 L15.4330127,10.9461524 L14.5669873,11.4461524 L14.0669873,10.580127 L14.9330127,10.080127 Z M14.5669873,0.553847577 L15.4330127,1.05384758 L14.9330127,1.91987298 L14.0669873,1.41987298 L14.5669873,0.553847577 Z M9.0669873,10.080127 L9.9330127,10.580127 L9.4330127,11.4461524 L8.5669873,10.9461524 L9.0669873,10.080127 Z M7.05384758,2.5669873 L7.91987298,3.0669873 L7.41987298,3.9330127 L6.55384758,3.4330127 L7.05384758,2.5669873 Z M16.580127,8.0669873 L17.4461524,8.5669873 L16.9461524,9.4330127 L16.080127,8.9330127 L16.580127,8.0669873 Z' id='sending' fill='%23FFFFFF'></path>        </g>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.ios-theme.dark-theme .module-message__metadata__status-icon--sent {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>check</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Sent' transform='translate(-6.000000, 0.000000)' fill='%23000000' fill-rule='nonzero'>            <path d='M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='check' fill='%23FFFFFF'></path>        </g>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.ios-theme.dark-theme .module-message__metadata__status-icon--delivered {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>double check</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C7.58941091,0.549084144 7.28273546,0.812570593 7.00070199,1.10030099 C6.67734551,1.03453102 6.34268082,1 6,1 C3.24,1 1,3.24 1,6 C1,8.76 3.24,11 6,11 C6.34268082,11 6.67734551,10.965469 7.00070199,10.899699 C7.28273546,11.1874294 7.58941091,11.4509159 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M5.07266453,7.01233547 C5.12977459,7.4065842 5.21974274,7.79019382 5.33970233,8.16029767 L5,8.5 L2.5,6 L3.205,5.295 L5,7.085 L5.07266453,7.01233547 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='path-1' fill='%23FFFFFF'></path>    </defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Delivered'>            <mask id='mask-2' fill='white'>                <use xlink:href='%23path-1'></use>            </mask>            <use id='double-check' fill='%23000000' fill-rule='nonzero' xlink:href='%23path-1'></use>        </g>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.ios-theme.dark-theme .module-message__metadata__status-icon--read {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Read/read-18x12</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C6.15053376,1.58392424 5,3.65760134 5,6 C5,6.343797 5.0247846,6.68180525 5.07266453,7.01233547 L5,7.085 L3.205,5.295 L2.5,6 L5,8.5 L5.33970233,8.16029767 C5.80439817,9.59399486 6.71914823,10.8250231 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M11,8.5 L15.5,4 L14.795,3.29 L11,7.085 L9.205,5.295 L8.5,6 L11,8.5 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='18' height='12'></rect>    </defs>    <g id='Icons/Read/read-18x12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <mask id='mask-2' fill='%23FFFFFF'>            <use xlink:href='%23path-1'></use>        </mask>        <g id='double-check' fill-rule='nonzero'></g>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%23FFFFFF'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%23FFFFFF' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.ios-theme.dark-theme .module-message__metadata__date {
+  color: rgba(255, 255, 255, 0.8); }
+
+.ios-theme.dark-theme .module-message__metadata__date--incoming {
+  color: #bbbdbe; }
+
+.ios-theme.dark-theme .module-message__generic-attachment__file-name--incoming {
+  color: #bbbdbe; }
+
+.ios-theme.dark-theme .module-message__generic-attachment__file-size--incoming {
+  color: #bbbdbe; }
+
+.ios-theme.dark-theme .module-expire-timer {
+  background-color: rgba(255, 255, 255, 0.8); }
+
+.ios-theme.dark-theme .module-expire-timer--incoming {
+  background-color: #bbbdbe; }
+
+.ios-theme.dark-theme .module-quote--outgoing {
+  border-left-color: #000000;
+  background-color: #285480; }
+
+.ios-theme.dark-theme .module-quote--incoming {
+  background-color: #285480;
+  border-left-color: #2090ea; }
+
+.ios-theme.dark-theme .module-quote__primary__author {
+  color: #eeefef; }
+
+.ios-theme.dark-theme .module-quote__primary__text {
+  color: #eeefef; }
+  .ios-theme.dark-theme .module-quote__primary__text a {
+    color: #eeefef; }
+
+.ios-theme.dark-theme .module-quote__primary__type-label {
+  color: #eeefef; }
+
+.ios-theme.dark-theme .module-quote__primary__type-label--incoming {
+  color: #eeefef; }
+
+.ios-theme.dark-theme .module-quote__primary__author--incoming {
+  color: #eeefef; }
+
+.ios-theme.dark-theme .module-quote__primary__text--incoming {
+  color: #eeefef; }
+  .ios-theme.dark-theme .module-quote__primary__text--incoming a {
+    color: #eeefef; }
+
+.ios-theme.dark-theme .module-quote__generic-file__text {
+  color: #eeefef; }
+
+.ios-theme.dark-theme .module-quote__generic-file__text--incoming {
+  color: #eeefef; }
+
+.ios-theme.dark-theme .module-quote__reference-warning {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.ios-theme.dark-theme .module-quote__reference-warning--incoming {
+  background-color: rgba(32, 144, 234, 0.5); }
+
+.ios-theme.dark-theme .module-quote__reference-warning__text {
+  color: #17191d; }
+
+.ios-theme.dark-theme .module-quote__reference-warning__text--incoming {
+  color: #eeefef; }
+
+.ios-theme.dark-theme .module-quote__reference-warning__icon {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->    <title>Link/broken-link-16</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Link/broken-link-16' stroke='none' stroke-width='1' fill='%232090EA' fill-rule='evenodd'>        <path d='M9.49509379,9.33333333 L12.6666667,9.33333333 C13.4030463,9.33333333 14,8.73637967 14,8 C14,7.26362033 13.4030463,6.66666667 12.6666667,6.66666667 L12.1617605,6.66666667 L13.3945435,5.43388365 C14.5135095,5.75065459 15.3333333,6.77958724 15.3333333,8 C15.3333333,9.47275933 14.139426,10.6666667 12.6666667,10.6666667 L8.66666667,10.6666667 C8.5081988,10.6666667 8.35295937,10.6528441 8.20208831,10.6263388 L9.49509379,9.33333333 Z' id='Combined-Shape' fill='%232090EA' fill-rule='nonzero'></path>        <path d='M6.50490621,6.66666667 L3.33333333,6.66666667 C2.59695367,6.66666667 2,7.26362033 2,8 C2,8.73637967 2.59695367,9.33333333 3.33333333,9.33333333 L3.83823954,9.33333333 L2.60545653,10.5661163 C1.48649049,10.2493454 0.666666667,9.22041276 0.666666667,8 C0.666666667,6.52724067 1.860574,5.33333333 3.33333333,5.33333333 L7.33333333,5.33333333 C7.4918012,5.33333333 7.64704063,5.34715592 7.79791169,5.37366118 L6.50490621,6.66666667 Z' id='Combined-Shape' fill='%232090EA' fill-rule='nonzero'></path>        <rect id='Rectangle-8' fill='%232090EA' fill-rule='nonzero' transform='translate(8.000000, 8.000000) rotate(45.000000) translate(-8.000000, -8.000000) ' x='7.33333333' y='1.33333333' width='1.33333333' height='13.3333333'></rect>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.ios-theme.dark-theme .module-quote__reference-warning__icon--incoming {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->    <title>Link/broken-link-16</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Link/broken-link-16' stroke='none' stroke-width='1' fill='%233D3E44' fill-rule='evenodd'>        <path d='M9.49509379,9.33333333 L12.6666667,9.33333333 C13.4030463,9.33333333 14,8.73637967 14,8 C14,7.26362033 13.4030463,6.66666667 12.6666667,6.66666667 L12.1617605,6.66666667 L13.3945435,5.43388365 C14.5135095,5.75065459 15.3333333,6.77958724 15.3333333,8 C15.3333333,9.47275933 14.139426,10.6666667 12.6666667,10.6666667 L8.66666667,10.6666667 C8.5081988,10.6666667 8.35295937,10.6528441 8.20208831,10.6263388 L9.49509379,9.33333333 Z' id='Combined-Shape' fill='%233D3E44' fill-rule='nonzero'></path>        <path d='M6.50490621,6.66666667 L3.33333333,6.66666667 C2.59695367,6.66666667 2,7.26362033 2,8 C2,8.73637967 2.59695367,9.33333333 3.33333333,9.33333333 L3.83823954,9.33333333 L2.60545653,10.5661163 C1.48649049,10.2493454 0.666666667,9.22041276 0.666666667,8 C0.666666667,6.52724067 1.860574,5.33333333 3.33333333,5.33333333 L7.33333333,5.33333333 C7.4918012,5.33333333 7.64704063,5.34715592 7.79791169,5.37366118 L6.50490621,6.66666667 Z' id='Combined-Shape' fill='%233D3E44' fill-rule='nonzero'></path>        <rect id='Rectangle-8' fill='%233D3E44' fill-rule='nonzero' transform='translate(8.000000, 8.000000) rotate(45.000000) translate(-8.000000, -8.000000) ' x='7.33333333' y='1.33333333' width='1.33333333' height='13.3333333'></rect>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.ios-theme.dark-theme .bottom-bar .module-quote__primary__author {
+  color: #eeefef; }
+
+.ios-theme.dark-theme .bottom-bar .module-quote__primary__type-label {
+  color: #eeefef; }
+
+.ios-theme.dark-theme .bottom-bar .module-quote__generic-file__text {
+  color: #eeefef; }
+
+.ios-theme.dark-theme .bottom-bar .module-quote__primary__text {
+  color: #eeefef; }
+  .ios-theme.dark-theme .bottom-bar .module-quote__primary__text a {
+    color: #eeefef; }
+
+.ios-theme.dark-theme .module-embedded-contact__contact-name--incoming {
+  color: #eeefef; }
+
+.ios-theme.dark-theme .module-embedded-contact__contact-method--incoming {
+  color: #bbbdbe; }
+
 body.dark-theme {
   background-color: #000000;
   color: #eeefef; }
@@ -2073,43 +2317,43 @@ body.dark-theme {
   background-repeat: no-repeat;
   background-position: center center; }
 
-.dark-theme .module-message__container--incoming {
+.dark-theme .module-message__container--outgoing {
   background-color: #414347; }
 
-.dark-theme .module-message__container--outgoing {
+.dark-theme .module-message__container--incoming {
   background-color: #6b6b78; }
 
-.dark-theme .module-message__container--outgoing-red {
+.dark-theme .module-message__container--incoming-red {
   background-color: #cc163d; }
 
-.dark-theme .module-message__container--outgoing-deep_orange {
+.dark-theme .module-message__container--incoming-deep_orange {
   background-color: #c73800; }
 
-.dark-theme .module-message__container--outgoing-brown {
+.dark-theme .module-message__container--incoming-brown {
   background-color: #746c53; }
 
-.dark-theme .module-message__container--outgoing-pink {
+.dark-theme .module-message__container--incoming-pink {
   background-color: #a23474; }
 
-.dark-theme .module-message__container--outgoing-purple {
+.dark-theme .module-message__container--incoming-purple {
   background-color: #862caf; }
 
-.dark-theme .module-message__container--outgoing-indigo {
+.dark-theme .module-message__container--incoming-indigo {
   background-color: #5951c8; }
 
-.dark-theme .module-message__container--outgoing-blue {
+.dark-theme .module-message__container--incoming-blue {
   background-color: #336ba3; }
 
-.dark-theme .module-message__container--outgoing-teal {
+.dark-theme .module-message__container--incoming-teal {
   background-color: #067589; }
 
-.dark-theme .module-message__container--outgoing-green {
+.dark-theme .module-message__container--incoming-green {
   background-color: #3b7845; }
 
-.dark-theme .module-message__container--outgoing-light_green {
+.dark-theme .module-message__container--incoming-light_green {
   background-color: #1c8260; }
 
-.dark-theme .module-message__container--outgoing-blue_grey {
+.dark-theme .module-message__container--incoming-blue_grey {
   background-color: #895d66; }
 
 .dark-theme .module-message__attachment-container {
@@ -2292,89 +2536,89 @@ body.dark-theme {
 .dark-theme .module-expire-timer--with-image-no-caption {
   background-color: #efefef; }
 
-.dark-theme .module-quote--incoming {
+.dark-theme .module-quote--outgoing {
   border-left-color: #6b6b78;
   background-color: #5a5a63; }
 
-.dark-theme .module-quote--incoming-red {
+.dark-theme .module-quote--outgoing-red {
   border-left-color: #cc163d;
   background-color: #8a0f29; }
 
-.dark-theme .module-quote--incoming-deep_orange {
+.dark-theme .module-quote--outgoing-deep_orange {
   border-left-color: #c73800;
   background-color: #872600; }
 
-.dark-theme .module-quote--incoming-brown {
+.dark-theme .module-quote--outgoing-brown {
   border-left-color: #746c53;
   background-color: #58513c; }
 
-.dark-theme .module-quote--incoming-pink {
+.dark-theme .module-quote--outgoing-pink {
   border-left-color: #a23474;
   background-color: #881b5b; }
 
-.dark-theme .module-quote--incoming-purple {
+.dark-theme .module-quote--outgoing-purple {
   border-left-color: #862caf;
   background-color: #6b248a; }
 
-.dark-theme .module-quote--incoming-indigo {
+.dark-theme .module-quote--outgoing-indigo {
   border-left-color: #5951c8;
   background-color: #4840a0; }
 
-.dark-theme .module-quote--incoming-blue {
+.dark-theme .module-quote--outgoing-blue {
   border-left-color: #336ba3;
   background-color: #285480; }
 
-.dark-theme .module-quote--incoming-teal {
+.dark-theme .module-quote--outgoing-teal {
   border-left-color: #067589;
   background-color: #055968; }
 
-.dark-theme .module-quote--incoming-green {
+.dark-theme .module-quote--outgoing-green {
   border-left-color: #3b7845;
   background-color: #2b5934; }
 
-.dark-theme .module-quote--incoming-light_green {
+.dark-theme .module-quote--outgoing-light_green {
   border-left-color: #1c8260;
   background-color: #36544a; }
 
-.dark-theme .module-quote--incoming-blue_grey {
+.dark-theme .module-quote--outgoing-blue_grey {
   border-left-color: #895d66;
   background-color: #6a4e54; }
 
-.dark-theme .module-quote--outgoing {
+.dark-theme .module-quote--incoming {
   border-left-color: #000000;
   background-color: #5a5a63; }
 
-.dark-theme .module-quote--outgoing-red {
+.dark-theme .module-quote--incoming-red {
   background-color: #8a0f29; }
 
-.dark-theme .module-quote--outgoing-deep_orange {
+.dark-theme .module-quote--incoming-deep_orange {
   background-color: #872600; }
 
-.dark-theme .module-quote--outgoing-brown {
+.dark-theme .module-quote--incoming-brown {
   background-color: #58513c; }
 
-.dark-theme .module-quote--outgoing-pink {
+.dark-theme .module-quote--incoming-pink {
   background-color: #881b5b; }
 
-.dark-theme .module-quote--outgoing-purple {
+.dark-theme .module-quote--incoming-purple {
   background-color: #6b248a; }
 
-.dark-theme .module-quote--outgoing-indigo {
+.dark-theme .module-quote--incoming-indigo {
   background-color: #4840a0; }
 
-.dark-theme .module-quote--outgoing-blue {
+.dark-theme .module-quote--incoming-blue {
   background-color: #285480; }
 
-.dark-theme .module-quote--outgoing-teal {
+.dark-theme .module-quote--incoming-teal {
   background-color: #055968; }
 
-.dark-theme .module-quote--outgoing-green {
+.dark-theme .module-quote--incoming-green {
   background-color: #2b5934; }
 
-.dark-theme .module-quote--outgoing-light_green {
+.dark-theme .module-quote--incoming-light_green {
   background-color: #36544a; }
 
-.dark-theme .module-quote--outgoing-blue_grey {
+.dark-theme .module-quote--incoming-blue_grey {
   background-color: #6a4e54; }
 
 .dark-theme .module-quote__primary__author {
@@ -2921,7 +3165,7 @@ body.dark-theme {
   background-repeat: no-repeat;
   background-position: center center; }
   .module-message__buttons__download:hover {
-    background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Download/download-24</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M19,9 L15,9 L15,3 L9,3 L9,9 L5,9 L12,16 L19,9 Z M5,18 L5,20 L19,20 L19,18 L5,18 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='24' height='24'></rect>    </defs>    <g id='Icons/Download/download-24' stroke='none' stroke-width='1' fill='%23070C14' fill-rule='evenodd'>        <mask id='mask-2' fill='%23070C14'>            <use xlink:href='%23path-1'></use>        </mask>        <use id='Shape' fill='%23070C14' fill-rule='nonzero' xlink:href='%23path-1'></use>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%23070C14'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%23070C14' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
+    background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Download/download-24</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M19,9 L15,9 L15,3 L9,3 L9,9 L5,9 L12,16 L19,9 Z M5,18 L5,20 L19,20 L19,18 L5,18 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='24' height='24'></rect>    </defs>    <g id='Icons/Download/download-24' stroke='none' stroke-width='1' fill='%2317191D' fill-rule='evenodd'>        <mask id='mask-2' fill='%2317191D'>            <use xlink:href='%23path-1'></use>        </mask>        <use id='Shape' fill='%2317191D' fill-rule='nonzero' xlink:href='%23path-1'></use>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%2317191D'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%2317191D' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -2942,7 +3186,7 @@ body.dark-theme {
   background-repeat: no-repeat;
   background-position: center center; }
   .module-message__buttons__reply:hover {
-    background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Reply/reply-24</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M10,8 L10,4 L3,11 L10,18 L10,13.9 C15,13.9 18.5,15.5 21,19 C20,14 17,9 10,8 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='24' height='24'></rect>    </defs>    <g id='Icons/Reply/reply-24' stroke='none' stroke-width='1' fill='%23070C14' fill-rule='evenodd'>        <mask id='mask-2' fill='%23070C14'>            <use xlink:href='%23path-1'></use>        </mask>        <use id='Shape' fill='%23070C14' fill-rule='nonzero' xlink:href='%23path-1'></use>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%23070C14'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%23070C14' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
+    background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Reply/reply-24</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M10,8 L10,4 L3,11 L10,18 L10,13.9 C15,13.9 18.5,15.5 21,19 C20,14 17,9 10,8 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='24' height='24'></rect>    </defs>    <g id='Icons/Reply/reply-24' stroke='none' stroke-width='1' fill='%2317191D' fill-rule='evenodd'>        <mask id='mask-2' fill='%2317191D'>            <use xlink:href='%23path-1'></use>        </mask>        <use id='Shape' fill='%2317191D' fill-rule='nonzero' xlink:href='%23path-1'></use>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%2317191D'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%2317191D' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -2963,7 +3207,7 @@ body.dark-theme {
   background-repeat: no-repeat;
   background-position: center center; }
   .module-message__buttons__menu:hover {
-    background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Ellipses/ellipses-24</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M6,10 C4.9,10 4,10.9 4,12 C4,13.1 4.9,14 6,14 C7.1,14 8,13.1 8,12 C8,10.9 7.1,10 6,10 Z M18,10 C16.9,10 16,10.9 16,12 C16,13.1 16.9,14 18,14 C19.1,14 20,13.1 20,12 C20,10.9 19.1,10 18,10 Z M12,10 C10.9,10 10,10.9 10,12 C10,13.1 10.9,14 12,14 C13.1,14 14,13.1 14,12 C14,10.9 13.1,10 12,10 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='24' height='24'></rect>    </defs>    <g id='Icons/Ellipses/ellipses-24' stroke='none' stroke-width='1' fill='%23070C14' fill-rule='evenodd'>        <mask id='mask-2' fill='%23070C14'>            <use xlink:href='%23path-1'></use>        </mask>        <use id='Shape' fill='%23070C14' fill-rule='nonzero' xlink:href='%23path-1'></use>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%23070C14'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%23070C14' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
+    background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Ellipses/ellipses-24</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M6,10 C4.9,10 4,10.9 4,12 C4,13.1 4.9,14 6,14 C7.1,14 8,13.1 8,12 C8,10.9 7.1,10 6,10 Z M18,10 C16.9,10 16,10.9 16,12 C16,13.1 16.9,14 18,14 C19.1,14 20,13.1 20,12 C20,10.9 19.1,10 18,10 Z M12,10 C10.9,10 10,10.9 10,12 C10,13.1 10.9,14 12,14 C13.1,14 14,13.1 14,12 C14,10.9 13.1,10 12,10 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='24' height='24'></rect>    </defs>    <g id='Icons/Ellipses/ellipses-24' stroke='none' stroke-width='1' fill='%2317191D' fill-rule='evenodd'>        <mask id='mask-2' fill='%2317191D'>            <use xlink:href='%23path-1'></use>        </mask>        <use id='Shape' fill='%2317191D' fill-rule='nonzero' xlink:href='%23path-1'></use>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%2317191D'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%2317191D' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
@@ -3005,43 +3249,43 @@ body.dark-theme {
   padding-bottom: 10px;
   min-width: 0px; }
 
-.module-message__container--incoming {
+.module-message__container--outgoing {
   background-color: #eeefef; }
 
-.module-message__container--outgoing {
+.module-message__container--incoming {
   background-color: #6b6b78; }
 
-.module-message__container--outgoing-red {
+.module-message__container--incoming-red {
   background-color: #cc163d; }
 
-.module-message__container--outgoing-deep_orange {
+.module-message__container--incoming-deep_orange {
   background-color: #c73800; }
 
-.module-message__container--outgoing-brown {
+.module-message__container--incoming-brown {
   background-color: #746c53; }
 
-.module-message__container--outgoing-pink {
+.module-message__container--incoming-pink {
   background-color: #a23474; }
 
-.module-message__container--outgoing-purple {
+.module-message__container--incoming-purple {
   background-color: #862caf; }
 
-.module-message__container--outgoing-indigo {
+.module-message__container--incoming-indigo {
   background-color: #5951c8; }
 
-.module-message__container--outgoing-blue {
+.module-message__container--incoming-blue {
   background-color: #336ba3; }
 
-.module-message__container--outgoing-teal {
+.module-message__container--incoming-teal {
   background-color: #067589; }
 
-.module-message__container--outgoing-green {
+.module-message__container--incoming-green {
   background-color: #3b7845; }
 
-.module-message__container--outgoing-light_green {
+.module-message__container--incoming-light_green {
   background-color: #1c8260; }
 
-.module-message__container--outgoing-blue_grey {
+.module-message__container--incoming-blue_grey {
   background-color: #895d66; }
 
 .module-message__attachment-container {
@@ -3191,7 +3435,7 @@ body.dark-theme {
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: clip;
-  color: #070c14; }
+  color: #17191d; }
 
 .module-message__generic-attachment__text {
   flex-grow: 1;
@@ -3199,7 +3443,7 @@ body.dark-theme {
   max-width: calc(100% - 37px); }
 
 .module-message__generic-attachment__file-name {
-  color: #ffffff;
+  color: #17191d;
   font-size: 14px;
   line-height: 18px;
   font-weight: 300;
@@ -3209,20 +3453,20 @@ body.dark-theme {
   text-overflow: ellipsis; }
 
 .module-message__generic-attachment__file-name--incoming {
-  color: #070c14; }
+  color: #ffffff; }
 
 .module-message__generic-attachment__file-size {
-  color: #ffffff;
+  color: #17191d;
   font-size: 11px;
   line-height: 16px;
   letter-spacing: 0.3px;
   margin-top: 3px; }
 
 .module-message__generic-attachment__file-size--incoming {
-  color: #070c14; }
+  color: #ffffff; }
 
 .module-message__author {
-  color: #070c14;
+  color: #ffffff;
   font-size: 13px;
   font-weight: 300;
   line-height: 18px;
@@ -3236,7 +3480,7 @@ body.dark-theme {
   font-style: italic; }
 
 .module-message__text {
-  color: #ffffff;
+  color: #17191d;
   font-size: 14px;
   line-height: 18px;
   text-align: start;
@@ -3246,13 +3490,13 @@ body.dark-theme {
   white-space: pre-wrap; }
   .module-message__text a {
     text-decoration: underline;
-    color: #ffffff; }
+    color: #17191d; }
 
 .module-message__text--incoming {
-  color: #070c14; }
+  color: #ffffff; }
   .module-message__text--incoming a {
     text-decoration: underline;
-    color: #070c14; }
+    color: #ffffff; }
 
 .module-message__text--error {
   font-style: italic; }
@@ -3275,11 +3519,11 @@ body.dark-theme {
   font-size: 11px;
   line-height: 16px;
   letter-spacing: 0.3px;
-  color: rgba(255, 255, 255, 0.8);
+  color: #6b6d70;
   text-transform: uppercase; }
 
 .module-message__metadata__date--incoming {
-  color: #62656a; }
+  color: rgba(255, 255, 255, 0.8); }
 
 .module-message__metadata__date--with-image-no-caption {
   color: #ffffff; }
@@ -3295,7 +3539,7 @@ body.dark-theme {
   margin-bottom: 2px; }
 
 .module-message__metadata__status-icon--sending {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>sending</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='iOS-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='iOS-Light/Message/Status/Sending' transform='translate(-6.000000, 0.000000)' fill='%23000000'>            <path d='M11.5,0 L12.5,0 L12.5,1 L11.5,1 L11.5,0 Z M11.5,11 L12.5,11 L12.5,12 L11.5,12 L11.5,11 Z M6,5.5 L7,5.5 L7,6.5 L6,6.5 L6,5.5 Z M17,5.5 L18,5.5 L18,6.5 L17,6.5 L17,5.5 Z M16.9461524,2.5669873 L17.4461524,3.4330127 L16.580127,3.9330127 L16.080127,3.0669873 L16.9461524,2.5669873 Z M7.41987298,8.0669873 L7.91987298,8.9330127 L7.05384758,9.4330127 L6.55384758,8.5669873 L7.41987298,8.0669873 Z M9.4330127,0.553847577 L9.9330127,1.41987298 L9.0669873,1.91987298 L8.5669873,1.05384758 L9.4330127,0.553847577 Z M14.9330127,10.080127 L15.4330127,10.9461524 L14.5669873,11.4461524 L14.0669873,10.580127 L14.9330127,10.080127 Z M14.5669873,0.553847577 L15.4330127,1.05384758 L14.9330127,1.91987298 L14.0669873,1.41987298 L14.5669873,0.553847577 Z M9.0669873,10.080127 L9.9330127,10.580127 L9.4330127,11.4461524 L8.5669873,10.9461524 L9.0669873,10.080127 Z M7.05384758,2.5669873 L7.91987298,3.0669873 L7.41987298,3.9330127 L6.55384758,3.4330127 L7.05384758,2.5669873 Z M16.580127,8.0669873 L17.4461524,8.5669873 L16.9461524,9.4330127 L16.080127,8.9330127 L16.580127,8.0669873 Z' id='sending' fill='%23FFFFFF'></path>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>sending</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='iOS-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='iOS-Light/Message/Status/Sending' transform='translate(-6.000000, 0.000000)' fill='%23000000'>            <path d='M11.5,0 L12.5,0 L12.5,1 L11.5,1 L11.5,0 Z M11.5,11 L12.5,11 L12.5,12 L11.5,12 L11.5,11 Z M6,5.5 L7,5.5 L7,6.5 L6,6.5 L6,5.5 Z M17,5.5 L18,5.5 L18,6.5 L17,6.5 L17,5.5 Z M16.9461524,2.5669873 L17.4461524,3.4330127 L16.580127,3.9330127 L16.080127,3.0669873 L16.9461524,2.5669873 Z M7.41987298,8.0669873 L7.91987298,8.9330127 L7.05384758,9.4330127 L6.55384758,8.5669873 L7.41987298,8.0669873 Z M9.4330127,0.553847577 L9.9330127,1.41987298 L9.0669873,1.91987298 L8.5669873,1.05384758 L9.4330127,0.553847577 Z M14.9330127,10.080127 L15.4330127,10.9461524 L14.5669873,11.4461524 L14.0669873,10.580127 L14.9330127,10.080127 Z M14.5669873,0.553847577 L15.4330127,1.05384758 L14.9330127,1.91987298 L14.0669873,1.41987298 L14.5669873,0.553847577 Z M9.0669873,10.080127 L9.9330127,10.580127 L9.4330127,11.4461524 L8.5669873,10.9461524 L9.0669873,10.080127 Z M7.05384758,2.5669873 L7.91987298,3.0669873 L7.41987298,3.9330127 L6.55384758,3.4330127 L7.05384758,2.5669873 Z M16.580127,8.0669873 L17.4461524,8.5669873 L16.9461524,9.4330127 L16.080127,8.9330127 L16.580127,8.0669873 Z' id='sending' fill='%236B6D70'></path>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -3307,20 +3551,20 @@ body.dark-theme {
     transform: rotate(360deg); } }
 
 .module-message__metadata__status-icon--sent {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>check</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Sent' transform='translate(-6.000000, 0.000000)' fill='%23000000' fill-rule='nonzero'>            <path d='M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='check' fill='%23FFFFFF'></path>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>check</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Sent' transform='translate(-6.000000, 0.000000)' fill='%23000000' fill-rule='nonzero'>            <path d='M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='check' fill='%236B6D70'></path>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-message__metadata__status-icon--delivered {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>double check</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C7.58941091,0.549084144 7.28273546,0.812570593 7.00070199,1.10030099 C6.67734551,1.03453102 6.34268082,1 6,1 C3.24,1 1,3.24 1,6 C1,8.76 3.24,11 6,11 C6.34268082,11 6.67734551,10.965469 7.00070199,10.899699 C7.28273546,11.1874294 7.58941091,11.4509159 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M5.07266453,7.01233547 C5.12977459,7.4065842 5.21974274,7.79019382 5.33970233,8.16029767 L5,8.5 L2.5,6 L3.205,5.295 L5,7.085 L5.07266453,7.01233547 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='path-1' fill='%23FFFFFF'></path>    </defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Delivered'>            <mask id='mask-2' fill='white'>                <use xlink:href='%23path-1'></use>            </mask>            <use id='double-check' fill='%23000000' fill-rule='nonzero' xlink:href='%23path-1'></use>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>double check</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C7.58941091,0.549084144 7.28273546,0.812570593 7.00070199,1.10030099 C6.67734551,1.03453102 6.34268082,1 6,1 C3.24,1 1,3.24 1,6 C1,8.76 3.24,11 6,11 C6.34268082,11 6.67734551,10.965469 7.00070199,10.899699 C7.28273546,11.1874294 7.58941091,11.4509159 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M5.07266453,7.01233547 C5.12977459,7.4065842 5.21974274,7.79019382 5.33970233,8.16029767 L5,8.5 L2.5,6 L3.205,5.295 L5,7.085 L5.07266453,7.01233547 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M12,1 C9.24,1 7,3.24 7,6 C7,8.76 9.24,11 12,11 C14.76,11 17,8.76 17,6 C17,3.24 14.76,1 12,1 Z M11,8.5 L8.5,6 L9.205,5.295 L11,7.085 L14.795,3.29 L15.5,4 L11,8.5 Z' id='path-1' fill='%236B6D70'></path>    </defs>    <g id='Android-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='Android-Light/Message/Status/Delivered'>            <mask id='mask-2' fill='white'>                <use xlink:href='%23path-1'></use>            </mask>            <use id='double-check' fill='%23000000' fill-rule='nonzero' xlink:href='%23path-1'></use>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
   width: 18px; }
 
 .module-message__metadata__status-icon--read {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Read/read-18x12</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C6.15053376,1.58392424 5,3.65760134 5,6 C5,6.343797 5.0247846,6.68180525 5.07266453,7.01233547 L5,7.085 L3.205,5.295 L2.5,6 L5,8.5 L5.33970233,8.16029767 C5.80439817,9.59399486 6.71914823,10.8250231 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M11,8.5 L15.5,4 L14.795,3.29 L11,7.085 L9.205,5.295 L8.5,6 L11,8.5 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='18' height='12'></rect>    </defs>    <g id='Icons/Read/read-18x12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <mask id='mask-2' fill='%23FFFFFF'>            <use xlink:href='%23path-1'></use>        </mask>        <g id='double-check' fill-rule='nonzero'></g>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%23FFFFFF'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%23FFFFFF' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Read/read-18x12</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M7.91731278,0.313257194 C6.15053376,1.58392424 5,3.65760134 5,6 C5,6.343797 5.0247846,6.68180525 5.07266453,7.01233547 L5,7.085 L3.205,5.295 L2.5,6 L5,8.5 L5.33970233,8.16029767 C5.80439817,9.59399486 6.71914823,10.8250231 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M11,8.5 L15.5,4 L14.795,3.29 L11,7.085 L9.205,5.295 L8.5,6 L11,8.5 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='18' height='12'></rect>    </defs>    <g id='Icons/Read/read-18x12' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <mask id='mask-2' fill='%236B6D70'>            <use xlink:href='%23path-1'></use>        </mask>        <g id='double-check' fill-rule='nonzero'></g>        <g id='Color/Dark/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%236B6D70'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%236B6D70' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -3357,85 +3601,85 @@ body.dark-theme {
   display: inline-block;
   margin-left: 6px;
   margin-bottom: 2px;
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 60/timer60_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-60/timer60_12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M6.51360423,1.02605705 L6.5136035,1.02628879 L6.49999983,1.02491092 L6.49999983,6.0000004 L5.49999983,6.0000004 L5.49999983,1.02491092 C4.39176553,1.1356372 3.31344314,1.61548894 2.46446592,2.46446616 C0.511844466,4.41708762 0.511844466,7.58291251 2.46446592,9.53553397 C4.41708738,11.4881554 7.58291228,11.4881554 9.53553374,9.53553397 C10.5118444,8.55922329 10.9999998,7.27961177 10.9999998,6.00000024 L11.9999998,6.00000024 C11.9999998,7.53553409 11.4142133,9.07106792 10.2426405,10.2426408 C7.89949477,12.5857865 4.10050489,12.5857865 1.75735914,10.2426408 C-0.585786607,7.899495 -0.585786607,4.10050513 1.75735914,1.75735938 C3.01051112,0.504207398 4.68007561,-0.0787387759 6.32064441,0.00852085708 C9.4853004,0.175084568 12,2.7938725 12,6 L11,6 C11,3.411981 9.0337411,1.28320638 6.51360423,1.02605705 Z' id='Combined-Shape' fill='%23FFFFFF'></path>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 60/timer60_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-60/timer60_12' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <path d='M6.51360423,1.02605705 L6.5136035,1.02628879 L6.49999983,1.02491092 L6.49999983,6.0000004 L5.49999983,6.0000004 L5.49999983,1.02491092 C4.39176553,1.1356372 3.31344314,1.61548894 2.46446592,2.46446616 C0.511844466,4.41708762 0.511844466,7.58291251 2.46446592,9.53553397 C4.41708738,11.4881554 7.58291228,11.4881554 9.53553374,9.53553397 C10.5118444,8.55922329 10.9999998,7.27961177 10.9999998,6.00000024 L11.9999998,6.00000024 C11.9999998,7.53553409 11.4142133,9.07106792 10.2426405,10.2426408 C7.89949477,12.5857865 4.10050489,12.5857865 1.75735914,10.2426408 C-0.585786607,7.899495 -0.585786607,4.10050513 1.75735914,1.75735938 C3.01051112,0.504207398 4.68007561,-0.0787387759 6.32064441,0.00852085708 C9.4853004,0.175084568 12,2.7938725 12,6 L11,6 C11,3.411981 9.0337411,1.28320638 6.51360423,1.02605705 Z' id='Combined-Shape' fill='%236B6D70'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-expire-timer--55 {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 55/timer55_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-55/timer55_12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M10.8871515,4.93877116 C10.7764707,4.43108229 10.5875051,3.94579225 10.3301269,3.50000021 L10.3308482,3.49958378 C9.46665561,2.00598422 7.8519922,1.00090744 6.00250515,1.00000061 L6.00250515,4.75001343e-07 C8.87812128,0.0011754551 11.2807698,2.02530154 11.8645776,4.72650571 C12.0619293,5.63173625 12.0518761,6.59631008 11.7955548,7.55291434 C10.9379039,10.753711 7.64788218,12.6532059 4.44708556,11.795555 C1.24628894,10.9379042 -0.653205997,7.64788242 0.204444873,4.4470858 C0.681422235,2.66698205 1.91072247,1.28936585 3.45859785,0.564661592 L3.95793802,1.43583792 L3.94546796,1.44144648 L6.4330127,5.75000036 L5.5669873,6.25000036 L3.07944256,1.94144648 C2.17504663,2.5914554 1.48111793,3.54618039 1.1703707,4.70590484 C0.455661641,7.37323536 2.03857409,10.1149201 4.7059046,10.8296292 C7.37323512,11.5443383 10.1149199,9.96142581 10.829629,7.29409529 C10.9454889,6.86170024 11.0009697,6.42735124 11.0012398,6 L11,6 C11,5.63585356 10.9610724,5.28079915 10.8871515,4.93877116 Z' id='Combined-Shape' fill='%23FFFFFF'></path>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 55/timer55_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-55/timer55_12' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <path d='M10.8871515,4.93877116 C10.7764707,4.43108229 10.5875051,3.94579225 10.3301269,3.50000021 L10.3308482,3.49958378 C9.46665561,2.00598422 7.8519922,1.00090744 6.00250515,1.00000061 L6.00250515,4.75001343e-07 C8.87812128,0.0011754551 11.2807698,2.02530154 11.8645776,4.72650571 C12.0619293,5.63173625 12.0518761,6.59631008 11.7955548,7.55291434 C10.9379039,10.753711 7.64788218,12.6532059 4.44708556,11.795555 C1.24628894,10.9379042 -0.653205997,7.64788242 0.204444873,4.4470858 C0.681422235,2.66698205 1.91072247,1.28936585 3.45859785,0.564661592 L3.95793802,1.43583792 L3.94546796,1.44144648 L6.4330127,5.75000036 L5.5669873,6.25000036 L3.07944256,1.94144648 C2.17504663,2.5914554 1.48111793,3.54618039 1.1703707,4.70590484 C0.455661641,7.37323536 2.03857409,10.1149201 4.7059046,10.8296292 C7.37323512,11.5443383 10.1149199,9.96142581 10.829629,7.29409529 C10.9454889,6.86170024 11.0009697,6.42735124 11.0012398,6 L11,6 C11,5.63585356 10.9610724,5.28079915 10.8871515,4.93877116 Z' id='Combined-Shape' fill='%236B6D70'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-expire-timer--50 {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 50/timer50_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-50/timer50_12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M8.49999998,1.66987313 L8.99999998,0.80384773 C10.3298113,1.57161469 11.3667294,2.84668755 11.7955548,4.4470858 C12.6532057,7.64788242 10.7537107,10.9379042 7.5529141,11.795555 C4.35211748,12.6532059 1.06209574,10.753711 0.204444873,7.55291434 C-0.27253249,5.77281059 0.103264647,3.96510985 1.08141192,2.56355986 L1.94944135,3.0683506 L1.94144625,3.07944279 L6.25000012,5.56698754 L5.75000012,6.43301294 L1.44144624,3.9454682 C0.98322086,4.96059039 0.85962347,6.13437085 1.1703707,7.29409529 C1.88507976,9.96142581 4.62676454,11.5443383 7.29409506,10.8296292 C9.96142557,10.1149201 11.544338,7.37323536 10.829629,4.70590484 C10.4722744,3.37223964 9.60817605,2.30967894 8.49999998,1.66987313 Z' id='Combined-Shape' fill='%23FFFFFF'></path>        <path d='M6.00250506,1.00000061 L6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,0 6,0 L6.00250686,5.12480482e-07 C9.31506271,0.0013544265 12,2.68712686 12,6 L11,6 C11,3.23941132 8.76277746,1.00135396 6.00250506,1.00000061 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%23FFFFFF'></path>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 50/timer50_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-50/timer50_12' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <path d='M8.49999998,1.66987313 L8.99999998,0.80384773 C10.3298113,1.57161469 11.3667294,2.84668755 11.7955548,4.4470858 C12.6532057,7.64788242 10.7537107,10.9379042 7.5529141,11.795555 C4.35211748,12.6532059 1.06209574,10.753711 0.204444873,7.55291434 C-0.27253249,5.77281059 0.103264647,3.96510985 1.08141192,2.56355986 L1.94944135,3.0683506 L1.94144625,3.07944279 L6.25000012,5.56698754 L5.75000012,6.43301294 L1.44144624,3.9454682 C0.98322086,4.96059039 0.85962347,6.13437085 1.1703707,7.29409529 C1.88507976,9.96142581 4.62676454,11.5443383 7.29409506,10.8296292 C9.96142557,10.1149201 11.544338,7.37323536 10.829629,4.70590484 C10.4722744,3.37223964 9.60817605,2.30967894 8.49999998,1.66987313 Z' id='Combined-Shape' fill='%236B6D70'></path>        <path d='M6.00250506,1.00000061 L6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,0 6,0 L6.00250686,5.12480482e-07 C9.31506271,0.0013544265 12,2.68712686 12,6 L11,6 C11,3.23941132 8.76277746,1.00135396 6.00250506,1.00000061 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%236B6D70'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-expire-timer--45 {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 45/timer45_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-45/timer45_12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M6.5,0.0207420343 C7.86488252,0.134195174 9.19834876,0.713067624 10.2426405,1.75735938 C12.5857863,4.10050513 12.5857863,7.89949501 10.2426405,10.2426408 C7.89949477,12.5857865 4.1005049,12.5857865 1.75735914,10.2426408 C0.454232755,8.93951437 -0.124167745,7.18610104 0.0221576434,5.48324951 L1.02628856,5.4863964 L1.02491069,5.50000007 L6.00000017,5.50000007 L6.00000017,6.50000007 L1.02491069,6.50000007 C1.13563696,7.60823437 1.61548871,8.68655676 2.46446593,9.53553398 C4.41708738,11.4881554 7.58291228,11.4881554 9.53553374,9.53553398 C11.4881552,7.58291252 11.4881552,4.41708762 9.53553374,2.46446616 C8.60186704,1.53079946 7.39081643,1.04357542 6.16765005,1.00279403 C6.11199694,1.00092412 6.05610639,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,0 6,0 C6.16837661,0 6.33513331,0.00693566443 6.5,0.0205368885 L6.5,0.0207420343 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%23FFFFFF'></path>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 45/timer45_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-45/timer45_12' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <path d='M6.5,0.0207420343 C7.86488252,0.134195174 9.19834876,0.713067624 10.2426405,1.75735938 C12.5857863,4.10050513 12.5857863,7.89949501 10.2426405,10.2426408 C7.89949477,12.5857865 4.1005049,12.5857865 1.75735914,10.2426408 C0.454232755,8.93951437 -0.124167745,7.18610104 0.0221576434,5.48324951 L1.02628856,5.4863964 L1.02491069,5.50000007 L6.00000017,5.50000007 L6.00000017,6.50000007 L1.02491069,6.50000007 C1.13563696,7.60823437 1.61548871,8.68655676 2.46446593,9.53553398 C4.41708738,11.4881554 7.58291228,11.4881554 9.53553374,9.53553398 C11.4881552,7.58291252 11.4881552,4.41708762 9.53553374,2.46446616 C8.60186704,1.53079946 7.39081643,1.04357542 6.16765005,1.00279403 C6.11199694,1.00092412 6.05610639,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,0 6,0 C6.16837661,0 6.33513331,0.00693566443 6.5,0.0205368885 L6.5,0.0207420343 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%236B6D70'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-expire-timer--40 {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 40/timer40_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-40/timer40_12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M6.5,1.02430376 L6.5,1.02468762 C6.33554688,1.00835972 6.1687497,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,-9.97465999e-18 6,-9.97465999e-18 L5.86308481,-6.71970472e-11 C6.4198906,-0.0124561805 6.98779302,0.0530213744 7.5529141,0.204445112 C10.7537107,1.06209598 12.6532057,4.35211772 11.7955548,7.55291434 C10.9379039,10.753711 7.64788218,12.6532059 4.44708556,11.795555 C2.66698181,11.3185777 1.28936562,10.0892774 0.564661357,8.54140205 L1.43583768,8.04206188 L1.44144625,8.05453194 L5.75000012,5.5669872 L6.25000012,6.4330126 L1.94144625,8.92055734 C2.59145516,9.82495327 3.54618016,10.518882 4.70590461,10.8296292 C7.37323512,11.5443383 10.1149199,9.96142581 10.829629,7.29409529 C11.544338,4.62676478 9.96142558,1.88508 7.29409506,1.17037094 C7.02944452,1.09945804 6.764062,1.05116398 6.5,1.02430376 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%23FFFFFF'></path>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 40/timer40_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-40/timer40_12' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <path d='M6.5,1.02430376 L6.5,1.02468762 C6.33554688,1.00835972 6.1687497,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,-9.97465999e-18 6,-9.97465999e-18 L5.86308481,-6.71970472e-11 C6.4198906,-0.0124561805 6.98779302,0.0530213744 7.5529141,0.204445112 C10.7537107,1.06209598 12.6532057,4.35211772 11.7955548,7.55291434 C10.9379039,10.753711 7.64788218,12.6532059 4.44708556,11.795555 C2.66698181,11.3185777 1.28936562,10.0892774 0.564661357,8.54140205 L1.43583768,8.04206188 L1.44144625,8.05453194 L5.75000012,5.5669872 L6.25000012,6.4330126 L1.94144625,8.92055734 C2.59145516,9.82495327 3.54618016,10.518882 4.70590461,10.8296292 C7.37323512,11.5443383 10.1149199,9.96142581 10.829629,7.29409529 C11.544338,4.62676478 9.96142558,1.88508 7.29409506,1.17037094 C7.02944452,1.09945804 6.764062,1.05116398 6.5,1.02430376 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%236B6D70'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-expire-timer--35 {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 35/timer35_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-35/timer35_12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M6.5,1.02370354 L6.5,1.02468762 C6.33554688,1.00835972 6.1687497,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,4.09828421e-17 6,4.09828421e-17 L5.87059244,4.2745538e-14 C8.57132199,-0.0604001451 11.0652567,1.72157611 11.7955548,4.4470858 C12.6532057,7.64788242 10.7537107,10.9379042 7.5529141,11.795555 C5.77281035,12.2725324 3.96510962,11.8967353 2.56355963,10.918588 L3.06835037,10.0505585 L3.07944256,10.0585537 L5.5669873,5.74999978 L6.4330127,6.24999978 L3.94546796,10.5585537 C4.96059016,11.016779 6.13437061,11.1403764 7.29409506,10.8296292 C9.96142558,10.1149201 11.544338,7.37323536 10.829629,4.70590484 C10.2763071,2.64087963 8.50807111,1.22582514 6.5,1.02370354 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%23FFFFFF'></path>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 35/timer35_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-35/timer35_12' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <path d='M6.5,1.02370354 L6.5,1.02468762 C6.33554688,1.00835972 6.1687497,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,4.09828421e-17 6,4.09828421e-17 L5.87059244,4.2745538e-14 C8.57132199,-0.0604001451 11.0652567,1.72157611 11.7955548,4.4470858 C12.6532057,7.64788242 10.7537107,10.9379042 7.5529141,11.795555 C5.77281035,12.2725324 3.96510962,11.8967353 2.56355963,10.918588 L3.06835037,10.0505585 L3.07944256,10.0585537 L5.5669873,5.74999978 L6.4330127,6.24999978 L3.94546796,10.5585537 C4.96059016,11.016779 6.13437061,11.1403764 7.29409506,10.8296292 C9.96142558,10.1149201 11.544338,7.37323536 10.829629,4.70590484 C10.2763071,2.64087963 8.50807111,1.22582514 6.5,1.02370354 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%236B6D70'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-expire-timer--30 {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 30/timer30_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-30/timer30_12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M6.5,0.0207420321 C7.86488252,0.134195172 9.19834876,0.713067621 10.2426405,1.75735938 C12.5857863,4.10050513 12.5857863,7.899495 10.2426405,10.2426408 C8.93951413,11.5457671 7.1861008,12.1241676 5.48324927,11.9778423 L5.48639616,10.9737113 L5.49999983,10.9750892 L5.49999983,5.99999973 L6.49999983,5.99999973 L6.49999983,10.9750892 C7.60823414,10.8643629 8.68655652,10.3845112 9.53553374,9.53553397 C11.4881552,7.58291251 11.4881552,4.41708762 9.53553374,2.46446616 C8.60186739,1.53079981 7.39081733,1.04357578 6.16765141,1.00279407 C6.11199785,1.00092414 6.05610685,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,0 6,0 C6.16837661,0 6.33513331,0.00693566443 6.5,0.0205368885 L6.5,0.0207420321 Z M2.57725574,10.928367 L3.07933111,10.0587469 C3.21358774,10.1551138 3.35385847,10.2457522 3.5,10.330127 C3.64614153,10.4145019 3.79477198,10.4906607 3.94535651,10.5587469 L3.44328115,11.428367 C3.2937018,11.3577126 3.14581842,11.2803407 3,11.1961524 C2.85418158,11.1119641 2.71323387,11.0225793 2.57725574,10.928367 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%23FFFFFF'></path>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 30/timer30_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-30/timer30_12' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <path d='M6.5,0.0207420321 C7.86488252,0.134195172 9.19834876,0.713067621 10.2426405,1.75735938 C12.5857863,4.10050513 12.5857863,7.899495 10.2426405,10.2426408 C8.93951413,11.5457671 7.1861008,12.1241676 5.48324927,11.9778423 L5.48639616,10.9737113 L5.49999983,10.9750892 L5.49999983,5.99999973 L6.49999983,5.99999973 L6.49999983,10.9750892 C7.60823414,10.8643629 8.68655652,10.3845112 9.53553374,9.53553397 C11.4881552,7.58291251 11.4881552,4.41708762 9.53553374,2.46446616 C8.60186739,1.53079981 7.39081733,1.04357578 6.16765141,1.00279407 C6.11199785,1.00092414 6.05610685,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,0 6,0 C6.16837661,0 6.33513331,0.00693566443 6.5,0.0205368885 L6.5,0.0207420321 Z M2.57725574,10.928367 L3.07933111,10.0587469 C3.21358774,10.1551138 3.35385847,10.2457522 3.5,10.330127 C3.64614153,10.4145019 3.79477198,10.4906607 3.94535651,10.5587469 L3.44328115,11.428367 C3.2937018,11.3577126 3.14581842,11.2803407 3,11.1961524 C2.85418158,11.1119641 2.71323387,11.0225793 2.57725574,10.928367 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%236B6D70'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-expire-timer--25 {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 25/timer25_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-25/timer25_12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M6.5,1.02430376 L6.5,1.02468762 C6.33554688,1.00835972 6.1687497,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,4.81385765e-17 6,4.81385765e-17 L5.86308468,4.16843209e-14 C6.41989052,-0.012456193 6.98779298,0.0530213603 7.5529141,0.204445109 C10.7537107,1.06209598 12.6532057,4.35211772 11.7955548,7.55291434 C11.3185774,9.33301809 10.0892772,10.7106343 8.54140181,11.4353385 L8.04206164,10.5641622 L8.0545317,10.5585537 L5.56698696,6.24999978 L6.43301237,5.74999978 L8.92055711,10.0585537 C9.82495303,9.40854474 10.5188817,8.45381974 10.829629,7.29409529 C11.544338,4.62676478 9.96142558,1.88507999 7.29409506,1.17037094 C7.02944452,1.09945804 6.764062,1.05116398 6.5,1.02430376 Z M2.57725574,10.928367 L3.07933111,10.0587469 C3.21358774,10.1551138 3.35385847,10.2457522 3.5,10.330127 C3.64614153,10.4145019 3.79477198,10.4906607 3.94535651,10.5587469 L3.44328115,11.428367 C3.2937018,11.3577126 3.14581842,11.2803407 3,11.1961524 C2.85418158,11.1119641 2.71323387,11.0225793 2.57725574,10.928367 Z M5.5,11.9794631 L5.5,10.9753124 C5.66445312,10.9916403 5.8312503,11 6,11 C6.1687497,11 6.33554688,10.9916403 6.5,10.9753124 L6.5,11.9794631 C6.33513331,11.9930643 6.16837661,12 6,12 C5.83162339,12 5.66486669,11.9930643 5.5,11.9794631 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%23FFFFFF'></path>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 25/timer25_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-25/timer25_12' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <path d='M6.5,1.02430376 L6.5,1.02468762 C6.33554688,1.00835972 6.1687497,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,4.81385765e-17 6,4.81385765e-17 L5.86308468,4.16843209e-14 C6.41989052,-0.012456193 6.98779298,0.0530213603 7.5529141,0.204445109 C10.7537107,1.06209598 12.6532057,4.35211772 11.7955548,7.55291434 C11.3185774,9.33301809 10.0892772,10.7106343 8.54140181,11.4353385 L8.04206164,10.5641622 L8.0545317,10.5585537 L5.56698696,6.24999978 L6.43301237,5.74999978 L8.92055711,10.0585537 C9.82495303,9.40854474 10.5188817,8.45381974 10.829629,7.29409529 C11.544338,4.62676478 9.96142558,1.88507999 7.29409506,1.17037094 C7.02944452,1.09945804 6.764062,1.05116398 6.5,1.02430376 Z M2.57725574,10.928367 L3.07933111,10.0587469 C3.21358774,10.1551138 3.35385847,10.2457522 3.5,10.330127 C3.64614153,10.4145019 3.79477198,10.4906607 3.94535651,10.5587469 L3.44328115,11.428367 C3.2937018,11.3577126 3.14581842,11.2803407 3,11.1961524 C2.85418158,11.1119641 2.71323387,11.0225793 2.57725574,10.928367 Z M5.5,11.9794631 L5.5,10.9753124 C5.66445312,10.9916403 5.8312503,11 6,11 C6.1687497,11 6.33554688,10.9916403 6.5,10.9753124 L6.5,11.9794631 C6.33513331,11.9930643 6.16837661,12 6,12 C5.83162339,12 5.66486669,11.9930643 5.5,11.9794631 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%236B6D70'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-expire-timer--20 {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 20/timer20_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-20/timer20_12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M6.5,1.02370353 L6.5,1.02468762 C6.33554688,1.00835972 6.1687497,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,-1.1492543e-17 6,-1.1492543e-17 L5.87059232,4.19252306e-14 C8.57132191,-0.0604002043 11.0652567,1.72157607 11.7955548,4.4470858 C12.2725322,6.22718955 11.896735,8.03489028 10.9185877,9.43644027 L10.0505583,8.93164953 L10.0585534,8.92055734 L5.74999954,6.4330126 L6.24999954,5.5669872 L10.5585534,8.05453194 C11.0167788,7.03940974 11.1403762,5.86562929 10.829629,4.70590484 C10.2763071,2.64087962 8.50807111,1.22582513 6.5,1.02370353 Z M8.55671885,11.428367 L8.05464349,10.5587469 C8.20522802,10.4906607 8.35385847,10.4145019 8.5,10.330127 C8.64614153,10.2457522 8.78641226,10.1551138 8.92066889,10.0587469 L9.42274426,10.928367 C9.28676613,11.0225793 9.14581842,11.1119641 9,11.1961524 C8.85418158,11.2803407 8.7062982,11.3577126 8.55671885,11.428367 Z M2.57725574,10.928367 L3.07933111,10.0587469 C3.21358774,10.1551138 3.35385847,10.2457522 3.5,10.330127 C3.64614153,10.4145019 3.79477198,10.4906607 3.94535651,10.5587469 L3.44328115,11.428367 C3.2937018,11.3577126 3.14581842,11.2803407 3,11.1961524 C2.85418158,11.1119641 2.71323387,11.0225793 2.57725574,10.928367 Z M5.5,11.9794631 L5.5,10.9753124 C5.66445312,10.9916403 5.8312503,11 6,11 C6.1687497,11 6.33554688,10.9916403 6.5,10.9753124 L6.5,11.9794631 C6.33513331,11.9930643 6.16837661,12 6,12 C5.83162339,12 5.66486669,11.9930643 5.5,11.9794631 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%23FFFFFF'></path>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 20/timer20_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-20/timer20_12' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <path d='M6.5,1.02370353 L6.5,1.02468762 C6.33554688,1.00835972 6.1687497,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,-1.1492543e-17 6,-1.1492543e-17 L5.87059232,4.19252306e-14 C8.57132191,-0.0604002043 11.0652567,1.72157607 11.7955548,4.4470858 C12.2725322,6.22718955 11.896735,8.03489028 10.9185877,9.43644027 L10.0505583,8.93164953 L10.0585534,8.92055734 L5.74999954,6.4330126 L6.24999954,5.5669872 L10.5585534,8.05453194 C11.0167788,7.03940974 11.1403762,5.86562929 10.829629,4.70590484 C10.2763071,2.64087962 8.50807111,1.22582513 6.5,1.02370353 Z M8.55671885,11.428367 L8.05464349,10.5587469 C8.20522802,10.4906607 8.35385847,10.4145019 8.5,10.330127 C8.64614153,10.2457522 8.78641226,10.1551138 8.92066889,10.0587469 L9.42274426,10.928367 C9.28676613,11.0225793 9.14581842,11.1119641 9,11.1961524 C8.85418158,11.2803407 8.7062982,11.3577126 8.55671885,11.428367 Z M2.57725574,10.928367 L3.07933111,10.0587469 C3.21358774,10.1551138 3.35385847,10.2457522 3.5,10.330127 C3.64614153,10.4145019 3.79477198,10.4906607 3.94535651,10.5587469 L3.44328115,11.428367 C3.2937018,11.3577126 3.14581842,11.2803407 3,11.1961524 C2.85418158,11.1119641 2.71323387,11.0225793 2.57725574,10.928367 Z M5.5,11.9794631 L5.5,10.9753124 C5.66445312,10.9916403 5.8312503,11 6,11 C6.1687497,11 6.33554688,10.9916403 6.5,10.9753124 L6.5,11.9794631 C6.33513331,11.9930643 6.16837661,12 6,12 C5.83162339,12 5.66486669,11.9930643 5.5,11.9794631 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%236B6D70'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-expire-timer--15 {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 15/timer15_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-15/timer15_12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M6.5,0.0207420606 C7.86488275,0.134195272 9.19834885,0.713067711 10.2426405,1.75735938 C11.5457669,3.06048577 12.1241674,4.8138991 11.977842,6.51675063 L10.9737111,6.51360374 L10.975089,6.50000007 L5.9999995,6.50000007 L5.9999995,5.50000007 L10.975089,5.50000007 C10.8643627,4.39176576 10.384511,3.31344338 9.53553374,2.46446616 C8.55922305,1.48815547 7.27961153,1.00000011 6,1.00000007 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,0 6,0 C6.16837661,0 6.33513331,0.00693566443 6.5,0.0205368885 L6.5,0.0207420606 Z M10.928367,9.42274426 L10.0587469,8.92066889 C10.1551138,8.78641226 10.2457522,8.64614153 10.330127,8.5 C10.4145019,8.35385847 10.4906607,8.20522802 10.5587469,8.05464349 L11.428367,8.55671885 C11.3577126,8.7062982 11.2803407,8.85418158 11.1961524,9 C11.1119641,9.14581842 11.0225793,9.28676613 10.928367,9.42274426 Z M8.55671885,11.428367 L8.05464349,10.5587469 C8.20522802,10.4906607 8.35385847,10.4145019 8.5,10.330127 C8.64614153,10.2457522 8.78641226,10.1551138 8.92066889,10.0587469 L9.42274426,10.928367 C9.28676613,11.0225793 9.14581842,11.1119641 9,11.1961524 C8.85418158,11.2803407 8.7062982,11.3577126 8.55671885,11.428367 Z M2.57725574,10.928367 L3.07933111,10.0587469 C3.21358774,10.1551138 3.35385847,10.2457522 3.5,10.330127 C3.64614153,10.4145019 3.79477198,10.4906607 3.94535651,10.5587469 L3.44328115,11.428367 C3.2937018,11.3577126 3.14581842,11.2803407 3,11.1961524 C2.85418158,11.1119641 2.71323387,11.0225793 2.57725574,10.928367 Z M5.5,11.9794631 L5.5,10.9753124 C5.66445312,10.9916403 5.8312503,11 6,11 C6.1687497,11 6.33554688,10.9916403 6.5,10.9753124 L6.5,11.9794631 C6.33513331,11.9930643 6.16837661,12 6,12 C5.83162339,12 5.66486669,11.9930643 5.5,11.9794631 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -1.13006288e-12,6.16837661 -1.13009381e-12,6 C-1.13012474e-12,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%23FFFFFF'></path>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 15/timer15_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-15/timer15_12' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <path d='M6.5,0.0207420606 C7.86488275,0.134195272 9.19834885,0.713067711 10.2426405,1.75735938 C11.5457669,3.06048577 12.1241674,4.8138991 11.977842,6.51675063 L10.9737111,6.51360374 L10.975089,6.50000007 L5.9999995,6.50000007 L5.9999995,5.50000007 L10.975089,5.50000007 C10.8643627,4.39176576 10.384511,3.31344338 9.53553374,2.46446616 C8.55922305,1.48815547 7.27961153,1.00000011 6,1.00000007 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,0 6,0 C6.16837661,0 6.33513331,0.00693566443 6.5,0.0205368885 L6.5,0.0207420606 Z M10.928367,9.42274426 L10.0587469,8.92066889 C10.1551138,8.78641226 10.2457522,8.64614153 10.330127,8.5 C10.4145019,8.35385847 10.4906607,8.20522802 10.5587469,8.05464349 L11.428367,8.55671885 C11.3577126,8.7062982 11.2803407,8.85418158 11.1961524,9 C11.1119641,9.14581842 11.0225793,9.28676613 10.928367,9.42274426 Z M8.55671885,11.428367 L8.05464349,10.5587469 C8.20522802,10.4906607 8.35385847,10.4145019 8.5,10.330127 C8.64614153,10.2457522 8.78641226,10.1551138 8.92066889,10.0587469 L9.42274426,10.928367 C9.28676613,11.0225793 9.14581842,11.1119641 9,11.1961524 C8.85418158,11.2803407 8.7062982,11.3577126 8.55671885,11.428367 Z M2.57725574,10.928367 L3.07933111,10.0587469 C3.21358774,10.1551138 3.35385847,10.2457522 3.5,10.330127 C3.64614153,10.4145019 3.79477198,10.4906607 3.94535651,10.5587469 L3.44328115,11.428367 C3.2937018,11.3577126 3.14581842,11.2803407 3,11.1961524 C2.85418158,11.1119641 2.71323387,11.0225793 2.57725574,10.928367 Z M5.5,11.9794631 L5.5,10.9753124 C5.66445312,10.9916403 5.8312503,11 6,11 C6.1687497,11 6.33554688,10.9916403 6.5,10.9753124 L6.5,11.9794631 C6.33513331,11.9930643 6.16837661,12 6,12 C5.83162339,12 5.66486669,11.9930643 5.5,11.9794631 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -1.13006288e-12,6.16837661 -1.13009381e-12,6 C-1.13012474e-12,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%236B6D70'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-expire-timer--10 {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 10/timer10_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-10/timer10_12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M6.5,1.02430376 L6.5,1.02468762 C6.33554688,1.00835972 6.1687497,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,1.62630326e-17 6,1.62630326e-17 L5.86308464,3.75931924e-14 C6.41989049,-0.0124561971 6.98779297,0.0530213558 7.5529141,0.204445108 C9.33301785,0.681422471 10.710634,1.91072271 11.4353383,3.45859809 L10.564162,3.95793826 L10.5585534,3.9454682 L6.24999954,6.43301294 L5.74999954,5.56698753 L10.0585534,3.07944279 C9.4085445,2.17504687 8.45381951,1.48111816 7.29409506,1.17037093 C7.02944452,1.09945804 6.764062,1.05116398 6.5,1.02430376 Z M11.9794631,6.5 L10.9753124,6.5 C10.9916403,6.33554688 11,6.1687497 11,6 C11,5.8312503 10.9916403,5.66445312 10.9753124,5.5 L11.9794631,5.5 C11.9930643,5.66486669 12,5.83162339 12,6 C12,6.16837661 11.9930643,6.33513331 11.9794631,6.5 Z M10.928367,9.42274426 L10.0587469,8.92066889 C10.1551138,8.78641226 10.2457522,8.64614153 10.330127,8.5 C10.4145019,8.35385847 10.4906607,8.20522802 10.5587469,8.05464349 L11.428367,8.55671885 C11.3577126,8.7062982 11.2803407,8.85418158 11.1961524,9 C11.1119641,9.14581842 11.0225793,9.28676613 10.928367,9.42274426 Z M8.55671885,11.428367 L8.05464349,10.5587469 C8.20522802,10.4906607 8.35385847,10.4145019 8.5,10.330127 C8.64614153,10.2457522 8.78641226,10.1551138 8.92066889,10.0587469 L9.42274426,10.928367 C9.28676613,11.0225793 9.14581842,11.1119641 9,11.1961524 C8.85418158,11.2803407 8.7062982,11.3577126 8.55671885,11.428367 Z M2.57725574,10.928367 L3.07933111,10.0587469 C3.21358774,10.1551138 3.35385847,10.2457522 3.5,10.330127 C3.64614153,10.4145019 3.79477198,10.4906607 3.94535651,10.5587469 L3.44328115,11.428367 C3.2937018,11.3577126 3.14581842,11.2803407 3,11.1961524 C2.85418158,11.1119641 2.71323387,11.0225793 2.57725574,10.928367 Z M5.5,11.9794631 L5.5,10.9753124 C5.66445312,10.9916403 5.8312503,11 6,11 C6.1687497,11 6.33554688,10.9916403 6.5,10.9753124 L6.5,11.9794631 C6.33513331,11.9930643 6.16837661,12 6,12 C5.83162339,12 5.66486669,11.9930643 5.5,11.9794631 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%23FFFFFF'></path>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 10/timer10_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-10/timer10_12' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <path d='M6.5,1.02430376 L6.5,1.02468762 C6.33554688,1.00835972 6.1687497,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,1.62630326e-17 6,1.62630326e-17 L5.86308464,3.75931924e-14 C6.41989049,-0.0124561971 6.98779297,0.0530213558 7.5529141,0.204445108 C9.33301785,0.681422471 10.710634,1.91072271 11.4353383,3.45859809 L10.564162,3.95793826 L10.5585534,3.9454682 L6.24999954,6.43301294 L5.74999954,5.56698753 L10.0585534,3.07944279 C9.4085445,2.17504687 8.45381951,1.48111816 7.29409506,1.17037093 C7.02944452,1.09945804 6.764062,1.05116398 6.5,1.02430376 Z M11.9794631,6.5 L10.9753124,6.5 C10.9916403,6.33554688 11,6.1687497 11,6 C11,5.8312503 10.9916403,5.66445312 10.9753124,5.5 L11.9794631,5.5 C11.9930643,5.66486669 12,5.83162339 12,6 C12,6.16837661 11.9930643,6.33513331 11.9794631,6.5 Z M10.928367,9.42274426 L10.0587469,8.92066889 C10.1551138,8.78641226 10.2457522,8.64614153 10.330127,8.5 C10.4145019,8.35385847 10.4906607,8.20522802 10.5587469,8.05464349 L11.428367,8.55671885 C11.3577126,8.7062982 11.2803407,8.85418158 11.1961524,9 C11.1119641,9.14581842 11.0225793,9.28676613 10.928367,9.42274426 Z M8.55671885,11.428367 L8.05464349,10.5587469 C8.20522802,10.4906607 8.35385847,10.4145019 8.5,10.330127 C8.64614153,10.2457522 8.78641226,10.1551138 8.92066889,10.0587469 L9.42274426,10.928367 C9.28676613,11.0225793 9.14581842,11.1119641 9,11.1961524 C8.85418158,11.2803407 8.7062982,11.3577126 8.55671885,11.428367 Z M2.57725574,10.928367 L3.07933111,10.0587469 C3.21358774,10.1551138 3.35385847,10.2457522 3.5,10.330127 C3.64614153,10.4145019 3.79477198,10.4906607 3.94535651,10.5587469 L3.44328115,11.428367 C3.2937018,11.3577126 3.14581842,11.2803407 3,11.1961524 C2.85418158,11.1119641 2.71323387,11.0225793 2.57725574,10.928367 Z M5.5,11.9794631 L5.5,10.9753124 C5.66445312,10.9916403 5.8312503,11 6,11 C6.1687497,11 6.33554688,10.9916403 6.5,10.9753124 L6.5,11.9794631 C6.33513331,11.9930643 6.16837661,12 6,12 C5.83162339,12 5.66486669,11.9930643 5.5,11.9794631 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%236B6D70'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-expire-timer--05 {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 05/timer05_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-05/timer05_12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M6.5,1.02370353 L6.5,1.02468762 C6.33554688,1.00835972 6.1687497,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,4.42354486e-17 6,4.42354486e-17 L5.87059234,-7.37983893e-14 C7.16354589,-0.0289161279 8.40910326,0.364429763 9.43644004,1.08141215 L8.9316493,1.94944159 L8.92055711,1.94144648 L6.43301236,6.25000036 L5.56698696,5.75000036 L8.0545317,1.44144648 C7.56661533,1.2212014 7.04204534,1.07826289 6.5,1.02370353 Z M11.428367,3.44328115 L10.5587469,3.94535651 C10.4906607,3.79477198 10.4145019,3.64614153 10.330127,3.5 C10.2457522,3.35385847 10.1551138,3.21358774 10.0587469,3.07933111 L10.928367,2.57725574 C11.0225793,2.71323387 11.1119641,2.85418158 11.1961524,3 C11.2803407,3.14581842 11.3577126,3.2937018 11.428367,3.44328115 Z M11.9794631,6.5 L10.9753124,6.5 C10.9916403,6.33554688 11,6.1687497 11,6 C11,5.8312503 10.9916403,5.66445312 10.9753124,5.5 L11.9794631,5.5 C11.9930643,5.66486669 12,5.83162339 12,6 C12,6.16837661 11.9930643,6.33513331 11.9794631,6.5 Z M10.928367,9.42274426 L10.0587469,8.92066889 C10.1551138,8.78641226 10.2457522,8.64614153 10.330127,8.5 C10.4145019,8.35385847 10.4906607,8.20522802 10.5587469,8.05464349 L11.428367,8.55671885 C11.3577126,8.7062982 11.2803407,8.85418158 11.1961524,9 C11.1119641,9.14581842 11.0225793,9.28676613 10.928367,9.42274426 Z M8.55671885,11.428367 L8.05464349,10.5587469 C8.20522802,10.4906607 8.35385847,10.4145019 8.5,10.330127 C8.64614153,10.2457522 8.78641226,10.1551138 8.92066889,10.0587469 L9.42274426,10.928367 C9.28676613,11.0225793 9.14581842,11.1119641 9,11.1961524 C8.85418158,11.2803407 8.7062982,11.3577126 8.55671885,11.428367 Z M2.57725574,10.928367 L3.07933111,10.0587469 C3.21358774,10.1551138 3.35385847,10.2457522 3.5,10.330127 C3.64614153,10.4145019 3.79477198,10.4906607 3.94535651,10.5587469 L3.44328115,11.428367 C3.2937018,11.3577126 3.14581842,11.2803407 3,11.1961524 C2.85418158,11.1119641 2.71323387,11.0225793 2.57725574,10.928367 Z M5.5,11.9794631 L5.5,10.9753124 C5.66445312,10.9916403 5.8312503,11 6,11 C6.1687497,11 6.33554688,10.9916403 6.5,10.9753124 L6.5,11.9794631 C6.33513331,11.9930643 6.16837661,12 6,12 C5.83162339,12 5.66486669,11.9930643 5.5,11.9794631 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%23FFFFFF'></path>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 05/timer05_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-05/timer05_12' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <path d='M6.5,1.02370353 L6.5,1.02468762 C6.33554688,1.00835972 6.1687497,1 6,1 C5.8312503,1 5.66445312,1.00835972 5.5,1.02468762 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,4.42354486e-17 6,4.42354486e-17 L5.87059234,-7.37983893e-14 C7.16354589,-0.0289161279 8.40910326,0.364429763 9.43644004,1.08141215 L8.9316493,1.94944159 L8.92055711,1.94144648 L6.43301236,6.25000036 L5.56698696,5.75000036 L8.0545317,1.44144648 C7.56661533,1.2212014 7.04204534,1.07826289 6.5,1.02370353 Z M11.428367,3.44328115 L10.5587469,3.94535651 C10.4906607,3.79477198 10.4145019,3.64614153 10.330127,3.5 C10.2457522,3.35385847 10.1551138,3.21358774 10.0587469,3.07933111 L10.928367,2.57725574 C11.0225793,2.71323387 11.1119641,2.85418158 11.1961524,3 C11.2803407,3.14581842 11.3577126,3.2937018 11.428367,3.44328115 Z M11.9794631,6.5 L10.9753124,6.5 C10.9916403,6.33554688 11,6.1687497 11,6 C11,5.8312503 10.9916403,5.66445312 10.9753124,5.5 L11.9794631,5.5 C11.9930643,5.66486669 12,5.83162339 12,6 C12,6.16837661 11.9930643,6.33513331 11.9794631,6.5 Z M10.928367,9.42274426 L10.0587469,8.92066889 C10.1551138,8.78641226 10.2457522,8.64614153 10.330127,8.5 C10.4145019,8.35385847 10.4906607,8.20522802 10.5587469,8.05464349 L11.428367,8.55671885 C11.3577126,8.7062982 11.2803407,8.85418158 11.1961524,9 C11.1119641,9.14581842 11.0225793,9.28676613 10.928367,9.42274426 Z M8.55671885,11.428367 L8.05464349,10.5587469 C8.20522802,10.4906607 8.35385847,10.4145019 8.5,10.330127 C8.64614153,10.2457522 8.78641226,10.1551138 8.92066889,10.0587469 L9.42274426,10.928367 C9.28676613,11.0225793 9.14581842,11.1119641 9,11.1961524 C8.85418158,11.2803407 8.7062982,11.3577126 8.55671885,11.428367 Z M2.57725574,10.928367 L3.07933111,10.0587469 C3.21358774,10.1551138 3.35385847,10.2457522 3.5,10.330127 C3.64614153,10.4145019 3.79477198,10.4906607 3.94535651,10.5587469 L3.44328115,11.428367 C3.2937018,11.3577126 3.14581842,11.2803407 3,11.1961524 C2.85418158,11.1119641 2.71323387,11.0225793 2.57725574,10.928367 Z M5.5,11.9794631 L5.5,10.9753124 C5.66445312,10.9916403 5.8312503,11 6,11 C6.1687497,11 6.33554688,10.9916403 6.5,10.9753124 L6.5,11.9794631 C6.33513331,11.9930643 6.16837661,12 6,12 C5.83162339,12 5.66486669,11.9930643 5.5,11.9794631 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z' id='Combined-Shape' fill='%236B6D70'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-expire-timer--00 {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 00/timer00_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-00/timer00_12' stroke='none' stroke-width='1' fill='%23FFFFFF' fill-rule='evenodd'>        <path d='M11.428367,3.44328115 L10.5587469,3.94535651 C10.4906607,3.79477198 10.4145019,3.64614153 10.330127,3.5 C10.2457522,3.35385847 10.1551138,3.21358774 10.0587469,3.07933111 L10.928367,2.57725574 C11.0225793,2.71323387 11.1119641,2.85418158 11.1961524,3 C11.2803407,3.14581842 11.3577126,3.2937018 11.428367,3.44328115 Z M9.42274426,1.07163304 L8.92066889,1.94125309 C8.78641226,1.84488615 8.64614153,1.75424783 8.5,1.66987298 C8.35385847,1.58549813 8.20522802,1.50933927 8.05464349,1.44125309 L8.55671885,0.571633044 C8.7062982,0.642287382 8.85418158,0.719659271 9,0.803847577 C9.14581842,0.888035884 9.28676613,0.977420696 9.42274426,1.07163304 Z M11.9794631,6.5 L10.9753124,6.5 C10.9916403,6.33554688 11,6.1687497 11,6 C11,5.8312503 10.9916403,5.66445312 10.9753124,5.5 L11.9794631,5.5 C11.9930643,5.66486669 12,5.83162339 12,6 C12,6.16837661 11.9930643,6.33513331 11.9794631,6.5 Z M10.928367,9.42274426 L10.0587469,8.92066889 C10.1551138,8.78641226 10.2457522,8.64614153 10.330127,8.5 C10.4145019,8.35385847 10.4906607,8.20522802 10.5587469,8.05464349 L11.428367,8.55671885 C11.3577126,8.7062982 11.2803407,8.85418158 11.1961524,9 C11.1119641,9.14581842 11.0225793,9.28676613 10.928367,9.42274426 Z M8.55671885,11.428367 L8.05464349,10.5587469 C8.20522802,10.4906607 8.35385847,10.4145019 8.5,10.330127 C8.64614153,10.2457522 8.78641226,10.1551138 8.92066889,10.0587469 L9.42274426,10.928367 C9.28676613,11.0225793 9.14581842,11.1119641 9,11.1961524 C8.85418158,11.2803407 8.7062982,11.3577126 8.55671885,11.428367 Z M2.57725574,10.928367 L3.07933111,10.0587469 C3.21358774,10.1551138 3.35385847,10.2457522 3.5,10.330127 C3.64614153,10.4145019 3.79477198,10.4906607 3.94535651,10.5587469 L3.44328115,11.428367 C3.2937018,11.3577126 3.14581842,11.2803407 3,11.1961524 C2.85418158,11.1119641 2.71323387,11.0225793 2.57725574,10.928367 Z M5.5,11.9794631 L5.5,10.9753124 C5.66445312,10.9916403 5.8312503,11 6,11 C6.1687497,11 6.33554688,10.9916403 6.5,10.9753124 L6.5,11.9794631 C6.33513331,11.9930643 6.16837661,12 6,12 C5.83162339,12 5.66486669,11.9930643 5.5,11.9794631 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z M6.5,0.0205368885 L6.5,7 L5.5,7 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,5.01e-14 6,5.01e-14 C6.16837661,5.01e-14 6.33513331,0.00693566443 6.5,0.0205368885 Z' id='Combined-Shape' fill='%23FFFFFF'></path>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Timer 00/timer00_12</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Icons/Timer-00/timer00_12' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <path d='M11.428367,3.44328115 L10.5587469,3.94535651 C10.4906607,3.79477198 10.4145019,3.64614153 10.330127,3.5 C10.2457522,3.35385847 10.1551138,3.21358774 10.0587469,3.07933111 L10.928367,2.57725574 C11.0225793,2.71323387 11.1119641,2.85418158 11.1961524,3 C11.2803407,3.14581842 11.3577126,3.2937018 11.428367,3.44328115 Z M9.42274426,1.07163304 L8.92066889,1.94125309 C8.78641226,1.84488615 8.64614153,1.75424783 8.5,1.66987298 C8.35385847,1.58549813 8.20522802,1.50933927 8.05464349,1.44125309 L8.55671885,0.571633044 C8.7062982,0.642287382 8.85418158,0.719659271 9,0.803847577 C9.14581842,0.888035884 9.28676613,0.977420696 9.42274426,1.07163304 Z M11.9794631,6.5 L10.9753124,6.5 C10.9916403,6.33554688 11,6.1687497 11,6 C11,5.8312503 10.9916403,5.66445312 10.9753124,5.5 L11.9794631,5.5 C11.9930643,5.66486669 12,5.83162339 12,6 C12,6.16837661 11.9930643,6.33513331 11.9794631,6.5 Z M10.928367,9.42274426 L10.0587469,8.92066889 C10.1551138,8.78641226 10.2457522,8.64614153 10.330127,8.5 C10.4145019,8.35385847 10.4906607,8.20522802 10.5587469,8.05464349 L11.428367,8.55671885 C11.3577126,8.7062982 11.2803407,8.85418158 11.1961524,9 C11.1119641,9.14581842 11.0225793,9.28676613 10.928367,9.42274426 Z M8.55671885,11.428367 L8.05464349,10.5587469 C8.20522802,10.4906607 8.35385847,10.4145019 8.5,10.330127 C8.64614153,10.2457522 8.78641226,10.1551138 8.92066889,10.0587469 L9.42274426,10.928367 C9.28676613,11.0225793 9.14581842,11.1119641 9,11.1961524 C8.85418158,11.2803407 8.7062982,11.3577126 8.55671885,11.428367 Z M2.57725574,10.928367 L3.07933111,10.0587469 C3.21358774,10.1551138 3.35385847,10.2457522 3.5,10.330127 C3.64614153,10.4145019 3.79477198,10.4906607 3.94535651,10.5587469 L3.44328115,11.428367 C3.2937018,11.3577126 3.14581842,11.2803407 3,11.1961524 C2.85418158,11.1119641 2.71323387,11.0225793 2.57725574,10.928367 Z M5.5,11.9794631 L5.5,10.9753124 C5.66445312,10.9916403 5.8312503,11 6,11 C6.1687497,11 6.33554688,10.9916403 6.5,10.9753124 L6.5,11.9794631 C6.33513331,11.9930643 6.16837661,12 6,12 C5.83162339,12 5.66486669,11.9930643 5.5,11.9794631 Z M0.571633044,8.55671885 L1.44125309,8.05464349 C1.50933927,8.20522802 1.58549813,8.35385847 1.66987298,8.5 C1.75424783,8.64614153 1.84488615,8.78641226 1.94125309,8.92066889 L1.07163304,9.42274426 C0.977420696,9.28676613 0.888035884,9.14581842 0.803847577,9 C0.719659271,8.85418158 0.642287382,8.7062982 0.571633044,8.55671885 Z M0.0205368885,5.5 L1.02468762,5.5 C1.00835972,5.66445312 1,5.8312503 1,6 C1,6.1687497 1.00835972,6.33554688 1.02468762,6.5 L0.0205368885,6.5 C0.00693566443,6.33513331 -9.95062878e-13,6.16837661 -9.95093808e-13,6 C-9.95124738e-13,5.83162339 0.00693566443,5.66486669 0.0205368885,5.5 Z M1.07163304,2.57725574 L1.94125309,3.07933111 C1.84488615,3.21358774 1.75424783,3.35385847 1.66987298,3.5 C1.58549813,3.64614153 1.50933927,3.79477198 1.44125309,3.94535651 L0.571633044,3.44328115 C0.642287382,3.2937018 0.719659271,3.14581842 0.803847577,3 C0.888035884,2.85418158 0.977420696,2.71323387 1.07163304,2.57725574 Z M3.44328115,0.571633044 L3.94535651,1.44125309 C3.79477198,1.50933927 3.64614153,1.58549813 3.5,1.66987298 C3.35385847,1.75424783 3.21358774,1.84488615 3.07933111,1.94125309 L2.57725574,1.07163304 C2.71323387,0.977420696 2.85418158,0.888035884 3,0.803847577 C3.14581842,0.719659271 3.2937018,0.642287382 3.44328115,0.571633044 Z M6.5,0.0205368885 L6.5,7 L5.5,7 L5.5,0.0205368885 C5.66486669,0.00693566443 5.83162339,5.01e-14 6,5.01e-14 C6.16837661,5.01e-14 6.33513331,0.00693566443 6.5,0.0205368885 Z' id='Combined-Shape' fill='%236B6D70'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-expire-timer--incoming {
-  background-color: #636467; }
+  background-color: rgba(255, 255, 255, 0.8); }
 
 .module-expire-timer--with-image-no-caption {
   background-color: #ffffff; }
@@ -3473,89 +3717,89 @@ body.dark-theme {
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px; }
 
-.module-quote--incoming {
+.module-quote--outgoing {
   border-left-color: #6b6b78;
   background-color: #bebec6; }
 
-.module-quote--incoming-red {
+.module-quote--outgoing-red {
   border-left-color: #cc163d;
   background-color: #eda6ae; }
 
-.module-quote--incoming-deep_orange {
+.module-quote--outgoing-deep_orange {
   border-left-color: #c73800;
   background-color: #eba78e; }
 
-.module-quote--incoming-brown {
+.module-quote--outgoing-brown {
   border-left-color: #746c53;
   background-color: #c4b997; }
 
-.module-quote--incoming-pink {
+.module-quote--outgoing-pink {
   border-left-color: #a23474;
   background-color: #dcb2ca; }
 
-.module-quote--incoming-purple {
+.module-quote--outgoing-purple {
   border-left-color: #862caf;
   background-color: #cdaddc; }
 
-.module-quote--incoming-indigo {
+.module-quote--outgoing-indigo {
   border-left-color: #5951c8;
   background-color: #c2c1e7; }
 
-.module-quote--incoming-blue {
+.module-quote--outgoing-blue {
   border-left-color: #336ba3;
   background-color: #adc8e1; }
 
-.module-quote--incoming-teal {
+.module-quote--outgoing-teal {
   border-left-color: #067589;
   background-color: #a5cad5; }
 
-.module-quote--incoming-green {
+.module-quote--outgoing-green {
   border-left-color: #3b7845;
   background-color: #8fcc9a; }
 
-.module-quote--incoming-light_green {
+.module-quote--outgoing-light_green {
   border-left-color: #1c8260;
   background-color: #9bcfbd; }
 
-.module-quote--incoming-blue_grey {
+.module-quote--outgoing-blue_grey {
   border-left-color: #895d66;
   background-color: #cfb5bb; }
 
-.module-quote--outgoing {
+.module-quote--incoming {
   border-left-color: #ffffff;
   background-color: #bebec6; }
 
-.module-quote--outgoing-red {
+.module-quote--incoming-red {
   background-color: #eda6ae; }
 
-.module-quote--outgoing-deep_orange {
+.module-quote--incoming-deep_orange {
   background-color: #eba78e; }
 
-.module-quote--outgoing-brown {
+.module-quote--incoming-brown {
   background-color: #c4b997; }
 
-.module-quote--outgoing-pink {
+.module-quote--incoming-pink {
   background-color: #dcb2ca; }
 
-.module-quote--outgoing-purple {
+.module-quote--incoming-purple {
   background-color: #cdaddc; }
 
-.module-quote--outgoing-indigo {
+.module-quote--incoming-indigo {
   background-color: #c2c1e7; }
 
-.module-quote--outgoing-blue {
+.module-quote--incoming-blue {
   background-color: #adc8e1; }
 
-.module-quote--outgoing-teal {
+.module-quote--incoming-teal {
   background-color: #a5cad5; }
 
-.module-quote--outgoing-green {
+.module-quote--incoming-green {
   background-color: #8fcc9a; }
 
-.module-quote--outgoing-light_green {
+.module-quote--incoming-light_green {
   background-color: #9bcfbd; }
 
-.module-quote--outgoing-blue_grey {
+.module-quote--incoming-blue_grey {
   background-color: #cfb5bb; }
 
 .module-quote__primary {
@@ -3570,7 +3814,7 @@ body.dark-theme {
   font-size: 13px;
   line-height: 18px;
   font-weight: 300;
-  color: #070c14;
+  color: #17191d;
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis; }
@@ -3581,7 +3825,7 @@ body.dark-theme {
 .module-quote__primary__text {
   font-size: 14px;
   line-height: 18px;
-  color: #070c14;
+  color: #17191d;
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
@@ -3591,11 +3835,11 @@ body.dark-theme {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical; }
   .module-quote__primary__text a {
-    color: #070c14; }
+    color: #17191d; }
 
 .module-quote__primary__type-label {
   font-style: italic;
-  color: #070c14;
+  color: #17191d;
   font-size: 13px;
   line-height: 18px; }
 
@@ -3702,7 +3946,7 @@ body.dark-theme {
 .module-quote__generic-file__text {
   font-size: 14px;
   line-height: 18px;
-  color: #070c14;
+  color: #17191d;
   max-width: calc(100% - 26px);
   overflow-x: hidden;
   white-space: nowrap;
@@ -3722,14 +3966,14 @@ body.dark-theme {
 .module-quote__reference-warning__icon {
   height: 16px;
   width: 16px;
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->    <title>Link/broken-link-16</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Link/broken-link-16' stroke='none' stroke-width='1' fill='%2362656A' fill-rule='evenodd'>        <path d='M9.49509379,9.33333333 L12.6666667,9.33333333 C13.4030463,9.33333333 14,8.73637967 14,8 C14,7.26362033 13.4030463,6.66666667 12.6666667,6.66666667 L12.1617605,6.66666667 L13.3945435,5.43388365 C14.5135095,5.75065459 15.3333333,6.77958724 15.3333333,8 C15.3333333,9.47275933 14.139426,10.6666667 12.6666667,10.6666667 L8.66666667,10.6666667 C8.5081988,10.6666667 8.35295937,10.6528441 8.20208831,10.6263388 L9.49509379,9.33333333 Z' id='Combined-Shape' fill='%2362656A' fill-rule='nonzero'></path>        <path d='M6.50490621,6.66666667 L3.33333333,6.66666667 C2.59695367,6.66666667 2,7.26362033 2,8 C2,8.73637967 2.59695367,9.33333333 3.33333333,9.33333333 L3.83823954,9.33333333 L2.60545653,10.5661163 C1.48649049,10.2493454 0.666666667,9.22041276 0.666666667,8 C0.666666667,6.52724067 1.860574,5.33333333 3.33333333,5.33333333 L7.33333333,5.33333333 C7.4918012,5.33333333 7.64704063,5.34715592 7.79791169,5.37366118 L6.50490621,6.66666667 Z' id='Combined-Shape' fill='%2362656A' fill-rule='nonzero'></path>        <rect id='Rectangle-8' fill='%2362656A' fill-rule='nonzero' transform='translate(8.000000, 8.000000) rotate(45.000000) translate(-8.000000, -8.000000) ' x='7.33333333' y='1.33333333' width='1.33333333' height='13.3333333'></rect>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->    <title>Link/broken-link-16</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='Link/broken-link-16' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <path d='M9.49509379,9.33333333 L12.6666667,9.33333333 C13.4030463,9.33333333 14,8.73637967 14,8 C14,7.26362033 13.4030463,6.66666667 12.6666667,6.66666667 L12.1617605,6.66666667 L13.3945435,5.43388365 C14.5135095,5.75065459 15.3333333,6.77958724 15.3333333,8 C15.3333333,9.47275933 14.139426,10.6666667 12.6666667,10.6666667 L8.66666667,10.6666667 C8.5081988,10.6666667 8.35295937,10.6528441 8.20208831,10.6263388 L9.49509379,9.33333333 Z' id='Combined-Shape' fill='%236B6D70' fill-rule='nonzero'></path>        <path d='M6.50490621,6.66666667 L3.33333333,6.66666667 C2.59695367,6.66666667 2,7.26362033 2,8 C2,8.73637967 2.59695367,9.33333333 3.33333333,9.33333333 L3.83823954,9.33333333 L2.60545653,10.5661163 C1.48649049,10.2493454 0.666666667,9.22041276 0.666666667,8 C0.666666667,6.52724067 1.860574,5.33333333 3.33333333,5.33333333 L7.33333333,5.33333333 C7.4918012,5.33333333 7.64704063,5.34715592 7.79791169,5.37366118 L6.50490621,6.66666667 Z' id='Combined-Shape' fill='%236B6D70' fill-rule='nonzero'></path>        <rect id='Rectangle-8' fill='%236B6D70' fill-rule='nonzero' transform='translate(8.000000, 8.000000) rotate(45.000000) translate(-8.000000, -8.000000) ' x='7.33333333' y='1.33333333' width='1.33333333' height='13.3333333'></rect>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-quote__reference-warning__text {
   margin-left: 6px;
-  color: #070c14;
+  color: #17191d;
   font-size: 13px;
   line-height: 18px; }
 
@@ -3755,28 +3999,28 @@ body.dark-theme {
   line-height: 18px;
   font-weight: 300;
   margin-top: 6px;
-  color: #ffffff;
+  color: #17191d;
   max-width: 100%;
   white-space: nowrap;
   overflow-x: hidden;
   text-overflow: ellipsis; }
 
 .module-embedded-contact__contact-name--incoming {
-  color: #070c14; }
+  color: #ffffff; }
 
 .module-embedded-contact__contact-method {
   font-size: 11px;
   line-height: 16px;
   letter-spacing: 0.3px;
   margin-top: 3px;
-  color: rgba(255, 255, 255, 0.7);
+  color: #6b6d70;
   max-width: 100%;
   white-space: nowrap;
   overflow-x: hidden;
   text-overflow: ellipsis; }
 
 .module-embedded-contact__contact-method--incoming {
-  color: #62656a; }
+  color: rgba(255, 255, 255, 0.7); }
 
 .module-contact-detail {
   text-align: center;
@@ -3844,7 +4088,7 @@ body.dark-theme {
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.3px;
-  color: #62656a;
+  color: #6b6d70;
   text-align: center; }
 
 .module-group-notification__change {
@@ -3858,7 +4102,7 @@ body.dark-theme {
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.3px;
-  color: #62656a;
+  color: #6b6d70;
   text-align: center; }
 
 .module-safety-number-notification {
@@ -3871,7 +4115,7 @@ body.dark-theme {
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 7px;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z' fill='%2362656A'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z' fill='%236B6D70'/></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
@@ -3880,7 +4124,7 @@ body.dark-theme {
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.3px;
-  color: #62656a; }
+  color: #6b6d70; }
 
 .module-safety-number-notification__contact {
   font-weight: 300; }
@@ -3902,7 +4146,7 @@ body.dark-theme {
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.3px;
-  color: #62656a;
+  color: #6b6d70;
   text-align: center; }
 
 .module-verification-notification__contact {
@@ -3914,7 +4158,7 @@ body.dark-theme {
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 4px;
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8' standalone='no'?><svg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'><path d='M11 21.34L2.66 13l-2.83 2.83L11 27 31.736 6.425 28.83 3.8' fill-rule='nonzero' fill='%2362656A'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8' standalone='no'?><svg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'><path d='M11 21.34L2.66 13l-2.83 2.83L11 27 31.736 6.425 28.83 3.8' fill-rule='nonzero' fill='%236B6D70'/></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
@@ -3925,7 +4169,7 @@ body.dark-theme {
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 7px;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z' fill='%2362656A'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z' fill='%236B6D70'/></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
@@ -3935,7 +4179,7 @@ body.dark-theme {
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.3px;
-  color: #62656a;
+  color: #6b6d70;
   text-align: center; }
 
 .module-timer-notification__icon-container {
@@ -3950,13 +4194,13 @@ body.dark-theme {
   height: 20px;
   width: 20px;
   display: inline-block;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='20' height='20' viewBox='0 0 20 20'>    <defs>        <path id='a' d='M10 1.5c-.338 0-.672.02-1 .058V.05C9.329.017 9.663 0 10 0c5.523 0 10 4.477 10 10s-4.477 10-10 10S0 15.523 0 10A10 10 0 0 1 5.658.99l.487.843.005-.002 4.5 7.794-1.3.75-4.233-7.333A8.5 8.5 0 1 0 10 1.5z'/>        <path id='c' d='M0 0h40v40H0z'/>    </defs>    <g fill='%2362656A' fill-rule='evenodd'>        <mask id='b' fill='%2362656A'>            <use xlink:href='%23a'/>        </mask>        <g mask='url(%23b)'>            <use fill='%2362656A' xlink:href='%23c'/>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='20' height='20' viewBox='0 0 20 20'>    <defs>        <path id='a' d='M10 1.5c-.338 0-.672.02-1 .058V.05C9.329.017 9.663 0 10 0c5.523 0 10 4.477 10 10s-4.477 10-10 10S0 15.523 0 10A10 10 0 0 1 5.658.99l.487.843.005-.002 4.5 7.794-1.3.75-4.233-7.333A8.5 8.5 0 1 0 10 1.5z'/>        <path id='c' d='M0 0h40v40H0z'/>    </defs>    <g fill='%236B6D70' fill-rule='evenodd'>        <mask id='b' fill='%236B6D70'>            <use xlink:href='%23a'/>        </mask>        <g mask='url(%23b)'>            <use fill='%236B6D70' xlink:href='%23c'/>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
 
 .module-timer-notification__icon--disabled {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51 (57462) - http://www.bohemiancoding.com/sketch -->    <title>Timer/timer-disabled-24</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M21.858998,18.8467957 C19.053119,22.8866962 13.9186786,24.9374228 8.89417112,23.5911101 C2.49257788,21.8758083 -1.30641199,15.2957648 0.408889745,8.8941716 C0.596993805,8.19215769 0.843600451,7.52144226 1.14205881,6.8858652 L0.241669751,6.3660254 L1.24166975,4.6339746 L23.7583302,17.6339746 L22.7583302,19.3660254 L21.858998,18.8467957 Z M2.88184096,7.89032891 C2.66430211,8.37455812 2.48256725,8.88250838 2.3407414,9.41180969 C0.911323282,14.7464707 4.07714818,20.2298403 9.41180921,21.6592584 C13.5418599,22.7659021 17.7610424,21.1182818 20.1191983,17.8423219 L2.88184138,7.8903292 Z M23.5326632,15.3164189 L21.7368136,14.2795846 C21.9158036,13.5170203 22.0020037,12.7530775 22.0024796,12 L22,12 C22,11.2717071 21.9221447,10.5615983 21.774303,9.87754233 C21.5529413,8.86216458 21.1750101,7.89158451 20.6602539,7.00000043 L20.6616964,6.99916755 C18.9333112,4.01196843 15.7039844,2.00181488 12.0050103,2.00000123 L12.0050103,9.50002686e-07 C17.7562426,0.0023509102 22.5615395,4.05060308 23.7291551,9.45301142 C24.1238587,11.2634725 24.1037523,13.1926202 23.5911096,15.1058287 C23.5722155,15.1763425 23.5527311,15.2465405 23.5326632,15.3164189 Z M3.35963731,3.66951691 C4.38333833,2.60965722 5.59187966,1.74982675 6.9171957,1.12932318 L7.91587604,2.87167583 L7.89093592,2.88289296 L10.8378215,7.9870486 L7.37371993,5.98704859 L6.15888511,3.88289296 C5.80800002,4.13508167 5.47295537,4.41020428 5.15627282,4.70680491 L3.35963731,3.66951691 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='24' height='24'></rect>    </defs>    <g id='Timer/timer-disabled-24' stroke='none' stroke-width='1' fill='%2362656A' fill-rule='evenodd'>        <mask id='mask-2' fill='%2362656A'>            <use xlink:href='%23path-1'></use>        </mask>        <use id='Shape' fill='%2362656A' fill-rule='nonzero' xlink:href='%23path-1'></use>        <g id='Primitives/Color/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%2362656A'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%2362656A' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51 (57462) - http://www.bohemiancoding.com/sketch -->    <title>Timer/timer-disabled-24</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M21.858998,18.8467957 C19.053119,22.8866962 13.9186786,24.9374228 8.89417112,23.5911101 C2.49257788,21.8758083 -1.30641199,15.2957648 0.408889745,8.8941716 C0.596993805,8.19215769 0.843600451,7.52144226 1.14205881,6.8858652 L0.241669751,6.3660254 L1.24166975,4.6339746 L23.7583302,17.6339746 L22.7583302,19.3660254 L21.858998,18.8467957 Z M2.88184096,7.89032891 C2.66430211,8.37455812 2.48256725,8.88250838 2.3407414,9.41180969 C0.911323282,14.7464707 4.07714818,20.2298403 9.41180921,21.6592584 C13.5418599,22.7659021 17.7610424,21.1182818 20.1191983,17.8423219 L2.88184138,7.8903292 Z M23.5326632,15.3164189 L21.7368136,14.2795846 C21.9158036,13.5170203 22.0020037,12.7530775 22.0024796,12 L22,12 C22,11.2717071 21.9221447,10.5615983 21.774303,9.87754233 C21.5529413,8.86216458 21.1750101,7.89158451 20.6602539,7.00000043 L20.6616964,6.99916755 C18.9333112,4.01196843 15.7039844,2.00181488 12.0050103,2.00000123 L12.0050103,9.50002686e-07 C17.7562426,0.0023509102 22.5615395,4.05060308 23.7291551,9.45301142 C24.1238587,11.2634725 24.1037523,13.1926202 23.5911096,15.1058287 C23.5722155,15.1763425 23.5527311,15.2465405 23.5326632,15.3164189 Z M3.35963731,3.66951691 C4.38333833,2.60965722 5.59187966,1.74982675 6.9171957,1.12932318 L7.91587604,2.87167583 L7.89093592,2.88289296 L10.8378215,7.9870486 L7.37371993,5.98704859 L6.15888511,3.88289296 C5.80800002,4.13508167 5.47295537,4.41020428 5.15627282,4.70680491 L3.35963731,3.66951691 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='24' height='24'></rect>    </defs>    <g id='Timer/timer-disabled-24' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <mask id='mask-2' fill='%236B6D70'>            <use xlink:href='%23path-1'></use>        </mask>        <use id='Shape' fill='%236B6D70' fill-rule='nonzero' xlink:href='%23path-1'></use>        <g id='Primitives/Color/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%236B6D70'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%236B6D70' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
@@ -3989,7 +4233,7 @@ body.dark-theme {
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: #62656a; }
+  color: #6b6d70; }
 
 .module-contact-list-item--with-click-handler {
   cursor: pointer; }
@@ -4009,7 +4253,7 @@ body.dark-theme {
   font-size: 14px; }
 
 .module-contact-list-item__text__verified-icon {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8' standalone='no'?><svg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'><path d='M11 21.34L2.66 13l-2.83 2.83L11 27 31.736 6.425 28.83 3.8' fill-rule='nonzero' fill='%2362656A'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8' standalone='no'?><svg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'><path d='M11 21.34L2.66 13l-2.83 2.83L11 27 31.736 6.425 28.83 3.8' fill-rule='nonzero' fill='%236B6D70'/></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -4026,7 +4270,7 @@ body.dark-theme {
   flex-direction: row;
   align-items: center;
   height: 48px;
-  color: #070c14;
+  color: #17191d;
   background-color: #ffffff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2); }
 
@@ -4056,7 +4300,7 @@ body.dark-theme {
   font-size: 16px;
   line-height: 24px;
   font-weight: 300;
-  color: #070c14;
+  color: #17191d;
   max-width: calc(100% - 36px);
   white-space: nowrap;
   overflow: hidden;
@@ -4067,7 +4311,7 @@ body.dark-theme {
   font-style: italic; }
 
 .module-conversation-header__title__verified-icon {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8' standalone='no'?><svg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'><path d='M11 21.34L2.66 13l-2.83 2.83L11 27 31.736 6.425 28.83 3.8' fill-rule='nonzero' fill='%23070C14'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8' standalone='no'?><svg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'><path d='M11 21.34L2.66 13l-2.83 2.83L11 27 31.736 6.425 28.83 3.8' fill-rule='nonzero' fill='%2317191D'/></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -4084,7 +4328,7 @@ body.dark-theme {
   padding-right: 8px; }
 
 .module-conversation-header__expiration__clock-icon {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='20' height='20' viewBox='0 0 20 20'>    <defs>        <path id='a' d='M10 1.5c-.338 0-.672.02-1 .058V.05C9.329.017 9.663 0 10 0c5.523 0 10 4.477 10 10s-4.477 10-10 10S0 15.523 0 10A10 10 0 0 1 5.658.99l.487.843.005-.002 4.5 7.794-1.3.75-4.233-7.333A8.5 8.5 0 1 0 10 1.5z'/>        <path id='c' d='M0 0h40v40H0z'/>    </defs>    <g fill='%2362656A' fill-rule='evenodd'>        <mask id='b' fill='%2362656A'>            <use xlink:href='%23a'/>        </mask>        <g mask='url(%23b)'>            <use fill='%2362656A' xlink:href='%23c'/>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='20' height='20' viewBox='0 0 20 20'>    <defs>        <path id='a' d='M10 1.5c-.338 0-.672.02-1 .058V.05C9.329.017 9.663 0 10 0c5.523 0 10 4.477 10 10s-4.477 10-10 10S0 15.523 0 10A10 10 0 0 1 5.658.99l.487.843.005-.002 4.5 7.794-1.3.75-4.233-7.333A8.5 8.5 0 1 0 10 1.5z'/>        <path id='c' d='M0 0h40v40H0z'/>    </defs>    <g fill='%236B6D70' fill-rule='evenodd'>        <mask id='b' fill='%236B6D70'>            <use xlink:href='%23a'/>        </mask>        <g mask='url(%23b)'>            <use fill='%236B6D70' xlink:href='%23c'/>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -4097,7 +4341,7 @@ body.dark-theme {
   text-align: center; }
 
 .module-conversation-header__gear-icon {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='20px' height='20px' viewBox='0 0 20 20' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51 (57462) - http://www.bohemiancoding.com/sketch -->    <title>Gear/gear-20</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M17.43,10.98 C17.47,10.66 17.5,10.34 17.5,10 C17.5,9.66 17.47,9.34 17.43,9.02 L19.54,7.37 C19.73,7.22 19.78,6.95 19.66,6.73 L17.66,3.27 C17.54,3.05 17.27,2.97 17.05,3.05 L14.56,4.05 C14.04,3.65 13.48,3.32 12.87,3.07 L12.49,0.42 C12.46,0.18 12.25,0 12,0 L8,0 C7.75,0 7.54,0.18 7.51,0.42 L7.13,3.07 C6.52,3.32 5.96,3.66 5.44,4.05 L2.95,3.05 C2.72,2.96 2.46,3.05 2.34,3.27 L0.34,6.73 C0.21,6.95 0.27,7.22 0.46,7.37 L2.57,9.02 C2.53,9.34 2.5,9.67 2.5,10 C2.5,10.33 2.53,10.66 2.57,10.98 L0.46,12.63 C0.27,12.78 0.22,13.05 0.34,13.27 L2.34,16.73 C2.46,16.95 2.73,17.03 2.95,16.95 L5.44,15.95 C5.96,16.35 6.52,16.68 7.13,16.93 L7.51,19.58 C7.54,19.82 7.75,20 8,20 L12,20 C12.25,20 12.46,19.82 12.49,19.58 L12.87,16.93 C13.48,16.68 14.04,16.34 14.56,15.95 L17.05,16.95 C17.28,17.04 17.54,16.95 17.66,16.73 L19.66,13.27 C19.78,13.05 19.73,12.78 19.54,12.63 L17.43,10.98 Z M10,13.5 C8.07,13.5 6.5,11.93 6.5,10 C6.5,8.07 8.07,6.5 10,6.5 C11.93,6.5 13.5,8.07 13.5,10 C13.5,11.93 11.93,13.5 10,13.5 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='40' height='40'></rect>    </defs>    <g id='Gear/gear-20' stroke='none' stroke-width='1' fill='%2362656A' fill-rule='evenodd'>        <mask id='mask-2' fill='%2362656A'>            <use xlink:href='%23path-1'></use>        </mask>        <use id='Shape' fill='%2362656A' fill-rule='nonzero' xlink:href='%23path-1'></use>        <g id='Primitives/Color/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%2362656A'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%2362656A' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='20px' height='20px' viewBox='0 0 20 20' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51 (57462) - http://www.bohemiancoding.com/sketch -->    <title>Gear/gear-20</title>    <desc>Created with Sketch.</desc>    <defs>        <path d='M17.43,10.98 C17.47,10.66 17.5,10.34 17.5,10 C17.5,9.66 17.47,9.34 17.43,9.02 L19.54,7.37 C19.73,7.22 19.78,6.95 19.66,6.73 L17.66,3.27 C17.54,3.05 17.27,2.97 17.05,3.05 L14.56,4.05 C14.04,3.65 13.48,3.32 12.87,3.07 L12.49,0.42 C12.46,0.18 12.25,0 12,0 L8,0 C7.75,0 7.54,0.18 7.51,0.42 L7.13,3.07 C6.52,3.32 5.96,3.66 5.44,4.05 L2.95,3.05 C2.72,2.96 2.46,3.05 2.34,3.27 L0.34,6.73 C0.21,6.95 0.27,7.22 0.46,7.37 L2.57,9.02 C2.53,9.34 2.5,9.67 2.5,10 C2.5,10.33 2.53,10.66 2.57,10.98 L0.46,12.63 C0.27,12.78 0.22,13.05 0.34,13.27 L2.34,16.73 C2.46,16.95 2.73,17.03 2.95,16.95 L5.44,15.95 C5.96,16.35 6.52,16.68 7.13,16.93 L7.51,19.58 C7.54,19.82 7.75,20 8,20 L12,20 C12.25,20 12.46,19.82 12.49,19.58 L12.87,16.93 C13.48,16.68 14.04,16.34 14.56,15.95 L17.05,16.95 C17.28,17.04 17.54,16.95 17.66,16.73 L19.66,13.27 C19.78,13.05 19.73,12.78 19.54,12.63 L17.43,10.98 Z M10,13.5 C8.07,13.5 6.5,11.93 6.5,10 C6.5,8.07 8.07,6.5 10,6.5 C11.93,6.5 13.5,8.07 13.5,10 C13.5,11.93 11.93,13.5 10,13.5 Z' id='path-1'></path>        <rect id='path-3' x='0' y='0' width='40' height='40'></rect>    </defs>    <g id='Gear/gear-20' stroke='none' stroke-width='1' fill='%236B6D70' fill-rule='evenodd'>        <mask id='mask-2' fill='%236B6D70'>            <use xlink:href='%23path-1'></use>        </mask>        <use id='Shape' fill='%236B6D70' fill-rule='nonzero' xlink:href='%23path-1'></use>        <g id='Primitives/Color/Black' mask='url(%23mask-2)'>            <mask id='mask-4' fill='%236B6D70'>                <use xlink:href='%23path-3'></use>            </mask>            <use id='fill' fill='%236B6D70' fill-rule='evenodd' xlink:href='%23path-3'></use>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -4175,7 +4419,7 @@ body.dark-theme {
   margin-bottom: 2px; }
 
 .module-message-detail__contact__status-icon--sending {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>sending</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='iOS-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='iOS-Light/Message/Status/Sending' transform='translate(-6.000000, 0.000000)' fill='%23000000'>            <path d='M11.5,0 L12.5,0 L12.5,1 L11.5,1 L11.5,0 Z M11.5,11 L12.5,11 L12.5,12 L11.5,12 L11.5,11 Z M6,5.5 L7,5.5 L7,6.5 L6,6.5 L6,5.5 Z M17,5.5 L18,5.5 L18,6.5 L17,6.5 L17,5.5 Z M16.9461524,2.5669873 L17.4461524,3.4330127 L16.580127,3.9330127 L16.080127,3.0669873 L16.9461524,2.5669873 Z M7.41987298,8.0669873 L7.91987298,8.9330127 L7.05384758,9.4330127 L6.55384758,8.5669873 L7.41987298,8.0669873 Z M9.4330127,0.553847577 L9.9330127,1.41987298 L9.0669873,1.91987298 L8.5669873,1.05384758 L9.4330127,0.553847577 Z M14.9330127,10.080127 L15.4330127,10.9461524 L14.5669873,11.4461524 L14.0669873,10.580127 L14.9330127,10.080127 Z M14.5669873,0.553847577 L15.4330127,1.05384758 L14.9330127,1.91987298 L14.0669873,1.41987298 L14.5669873,0.553847577 Z M9.0669873,10.080127 L9.9330127,10.580127 L9.4330127,11.4461524 L8.5669873,10.9461524 L9.0669873,10.080127 Z M7.05384758,2.5669873 L7.91987298,3.0669873 L7.41987298,3.9330127 L6.55384758,3.4330127 L7.05384758,2.5669873 Z M16.580127,8.0669873 L17.4461524,8.5669873 L16.9461524,9.4330127 L16.080127,8.9330127 L16.580127,8.0669873 Z' id='sending' fill='%2362656A'></path>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>sending</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='iOS-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='iOS-Light/Message/Status/Sending' transform='translate(-6.000000, 0.000000)' fill='%23000000'>            <path d='M11.5,0 L12.5,0 L12.5,1 L11.5,1 L11.5,0 Z M11.5,11 L12.5,11 L12.5,12 L11.5,12 L11.5,11 Z M6,5.5 L7,5.5 L7,6.5 L6,6.5 L6,5.5 Z M17,5.5 L18,5.5 L18,6.5 L17,6.5 L17,5.5 Z M16.9461524,2.5669873 L17.4461524,3.4330127 L16.580127,3.9330127 L16.080127,3.0669873 L16.9461524,2.5669873 Z M7.41987298,8.0669873 L7.91987298,8.9330127 L7.05384758,9.4330127 L6.55384758,8.5669873 L7.41987298,8.0669873 Z M9.4330127,0.553847577 L9.9330127,1.41987298 L9.0669873,1.91987298 L8.5669873,1.05384758 L9.4330127,0.553847577 Z M14.9330127,10.080127 L15.4330127,10.9461524 L14.5669873,11.4461524 L14.0669873,10.580127 L14.9330127,10.080127 Z M14.5669873,0.553847577 L15.4330127,1.05384758 L14.9330127,1.91987298 L14.0669873,1.41987298 L14.5669873,0.553847577 Z M9.0669873,10.080127 L9.9330127,10.580127 L9.4330127,11.4461524 L8.5669873,10.9461524 L9.0669873,10.080127 Z M7.05384758,2.5669873 L7.91987298,3.0669873 L7.41987298,3.9330127 L6.55384758,3.4330127 L7.05384758,2.5669873 Z M16.580127,8.0669873 L17.4461524,8.5669873 L16.9461524,9.4330127 L16.080127,8.9330127 L16.580127,8.0669873 Z' id='sending' fill='%236B6D70'></path>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -4490,7 +4734,7 @@ body.dark-theme {
   white-space: nowrap;
   text-overflow: ellipsis;
   text-transform: uppercase;
-  color: #636467; }
+  color: #6b6d70; }
 
 .module-conversation-list-item__header__date--has-unread {
   font-weight: 300;
@@ -4507,7 +4751,7 @@ body.dark-theme {
   flex-shrink: 1;
   font-size: 13px;
   line-height: 18px;
-  color: #636467;
+  color: #6b6d70;
   height: 1.3em;
   overflow: hidden;
   text-overflow: ellipsis; }
@@ -4525,7 +4769,7 @@ body.dark-theme {
   margin-left: 6px; }
 
 .module-conversation-list-item__message__status-icon--sending {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>sending</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='iOS-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='iOS-Light/Message/Status/Sending' transform='translate(-6.000000, 0.000000)' fill='%23000000'>            <path d='M11.5,0 L12.5,0 L12.5,1 L11.5,1 L11.5,0 Z M11.5,11 L12.5,11 L12.5,12 L11.5,12 L11.5,11 Z M6,5.5 L7,5.5 L7,6.5 L6,6.5 L6,5.5 Z M17,5.5 L18,5.5 L18,6.5 L17,6.5 L17,5.5 Z M16.9461524,2.5669873 L17.4461524,3.4330127 L16.580127,3.9330127 L16.080127,3.0669873 L16.9461524,2.5669873 Z M7.41987298,8.0669873 L7.91987298,8.9330127 L7.05384758,9.4330127 L6.55384758,8.5669873 L7.41987298,8.0669873 Z M9.4330127,0.553847577 L9.9330127,1.41987298 L9.0669873,1.91987298 L8.5669873,1.05384758 L9.4330127,0.553847577 Z M14.9330127,10.080127 L15.4330127,10.9461524 L14.5669873,11.4461524 L14.0669873,10.580127 L14.9330127,10.080127 Z M14.5669873,0.553847577 L15.4330127,1.05384758 L14.9330127,1.91987298 L14.0669873,1.41987298 L14.5669873,0.553847577 Z M9.0669873,10.080127 L9.9330127,10.580127 L9.4330127,11.4461524 L8.5669873,10.9461524 L9.0669873,10.080127 Z M7.05384758,2.5669873 L7.91987298,3.0669873 L7.41987298,3.9330127 L6.55384758,3.4330127 L7.05384758,2.5669873 Z M16.580127,8.0669873 L17.4461524,8.5669873 L16.9461524,9.4330127 L16.080127,8.9330127 L16.580127,8.0669873 Z' id='sending' fill='%2362656A'></path>        </g>    </g></svg>");
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>sending</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='iOS-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='iOS-Light/Message/Status/Sending' transform='translate(-6.000000, 0.000000)' fill='%23000000'>            <path d='M11.5,0 L12.5,0 L12.5,1 L11.5,1 L11.5,0 Z M11.5,11 L12.5,11 L12.5,12 L11.5,12 L11.5,11 Z M6,5.5 L7,5.5 L7,6.5 L6,6.5 L6,5.5 Z M17,5.5 L18,5.5 L18,6.5 L17,6.5 L17,5.5 Z M16.9461524,2.5669873 L17.4461524,3.4330127 L16.580127,3.9330127 L16.080127,3.0669873 L16.9461524,2.5669873 Z M7.41987298,8.0669873 L7.91987298,8.9330127 L7.05384758,9.4330127 L6.55384758,8.5669873 L7.41987298,8.0669873 Z M9.4330127,0.553847577 L9.9330127,1.41987298 L9.0669873,1.91987298 L8.5669873,1.05384758 L9.4330127,0.553847577 Z M14.9330127,10.080127 L15.4330127,10.9461524 L14.5669873,11.4461524 L14.0669873,10.580127 L14.9330127,10.080127 Z M14.5669873,0.553847577 L15.4330127,1.05384758 L14.9330127,1.91987298 L14.0669873,1.41987298 L14.5669873,0.553847577 Z M9.0669873,10.080127 L9.9330127,10.580127 L9.4330127,11.4461524 L8.5669873,10.9461524 L9.0669873,10.080127 Z M7.05384758,2.5669873 L7.91987298,3.0669873 L7.41987298,3.9330127 L6.55384758,3.4330127 L7.05384758,2.5669873 Z M16.580127,8.0669873 L17.4461524,8.5669873 L16.9461524,9.4330127 L16.080127,8.9330127 L16.580127,8.0669873 Z' id='sending' fill='%236B6D70'></path>        </g>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -4710,7 +4954,7 @@ body.dark-theme {
   line-height: 24px;
   font-weight: 300;
   margin-left: 32px;
-  color: #070c14; }
+  color: #17191d; }
 
 .react-contextmenu {
   background-color: #f9fafa;
@@ -4727,7 +4971,7 @@ body.dark-theme {
   opacity: 1; }
 
 .react-contextmenu-item {
-  color: #070c14;
+  color: #17191d;
   cursor: pointer;
   font-size: 13px;
   line-height: 18px;
@@ -4742,7 +4986,7 @@ body.dark-theme {
   display: inline-block;
   position: absolute;
   right: 7px;
-  color: #070c14; }
+  color: #17191d; }
 
 .react-contextmenu-item.react-contextmenu-submenu {
   padding: 0; }
@@ -4756,7 +5000,7 @@ body.dark-theme {
   display: inline-block;
   position: absolute;
   right: 7px;
-  color: #070c14; }
+  color: #17191d; }
 
 .react-contextmenu-item.react-contextmenu-item--active,
 .react-contextmenu-item.react-contextmenu-item--selected {

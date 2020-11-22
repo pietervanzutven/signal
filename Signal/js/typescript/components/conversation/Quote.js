@@ -160,15 +160,15 @@
                 }, i18n('originalMessageNotFound'))));
         }
         render() {
-            const { conversationColor, isIncoming, onClick, referencedMessageNotFound, withContentAbove, } = this.props;
+            const { authorColor, isIncoming, onClick, referencedMessageNotFound, withContentAbove, } = this.props;
             if (!validateQuote(this.props)) {
                 return null;
             }
             return (react_1.default.createElement("div", { className: classnames_1.default('module-quote-container', withContentAbove ? 'module-quote-container--with-content-above' : null) },
                 react_1.default.createElement("div", {
                     onClick: onClick, role: "button", className: classnames_1.default('module-quote', isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing', isIncoming
-                        ? `module-quote--incoming-${conversationColor}`
-                        : `module-quote--outgoing-${conversationColor}`, !onClick ? 'module-quote--no-click' : null, withContentAbove ? 'module-quote--with-content-above' : null, referencedMessageNotFound
+                        ? `module-quote--incoming-${authorColor}`
+                        : `module-quote--outgoing-${authorColor}`, !onClick ? 'module-quote--no-click' : null, withContentAbove ? 'module-quote--with-content-above' : null, referencedMessageNotFound
                         ? 'module-quote--with-reference-warning'
                         : null)
                 },

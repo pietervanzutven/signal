@@ -1375,6 +1375,10 @@
     },
 
     getColor() {
+      if (!this.isPrivate()) {
+        return null;
+      }
+
       const { migrateColor } = Util;
       return migrateColor(this.get('color'));
     },

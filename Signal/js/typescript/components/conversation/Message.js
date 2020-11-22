@@ -267,12 +267,12 @@
             }
         }
         renderQuote() {
-            const { conversationType, conversationColor, direction, i18n, quote, } = this.props;
+            const { conversationType, direction, i18n, quote } = this.props;
             if (!quote) {
                 return null;
             }
             const withContentAbove = conversationType === 'group' && direction === 'incoming';
-            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: quote.onClick, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, conversationColor: conversationColor, referencedMessageNotFound: quote.referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
+            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: quote.onClick, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quote.authorColor, referencedMessageNotFound: quote.referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
         }
         renderEmbeddedContact() {
             const { collapseMetadata, contact, conversationType, direction, i18n, text, } = this.props;
@@ -292,14 +292,14 @@
             return (react_1.default.createElement("div", { role: "button", onClick: contact.onSendMessage, className: "module-message__send-message-button" }, i18n('sendMessageToContact')));
         }
         renderAvatar() {
-            const { authorAvatarPath, authorName, authorPhoneNumber, authorProfileName, collapseMetadata, conversationColor, conversationType, direction, i18n, } = this.props;
+            const { authorAvatarPath, authorName, authorPhoneNumber, authorProfileName, collapseMetadata, authorColor, conversationType, direction, i18n, } = this.props;
             if (collapseMetadata ||
                 conversationType !== 'group' ||
                 direction === 'outgoing') {
                 return;
             }
             return (react_1.default.createElement("div", { className: "module-message__author-avatar" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: authorAvatarPath, color: conversationColor, conversationType: "direct", i18n: i18n, name: authorName, phoneNumber: authorPhoneNumber, profileName: authorProfileName, size: 36 })));
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: authorAvatarPath, color: authorColor, conversationType: "direct", i18n: i18n, name: authorName, phoneNumber: authorPhoneNumber, profileName: authorProfileName, size: 36 })));
         }
         renderText() {
             const { text, i18n, direction, status } = this.props;
@@ -387,7 +387,7 @@
                 }, i18n('deleteMessage'))));
         }
         render() {
-            const { authorPhoneNumber, conversationColor, direction, id, timestamp, } = this.props;
+            const { authorPhoneNumber, authorColor, direction, id, timestamp, } = this.props;
             const { expired, expiring } = this.state;
             // This id is what connects our triple-dot click with our associated pop-up menu.
             //   It needs to be unique.
@@ -399,8 +399,8 @@
                 this.renderError(direction === 'incoming'),
                 this.renderMenu(direction === 'outgoing', triggerId),
                 react_1.default.createElement("div", {
-                    className: classnames_1.default('module-message__container', `module-message__container--${direction}`, direction === 'outgoing'
-                        ? `module-message__container--outgoing-${conversationColor}`
+                    className: classnames_1.default('module-message__container', `module-message__container--${direction}`, direction === 'incoming'
+                        ? `module-message__container--incoming-${authorColor}`
                         : null)
                 },
                     this.renderAuthor(),
