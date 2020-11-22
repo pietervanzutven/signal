@@ -2996,6 +2996,9 @@ body.dark-theme {
 .dark-theme .module-avatar--no-image {
   background-color: #5a5a63; }
 
+.dark-theme .module-avatar--signal-blue {
+  background-color: #2090ea; }
+
 .dark-theme .module-avatar--red {
   background-color: #8a0f29; }
 
