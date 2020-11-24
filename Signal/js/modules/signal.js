@@ -125,6 +125,7 @@
 
     return {
       attachmentsPath,
+      deleteAttachmentData: deleteOnDisk,
       deleteExternalMessageFiles: MessageType.deleteAllExternalFiles({
         deleteAttachmentData: Type.deleteData(deleteOnDisk),
         deleteOnDisk,
@@ -137,8 +138,6 @@
       loadMessage: MessageType.createAttachmentLoader(loadAttachmentData),
       Migrations0DatabaseWithAttachmentData,
       Migrations1DatabaseWithoutAttachmentData,
-      writeNewAttachmentData: createWriterForNew(attachmentsPath),
-      deleteAttachmentData: deleteOnDisk,
       upgradeMessageSchema: (message, options = {}) => {
         const { maxVersion } = options;
 
@@ -159,6 +158,7 @@
         writeExistingAttachmentData: createWriterForExisting(attachmentsPath),
         logger,
       }),
+      writeNewAttachmentData: createWriterForNew(attachmentsPath),
     };
   }
 
