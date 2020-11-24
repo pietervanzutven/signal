@@ -360,11 +360,17 @@
         renderContextMenu(triggerId) {
             const { attachment, direction, status, onDelete, onDownload, onReply, onRetrySend, onShowDetail, i18n, } = this.props;
             const showRetry = status === 'error' && direction === 'outgoing';
+            const fileName = attachment ? attachment.fileName : null;
+            const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
             return (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
                 attachment ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__download',
-                    }, onClick: onDownload
+                    }, onClick: () => {
+                        if (onDownload) {
+                            onDownload(isDangerous);
+                        }
+                    }
                 }, i18n('downloadAttachment'))) : null,
                 react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {

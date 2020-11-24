@@ -19,10 +19,12 @@
 
   const { Message: TypedMessage, Contact, PhoneNumber } = Signal.Types;
   const {
+    deleteAttachmentData,
     deleteExternalMessageFiles,
     getAbsoluteAttachmentPath,
     loadAttachmentData,
     loadQuoteData,
+    writeNewAttachmentData,
   } = window.Signal.Migrations;
 
   window.AccountCache = Object.create(null);
@@ -1039,28 +1041,47 @@
       return conversation.queueJob(async () => {
         try {
           const now = new Date().getTime();
-          let attributes = { type: 'private' };
+          let attributes = Object.assign({},
+            conversation.attributes,
+          );
           if (dataMessage.group) {
             let groupUpdate = null;
-            attributes = {
-              type: 'group',
-              groupId: dataMessage.group.id,
-            };
-            if (dataMessage.group.type === GROUP_TYPES.UPDATE) {
-              attributes = {
+            attributes = Object.assign({},
+              attributes,
+              {
                 type: 'group',
                 groupId: dataMessage.group.id,
-                name: dataMessage.group.name,
-                avatar: dataMessage.group.avatar,
-                members: _.union(
-                  dataMessage.group.members,
-                  conversation.get('members')
-                ),
-              };
+              }
+            );
+            if (dataMessage.group.type === GROUP_TYPES.UPDATE) {
+              attributes = Object.assign({},
+                attributes,
+                {
+                  name: dataMessage.group.name,
+                  members: _.union(
+                    dataMessage.group.members,
+                    conversation.get('members')
+                  ),
+                }
+              );
+
+              // Update this group conversations's avatar on disk if it has changed.
+              if (dataMessage.group.avatar) {
+                attributes = await window.Signal.Types.Conversation.maybeUpdateAvatar(
+                  attributes,
+                  dataMessage.group.avatar.data,
+                  {
+                    writeNewAttachmentData,
+                    deleteAttachmentData,
+                  }
+                );
+              }
+
               groupUpdate =
                 conversation.changedAttributes(
                   _.pick(dataMessage.group, 'name', 'avatar')
                 ) || {};
+
               const difference = _.difference(
                 attributes.members,
                 conversation.get('members')
