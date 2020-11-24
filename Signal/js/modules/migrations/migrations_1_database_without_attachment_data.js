@@ -6,26 +6,38 @@
   window.migrations = window.migrations || {};
   const exports = window.migrations.migrations_1_database_without_attachment_data = {};
 
-  const { last } = window.lodash;
+  const { last, includes } = window.lodash;
 
-  const db = window.database;
+  const { open } = window.database;
   const settings = window.settings;
   const { runMigrations } = window.migrations.run_migrations;
 
-  // These are migrations for after the SQLCipher migration, currently not running
+  // These are cleanup migrations, to be run after migration to SQLCipher
   exports.migrations = [
     {
       version: 20,
       migrate(transaction, next) {
         window.log.info('Migration 20');
-        window.log.info(
-          'Removing messages, unprocessed, and conversations object stores'
-        );
+
+        const { db } = transaction;
 
         // This should be run after things are migrated to SQLCipher
-        transaction.db.deleteObjectStore('messages');
-        transaction.db.deleteObjectStore('unprocessed');
-        transaction.db.deleteObjectStore('conversations');
+
+        // We check for existence first, because this removal was present in v1.17.0.beta.1,
+        //  but reverted in v1.17.0-beta.3
+
+        if (includes(db.objectStoreNames, 'messages')) {
+          window.log.info('Removing messages store');
+          db.deleteObjectStore('messages');
+        }
+        if (includes(db.objectStoreNames, 'unprocessed')) {
+          window.log.info('Removing unprocessed store');
+          db.deleteObjectStore('unprocessed');
+        }
+        if (includes(db.objectStoreNames, 'conversations')) {
+          window.log.info('Removing conversations store');
+          db.deleteObjectStore('conversations');
+        }
 
         next();
       },
@@ -54,7 +66,7 @@
   };
 
   exports.getStatus = async ({ database } = {}) => {
-    const connection = await db.open(database.id, database.version);
+    const connection = await open(database.id, database.version);
     const isAttachmentMigrationComplete = await settings.isAttachmentMigrationComplete(
       connection
     );
