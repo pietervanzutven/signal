@@ -15,8 +15,9 @@
   const Settings = window.settings;
   const Startup = window.startup;
   const Util = window.ts.util;
-  const Metadata = window.metadata.SecretSessionCipher;
   const { migrateToSQL } = window.migrate_to_sql;
+  const Metadata = window.metadata.SecretSessionCipher;
+  const RefreshSenderCertificate = window.refresh_sender_certificate;
 
   // Components
   const {
@@ -232,6 +233,7 @@
       Migrations,
       Notifications,
       OS,
+      RefreshSenderCertificate,
       Settings,
       Startup,
       Types,

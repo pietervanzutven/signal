@@ -9,20 +9,28 @@
   const Settings = window.settings;
 
   exports.syncReadReceiptConfiguration = async ({
+    ourNumber,
     deviceId,
     sendRequestConfigurationSyncMessage,
     storage,
+    prepareForSend,
   }) => {
     if (!is.string(deviceId)) {
-      throw new TypeError("'deviceId' is required");
+      throw new TypeError('deviceId is required');
+    }
+    if (!is.function(sendRequestConfigurationSyncMessage)) {
+      throw new TypeError('sendRequestConfigurationSyncMessage is required');
+    }
+    if (!is.function(prepareForSend)) {
+      throw new TypeError('prepareForSend is required');
     }
 
-    if (!is.function(sendRequestConfigurationSyncMessage)) {
-      throw new TypeError("'sendRequestConfigurationSyncMessage' is required");
+    if (!is.string(ourNumber)) {
+      throw new TypeError('ourNumber is required');
     }
 
     if (!is.object(storage)) {
-      throw new TypeError("'storage' is required");
+      throw new TypeError('storage is required');
     }
 
     const isPrimaryDevice = deviceId === '1';
@@ -43,7 +51,8 @@
     }
 
     try {
-      await sendRequestConfigurationSyncMessage();
+      const { wrap, sendOptions } = prepareForSend(ourNumber);
+      await wrap(sendRequestConfigurationSyncMessage(sendOptions));
       storage.put(settingName, true);
     } catch (error) {
       return {

@@ -12,7 +12,7 @@
   const { blobToArrayBuffer } = window.blob_util;
   const {
     arrayBufferToObjectURL,
-  } = window.ts.util.arrayBufferToObjectURL;
+  } = require_ts_util_arrayBufferToObjectURL();
 
   exports.blobToArrayBuffer = blobToArrayBuffer;
 

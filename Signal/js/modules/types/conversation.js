@@ -1,4 +1,4 @@
-/* global dcodeIO, crypto */
+/* global crypto */
 
 (function () {
   'use strict';
@@ -8,18 +8,11 @@
   const fse = window.fs_extra;
   const { isFunction, isNumber } = window.lodash;
   const { createLastMessageUpdate } = window.ts.types.Conversation;
+  const { arrayBufferToBase64, base64ToArrayBuffer } = window.crypto;
 
   async function computeHash(arraybuffer) {
     const hash = await crypto.subtle.digest({ name: 'SHA-512' }, arraybuffer);
     return arrayBufferToBase64(hash);
-  }
-
-  function arrayBufferToBase64(arraybuffer) {
-    return dcodeIO.ByteBuffer.wrap(arraybuffer).toString('base64');
-  }
-
-  function base64ToArrayBuffer(base64) {
-    return dcodeIO.ByteBuffer.wrap(base64, 'base64').toArrayBuffer();
   }
 
   function buildAvatarUpdater({ field }) {

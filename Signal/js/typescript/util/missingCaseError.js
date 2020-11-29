@@ -1,9 +1,7 @@
-(function () {
+function require_ts_util_missingCaseError() {
     "use strict";
 
-    window.ts = window.ts || {};
-    window.ts.util = window.ts.util || {};
-    const exports = window.ts.util.missingCaseError = {};
+    const exports = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
     // `missingCaseError` is useful for compile-time checking that all `case`s in
@@ -26,4 +24,6 @@
     // handled by our `switch` / `case` statement which is useful for code
     // maintenance and system evolution.
     exports.missingCaseError = (x) => new TypeError(`Unhandled case: ${x}`);
-})();
+
+    return exports;
+}

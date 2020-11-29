@@ -14,7 +14,7 @@
     const classnames_1 = __importDefault(window.classnames);
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const Intl_1 = window.ts.components.Intl;
-    const missingCaseError_1 = window.ts.util.missingCaseError;
+    const missingCaseError_1 = require_ts_util_missingCaseError();
     class TimerNotification extends react_1.default.Component {
         renderContents() {
             const { i18n, name, phoneNumber, profileName, timespan, type, disabled, } = this.props;

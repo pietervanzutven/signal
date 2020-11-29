@@ -14,12 +14,12 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
     exports.GoogleChrome = GoogleChrome;
-    const arrayBufferToObjectURL_1 = window.ts.util.arrayBufferToObjectURL;
+    const arrayBufferToObjectURL_1 = require_ts_util_arrayBufferToObjectURL();
     exports.arrayBufferToObjectURL = arrayBufferToObjectURL_1.arrayBufferToObjectURL;
-    const isFileDangerous_1 = window.ts.util.isFileDangerous;
+    const isFileDangerous_1 = require_ts_util_isFileDangerous();
     exports.isFileDangerous = isFileDangerous_1.isFileDangerous;
-    const missingCaseError_1 = window.ts.util.missingCaseError;
+    const missingCaseError_1 = require_ts_util_missingCaseError();
     exports.missingCaseError = missingCaseError_1.missingCaseError;
-    const migrateColor_1 = window.ts.util.migrateColor;
+    const migrateColor_1 = require_ts_util_migrateColor();
     exports.migrateColor = migrateColor_1.migrateColor;
 })();

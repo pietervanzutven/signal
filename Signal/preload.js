@@ -27,6 +27,7 @@
   window.getExpiration = () => config.buildExpiration;
   window.getUWPVersion = () => config.uwp_version;
   window.getHostName = () => config.hostname;
+  window.getServerTrustRoot = () => config.serverTrustRoot;
 
   window.isBeforeVersion = (toCheck, baseVersion) => {
     try {
@@ -197,6 +198,7 @@
   window.libphonenumber = window.google_libphonenumber.PhoneNumberUtil.getInstance();
   window.libphonenumber.PhoneNumberFormat = window.google_libphonenumber.PhoneNumberFormat;
   window.loadImage = window.blueimp_load_image;
+  window.getGuid = window.uuid.v4;
 
   window.React = window.react;
   window.ReactDOM = window.react_dom;
@@ -205,7 +207,7 @@
   const Signal = window.signal;
   const i18n = window.modules.i18n;
   const Attachments = window.app.attachments;
-    
+
   const { locale } = config;
   window.i18n = i18n.setup(locale, localeMessages);
   window.moment.updateLocale(locale, {

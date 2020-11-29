@@ -19,7 +19,7 @@
     const is_1 = __importDefault(window.sindresorhus.is);
     const moment_1 = __importDefault(window.moment);
     const MIME = __importStar(window.ts.types.MIME);
-    const arrayBufferToObjectURL_1 = window.ts.util.arrayBufferToObjectURL;
+    const arrayBufferToObjectURL_1 = require_ts_util_arrayBufferToObjectURL();
     const saveURLAsFile_1 = window.ts.util.saveURLAsFile;
     const protobuf_1 = window.ts.protobuf;
     exports.isVisualMedia = (attachment) => {

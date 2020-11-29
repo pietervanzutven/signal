@@ -79,6 +79,8 @@
       return res;
     } else if (thing === null) {
       return null;
+    } else if (thing === undefined) {
+      return undefined;
     }
     throw new Error(`unsure of how to jsonify object of type ${typeof thing}`);
   }
@@ -159,7 +161,9 @@
   function _promiseAjax(providedUrl, options) {
     return new Promise((resolve, reject) => {
       const url = providedUrl || `${options.host}/${options.path}`;
-      log.info(options.type, url);
+      log.info(
+        `${options.type} ${url}${options.unauthenticated ? ' (unauth)' : ''}`
+      );
       const timeout =
         typeof options.timeout !== 'undefined' ? options.timeout : 10000;
 
@@ -187,15 +191,26 @@
         fetchOptions.headers['Content-Length'] = contentLength;
       }
 
-      if (options.user && options.password) {
+      const { accessKey, unauthenticated } = options;
+      if (unauthenticated) {
+        if (!accessKey) {
+          throw new Error(
+            '_promiseAjax: mode is aunathenticated, but accessKey was not provided'
+          );
+        }
+        // Access key is already a Base64 string
+        fetchOptions.headers['Unidentified-Access-Key'] = accessKey;
+      } else if (options.user && options.password) {
         const user = _getString(options.user);
         const password = _getString(options.password);
         const auth = _btoa(`${user}:${password}`);
         fetchOptions.headers.Authorization = `Basic ${auth}`;
       }
+
       if (options.contentType) {
         fetchOptions.headers['Content-Type'] = options.contentType;
       }
+
       fetch(url, fetchOptions)
         .then(response => {
           let resultPromise;
@@ -284,12 +299,14 @@
 
   const URL_CALLS = {
     accounts: 'v1/accounts',
+    attachment: 'v1/attachments',
+    deliveryCert: 'v1/certificate/delivery',
+    supportUnauthenticatedDelivery: 'v1/devices/unauthenticated_delivery',
     devices: 'v1/devices',
     keys: 'v2/keys',
-    signed: 'v2/keys/signed',
     messages: 'v1/messages',
-    attachment: 'v1/attachments',
     profile: 'v1/profile',
+    signed: 'v2/keys/signed',
   };
 
   window.web_api = {
@@ -327,16 +344,21 @@
         getAttachment,
         getAvatar,
         getDevices,
+        getSenderCertificate,
+        registerSupportForUnauthenticatedDelivery,
         getKeysForNumber,
+        getKeysForNumberUnauth,
         getMessageSocket,
         getMyKeys,
         getProfile,
+        getProfileUnauth,
         getProvisioningSocket,
         putAttachment,
         registerKeys,
         requestVerificationSMS,
         requestVerificationVoice,
         sendMessages,
+        sendMessagesUnauth,
         setSignedPreKey,
       };
 
@@ -358,6 +380,8 @@
           type: param.httpType,
           user: username,
           validateResponse: param.validateResponse,
+          unauthenticated: param.unauthenticated,
+          accessKey: param.accessKey,
         }).catch(e => {
           const { code } = e;
           if (code === 200) {
@@ -397,12 +421,39 @@
         });
       }
 
+      function getSenderCertificate() {
+        return _ajax({
+          call: 'deliveryCert',
+          httpType: 'GET',
+          responseType: 'json',
+          schema: { certificate: 'string' },
+        });
+      }
+
+      function registerSupportForUnauthenticatedDelivery() {
+        return _ajax({
+          call: 'supportUnauthenticatedDelivery',
+          httpType: 'PUT',
+          responseType: 'json',
+        });
+      }
+
       function getProfile(number) {
         return _ajax({
           call: 'profile',
           httpType: 'GET',
           urlParameters: `/${number}`,
           responseType: 'json',
+        });
+      }
+      function getProfileUnauth(number, { accessKey } = {}) {
+        return _ajax({
+          call: 'profile',
+          httpType: 'GET',
+          urlParameters: `/${number}`,
+          responseType: 'json',
+          unauthenticated: true,
+          accessKey,
         });
       }
 
@@ -441,13 +492,19 @@
         newPassword,
         signalingKey,
         registrationId,
-        deviceName
+        deviceName,
+        options = {}
       ) {
+        const { accessKey } = options;
         const jsonData = {
           signalingKey: _btoa(_getString(signalingKey)),
           supportsSms: false,
           fetchesMessages: true,
           registrationId,
+          unidentifiedAccessKey: accessKey
+            ? _btoa(_getString(accessKey))
+            : undefined,
+          unrestrictedUnidentifiedAccess: false,
         };
 
         let call;
@@ -544,15 +601,8 @@
         }).then(res => res.count);
       }
 
-      function getKeysForNumber(number, deviceId = '*') {
-        return _ajax({
-          call: 'keys',
-          httpType: 'GET',
-          urlParameters: `/${number}/${deviceId}`,
-          responseType: 'json',
-          validateResponse: { identityKey: 'string', devices: 'object' },
-        }).then(res => {
-          if (res.devices.constructor !== Array) {
+      function handleKeys(res) {
+        if (!Array.isArray(res.devices)) {
             throw new Error('Invalid response');
           }
           res.identityKey = _base64ToBytes(res.identityKey);
@@ -586,6 +636,55 @@
             );
           });
           return res;
+      }
+
+      function getKeysForNumber(number, deviceId = '*') {
+        return _ajax({
+          call: 'keys',
+          httpType: 'GET',
+          urlParameters: `/${number}/${deviceId}`,
+          responseType: 'json',
+          validateResponse: { identityKey: 'string', devices: 'object' },
+        }).then(handleKeys);
+      }
+
+      function getKeysForNumberUnauth(
+        number,
+        deviceId = '*',
+        { accessKey } = {}
+      ) {
+        return _ajax({
+          call: 'keys',
+          httpType: 'GET',
+          urlParameters: `/${number}/${deviceId}`,
+          responseType: 'json',
+          validateResponse: { identityKey: 'string', devices: 'object' },
+          unauthenticated: true,
+          accessKey,
+        }).then(handleKeys);
+      }
+
+      function sendMessagesUnauth(
+        destination,
+        messageArray,
+        timestamp,
+        silent,
+        { accessKey } = {}
+      ) {
+        const jsonData = { messages: messageArray, timestamp };
+
+        if (silent) {
+          jsonData.silent = true;
+        }
+
+        return _ajax({
+          call: 'messages',
+          httpType: 'PUT',
+          urlParameters: `/${destination}`,
+          jsonData,
+          responseType: 'json',
+          unauthenticated: true,
+          accessKey,
         });
       }
 

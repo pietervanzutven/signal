@@ -202,6 +202,7 @@
     <Content Include="js\modules\migrations\migrations_1_database_without_attachment_data.js" />
     <Content Include="js\modules\migrations\run_migrations.js" />
     <Content Include="js\modules\privacy.js" />
+    <Content Include="js\modules\refresh_sender_certificate.js" />
     <Content Include="js\modules\settings.js" />
     <Content Include="js\modules\signal.js" />
     <Content Include="js\modules\sleep.js" />
@@ -370,11 +371,11 @@
     <Content Include="node_modules\react-contextmenu\SubMenu.js" />
     <Content Include="node_modules\rimraf\index.js" />
     <Content Include="node_modules\semver\functions\lt.js" />
+    <Content Include="node_modules\sjcl\sjcl.js" />
     <Content Include="node_modules\sql\sql-asm.js" />
     <Content Include="node_modules\url\url.js" />
     <Content Include="node_modules\url\util.js" />
     <Content Include="node_modules\uuid\v4.js" />
-    <Content Include="node_modules\aes-js\index.js" />
     <Content Include="node_modules\blob-util\blob-util.js" />
     <Content Include="node_modules\blueimp-canvas-to-blob\canvas-to-blob.js" />
     <Content Include="node_modules\blueimp-load-image\load-image-exif-map.js" />
