@@ -6,14 +6,14 @@
   window.migrations = window.migrations || {};
   const exports = window.migrations.get_placeholder_migrations = {};
 
-  const Migrations0DatabaseWithAttachmentData = window.migrations.migrations_0_database_with_attachment_data;
+  const Migrations = window.migrations.migrations;
 
   exports.getPlaceholderMigrations = () => {
-    const last0MigrationVersion = Migrations0DatabaseWithAttachmentData.getLatestVersion();
+    const version = Migrations.getLatestVersion();
 
     return [
       {
-        version: last0MigrationVersion,
+        version,
         migrate() {
           throw new Error(
             'Unexpected invocation of placeholder migration!' +

@@ -58,7 +58,10 @@
       storeName: 'items',
     }))();
 
+    // Note: this legacy migration technique is required to bring old clients with
+    //   data in IndexedDB forward into the new world of SQLCipher only.
     await deferredToPromise(migrationCollection.fetch({ limit: 1 }));
+
     logger.info('Close database connection');
     await closeDatabaseConnection({ Backbone });
   };

@@ -10,6 +10,7 @@
   const Data = window.data;
   const Database = window.database;
   const Emoji = window.ts.util.emoji;
+  const IndexedDB = window.indexeddb;
   const Notifications = window.ts.notifications;
   const OS = window.ts.OS;
   const Settings = window.settings;
@@ -68,9 +69,7 @@
     getPlaceholderMigrations,
     getCurrentVersion,
   } = window.migrations.get_placeholder_migrations;
-
-  const Migrations0DatabaseWithAttachmentData = window.migrations.migrations_0_database_with_attachment_data;
-  const Migrations1DatabaseWithoutAttachmentData = window.migrations.migrations_1_database_without_attachment_data;
+  const { run } = window.migrations.migrations;
 
   // Types
   const AttachmentType = window.types.attachment;
@@ -137,8 +136,7 @@
       loadAttachmentData,
       loadQuoteData,
       loadMessage: MessageType.createAttachmentLoader(loadAttachmentData),
-      Migrations0DatabaseWithAttachmentData,
-      Migrations1DatabaseWithoutAttachmentData,
+      run,
       upgradeMessageSchema: (message, options = {}) => {
         const { maxVersion } = options;
 
@@ -230,6 +228,7 @@
       Data,
       Database,
       Emoji,
+      IndexedDB,
       Migrations,
       Notifications,
       OS,

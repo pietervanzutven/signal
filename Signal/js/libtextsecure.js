@@ -37087,15 +37087,17 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
 
     getNumbers(groupId) {
       return textsecure.storage.protocol.getGroup(groupId).then(group => {
-          if (group === undefined) return undefined;
+        if (!group) {
+          return undefined;
+        }
 
-          return group.numbers;
-        });
+        return group.numbers;
+      });
     },
 
     removeNumber(groupId, number) {
       return textsecure.storage.protocol.getGroup(groupId).then(group => {
-          if (group === undefined) return undefined;
+        if (group === undefined) return undefined;
 
         const me = textsecure.storage.user.getNumber();
         if (number === me)
