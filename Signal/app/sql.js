@@ -867,10 +867,6 @@
      ORDER BY id ASC;`
     );
 
-    if (!rows) {
-      return null;
-    }
-
     return map(rows, row => jsonToObject(row.json));
   }
 
@@ -884,10 +880,6 @@
         $id: `%${id}%`,
       }
     );
-
-    if (!rows) {
-      return null;
-    }
 
     return map(rows, row => jsonToObject(row.json));
   }
@@ -905,10 +897,6 @@
         $profileName: `%${query}%`,
       }
     );
-
-    if (!rows) {
-      return null;
-    }
 
     return map(rows, row => jsonToObject(row.json));
   }
@@ -1130,10 +1118,6 @@
       }
     );
 
-    if (!rows) {
-      return null;
-    }
-
     return map(rows, row => jsonToObject(row.json));
   }
 
@@ -1154,10 +1138,6 @@
       }
     );
 
-    if (!rows) {
-      return null;
-    }
-
     return map(rows, row => jsonToObject(row.json));
   }
 
@@ -1170,10 +1150,6 @@
         $sent_at: sentAt,
       }
     );
-
-    if (!rows) {
-      return null;
-    }
 
     return map(rows, row => jsonToObject(row.json));
   }
@@ -1191,10 +1167,6 @@
       }
     );
 
-    if (!rows) {
-      return null;
-    }
-
     return map(rows, row => jsonToObject(row.json));
   }
 
@@ -1208,10 +1180,6 @@
     ORDER BY expires_at ASC;
   `);
 
-    if (!rows) {
-      return null;
-    }
-
     return map(rows, row => jsonToObject(row.json));
   }
 
@@ -1222,10 +1190,6 @@
     ORDER BY expires_at ASC
     LIMIT 1;
   `);
-
-    if (!rows) {
-      return null;
-    }
 
     return map(rows, row => jsonToObject(row.json));
   }
@@ -1312,10 +1276,6 @@
       'SELECT json FROM unprocessed ORDER BY timestamp ASC;'
     );
 
-    if (!rows) {
-      return null;
-    }
-
     return map(rows, row => jsonToObject(row.json));
   }
 
@@ -1394,10 +1354,6 @@
       }
     );
 
-    if (!rows) {
-      return null;
-    }
-
     return map(rows, row => jsonToObject(row.json));
   }
 
@@ -1417,10 +1373,6 @@
       }
     );
 
-    if (!rows) {
-      return null;
-    }
-
     return map(rows, row => jsonToObject(row.json));
   }
 
@@ -1436,10 +1388,6 @@
         $limit: limit,
       }
     );
-
-    if (!rows) {
-      return null;
-    }
 
     return map(rows, row => jsonToObject(row.json));
   }
