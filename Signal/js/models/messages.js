@@ -988,7 +988,8 @@
     sendSyncMessage() {
       const ourNumber = textsecure.storage.user.getNumber();
       const { wrap, sendOptions } = ConversationController.prepareForSend(
-        ourNumber
+        ourNumber,
+        { syncMessage: true }
       );
 
       this.syncPromise = this.syncPromise || Promise.resolve();

@@ -158,6 +158,11 @@
     return new WebSocket(url);
   }
 
+  const agents = {
+    unauth: null,
+    auth: null,
+  };
+
   function _promiseAjax(providedUrl, options) {
     return new Promise((resolve, reject) => {
       const url = providedUrl || `${options.host}/${options.path}`;
@@ -168,10 +173,16 @@
         typeof options.timeout !== 'undefined' ? options.timeout : 10000;
 
       const { proxyUrl } = options;
-      let agent;
-      if (proxyUrl) {
-        agent = new ProxyAgent(proxyUrl);
+      const agentType = options.unathenticated ? 'unauth' : 'auth';
+
+      if (!agents[agentType]) {
+        if (proxyUrl) {
+          agents[agentType] = new ProxyAgent(proxyUrl);
+        } else {
+          agents[agentType] = new Agent();
+        }
       }
+      const agent = agents[agentType];
 
       const fetchOptions = {
         method: options.type,
@@ -603,39 +614,39 @@
 
       function handleKeys(res) {
         if (!Array.isArray(res.devices)) {
-            throw new Error('Invalid response');
+          throw new Error('Invalid response');
+        }
+        res.identityKey = _base64ToBytes(res.identityKey);
+        res.devices.forEach(device => {
+          if (
+            !_validateResponse(device, { signedPreKey: 'object' }) ||
+            !_validateResponse(device.signedPreKey, {
+              publicKey: 'string',
+              signature: 'string',
+            })
+          ) {
+            throw new Error('Invalid signedPreKey');
           }
-          res.identityKey = _base64ToBytes(res.identityKey);
-          res.devices.forEach(device => {
+          if (device.preKey) {
             if (
-              !_validateResponse(device, { signedPreKey: 'object' }) ||
-              !_validateResponse(device.signedPreKey, {
-                publicKey: 'string',
-                signature: 'string',
-              })
+              !_validateResponse(device, { preKey: 'object' }) ||
+              !_validateResponse(device.preKey, { publicKey: 'string' })
             ) {
-              throw new Error('Invalid signedPreKey');
-            }
-            if (device.preKey) {
-              if (
-                !_validateResponse(device, { preKey: 'object' }) ||
-                !_validateResponse(device.preKey, { publicKey: 'string' })
-              ) {
-                throw new Error('Invalid preKey');
-              }
-              // eslint-disable-next-line no-param-reassign
-              device.preKey.publicKey = _base64ToBytes(device.preKey.publicKey);
+              throw new Error('Invalid preKey');
             }
             // eslint-disable-next-line no-param-reassign
-            device.signedPreKey.publicKey = _base64ToBytes(
-              device.signedPreKey.publicKey
-            );
-            // eslint-disable-next-line no-param-reassign
-            device.signedPreKey.signature = _base64ToBytes(
-              device.signedPreKey.signature
-            );
-          });
-          return res;
+            device.preKey.publicKey = _base64ToBytes(device.preKey.publicKey);
+          }
+          // eslint-disable-next-line no-param-reassign
+          device.signedPreKey.publicKey = _base64ToBytes(
+            device.signedPreKey.publicKey
+          );
+          // eslint-disable-next-line no-param-reassign
+          device.signedPreKey.signature = _base64ToBytes(
+            device.signedPreKey.signature
+          );
+        });
+        return res;
       }
 
       function getKeysForNumber(number, deviceId = '*') {
