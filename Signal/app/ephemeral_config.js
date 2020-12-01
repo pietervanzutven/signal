@@ -1,16 +1,18 @@
 (function () {
-    'use strict';
+  'use strict';
 
-    window.app = window.app || {};
+  window.app = window.app || {};
 
-    const path = window.path;
+  const path = window.path;
 
-    const { start } = window.app.base_config;
+  const { start } = window.app.base_config;
 
-    const userDataPath = app.getPath('userData');
-    const targetPath = path.join(userDataPath, 'ephemeral.json');
+  const userDataPath = app.getPath('userData');
+  const targetPath = path.join(userDataPath, 'ephemeral.json');
 
-    const ephemeralConfig = start('ephemeral', targetPath);
+  const ephemeralConfig = start('ephemeral', targetPath, {
+    allowMalformedOnStartup: true,
+  });
 
-    window.app.ephemeral_config = ephemeralConfig;
+  window.app.ephemeral_config = ephemeralConfig;
 })();
