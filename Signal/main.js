@@ -486,6 +486,46 @@ function setupMenu(options) {
   });
 }
 
+async function requestShutdown() {
+  if (!mainWindow || !mainWindow.webContents) {
+    return;
+  }
+
+  console.log('requestShutdown: Requesting close of mainWindow...');
+  const request = new Promise((resolve, reject) => {
+    ipc.once('now-ready-for-shutdown', (_event, error) => {
+      console.log('requestShutdown: Response received');
+
+      if (error) {
+        return reject(error);
+      }
+
+      return resolve();
+    });
+    mainWindow.webContents.send('get-ready-for-shutdown');
+
+    // We'll wait two minutes, then force the app to go down. This can happen if someone
+    //   exits the app before we've set everything up in preload() (so the browser isn't
+    //   yet listening for these events), or if there are a whole lot of stacked-up tasks.
+    // Note: two minutes is also our timeout for SQL tasks in data.js in the browser.
+    setTimeout(() => {
+      console.log(
+        'requestShutdown: Response never received; forcing shutdown.'
+      );
+      resolve();
+    }, 2 * 60 * 1000);
+  });
+
+  try {
+    await request;
+  } catch (error) {
+    console.log(
+      'requestShutdown error:',
+      error && error.stack ? error.stack : error
+    );
+  }
+}
+
 ipc.on('set-badge-count', (event, count) => {
   var Notifications = Windows.UI.Notifications;
   var type = typeof (count) === 'string' ? Notifications.BadgeTemplateType.badgeGlyph : Notifications.BadgeTemplateType.badgeNumber;
