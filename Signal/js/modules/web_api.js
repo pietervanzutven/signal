@@ -158,6 +158,7 @@
     return new WebSocket(url);
   }
 
+  const FIVE_MINUTES = 1000 * 60 * 5;
   const agents = {
     unauth: null,
     auth: null,
@@ -173,16 +174,21 @@
         typeof options.timeout !== 'undefined' ? options.timeout : 10000;
 
       const { proxyUrl } = options;
-      const agentType = options.unathenticated ? 'unauth' : 'auth';
+      const agentType = options.unauthenticated ? 'unauth' : 'auth';
 
-      if (!agents[agentType]) {
-        if (proxyUrl) {
-          agents[agentType] = new ProxyAgent(proxyUrl);
-        } else {
-          agents[agentType] = new Agent();
+      const { timestamp } = agents[agentType] || {};
+      if (!timestamp || timestamp + FIVE_MINUTES < Date.now()) {
+        if (timestamp) {
+          log.info(`Cycling agent for type ${agentType}`);
         }
+        agents[agentType] = {
+          agent: proxyUrl
+            ? new ProxyAgent(proxyUrl)
+            : new Agent({ keepAlive: true }),
+          timestamp: Date.now(),
+        };
       }
-      const agent = agents[agentType];
+      const { agent } = agents[agentType];
 
       const fetchOptions = {
         method: options.type,
@@ -427,7 +433,7 @@
               message =
                 'The server rejected our query, please file a bug report.';
           }
-          e.message = message;
+          e.message = `${message} (original: ${e.message})`;
           throw e;
         });
       }
