@@ -1115,9 +1115,11 @@
 
   // Sent:
   async function handleMessageSentProfileUpdate({
+    data,
     confirm,
     messageDescriptor,
   }) {
+    // First set profileSharing = true for the conversation we sent to
     const { id, type } = messageDescriptor;
     const conversation = await ConversationController.getOrCreateAndWait(
       id,
@@ -1128,6 +1130,14 @@
     await window.Signal.Data.updateConversation(id, conversation.attributes, {
       Conversation: Whisper.Conversation,
     });
+
+    // Then we update our own profileKey if it's different from what we have
+    const ourNumber = textsecure.storage.user.getNumber();
+    const profileKey = data.message.profileKey.toString('base64');
+    const me = await ConversationController.getOrCreate(ourNumber, 'private');
+
+    // Will do the save for us if needed
+    await me.setProfileKey(profileKey);
 
     return confirm();
   }
