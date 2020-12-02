@@ -146,7 +146,7 @@
     if (proxyUrl) {
       requestOptions = {
         ca: certificateAuthority,
-        agent: new ProxyAgent(proxyUrl),
+        agent: null,
       };
     } else {
       requestOptions = {
@@ -183,8 +183,8 @@
         }
         agents[agentType] = {
           agent: proxyUrl
-            ? new ProxyAgent(proxyUrl)
-            : new Agent({ keepAlive: true }),
+            ? null
+            : null,
           timestamp: Date.now(),
         };
       }
