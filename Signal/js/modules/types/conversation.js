@@ -1,25 +1,17 @@
-/* global dcodeIO, crypto */
+/* global crypto */
 
 (function () {
   'use strict';
 
   window.types = window.types || {};
 
-  const fse = window.fs_extra;
   const { isFunction, isNumber } = window.lodash;
   const { createLastMessageUpdate } = window.ts.types.Conversation;
+  const { arrayBufferToBase64, base64ToArrayBuffer } = window.crypto;
 
   async function computeHash(arraybuffer) {
     const hash = await crypto.subtle.digest({ name: 'SHA-512' }, arraybuffer);
     return arrayBufferToBase64(hash);
-  }
-
-  function arrayBufferToBase64(arraybuffer) {
-    return dcodeIO.ByteBuffer.wrap(arraybuffer).toString('base64');
-  }
-
-  function base64ToArrayBuffer(base64) {
-    return dcodeIO.ByteBuffer.wrap(base64, 'base64').toArrayBuffer();
   }
 
   function buildAvatarUpdater({ field }) {
@@ -47,7 +39,7 @@
         return Object.assign({},
           conversation,
           {
-            avatar: {
+            [field]: {
               hash: newHash,
               path: await writeNewAttachmentData(data),
             },
@@ -66,7 +58,7 @@
       return Object.assign({},
         conversation,
         {
-          avatar: {
+          [field]: {
             hash: newHash,
             path: await writeNewAttachmentData(data),
           },
@@ -95,9 +87,6 @@
     let { avatar, profileAvatar, profileKey } = conversation;
 
     if (avatar && avatar.data) {
-      if (typeof avatar.data === 'string') {
-        avatar.data = (await fse.readFile(avatar.data)).buffer;
-      }
       avatar = {
         hash: await computeHash(avatar.data),
         path: await writeNewAttachmentData(avatar.data),
@@ -105,9 +94,6 @@
     }
 
     if (profileAvatar && profileAvatar.data) {
-      if (typeof profileAvatar.data === 'string') {
-        profileAvatar.data = (await fse.readFile(profileAvatar.data)).buffer;
-      }
       profileAvatar = {
         hash: await computeHash(profileAvatar.data),
         path: await writeNewAttachmentData(profileAvatar.data),

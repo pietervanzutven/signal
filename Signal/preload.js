@@ -27,6 +27,7 @@
   window.getExpiration = () => config.buildExpiration;
   window.getUWPVersion = () => config.uwp_version;
   window.getHostName = () => config.hostname;
+  window.getServerTrustRoot = () => config.serverTrustRoot;
 
   window.isBeforeVersion = (toCheck, baseVersion) => {
     try {
@@ -141,6 +142,25 @@
     }
   });
 
+  ipc.on('get-ready-for-shutdown', async () => {
+    const { shutdown } = window.Events;
+    if (!shutdown) {
+      window.log.error('preload shutdown handler: shutdown method not found');
+      ipc.send('now-ready-for-shutdown');
+      return;
+    }
+
+    try {
+      await shutdown();
+      ipc.send('now-ready-for-shutdown');
+    } catch (error) {
+      ipc.send(
+        'now-ready-for-shutdown',
+        error && error.stack ? error.stack : error
+      );
+    }
+  });
+
   function installGetter(name, functionName) {
     ipc.on(`get-${name}`, async () => {
       const getFn = window.Events[functionName];
@@ -149,7 +169,10 @@
         try {
           ipc.send(`get-success-${name}`, null, await getFn());
         } catch (error) {
-          ipc.send(`get-success-${name}`, error);
+          ipc.send(
+            `get-success-${name}`,
+            error && error.stack ? error.stack : error
+          );
         }
       }
     });
@@ -197,6 +220,7 @@
   window.libphonenumber = window.google_libphonenumber.PhoneNumberUtil.getInstance();
   window.libphonenumber.PhoneNumberFormat = window.google_libphonenumber.PhoneNumberFormat;
   window.loadImage = window.blueimp_load_image;
+  window.getGuid = window.uuid.v4;
 
   window.React = window.react;
   window.ReactDOM = window.react_dom;
@@ -205,7 +229,7 @@
   const Signal = window.signal;
   const i18n = window.modules.i18n;
   const Attachments = window.app.attachments;
-    
+
   const { locale } = config;
   window.i18n = i18n.setup(locale, localeMessages);
   window.moment.updateLocale(locale, {

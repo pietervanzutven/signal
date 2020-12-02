@@ -13,7 +13,8 @@
     start,
   };
 
-  function start(name, targetPath) {
+  function start(name, targetPath, options = {}) {
+    const { allowMalformedOnStartup } = options;
     let cachedValue = null;
 
     try {
@@ -28,7 +29,7 @@
         cachedValue = Object.create(null);
       }
     } catch (error) {
-      if (error.code !== 'ENOENT') {
+      if (!allowMalformedOnStartup && error.code !== 'ENOENT') {
         throw error;
       }
 

@@ -1,9 +1,7 @@
-(function () {
+function require_ts_util_isFileDangerous() {
     "use strict";
 
-    window.ts = window.ts || {};
-    window.ts.util = window.ts.util || {};
-    const exports = window.ts.util.isFileDangerous = {};
+    const exports = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
     // tslint:disable-next-line max-line-length
@@ -12,4 +10,6 @@
         return DANGEROUS_FILE_TYPES.test(fileName);
     }
     exports.isFileDangerous = isFileDangerous;
-})();
+
+    return exports;
+}

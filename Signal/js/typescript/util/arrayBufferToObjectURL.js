@@ -1,9 +1,7 @@
-(function () {
+function require_ts_util_arrayBufferToObjectURL() {
     "use strict";
 
-    window.ts = window.ts || {};
-    window.ts.util = window.ts.util || {};
-    const exports = window.ts.util.arrayBufferToObjectURL = {};
+    const exports = {};
 
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -17,4 +15,6 @@
         const blob = new Blob([data], { type });
         return URL.createObjectURL(blob);
     };
-})();
+
+    return exports;
+}

@@ -27,7 +27,7 @@
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const Quote_1 = window.ts.components.conversation.Quote;
     const EmbeddedContact_1 = window.ts.components.conversation.EmbeddedContact;
-    const isFileDangerous_1 = window.ts.util.isFileDangerous;
+    const isFileDangerous_1 = require_ts_util_isFileDangerous();
     const react_contextmenu_1 = window.react_contextmenu;
     const MIME = __importStar(window.ts.types.MIME);
     function isImage(attachment) {

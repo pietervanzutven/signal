@@ -1,9 +1,7 @@
-(function () {
+function require_ts_util_migrateColor() {
     "use strict";
 
-    window.ts = window.ts || {};
-    window.ts.util = window.ts.util || {};
-    const exports = window.ts.util.migrateColor = {};
+    const exports = {};
 
     // import { missingCaseError } from './missingCaseError';
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -45,4 +43,6 @@
         }
     }
     exports.migrateColor = migrateColor;
-})();
+
+    return exports;
+}

@@ -175,6 +175,7 @@
     <Content Include="js\expiring_messages.js" />
     <Content Include="js\focus_listener.js" />
     <Content Include="js\keychange_listener.js" />
+    <Content Include="js\legacy_storage.js" />
     <Content Include="js\libphonenumber-util.js" />
     <Content Include="js\libsignal-protocol-worker.js" />
     <Content Include="js\libtextsecure.js" />
@@ -191,6 +192,7 @@
     <Content Include="js\modules\deferred_to_promise.js" />
     <Content Include="js\modules\i18n.js" />
     <Content Include="js\modules\idle_detector.js" />
+    <Content Include="js\modules\indexeddb.js" />
     <Content Include="js\modules\logs.js" />
     <Content Include="js\modules\messages_data_migrator.js" />
     <Content Include="js\modules\metadata\CiphertextMessage.js" />
@@ -198,10 +200,10 @@
     <Content Include="js\modules\migrate_to_sql.js" />
     <Content Include="js\modules\migrations\18\index.js" />
     <Content Include="js\modules\migrations\get_placeholder_migrations.js" />
-    <Content Include="js\modules\migrations\migrations_0_database_with_attachment_data.js" />
-    <Content Include="js\modules\migrations\migrations_1_database_without_attachment_data.js" />
+    <Content Include="js\modules\migrations\migrations.js" />
     <Content Include="js\modules\migrations\run_migrations.js" />
     <Content Include="js\modules\privacy.js" />
+    <Content Include="js\modules\refresh_sender_certificate.js" />
     <Content Include="js\modules\settings.js" />
     <Content Include="js\modules\signal.js" />
     <Content Include="js\modules\sleep.js" />
@@ -350,6 +352,7 @@
     <Content Include="node_modules\lodash\filter.js" />
     <Content Include="node_modules\lodash\includes.js" />
     <Content Include="node_modules\lodash\map.js" />
+    <Content Include="node_modules\lodash\clonedeep.js" />
     <Content Include="node_modules\lodash\set.js" />
     <Content Include="node_modules\mkdirp\index.js" />
     <Content Include="node_modules\pify\index.js" />
@@ -370,11 +373,11 @@
     <Content Include="node_modules\react-contextmenu\SubMenu.js" />
     <Content Include="node_modules\rimraf\index.js" />
     <Content Include="node_modules\semver\functions\lt.js" />
+    <Content Include="node_modules\sjcl\sjcl.js" />
     <Content Include="node_modules\sql\sql-asm.js" />
     <Content Include="node_modules\url\url.js" />
     <Content Include="node_modules\url\util.js" />
     <Content Include="node_modules\uuid\v4.js" />
-    <Content Include="node_modules\aes-js\index.js" />
     <Content Include="node_modules\blob-util\blob-util.js" />
     <Content Include="node_modules\blueimp-canvas-to-blob\canvas-to-blob.js" />
     <Content Include="node_modules\blueimp-load-image\load-image-exif-map.js" />

@@ -4,7 +4,7 @@
 
 (function () {
   'use strict';
-  
+
   const exports = window.metadata;
 
   const CiphertextMessage = window.metadata.CiphertextMessage;
@@ -294,11 +294,18 @@
         signalProtocolStore,
         destinationAddress
       );
+      const sessionRecord = await sessionCipher.getRecord(
+        destinationAddress.toString()
+      );
+      const openSession = sessionRecord.getOpenSession();
+      if (!openSession) {
+        throw new Error('No active session');
+      }
 
       const message = await sessionCipher.encrypt(paddedPlaintext);
       const ourIdentity = await signalProtocolStore.getIdentityKeyPair();
       const theirIdentity = fromEncodedBinaryToArrayBuffer(
-        await signalProtocolStore.loadIdentityKey(destinationAddress.getName())
+        openSession.indexInfo.remoteIdentityKey
       );
 
       const ephemeral = await libsignal.Curve.async.generateKeyPair();
@@ -421,11 +428,6 @@
           content: await _decryptWithUnidentifiedSenderMessage(content),
         };
       } catch (error) {
-        if (!error) {
-          // eslint-disable-next-line no-ex-assign
-          error = new Error('Decryption error was falsey!');
-        }
-
         error.sender = address;
 
         throw error;
