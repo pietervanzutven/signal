@@ -19,39 +19,31 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
-    const GoogleChrome_1 = window.ts.util.GoogleChrome;
     const Avatar_1 = window.ts.components.Avatar;
     const MessageBody_1 = window.ts.components.conversation.MessageBody;
     const ExpireTimer_1 = window.ts.components.conversation.ExpireTimer;
+    const ImageGrid_1 = window.ts.components.conversation.ImageGrid;
     const Timestamp_1 = window.ts.components.conversation.Timestamp;
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const Quote_1 = window.ts.components.conversation.Quote;
     const EmbeddedContact_1 = window.ts.components.conversation.EmbeddedContact;
+    const MIME = __importStar(window.ts.types.MIME);
     const isFileDangerous_1 = require_ts_util_isFileDangerous();
     const react_contextmenu_1 = window.react_contextmenu;
-    const MIME = __importStar(window.ts.types.MIME);
-    function isImage(attachment) {
-        return (attachment &&
-            attachment.contentType &&
-            GoogleChrome_1.isImageTypeSupported(attachment.contentType));
+    function isAudio(attachments) {
+        return (attachments &&
+            attachments[0] &&
+            attachments[0].contentType &&
+            MIME.isAudio(attachments[0].contentType));
     }
-    function hasImage(attachment) {
-        return attachment && attachment.url;
-    }
-    function isVideo(attachment) {
-        return (attachment &&
-            attachment.contentType &&
-            GoogleChrome_1.isVideoTypeSupported(attachment.contentType));
-    }
-    function hasVideoScreenshot(attachment) {
-        return attachment && attachment.screenshot && attachment.screenshot.url;
-    }
-    function isAudio(attachment) {
-        return (attachment && attachment.contentType && MIME.isAudio(attachment.contentType));
-    }
-    function canDisplayImage(attachment) {
-        const { height, width } = attachment || { height: 0, width: 0 };
-        return height > 0 && height <= 4096 && width > 0 && width <= 4096;
+    function canDisplayImage(attachments) {
+        const { height, width } = attachments && attachments[0] ? attachments[0] : { height: 0, width: 0 };
+        return (height &&
+            height > 0 &&
+            height <= 4096 &&
+            width &&
+            width > 0 &&
+            width <= 4096);
     }
     function getExtension({ fileName, contentType, }) {
         if (fileName && fileName.indexOf('.') >= 0) {
@@ -67,8 +59,6 @@
         }
         return null;
     }
-    const MINIMUM_IMG_HEIGHT = 150;
-    const MAXIMUM_IMG_HEIGHT = 300;
     const EXPIRATION_CHECK_MINIMUM = 2000;
     const EXPIRED_DELAY = 600;
     class Message extends react_1.default.Component {
@@ -138,17 +128,17 @@
             });
         }
         renderMetadata() {
-            const { attachment, collapseMetadata, direction, expirationLength, expirationTimestamp, i18n, status, text, timestamp, } = this.props;
+            const { attachments, collapseMetadata, direction, expirationLength, expirationTimestamp, i18n, status, text, timestamp, } = this.props;
             const { imageBroken } = this.state;
             if (collapseMetadata) {
                 return null;
             }
-            const canDisplayAttachment = canDisplayImage(attachment);
+            const canDisplayAttachment = canDisplayImage(attachments);
             const withImageNoCaption = Boolean(!text &&
                 canDisplayAttachment &&
                 !imageBroken &&
-                ((isImage(attachment) && hasImage(attachment)) ||
-                    (isVideo(attachment) && hasVideoScreenshot(attachment))));
+                ((ImageGrid_1.isImage(attachments) && ImageGrid_1.hasImage(attachments)) ||
+                    (ImageGrid_1.isVideo(attachments) && ImageGrid_1.hasVideoScreenshot(attachments))));
             const showError = status === 'error' && direction === 'outgoing';
             return (react_1.default.createElement("div", {
                 className: classnames_1.default('module-message__metadata', withImageNoCaption
@@ -179,64 +169,31 @@
         }
         // tslint:disable-next-line max-func-body-length cyclomatic-complexity
         renderAttachment() {
-            const { i18n, attachment, text, collapseMetadata, conversationType, direction, quote, onClickAttachment, } = this.props;
+            const { attachments, text, collapseMetadata, conversationType, direction, i18n, quote, onClickAttachment, } = this.props;
             const { imageBroken } = this.state;
-            if (!attachment) {
+            if (!attachments || !attachments[0]) {
                 return null;
             }
-            const withCaption = Boolean(text);
+            const firstAttachment = attachments[0];
             // For attachments which aren't full-frame
-            const withContentBelow = withCaption || !collapseMetadata;
-            const withContentAbove = quote || (conversationType === 'group' && direction === 'incoming');
-            const displayImage = canDisplayImage(attachment);
-            if (isImage(attachment) && displayImage && !imageBroken && attachment.url) {
-                // Calculating height to prevent reflow when image loads
-                const imageHeight = Math.max(MINIMUM_IMG_HEIGHT, attachment.height || 0);
-                return (react_1.default.createElement("div", {
-                    onClick: onClickAttachment, role: "button", className: classnames_1.default('module-message__attachment-container', withCaption
-                        ? 'module-message__attachment-container--with-content-below'
-                        : null, withContentAbove
-                        ? 'module-message__attachment-container--with-content-above'
-                        : null)
-                },
-                    react_1.default.createElement("img", { onError: this.handleImageErrorBound, className: "module-message__img-attachment", height: Math.min(MAXIMUM_IMG_HEIGHT, imageHeight), src: attachment.url, alt: i18n('imageAttachmentAlt') }),
-                    react_1.default.createElement("div", {
-                        className: classnames_1.default('module-message__img-border-overlay', withCaption
-                            ? 'module-message__img-border-overlay--with-content-below'
-                            : null, withContentAbove
-                            ? 'module-message__img-border-overlay--with-content-above'
-                            : null)
-                    }),
-                    !withCaption && !collapseMetadata ? (react_1.default.createElement("div", { className: "module-message__img-overlay" })) : null));
-            }
-            else if (isVideo(attachment) &&
-                displayImage &&
+            const withContentBelow = Boolean(text);
+            const withContentAbove = Boolean(quote) ||
+                (conversationType === 'group' && direction === 'incoming');
+            const displayImage = canDisplayImage(attachments);
+            if (displayImage &&
                 !imageBroken &&
-                attachment.screenshot &&
-                attachment.screenshot.url) {
-                const { screenshot } = attachment;
-                // Calculating height to prevent reflow when image loads
-                const imageHeight = Math.max(MINIMUM_IMG_HEIGHT, attachment.screenshot.height || 0);
+                ((ImageGrid_1.isImage(attachments) && ImageGrid_1.hasImage(attachments)) ||
+                    (ImageGrid_1.isVideo(attachments) && ImageGrid_1.hasVideoScreenshot(attachments)))) {
                 return (react_1.default.createElement("div", {
-                    onClick: onClickAttachment, role: "button", className: classnames_1.default('module-message__attachment-container', withCaption
-                        ? 'module-message__attachment-container--with-content-below'
-                        : null, withContentAbove
+                    className: classnames_1.default('module-message__attachment-container', withContentAbove
                         ? 'module-message__attachment-container--with-content-above'
+                        : null, withContentBelow
+                        ? 'module-message__attachment-container--with-content-below'
                         : null)
                 },
-                    react_1.default.createElement("img", { onError: this.handleImageErrorBound, className: "module-message__img-attachment", alt: i18n('videoAttachmentAlt'), height: Math.min(MAXIMUM_IMG_HEIGHT, imageHeight), src: screenshot.url }),
-                    react_1.default.createElement("div", {
-                        className: classnames_1.default('module-message__img-border-overlay', withCaption
-                            ? 'module-message__img-border-overlay--with-content-below'
-                            : null, withContentAbove
-                            ? 'module-message__img-border-overlay--with-content-above'
-                            : null)
-                    }),
-                    !withCaption && !collapseMetadata ? (react_1.default.createElement("div", { className: "module-message__img-overlay" })) : null,
-                    react_1.default.createElement("div", { className: "module-message__video-overlay__circle" },
-                        react_1.default.createElement("div", { className: "module-message__video-overlay__play-icon" }))));
+                    react_1.default.createElement(ImageGrid_1.ImageGrid, { attachments: attachments, withContentAbove: withContentAbove, withContentBelow: withContentBelow, bottomOverlay: !collapseMetadata, i18n: i18n, onError: this.handleImageErrorBound, onClickAttachment: onClickAttachment })));
             }
-            else if (isAudio(attachment)) {
+            else if (isAudio(attachments)) {
                 return (react_1.default.createElement("audio", {
                     controls: true, className: classnames_1.default('module-message__audio-attachment', withContentBelow
                         ? 'module-message__audio-attachment--with-content-below'
@@ -244,10 +201,10 @@
                         ? 'module-message__audio-attachment--with-content-above'
                         : null)
                 },
-                    react_1.default.createElement("source", { src: attachment.url })));
+                    react_1.default.createElement("source", { src: firstAttachment.url })));
             }
             else {
-                const { fileName, fileSize, contentType } = attachment;
+                const { fileName, fileSize, contentType } = firstAttachment;
                 const extension = getExtension({ contentType, fileName });
                 const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
                 return (react_1.default.createElement("div", {
@@ -334,13 +291,14 @@
             }
         }
         renderMenu(isCorrectSide, triggerId) {
-            const { attachment, direction, disableMenu, onDownload, onReply, } = this.props;
+            const { attachments, direction, disableMenu, onDownload, onReply, } = this.props;
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
-            const fileName = attachment ? attachment.fileName : null;
+            const fileName = attachments && attachments[0] ? attachments[0].fileName : null;
             const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
-            const downloadButton = attachment ? (react_1.default.createElement("div", {
+            const multipleAttachments = attachments && attachments.length > 1;
+            const downloadButton = !multipleAttachments && attachments && attachments[0] ? (react_1.default.createElement("div", {
                 onClick: () => {
                     if (onDownload) {
                         onDownload(isDangerous);
@@ -358,12 +316,13 @@
                 last));
         }
         renderContextMenu(triggerId) {
-            const { attachment, direction, status, onDelete, onDownload, onReply, onRetrySend, onShowDetail, i18n, } = this.props;
+            const { attachments, direction, status, onDelete, onDownload, onReply, onRetrySend, onShowDetail, i18n, } = this.props;
             const showRetry = status === 'error' && direction === 'outgoing';
-            const fileName = attachment ? attachment.fileName : null;
+            const fileName = attachments && attachments[0] ? attachments[0].fileName : null;
             const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
+            const multipleAttachments = attachments && attachments.length > 1;
             return (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
-                attachment ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                !multipleAttachments && attachments && attachments[0] ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__download',
                     }, onClick: () => {
@@ -394,15 +353,25 @@
                 }, i18n('deleteMessage'))));
         }
         render() {
-            const { authorPhoneNumber, authorColor, direction, id, timestamp, } = this.props;
-            const { expired, expiring } = this.state;
+            const { attachments, authorPhoneNumber, authorColor, direction, id, timestamp, } = this.props;
+            const { expired, expiring, imageBroken } = this.state;
             // This id is what connects our triple-dot click with our associated pop-up menu.
             //   It needs to be unique.
             const triggerId = String(id || `${authorPhoneNumber}-${timestamp}`);
             if (expired) {
                 return null;
             }
-            return (react_1.default.createElement("div", { className: classnames_1.default('module-message', `module-message--${direction}`, expiring ? 'module-message--expired' : null) },
+            const displayImage = canDisplayImage(attachments);
+            const showingImage = displayImage &&
+                !imageBroken &&
+                ((ImageGrid_1.isImage(attachments) && ImageGrid_1.hasImage(attachments)) ||
+                    (ImageGrid_1.isVideo(attachments) && ImageGrid_1.hasVideoScreenshot(attachments)));
+            const { width } = ImageGrid_1.getGridDimensions(attachments) || { width: undefined };
+            return (react_1.default.createElement("div", {
+                className: classnames_1.default('module-message', `module-message--${direction}`, expiring ? 'module-message--expired' : null), style: {
+                    width: showingImage ? width : undefined,
+                }
+            },
                 this.renderError(direction === 'incoming'),
                 this.renderMenu(direction === 'outgoing', triggerId),
                 react_1.default.createElement("div", {

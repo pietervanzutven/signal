@@ -16,7 +16,7 @@
     const moment_1 = __importDefault(window.moment);
     const AttachmentSection_1 = window.ts.components.conversation.media_gallery.AttachmentSection;
     const EmptyState_1 = window.ts.components.conversation.media_gallery.EmptyState;
-    const groupMessagesByDate_1 = window.ts.components.conversation.media_gallery.groupMessagesByDate;
+    const groupMediaItemsByDate_1 = window.ts.components.conversation.media_gallery.groupMediaItemsByDate;
     const missingCaseError_1 = require_ts_util_missingCaseError();
     const MONTH_FORMAT = 'MMMM YYYY';
     const Tab = ({ isSelected, label, onSelect, type, }) => {
@@ -48,9 +48,9 @@
         renderSections() {
             const { i18n, media, documents, onItemClick } = this.props;
             const { selectedTab } = this.state;
-            const messages = selectedTab === 'media' ? media : documents;
+            const mediaItems = selectedTab === 'media' ? media : documents;
             const type = selectedTab;
-            if (!messages || messages.length === 0) {
+            if (!mediaItems || mediaItems.length === 0) {
                 const label = (() => {
                     switch (type) {
                         case 'media':
@@ -64,13 +64,14 @@
                 return react_1.default.createElement(EmptyState_1.EmptyState, { "data-test": "EmptyState", label: label });
             }
             const now = Date.now();
-            const sections = groupMessagesByDate_1.groupMessagesByDate(now, messages).map(section => {
-                const first = section.messages[0];
-                const date = moment_1.default(first.received_at);
+            const sections = groupMediaItemsByDate_1.groupMediaItemsByDate(now, mediaItems).map(section => {
+                const first = section.mediaItems[0];
+                const { message } = first;
+                const date = moment_1.default(message.received_at);
                 const header = section.type === 'yearMonth'
                     ? date.format(MONTH_FORMAT)
                     : i18n(section.type);
-                return (react_1.default.createElement(AttachmentSection_1.AttachmentSection, { key: header, header: header, i18n: i18n, type: type, messages: section.messages, onItemClick: onItemClick }));
+                return (react_1.default.createElement(AttachmentSection_1.AttachmentSection, { key: header, header: header, i18n: i18n, type: type, mediaItems: section.mediaItems, onItemClick: onItemClick }));
             });
             return react_1.default.createElement("div", { className: "module-media-gallery__sections" }, sections);
         }

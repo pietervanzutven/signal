@@ -30,26 +30,24 @@
             });
         }
         renderContent() {
-            const { message, i18n } = this.props;
+            const { mediaItem, i18n } = this.props;
             const { imageBroken } = this.state;
-            const { attachments } = message;
-            if (!attachments || !attachments.length) {
+            const { attachment, contentType } = mediaItem;
+            if (!attachment) {
                 return null;
             }
-            const first = attachments[0];
-            const { contentType } = first;
             if (contentType && GoogleChrome_1.isImageTypeSupported(contentType)) {
-                if (imageBroken || !message.thumbnailObjectUrl) {
+                if (imageBroken || !mediaItem.thumbnailObjectUrl) {
                     return (react_1.default.createElement("div", { className: classnames_1.default('module-media-grid-item__icon', 'module-media-grid-item__icon-image') }));
                 }
-                return (react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), className: "module-media-grid-item__image", src: message.thumbnailObjectUrl, onError: this.onImageErrorBound }));
+                return (react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), className: "module-media-grid-item__image", src: mediaItem.thumbnailObjectUrl, onError: this.onImageErrorBound }));
             }
             else if (contentType && GoogleChrome_1.isVideoTypeSupported(contentType)) {
-                if (imageBroken || !message.thumbnailObjectUrl) {
+                if (imageBroken || !mediaItem.thumbnailObjectUrl) {
                     return (react_1.default.createElement("div", { className: classnames_1.default('module-media-grid-item__icon', 'module-media-grid-item__icon-video') }));
                 }
                 return (react_1.default.createElement("div", { className: "module-media-grid-item__image-container" },
-                    react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), className: "module-media-grid-item__image", src: message.thumbnailObjectUrl, onError: this.onImageErrorBound }),
+                    react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), className: "module-media-grid-item__image", src: mediaItem.thumbnailObjectUrl, onError: this.onImageErrorBound }),
                     react_1.default.createElement("div", { className: "module-media-grid-item__circle-overlay" },
                         react_1.default.createElement("div", { className: "module-media-grid-item__play-overlay" }))));
             }
