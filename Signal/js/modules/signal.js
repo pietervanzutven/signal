@@ -61,6 +61,9 @@
     TimerNotification,
   } = window.ts.components.conversation.TimerNotification;
   const {
+    TypingBubble,
+  } = window.ts.components.conversation.TypingBubble;
+  const {
     VerificationNotification,
   } = window.ts.components.conversation.VerificationNotification;
 
@@ -196,6 +199,7 @@
       Types: {
         Message: MediaGalleryMessage,
       },
+      TypingBubble,
       VerificationNotification,
     };
 
