@@ -75,6 +75,7 @@ const process = {
     HTTPS_PROXY: null,
   },
   argv: [],
+  on: () => {}
 };
 
 window.requestIdleCallback = () => { };
