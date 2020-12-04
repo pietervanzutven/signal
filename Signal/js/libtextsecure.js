@@ -35977,7 +35977,7 @@ SessionBuilder.prototype = {
           record.updateSessionState(session);
           return Promise.all([
             this.storage.storeSession(address, record.serialize()),
-            this.storage.saveIdentity(this.remoteAddress.toString(), session.indexInfo.remoteIdentityKey)
+            this.storage.saveIdentity(this.remoteAddress.toString(), device.identityKey)
           ]);
         }.bind(this));
       }.bind(this));
@@ -36220,9 +36220,12 @@ SessionCipher.prototype = {
               msg.ciphertext = ciphertext;
               var encodedMsg = msg.toArrayBuffer();
 
+              var ourIdentityKeyBuffer = util.toArrayBuffer(ourIdentityKey.pubKey);
+              var theirIdentityKey = util.toArrayBuffer(session.indexInfo.remoteIdentityKey);
               var macInput = new Uint8Array(encodedMsg.byteLength + 33*2 + 1);
-              macInput.set(new Uint8Array(util.toArrayBuffer(ourIdentityKey.pubKey)));
-              macInput.set(new Uint8Array(util.toArrayBuffer(session.indexInfo.remoteIdentityKey)), 33);
+
+              macInput.set(new Uint8Array(ourIdentityKeyBuffer));
+              macInput.set(new Uint8Array(theirIdentityKey), 33);
               macInput[33*2] = (3 << 4) | 3;
               macInput.set(new Uint8Array(encodedMsg), 33*2 + 1);
 
@@ -36233,13 +36236,13 @@ SessionCipher.prototype = {
                   result.set(new Uint8Array(mac, 0, 8), encodedMsg.byteLength + 1);
 
                   return this.storage.isTrustedIdentity(
-                      this.remoteAddress.getName(), util.toArrayBuffer(session.indexInfo.remoteIdentityKey), this.storage.Direction.SENDING
+                      this.remoteAddress.getName(), theirIdentityKey, this.storage.Direction.SENDING
                   ).then(function(trusted) {
                       if (!trusted) {
                           throw new Error('Identity key changed');
                       }
                   }).then(function() {
-                      return this.storage.saveIdentity(this.remoteAddress.toString(), session.indexInfo.remoteIdentityKey);
+                      return this.storage.saveIdentity(this.remoteAddress.toString(), theirIdentityKey);
                   }.bind(this)).then(function() {
                       record.updateSessionState(session);
                       return this.storage.storeSession(address, record.serialize()).then(function() {
