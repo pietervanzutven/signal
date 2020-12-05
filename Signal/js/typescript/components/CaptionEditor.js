@@ -20,6 +20,32 @@
     const react_1 = __importDefault(window.react);
     const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
     class CaptionEditor extends react_1.default.Component {
+        constructor(props) {
+            super(props);
+            this.handleKeyUpBound = this.handleKeyUp.bind(this);
+            this.setFocusBound = this.setFocus.bind(this);
+            this.captureRefBound = this.captureRef.bind(this);
+            this.inputRef = null;
+        }
+        handleKeyUp(event) {
+            const { close } = this.props;
+            if (close && (event.key === 'Escape' || event.key === 'Enter')) {
+                close();
+            }
+        }
+        setFocus() {
+            if (this.inputRef) {
+                // @ts-ignore
+                this.inputRef.focus();
+            }
+        }
+        captureRef(ref) {
+            this.inputRef = ref;
+            // Forcing focus after a delay due to some focus contention with ConversationView
+            setTimeout(() => {
+                this.setFocus();
+            }, 200);
+        }
         renderObject() {
             const { url, i18n, attachment } = this.props;
             const { contentType } = attachment || { contentType: null };
@@ -36,13 +62,13 @@
         }
         render() {
             const { caption, i18n, close, onChangeCaption } = this.props;
-            return (react_1.default.createElement("div", { className: "module-caption-editor" },
+            return (react_1.default.createElement("div", { role: "dialog", onClick: this.setFocusBound, className: "module-caption-editor" },
                 react_1.default.createElement("div", { role: "button", onClick: close, className: "module-caption-editor__close-button" }),
                 react_1.default.createElement("div", { className: "module-caption-editor__media-container" }, this.renderObject()),
                 react_1.default.createElement("div", { className: "module-caption-editor__bottom-bar" },
                     react_1.default.createElement("div", { className: "module-caption-editor__add-caption-button" }),
                     react_1.default.createElement("input", {
-                        type: "text", value: caption || '', maxLength: 200, placeholder: i18n('addACaption'), className: "module-caption-editor__caption-input", onChange: event => {
+                        type: "text", ref: this.captureRefBound, onKeyUp: close ? this.handleKeyUpBound : undefined, value: caption || '', maxLength: 200, placeholder: i18n('addACaption'), className: "module-caption-editor__caption-input", onChange: event => {
                             if (onChangeCaption) {
                                 onChangeCaption(event.target.value);
                             }

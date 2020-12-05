@@ -33,7 +33,7 @@
                     const { contentType } = attachment;
                     if (GoogleChrome_1.isImageTypeSupported(contentType) ||
                         GoogleChrome_1.isVideoTypeSupported(contentType)) {
-                        return (react_1.default.createElement(Image_1.Image, { key: getUrl(attachment) || attachment.fileName || index, alt: `TODO: attachment number ${index}`, i18n: i18n, attachment: attachment, softCorners: true, playIconOverlay: isVideoAttachment(attachment), height: IMAGE_HEIGHT, width: IMAGE_WIDTH, url: getUrl(attachment), closeButton: true, onClick: onClickAttachment, onClickClose: onCloseAttachment }));
+                        return (react_1.default.createElement(Image_1.Image, { key: getUrl(attachment) || attachment.fileName || index, alt: `TODO: attachment number ${index}`, i18n: i18n, attachment: attachment, softCorners: true, playIconOverlay: isVideoAttachment(attachment), height: IMAGE_HEIGHT, width: IMAGE_WIDTH, url: getUrl(attachment), closeButton: true, onClick: attachments.length > 1 ? onClickAttachment : undefined, onClickClose: onCloseAttachment }));
                     }
                     return (react_1.default.createElement(StagedGenericAttachment_1.StagedGenericAttachment, { key: getUrl(attachment) || attachment.fileName || index, attachment: attachment, i18n: i18n, onClose: onCloseAttachment }));
                 }))));
