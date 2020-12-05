@@ -24,6 +24,7 @@
     createOrUpdateGroup,
     getGroupById,
     getAllGroupIds,
+    getAllGroups,
     bulkAddGroups,
     removeGroupById,
     removeAllGroups,
@@ -571,6 +572,10 @@
   async function getAllGroupIds() {
     const rows = await db.all('SELECT id FROM groups ORDER BY id ASC;');
     return map(rows, row => row.id);
+  }
+  async function getAllGroups() {
+    const rows = await db.all('SELECT id FROM groups ORDER BY id ASC;');
+    return map(rows, row => jsonToObject(row.json));
   }
   async function bulkAddGroups(array) {
     return bulkAdd(GROUPS_TABLE, array);

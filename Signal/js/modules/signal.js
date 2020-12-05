@@ -138,6 +138,7 @@
       loadAttachmentData,
       loadQuoteData,
       loadMessage: MessageType.createAttachmentLoader(loadAttachmentData),
+      readAttachmentData,
       run,
       upgradeMessageSchema: (message, options = {}) => {
         const { maxVersion } = options;

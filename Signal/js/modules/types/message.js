@@ -555,8 +555,6 @@
         });
       };
 
-      // TODO: need to handle attachment thumbnails and video screenshots
-
       const messageWithoutAttachmentData = Object.assign(
         {},
         await writeThumbnails(message, { logger }),
@@ -565,7 +563,23 @@
           attachments: await Promise.all(
             (attachments || []).map(async attachment => {
               await writeExistingAttachmentData(attachment);
-              return omit(attachment, ['data']);
+
+              if (attachment.screenshot && attachment.screenshot.data) {
+                await writeExistingAttachmentData(attachment.screenshot);
+              }
+              if (attachment.thumbnail && attachment.thumbnail.data) {
+                await writeExistingAttachmentData(attachment.thumbnail);
+              }
+
+              return Object.assign({},
+                omit(attachment, ['data']),
+                (attachment.thumbnail
+                  ? { thumbnail: omit(attachment.thumbnail, ['data']) }
+                  : null),
+                (attachment.screenshot
+                  ? { screenshot: omit(attachment.screenshot, ['data']) }
+                  : null)
+                );
             })
           ),
         }

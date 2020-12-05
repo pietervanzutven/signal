@@ -15,10 +15,14 @@
   window.crypto.constantTimeEqual = constantTimeEqual;
   window.crypto.decryptAesCtr = decryptAesCtr;
   window.crypto.decryptDeviceName = decryptDeviceName;
+  window.crypto.decryptAttachment = decryptAttachment;
+  window.crypto.decryptFile = decryptFile;
   window.crypto.decryptSymmetric = decryptSymmetric;
   window.crypto.deriveAccessKey = deriveAccessKey;
   window.crypto.encryptAesCtr = encryptAesCtr;
   window.crypto.encryptDeviceName = encryptDeviceName;
+  window.crypto.encryptAttachment = encryptAttachment;
+  window.crypto.encryptFile = encryptFile;
   window.crypto.encryptSymmetric = encryptSymmetric;
   window.crypto.fromEncodedBinaryToArrayBuffer = fromEncodedBinaryToArrayBuffer;
   window.crypto.getAccessKeyVerifier = getAccessKeyVerifier;
@@ -34,6 +38,24 @@
   window.crypto.verifyAccessKey = verifyAccessKey;
 
   window.crypto.randomBytes = n => Buffer.from(window.crypto.getRandomBytes(n));
+
+  function arrayBufferToBase64(arrayBuffer) {
+    return dcodeIO.ByteBuffer.wrap(arrayBuffer).toString('base64');
+  }
+  function base64ToArrayBuffer(base64string) {
+    return dcodeIO.ByteBuffer.wrap(base64string, 'base64').toArrayBuffer();
+  }
+
+  function fromEncodedBinaryToArrayBuffer(key) {
+    return dcodeIO.ByteBuffer.wrap(key, 'binary').toArrayBuffer();
+  }
+
+  function bytesFromString(string) {
+    return dcodeIO.ByteBuffer.wrap(string, 'utf8').toArrayBuffer();
+  }
+  function stringFromBytes(buffer) {
+    return dcodeIO.ByteBuffer.wrap(buffer).toString('utf8');
+  }
 
   // High-level Operations
 
@@ -84,6 +106,48 @@
     }
 
     return stringFromBytes(plaintext);
+  }
+
+  // Path structure: 'fa/facdf99c22945b1c9393345599a276f4b36ad7ccdc8c2467f5441b742c2d11fa'
+  function getAttachmentLabel(path) {
+    const filename = path.slice(3);
+    return base64ToArrayBuffer(filename);
+  }
+
+  const PUB_KEY_LENGTH = 32;
+  async function encryptAttachment(staticPublicKey, path, plaintext) {
+    const uniqueId = getAttachmentLabel(path);
+    return encryptFile(staticPublicKey, uniqueId, plaintext);
+  }
+
+  async function decryptAttachment(staticPrivateKey, path, data) {
+    const uniqueId = getAttachmentLabel(path);
+    return decryptFile(staticPrivateKey, uniqueId, data);
+  }
+
+  async function encryptFile(staticPublicKey, uniqueId, plaintext) {
+    const ephemeralKeyPair = await libsignal.KeyHelper.generateIdentityKeyPair();
+    const agreement = await libsignal.Curve.async.calculateAgreement(
+      staticPublicKey,
+      ephemeralKeyPair.privKey
+    );
+    const key = await hmacSha256(agreement, uniqueId);
+
+    const prefix = ephemeralKeyPair.pubKey.slice(1);
+    return concatenateBytes(prefix, await encryptSymmetric(key, plaintext));
+  }
+
+  async function decryptFile(staticPrivateKey, uniqueId, data) {
+    const ephemeralPublicKey = _getFirstBytes(data, PUB_KEY_LENGTH);
+    const ciphertext = _getBytes(data, PUB_KEY_LENGTH, data.byteLength);
+    const agreement = await libsignal.Curve.async.calculateAgreement(
+      ephemeralPublicKey,
+      staticPrivateKey
+    );
+
+    const key = await hmacSha256(agreement, uniqueId);
+
+    return decryptSymmetric(key, ciphertext);
   }
 
   async function deriveAccessKey(profileKey) {
@@ -228,39 +292,68 @@
   }
 
   async function encryptAesCtr(key, plaintext, counter) {
-    const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
-    const ptBits = window.sjcl.codec.arrayBuffer.toBits(plaintext);
-    const counterBits = window.sjcl.codec.bytes.toBits(counter);
+    const extractable = false;
+    const algorithm = {
+      name: 'AES-CTR',
+      counter: new Uint8Array(counter),
+      length: 128,
+    };
 
-    const aes = new window.sjcl.cipher.aes(keyBits);
-    const ctBits = window.sjcl.mode.ctr.encrypt(aes, ptBits, counterBits);
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      key,
+      algorithm,
+      extractable,
+      ['encrypt']
+    );
 
-    const ct = window.sjcl.codec.bytes.fromBits(ctBits);
-    return new Uint8Array(ct);
+    const ciphertext = await crypto.subtle.encrypt(
+      algorithm,
+      cryptoKey,
+      plaintext
+    );
+
+    return ciphertext;
   }
 
   async function decryptAesCtr(key, ciphertext, counter) {
-    const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
-    const ctBits = window.sjcl.codec.bytes.toBits(ciphertext);
-    const counterBits = window.sjcl.codec.bytes.toBits(counter);
+    const extractable = false;
+    const algorithm = {
+      name: 'AES-CTR',
+      counter: new Uint8Array(counter),
+      length: 128,
+    };
 
-    const aes = new window.sjcl.cipher.aes(keyBits);
-    const ptBits = window.sjcl.mode.ctr.decrypt(aes, ctBits, counterBits);
-
-    const pt = window.sjcl.codec.bytes.fromBits(ptBits);
-    return new Uint8Array(pt);
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      key,
+      algorithm,
+      extractable,
+      ['decrypt']
+    );
+    const plaintext = await crypto.subtle.decrypt(
+      algorithm,
+      cryptoKey,
+      ciphertext
+    );
+    return plaintext;
   }
 
   async function _encrypt_aes_gcm(key, iv, plaintext) {
-    const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
-    const ptBits = window.sjcl.codec.bytes.toBits(plaintext);
-    const ivBits = window.sjcl.codec.bytes.toBits(iv);
+    const algorithm = {
+      name: 'AES-GCM',
+      iv,
+    };
+    const extractable = false;
 
-    const aes = new window.sjcl.cipher.aes(keyBits);
-    const ctBits = window.sjcl.mode.gcm.encrypt(aes, ptBits, ivBits);
-
-    const ct = window.sjcl.codec.bytes.fromBits(ctBits);
-    return new Uint8Array(ct);
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      key,
+      algorithm,
+      extractable,
+      ['encrypt']
+    );
+    return crypto.subtle.encrypt(algorithm, cryptoKey, plaintext);
   }
 
   // Utility
@@ -292,24 +385,6 @@
 
   function trimBytes(buffer, length) {
     return _getFirstBytes(buffer, length);
-  }
-
-  function arrayBufferToBase64(arrayBuffer) {
-    return dcodeIO.ByteBuffer.wrap(arrayBuffer).toString('base64');
-  }
-  function base64ToArrayBuffer(base64string) {
-    return dcodeIO.ByteBuffer.wrap(base64string, 'base64').toArrayBuffer();
-  }
-
-  function fromEncodedBinaryToArrayBuffer(key) {
-    return dcodeIO.ByteBuffer.wrap(key, 'binary').toArrayBuffer();
-  }
-
-  function bytesFromString(string) {
-    return dcodeIO.ByteBuffer.wrap(string, 'utf8').toArrayBuffer();
-  }
-  function stringFromBytes(buffer) {
-    return dcodeIO.ByteBuffer.wrap(buffer).toString('utf8');
   }
 
   function getViewOfArrayBuffer(buffer, start, finish) {
