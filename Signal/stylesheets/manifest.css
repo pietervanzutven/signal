@@ -1706,6 +1706,12 @@ input.search {
 .ios-theme .module-embedded-contact__contact-method--incoming {
   color: #62656a; }
 
+.ios-theme .module-typing-animation__dot {
+  background-color: #6b6d70; }
+
+.ios-theme .module-typing-animation__dot--light {
+  background-color: #6b6d70; }
+
 .ios-theme.dark-theme .module-message__container--outgoing {
   background-color: #2090ea;
   color: #eeefef; }
