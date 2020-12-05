@@ -406,7 +406,8 @@ a {
   bottom: 0;
   background-color: white;
   display: flex;
-  align-items: center; }
+  align-items: center;
+  user-select: none; }
   .app-loading-screen .content {
     margin-left: auto;
     margin-right: auto;
@@ -972,52 +973,46 @@ img.emoji.jumbo {
   width: 1em;
   height: 1em; }
 
-.settings.modal {
-  padding: 0;
-  background-color: transparent; }
-  .settings.modal .content {
-    margin: 0;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-    max-width: 450px;
-    border-radius: 0;
-    box-shadow: 0px 0px 0px 0px; }
-
-.settings hr {
-  margin: 10px 0; }
-
-.settings .device-name-settings {
-  text-align: center;
-  margin-bottom: 1em; }
-
-.settings .syncSettings button {
-  float: right;
-  line-height: 36px;
-  padding: 0 20px;
-  margin: 0 0 20px 20px; }
-
-.settings .syncSettings .synced_at {
-  font-size: 0.9285714286em;
-  color: #616161; }
-
-.settings .syncSettings .sync_failed {
-  display: none;
-  font-size: 0.9285714286em;
-  color: red; }
-
-.settings .restart-needed {
-  margin-top: 1em; }
-
-.settings .clear-data-settings button {
-  float: right;
-  line-height: 36px;
-  padding: 0 20px;
-  margin: 0 0 20px 20px; }
-
-.settings .clear-data-settings .destructive {
-  background-color: red;
-  color: white; }
+.settings {
+  user-select: none; }
+  .settings.modal {
+    padding: 0;
+    background-color: transparent; }
+    .settings.modal .content {
+      margin: 0;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+      max-width: 450px;
+      border-radius: 0;
+      box-shadow: 0px 0px 0px 0px; }
+  .settings hr {
+    margin: 10px 0; }
+  .settings .device-name-settings {
+    text-align: center;
+    margin-bottom: 1em; }
+  .settings .syncSettings button {
+    float: right;
+    line-height: 36px;
+    padding: 0 20px;
+    margin: 0 0 20px 20px; }
+  .settings .syncSettings .synced_at {
+    font-size: 0.9285714286em;
+    color: #616161; }
+  .settings .syncSettings .sync_failed {
+    display: none;
+    font-size: 0.9285714286em;
+    color: red; }
+  .settings .restart-needed {
+    margin-top: 1em; }
+  .settings .clear-data-settings button {
+    float: right;
+    line-height: 36px;
+    padding: 0 20px;
+    margin: 0 0 20px 20px; }
+  .settings .clear-data-settings .destructive {
+    background-color: red;
+    color: white; }
 
 .conversation-stack,
 .new-conversation,
@@ -1037,7 +1032,8 @@ img.emoji.jumbo {
 .gutter {
   background-color: #f8f9f9;
   float: left;
-  width: 300px; }
+  width: 300px;
+  user-select: none; }
   .gutter ::-webkit-scrollbar-track {
     background: #f8f9f9; }
   .gutter ::-webkit-scrollbar-thumb {
@@ -1193,7 +1189,8 @@ input.search {
       left: -30px; }
 
 .conversation.placeholder {
-  text-align: center; }
+  text-align: center;
+  user-select: none; }
   .conversation.placeholder .container {
     position: absolute;
     height: 100%;
@@ -4221,7 +4218,8 @@ body.dark-theme {
   max-width: 100%; }
 
 .module-conversation-header__avatar {
-  min-width: 28px; }
+  min-width: 28px;
+  user-select: none; }
 
 .module-conversation-header__title {
   margin-left: 8px;
@@ -5307,7 +5305,8 @@ body.dark-theme {
   padding-top: 8px;
   padding-bottom: 8px;
   border: 1px solid #efefef;
-  opacity: 0; }
+  opacity: 0;
+  user-select: none; }
 
 .react-contextmenu--visible {
   z-index: 1000;
