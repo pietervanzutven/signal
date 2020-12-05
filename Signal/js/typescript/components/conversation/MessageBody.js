@@ -16,7 +16,7 @@
     const AddNewLines_1 = window.ts.components.conversation.AddNewLines;
     const Linkify_1 = window.ts.components.conversation.Linkify;
     const renderNewLines = ({ text: textWithNewLines, key, }) => react_1.default.createElement(AddNewLines_1.AddNewLines, { key: key, text: textWithNewLines });
-    const renderLinks = ({ text: textWithLinks, key }) => (react_1.default.createElement(Linkify_1.Linkify, { key: key, text: textWithLinks, renderNonLink: renderNewLines }));
+    const renderEmoji = ({ i18n, text, key, sizeClass, renderNonEmoji, }) => (react_1.default.createElement(Emojify_1.Emojify, { i18n: i18n, key: key, text: text, sizeClass: sizeClass, renderNonEmoji: renderNonEmoji }));
     /**
      * This component makes it very easy to use all three of our message formatting
      * components: `Emojify`, `Linkify`, and `AddNewLines`. Because each of them is fully
@@ -25,9 +25,28 @@
      */
     class MessageBody extends react_1.default.Component {
         render() {
-            const { text, disableJumbomoji, disableLinks } = this.props;
-            const sizeClass = disableJumbomoji ? '' : emoji_1.getSizeClass(text);
-            return (react_1.default.createElement(Emojify_1.Emojify, { text: text, sizeClass: sizeClass, renderNonEmoji: disableLinks ? renderNewLines : renderLinks }));
+            const { text, disableJumbomoji, disableLinks, i18n } = this.props;
+            const sizeClass = disableJumbomoji ? undefined : emoji_1.getSizeClass(text);
+            if (disableLinks) {
+                return renderEmoji({
+                    i18n,
+                    text,
+                    sizeClass,
+                    key: 0,
+                    renderNonEmoji: renderNewLines,
+                });
+            }
+            return (react_1.default.createElement(Linkify_1.Linkify, {
+                text: text, renderNonLink: ({ key, text: nonLinkText }) => {
+                    return renderEmoji({
+                        i18n,
+                        text: nonLinkText,
+                        sizeClass,
+                        key,
+                        renderNonEmoji: renderNewLines,
+                    });
+                }
+            }));
         }
     }
     exports.MessageBody = MessageBody;
