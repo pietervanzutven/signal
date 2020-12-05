@@ -153,14 +153,13 @@
       });
       this.listenTo(
         this.fileInput,
-        'attachments-changed',
-        this.toggleMicrophone
-      );
-      this.listenTo(
-        this.fileInput,
         'choose-attachment',
         this.onChooseAttachment
       );
+      this.listenTo(this.fileInput, 'staged-attachments-changed', () => {
+        this.view.resetScrollPosition();
+        this.toggleMicrophone();
+      });
 
       const getHeaderProps = () => {
         const expireTimer = this.model.get('expireTimer');
@@ -1512,7 +1511,6 @@
       if (event.key !== 'Escape') {
         return;
       }
-
       this.closeEmojiPanel();
     },
     openEmojiPanel() {
@@ -1520,6 +1518,7 @@
       this.emojiPanel = new EmojiPanel(this.$emojiPanelContainer[0], {
         onClick: this.insertEmoji.bind(this),
       });
+      this.view.resetScrollPosition();
       this.updateMessageFieldSize({});
     },
     closeEmojiPanel() {
@@ -1529,6 +1528,7 @@
 
       this.$emojiPanelContainer.empty().outerHeight(0);
       this.emojiPanel = null;
+      this.view.resetScrollPosition();
       this.updateMessageFieldSize({});
     },
     insertEmoji(e) {
