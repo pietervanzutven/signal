@@ -1619,7 +1619,7 @@
     maybeBumpTyping() {
       const messageText = this.$messageField.val();
       if (messageText.length) {
-        this.model.bumpTyping();
+        this.model.throttledBumpTyping();
       }
     },
 

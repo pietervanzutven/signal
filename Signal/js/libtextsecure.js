@@ -36803,10 +36803,10 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
 
       return verifyMAC(ivAndCiphertext, macKey, mac, 32)
         .then(() => {
-          if (theirDigest !== null) {
-            return verifyDigest(encryptedBin, theirDigest);
+          if (!theirDigest) {
+            throw new Error('Failure: Ask sender to update Signal and resend.');
           }
-          return null;
+          return verifyDigest(encryptedBin, theirDigest);
         })
         .then(() => decrypt(aesKey, ciphertext, iv));
     },
@@ -40209,7 +40209,7 @@ OutgoingMessage.prototype = {
   },
 };
 
-/* global textsecure, WebAPI, libsignal, OutgoingMessage, window */
+/* global _, textsecure, WebAPI, libsignal, OutgoingMessage, window */
 
 /* eslint-disable more/no-then, no-bitwise */
 
@@ -40744,7 +40744,7 @@ MessageSender.prototype = {
     }
 
     const recipients = groupId
-      ? await textsecure.storage.groups.getNumbers(groupId)
+      ? _.without(await textsecure.storage.groups.getNumbers(groupId), myNumber)
       : [recipientId];
     const groupIdBuffer = groupId
       ? window.Signal.Crypto.fromEncodedBinaryToArrayBuffer(groupId)
