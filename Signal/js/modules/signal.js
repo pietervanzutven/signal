@@ -21,6 +21,10 @@
 
   // Components
   const {
+    AttachmentList,
+  } = window.ts.components.conversation.AttachmentList;
+  const { CaptionEditor } = window.ts.components.CaptionEditor;
+  const {
     ContactDetail,
   } = window.ts.components.conversation.ContactDetail;
   const { ContactListItem } = window.ts.components.ContactListItem;
@@ -177,6 +181,8 @@
     });
 
     const Components = {
+      AttachmentList,
+      CaptionEditor,
       ContactDetail,
       ContactListItem,
       ContactName,

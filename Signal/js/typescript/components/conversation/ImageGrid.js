@@ -17,7 +17,7 @@
     const MAX_WIDTH = 300;
     const MAX_HEIGHT = MAX_WIDTH * 1.5;
     const MIN_WIDTH = 200;
-    const MIN_HEIGHT = 25;
+    const MIN_HEIGHT = 50;
     class ImageGrid extends react_1.default.Component {
         // tslint:disable-next-line max-func-body-length */
         render() {

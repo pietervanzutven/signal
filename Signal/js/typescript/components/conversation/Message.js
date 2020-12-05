@@ -30,35 +30,6 @@
     const MIME = __importStar(window.ts.types.MIME);
     const isFileDangerous_1 = require_ts_util_isFileDangerous();
     const react_contextmenu_1 = window.react_contextmenu;
-    function isAudio(attachments) {
-        return (attachments &&
-            attachments[0] &&
-            attachments[0].contentType &&
-            MIME.isAudio(attachments[0].contentType));
-    }
-    function canDisplayImage(attachments) {
-        const { height, width } = attachments && attachments[0] ? attachments[0] : { height: 0, width: 0 };
-        return (height &&
-            height > 0 &&
-            height <= 4096 &&
-            width &&
-            width > 0 &&
-            width <= 4096);
-    }
-    function getExtension({ fileName, contentType, }) {
-        if (fileName && fileName.indexOf('.') >= 0) {
-            const lastPeriod = fileName.lastIndexOf('.');
-            const extension = fileName.slice(lastPeriod + 1);
-            if (extension.length) {
-                return extension;
-            }
-        }
-        const slash = contentType.indexOf('/');
-        if (slash >= 0) {
-            return contentType.slice(slash + 1);
-        }
-        return null;
-    }
     const EXPIRATION_CHECK_MINIMUM = 2000;
     const EXPIRED_DELAY = 600;
     class Message extends react_1.default.Component {
@@ -393,4 +364,34 @@
         }
     }
     exports.Message = Message;
+    function getExtension({ fileName, contentType, }) {
+        if (fileName && fileName.indexOf('.') >= 0) {
+            const lastPeriod = fileName.lastIndexOf('.');
+            const extension = fileName.slice(lastPeriod + 1);
+            if (extension.length) {
+                return extension;
+            }
+        }
+        const slash = contentType.indexOf('/');
+        if (slash >= 0) {
+            return contentType.slice(slash + 1);
+        }
+        return null;
+    }
+    exports.getExtension = getExtension;
+    function isAudio(attachments) {
+        return (attachments &&
+            attachments[0] &&
+            attachments[0].contentType &&
+            MIME.isAudio(attachments[0].contentType));
+    }
+    function canDisplayImage(attachments) {
+        const { height, width } = attachments && attachments[0] ? attachments[0] : { height: 0, width: 0 };
+        return (height &&
+            height > 0 &&
+            height <= 4096 &&
+            width &&
+            width > 0 &&
+            width <= 4096);
+    }
 })();

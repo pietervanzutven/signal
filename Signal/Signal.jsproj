@@ -236,9 +236,11 @@
     <Content Include="js\typescript\backbone\views\index.js" />
     <Content Include="js\typescript\backbone\views\Lightbox.js" />
     <Content Include="js\typescript\components\Avatar.js" />
+    <Content Include="js\typescript\components\CaptionEditor.js" />
     <Content Include="js\typescript\components\ContactListItem.js" />
     <Content Include="js\typescript\components\ConversationListItem.js" />
     <Content Include="js\typescript\components\conversation\AddNewLines.js" />
+    <Content Include="js\typescript\components\conversation\AttachmentList.js" />
     <Content Include="js\typescript\components\conversation\ContactDetail.js" />
     <Content Include="js\typescript\components\conversation\ContactName.js" />
     <Content Include="js\typescript\components\conversation\ConversationHeader.js" />
@@ -263,6 +265,7 @@
     <Content Include="js\typescript\components\conversation\Quote.js" />
     <Content Include="js\typescript\components\conversation\ResetSessionNotification.js" />
     <Content Include="js\typescript\components\conversation\SafetyNumberNotification.js" />
+    <Content Include="js\typescript\components\conversation\StagedGenericAttachment.js" />
     <Content Include="js\typescript\components\conversation\TimerNotification.js" />
     <Content Include="js\typescript\components\conversation\Timestamp.js" />
     <Content Include="js\typescript\components\conversation\types.js" />
@@ -301,7 +304,6 @@
     <Content Include="js\util_worker.js" />
     <Content Include="js\views\about_view.js" />
     <Content Include="js\views\app_view.js" />
-    <Content Include="js\views\attachment_preview_view.js" />
     <Content Include="js\views\attachment_view.js" />
     <Content Include="js\views\banner_view.js" />
     <Content Include="js\views\clear_data_view.js" />
