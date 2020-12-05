@@ -133,7 +133,7 @@
                 }
                 const isVideoTypeSupported = GoogleChrome.isVideoTypeSupported(contentType);
                 if (isVideoTypeSupported) {
-                    return (react_1.default.createElement("video", { role: "button", ref: this.captureVideoBound, onClick: this.playVideoBound, controls: true, style: styles.object },
+                    return (react_1.default.createElement("video", { role: "button", ref: this.captureVideoBound, onClick: this.playVideoBound, controls: true, style: styles.object, key: objectURL },
                         react_1.default.createElement("source", { src: objectURL })));
                 }
                 const isUnsupportedImageType = !isImageTypeSupported && MIME.isImage(contentType);
