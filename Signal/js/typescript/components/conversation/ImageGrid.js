@@ -37,42 +37,48 @@
             }
             if (attachments.length === 2) {
                 return (react_1.default.createElement("div", { className: "module-image-grid" },
-                    react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[0], i18n), i18n: i18n, attachment: attachments[0], bottomOverlay: bottomOverlay && curveBottom, curveTopLeft: curveTopLeft, curveBottomLeft: curveBottomLeft, playIconOverlay: isVideoAttachment(attachments[0]), height: 149, width: 149, url: getUrl(attachments[0]), onClick: onClickAttachment, onError: onError }),
-                    react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[1], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, curveTopRight: curveTopRight, curveBottomRight: curveBottomRight, playIconOverlay: isVideoAttachment(attachments[1]), height: 149, width: 149, attachment: attachments[1], url: getUrl(attachments[1]), onClick: onClickAttachment, onError: onError })));
+                    react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[0], i18n), i18n: i18n, attachment: attachments[0], bottomOverlay: bottomOverlay && curveBottom, curveTopLeft: curveTopLeft, curveBottomLeft: curveBottomLeft, playIconOverlay: isVideoAttachment(attachments[0]), height: 149, width: 149, url: getThumbnailUrl(attachments[0]), onClick: onClickAttachment, onError: onError }),
+                    react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[1], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, curveTopRight: curveTopRight, curveBottomRight: curveBottomRight, playIconOverlay: isVideoAttachment(attachments[1]), height: 149, width: 149, attachment: attachments[1], url: getThumbnailUrl(attachments[1]), onClick: onClickAttachment, onError: onError })));
             }
             if (attachments.length === 3) {
                 return (react_1.default.createElement("div", { className: "module-image-grid" },
                     react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[0], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, curveTopLeft: curveTopLeft, curveBottomLeft: curveBottomLeft, attachment: attachments[0], playIconOverlay: isVideoAttachment(attachments[0]), height: 200, width: 199, url: getUrl(attachments[0]), onClick: onClickAttachment, onError: onError }),
                     react_1.default.createElement("div", { className: "module-image-grid__column" },
-                        react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[1], i18n), i18n: i18n, curveTopRight: curveTopRight, height: 99, width: 99, attachment: attachments[1], playIconOverlay: isVideoAttachment(attachments[1]), url: getUrl(attachments[1]), onClick: onClickAttachment, onError: onError }),
-                        react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[2], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, curveBottomRight: curveBottomRight, height: 99, width: 99, attachment: attachments[2], playIconOverlay: isVideoAttachment(attachments[2]), url: getUrl(attachments[2]), onClick: onClickAttachment, onError: onError }))));
+                        react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[1], i18n), i18n: i18n, curveTopRight: curveTopRight, height: 99, width: 99, attachment: attachments[1], playIconOverlay: isVideoAttachment(attachments[1]), url: getThumbnailUrl(attachments[1]), onClick: onClickAttachment, onError: onError }),
+                        react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[2], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, curveBottomRight: curveBottomRight, height: 99, width: 99, attachment: attachments[2], playIconOverlay: isVideoAttachment(attachments[2]), url: getThumbnailUrl(attachments[2]), onClick: onClickAttachment, onError: onError }))));
             }
             if (attachments.length === 4) {
                 return (react_1.default.createElement("div", { className: "module-image-grid" },
                     react_1.default.createElement("div", { className: "module-image-grid__column" },
                         react_1.default.createElement("div", { className: "module-image-grid__row" },
-                            react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[0], i18n), i18n: i18n, curveTopLeft: curveTopLeft, attachment: attachments[0], playIconOverlay: isVideoAttachment(attachments[0]), height: 149, width: 149, url: getUrl(attachments[0]), onClick: onClickAttachment, onError: onError }),
-                            react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[1], i18n), i18n: i18n, curveTopRight: curveTopRight, playIconOverlay: isVideoAttachment(attachments[1]), height: 149, width: 149, attachment: attachments[1], url: getUrl(attachments[1]), onClick: onClickAttachment, onError: onError })),
+                            react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[0], i18n), i18n: i18n, curveTopLeft: curveTopLeft, attachment: attachments[0], playIconOverlay: isVideoAttachment(attachments[0]), height: 149, width: 149, url: getThumbnailUrl(attachments[0]), onClick: onClickAttachment, onError: onError }),
+                            react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[1], i18n), i18n: i18n, curveTopRight: curveTopRight, playIconOverlay: isVideoAttachment(attachments[1]), height: 149, width: 149, attachment: attachments[1], url: getThumbnailUrl(attachments[1]), onClick: onClickAttachment, onError: onError })),
                         react_1.default.createElement("div", { className: "module-image-grid__row" },
-                            react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[2], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, curveBottomLeft: curveBottomLeft, playIconOverlay: isVideoAttachment(attachments[2]), height: 149, width: 149, attachment: attachments[2], url: getUrl(attachments[2]), onClick: onClickAttachment, onError: onError }),
-                            react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[3], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, curveBottomRight: curveBottomRight, playIconOverlay: isVideoAttachment(attachments[3]), height: 149, width: 149, attachment: attachments[3], url: getUrl(attachments[3]), onClick: onClickAttachment, onError: onError })))));
+                            react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[2], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, curveBottomLeft: curveBottomLeft, playIconOverlay: isVideoAttachment(attachments[2]), height: 149, width: 149, attachment: attachments[2], url: getThumbnailUrl(attachments[2]), onClick: onClickAttachment, onError: onError }),
+                            react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[3], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, curveBottomRight: curveBottomRight, playIconOverlay: isVideoAttachment(attachments[3]), height: 149, width: 149, attachment: attachments[3], url: getThumbnailUrl(attachments[3]), onClick: onClickAttachment, onError: onError })))));
             }
             return (react_1.default.createElement("div", { className: "module-image-grid" },
                 react_1.default.createElement("div", { className: "module-image-grid__column" },
                     react_1.default.createElement("div", { className: "module-image-grid__row" },
-                        react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[0], i18n), i18n: i18n, curveTopLeft: curveTopLeft, attachment: attachments[0], playIconOverlay: isVideoAttachment(attachments[0]), height: 149, width: 149, url: getUrl(attachments[0]), onClick: onClickAttachment, onError: onError }),
-                        react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[1], i18n), i18n: i18n, curveTopRight: curveTopRight, playIconOverlay: isVideoAttachment(attachments[1]), height: 149, width: 149, attachment: attachments[1], url: getUrl(attachments[1]), onClick: onClickAttachment, onError: onError })),
+                        react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[0], i18n), i18n: i18n, curveTopLeft: curveTopLeft, attachment: attachments[0], playIconOverlay: isVideoAttachment(attachments[0]), height: 149, width: 149, url: getThumbnailUrl(attachments[0]), onClick: onClickAttachment, onError: onError }),
+                        react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[1], i18n), i18n: i18n, curveTopRight: curveTopRight, playIconOverlay: isVideoAttachment(attachments[1]), height: 149, width: 149, attachment: attachments[1], url: getThumbnailUrl(attachments[1]), onClick: onClickAttachment, onError: onError })),
                     react_1.default.createElement("div", { className: "module-image-grid__row" },
-                        react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[2], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, curveBottomLeft: curveBottomLeft, playIconOverlay: isVideoAttachment(attachments[2]), height: 99, width: 99, attachment: attachments[2], url: getUrl(attachments[2]), onClick: onClickAttachment, onError: onError }),
-                        react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[3], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, playIconOverlay: isVideoAttachment(attachments[3]), height: 99, width: 98, attachment: attachments[3], url: getUrl(attachments[3]), onClick: onClickAttachment, onError: onError }),
+                        react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[2], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, curveBottomLeft: curveBottomLeft, playIconOverlay: isVideoAttachment(attachments[2]), height: 99, width: 99, attachment: attachments[2], url: getThumbnailUrl(attachments[2]), onClick: onClickAttachment, onError: onError }),
+                        react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[3], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, playIconOverlay: isVideoAttachment(attachments[3]), height: 99, width: 98, attachment: attachments[3], url: getThumbnailUrl(attachments[3]), onClick: onClickAttachment, onError: onError }),
                         react_1.default.createElement(Image_1.Image, {
                             alt: getAlt(attachments[4], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, curveBottomRight: curveBottomRight, playIconOverlay: isVideoAttachment(attachments[4]), height: 99, width: 99, darkOverlay: attachments.length > 5, overlayText: attachments.length > 5
                                 ? `+${attachments.length - 5}`
-                                : undefined, attachment: attachments[4], url: getUrl(attachments[4]), onClick: onClickAttachment, onError: onError
+                                : undefined, attachment: attachments[4], url: getThumbnailUrl(attachments[4]), onClick: onClickAttachment, onError: onError
                         })))));
         }
     }
     exports.ImageGrid = ImageGrid;
+    function getThumbnailUrl(attachment) {
+        if (attachment.thumbnail) {
+            return attachment.thumbnail.url;
+        }
+        return getUrl(attachment);
+    }
     function getUrl(attachment) {
         if (attachment.screenshot) {
             return attachment.screenshot.url;
