@@ -142,12 +142,13 @@
         const max = attachments.length;
         for (let i = 0; i < max; i += 1) {
             const attachment = attachments[i];
-            if (!isImageAttachment(attachment) || !isVideoAttachment(attachment)) {
+            if (!isImageAttachment(attachment) && !isVideoAttachment(attachment)) {
                 return false;
             }
         }
         return true;
     }
+    exports.areAllAttachmentsVisual = areAllAttachmentsVisual;
     function getGridDimensions(attachments) {
         if (!attachments || !attachments.length) {
             return null;

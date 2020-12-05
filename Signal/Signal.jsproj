@@ -266,6 +266,7 @@
     <Content Include="js\typescript\components\conversation\ResetSessionNotification.js" />
     <Content Include="js\typescript\components\conversation\SafetyNumberNotification.js" />
     <Content Include="js\typescript\components\conversation\StagedGenericAttachment.js" />
+    <Content Include="js\typescript\components\conversation\StagedPlaceholderAttachment.js" />
     <Content Include="js\typescript\components\conversation\TimerNotification.js" />
     <Content Include="js\typescript\components\conversation\Timestamp.js" />
     <Content Include="js\typescript\components\conversation\types.js" />
