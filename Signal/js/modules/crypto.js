@@ -292,68 +292,39 @@
   }
 
   async function encryptAesCtr(key, plaintext, counter) {
-    const extractable = false;
-    const algorithm = {
-      name: 'AES-CTR',
-      counter: new Uint8Array(counter),
-      length: 128,
-    };
+    const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
+    const ptBits = window.sjcl.codec.arrayBuffer.toBits(plaintext);
+    const counterBits = window.sjcl.codec.bytes.toBits(counter);
 
-    const cryptoKey = await crypto.subtle.importKey(
-      'raw',
-      key,
-      algorithm,
-      extractable,
-      ['encrypt']
-    );
+    const aes = new window.sjcl.cipher.aes(keyBits);
+    const ctBits = window.sjcl.mode.ctr.encrypt(aes, ptBits, counterBits);
 
-    const ciphertext = await crypto.subtle.encrypt(
-      algorithm,
-      cryptoKey,
-      plaintext
-    );
-
-    return ciphertext;
+    const ct = window.sjcl.codec.bytes.fromBits(ctBits);
+    return new Uint8Array(ct);
   }
 
   async function decryptAesCtr(key, ciphertext, counter) {
-    const extractable = false;
-    const algorithm = {
-      name: 'AES-CTR',
-      counter: new Uint8Array(counter),
-      length: 128,
-    };
+    const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
+    const ctBits = window.sjcl.codec.bytes.toBits(ciphertext);
+    const counterBits = window.sjcl.codec.bytes.toBits(counter);
 
-    const cryptoKey = await crypto.subtle.importKey(
-      'raw',
-      key,
-      algorithm,
-      extractable,
-      ['decrypt']
-    );
-    const plaintext = await crypto.subtle.decrypt(
-      algorithm,
-      cryptoKey,
-      ciphertext
-    );
-    return plaintext;
+    const aes = new window.sjcl.cipher.aes(keyBits);
+    const ptBits = window.sjcl.mode.ctr.decrypt(aes, ctBits, counterBits);
+
+    const pt = window.sjcl.codec.bytes.fromBits(ptBits);
+    return new Uint8Array(pt);
   }
 
   async function _encrypt_aes_gcm(key, iv, plaintext) {
-    const algorithm = {
-      name: 'AES-GCM',
-      iv,
-    };
-    const extractable = false;
+    const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
+    const ptBits = window.sjcl.codec.bytes.toBits(plaintext);
+    const ivBits = window.sjcl.codec.bytes.toBits(iv);
 
-    const cryptoKey = await crypto.subtle.importKey(
-      'raw',
-      key,
-      algorithm,
-      extractable,
-      ['encrypt']
-    );
-    return crypto.subtle.encrypt(algorithm, cryptoKey, plaintext);
+    const aes = new window.sjcl.cipher.aes(keyBits);
+    const ctBits = window.sjcl.mode.gcm.encrypt(aes, ptBits, ivBits);
+
+    const ct = window.sjcl.codec.bytes.fromBits(ctBits);
+    return new Uint8Array(ct);
   }
 
   // Utility
