@@ -37012,6 +37012,14 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
     getDeviceName() {
       return textsecure.storage.get('device_name');
     },
+
+    setDeviceNameEncrypted() {
+      return textsecure.storage.put('deviceNameEncrypted', true);
+    },
+
+    getDeviceNameEncrypted() {
+      return textsecure.storage.get('deviceNameEncrypted');
+    },
   };
 })();
 
@@ -37248,7 +37256,6 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
   loadProtoBufs('SignalService.proto');
   loadProtoBufs('SubProtocol.proto');
   loadProtoBufs('DeviceMessages.proto');
-  loadProtoBufs('Stickers.proto');
 
     // Just for encrypting device names
   loadProtoBufs('DeviceName.proto');
@@ -37520,6 +37527,7 @@ window.textsecure.utils = (() => {
   libsignal,
   WebSocketResource,
   btoa,
+  Signal,
   getString,
   libphonenumber,
   Event,
@@ -37560,6 +37568,59 @@ window.textsecure.utils = (() => {
     },
     requestSMSVerification(number) {
       return this.server.requestVerificationSMS(number);
+    },
+    async encryptDeviceName(name, providedIdentityKey) {
+      const identityKey =
+        providedIdentityKey ||
+        (await textsecure.storage.protocol.getIdentityKeyPair());
+      if (!identityKey) {
+        throw new Error(
+          'Identity key was not provided and is not in database!'
+        );
+      }
+      const encrypted = await Signal.Crypto.encryptDeviceName(
+        name,
+        identityKey.pubKey
+      );
+
+      const proto = new textsecure.protobuf.DeviceName();
+      proto.ephemeralPublic = encrypted.ephemeralPublic;
+      proto.syntheticIv = encrypted.syntheticIv;
+      proto.ciphertext = encrypted.ciphertext;
+
+      const arrayBuffer = proto.encode().toArrayBuffer();
+      return Signal.Crypto.arrayBufferToBase64(arrayBuffer);
+    },
+    async decryptDeviceName(base64) {
+      const identityKey = await textsecure.storage.protocol.getIdentityKeyPair();
+
+      const arrayBuffer = Signal.Crypto.base64ToArrayBuffer(base64);
+      const proto = textsecure.protobuf.DeviceName.decode(arrayBuffer);
+      const encrypted = {
+        ephemeralPublic: proto.ephemeralPublic.toArrayBuffer(),
+        syntheticIv: proto.syntheticIv.toArrayBuffer(),
+        ciphertext: proto.ciphertext.toArrayBuffer(),
+      };
+
+      const name = await Signal.Crypto.decryptDeviceName(
+        encrypted,
+        identityKey.privKey
+      );
+
+      return name;
+    },
+    async maybeUpdateDeviceName() {
+      const isNameEncrypted = textsecure.storage.user.getDeviceNameEncrypted();
+      if (isNameEncrypted) {
+        return;
+      }
+      const deviceName = await textsecure.storage.user.getDeviceName();
+      const base64 = await this.encryptDeviceName(deviceName);
+
+      await this.server.updateDeviceName(base64);
+    },
+    async deviceNameIsEncrypted() {
+      await textsecure.storage.user.setDeviceNameEncrypted();
     },
     registerSingleDevice(number, verificationCode) {
       const registerKeys = this.server.registerKeys.bind(this.server);
@@ -37851,7 +37912,7 @@ window.textsecure.utils = (() => {
         });
       });
     },
-    createAccount(
+    async createAccount(
       number,
       verificationCode,
       identityKeyPair,
@@ -37869,41 +37930,38 @@ window.textsecure.utils = (() => {
 
       const previousNumber = getNumber(textsecure.storage.get('number_id'));
 
-      return this.server
-        .confirmCode(
+      const encryptedDeviceName = await this.encryptDeviceName(
+        deviceName,
+        identityKeyPair
+      );
+      await this.deviceNameIsEncrypted();
+
+      const response = await this.server.confirmCode(
           number,
           verificationCode,
           password,
           signalingKey,
           registrationId,
-          deviceName,
+        encryptedDeviceName,
           { accessKey }
-        )
-        .then(response => {
+      );
+
           if (previousNumber && previousNumber !== number) {
             window.log.warn(
               'New number is different from old number; deleting all previous data'
             );
 
-            return textsecure.storage.protocol.removeAllData().then(
-              () => {
+        try {
+          await textsecure.storage.protocol.removeAllData();
                 window.log.info('Successfully deleted previous data');
-                return response;
-              },
-              error => {
+        } catch (error) {
                 window.log.error(
                   'Something went wrong deleting data from previous number',
                   error && error.stack ? error.stack : error
                 );
-
-                return response;
               }
-            );
           }
 
-          return response;
-        })
-        .then(async response => {
           await Promise.all([
             textsecure.storage.remove('identityKey'),
             textsecure.storage.remove('signaling_key'),
@@ -37953,26 +38011,25 @@ window.textsecure.utils = (() => {
               'regionCode',
               libphonenumber.util.getRegionCodeForNumber(number)
             );
-        });
     },
-    clearSessionsAndPreKeys() {
+    async clearSessionsAndPreKeys() {
       const store = textsecure.storage.protocol;
 
       window.log.info('clearing all sessions, prekeys, and signed prekeys');
-      return Promise.all([
+      await Promise.all([
         store.clearPreKeyStore(),
         store.clearSignedPreKeysStore(),
         store.clearSessionStore(),
       ]);
     },
     // Takes the same object returned by generateKeys
-    confirmKeys(keys) {
+    async confirmKeys(keys) {
       const store = textsecure.storage.protocol;
       const key = keys.signedPreKey;
       const confirmed = true;
 
       window.log.info('confirmKeys: confirming key', key.keyId);
-      return store.storeSignedPreKey(key.keyId, key.keyPair, confirmed);
+      await store.storeSignedPreKey(key.keyId, key.keyPair, confirmed);
     },
     generateKeys(count, providedProgressCallback) {
       const progressCallback =
@@ -39008,6 +39065,8 @@ MessageReceiver.prototype.extend({
             // Here we take this sender information and attach it back to the envelope
             //   to make the rest of the app work properly.
 
+              const originalSource = envelope.source;
+
             // eslint-disable-next-line no-param-reassign
             envelope.source = sender.getName();
             // eslint-disable-next-line no-param-reassign
@@ -39023,6 +39082,8 @@ MessageReceiver.prototype.extend({
             const { sender } = error || {};
         
             if (sender) {
+                const originalSource = envelope.source;
+
               // eslint-disable-next-line no-param-reassign
               envelope.source = sender.getName();
               // eslint-disable-next-line no-param-reassign

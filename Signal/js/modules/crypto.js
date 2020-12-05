@@ -1,5 +1,5 @@
 /* eslint-env browser */
-/* global dcodeIO */
+/* global dcodeIO, libsignal */
 
 /* eslint-disable camelcase, no-bitwise */
 
@@ -7,16 +7,18 @@
   'use strict';
 
   window.sjcl.beware["CTR mode is dangerous because it doesn't protect message integrity."]();
-  
+
   window.crypto.arrayBufferToBase64 = arrayBufferToBase64;
   window.crypto.base64ToArrayBuffer = base64ToArrayBuffer;
   window.crypto.bytesFromString = bytesFromString;
   window.crypto.concatenateBytes = concatenateBytes;
   window.crypto.constantTimeEqual = constantTimeEqual;
   window.crypto.decryptAesCtr = decryptAesCtr;
+  window.crypto.decryptDeviceName = decryptDeviceName;
   window.crypto.decryptSymmetric = decryptSymmetric;
   window.crypto.deriveAccessKey = deriveAccessKey;
   window.crypto.encryptAesCtr = encryptAesCtr;
+  window.crypto.encryptDeviceName = encryptDeviceName;
   window.crypto.encryptSymmetric = encryptSymmetric;
   window.crypto.fromEncodedBinaryToArrayBuffer = fromEncodedBinaryToArrayBuffer;
   window.crypto.getAccessKeyVerifier = getAccessKeyVerifier;
@@ -32,8 +34,57 @@
   window.crypto.verifyAccessKey = verifyAccessKey;
 
   window.crypto.randomBytes = n => Buffer.from(window.crypto.getRandomBytes(n));
-  
+
   // High-level Operations
+
+  async function encryptDeviceName(deviceName, identityPublic) {
+    const plaintext = bytesFromString(deviceName);
+    const ephemeralKeyPair = await libsignal.KeyHelper.generateIdentityKeyPair();
+    const masterSecret = await libsignal.Curve.async.calculateAgreement(
+      identityPublic,
+      ephemeralKeyPair.privKey
+    );
+
+    const key1 = await hmacSha256(masterSecret, bytesFromString('auth'));
+    const syntheticIv = _getFirstBytes(await hmacSha256(key1, plaintext), 16);
+
+    const key2 = await hmacSha256(masterSecret, bytesFromString('cipher'));
+    const cipherKey = await hmacSha256(key2, syntheticIv);
+
+    const counter = getZeroes(16);
+    const ciphertext = await encryptAesCtr(cipherKey, plaintext, counter);
+
+    return {
+      ephemeralPublic: ephemeralKeyPair.pubKey,
+      syntheticIv,
+      ciphertext,
+    };
+  }
+
+  async function decryptDeviceName(
+    { ephemeralPublic, syntheticIv, ciphertext } = {},
+    identityPrivate
+  ) {
+    const masterSecret = await libsignal.Curve.async.calculateAgreement(
+      ephemeralPublic,
+      identityPrivate
+    );
+
+    const key2 = await hmacSha256(masterSecret, bytesFromString('cipher'));
+    const cipherKey = await hmacSha256(key2, syntheticIv);
+
+    const counter = getZeroes(16);
+    const plaintext = await decryptAesCtr(cipherKey, ciphertext, counter);
+
+    const key1 = await hmacSha256(masterSecret, bytesFromString('auth'));
+    const ourSyntheticIv = _getFirstBytes(await hmacSha256(key1, plaintext), 16);
+
+    if (!constantTimeEqual(ourSyntheticIv, syntheticIv)) {
+      throw new Error('decryptDeviceName: synthetic IV did not match');
+    }
+
+    return stringFromBytes(plaintext);
+  }
 
   async function deriveAccessKey(profileKey) {
     const iv = getZeroes(12);
@@ -180,7 +231,7 @@
     const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
     const ptBits = window.sjcl.codec.arrayBuffer.toBits(plaintext);
     const counterBits = window.sjcl.codec.bytes.toBits(counter);
- 
+
     const aes = new window.sjcl.cipher.aes(keyBits);
     const ctBits = window.sjcl.mode.ctr.encrypt(aes, ptBits, counterBits);
 
@@ -192,7 +243,7 @@
     const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
     const ctBits = window.sjcl.codec.bytes.toBits(ciphertext);
     const counterBits = window.sjcl.codec.bytes.toBits(counter);
- 
+
     const aes = new window.sjcl.cipher.aes(keyBits);
     const ptBits = window.sjcl.mode.ctr.decrypt(aes, ctBits, counterBits);
 

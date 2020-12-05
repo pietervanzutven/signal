@@ -457,7 +457,6 @@
     <Content Include="protos\DeviceMessages.proto" />
     <Content Include="protos\DeviceName.proto" />
     <Content Include="protos\SignalService.proto" />
-    <Content Include="protos\Stickers.proto" />
     <Content Include="protos\SubProtocol.proto" />
     <Content Include="protos\UnidentifiedDelivery.proto" />
     <Content Include="settings.html" />
