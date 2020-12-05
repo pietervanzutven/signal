@@ -11,7 +11,6 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
-    // import classNames from 'classnames';
     const GoogleChrome_1 = window.ts.util.GoogleChrome;
     const Image_1 = window.ts.components.conversation.Image;
     const StagedGenericAttachment_1 = window.ts.components.conversation.StagedGenericAttachment;
@@ -20,9 +19,7 @@
     class AttachmentList extends react_1.default.Component {
         // tslint:disable-next-line max-func-body-length */
         render() {
-            const { attachments, i18n,
-                // onError,
-                onClickAttachment, onCloseAttachment, onClose, } = this.props;
+            const { attachments, i18n, onClickAttachment, onCloseAttachment, onClose, } = this.props;
             if (!attachments.length) {
                 return null;
             }
@@ -33,7 +30,11 @@
                     const { contentType } = attachment;
                     if (GoogleChrome_1.isImageTypeSupported(contentType) ||
                         GoogleChrome_1.isVideoTypeSupported(contentType)) {
-                        return (react_1.default.createElement(Image_1.Image, { key: getUrl(attachment) || attachment.fileName || index, alt: `TODO: attachment number ${index}`, i18n: i18n, attachment: attachment, softCorners: true, playIconOverlay: isVideoAttachment(attachment), height: IMAGE_HEIGHT, width: IMAGE_WIDTH, url: getUrl(attachment), closeButton: true, onClick: attachments.length > 1 ? onClickAttachment : undefined, onClickClose: onCloseAttachment }));
+                        return (react_1.default.createElement(Image_1.Image, {
+                            key: getUrl(attachment) || attachment.fileName || index, alt: i18n('stagedImageAttachment', [
+                                getUrl(attachment) || attachment.fileName,
+                            ]), i18n: i18n, attachment: attachment, softCorners: true, playIconOverlay: isVideoAttachment(attachment), height: IMAGE_HEIGHT, width: IMAGE_WIDTH, url: getUrl(attachment), closeButton: true, onClick: attachments.length > 1 ? onClickAttachment : undefined, onClickClose: onCloseAttachment
+                        }));
                     }
                     return (react_1.default.createElement(StagedGenericAttachment_1.StagedGenericAttachment, { key: getUrl(attachment) || attachment.fileName || index, attachment: attachment, i18n: i18n, onClose: onCloseAttachment }));
                 }))));
