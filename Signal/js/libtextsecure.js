@@ -37261,10 +37261,10 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
   loadProtoBufs('SubProtocol.proto');
   loadProtoBufs('DeviceMessages.proto');
 
-    // Just for encrypting device names
+  // Just for encrypting device names
   loadProtoBufs('DeviceName.proto');
 
-    // Metadata-specific protos
+  // Metadata-specific protos
   loadProtoBufs('UnidentifiedDelivery.proto');
 })();
 
