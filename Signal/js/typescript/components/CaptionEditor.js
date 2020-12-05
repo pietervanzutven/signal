@@ -1,0 +1,100 @@
+(function () {
+    "use strict";
+
+    window.ts = window.ts || {};
+    window.ts.components = window.ts.components || {};
+    const exports = window.ts.components.CaptionEditor = {};
+
+    // tslint:disable:react-a11y-anchors
+    var __importDefault = (this && this.__importDefault) || function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
+    var __importStar = (this && this.__importStar) || function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+        result["default"] = mod;
+        return result;
+    };
+    Object.defineProperty(exports, "__esModule", { value: true });
+    const react_1 = __importDefault(window.react);
+    const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
+    class CaptionEditor extends react_1.default.Component {
+        constructor(props) {
+            super(props);
+            const { caption } = props;
+            this.state = {
+                caption: caption || '',
+            };
+            this.handleKeyUpBound = this.handleKeyUp.bind(this);
+            this.setFocusBound = this.setFocus.bind(this);
+            this.captureRefBound = this.captureRef.bind(this);
+            this.onChangeBound = this.onChange.bind(this);
+            this.onSaveBound = this.onSave.bind(this);
+            this.inputRef = null;
+        }
+        handleKeyUp(event) {
+            const { close, onSave } = this.props;
+            if (close && event.key === 'Escape') {
+                close();
+            }
+            if (onSave && event.key === 'Enter') {
+                const { caption } = this.state;
+                onSave(caption);
+            }
+        }
+        setFocus() {
+            if (this.inputRef) {
+                // @ts-ignore
+                this.inputRef.focus();
+            }
+        }
+        captureRef(ref) {
+            this.inputRef = ref;
+            // Forcing focus after a delay due to some focus contention with ConversationView
+            setTimeout(() => {
+                this.setFocus();
+            }, 200);
+        }
+        onSave() {
+            const { onSave } = this.props;
+            const { caption } = this.state;
+            if (onSave) {
+                onSave(caption);
+            }
+        }
+        onChange(event) {
+            // @ts-ignore
+            const { value } = event.target;
+            this.setState({
+                caption: value,
+            });
+        }
+        renderObject() {
+            const { url, i18n, attachment } = this.props;
+            const { contentType } = attachment || { contentType: null };
+            const isImageTypeSupported = GoogleChrome.isImageTypeSupported(contentType);
+            if (isImageTypeSupported) {
+                return (react_1.default.createElement("img", { className: "module-caption-editor__image", alt: i18n('imageAttachmentAlt'), src: url }));
+            }
+            const isVideoTypeSupported = GoogleChrome.isVideoTypeSupported(contentType);
+            if (isVideoTypeSupported) {
+                return (react_1.default.createElement("video", { className: "module-caption-editor__video", controls: true },
+                    react_1.default.createElement("source", { src: url })));
+            }
+            return react_1.default.createElement("div", { className: "module-caption-editor__placeholder" });
+        }
+        render() {
+            const { i18n, close } = this.props;
+            const { caption } = this.state;
+            return (react_1.default.createElement("div", { role: "dialog", onClick: this.setFocusBound, className: "module-caption-editor" },
+                react_1.default.createElement("div", { role: "button", onClick: close, className: "module-caption-editor__close-button" }),
+                react_1.default.createElement("div", { className: "module-caption-editor__media-container" }, this.renderObject()),
+                react_1.default.createElement("div", { className: "module-caption-editor__bottom-bar" },
+                    react_1.default.createElement("div", { className: "module-caption-editor__input-container" },
+                        react_1.default.createElement("input", { type: "text", ref: this.captureRefBound, value: caption, maxLength: 200, placeholder: i18n('addACaption'), className: "module-caption-editor__caption-input", onKeyUp: close ? this.handleKeyUpBound : undefined, onChange: this.onChangeBound }),
+                        caption ? (react_1.default.createElement("div", { role: "button", onClick: this.onSaveBound, className: "module-caption-editor__save-button" }, i18n('save'))) : null))));
+        }
+    }
+    exports.CaptionEditor = CaptionEditor;
+})();

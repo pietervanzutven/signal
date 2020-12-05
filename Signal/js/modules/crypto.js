@@ -1,5 +1,5 @@
 /* eslint-env browser */
-/* global dcodeIO */
+/* global dcodeIO, libsignal */
 
 /* eslint-disable camelcase, no-bitwise */
 
@@ -7,16 +7,22 @@
   'use strict';
 
   window.sjcl.beware["CTR mode is dangerous because it doesn't protect message integrity."]();
-  
+
   window.crypto.arrayBufferToBase64 = arrayBufferToBase64;
   window.crypto.base64ToArrayBuffer = base64ToArrayBuffer;
   window.crypto.bytesFromString = bytesFromString;
   window.crypto.concatenateBytes = concatenateBytes;
   window.crypto.constantTimeEqual = constantTimeEqual;
   window.crypto.decryptAesCtr = decryptAesCtr;
+  window.crypto.decryptDeviceName = decryptDeviceName;
+  window.crypto.decryptAttachment = decryptAttachment;
+  window.crypto.decryptFile = decryptFile;
   window.crypto.decryptSymmetric = decryptSymmetric;
   window.crypto.deriveAccessKey = deriveAccessKey;
   window.crypto.encryptAesCtr = encryptAesCtr;
+  window.crypto.encryptDeviceName = encryptDeviceName;
+  window.crypto.encryptAttachment = encryptAttachment;
+  window.crypto.encryptFile = encryptFile;
   window.crypto.encryptSymmetric = encryptSymmetric;
   window.crypto.fromEncodedBinaryToArrayBuffer = fromEncodedBinaryToArrayBuffer;
   window.crypto.getAccessKeyVerifier = getAccessKeyVerifier;
@@ -32,8 +38,117 @@
   window.crypto.verifyAccessKey = verifyAccessKey;
 
   window.crypto.randomBytes = n => Buffer.from(window.crypto.getRandomBytes(n));
-  
+
+  function arrayBufferToBase64(arrayBuffer) {
+    return dcodeIO.ByteBuffer.wrap(arrayBuffer).toString('base64');
+  }
+  function base64ToArrayBuffer(base64string) {
+    return dcodeIO.ByteBuffer.wrap(base64string, 'base64').toArrayBuffer();
+  }
+
+  function fromEncodedBinaryToArrayBuffer(key) {
+    return dcodeIO.ByteBuffer.wrap(key, 'binary').toArrayBuffer();
+  }
+
+  function bytesFromString(string) {
+    return dcodeIO.ByteBuffer.wrap(string, 'utf8').toArrayBuffer();
+  }
+  function stringFromBytes(buffer) {
+    return dcodeIO.ByteBuffer.wrap(buffer).toString('utf8');
+  }
+
   // High-level Operations
+
+  async function encryptDeviceName(deviceName, identityPublic) {
+    const plaintext = bytesFromString(deviceName);
+    const ephemeralKeyPair = await libsignal.KeyHelper.generateIdentityKeyPair();
+    const masterSecret = await libsignal.Curve.async.calculateAgreement(
+      identityPublic,
+      ephemeralKeyPair.privKey
+    );
+
+    const key1 = await hmacSha256(masterSecret, bytesFromString('auth'));
+    const syntheticIv = _getFirstBytes(await hmacSha256(key1, plaintext), 16);
+
+    const key2 = await hmacSha256(masterSecret, bytesFromString('cipher'));
+    const cipherKey = await hmacSha256(key2, syntheticIv);
+
+    const counter = getZeroes(16);
+    const ciphertext = await encryptAesCtr(cipherKey, plaintext, counter);
+
+    return {
+      ephemeralPublic: ephemeralKeyPair.pubKey,
+      syntheticIv,
+      ciphertext,
+    };
+  }
+
+  async function decryptDeviceName(
+    { ephemeralPublic, syntheticIv, ciphertext } = {},
+    identityPrivate
+  ) {
+    const masterSecret = await libsignal.Curve.async.calculateAgreement(
+      ephemeralPublic,
+      identityPrivate
+    );
+
+    const key2 = await hmacSha256(masterSecret, bytesFromString('cipher'));
+    const cipherKey = await hmacSha256(key2, syntheticIv);
+
+    const counter = getZeroes(16);
+    const plaintext = await decryptAesCtr(cipherKey, ciphertext, counter);
+
+    const key1 = await hmacSha256(masterSecret, bytesFromString('auth'));
+    const ourSyntheticIv = _getFirstBytes(await hmacSha256(key1, plaintext), 16);
+
+    if (!constantTimeEqual(ourSyntheticIv, syntheticIv)) {
+      throw new Error('decryptDeviceName: synthetic IV did not match');
+    }
+
+    return stringFromBytes(plaintext);
+  }
+
+  // Path structure: 'fa/facdf99c22945b1c9393345599a276f4b36ad7ccdc8c2467f5441b742c2d11fa'
+  function getAttachmentLabel(path) {
+    const filename = path.slice(3);
+    return base64ToArrayBuffer(filename);
+  }
+
+  const PUB_KEY_LENGTH = 32;
+  async function encryptAttachment(staticPublicKey, path, plaintext) {
+    const uniqueId = getAttachmentLabel(path);
+    return encryptFile(staticPublicKey, uniqueId, plaintext);
+  }
+
+  async function decryptAttachment(staticPrivateKey, path, data) {
+    const uniqueId = getAttachmentLabel(path);
+    return decryptFile(staticPrivateKey, uniqueId, data);
+  }
+
+  async function encryptFile(staticPublicKey, uniqueId, plaintext) {
+    const ephemeralKeyPair = await libsignal.KeyHelper.generateIdentityKeyPair();
+    const agreement = await libsignal.Curve.async.calculateAgreement(
+      staticPublicKey,
+      ephemeralKeyPair.privKey
+    );
+    const key = await hmacSha256(agreement, uniqueId);
+
+    const prefix = ephemeralKeyPair.pubKey.slice(1);
+    return concatenateBytes(prefix, await encryptSymmetric(key, plaintext));
+  }
+
+  async function decryptFile(staticPrivateKey, uniqueId, data) {
+    const ephemeralPublicKey = _getFirstBytes(data, PUB_KEY_LENGTH);
+    const ciphertext = _getBytes(data, PUB_KEY_LENGTH, data.byteLength);
+    const agreement = await libsignal.Curve.async.calculateAgreement(
+      ephemeralPublicKey,
+      staticPrivateKey
+    );
+
+    const key = await hmacSha256(agreement, uniqueId);
+
+    return decryptSymmetric(key, ciphertext);
+  }
 
   async function deriveAccessKey(profileKey) {
     const iv = getZeroes(12);
@@ -180,7 +295,7 @@
     const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
     const ptBits = window.sjcl.codec.arrayBuffer.toBits(plaintext);
     const counterBits = window.sjcl.codec.bytes.toBits(counter);
- 
+
     const aes = new window.sjcl.cipher.aes(keyBits);
     const ctBits = window.sjcl.mode.ctr.encrypt(aes, ptBits, counterBits);
 
@@ -192,7 +307,7 @@
     const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
     const ctBits = window.sjcl.codec.bytes.toBits(ciphertext);
     const counterBits = window.sjcl.codec.bytes.toBits(counter);
- 
+
     const aes = new window.sjcl.cipher.aes(keyBits);
     const ptBits = window.sjcl.mode.ctr.decrypt(aes, ctBits, counterBits);
 
@@ -241,24 +356,6 @@
 
   function trimBytes(buffer, length) {
     return _getFirstBytes(buffer, length);
-  }
-
-  function arrayBufferToBase64(arrayBuffer) {
-    return dcodeIO.ByteBuffer.wrap(arrayBuffer).toString('base64');
-  }
-  function base64ToArrayBuffer(base64string) {
-    return dcodeIO.ByteBuffer.wrap(base64string, 'base64').toArrayBuffer();
-  }
-
-  function fromEncodedBinaryToArrayBuffer(key) {
-    return dcodeIO.ByteBuffer.wrap(key, 'binary').toArrayBuffer();
-  }
-
-  function bytesFromString(string) {
-    return dcodeIO.ByteBuffer.wrap(string, 'utf8').toArrayBuffer();
-  }
-  function stringFromBytes(buffer) {
-    return dcodeIO.ByteBuffer.wrap(buffer).toString('utf8');
   }
 
   function getViewOfArrayBuffer(buffer, start, finish) {

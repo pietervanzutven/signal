@@ -1176,9 +1176,12 @@
               conversation,
               message
             );
-            receipts.forEach(() =>
+            receipts.forEach(receipt =>
               message.set({
                 delivered: (message.get('delivered') || 0) + 1,
+                delivered_to: _.union(message.get('delivered_to') || [], [
+                  receipt.get('source'),
+                ]),
               })
             );
           }

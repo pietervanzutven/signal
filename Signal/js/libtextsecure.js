@@ -37012,6 +37012,18 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
     getDeviceName() {
       return textsecure.storage.get('device_name');
     },
+
+    setDeviceNameEncrypted() {
+      return textsecure.storage.put('deviceNameEncrypted', true);
+    },
+
+    getDeviceNameEncrypted() {
+      return textsecure.storage.get('deviceNameEncrypted');
+    },
+
+    getSignalingKey() {
+      return textsecure.storage.get('signaling_key');
+    },
   };
 })();
 
@@ -37248,7 +37260,6 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
   loadProtoBufs('SignalService.proto');
   loadProtoBufs('SubProtocol.proto');
   loadProtoBufs('DeviceMessages.proto');
-  loadProtoBufs('Stickers.proto');
 
     // Just for encrypting device names
   loadProtoBufs('DeviceName.proto');
@@ -37520,6 +37531,7 @@ window.textsecure.utils = (() => {
   libsignal,
   WebSocketResource,
   btoa,
+  Signal,
   getString,
   libphonenumber,
   Event,
@@ -37560,6 +37572,65 @@ window.textsecure.utils = (() => {
     },
     requestSMSVerification(number) {
       return this.server.requestVerificationSMS(number);
+    },
+    async encryptDeviceName(name, providedIdentityKey) {
+      const identityKey =
+        providedIdentityKey ||
+        (await textsecure.storage.protocol.getIdentityKeyPair());
+      if (!identityKey) {
+        throw new Error(
+          'Identity key was not provided and is not in database!'
+        );
+      }
+      const encrypted = await Signal.Crypto.encryptDeviceName(
+        name,
+        identityKey.pubKey
+      );
+
+      const proto = new textsecure.protobuf.DeviceName();
+      proto.ephemeralPublic = encrypted.ephemeralPublic;
+      proto.syntheticIv = encrypted.syntheticIv;
+      proto.ciphertext = encrypted.ciphertext;
+
+      const arrayBuffer = proto.encode().toArrayBuffer();
+      return Signal.Crypto.arrayBufferToBase64(arrayBuffer);
+    },
+    async decryptDeviceName(base64) {
+      const identityKey = await textsecure.storage.protocol.getIdentityKeyPair();
+
+      const arrayBuffer = Signal.Crypto.base64ToArrayBuffer(base64);
+      const proto = textsecure.protobuf.DeviceName.decode(arrayBuffer);
+      const encrypted = {
+        ephemeralPublic: proto.ephemeralPublic.toArrayBuffer(),
+        syntheticIv: proto.syntheticIv.toArrayBuffer(),
+        ciphertext: proto.ciphertext.toArrayBuffer(),
+      };
+
+      const name = await Signal.Crypto.decryptDeviceName(
+        encrypted,
+        identityKey.privKey
+      );
+
+      return name;
+    },
+    async maybeUpdateDeviceName() {
+      const isNameEncrypted = textsecure.storage.user.getDeviceNameEncrypted();
+      if (isNameEncrypted) {
+        return;
+      }
+      const deviceName = await textsecure.storage.user.getDeviceName();
+      const base64 = await this.encryptDeviceName(deviceName);
+
+      await this.server.updateDeviceName(base64);
+    },
+    async deviceNameIsEncrypted() {
+      await textsecure.storage.user.setDeviceNameEncrypted();
+    },
+    async maybeDeleteSignalingKey() {
+      const key = await textsecure.storage.user.getSignalingKey();
+      if (key) {
+        await this.server.removeSignalingKey();
+      }
     },
     registerSingleDevice(number, verificationCode) {
       const registerKeys = this.server.registerKeys.bind(this.server);
@@ -37851,7 +37922,7 @@ window.textsecure.utils = (() => {
         });
       });
     },
-    createAccount(
+    async createAccount(
       number,
       verificationCode,
       identityKeyPair,
@@ -37862,51 +37933,45 @@ window.textsecure.utils = (() => {
       options = {}
     ) {
       const { accessKey } = options;
-      const signalingKey = libsignal.crypto.getRandomBytes(32 + 20);
       let password = btoa(getString(libsignal.crypto.getRandomBytes(16)));
       password = password.substring(0, password.length - 2);
       const registrationId = libsignal.KeyHelper.generateRegistrationId();
 
       const previousNumber = getNumber(textsecure.storage.get('number_id'));
 
-      return this.server
-        .confirmCode(
+      const encryptedDeviceName = await this.encryptDeviceName(
+        deviceName,
+        identityKeyPair
+      );
+      await this.deviceNameIsEncrypted();
+
+      const response = await this.server.confirmCode(
           number,
           verificationCode,
           password,
-          signalingKey,
           registrationId,
-          deviceName,
+        encryptedDeviceName,
           { accessKey }
-        )
-        .then(response => {
+      );
+
           if (previousNumber && previousNumber !== number) {
             window.log.warn(
               'New number is different from old number; deleting all previous data'
             );
 
-            return textsecure.storage.protocol.removeAllData().then(
-              () => {
+        try {
+          await textsecure.storage.protocol.removeAllData();
                 window.log.info('Successfully deleted previous data');
-                return response;
-              },
-              error => {
+        } catch (error) {
                 window.log.error(
                   'Something went wrong deleting data from previous number',
                   error && error.stack ? error.stack : error
                 );
-
-                return response;
               }
-            );
           }
 
-          return response;
-        })
-        .then(async response => {
           await Promise.all([
             textsecure.storage.remove('identityKey'),
-            textsecure.storage.remove('signaling_key'),
             textsecure.storage.remove('password'),
             textsecure.storage.remove('registrationId'),
             textsecure.storage.remove('number_id'),
@@ -37929,7 +37994,6 @@ window.textsecure.utils = (() => {
             });
 
           await textsecure.storage.put('identityKey', identityKeyPair);
-          await textsecure.storage.put('signaling_key', signalingKey);
           await textsecure.storage.put('password', password);
           await textsecure.storage.put('registrationId', registrationId);
             if (profileKey) {
@@ -37953,26 +38017,25 @@ window.textsecure.utils = (() => {
               'regionCode',
               libphonenumber.util.getRegionCodeForNumber(number)
             );
-        });
     },
-    clearSessionsAndPreKeys() {
+    async clearSessionsAndPreKeys() {
       const store = textsecure.storage.protocol;
 
       window.log.info('clearing all sessions, prekeys, and signed prekeys');
-      return Promise.all([
+      await Promise.all([
         store.clearPreKeyStore(),
         store.clearSignedPreKeysStore(),
         store.clearSessionStore(),
       ]);
     },
     // Takes the same object returned by generateKeys
-    confirmKeys(keys) {
+    async confirmKeys(keys) {
       const store = textsecure.storage.protocol;
       const key = keys.signedPreKey;
       const confirmed = true;
 
       window.log.info('confirmKeys: confirming key', key.keyId);
-      return store.storeSignedPreKey(key.keyId, key.keyPair, confirmed);
+      await store.storeSignedPreKey(key.keyId, key.keyPair, confirmed);
     },
     generateKeys(count, providedProgressCallback) {
       const progressCallback =
@@ -38074,6 +38137,7 @@ window.textsecure.utils = (() => {
   const Request = function Request(options) {
     this.verb = options.verb || options.type;
     this.path = options.path || options.url;
+    this.headers = options.headers;
     this.body = options.body || options.data;
     this.success = options.success;
     this.error = options.error;
@@ -38097,6 +38161,7 @@ window.textsecure.utils = (() => {
     this.verb = request.verb;
     this.path = request.path;
     this.body = request.body;
+    this.headers = request.headers;
 
     this.respond = (status, message) => {
       socket.send(
@@ -38124,6 +38189,7 @@ window.textsecure.utils = (() => {
           verb: request.verb,
           path: request.path,
           body: request.body,
+          headers: request.headers,
           id: request.id,
         },
       })
@@ -38152,6 +38218,7 @@ window.textsecure.utils = (() => {
               verb: message.request.verb,
               path: message.request.path,
               body: message.request.body,
+              headers: message.request.headers,
               id: message.request.id,
               socket,
             })
@@ -38552,7 +38619,6 @@ MessageReceiver.prototype.extend({
     // We do the message decryption here, instead of in the ordered pending queue,
     // to avoid exposing the time it took us to process messages through the time-to-ack.
 
-    // TODO: handle different types of requests.
     if (request.path !== '/api/v1/message') {
       window.log.info('got request', request.verb, request.path);
       request.respond(200, 'OK');
@@ -38563,8 +38629,18 @@ MessageReceiver.prototype.extend({
       return;
     }
 
-    const promise = textsecure.crypto
-      .decryptWebsocketMessage(request.body, this.signalingKey)
+    let promise;
+    const headers = request.headers || [];
+    if (headers.includes('X-Signal-Key: true')) {
+      promise = textsecure.crypto.decryptWebsocketMessage(
+        request.body,
+        this.signalingKey
+      );
+    } else {
+      promise = Promise.resolve(request.body.toArrayBuffer());
+    }
+
+    promise = promise
       .then(plaintext => {
         const envelope = textsecure.protobuf.Envelope.decode(plaintext);
         // After this point, decoding errors are not the server's
@@ -39008,6 +39084,8 @@ MessageReceiver.prototype.extend({
             // Here we take this sender information and attach it back to the envelope
             //   to make the rest of the app work properly.
 
+              const originalSource = envelope.source;
+
             // eslint-disable-next-line no-param-reassign
             envelope.source = sender.getName();
             // eslint-disable-next-line no-param-reassign
@@ -39023,6 +39101,8 @@ MessageReceiver.prototype.extend({
             const { sender } = error || {};
         
             if (sender) {
+                const originalSource = envelope.source;
+
               // eslint-disable-next-line no-param-reassign
               envelope.source = sender.getName();
               // eslint-disable-next-line no-param-reassign
@@ -39756,7 +39836,7 @@ function OutgoingMessage(
   this.failoverNumbers = [];
   this.unidentifiedDeliveries = [];
 
-  const { numberInfo, senderCertificate, online } = options;
+  const { numberInfo, senderCertificate, online } = options || {};
   this.numberInfo = numberInfo;
   this.senderCertificate = senderCertificate;
   this.online = online;
@@ -40387,15 +40467,26 @@ MessageSender.prototype = {
               proto.id = id;
               proto.contentType = attachment.contentType;
               proto.digest = result.digest;
-              if (attachment.fileName) {
-                proto.fileName = attachment.fileName;
-              }
+
               if (attachment.size) {
                 proto.size = attachment.size;
+              }
+              if (attachment.fileName) {
+                proto.fileName = attachment.fileName;
               }
               if (attachment.flags) {
                 proto.flags = attachment.flags;
               }
+              if (attachment.width) {
+                proto.width = attachment.width;
+              }
+              if (attachment.height) {
+                proto.height = attachment.height;
+              }
+              if (attachment.caption) {
+                proto.caption = attachment.caption;
+              }
+
               return proto;
         })
       );

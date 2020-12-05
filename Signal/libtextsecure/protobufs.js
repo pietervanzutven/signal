@@ -42,6 +42,9 @@
   // Just for encrypting device names
   loadProtoBufs('DeviceName.proto');
 
+  // Just for encrypting device names
+  loadProtoBufs('DeviceName.proto');
+
   // Metadata-specific protos
   loadProtoBufs('UnidentifiedDelivery.proto');
 })();
