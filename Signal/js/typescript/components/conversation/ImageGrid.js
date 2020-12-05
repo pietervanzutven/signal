@@ -30,7 +30,7 @@
             if (!attachments || !attachments.length) {
                 return null;
             }
-            if (attachments.length === 1) {
+            if (attachments.length === 1 || !areAllAttachmentsVisual(attachments)) {
                 const { height, width } = getImageDimensions(attachments[0]);
                 return (react_1.default.createElement("div", { className: classnames_1.default('module-image-grid', 'module-image-grid--one-image') },
                     react_1.default.createElement(Image_1.Image, { alt: getAlt(attachments[0], i18n), i18n: i18n, bottomOverlay: bottomOverlay && curveBottom, curveTopLeft: curveTopLeft, curveTopRight: curveTopRight, curveBottomLeft: curveBottomLeft, curveBottomRight: curveBottomRight, attachment: attachments[0], playIconOverlay: isVideoAttachment(attachments[0]), height: height, width: width, url: getUrl(attachments[0]), onClick: onClickAttachment, onError: onError })));
@@ -86,6 +86,12 @@
             GoogleChrome_1.isImageTypeSupported(attachments[0].contentType));
     }
     exports.isImage = isImage;
+    function isImageAttachment(attachment) {
+        return (attachment &&
+            attachment.contentType &&
+            GoogleChrome_1.isImageTypeSupported(attachment.contentType));
+    }
+    exports.isImageAttachment = isImageAttachment;
     function hasImage(attachments) {
         return attachments && attachments[0] && attachments[0].url;
     }
@@ -122,6 +128,19 @@
             width: targetWidth,
             height: Math.max(Math.min(MAX_HEIGHT, candidateHeight), MIN_HEIGHT),
         };
+    }
+    function areAllAttachmentsVisual(attachments) {
+        if (!attachments) {
+            return false;
+        }
+        const max = attachments.length;
+        for (let i = 0; i < max; i += 1) {
+            const attachment = attachments[i];
+            if (!isImageAttachment(attachment) || !isVideoAttachment(attachment)) {
+                return false;
+            }
+        }
+        return true;
     }
     function getGridDimensions(attachments) {
         if (!attachments || !attachments.length) {
