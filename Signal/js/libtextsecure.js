@@ -37020,6 +37020,10 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
     getDeviceNameEncrypted() {
       return textsecure.storage.get('deviceNameEncrypted');
     },
+
+    getSignalingKey() {
+      return textsecure.storage.get('signaling_key');
+    },
   };
 })();
 
@@ -37622,6 +37626,12 @@ window.textsecure.utils = (() => {
     async deviceNameIsEncrypted() {
       await textsecure.storage.user.setDeviceNameEncrypted();
     },
+    async maybeDeleteSignalingKey() {
+      const key = await textsecure.storage.user.getSignalingKey();
+      if (key) {
+        await this.server.removeSignalingKey();
+      }
+    },
     registerSingleDevice(number, verificationCode) {
       const registerKeys = this.server.registerKeys.bind(this.server);
       const createAccount = this.createAccount.bind(this);
@@ -37923,7 +37933,6 @@ window.textsecure.utils = (() => {
       options = {}
     ) {
       const { accessKey } = options;
-      const signalingKey = libsignal.crypto.getRandomBytes(32 + 20);
       let password = btoa(getString(libsignal.crypto.getRandomBytes(16)));
       password = password.substring(0, password.length - 2);
       const registrationId = libsignal.KeyHelper.generateRegistrationId();
@@ -37940,7 +37949,6 @@ window.textsecure.utils = (() => {
           number,
           verificationCode,
           password,
-          signalingKey,
           registrationId,
         encryptedDeviceName,
           { accessKey }
@@ -37964,7 +37972,6 @@ window.textsecure.utils = (() => {
 
           await Promise.all([
             textsecure.storage.remove('identityKey'),
-            textsecure.storage.remove('signaling_key'),
             textsecure.storage.remove('password'),
             textsecure.storage.remove('registrationId'),
             textsecure.storage.remove('number_id'),
@@ -37987,7 +37994,6 @@ window.textsecure.utils = (() => {
             });
 
           await textsecure.storage.put('identityKey', identityKeyPair);
-          await textsecure.storage.put('signaling_key', signalingKey);
           await textsecure.storage.put('password', password);
           await textsecure.storage.put('registrationId', registrationId);
             if (profileKey) {
@@ -38131,6 +38137,7 @@ window.textsecure.utils = (() => {
   const Request = function Request(options) {
     this.verb = options.verb || options.type;
     this.path = options.path || options.url;
+    this.headers = options.headers;
     this.body = options.body || options.data;
     this.success = options.success;
     this.error = options.error;
@@ -38154,6 +38161,7 @@ window.textsecure.utils = (() => {
     this.verb = request.verb;
     this.path = request.path;
     this.body = request.body;
+    this.headers = request.headers;
 
     this.respond = (status, message) => {
       socket.send(
@@ -38181,6 +38189,7 @@ window.textsecure.utils = (() => {
           verb: request.verb,
           path: request.path,
           body: request.body,
+          headers: request.headers,
           id: request.id,
         },
       })
@@ -38209,6 +38218,7 @@ window.textsecure.utils = (() => {
               verb: message.request.verb,
               path: message.request.path,
               body: message.request.body,
+              headers: message.request.headers,
               id: message.request.id,
               socket,
             })
@@ -38620,8 +38630,18 @@ MessageReceiver.prototype.extend({
       return;
     }
 
-    const promise = textsecure.crypto
-      .decryptWebsocketMessage(request.body, this.signalingKey)
+    let promise;
+    const headers = request.headers || [];
+    if (headers.includes('X-Signal-Key: true')) {
+      promise = textsecure.crypto.decryptWebsocketMessage(
+        request.body,
+        this.signalingKey
+      );
+    } else {
+      promise = Promise.resolve(request.body.toArrayBuffer());
+    }
+
+    promise = promise
       .then(plaintext => {
         const envelope = textsecure.protobuf.Envelope.decode(plaintext);
         // After this point, decoding errors are not the server's
