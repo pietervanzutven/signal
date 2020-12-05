@@ -73,7 +73,10 @@
     getAllConversationIds,
     getAllPrivateConversations,
     getAllGroupsInvolvingId,
+
     searchConversations,
+    searchMessages,
+    searchMessagesInConversation,
 
     getMessageCount,
     saveMessage,
@@ -464,6 +467,69 @@
     console.log('updateToSchemaVersion7: success!');
   }
 
+  async function updateToSchemaVersion8(currentVersion, instance) {
+    if (currentVersion >= 8) {
+      return;
+    }
+    console.log('updateToSchemaVersion8: starting...');
+    await instance.run('BEGIN TRANSACTION;');
+
+    // First, we pull a new body field out of the message table's json blob
+    await instance.run(
+      `ALTER TABLE messages
+     ADD COLUMN body TEXT;`
+    );
+    await instance.run("UPDATE messages SET body = json_extract(json, '$.body')");
+
+    // Then we create our full-text search table and populate it
+    await instance.run(`
+    CREATE VIRTUAL TABLE messages_fts
+    USING fts5(id UNINDEXED, body);
+  `);
+    await instance.run(`
+    INSERT INTO messages_fts(id, body)
+    SELECT id, body FROM messages;
+  `);
+
+    // Then we set up triggers to keep the full-text search table up to date
+    await instance.run(`
+    CREATE TRIGGER messages_on_insert AFTER INSERT ON messages BEGIN
+      INSERT INTO messages_fts (
+        id,
+        body
+      ) VALUES (
+        new.id,
+        new.body
+      );
+    END;
+  `);
+    await instance.run(`
+    CREATE TRIGGER messages_on_delete AFTER DELETE ON messages BEGIN
+      DELETE FROM messages_fts WHERE id = old.id;
+    END;
+  `);
+    await instance.run(`
+    CREATE TRIGGER messages_on_update AFTER UPDATE ON messages BEGIN
+      DELETE FROM messages_fts WHERE id = old.id;
+      INSERT INTO messages_fts(
+        id,
+        body
+      ) VALUES (
+        new.id,
+        new.body
+      );
+    END;
+  `);
+
+    // For formatting search results:
+    //   https://sqlite.org/fts5.html#the_highlight_function
+    //   https://sqlite.org/fts5.html#the_snippet_function
+
+    await instance.run('PRAGMA schema_version = 8;');
+    await instance.run('COMMIT TRANSACTION;');
+    console.log('updateToSchemaVersion8: success!');
+  }
+
   const SCHEMA_VERSIONS = [
     updateToSchemaVersion1,
     updateToSchemaVersion2,
@@ -472,6 +538,7 @@
     () => null, // version 5 was dropped
     updateToSchemaVersion6,
     updateToSchemaVersion7,
+    updateToSchemaVersion8,
   ];
 
   async function updateSchema(instance) {
@@ -522,7 +589,7 @@
     const promisified = promisify(sqlInstance);
 
     // promisified.on('trace', async statement => {
-    //   if (!db) {
+    //   if (!db || statement.startsWith('--')) {
     //     console._log(statement);
     //     return;
     //   }
@@ -946,9 +1013,11 @@
   async function searchConversations(query) {
     const rows = await db.all(
       `SELECT json FROM conversations WHERE
+      (
       id LIKE $id OR
       name LIKE $name OR
       profileName LIKE $profileName
+      )
      ORDER BY id ASC;`,
       {
         $id: `%${query}%`,
@@ -958,6 +1027,62 @@
     );
 
     return map(rows, row => jsonToObject(row.json));
+  }
+
+  async function searchMessages(query, { limit } = {}) {
+    const rows = await db.all(
+      `SELECT
+      messages.json,
+      snippet(messages_fts, -1, '<<left>>', '<<right>>', '...', 15) as snippet
+    FROM messages_fts
+    INNER JOIN messages on messages_fts.id = messages.id
+    WHERE
+      messages_fts match $query
+    ORDER BY messages.received_at DESC
+    LIMIT $limit;`,
+      {
+        $query: query,
+        $limit: limit || 100,
+      }
+    );
+
+    return map(rows, row => (Object.assign({},
+      jsonToObject(row.json),
+      {
+        snippet: row.snippet,
+      }
+    )));
+  }
+
+  async function searchMessagesInConversation(
+    query,
+    conversationId,
+    { limit } = {}
+  ) {
+    const rows = await db.all(
+      `SELECT
+      messages.json,
+      snippet(messages_fts, -1, '<<left>>', '<<right>>', '...', 15) as snippet
+    FROM messages_fts
+    INNER JOIN messages on messages_fts.id = messages.id
+    WHERE
+      messages_fts match $query AND
+      messages.conversationId = $conversationId
+    ORDER BY messages.received_at DESC
+    LIMIT $limit;`,
+      {
+        $query: query,
+        $conversationId: conversationId,
+        $limit: limit || 100,
+      }
+    );
+
+    return map(rows, row => (Object.assign({},
+      jsonToObject(row.json),
+      {
+        snippet: row.snippet,
+      }
+    )));
   }
 
   async function getMessageCount() {
@@ -972,6 +1097,7 @@
 
   async function saveMessage(data, { forceSave } = {}) {
     const {
+      body,
       conversationId,
       // eslint-disable-next-line camelcase
       expires_at,
@@ -996,6 +1122,7 @@
       $id: id,
       $json: objectToJSON(data),
 
+      $body: body,
       $conversationId: conversationId,
       $expirationStartTimestamp: expirationStartTimestamp,
       $expires_at: expires_at,
@@ -1016,6 +1143,7 @@
       await db.run(
         `UPDATE messages SET
         json = $json,
+        body = $body,
         conversationId = $conversationId,
         expirationStartTimestamp = $expirationStartTimestamp,
         expires_at = $expires_at,
@@ -1050,6 +1178,7 @@
     id,
     json,
 
+    body,
     conversationId,
     expirationStartTimestamp,
     expires_at,
@@ -1068,6 +1197,7 @@
     $id,
     $json,
 
+    $body,
     $conversationId,
     $expirationStartTimestamp,
     $expires_at,
