@@ -18,12 +18,13 @@
     class AttachmentSection extends react_1.default.Component {
         constructor() {
             super(...arguments);
-            this.createClickHandler = (message) => () => {
+            this.createClickHandler = (mediaItem) => () => {
                 const { onItemClick, type } = this.props;
+                const { message, attachment } = mediaItem;
                 if (!onItemClick) {
                     return;
                 }
-                onItemClick({ type, message });
+                onItemClick({ type, message, attachment });
             };
         }
         render() {
@@ -33,17 +34,16 @@
                 react_1.default.createElement("div", { className: "module-attachment-section__items" }, this.renderItems())));
         }
         renderItems() {
-            const { i18n, messages, type } = this.props;
-            return messages.map((message, index, array) => {
-                const shouldShowSeparator = index < array.length - 1;
-                const { attachments } = message;
-                const firstAttachment = attachments[0];
-                const onClick = this.createClickHandler(message);
+            const { i18n, mediaItems, type } = this.props;
+            return mediaItems.map((mediaItem, position, array) => {
+                const shouldShowSeparator = position < array.length - 1;
+                const { message, index, attachment } = mediaItem;
+                const onClick = this.createClickHandler(mediaItem);
                 switch (type) {
                     case 'media':
-                        return (react_1.default.createElement(MediaGridItem_1.MediaGridItem, { key: message.id, message: message, onClick: onClick, i18n: i18n }));
+                        return (react_1.default.createElement(MediaGridItem_1.MediaGridItem, { key: `${message.id}-${index}`, mediaItem: mediaItem, onClick: onClick, i18n: i18n }));
                     case 'documents':
-                        return (react_1.default.createElement(DocumentListItem_1.DocumentListItem, { key: message.id, fileName: firstAttachment.fileName, fileSize: firstAttachment.size, shouldShowSeparator: shouldShowSeparator, onClick: onClick, timestamp: message.received_at }));
+                        return (react_1.default.createElement(DocumentListItem_1.DocumentListItem, { key: `${message.id}-${index}`, fileName: attachment.fileName, fileSize: attachment.size, shouldShowSeparator: shouldShowSeparator, onClick: onClick, timestamp: message.received_at }));
                     default:
                         return missingCaseError_1.missingCaseError(type);
                 }

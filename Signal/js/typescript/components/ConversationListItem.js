@@ -15,6 +15,7 @@
     const MessageBody_1 = window.ts.components.conversation.MessageBody;
     const Timestamp_1 = window.ts.components.conversation.Timestamp;
     const ContactName_1 = window.ts.components.conversation.ContactName;
+    const TypingAnimation_1 = window.ts.components.conversation.TypingAnimation;
     class ConversationListItem extends react_1.default.Component {
         renderAvatar() {
             const { avatarPath, color, conversationType, i18n, name, phoneNumber, profileName, } = this.props;
@@ -46,8 +47,8 @@
                     react_1.default.createElement(Timestamp_1.Timestamp, { timestamp: lastUpdated, extended: false, module: "module-conversation-list-item__header__timestamp", i18n: i18n }))));
         }
         renderMessage() {
-            const { lastMessage, unreadCount, i18n } = this.props;
-            if (!lastMessage) {
+            const { lastMessage, isTyping, unreadCount, i18n } = this.props;
+            if (!lastMessage && !isTyping) {
                 return null;
             }
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__message" },
@@ -55,9 +56,8 @@
                     className: classnames_1.default('module-conversation-list-item__message__text', unreadCount > 0
                         ? 'module-conversation-list-item__message__text--has-unread'
                         : null)
-                },
-                    react_1.default.createElement(MessageBody_1.MessageBody, { text: lastMessage.text || '', disableJumbomoji: true, disableLinks: true, i18n: i18n })),
-                lastMessage.status ? (react_1.default.createElement("div", { className: classnames_1.default('module-conversation-list-item__message__status-icon', `module-conversation-list-item__message__status-icon--${lastMessage.status}`) })) : null));
+                }, isTyping ? (react_1.default.createElement(TypingAnimation_1.TypingAnimation, { i18n: i18n })) : (react_1.default.createElement(MessageBody_1.MessageBody, { text: lastMessage && lastMessage.text ? lastMessage.text : '', disableJumbomoji: true, disableLinks: true, i18n: i18n }))),
+                lastMessage && lastMessage.status ? (react_1.default.createElement("div", { className: classnames_1.default('module-conversation-list-item__message__status-icon', `module-conversation-list-item__message__status-icon--${lastMessage.status}`) })) : null));
         }
         render() {
             const { unreadCount, onClick, isSelected } = this.props;

@@ -56,6 +56,7 @@
             paddingBottom: 0,
         },
         objectContainer: {
+            position: 'relative',
             flexGrow: 1,
             display: 'inline-flex',
             justifyContent: 'center',
@@ -66,6 +67,18 @@
             maxWidth: '100%',
             maxHeight: '100%',
             objectFit: 'contain',
+        },
+        caption: {
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            textAlign: 'center',
+            color: 'white',
+            padding: '1em',
+            paddingLeft: '3em',
+            paddingRight: '3em',
+            backgroundColor: 'rgba(192, 192, 192, .20)',
         },
         controlsOffsetPlaceholder: {
             width: CONTROLS_WIDTH,
@@ -120,7 +133,7 @@
                 }
                 const isVideoTypeSupported = GoogleChrome.isVideoTypeSupported(contentType);
                 if (isVideoTypeSupported) {
-                    return (react_1.default.createElement("video", { role: "button", ref: this.captureVideoBound, onClick: this.playVideoBound, controls: true, style: styles.object },
+                    return (react_1.default.createElement("video", { role: "button", ref: this.captureVideoBound, onClick: this.playVideoBound, controls: true, style: styles.object, key: objectURL },
                         react_1.default.createElement("source", { src: objectURL })));
                 }
                 const isUnsupportedImageType = !isImageTypeSupported && MIME.isImage(contentType);
@@ -199,13 +212,15 @@
             }
         }
         render() {
-            const { contentType, objectURL, onNext, onPrevious, onSave, i18n, } = this.props;
+            const { caption, contentType, objectURL, onNext, onPrevious, onSave, i18n, } = this.props;
             return (react_1.default.createElement("div", { style: styles.container, onClick: this.onContainerClick, ref: this.setContainerRef, role: "dialog" },
                 react_1.default.createElement("div", { style: styles.mainContainer },
                     react_1.default.createElement("div", { style: styles.controlsOffsetPlaceholder }),
-                    react_1.default.createElement("div", { style: styles.objectContainer }, !is_1.default.undefined(contentType)
-                        ? this.renderObject({ objectURL, contentType, i18n })
-                        : null),
+                    react_1.default.createElement("div", { style: styles.objectContainer },
+                        !is_1.default.undefined(contentType)
+                            ? this.renderObject({ objectURL, contentType, i18n })
+                            : null,
+                        caption ? react_1.default.createElement("div", { style: styles.caption }, caption) : null),
                     react_1.default.createElement("div", { style: styles.controls },
                         react_1.default.createElement(IconButton, { type: "close", onClick: this.onClose }),
                         onSave ? (react_1.default.createElement(IconButton, { type: "save", onClick: onSave, style: styles.saveButton })) : null)),

@@ -152,6 +152,10 @@
       </div>
     </div>
   </script>
+  <script type='text/x-tmpl-mustache' id='message-list'>
+    <div class='messages'></div>
+    <div class='typing-container'></div>
+  </script>
   <script type='text/x-tmpl-mustache' id='recorder'>
       <button class='finish'><span class='icon'></span></button>
       <span class='time'>0:00</span>
@@ -672,7 +676,6 @@
   <script type='text/javascript' src='js/modules/database.js'></script>
   <script type='text/javascript' src='js/modules/settings.js'></script>
   <script type='text/javascript' src='js/modules/sleep.js'></script>
-  <script type='text/javascript' src='js/modules/startup.js'></script>
   <script type='text/javascript' src='js/modules/views/initialization.js'></script>
   <script type='text/javascript' src='js/modules/i18n.js'></script>
   <script type='text/javascript' src='js/modules/string_to_array_buffer.js'></script>
@@ -693,7 +696,7 @@
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/EmptyState.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/MediaGridItem.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/AttachmentSection.js'></script>
-  <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/groupMessagesByDate.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/groupMediaItemsByDate.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/MediaGallery.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/types/Message.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/Quote.js'></script>
@@ -712,8 +715,12 @@
   <script type='text/javascript' src='js/typescript/components/conversation/TimerNotification.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/Timestamp.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/VerificationNotification.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/Image.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/ImageGrid.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/Message.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/MessageDetail.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/TypingAnimation.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/TypingBubble.js'></script>
   <script type='text/javascript' src='js/typescript/components/ContactListItem.js'></script>
   <script type='text/javascript' src='js/typescript/components/ConversationListItem.js'></script>
   <script type='text/javascript' src='js/typescript/backbone/Conversation.js'></script>

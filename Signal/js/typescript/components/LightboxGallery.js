@@ -14,10 +14,6 @@
      */
     const react_1 = __importDefault(window.react);
     const Lightbox_1 = window.ts.components.Lightbox;
-    const messageToItem = (message) => ({
-        objectURL: message.objectURL,
-        contentType: message.attachments[0].contentType,
-    });
     class LightboxGallery extends react_1.default.Component {
         constructor(props) {
             super(props);
@@ -28,33 +24,34 @@
             };
             this.handleNext = () => {
                 this.setState((prevState, props) => ({
-                    selectedIndex: Math.min(prevState.selectedIndex + 1, props.messages.length - 1),
+                    selectedIndex: Math.min(prevState.selectedIndex + 1, props.media.length - 1),
                 }));
             };
             this.handleSave = () => {
-                const { messages, onSave } = this.props;
+                const { media, onSave } = this.props;
                 if (!onSave) {
                     return;
                 }
                 const { selectedIndex } = this.state;
-                const message = messages[selectedIndex];
-                onSave({ message });
+                const mediaItem = media[selectedIndex];
+                const { attachment, message } = mediaItem;
+                onSave({ attachment, message });
             };
             this.state = {
                 selectedIndex: this.props.selectedIndex,
             };
         }
         render() {
-            const { close, messages, onSave, i18n } = this.props;
+            const { close, media, onSave, i18n } = this.props;
             const { selectedIndex } = this.state;
-            const selectedMessage = messages[selectedIndex];
-            const selectedItem = messageToItem(selectedMessage);
+            const selectedMedia = media[selectedIndex];
             const firstIndex = 0;
+            const lastIndex = media.length - 1;
             const onPrevious = selectedIndex > firstIndex ? this.handlePrevious : undefined;
-            const lastIndex = messages.length - 1;
             const onNext = selectedIndex < lastIndex ? this.handleNext : undefined;
-            const objectURL = selectedItem.objectURL || 'images/alert-outline.svg';
-            return (react_1.default.createElement(Lightbox_1.Lightbox, { close: close, onPrevious: onPrevious, onNext: onNext, onSave: onSave ? this.handleSave : undefined, objectURL: objectURL, contentType: selectedItem.contentType, i18n: i18n }));
+            const objectURL = selectedMedia.objectURL || 'images/alert-outline.svg';
+            const { attachment } = selectedMedia;
+            return (react_1.default.createElement(Lightbox_1.Lightbox, { close: close, onPrevious: onPrevious, onNext: onNext, onSave: onSave ? this.handleSave : undefined, objectURL: objectURL, caption: attachment ? attachment.caption : undefined, contentType: selectedMedia.contentType, i18n: i18n }));
         }
     }
     LightboxGallery.defaultProps = {

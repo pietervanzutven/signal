@@ -35977,7 +35977,7 @@ SessionBuilder.prototype = {
           record.updateSessionState(session);
           return Promise.all([
             this.storage.storeSession(address, record.serialize()),
-            this.storage.saveIdentity(this.remoteAddress.toString(), session.indexInfo.remoteIdentityKey)
+            this.storage.saveIdentity(this.remoteAddress.toString(), device.identityKey)
           ]);
         }.bind(this));
       }.bind(this));
@@ -36220,9 +36220,12 @@ SessionCipher.prototype = {
               msg.ciphertext = ciphertext;
               var encodedMsg = msg.toArrayBuffer();
 
+              var ourIdentityKeyBuffer = util.toArrayBuffer(ourIdentityKey.pubKey);
+              var theirIdentityKey = util.toArrayBuffer(session.indexInfo.remoteIdentityKey);
               var macInput = new Uint8Array(encodedMsg.byteLength + 33*2 + 1);
-              macInput.set(new Uint8Array(util.toArrayBuffer(ourIdentityKey.pubKey)));
-              macInput.set(new Uint8Array(util.toArrayBuffer(session.indexInfo.remoteIdentityKey)), 33);
+
+              macInput.set(new Uint8Array(ourIdentityKeyBuffer));
+              macInput.set(new Uint8Array(theirIdentityKey), 33);
               macInput[33*2] = (3 << 4) | 3;
               macInput.set(new Uint8Array(encodedMsg), 33*2 + 1);
 
@@ -36233,13 +36236,13 @@ SessionCipher.prototype = {
                   result.set(new Uint8Array(mac, 0, 8), encodedMsg.byteLength + 1);
 
                   return this.storage.isTrustedIdentity(
-                      this.remoteAddress.getName(), util.toArrayBuffer(session.indexInfo.remoteIdentityKey), this.storage.Direction.SENDING
+                      this.remoteAddress.getName(), theirIdentityKey, this.storage.Direction.SENDING
                   ).then(function(trusted) {
                       if (!trusted) {
                           throw new Error('Identity key changed');
                       }
                   }).then(function() {
-                      return this.storage.saveIdentity(this.remoteAddress.toString(), session.indexInfo.remoteIdentityKey);
+                      return this.storage.saveIdentity(this.remoteAddress.toString(), theirIdentityKey);
                   }.bind(this)).then(function() {
                       record.updateSessionState(session);
                       return this.storage.storeSession(address, record.serialize()).then(function() {
@@ -36800,10 +36803,10 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
 
       return verifyMAC(ivAndCiphertext, macKey, mac, 32)
         .then(() => {
-          if (theirDigest !== null) {
-            return verifyDigest(encryptedBin, theirDigest);
+          if (!theirDigest) {
+            throw new Error('Failure: Ask sender to update Signal and resend.');
           }
-          return null;
+          return verifyDigest(encryptedBin, theirDigest);
         })
         .then(() => decrypt(aesKey, ciphertext, iv));
     },
@@ -38752,7 +38755,7 @@ MessageReceiver.prototype.extend({
     window.log.info('getAllFromCache');
     const count = await textsecure.storage.unprocessed.getCount();
 
-    if (count > 250) {
+    if (count > 1500) {
       await textsecure.storage.unprocessed.removeAll();
       window.log.warn(
         `There were ${count} messages in cache. Deleted all instead of reprocessing`
@@ -39010,7 +39013,7 @@ MessageReceiver.prototype.extend({
             // eslint-disable-next-line no-param-reassign
             envelope.sourceDevice = sender.getDeviceId();
             // eslint-disable-next-line no-param-reassign
-            envelope.unidentifiedDeliveryReceived = true;
+            envelope.unidentifiedDeliveryReceived = !originalSource;
         
             // Return just the content because that matches the signature of the other
             //   decrypt methods used above.
@@ -39025,7 +39028,7 @@ MessageReceiver.prototype.extend({
               // eslint-disable-next-line no-param-reassign
               envelope.sourceDevice = sender.getDeviceId();
               // eslint-disable-next-line no-param-reassign
-              envelope.unidentifiedDeliveryReceived = true;
+              envelope.unidentifiedDeliveryReceived = !originalSource;
 
               throw error;
             }
@@ -39272,7 +39275,7 @@ MessageReceiver.prototype.extend({
       const typingTimestamp = typingMessage.timestamp.toNumber();
 
       if (typingTimestamp !== envelopeTimestamp) {
-        console.warn(
+        window.log.warn(
           `Typing message envelope timestamp (${envelopeTimestamp}) did not match typing timestamp (${typingTimestamp})`
         );
         return null;
@@ -39617,7 +39620,15 @@ MessageReceiver.prototype.extend({
       );
     }
 
-    for (let i = 0, max = decrypted.attachments.length; i < max; i += 1) {
+    const attachmentCount = decrypted.attachments.length;
+    const ATTACHMENT_MAX = 32;
+    if (attachmentCount > ATTACHMENT_MAX) {
+      throw new Error(
+        `Too many attachments: ${attachmentCount} included in one message, max is ${ATTACHMENT_MAX}`
+      );
+    }
+
+    for (let i = 0; i < attachmentCount; i += 1) {
       const attachment = decrypted.attachments[i];
       promises.push(this.handleAttachment(attachment));
     }
@@ -39745,9 +39756,10 @@ function OutgoingMessage(
   this.failoverNumbers = [];
   this.unidentifiedDeliveries = [];
 
-  const { numberInfo, senderCertificate } = options;
+  const { numberInfo, senderCertificate, online } = options;
   this.numberInfo = numberInfo;
   this.senderCertificate = senderCertificate;
+  this.online = online;
 }
 
 OutgoingMessage.prototype = {
@@ -39907,6 +39919,7 @@ OutgoingMessage.prototype = {
         jsonData,
         timestamp,
         this.silent,
+        this.online,
         { accessKey }
       );
     } else {
@@ -39914,7 +39927,8 @@ OutgoingMessage.prototype = {
         number,
         jsonData,
         timestamp,
-        this.silent
+        this.silent,
+        this.online
       );
     }
 
@@ -40195,7 +40209,7 @@ OutgoingMessage.prototype = {
   },
 };
 
-/* global textsecure, WebAPI, libsignal, OutgoingMessage, window */
+/* global _, textsecure, WebAPI, libsignal, OutgoingMessage, window */
 
 /* eslint-disable more/no-then, no-bitwise */
 
@@ -40513,10 +40527,31 @@ MessageSender.prototype = {
         });
   },
 
+  sendMessageProtoAndWait(timestamp, numbers, message, silent, options = {}) {
+    return new Promise((resolve, reject) => {
+      const callback = result => {
+        if (result && result.errors && result.errors.length > 0) {
+          return reject(result);
+        }
+
+        return resolve(result);
+      };
+
+      this.sendMessageProto(
+        timestamp,
+        numbers,
+        message,
+        callback,
+        silent,
+        options
+      );
+    });
+  },
+
   sendIndividualProto(number, proto, timestamp, silent, options = {}) {
     return new Promise((resolve, reject) => {
       const callback = res => {
-          if (res.errors.length > 0) {
+        if (res && res.errors && res.errors.length > 0) {
             reject(res);
           } else {
             resolve(res);
@@ -40644,6 +40679,7 @@ MessageSender.prototype = {
 
     return Promise.resolve();
   },
+
   sendRequestGroupSyncMessage(options) {
     const myNumber = textsecure.storage.user.getNumber();
     const myDevice = textsecure.storage.user.getDeviceId();
@@ -40691,6 +40727,57 @@ MessageSender.prototype = {
 
     return Promise.resolve();
   },
+
+  async sendTypingMessage(options = {}, sendOptions = {}) {
+    const ACTION_ENUM = textsecure.protobuf.TypingMessage.Action;
+    const { recipientId, groupId, isTyping, timestamp } = options;
+
+    // We don't want to send typing messages to our other devices, but we will
+    //   in the group case.
+    const myNumber = textsecure.storage.user.getNumber();
+    if (recipientId && myNumber === recipientId) {
+      return null;
+    }
+
+    if (!recipientId && !groupId) {
+      throw new Error('Need to provide either recipientId or groupId!');
+    }
+
+    const recipients = groupId
+      ? _.without(await textsecure.storage.groups.getNumbers(groupId), myNumber)
+      : [recipientId];
+    const groupIdBuffer = groupId
+      ? window.Signal.Crypto.fromEncodedBinaryToArrayBuffer(groupId)
+      : null;
+
+    const action = isTyping ? ACTION_ENUM.STARTED : ACTION_ENUM.STOPPED;
+    const finalTimestamp = timestamp || Date.now();
+
+    const typingMessage = new textsecure.protobuf.TypingMessage();
+    typingMessage.groupId = groupIdBuffer;
+    typingMessage.action = action;
+    typingMessage.timestamp = finalTimestamp;
+
+    const contentMessage = new textsecure.protobuf.Content();
+    contentMessage.typingMessage = typingMessage;
+
+    const silent = true;
+    const online = true;
+
+    return this.sendMessageProtoAndWait(
+      finalTimestamp,
+      recipients,
+      contentMessage,
+      silent,
+      Object.assign({},
+        sendOptions,
+        {
+          online,
+        }
+      )
+    );
+  },
+
   sendDeliveryReceipt(recipientId, timestamp, options) {
     const myNumber = textsecure.storage.user.getNumber();
     const myDevice = textsecure.storage.user.getDeviceId();
@@ -40714,6 +40801,7 @@ MessageSender.prototype = {
       options
     );
   },
+
   sendReadReceipts(sender, timestamps, options) {
     const receiptMessage = new textsecure.protobuf.ReceiptMessage();
     receiptMessage.type = textsecure.protobuf.ReceiptMessage.Type.READ;
@@ -41168,6 +41256,7 @@ textsecure.MessageSender = function MessageSenderWrapper(
   this.sendMessage = sender.sendMessage.bind(sender);
   this.resetSession = sender.resetSession.bind(sender);
   this.sendMessageToGroup = sender.sendMessageToGroup.bind(sender);
+  this.sendTypingMessage = sender.sendTypingMessage.bind(sender);
   this.createGroup = sender.createGroup.bind(sender);
   this.updateGroup = sender.updateGroup.bind(sender);
   this.addNumberToGroup = sender.addNumberToGroup.bind(sender);
@@ -41217,7 +41306,11 @@ textsecure.MessageSender.prototype = {
       ourNumber,
       { syncMessage: true }
     );
-    window.log.info('SyncRequest created. Sending contact sync message...');
+
+    window.log.info('SyncRequest created. Sending config sync request...');
+    wrap(sender.sendRequestConfigurationSyncMessage(sendOptions));
+
+    window.log.info('SyncRequest now sending contact sync message...');
     wrap(sender.sendRequestContactSyncMessage(sendOptions))
       .then(() => {
         window.log.info('SyncRequest now sending group sync messsage...');
