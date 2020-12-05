@@ -1213,6 +1213,7 @@
         const props = {
           objectURL: getAbsoluteAttachmentPath(path),
           contentType,
+          caption: attachment.caption,
           onSave: () => this.downloadAttachment({ attachment, message }),
         };
         this.lightboxView = new Whisper.ReactWrapperView({
