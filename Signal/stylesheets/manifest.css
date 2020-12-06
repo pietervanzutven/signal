@@ -53,6 +53,9 @@ body {
 ::-webkit-scrollbar-corner {
   background: #ffffff; }
 
+audio {
+  max-width: 100%; }
+
 .dark-overlay {
   position: absolute;
   top: 0;
