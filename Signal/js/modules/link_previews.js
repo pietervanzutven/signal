@@ -58,7 +58,7 @@
     }
   }
 
-  const SUPPORTED_MEDIA_DOMAINS = /^([^.]+\.)*(ytimg.com|cdninstagram.com|redd.it|imgur.com)$/i;
+  const SUPPORTED_MEDIA_DOMAINS = /^([^.]+\.)*(ytimg.com|cdninstagram.com|redd.it|imgur.com|fbcdn.net)$/i;
   function isMediaLinkInWhitelist(link) {
     try {
       const url = new URL(link);
