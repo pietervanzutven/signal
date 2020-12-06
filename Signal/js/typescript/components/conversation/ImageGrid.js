@@ -135,6 +135,7 @@
             height: Math.max(Math.min(MAX_HEIGHT, candidateHeight), MIN_HEIGHT),
         };
     }
+    exports.getImageDimensions = getImageDimensions;
     function areAllAttachmentsVisual(attachments) {
         if (!attachments) {
             return false;

@@ -18,6 +18,7 @@
   const { migrateToSQL } = window.migrate_to_sql;
   const Metadata = window.metadata.SecretSessionCipher;
   const RefreshSenderCertificate = window.refresh_sender_certificate;
+  const LinkPreviews = window.link_previews;
 
   // Components
   const {
@@ -60,6 +61,9 @@
   const {
     SafetyNumberNotification,
   } = window.ts.components.conversation.SafetyNumberNotification;
+  const {
+    StagedLinkPreview,
+  } = window.ts.components.conversation.StagedLinkPreview;
   const {
     TimerNotification,
   } = window.ts.components.conversation.TimerNotification;
@@ -125,7 +129,8 @@
     const attachmentsPath = getPath(userDataPath);
     const readAttachmentData = createReader(attachmentsPath);
     const loadAttachmentData = Type.loadData(readAttachmentData);
-    const loadQuoteData = MessageType.loadQuoteData(readAttachmentData);
+    const loadPreviewData = MessageType.loadPreviewData(loadAttachmentData);
+    const loadQuoteData = MessageType.loadQuoteData(loadAttachmentData);
     const getAbsoluteAttachmentPath = createAbsolutePathGetter(attachmentsPath);
     const deleteOnDisk = Attachments.createDeleter(attachmentsPath);
 
@@ -140,8 +145,9 @@
       getPlaceholderMigrations,
       getCurrentVersion,
       loadAttachmentData,
-      loadQuoteData,
       loadMessage: MessageType.createAttachmentLoader(loadAttachmentData),
+      loadPreviewData,
+      loadQuoteData,
       readAttachmentData,
       run,
       upgradeMessageSchema: (message, options = {}) => {
@@ -201,6 +207,7 @@
       Quote,
       ResetSessionNotification,
       SafetyNumberNotification,
+      StagedLinkPreview,
       TimerNotification,
       Types: {
         Message: MediaGalleryMessage,
@@ -231,7 +238,6 @@
     };
 
     return {
-      Metadata,
       Backbone,
       Components,
       Crypto,
@@ -239,6 +245,9 @@
       Database,
       Emoji,
       IndexedDB,
+      LinkPreviews,
+      Metadata,
+      migrateToSQL,
       Migrations,
       Notifications,
       OS,
@@ -248,7 +257,6 @@
       Util,
       Views,
       Workflow,
-      migrateToSQL,
     };
   };
 })();

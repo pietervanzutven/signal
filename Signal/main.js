@@ -175,6 +175,7 @@ function prepareURL(pathSegments, moreKeys) {
       hostname: os.hostname(),
       appInstance: process.env.NODE_APP_INSTANCE,
       proxyUrl: process.env.HTTPS_PROXY || process.env.https_proxy,
+      contentProxyUrl: config.contentProxyUrl,
       importMode: importMode ? true : undefined, // for stringify()
       serverTrustRoot: config.get('serverTrustRoot'),
     }, moreKeys),
@@ -425,12 +426,12 @@ let ready = false;
     loggingSetupError = error;
   }
 
+  if (loggingSetupError) {
+    console.error('Problem setting up logging', loggingSetupError.stack);
+  }
+
   logger = logging.getLogger();
   logger.info('app ready');
-
-  if (loggingSetupError) {
-    logger.error('Problem setting up logging', loggingSetupError.stack);
-  }
 
   if (!locale) {
     const appLocale = process.env.UWP_ENV === 'test' ? 'en' : Windows.Globalization.ApplicationLanguages.languages[0];

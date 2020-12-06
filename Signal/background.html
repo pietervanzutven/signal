@@ -29,7 +29,7 @@
 
   <script type='text/x-tmpl-mustache' id='app-loading-screen'>
     <div class='content'>
-      <img src='images/icon_128.png'>
+      <img src='images/icon_250.png' height='150'>
       <div class='container'>
         <span class='dot'></span>
         <span class='dot'></span>
@@ -624,6 +624,7 @@
   <script type='text/javascript' src='node_modules/mkdirp/index.js'></script>
   <script type='text/javascript' src='node_modules/rimraf/index.js'></script>
   <script type='text/javascript' src='node_modules/glob/glob.js'></script>
+  <script type='text/javascript' src='node_modules/he/he.js'></script>
 
   <script type='text/javascript' src='js/components.js'></script>
 
@@ -663,7 +664,6 @@
   <script type='text/javascript' src='js/modules/privacy.js'></script>
   <script type='text/javascript' src='js/modules/deferred_to_promise.js'></script>
   <script type='text/javascript' src='js/modules/database.js'></script>
-  <script type='text/javascript' src='js/modules/backup.js'></script>
   <script type='text/javascript' src='js/modules/refresh_sender_certificate.js'></script>
   <script type='text/javascript' src='js/modules/idle_detector.js'></script>
   <script type='text/javascript' src='js/modules/database.js'></script>
@@ -673,6 +673,7 @@
   <script type='text/javascript' src='js/modules/i18n.js'></script>
   <script type='text/javascript' src='js/modules/string_to_array_buffer.js'></script>
   <script type='text/javascript' src='js/modules/web_api.js'></script>
+  <script type='text/javascript' src='js/modules/link_previews.js'></script>
   <script type='text/javascript' src='js/modules/migrations/run_migrations.js'></script>
   <script type='text/javascript' src='js/modules/migrations/18/index.js'></script>
   <script type='text/javascript' src='js/modules/migrations/migrations.js'></script>
@@ -692,7 +693,6 @@
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/groupMediaItemsByDate.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/MediaGallery.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/types/Message.js'></script>
-  <script type='text/javascript' src='js/typescript/components/conversation/Quote.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/AddNewLines.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/Emojify.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/ExpireTimer.js'></script>
@@ -703,6 +703,7 @@
   <script type='text/javascript' src='js/typescript/components/conversation/GroupNotification.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/ConversationHeader.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/MessageBody.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/Quote.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/ResetSessionNotification.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/SafetyNumberNotification.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/TimerNotification.js'></script>
@@ -716,6 +717,7 @@
   <script type='text/javascript' src='js/typescript/components/conversation/TypingBubble.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/StagedGenericAttachment.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/StagedPlaceholderAttachment.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/StagedLinkPreview.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/AttachmentList.js'></script>
   <script type='text/javascript' src='js/typescript/components/CaptionEditor.js'></script>
   <script type='text/javascript' src='js/typescript/components/ContactListItem.js'></script>
@@ -818,7 +820,7 @@
 <body>
   <div class='app-loading-screen'>
     <div class='content'>
-      <img src='/images/icon_128.png'>
+      <img src='images/icon_250.png' height='150'>
       <div class='container'>
         <span class='dot'></span>
         <span class='dot'></span>

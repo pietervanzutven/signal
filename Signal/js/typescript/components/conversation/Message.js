@@ -23,6 +23,7 @@
     const MessageBody_1 = window.ts.components.conversation.MessageBody;
     const ExpireTimer_1 = window.ts.components.conversation.ExpireTimer;
     const ImageGrid_1 = window.ts.components.conversation.ImageGrid;
+    const Image_1 = window.ts.components.conversation.Image;
     const Timestamp_1 = window.ts.components.conversation.Timestamp;
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const Quote_1 = window.ts.components.conversation.Quote;
@@ -30,6 +31,8 @@
     const MIME = __importStar(window.ts.types.MIME);
     const isFileDangerous_1 = require_ts_util_isFileDangerous();
     const react_contextmenu_1 = window.react_contextmenu;
+    // Same as MIN_WIDTH in ImageGrid.tsx
+    const MINIMUM_LINK_PREVIEW_IMAGE_WIDTH = 200;
     const EXPIRATION_CHECK_MINIMUM = 2000;
     const EXPIRED_DELAY = 600;
     class Message extends react_1.default.Component {
@@ -99,17 +102,12 @@
             });
         }
         renderMetadata() {
-            const { attachments, collapseMetadata, direction, expirationLength, expirationTimestamp, i18n, status, text, timestamp, } = this.props;
-            const { imageBroken } = this.state;
+            const { collapseMetadata, direction, expirationLength, expirationTimestamp, i18n, status, text, timestamp, } = this.props;
             if (collapseMetadata) {
                 return null;
             }
-            const canDisplayAttachment = canDisplayImage(attachments);
-            const withImageNoCaption = Boolean(!text &&
-                canDisplayAttachment &&
-                !imageBroken &&
-                ((ImageGrid_1.isImage(attachments) && ImageGrid_1.hasImage(attachments)) ||
-                    (ImageGrid_1.isVideo(attachments) && ImageGrid_1.hasVideoScreenshot(attachments))));
+            const isShowingImage = this.isShowingImage();
+            const withImageNoCaption = Boolean(!text && isShowingImage);
             const showError = status === 'error' && direction === 'outgoing';
             return (react_1.default.createElement("div", {
                 className: classnames_1.default('module-message__metadata', withImageNoCaption
@@ -193,6 +191,50 @@
                         react_1.default.createElement("div", { className: classnames_1.default('module-message__generic-attachment__file-name', `module-message__generic-attachment__file-name--${direction}`) }, fileName),
                         react_1.default.createElement("div", { className: classnames_1.default('module-message__generic-attachment__file-size', `module-message__generic-attachment__file-size--${direction}`) }, fileSize))));
             }
+        }
+        // tslint:disable-next-line cyclomatic-complexity
+        renderPreview() {
+            const { attachments, conversationType, direction, i18n, onClickLinkPreview, previews, quote, } = this.props;
+            // Attachments take precedence over Link Previews
+            if (attachments && attachments.length) {
+                return null;
+            }
+            if (!previews || previews.length < 1) {
+                return null;
+            }
+            const first = previews[0];
+            if (!first) {
+                return null;
+            }
+            const withContentAbove = Boolean(quote) ||
+                (conversationType === 'group' && direction === 'incoming');
+            const previewHasImage = first.image && ImageGrid_1.isImageAttachment(first.image);
+            const width = first.image && first.image.width;
+            const isFullSizeImage = width && width >= MINIMUM_LINK_PREVIEW_IMAGE_WIDTH;
+            return (react_1.default.createElement("div", {
+                role: "button", className: classnames_1.default('module-message__link-preview', withContentAbove
+                    ? 'module-message__link-preview--with-content-above'
+                    : null), onClick: () => {
+                        if (onClickLinkPreview) {
+                            onClickLinkPreview(first.url);
+                        }
+                    }
+            },
+                first.image && previewHasImage && isFullSizeImage ? (react_1.default.createElement(ImageGrid_1.ImageGrid, { attachments: [first.image], withContentAbove: withContentAbove, withContentBelow: true, onError: this.handleImageErrorBound, i18n: i18n })) : null,
+                react_1.default.createElement("div", {
+                    className: classnames_1.default('module-message__link-preview__content', withContentAbove || isFullSizeImage
+                        ? 'module-message__link-preview__content--with-content-above'
+                        : null)
+                },
+                    first.image && previewHasImage && !isFullSizeImage ? (react_1.default.createElement("div", { className: "module-message__link-preview__icon_container" },
+                        react_1.default.createElement(Image_1.Image, { smallCurveTopLeft: !withContentAbove, softCorners: true, alt: i18n('previewThumbnail', [first.domain]), height: 72, width: 72, url: first.image.url, attachment: first.image, onError: this.handleImageErrorBound, i18n: i18n }))) : null,
+                    react_1.default.createElement("div", {
+                        className: classnames_1.default('module-message__link-preview__text', previewHasImage && !isFullSizeImage
+                            ? 'module-message__link-preview__text--with-icon'
+                            : null)
+                    },
+                        react_1.default.createElement("div", { className: "module-message__link-preview__title" }, first.title),
+                        react_1.default.createElement("div", { className: "module-message__link-preview__location" }, first.domain)))));
         }
         renderQuote() {
             const { conversationType, authorColor, direction, i18n, quote, } = this.props;
@@ -323,36 +365,78 @@
                     }, onClick: onDelete
                 }, i18n('deleteMessage'))));
         }
+        getWidth() {
+            const { attachments, previews } = this.props;
+            if (attachments && attachments.length) {
+                const dimensions = ImageGrid_1.getGridDimensions(attachments);
+                if (dimensions) {
+                    return dimensions.width;
+                }
+            }
+            if (previews && previews.length) {
+                const first = previews[0];
+                if (!first || !first.image) {
+                    return;
+                }
+                const { width } = first.image;
+                if (ImageGrid_1.isImageAttachment(first.image) &&
+                    width &&
+                    width >= MINIMUM_LINK_PREVIEW_IMAGE_WIDTH) {
+                    const dimensions = ImageGrid_1.getImageDimensions(first.image);
+                    if (dimensions) {
+                        return dimensions.width;
+                    }
+                }
+            }
+            return;
+        }
+        isShowingImage() {
+            const { attachments, previews } = this.props;
+            const { imageBroken } = this.state;
+            if (imageBroken) {
+                return false;
+            }
+            if (attachments && attachments.length) {
+                const displayImage = canDisplayImage(attachments);
+                return (displayImage &&
+                    ((ImageGrid_1.isImage(attachments) && ImageGrid_1.hasImage(attachments)) ||
+                        (ImageGrid_1.isVideo(attachments) && ImageGrid_1.hasVideoScreenshot(attachments))));
+            }
+            if (previews && previews.length) {
+                const first = previews[0];
+                const { image } = first;
+                if (!image) {
+                    return false;
+                }
+                return ImageGrid_1.isImageAttachment(image);
+            }
+            return false;
+        }
         render() {
-            const { attachments, authorPhoneNumber, authorColor, direction, id, timestamp, } = this.props;
-            const { expired, expiring, imageBroken } = this.state;
+            const { authorPhoneNumber, authorColor, direction, id, timestamp, } = this.props;
+            const { expired, expiring } = this.state;
             // This id is what connects our triple-dot click with our associated pop-up menu.
             //   It needs to be unique.
             const triggerId = String(id || `${authorPhoneNumber}-${timestamp}`);
             if (expired) {
                 return null;
             }
-            const displayImage = canDisplayImage(attachments);
-            const showingImage = displayImage &&
-                !imageBroken &&
-                ((ImageGrid_1.isImage(attachments) && ImageGrid_1.hasImage(attachments)) ||
-                    (ImageGrid_1.isVideo(attachments) && ImageGrid_1.hasVideoScreenshot(attachments)));
-            const { width } = ImageGrid_1.getGridDimensions(attachments) || { width: undefined };
-            return (react_1.default.createElement("div", {
-                className: classnames_1.default('module-message', `module-message--${direction}`, expiring ? 'module-message--expired' : null), style: {
-                    width: showingImage ? width : undefined,
-                }
-            },
+            const width = this.getWidth();
+            const isShowingImage = this.isShowingImage();
+            return (react_1.default.createElement("div", { className: classnames_1.default('module-message', `module-message--${direction}`, expiring ? 'module-message--expired' : null) },
                 this.renderError(direction === 'incoming'),
                 this.renderMenu(direction === 'outgoing', triggerId),
                 react_1.default.createElement("div", {
                     className: classnames_1.default('module-message__container', `module-message__container--${direction}`, direction === 'incoming'
                         ? `module-message__container--incoming-${authorColor}`
-                        : null)
+                        : null), style: {
+                            width: isShowingImage ? width : undefined,
+                        }
                 },
                     this.renderAuthor(),
                     this.renderQuote(),
                     this.renderAttachment(),
+                    this.renderPreview(),
                     this.renderEmbeddedContact(),
                     this.renderText(),
                     this.renderMetadata(),
