@@ -425,12 +425,12 @@ let ready = false;
     loggingSetupError = error;
   }
 
+  if (loggingSetupError) {
+    console.error('Problem setting up logging', loggingSetupError.stack);
+  }
+
   logger = logging.getLogger();
   logger.info('app ready');
-
-  if (loggingSetupError) {
-    logger.error('Problem setting up logging', loggingSetupError.stack);
-  }
 
   if (!locale) {
     const appLocale = process.env.UWP_ENV === 'test' ? 'en' : Windows.Globalization.ApplicationLanguages.languages[0];
