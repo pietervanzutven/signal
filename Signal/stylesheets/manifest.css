@@ -2062,11 +2062,6 @@ body.dark-theme {
     color: white;
     background: #2090ea; }
 
-.dark-theme .app-loading-screen {
-  background-color: #0f1012; }
-  .dark-theme .app-loading-screen .dot {
-    border: 3px solid #2090ea; }
-
 .dark-theme .full-screen-flow {
   color: black;
   background: linear-gradient(to bottom, #eeeeee 0%, #f3f3f3 12%, white 27%, white 60%, #f9f9f9 85%, #d5d5d5 100%); }
