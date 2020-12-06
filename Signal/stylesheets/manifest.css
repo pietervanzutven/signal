@@ -404,7 +404,8 @@ a {
   right: 0;
   top: 0;
   bottom: 0;
-  background-color: white;
+  background-color: #2090ea;
+  color: #ffffff;
   display: flex;
   align-items: center;
   user-select: none; }
@@ -423,7 +424,7 @@ a {
   .app-loading-screen .dot {
     width: 14px;
     height: 14px;
-    border: 3px solid #2090ea;
+    border: 3px solid #ffffff;
     border-radius: 50%;
     float: left;
     margin: 0 6px;
