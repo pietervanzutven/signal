@@ -39730,6 +39730,14 @@ MessageReceiver.prototype.extend({
       promises.push(this.handleAttachment(attachment));
     }
 
+    const previewCount = (decrypted.preview || []).length;
+    for (let i = 0; i < previewCount; i += 1) {
+      const preview = decrypted.preview[i];
+      if (preview.image) {
+        promises.push(this.handleAttachment(preview.image));
+      }
+    }
+
     if (decrypted.contact && decrypted.contact.length) {
       const contacts = decrypted.contact;
 
@@ -40326,6 +40334,7 @@ function Message(options) {
   this.body = options.body;
   this.attachments = options.attachments || [];
   this.quote = options.quote;
+  this.preview = options.preview;
   this.group = options.group;
   this.flags = options.flags;
   this.recipients = options.recipients;
@@ -40409,6 +40418,15 @@ Message.prototype = {
       proto.group = new textsecure.protobuf.GroupContext();
       proto.group.id = stringToArrayBuffer(this.group.id);
       proto.group.type = this.group.type;
+    }
+    if (Array.isArray(this.preview)) {
+      proto.preview = this.preview.map(preview => {
+        const item = new textsecure.protobuf.DataMessage.Preview();
+        item.title = preview.title;
+        item.url = preview.url;
+        item.image = preview.image;
+        return item;
+      });
     }
     if (this.quote) {
       const { QuotedAttachment } = textsecure.protobuf.DataMessage.Quote;
@@ -40546,6 +40564,27 @@ MessageSender.prototype = {
       });
   },
 
+  async uploadLinkPreviews(message) {
+    try {
+      const preview = await Promise.all(
+        (message.preview || []).map(async item => (Object.assign({},
+          item,
+          {
+            image: await this.makeAttachmentPointer(item.image),
+          }
+        )))
+      );
+      // eslint-disable-next-line no-param-reassign
+      message.preview = preview;
+    } catch (error) {
+      if (error instanceof Error && error.name === 'HTTPError') {
+        throw new textsecure.MessageError(message, error);
+      } else {
+        throw error;
+      }
+    }
+  },
+
   uploadThumbnails(message) {
     const makePointer = this.makeAttachmentPointer.bind(this);
     const { quote } = message;
@@ -40582,6 +40621,7 @@ MessageSender.prototype = {
     return Promise.all([
       this.uploadAttachments(message),
       this.uploadThumbnails(message),
+      this.uploadLinkPreviews(message),
     ]).then(
       () =>
         new Promise((resolve, reject) => {
@@ -41044,6 +41084,7 @@ MessageSender.prototype = {
     messageText,
     attachments,
     quote,
+    preview,
     timestamp,
     expireTimer,
     profileKey,
@@ -41056,6 +41097,7 @@ MessageSender.prototype = {
       timestamp,
       attachments,
       quote,
+      preview,
       needsSync: true,
       expireTimer,
       profileKey,
@@ -41132,6 +41174,7 @@ MessageSender.prototype = {
     messageText,
     attachments,
     quote,
+    preview,
     timestamp,
     expireTimer,
     profileKey,
@@ -41155,6 +41198,7 @@ MessageSender.prototype = {
           timestamp,
           attachments,
           quote,
+          preview,
           needsSync: true,
           expireTimer,
           profileKey,
@@ -41333,6 +41377,12 @@ MessageSender.prototype = {
       options
     );
   },
+  makeProxiedRequest(url, options) {
+    return this.server.makeProxiedRequest(url, options);
+  },
+  getProxiedSize(url) {
+    return this.server.getProxiedSize(url);
+  },
 };
 
 window.textsecure = window.textsecure || {};
@@ -41378,6 +41428,8 @@ textsecure.MessageSender = function MessageSenderWrapper(
   this.syncVerification = sender.syncVerification.bind(sender);
   this.sendDeliveryReceipt = sender.sendDeliveryReceipt.bind(sender);
   this.sendReadReceipts = sender.sendReadReceipts.bind(sender);
+  this.makeProxiedRequest = sender.makeProxiedRequest.bind(sender);
+  this.getProxiedSize = sender.getProxiedSize.bind(sender);
 };
 
 textsecure.MessageSender.prototype = {

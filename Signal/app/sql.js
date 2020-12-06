@@ -1582,7 +1582,7 @@
   }
 
   function getExternalFilesForMessage(message) {
-    const { attachments, contact, quote } = message;
+    const { attachments, contact, quote, preview } = message;
     const files = [];
 
     forEach(attachments, attachment => {
@@ -1616,6 +1616,16 @@
 
         if (avatar && avatar.avatar && avatar.avatar.path) {
           files.push(avatar.avatar.path);
+        }
+      });
+    }
+
+    if (preview && preview.length) {
+      forEach(preview, item => {
+        const { image } = item;
+
+        if (image && image.path) {
+          files.push(image.path);
         }
       });
     }

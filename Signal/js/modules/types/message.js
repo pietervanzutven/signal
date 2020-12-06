@@ -53,6 +53,8 @@
   // Version 9
   //   - Attachments: Expand the set of unicode characters we filter out of
   //     attachment filenames
+  // Version 10
+  //   - Preview: A new type of attachment can be included in a message.
 
   const INITIAL_SCHEMA_VERSION = 0;
 
@@ -238,6 +240,46 @@
     });
   };
 
+  //      _mapPreviewAttachments :: (PreviewAttachment -> Promise PreviewAttachment) ->
+  //                               (Message, Context) ->
+  //                               Promise Message
+  exports._mapPreviewAttachments = upgradeAttachment => async (
+    message,
+    context
+  ) => {
+    if (!message.preview) {
+      return message;
+    }
+    if (!context || !isObject(context.logger)) {
+      throw new Error('_mapPreviewAttachments: context must have logger object');
+    }
+    const { logger } = context;
+
+    const upgradeWithContext = async preview => {
+      const { image } = preview;
+      if (!image) {
+        return preview;
+      }
+
+      if (!image.data && !image.path) {
+        logger.warn('Preview did not have image data; removing it');
+        return omit(preview, ['image']);
+      }
+
+      const upgradedImage = await upgradeAttachment(image, context);
+      return Object.assign({}, preview, {
+        image: upgradedImage,
+      });
+    };
+
+    const preview = await Promise.all(
+      (message.preview || []).map(upgradeWithContext)
+    );
+    return Object.assign({}, message, {
+      preview,
+    });
+  };
+
   const toVersion0 = async (message, context) =>
     exports.initializeSchemaVersion({ message, logger: context.logger });
   const toVersion1 = exports._withSchemaVersion({
@@ -283,6 +325,10 @@
     schemaVersion: 9,
     upgrade: exports._mapAttachments(Attachment.replaceUnicodeV2),
   });
+  const toVersion10 = exports._withSchemaVersion({
+    schemaVersion: 10,
+    upgrade: exports._mapPreviewAttachments(Attachment.migrateDataToFileSystem),
+  });
 
   const VERSIONS = [
     toVersion0,
@@ -295,8 +341,12 @@
     toVersion7,
     toVersion8,
     toVersion9,
+    toVersion10,
   ];
   exports.CURRENT_SCHEMA_VERSION = VERSIONS.length - 1;
+
+  // We need dimensions and screenshots for images for proper display
+  exports.VERSION_NEEDED_FOR_DISPLAY = 9;
 
   // UpgradeStep
   exports.upgradeSchema = async (
@@ -410,10 +460,37 @@
                 {
                   thumbnail: await loadAttachmentData(thumbnail),
                 }
-              )
+              );
             })
-          )
+          ),
         }
+      );
+    };
+  };
+
+  exports.loadPreviewData = loadAttachmentData => {
+    if (!isFunction(loadAttachmentData)) {
+      throw new TypeError('loadPreviewData: loadAttachmentData is required');
+    }
+
+    return async preview => {
+      if (!preview || !preview.length) {
+        return [];
+      }
+
+      return Promise.all(
+        preview.map(async () => {
+          if (!preview.image) {
+            return preview;
+          }
+
+          return Object.assign({},
+            preview,
+            {
+              image: await loadAttachmentData(preview.image),
+            }
+          );
+        })
       );
     };
   };
@@ -432,7 +509,7 @@
     }
 
     return async message => {
-      const { attachments, quote, contact } = message;
+      const { attachments, quote, contact, preview } = message;
 
       if (attachments && attachments.length) {
         await Promise.all(attachments.map(deleteAttachmentData));
@@ -457,6 +534,18 @@
 
             if (avatar && avatar.avatar && avatar.avatar.path) {
               await deleteOnDisk(avatar.avatar.path);
+            }
+          })
+        );
+      }
+
+      if (preview && preview.length) {
+        await Promise.all(
+          preview.map(async item => {
+            const { image } = item;
+
+            if (image && image.path) {
+              await deleteOnDisk(image.path);
             }
           })
         );
@@ -490,11 +579,12 @@
         logger,
       });
 
-      const { attachments, quote, contact } = message;
+      const { attachments, quote, contact, preview } = message;
       const hasFilesToWrite =
         (quote && quote.attachments && quote.attachments.length > 0) ||
         (attachments && attachments.length > 0) ||
-        (contact && contact.length > 0);
+        (contact && contact.length > 0) ||
+        (preview && preview.length > 0);
 
       if (!hasFilesToWrite) {
         return message;
@@ -555,11 +645,25 @@
         });
       };
 
+      const writePreviewImage = async item => {
+        const { image } = item;
+        if (!image) {
+          return omit(item, ['image']);
+        }
+
+        await writeExistingAttachmentData(image);
+
+        return Object.assign({}, item, {
+          image: omit(image, ['data']),
+        });
+      };
+
       const messageWithoutAttachmentData = Object.assign(
         {},
         await writeThumbnails(message, { logger }),
         {
           contact: await Promise.all((contact || []).map(writeContactAvatar)),
+          preview: await Promise.all((preview || []).map(writePreviewImage)),
           attachments: await Promise.all(
             (attachments || []).map(async attachment => {
               await writeExistingAttachmentData(attachment);
@@ -579,7 +683,7 @@
                 (attachment.screenshot
                   ? { screenshot: omit(attachment.screenshot, ['data']) }
                   : null)
-                );
+              );
             })
           ),
         }

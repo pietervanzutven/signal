@@ -15,7 +15,7 @@
     exports.VIDEO_MP4 = 'video/mp4';
     exports.VIDEO_QUICKTIME = 'video/quicktime';
     exports.isJPEG = (value) => value === 'image/jpeg';
-    exports.isImage = (value) => value.startsWith('image/');
-    exports.isVideo = (value) => value.startsWith('video/');
-    exports.isAudio = (value) => value.startsWith('audio/');
+    exports.isImage = (value) => value && value.startsWith('image/');
+    exports.isVideo = (value) => value && value.startsWith('video/');
+    exports.isAudio = (value) => value && value.startsWith('audio/');
 })();

@@ -194,6 +194,7 @@
     <Content Include="js\modules\i18n.js" />
     <Content Include="js\modules\idle_detector.js" />
     <Content Include="js\modules\indexeddb.js" />
+    <Content Include="js\modules\link_previews.js" />
     <Content Include="js\modules\logs.js" />
     <Content Include="js\modules\messages_data_migrator.js" />
     <Content Include="js\modules\metadata\CiphertextMessage.js" />
@@ -266,6 +267,7 @@
     <Content Include="js\typescript\components\conversation\ResetSessionNotification.js" />
     <Content Include="js\typescript\components\conversation\SafetyNumberNotification.js" />
     <Content Include="js\typescript\components\conversation\StagedGenericAttachment.js" />
+    <Content Include="js\typescript\components\conversation\StagedLinkPreview.js" />
     <Content Include="js\typescript\components\conversation\StagedPlaceholderAttachment.js" />
     <Content Include="js\typescript\components\conversation\TimerNotification.js" />
     <Content Include="js\typescript\components\conversation\Timestamp.js" />
@@ -349,6 +351,7 @@
     <Content Include="node_modules\core\ipc.js" />
     <Content Include="node_modules\core\uwp-config.js" />
     <Content Include="node_modules\glob\glob.js" />
+    <Content Include="node_modules\he\he.js" />
     <Content Include="node_modules\journeyapps\sqlcipher.js" />
     <Content Include="node_modules\jquery\dist\jquery.js" />
     <Content Include="node_modules\lodash\compact.js" />

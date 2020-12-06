@@ -24,6 +24,7 @@
     getAbsoluteAttachmentPath,
     loadAttachmentData,
     loadQuoteData,
+    loadPreviewData,
     writeNewAttachmentData,
   } = window.Signal.Migrations;
 
@@ -430,6 +431,7 @@
         attachments: attachments.map(attachment =>
           this.getPropsForAttachment(attachment)
         ),
+        previews: this.getPropsForPreview(),
         quote: this.getPropsForQuote(),
         authorAvatarPath,
         isExpired: this.hasExpired,
@@ -439,6 +441,7 @@
         onRetrySend: () => this.retrySend(),
         onShowDetail: () => this.trigger('show-message-detail', this),
         onDelete: () => this.trigger('delete', this),
+        onClickLinkPreview: url => this.trigger('navigate-to', url),
         onClickAttachment: attachment =>
           this.trigger('show-lightbox', {
             attachment,
@@ -530,6 +533,17 @@
         isVoiceMessage: Signal.Types.Attachment.isVoiceMessage(attachment),
         thumbnail: thumbnailWithObjectUrl,
       });
+    },
+    getPropsForPreview() {
+      const previews = this.get('preview') || [];
+
+      return previews.map(preview => (Object.assign({},
+        preview,
+        {
+          domain: window.Signal.LinkPreviews.getDomain(preview.url),
+          image: preview.image ? this.getPropsForAttachment(preview.image) : null,
+        }
+      )));
     },
     getPropsForQuote() {
       const quote = this.get('quote');
@@ -719,6 +733,7 @@
         (this.get('attachments') || []).map(loadAttachmentData)
       );
       const quoteWithData = await loadQuoteData(this.get('quote'));
+      const previewWithData = await loadPreviewData(this.get('preview'));
 
       const conversation = this.getConversation();
       const options = conversation.getSendOptions();
@@ -732,6 +747,7 @@
           this.get('body'),
           attachmentsWithData,
           quoteWithData,
+          previewWithData,
           this.get('sent_at'),
           this.get('expireTimer'),
           profileKey,
@@ -748,6 +764,7 @@
             timestamp: this.get('sent_at'),
             attachments: attachmentsWithData,
             quote: quoteWithData,
+            preview: previewWithData,
             needsSync: !this.get('synced'),
             expireTimer: this.get('expireTimer'),
             profileKey,
@@ -782,6 +799,7 @@
           (this.get('attachments') || []).map(loadAttachmentData)
         );
         const quoteWithData = await loadQuoteData(this.get('quote'));
+        const previewWithData = await loadPreviewData(this.get('preview'));
 
         const { wrap, sendOptions } = ConversationController.prepareForSend(
           number
@@ -791,6 +809,7 @@
           this.get('body'),
           attachmentsWithData,
           quoteWithData,
+          previewWithData,
           this.get('sent_at'),
           this.get('expireTimer'),
           profileKey,
@@ -1157,6 +1176,22 @@
               message.set({ group_update: groupUpdate });
             }
           }
+
+          const urls = window.Signal.LinkPreviews.findLinks(dataMessage.body);
+          const incomingPreview = dataMessage.preview || [];
+          const preview = incomingPreview.filter(
+            item =>
+              (item.image || item.title) &&
+              urls.includes(item.url) &&
+              window.Signal.LinkPreviews.isLinkInWhitelist(item.url)
+          );
+          if (preview.length > incomingPreview.length) {
+            window.log.info(
+              `${message.idForLogging()}: Eliminated ${preview.length -
+                incomingPreview.length} previews with invalid urls'`
+            );
+          }
+
           message.set({
             attachments: dataMessage.attachments,
             body: dataMessage.body,
@@ -1169,6 +1204,7 @@
             hasFileAttachments: dataMessage.hasFileAttachments,
             hasVisualMediaAttachments: dataMessage.hasVisualMediaAttachments,
             quote: dataMessage.quote,
+            preview,
             schemaVersion: dataMessage.schemaVersion,
           });
           if (type === 'outgoing') {
