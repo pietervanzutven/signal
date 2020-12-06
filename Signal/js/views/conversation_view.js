@@ -1141,7 +1141,10 @@
 
     forceSend({ contact, message }) {
       const dialog = new Whisper.ConfirmationDialogView({
-        message: i18n('identityKeyErrorOnSend'),
+        message: i18n('identityKeyErrorOnSend', [
+          contact.getTitle(),
+          contact.getTitle(),
+        ]),
         okText: i18n('sendAnyway'),
         resolve: async () => {
           await contact.updateVerified();
