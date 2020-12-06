@@ -479,15 +479,15 @@
       }
 
       return Promise.all(
-        preview.map(async () => {
-          if (!preview.image) {
-            return preview;
+        preview.map(async item => {
+          if (!item.image) {
+            return item;
           }
 
           return Object.assign({},
-            preview,
+            item,
             {
-              image: await loadAttachmentData(preview.image),
+              image: await loadAttachmentData(item.image),
             }
           );
         })
