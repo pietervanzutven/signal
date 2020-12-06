@@ -37574,6 +37574,9 @@ window.textsecure.utils = (() => {
       return this.server.requestVerificationSMS(number);
     },
     async encryptDeviceName(name, providedIdentityKey) {
+      if (!name) {
+        return null;
+      }
       const identityKey =
         providedIdentityKey ||
         (await textsecure.storage.protocol.getIdentityKeyPair());
