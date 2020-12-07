@@ -37220,8 +37220,14 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
     add(data) {
       return textsecure.storage.protocol.addUnprocessed(data);
     },
-    save(data) {
-      return textsecure.storage.protocol.saveUnprocessed(data);
+    updateAttempts(id, attempts) {
+      return textsecure.storage.protocol.updateUnprocessedAttempts(
+        id,
+        attempts
+      );
+    },
+    addDecryptedData(id, data) {
+      return textsecure.storage.protocol.updateUnprocessedWithData(id, data);
     },
     remove(id) {
       return textsecure.storage.protocol.removeUnprocessed(id);
@@ -38866,7 +38872,10 @@ MessageReceiver.prototype.extend({
             );
             await textsecure.storage.unprocessed.remove(item.id);
           } else {
-            await textsecure.storage.unprocessed.save(Object.assign({}, item, { attempts } ));
+            await textsecure.storage.unprocessed.updateAttempts(
+              item.id,
+              attempts
+            );
           }
         } catch (error) {
           window.log.error(
@@ -38900,23 +38909,19 @@ MessageReceiver.prototype.extend({
       return null;
     }
 
-    if (item.get('version') === 2) {
-      item.set({
-        source: envelope.source,
-        sourceDevice: envelope.sourceDevice,
-        serverTimestamp: envelope.serverTimestamp,
-        decrypted: await MessageReceiver.arrayBufferToStringBase64(plaintext),
-      });
+    item.source = envelope.source;
+    item.sourceDevice = envelope.sourceDevice;
+    item.serverTimestamp = envelope.serverTimestamp;
+
+    if (item.version === 2) {
+      item.decrypted = await MessageReceiver.arrayBufferToStringBase64(
+        plaintext
+      );
     } else {
-      item.set({
-        source: envelope.source,
-        sourceDevice: envelope.sourceDevice,
-        serverTimestamp: envelope.serverTimestamp,
-        decrypted: await MessageReceiver.arrayBufferToString(plaintext),
-      });
+      item.decrypted = await MessageReceiver.arrayBufferToString(plaintext);
     }
 
-    return textsecure.storage.unprocessed.save(item.attributes);
+    return textsecure.storage.unprocessed.addDecryptedData(item.id, item);
   },
   removeFromCache(envelope) {
     const { id } = envelope;
