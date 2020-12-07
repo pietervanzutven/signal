@@ -41088,6 +41088,37 @@ MessageSender.prototype = {
     });
   },
 
+  async getMessageProto(
+    number,
+    body,
+    attachments,
+    quote,
+    preview,
+    timestamp,
+    expireTimer,
+    profileKey
+  ) {
+    const attributes = {
+      recipients: [number],
+      body,
+      timestamp,
+      attachments,
+      quote,
+      preview,
+      expireTimer,
+      profileKey,
+    };
+
+    const message = new Message(attributes);
+    await Promise.all([
+      this.uploadAttachments(message),
+      this.uploadThumbnails(message),
+      this.uploadLinkPreviews(message),
+    ]);
+
+    return message.toArrayBuffer();
+  },
+
   sendMessageToNumber(
     number,
     messageText,
@@ -41439,6 +41470,7 @@ textsecure.MessageSender = function MessageSenderWrapper(
   this.sendReadReceipts = sender.sendReadReceipts.bind(sender);
   this.makeProxiedRequest = sender.makeProxiedRequest.bind(sender);
   this.getProxiedSize = sender.getProxiedSize.bind(sender);
+  this.getMessageProto = sender.getMessageProto.bind(sender);
 };
 
 textsecure.MessageSender.prototype = {

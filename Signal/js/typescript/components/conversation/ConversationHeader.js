@@ -37,7 +37,10 @@
             return (react_1.default.createElement("div", { onClick: onGoBack, role: "button", className: "module-conversation-header__back-icon" }));
         }
         renderTitle() {
-            const { name, phoneNumber, i18n, profileName, isVerified } = this.props;
+            const { name, phoneNumber, i18n, isMe, profileName, isVerified, } = this.props;
+            if (isMe) {
+                return (react_1.default.createElement("div", { className: "module-conversation-header__title" }, i18n('noteToSelf')));
+            }
             return (react_1.default.createElement("div", { className: "module-conversation-header__title" },
                 name ? react_1.default.createElement(Emojify_1.Emojify, { text: name, i18n: i18n }) : null,
                 name && phoneNumber ? ' · ' : null,
@@ -52,9 +55,9 @@
                     i18n('verified'))) : null));
         }
         renderAvatar() {
-            const { avatarPath, color, i18n, isGroup, name, phoneNumber, profileName, } = this.props;
+            const { avatarPath, color, i18n, isGroup, isMe, name, phoneNumber, profileName, } = this.props;
             return (react_1.default.createElement("span", { className: "module-conversation-header__avatar" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: isGroup ? 'group' : 'direct', i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28 })));
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: isGroup ? 'group' : 'direct', i18n: i18n, noteToSelf: isMe, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28 })));
         }
         renderExpirationLength() {
             const { expirationSettingName } = this.props;
