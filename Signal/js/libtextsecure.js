@@ -39486,8 +39486,11 @@ MessageReceiver.prototype.extend({
   },
   handleContacts(envelope, contacts) {
     window.log.info('contact sync');
-    const attachmentPointer = contacts.blob;
-    return this.handleAttachment(attachmentPointer).then(() => {
+    const { blob } = contacts;
+
+    // Note: we do not return here because we don't want to block the next message on
+    //   this attachment download and a lot of processing of that attachment.
+    this.handleAttachment(blob).then(attachmentPointer => {
       const results = [];
       const contactBuffer = new ContactBuffer(attachmentPointer.data);
       let contactDetails = contactBuffer.next();
@@ -39510,8 +39513,11 @@ MessageReceiver.prototype.extend({
   },
   handleGroups(envelope, groups) {
     window.log.info('group sync');
-    const attachmentPointer = groups.blob;
-    return this.handleAttachment(attachmentPointer).then(() => {
+    const { blob } = groups;
+
+    // Note: we do not return here because we don't want to block the next message on
+    //   this attachment download and a lot of processing of that attachment.
+    this.handleAttachment(blob).then(attachmentPointer => {
       const groupBuffer = new GroupBuffer(attachmentPointer.data);
       let groupDetails = groupBuffer.next();
       const promises = [];
@@ -39579,32 +39585,36 @@ MessageReceiver.prototype.extend({
   isGroupBlocked(groupId) {
     return textsecure.storage.get('blocked-groups', []).indexOf(groupId) >= 0;
   },
-  handleAttachment(attachment) {
-    // eslint-disable-next-line no-param-reassign
-    attachment.id = attachment.id.toString();
-    // eslint-disable-next-line no-param-reassign
-    attachment.key = attachment.key.toArrayBuffer();
-    if (attachment.digest) {
-      // eslint-disable-next-line no-param-reassign
-      attachment.digest = attachment.digest.toArrayBuffer();
-    }
-    function decryptAttachment(encrypted) {
-      return textsecure.crypto.decryptAttachment(
+  cleanAttachment(attachment) {
+    return Object.assign({},
+      _.omit(attachment, 'thumbnail'),
+      {
+        id: attachment.id.toString(),
+        key: attachment.key ? attachment.key.toString('base64') : null,
+        digest: attachment.digest ? attachment.digest.toString('base64') : null,
+      }
+    );
+  },
+  async downloadAttachment(attachment) {
+    const encrypted = await this.server.getAttachment(attachment.id);
+    const { key, digest } = attachment;
+
+    const data = await textsecure.crypto.decryptAttachment(
         encrypted,
-        attachment.key,
-        attachment.digest
+      window.Signal.Crypto.base64ToArrayBuffer(key),
+      window.Signal.Crypto.base64ToArrayBuffer(digest)
       );
-    }
 
-    function updateAttachment(data) {
-      // eslint-disable-next-line no-param-reassign
-      attachment.data = data;
-    }
-
-    return this.server
-      .getAttachment(attachment.id)
-      .then(decryptAttachment)
-      .then(updateAttachment);
+    return Object.assign({},
+      _.omit(attachment, 'digest', 'key'),
+      {
+        data,
+      }
+    );
+  },
+  handleAttachment(attachment) {
+    const cleaned = this.cleanAttachment(attachment);
+    return this.downloadAttachment(cleaned);
   },
   async handleEndSession(number) {
     window.log.info('got end session');
@@ -39658,14 +39668,6 @@ MessageReceiver.prototype.extend({
 
     if (decrypted.group !== null) {
       decrypted.group.id = decrypted.group.id.toBinary();
-
-      if (
-        decrypted.group.type === textsecure.protobuf.GroupContext.Type.UPDATE
-      ) {
-        if (decrypted.group.avatar !== null) {
-          promises.push(this.handleAttachment(decrypted.group.avatar));
-        }
-      }
 
       const storageGroups = textsecure.storage.groups;
 
@@ -39734,65 +39736,75 @@ MessageReceiver.prototype.extend({
       );
     }
 
-    for (let i = 0; i < attachmentCount; i += 1) {
-      const attachment = decrypted.attachments[i];
-      promises.push(this.handleAttachment(attachment));
-    }
+    // Here we go from binary to string/base64 in all AttachmentPointer digest/key fields
 
-    const previewCount = (decrypted.preview || []).length;
-    for (let i = 0; i < previewCount; i += 1) {
-      const preview = decrypted.preview[i];
-      if (preview.image) {
-        promises.push(this.handleAttachment(preview.image));
+    if (
+      decrypted.group &&
+      decrypted.group.type === textsecure.protobuf.GroupContext.Type.UPDATE
+    ) {
+      if (decrypted.group.avatar !== null) {
+        decrypted.group.avatar = this.cleanAttachment(decrypted.group.avatar);
       }
     }
 
-    if (decrypted.contact && decrypted.contact.length) {
-      const contacts = decrypted.contact;
+    decrypted.attachments = (decrypted.attachments || []).map(
+      this.cleanAttachment.bind(this)
+    );
+    decrypted.preview = (decrypted.preview || []).map(item => {
+      const { image } = item;
 
-      for (let i = 0, max = contacts.length; i < max; i += 1) {
-        const contact = contacts[i];
-        const { avatar } = contact;
+      if (!image) {
+        return item;
+      }
 
-        if (avatar && avatar.avatar) {
-          // We don't want the failure of a thumbnail download to fail the handling of
-          //   this message entirely, like we do for full attachments.
-          promises.push(
-            this.handleAttachment(avatar.avatar).catch(error => {
-              window.log.error(
-                'Problem loading avatar for contact',
-                error && error.stack ? error.stack : error
-              );
-            })
-          );
+      return Object.assign({},
+        item,
+        {
+          image: this.cleanAttachment(image),
         }
-      }
-    }
+      );
+    });
+    decrypted.contact = (decrypted.contact || []).map(item => {
+      const { avatar } = item;
+
+      if (!avatar || !avatar.avatar) {
+        return item;
+        }
+
+      return Object.assign({},
+        item,
+        {
+          avatar: Object.assign({},
+            item.avatar,
+            {
+              avatar: this.cleanAttachment(item.avatar.avatar),
+            }
+          ),
+        }
+      );
+    });
 
     if (decrypted.quote && decrypted.quote.id) {
       decrypted.quote.id = decrypted.quote.id.toNumber();
     }
 
-    if (decrypted.quote && decrypted.quote.attachments) {
-      const { attachments } = decrypted.quote;
+    if (decrypted.quote) {
+      decrypted.quote.attachments = (decrypted.quote.attachments || []).map(
+        item => {
+          const { thumbnail } = item;
 
-      for (let i = 0, max = attachments.length; i < max; i += 1) {
-        const attachment = attachments[i];
-        const { thumbnail } = attachment;
+          if (!thumbnail) {
+            return item;
+        }
 
-        if (thumbnail) {
-          // We don't want the failure of a thumbnail download to fail the handling of
-          //   this message entirely, like we do for full attachments.
-          promises.push(
-            this.handleAttachment(thumbnail).catch(error => {
-              window.log.error(
-                'Problem loading thumbnail for quote',
-                error && error.stack ? error.stack : error
-              );
-            })
+          return Object.assign({},
+            item,
+            {
+              thumbnail: this.cleanAttachment(item.thumbnail),
+            }
           );
         }
-      }
+      );
     }
 
     return Promise.all(promises).then(() => decrypted);
@@ -39822,6 +39834,11 @@ textsecure.MessageReceiver = function MessageReceiverWrapper(
   );
   this.getStatus = messageReceiver.getStatus.bind(messageReceiver);
   this.close = messageReceiver.close.bind(messageReceiver);
+
+  this.downloadAttachment = messageReceiver.downloadAttachment.bind(
+    messageReceiver
+  );
+
   messageReceiver.connect();
 };
 

@@ -132,6 +132,13 @@
     removeUnprocessed,
     removeAllUnprocessed,
 
+    getNextAttachmentDownloadJobs,
+    saveAttachmentDownloadJob,
+    resetAttachmentDownloadPending,
+    setAttachmentDownloadJobPending,
+    removeAttachmentDownloadJob,
+    removeAllAttachmentDownloadJobs,
+
     removeAll,
     removeAllConfiguration,
 
@@ -855,6 +862,27 @@
 
   async function removeAllUnprocessed() {
     await channels.removeAllUnprocessed();
+  }
+
+  // Attachment downloads
+
+  async function getNextAttachmentDownloadJobs(limit) {
+    return channels.getNextAttachmentDownloadJobs(limit);
+  }
+  async function saveAttachmentDownloadJob(job) {
+    await channels.saveAttachmentDownloadJob(job);
+  }
+  async function setAttachmentDownloadJobPending(id, pending) {
+    await channels.setAttachmentDownloadJobPending(id, pending);
+  }
+  async function resetAttachmentDownloadPending() {
+    await channels.resetAttachmentDownloadPending();
+  }
+  async function removeAttachmentDownloadJob(id) {
+    await channels.removeAttachmentDownloadJob(id);
+  }
+  async function removeAllAttachmentDownloadJobs() {
+    await channels.removeAllAttachmentDownloadJobs();
   }
 
   // Other

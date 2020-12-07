@@ -1717,6 +1717,30 @@ input.search {
 .ios-theme .module-typing-animation__dot--light {
   background-color: #6b6d70; }
 
+.ios-theme .module-spinner__circle--incoming {
+  background-color: #d5d6d6; }
+
+.ios-theme .module-spinner__arc--incoming {
+  background-color: #6b6d70; }
+
+.ios-theme .module-spinner__circle--small-incoming {
+  background-color: #d5d6d6; }
+
+.ios-theme .module-spinner__arc--small-incoming {
+  background-color: #6b6d70; }
+
+.ios-theme .module-spinner__circle--outgoing {
+  background-color: #898a8c; }
+
+.ios-theme .module-spinner__arc--outgoing {
+  background-color: #eeefef; }
+
+.ios-theme .module-spinner__circle--small-outgoing {
+  background-color: #898a8c; }
+
+.ios-theme .module-spinner__arc--small-outgoing {
+  background-color: #eeefef; }
+
 .ios-theme.dark-theme .module-message__container--outgoing {
   background-color: #2090ea;
   color: #eeefef; }
@@ -1855,6 +1879,30 @@ input.search {
 
 .ios-theme.dark-theme .module-embedded-contact__contact-method--incoming {
   color: #bbbdbe; }
+
+.ios-theme.dark-theme .module-spinner__circle--incoming {
+  background-color: #898a8c; }
+
+.ios-theme.dark-theme .module-spinner__arc--incoming {
+  background-color: #bbbdbe; }
+
+.ios-theme.dark-theme .module-spinner__circle--small-incoming {
+  background-color: #898a8c; }
+
+.ios-theme.dark-theme .module-spinner__arc--small-incoming {
+  background-color: #bbbdbe; }
+
+.ios-theme.dark-theme .module-spinner__circle--outgoing {
+  background-color: #898a8c; }
+
+.ios-theme.dark-theme .module-spinner__arc--outgoing {
+  background-color: #eeefef; }
+
+.ios-theme.dark-theme .module-spinner__circle--small-outgoing {
+  background-color: #898a8c; }
+
+.ios-theme.dark-theme .module-spinner__arc--small-outgoing {
+  background-color: #eeefef; }
 
 body.dark-theme {
   background-color: #000000;
@@ -2990,8 +3038,14 @@ body.dark-theme {
 .dark-theme .module-main-header__app-name {
   color: #efefef; }
 
+.dark-theme .module-image {
+  background-color: #000000; }
+
 .dark-theme .module-image__border-overlay {
   box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.15); }
+
+.dark-theme .module-image__loading-placeholder {
+  background-color: rgba(255, 255, 255, 0.15); }
 
 .dark-theme .module-typing-animation__dot {
   background-color: #ffffff; }
@@ -3050,6 +3104,42 @@ body.dark-theme {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
+
+.dark-theme .module-spinner__circle {
+  background-color: #898a8c; }
+
+.dark-theme .module-spinner__arc {
+  background-color: #eeefef; }
+
+.dark-theme .module-spinner__circle--small {
+  background-color: #898a8c; }
+
+.dark-theme .module-spinner__arc--small {
+  background-color: #eeefef; }
+
+.dark-theme .module-spinner__circle--incoming {
+  background-color: #898a8c; }
+
+.dark-theme .module-spinner__arc--incoming {
+  background-color: #eeefef; }
+
+.dark-theme .module-spinner__circle--small-incoming {
+  background-color: #898a8c; }
+
+.dark-theme .module-spinner__arc--small-incoming {
+  background-color: #eeefef; }
+
+.dark-theme .module-spinner__circle--outgoing {
+  background-color: #898a8c; }
+
+.dark-theme .module-spinner__arc--outgoing {
+  background-color: #eeefef; }
+
+.dark-theme .module-spinner__circle--small-outgoing {
+  background-color: #898a8c; }
+
+.dark-theme .module-spinner__arc--small-outgoing {
+  background-color: #eeefef; }
 
 .dark-theme .react-contextmenu {
   background-color: #1a1c20;
@@ -3310,7 +3400,6 @@ body.dark-theme {
 .module-message__attachment-container {
   text-align: center;
   position: relative;
-  cursor: pointer;
   margin-left: -12px;
   margin-right: -12px;
   margin-top: -10px;
@@ -3344,7 +3433,8 @@ body.dark-theme {
 
 .module-message__generic-attachment {
   display: flex;
-  flex-direction: row; }
+  flex-direction: row;
+  align-items: center; }
 
 .module-message__generic-attachment--with-content-below {
   padding-bottom: 6px; }
@@ -3354,6 +3444,10 @@ body.dark-theme {
 
 .module-message__generic-attachment__icon-container {
   position: relative; }
+
+.module-message__generic-attachment__spinner-container {
+  padding-left: 4px;
+  padding-right: 4px; }
 
 .module-message__generic-attachment__icon {
   background: url("../images/file-gradient.svg") no-repeat center;
@@ -4010,13 +4104,17 @@ body.dark-theme {
   cursor: pointer;
   display: flex;
   flex-direction: row;
-  align-items: stretch; }
+  align-items: center; }
 
 .module-embedded-contact--with-content-above {
   padding-top: 4px; }
 
 .module-embedded-contact--with-content-below {
   padding-bottom: 4px; }
+
+.module-embedded-contact__spinner-container {
+  padding-left: 5px;
+  padding-right: 5px; }
 
 .module-embedded-contact__text-container {
   flex-grow: 1;
@@ -5052,6 +5150,12 @@ body.dark-theme {
 .module-image__border-overlay--dark {
   background-color: rgba(0, 0, 0, 0.2); }
 
+.module-image__loading-placeholder {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.15); }
+
 .module-image__image {
   object-fit: cover;
   cursor: pointer;
@@ -5463,6 +5567,78 @@ body.dark-theme {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
+
+.module-spinner__container {
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  height: 56px;
+  width: 56px; }
+
+.module-spinner__circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='56px' height='56px' viewBox='0 0 56 56' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Track - 56</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Track---56' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M28,54 C42.3594035,54 54,42.3594035 54,28 C54,13.6405965 42.3594035,2 28,2 C13.6405965,2 2,13.6405965 2,28 C2,42.3594035 13.6405965,54 28,54 Z M28,56 C12.536027,56 0,43.463973 0,28 C0,12.536027 12.536027,0 28,0 C43.463973,0 56,12.536027 56,28 C56,43.463973 43.463973,56 28,56 Z' id='Oval' fill='%23D5D6D6' fill-rule='nonzero'></path>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  z-index: 2;
+  height: 56px;
+  width: 56px; }
+
+.module-spinner__arc {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='56px' height='56px' viewBox='0 0 56 56' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Spinner - 56</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Spinner---56' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M52.3599009,14.184516 C54.6768062,18.2609741 56,22.9759628 56,28 C56,43.463973 43.463973,56 28,56 L28,54 C42.3594035,54 54,42.3594035 54,28 C54,23.3403176 52.7742128,18.9669331 50.6275064,15.1847144 L52.3599009,14.184516 Z' id='Path' fill='%236B6D70'></path>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  z-index: 3;
+  height: 56px;
+  width: 56px;
+  animation: spinner-arc-animation 1000ms linear infinite; }
+
+@keyframes spinner-arc-animation {
+  0% {
+    transform: rotate(0deg); }
+  50% {
+    transform: rotate(180deg); }
+  100% {
+    transform: rotate(360deg); } }
+
+.module-spinner__container--small {
+  height: 24px;
+  width: 24px; }
+
+.module-spinner__circle--small {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Track - 24</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Track---24' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M12,24 C5.372583,24 0,18.627417 0,12 C0,5.372583 5.372583,0 12,0 C18.627417,0 24,5.372583 24,12 C24,18.627417 18.627417,24 12,24 Z M12,22 C17.5228475,22 22,17.5228475 22,12 C22,6.4771525 17.5228475,2 12,2 C6.4771525,2 2,6.4771525 2,12 C2,17.5228475 6.4771525,22 12,22 Z' id='Combined-Shape' fill='%23D5D6D6' fill-rule='nonzero'></path>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 24px;
+  width: 24px; }
+
+.module-spinner__arc--small {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Spinner - 24</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Spinner---24' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M22.5600116,6.29547931 C23.4784938,7.99216184 24,9.93517878 24,12 C24,18.627417 18.627417,24 12,24 L12,22 C17.5228475,22 22,17.5228475 22,12 C22,10.2995217 21.5755584,8.6981771 20.8268371,7.29612807 L22.5600116,6.29547931 Z' id='Path' fill='%236B6D70' fill-rule='nonzero'></path>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 24px;
+  width: 24px; }
+
+.module-spinner__circle--incoming {
+  background-color: #3d3e44; }
+
+.module-spinner__arc--incoming {
+  background-color: #d5d6d6; }
+
+.module-spinner__circle--small-incoming {
+  background-color: #3d3e44; }
+
+.module-spinner__arc--small-incoming {
+  background-color: #d5d6d6; }
 
 .react-contextmenu {
   background-color: #f9fafa;

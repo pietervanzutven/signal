@@ -55,12 +55,26 @@
         return null;
     }
     class Quote extends react_1.default.Component {
+        constructor(props) {
+            super(props);
+            this.handleImageErrorBound = this.handleImageError.bind(this);
+            this.state = {
+                imageBroken: false,
+            };
+        }
+        handleImageError() {
+            // tslint:disable-next-line no-console
+            console.log('Message: Image failed to load; failing over to placeholder');
+            this.setState({
+                imageBroken: true,
+            });
+        }
         renderImage(url, i18n, icon) {
             const iconElement = icon ? (react_1.default.createElement("div", { className: "module-quote__icon-container__inner" },
                 react_1.default.createElement("div", { className: "module-quote__icon-container__circle-background" },
                     react_1.default.createElement("div", { className: classnames_1.default('module-quote__icon-container__icon', `module-quote__icon-container__icon--${icon}`) })))) : null;
             return (react_1.default.createElement("div", { className: "module-quote__icon-container" },
-                react_1.default.createElement("img", { src: url, alt: i18n('quoteThumbnailAlt') }),
+                react_1.default.createElement("img", { src: url, alt: i18n('quoteThumbnailAlt'), onError: this.handleImageErrorBound }),
                 iconElement));
         }
         renderIcon(icon) {
@@ -87,18 +101,19 @@
         }
         renderIconContainer() {
             const { attachment, i18n } = this.props;
+            const { imageBroken } = this.state;
             if (!attachment) {
                 return null;
             }
             const { contentType, thumbnail } = attachment;
             const objectUrl = getObjectUrl(thumbnail);
             if (GoogleChrome.isVideoTypeSupported(contentType)) {
-                return objectUrl
+                return objectUrl && !imageBroken
                     ? this.renderImage(objectUrl, i18n, 'play')
                     : this.renderIcon('movie');
             }
             if (GoogleChrome.isImageTypeSupported(contentType)) {
-                return objectUrl
+                return objectUrl && !imageBroken
                     ? this.renderImage(objectUrl, i18n)
                     : this.renderIcon('image');
             }

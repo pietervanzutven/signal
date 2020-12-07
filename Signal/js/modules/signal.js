@@ -19,6 +19,7 @@
   const Metadata = window.metadata.SecretSessionCipher;
   const RefreshSenderCertificate = window.refresh_sender_certificate;
   const LinkPreviews = window.link_previews;
+  const AttachmentDownloads = window.attachment_downloads;
 
   // Components
   const {
@@ -133,6 +134,7 @@
     const loadQuoteData = MessageType.loadQuoteData(loadAttachmentData);
     const getAbsoluteAttachmentPath = createAbsolutePathGetter(attachmentsPath);
     const deleteOnDisk = Attachments.createDeleter(attachmentsPath);
+    const writeNewAttachmentData = createWriterForNew(attachmentsPath);
 
     return {
       attachmentsPath,
@@ -150,11 +152,22 @@
       loadQuoteData,
       readAttachmentData,
       run,
+      processNewAttachment: attachment =>
+        MessageType.processNewAttachment(attachment, {
+          writeNewAttachmentData,
+          getAbsoluteAttachmentPath,
+          makeObjectUrl,
+          revokeObjectUrl,
+          getImageDimensions,
+          makeImageThumbnail,
+          makeVideoScreenshot,
+          logger,
+        }),
       upgradeMessageSchema: (message, options = {}) => {
         const { maxVersion } = options;
 
         return MessageType.upgradeSchema(message, {
-          writeNewAttachmentData: createWriterForNew(attachmentsPath),
+          writeNewAttachmentData,
           getRegionCode,
           getAbsoluteAttachmentPath,
           makeObjectUrl,
@@ -238,6 +251,7 @@
     };
 
     return {
+      AttachmentDownloads,
       Backbone,
       Components,
       Crypto,

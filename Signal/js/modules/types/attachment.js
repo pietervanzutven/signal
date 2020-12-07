@@ -62,6 +62,11 @@
       return attachment;
     }
 
+    // If we haven't downloaded the attachment yet, we won't have the data
+    if (!attachment.data) {
+      return attachment;
+    }
+
     const dataBlob = await arrayBufferToBlob(
       attachment.data,
       attachment.contentType
@@ -242,6 +247,11 @@
       return attachment;
     }
 
+    // If the attachment hasn't been downloaded yet, we won't have a path
+    if (!attachment.path) {
+      return attachment;
+    }
+
     const absolutePath = await getAbsoluteAttachmentPath(attachment.path);
 
     if (GoogleChrome.isImageTypeSupported(contentType)) {
@@ -271,7 +281,8 @@
               width: THUMBNAIL_SIZE,
               height: THUMBNAIL_SIZE,
             },
-          });
+          }
+        );
       } catch (error) {
         logger.error(
           'captureDimensionsAndScreenshot:',
@@ -329,7 +340,8 @@
           },
           width,
           height,
-        });
+        }
+      );
     } catch (error) {
       logger.error(
         'captureDimensionsAndScreenshot: error processing video; skipping screenshot generation',

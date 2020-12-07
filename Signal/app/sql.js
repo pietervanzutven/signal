@@ -101,6 +101,13 @@
     removeUnprocessed,
     removeAllUnprocessed,
 
+    getNextAttachmentDownloadJobs,
+    saveAttachmentDownloadJob,
+    setAttachmentDownloadJobPending,
+    resetAttachmentDownloadPending,
+    removeAttachmentDownloadJob,
+    removeAllAttachmentDownloadJobs,
+
     removeAll,
     removeAllConfiguration,
 
@@ -530,6 +537,34 @@
     console.log('updateToSchemaVersion8: success!');
   }
 
+  async function updateToSchemaVersion9(currentVersion, instance) {
+    if (currentVersion >= 9) {
+      return;
+    }
+    console.log('updateToSchemaVersion9: starting...');
+    await instance.run('BEGIN TRANSACTION;');
+
+    await instance.run(`CREATE TABLE attachment_downloads(
+    id STRING primary key,
+    timestamp INTEGER,
+    pending INTEGER,
+    json TEXT
+  );`);
+
+    await instance.run(`CREATE INDEX attachment_downloads_timestamp
+    ON attachment_downloads (
+      timestamp
+  ) WHERE pending = 0;`);
+    await instance.run(`CREATE INDEX attachment_downloads_pending
+    ON attachment_downloads (
+      pending
+  ) WHERE pending != 0;`);
+
+    await instance.run('PRAGMA schema_version = 9;');
+    await instance.run('COMMIT TRANSACTION;');
+    console.log('updateToSchemaVersion9: success!');
+  }
+
   const SCHEMA_VERSIONS = [
     updateToSchemaVersion1,
     updateToSchemaVersion2,
@@ -539,6 +574,7 @@
     updateToSchemaVersion6,
     updateToSchemaVersion7,
     updateToSchemaVersion8,
+    updateToSchemaVersion9,
   ];
 
   async function updateSchema(instance) {
@@ -1489,6 +1525,72 @@
     await db.run('DELETE FROM unprocessed;');
   }
 
+  const ATTACHMENT_DOWNLOADS_TABLE = 'attachment_downloads';
+  async function getNextAttachmentDownloadJobs(limit, options = {}) {
+    const timestamp = options.timestamp || Date.now();
+
+    const rows = await db.all(
+      `SELECT json FROM attachment_downloads
+    WHERE pending = 0 AND timestamp < $timestamp
+    ORDER BY timestamp DESC
+    LIMIT $limit;`,
+      {
+        $limit: limit,
+        $timestamp: timestamp,
+      }
+    );
+
+    return map(rows, row => jsonToObject(row.json));
+  }
+  async function saveAttachmentDownloadJob(job) {
+    const { id, pending, timestamp } = job;
+    if (!id) {
+      throw new Error(
+        'saveAttachmentDownloadJob: Provided job did not have a truthy id'
+      );
+    }
+
+    await db.run(
+      `INSERT OR REPLACE INTO attachment_downloads (
+      id,
+      pending,
+      timestamp,
+      json
+    ) values (
+      $id,
+      $pending,
+      $timestamp,
+      $json
+    )`,
+      {
+        $id: id,
+        $pending: pending,
+        $timestamp: timestamp,
+        $json: objectToJSON(job),
+      }
+    );
+  }
+  async function setAttachmentDownloadJobPending(id, pending) {
+    await db.run(
+      'UPDATE attachment_downloads SET pending = $pending WHERE id = $id;',
+      {
+        $id: id,
+        $pending: pending,
+      }
+    );
+  }
+  async function resetAttachmentDownloadPending() {
+    await db.run(
+      'UPDATE attachment_downloads SET pending = 0 WHERE pending != 0;'
+    );
+  }
+  async function removeAttachmentDownloadJob(id) {
+    return removeById(ATTACHMENT_DOWNLOADS_TABLE, id);
+  }
+  async function removeAllAttachmentDownloadJobs() {
+    return removeAllFromTable(ATTACHMENT_DOWNLOADS_TABLE);
+  }
+
   // All data in database
   async function removeAll() {
     let promise;
@@ -1505,6 +1607,8 @@
         db.run('DELETE FROM sessions;'),
         db.run('DELETE FROM signedPreKeys;'),
         db.run('DELETE FROM unprocessed;'),
+        db.run('DELETE FROM attachment_downloads;'),
+        db.run('DELETE FROM messages_fts;'),
         db.run('COMMIT TRANSACTION;'),
       ]);
     });

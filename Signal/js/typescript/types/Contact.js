@@ -23,8 +23,19 @@
     function contactSelector(contact, options) {
         const { getAbsoluteAttachmentPath, hasSignalAccount, onClick, onSendMessage, regionCode, } = options;
         let { avatar } = contact;
-        if (avatar && avatar.avatar && avatar.avatar.path) {
-            avatar = Object.assign({}, avatar, { avatar: Object.assign({}, avatar.avatar, { path: getAbsoluteAttachmentPath(avatar.avatar.path) }) });
+        if (avatar && avatar.avatar) {
+            if (avatar.avatar.error) {
+                avatar = undefined;
+            }
+            else {
+                avatar = Object.assign({}, avatar, {
+                    avatar: Object.assign({}, avatar.avatar, {
+                        path: avatar.avatar.path
+                            ? getAbsoluteAttachmentPath(avatar.avatar.path)
+                            : undefined
+                    })
+                });
+            }
         }
         return Object.assign({}, contact, {
             hasSignalAccount,

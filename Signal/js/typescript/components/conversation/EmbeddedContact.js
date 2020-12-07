@@ -13,11 +13,13 @@
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
     const Avatar_1 = window.ts.components.Avatar;
+    const Spinner_1 = window.ts.components.Spinner;
     const Contact_1 = window.ts.types.Contact;
     class EmbeddedContact extends react_1.default.Component {
         render() {
             const { contact, i18n, isIncoming, onClick, withContentAbove, withContentBelow, } = this.props;
             const module = 'embedded-contact';
+            const direction = isIncoming ? 'incoming' : 'outgoing';
             return (react_1.default.createElement("div", {
                 className: classnames_1.default('module-embedded-contact', withContentAbove
                     ? 'module-embedded-contact--with-content-above'
@@ -25,7 +27,7 @@
                     ? 'module-embedded-contact--with-content-below'
                     : null), role: "button", onClick: onClick
             },
-                renderAvatar({ contact, i18n, size: 48 }),
+                renderAvatar({ contact, i18n, size: 48, direction }),
                 react_1.default.createElement("div", { className: "module-embedded-contact__text-container" },
                     renderName({ contact, isIncoming, module }),
                     renderContactShorthand({ contact, isIncoming, module }))));
@@ -33,10 +35,15 @@
     }
     exports.EmbeddedContact = EmbeddedContact;
     // Note: putting these below the main component so style guide picks up EmbeddedContact
-    function renderAvatar({ contact, i18n, size, }) {
+    function renderAvatar({ contact, i18n, size, direction, }) {
         const { avatar } = contact;
         const avatarPath = avatar && avatar.avatar && avatar.avatar.path;
+        const pending = avatar && avatar.avatar && avatar.avatar.pending;
         const name = Contact_1.getName(contact) || '';
+        if (pending) {
+            return (react_1.default.createElement("div", { className: "module-embedded-contact__spinner-container" },
+                react_1.default.createElement(Spinner_1.Spinner, { small: size < 50, direction: direction })));
+        }
         return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: "grey", conversationType: "direct", i18n: i18n, name: name, size: size }));
     }
     exports.renderAvatar = renderAvatar;
