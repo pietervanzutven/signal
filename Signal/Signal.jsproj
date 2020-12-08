@@ -332,10 +332,8 @@
     <Content Include="js\views\message_list_view.js" />
     <Content Include="js\views\message_view.js" />
     <Content Include="js\views\network_status_view.js" />
-    <Content Include="js\views\new_group_update_view.js" />
     <Content Include="js\views\phone-input-view.js" />
     <Content Include="js\views\react_wrapper_view.js" />
-    <Content Include="js\views\recipients_input_view.js" />
     <Content Include="js\views\recorder_view.js" />
     <Content Include="js\views\scroll_down_button_view.js" />
     <Content Include="js\views\settings_view.js" />

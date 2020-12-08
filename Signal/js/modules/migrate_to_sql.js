@@ -5,14 +5,12 @@
 
   const { includes, isFunction, isString, last, map } = window.lodash;
   const {
-    bulkAddGroups,
     bulkAddSessions,
     bulkAddIdentityKeys,
     bulkAddPreKeys,
     bulkAddSignedPreKeys,
     bulkAddItems,
 
-    removeGroupById,
     removeSessionById,
     removeIdentityKeyById,
     removePreKeyById,
@@ -182,31 +180,6 @@
       await clearStores(['conversations']);
     } catch (error) {
       window.log.warn('Failed to clear conversations store');
-    }
-
-    complete = false;
-    lastIndex = null;
-
-    while (!complete) {
-      // eslint-disable-next-line no-await-in-loop
-      const status = await migrateStoreToSQLite({
-        db,
-        // eslint-disable-next-line no-loop-func
-        save: bulkAddGroups,
-        remove: removeGroupById,
-        storeName: 'groups',
-        handleDOMException,
-        lastIndex,
-        batchSize: 10,
-      });
-
-      ({ complete, lastIndex } = status);
-    }
-    window.log.info('migrateToSQL: migrate of groups complete');
-    try {
-      await clearStores(['groups']);
-    } catch (error) {
-      window.log.warn('Failed to clear groups store');
     }
 
     complete = false;
