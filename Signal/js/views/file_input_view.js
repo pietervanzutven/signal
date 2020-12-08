@@ -530,7 +530,8 @@
           resolve(Object.assign({},
             attachment,
             {
-              data: e.target.result,
+              data,
+              size: data.byteLength,
             }
           ));
         };
