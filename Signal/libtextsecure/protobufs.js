@@ -32,9 +32,9 @@
     );
   }
 
+  loadProtoBufs('SignalService.proto');
   loadProtoBufs('SubProtocol.proto');
   loadProtoBufs('DeviceMessages.proto');
-  loadProtoBufs('SignalService.proto');
 
   // Just for encrypting device names
   loadProtoBufs('DeviceName.proto');
