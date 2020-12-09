@@ -207,7 +207,6 @@
         method: options.type,
         headers: Object.assign({},
           {
-            'User-Agent': 'Signal Desktop (+https://signal.org/download)',
             'X-Signal-Agent': 'OWD',
           },
           options.headers,
