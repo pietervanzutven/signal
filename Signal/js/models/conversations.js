@@ -1268,10 +1268,24 @@
       const sendOptions = this.getSendOptions();
       let promise;
 
+      if (this.isMe()) {
+        const dataMessage = await textsecure.messaging.getMessageProto(
+          this.get('id'),
+          null,
+          [],
+          null,
+          [],
+          message.get('sent_at'),
+          expireTimer,
+          profileKey
+        );
+        return message.sendSyncMessageOnly(dataMessage);
+      }
+
       if (this.get('type') === 'private') {
         promise = textsecure.messaging.sendExpirationTimerUpdateToNumber(
           this.get('id'),
-          this.get('expireTimer'),
+          expireTimer,
           message.get('sent_at'),
           profileKey,
           sendOptions
@@ -1280,7 +1294,7 @@
         promise = textsecure.messaging.sendExpirationTimerUpdateToGroup(
           this.get('id'),
           this.getRecipients(),
-          this.get('expireTimer'),
+          expireTimer,
           message.get('sent_at'),
           profileKey,
           sendOptions
