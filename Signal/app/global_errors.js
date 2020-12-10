@@ -6,6 +6,8 @@
 
   const Errors = window.types.errors;
 
+  const { redactAll } = window.privacy;
+
   // We're using hard-coded strings in this file because it needs to be ready
   //   to report errors before we do anything in the app. Also, we expect users to directly
   //   paste this text into search engines to find the bugs on GitHub.
@@ -25,7 +27,7 @@
       });
 
       if (buttonIndex === 1) {
-        clipboard.writeText(`${prefix}\n${error.stack}`);
+        clipboard.writeText(`${prefix}\n${redactAll(error.stack)}`);
       }
     } else {
       dialog.showErrorBox(prefix, error.stack);
