@@ -194,6 +194,11 @@ MessageReceiver.prototype.extend({
     //   all cached envelopes are processed.
     this.incoming = [this.pending];
   },
+  stopProcessing() {
+    window.log.info('MessageReceiver: stopProcessing requested');
+    this.stoppingProcessing = true;
+    return this.close();
+  },
   shutdown() {
     if (this.socket) {
       this.socket.onclose = null;
@@ -616,6 +621,9 @@ MessageReceiver.prototype.extend({
   //   messages which were successfully decrypted, but application logic didn't finish
   //   processing.
   handleDecryptedEnvelope(envelope, plaintext) {
+    if (this.stoppingProcessing) {
+      return Promise.resolve();
+    }
     // No decryption is required for delivery receipts, so the decrypted field of
     //   the Unprocessed model will never be set
 
@@ -628,6 +636,10 @@ MessageReceiver.prototype.extend({
     throw new Error('Received message with no content and no legacyMessage');
   },
   handleEnvelope(envelope) {
+    if (this.stoppingProcessing) {
+      return Promise.resolve();
+    }
+
     if (envelope.type === textsecure.protobuf.Envelope.Type.RECEIPT) {
       return this.onDeliveryReceipt(envelope);
     }
@@ -1430,6 +1442,7 @@ textsecure.MessageReceiver = function MessageReceiverWrapper(
   this.downloadAttachment = messageReceiver.downloadAttachment.bind(
     messageReceiver
   );
+  this.stopProcessing = messageReceiver.stopProcessing.bind(messageReceiver);
 
   messageReceiver.connect();
 };
