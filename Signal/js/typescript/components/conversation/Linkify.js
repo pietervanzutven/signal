@@ -12,6 +12,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const linkify_it_1 = __importDefault(window.linkify_it.linkify_it);
+    const link_previews_1 = window.link_previews;
     const linkify = linkify_it_1.default();
     const SUPPORTED_PROTOCOLS = /^(http|https):/i;
     class Linkify extends react_1.default.Component {
@@ -35,7 +36,7 @@
                     results.push(renderNonLink({ text: textWithNoLink, key: count++ }));
                 }
                 const { url, text: originalText } = match;
-                if (SUPPORTED_PROTOCOLS.test(url)) {
+                if (SUPPORTED_PROTOCOLS.test(url) && !link_previews_1.isLinkSneaky(url)) {
                     results.push(react_1.default.createElement("a", { key: count++, href: url }, originalText));
                 }
                 else {
