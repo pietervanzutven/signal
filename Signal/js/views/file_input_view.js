@@ -171,19 +171,26 @@
     },
 
     onPaste(e) {
-      const { items } = e.originalEvent.clipboardData;
-      let imgBlob = null;
-      for (let i = 0; i < items.length; i += 1) {
-        if (items[i].type.split('/')[0] === 'image') {
-          imgBlob = items[i].getAsFile();
+      try {
+        const {items } = e.originalEvent.clipboardData;
+        let imgBlob = null;
+        for (let i = 0; i < items.length; i += 1) {
+          if (items[i].type.split('/')[0] === 'image') {
+            imgBlob = items[i].getAsFile();
+          }
         }
-      }
-      if (imgBlob !== null) {
-        const file = imgBlob;
-        this.maybeAddAttachment(file);
+        if (imgBlob !== null) {
+          const file = imgBlob;
+          this.maybeAddAttachment(file);
 
-        e.stopPropagation();
-        e.preventDefault();
+          e.stopPropagation();
+          e.preventDefault();
+        }
+      } catch (error) {
+        window.log.error(
+          'Clipboard data cannot be parsed:',
+          error && error.stack ? error.stack : error
+        );
       }
     },
 
