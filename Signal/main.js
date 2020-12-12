@@ -419,17 +419,7 @@ let ready = false;
 (async function () {
   const userDataPath = app.getPath('userData');
 
-  let loggingSetupError;
-  try {
-    await logging.initialize();
-  } catch (error) {
-    loggingSetupError = error;
-  }
-
-  if (loggingSetupError) {
-    console.error('Problem setting up logging', loggingSetupError.stack);
-  }
-
+  await logging.initialize();
   logger = logging.getLogger();
   logger.info('app ready');
 
