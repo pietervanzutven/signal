@@ -136,8 +136,6 @@
       this.unset('unidentifiedDeliveryUnrestricted');
       this.unset('hasFetchedProfile');
       this.unset('tokens');
-      this.unset('lastMessage');
-      this.unset('lastMessageStatus');
 
       this.typingRefreshTimer = null;
       this.typingPauseTimer = null;
@@ -323,11 +321,11 @@
           unreadCount: this.get('unreadCount') || 0,
           isSelected: this.isSelected,
 
-          isTyping: typingKeys.length > 0,
-          lastMessage: {
-            status: this.lastMessageStatus,
-            text: this.lastMessage,
-          },
+        isTyping: typingKeys.length > 0,
+        lastMessage: {
+          status: this.get('lastMessageStatus'),
+          text: this.get('lastMessage'),
+        },
 
           lastMessage: {
             status: this.lastMessageStatus,
@@ -890,10 +888,10 @@
         });
 
         const message = this.addSingleMessage(messageWithSchema);
-        this.lastMessage = message.getNotificationText();
-        this.lastMessageStatus = 'sending';
 
         this.set({
+          lastMessage: message.getNotificationText(),
+          lastMessageStatus: 'sending',
           active_at: now,
           timestamp: now,
         });
@@ -1165,17 +1163,6 @@
           : null,
       });
 
-      let hasChanged = false;
-      const { lastMessage, lastMessageStatus } = lastMessageUpdate;
-      delete lastMessageUpdate.lastMessage;
-      delete lastMessageUpdate.lastMessageStatus;
-
-      hasChanged = hasChanged || lastMessage !== this.lastMessage;
-      this.lastMessage = lastMessage;
-
-      hasChanged = hasChanged || lastMessageStatus !== this.lastMessageStatus;
-      this.lastMessageStatus = lastMessageStatus;
-
       // Because we're no longer using Backbone-integrated saves, we need to manually
       //   clear the changed fields here so our hasChanged() check below is useful.
       this.changed = {};
@@ -1185,8 +1172,6 @@
         await window.Signal.Data.updateConversation(this.id, this.attributes, {
           Conversation: Whisper.Conversation,
         });
-      } else if (hasChanged) {
-        this.trigger('change');
       }
     },
 
