@@ -34,8 +34,8 @@
                 }
                 const { selectedIndex } = this.state;
                 const mediaItem = media[selectedIndex];
-                const { attachment, message } = mediaItem;
-                onSave({ attachment, message });
+                const { attachment, message, index } = mediaItem;
+                onSave({ attachment, message, index });
             };
             this.state = {
                 selectedIndex: this.props.selectedIndex,

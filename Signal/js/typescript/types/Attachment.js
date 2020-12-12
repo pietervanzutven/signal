@@ -18,6 +18,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const is_1 = __importDefault(window.sindresorhus.is);
     const moment_1 = __importDefault(window.moment);
+    const lodash_1 = window.lodash;
     const MIME = __importStar(window.ts.types.MIME);
     const arrayBufferToObjectURL_1 = require_ts_util_arrayBufferToObjectURL();
     const saveURLAsFile_1 = window.ts.util.saveURLAsFile;
@@ -61,7 +62,7 @@
         }
         return false;
     };
-    exports.save = ({ attachment, document, getAbsolutePath, timestamp, }) => {
+    exports.save = ({ attachment, document, index, getAbsolutePath, timestamp, }) => {
         const isObjectURLRequired = is_1.default.undefined(attachment.path);
         const url = !is_1.default.undefined(attachment.path)
             ? getAbsolutePath(attachment.path)
@@ -69,13 +70,13 @@
                 data: attachment.data,
                 type: MIME.APPLICATION_OCTET_STREAM,
             });
-        const filename = exports.getSuggestedFilename({ attachment, timestamp });
+        const filename = exports.getSuggestedFilename({ attachment, timestamp, index });
         saveURLAsFile_1.saveURLAsFile({ url, filename, document });
         if (isObjectURLRequired) {
             URL.revokeObjectURL(url);
         }
     };
-    exports.getSuggestedFilename = ({ attachment, timestamp, }) => {
+    exports.getSuggestedFilename = ({ attachment, timestamp, index, }) => {
         if (attachment.fileName) {
             return attachment.fileName;
         }
@@ -85,7 +86,8 @@
             : '';
         const fileType = exports.getFileExtension(attachment);
         const extension = fileType ? `.${fileType}` : '';
-        return `${prefix}${suffix}${extension}`;
+        const indexSuffix = index ? `_${lodash_1.padStart(index.toString(), 3, '0')}` : '';
+        return `${prefix}${suffix}${indexSuffix}${extension}`;
     };
     exports.getFileExtension = (attachment) => {
         if (!attachment.contentType) {
