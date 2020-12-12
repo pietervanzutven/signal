@@ -7,9 +7,12 @@
   const mkdirp = window.mkdirp;
   const rimraf = window.rimraf;
   const sql = window.journeyapps.sqlcipher;
+  const { redactAll } = window.privacy;
+  const { remove: removeUserConfig } = window.app.user_config;
+
   const pify = window.pify;
   const uuidv4 = window.uuid.v4;
-  const { map, isString, fromPairs, forEach, last } = window.lodash;
+  const { map, isObject, isString, fromPairs, forEach, last } = window.lodash;
 
   // To get long stack traces
   //   https://github.com/mapbox/node-sqlite3/wiki/API#sqlite3verbose
@@ -675,7 +678,7 @@
   let filePath;
   let indexedDBPath;
 
-  async function initialize({ configDir, key }) {
+  async function initialize({ configDir, key, messages }) {
     if (db) {
       throw new Error('Cannot initialize more than once!');
     }
@@ -684,7 +687,10 @@
       throw new Error('initialize: configDir is required!');
     }
     if (!isString(key)) {
-      throw new Error('initialize: key` is required!');
+      throw new Error('initialize: key is required!');
+    }
+    if (!isObject(messages)) {
+      throw new Error('initialize: message is required!');
     }
 
     indexedDBPath = path.join(configDir, 'IndexedDB');
@@ -710,6 +716,40 @@
     await updateSchema(promisified);
 
     db = promisified;
+
+    // test database
+    try {
+      await getMessageCount();
+    } catch (error) {
+      console.log('Database startup error:', error.stack);
+      const buttonIndex = dialog.showMessageBox({
+        buttons: [
+          messages.copyErrorAndQuit.message,
+          messages.deleteAndRestart.message,
+        ],
+        defaultId: 0,
+        detail: redactAll(error.stack),
+        message: messages.databaseError.message,
+        noLink: true,
+        type: 'error',
+      });
+
+      if (buttonIndex === 0) {
+        clipboard.writeText(
+          `Database startup error:\n\n${redactAll(error.stack)}`
+        );
+      } else {
+        await close();
+        await removeDB();
+        removeUserConfig();
+        app.relaunch();
+      }
+
+      app.exit(1);
+      return false;
+    }
+
+    return true;
   }
 
   async function close() {
@@ -957,7 +997,9 @@
     const row = await db.get('SELECT count(*) from conversations;');
 
     if (!row) {
-      throw new Error('getMessageCount: Unable to get count of conversations');
+      throw new Error(
+        'getConversationCount: Unable to get count of conversations'
+      );
     }
 
     return row['count(*)'];
