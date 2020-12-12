@@ -183,25 +183,27 @@
           `${options.type} ${url}${options.unauthenticated ? ' (unauth)' : ''}`
         );
       }
+      
       const timeout =
         typeof options.timeout !== 'undefined' ? options.timeout : 10000;
 
       const { proxyUrl } = options;
       const agentType = options.unauthenticated ? 'unauth' : 'auth';
+      const cacheKey = `${proxyUrl}-${agentType}`;
 
-      const { timestamp } = agents[agentType] || {};
+      const { timestamp } = agents[cacheKey] || {};
       if (!timestamp || timestamp + FIVE_MINUTES < Date.now()) {
         if (timestamp) {
-          log.info(`Cycling agent for type ${agentType}`);
+          log.info(`Cycling agent for type ${cacheKey}`);
         }
-        agents[agentType] = {
+        agents[cacheKey] = {
           agent: proxyUrl
             ? null
             : null,
           timestamp: Date.now(),
         };
       }
-      const { agent } = agents[agentType];
+      const { agent } = agents[cacheKey];
 
       const fetchOptions = {
         method: options.type,
