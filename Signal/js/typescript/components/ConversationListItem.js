@@ -18,9 +18,9 @@
     const TypingAnimation_1 = window.ts.components.conversation.TypingAnimation;
     class ConversationListItem extends react_1.default.Component {
         renderAvatar() {
-            const { avatarPath, color, conversationType, i18n, name, phoneNumber, profileName, } = this.props;
+            const { avatarPath, color, conversationType, i18n, isMe, name, phoneNumber, profileName, } = this.props;
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__avatar-container" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: conversationType, i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 48 }),
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, noteToSelf: isMe, conversationType: conversationType, i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 48 }),
                 this.renderUnread()));
         }
         renderUnread() {
@@ -31,14 +31,13 @@
             return null;
         }
         renderHeader() {
-            const { unreadCount, i18n, lastUpdated, name, phoneNumber, profileName, } = this.props;
+            const { unreadCount, i18n, isMe, lastUpdated, name, phoneNumber, profileName, } = this.props;
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__header" },
                 react_1.default.createElement("div", {
                     className: classnames_1.default('module-conversation-list-item__header__name', unreadCount > 0
                         ? 'module-conversation-list-item__header__name--with-unread'
                         : null)
-                },
-                    react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: phoneNumber, name: name, profileName: profileName, i18n: i18n })),
+                }, isMe ? (i18n('noteToSelf')) : (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: phoneNumber, name: name, profileName: profileName, i18n: i18n }))),
                 react_1.default.createElement("div", {
                     className: classnames_1.default('module-conversation-list-item__header__date', unreadCount > 0
                         ? 'module-conversation-list-item__header__date--has-unread'

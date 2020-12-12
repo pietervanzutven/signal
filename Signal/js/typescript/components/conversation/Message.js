@@ -20,6 +20,7 @@
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
     const Avatar_1 = window.ts.components.Avatar;
+    const Spinner_1 = window.ts.components.Spinner;
     const MessageBody_1 = window.ts.components.conversation.MessageBody;
     const ExpireTimer_1 = window.ts.components.conversation.ExpireTimer;
     const ImageGrid_1 = window.ts.components.conversation.ImageGrid;
@@ -162,18 +163,18 @@
                 },
                     react_1.default.createElement(ImageGrid_1.ImageGrid, { attachments: attachments, withContentAbove: withContentAbove, withContentBelow: withContentBelow, bottomOverlay: !collapseMetadata, i18n: i18n, onError: this.handleImageErrorBound, onClickAttachment: onClickAttachment })));
             }
-            else if (isAudio(attachments)) {
+            else if (!firstAttachment.pending && isAudio(attachments)) {
                 return (react_1.default.createElement("audio", {
                     controls: true, className: classnames_1.default('module-message__audio-attachment', withContentBelow
                         ? 'module-message__audio-attachment--with-content-below'
                         : null, withContentAbove
                         ? 'module-message__audio-attachment--with-content-above'
-                        : null)
+                        : null), key: firstAttachment.url
                 },
                     react_1.default.createElement("source", { src: firstAttachment.url })));
             }
             else {
-                const { fileName, fileSize, contentType } = firstAttachment;
+                const { pending, fileName, fileSize, contentType } = firstAttachment;
                 const extension = getExtension({ contentType, fileName });
                 const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
                 return (react_1.default.createElement("div", {
@@ -183,10 +184,11 @@
                         ? 'module-message__generic-attachment--with-content-above'
                         : null)
                 },
-                    react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-container" },
-                        react_1.default.createElement("div", { className: "module-message__generic-attachment__icon" }, extension ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon__extension" }, extension)) : null),
-                        isDangerous ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous-container" },
-                            react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous" }))) : null),
+                    pending ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__spinner-container" },
+                        react_1.default.createElement(Spinner_1.Spinner, { small: true, direction: direction }))) : (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-container" },
+                            react_1.default.createElement("div", { className: "module-message__generic-attachment__icon" }, extension ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon__extension" }, extension)) : null),
+                            isDangerous ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous-container" },
+                                react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous" }))) : null)),
                     react_1.default.createElement("div", { className: "module-message__generic-attachment__text" },
                         react_1.default.createElement("div", { className: classnames_1.default('module-message__generic-attachment__file-name', `module-message__generic-attachment__file-name--${direction}`) }, fileName),
                         react_1.default.createElement("div", { className: classnames_1.default('module-message__generic-attachment__file-size', `module-message__generic-attachment__file-size--${direction}`) }, fileSize))));
@@ -311,7 +313,8 @@
             const fileName = attachments && attachments[0] ? attachments[0].fileName : null;
             const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
             const multipleAttachments = attachments && attachments.length > 1;
-            const downloadButton = !multipleAttachments && attachments && attachments[0] ? (react_1.default.createElement("div", {
+            const firstAttachment = attachments && attachments[0];
+            const downloadButton = !multipleAttachments && firstAttachment && !firstAttachment.pending ? (react_1.default.createElement("div", {
                 onClick: () => {
                     if (onDownload) {
                         onDownload(isDangerous);
@@ -455,6 +458,9 @@
             if (extension.length) {
                 return extension;
             }
+        }
+        if (!contentType) {
+            return null;
         }
         const slash = contentType.indexOf('/');
         if (slash >= 0) {

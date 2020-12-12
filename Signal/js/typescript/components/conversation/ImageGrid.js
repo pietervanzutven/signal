@@ -99,7 +99,9 @@
     }
     exports.isImageAttachment = isImageAttachment;
     function hasImage(attachments) {
-        return attachments && attachments[0] && attachments[0].url;
+        return (attachments &&
+            attachments[0] &&
+            (attachments[0].url || attachments[0].pending));
     }
     exports.hasImage = hasImage;
     function isVideo(attachments) {

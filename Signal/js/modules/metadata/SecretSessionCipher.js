@@ -421,6 +421,11 @@
           content: await _decryptWithUnidentifiedSenderMessage(content),
         };
       } catch (error) {
+        if (!error) {
+          // eslint-disable-next-line no-ex-assign
+          error = new Error('Decryption error was falsey!');
+        }
+
         error.sender = address;
 
         throw error;

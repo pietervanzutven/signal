@@ -38,18 +38,21 @@
             return (react_1.default.createElement("img", { onError: this.handleImageErrorBound, alt: i18n('contactAvatarAlt', [title]), src: avatarPath }));
         }
         renderNoImage() {
-            const { conversationType, name, size } = this.props;
+            const { conversationType, name, noteToSelf, size } = this.props;
             const initials = getInitials_1.getInitials(name);
             const isGroup = conversationType === 'group';
+            if (noteToSelf) {
+                return (react_1.default.createElement("div", { className: classnames_1.default('module-avatar__icon', 'module-avatar__icon--note-to-self', `module-avatar__icon--${size}`) }));
+            }
             if (!isGroup && initials) {
                 return (react_1.default.createElement("div", { className: classnames_1.default('module-avatar__label', `module-avatar__label--${size}`) }, initials));
             }
             return (react_1.default.createElement("div", { className: classnames_1.default('module-avatar__icon', `module-avatar__icon--${conversationType}`, `module-avatar__icon--${size}`) }));
         }
         render() {
-            const { avatarPath, color, size } = this.props;
+            const { avatarPath, color, size, noteToSelf } = this.props;
             const { imageBroken } = this.state;
-            const hasImage = avatarPath && !imageBroken;
+            const hasImage = !noteToSelf && avatarPath && !imageBroken;
             if (size !== 28 && size !== 36 && size !== 48 && size !== 80) {
                 throw new Error(`Size ${size} is not supported!`);
             }

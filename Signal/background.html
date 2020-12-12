@@ -537,6 +537,7 @@
   <script type='text/javascript' src='node_modules/lodash/escapeRegExp.js'></script>
   <script type='text/javascript' src='node_modules/lodash/get.js'></script>
   <script type='text/javascript' src='node_modules/lodash/filter.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/flatten.js'></script>
   <script type='text/javascript' src='node_modules/lodash/flowRight.js'></script>
   <script type='text/javascript' src='node_modules/lodash/forEach.js'></script>
   <script type='text/javascript' src='node_modules/lodash/fromPairs.js'></script>
@@ -556,6 +557,7 @@
   <script type='text/javascript' src='node_modules/lodash/omit.js'></script>
   <script type='text/javascript' src='node_modules/lodash/partial.js'></script>
   <script type='text/javascript' src='node_modules/lodash/partition.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/pick.js'></script>
   <script type='text/javascript' src='node_modules/lodash/random.js'></script>
   <script type='text/javascript' src='node_modules/lodash/range.js'></script>
   <script type='text/javascript' src='node_modules/lodash/sample.js'></script>
@@ -625,6 +627,8 @@
   <script type='text/javascript' src='node_modules/rimraf/index.js'></script>
   <script type='text/javascript' src='node_modules/glob/glob.js'></script>
   <script type='text/javascript' src='node_modules/he/he.js'></script>
+  <script type='text/javascript' src='node_modules/firstline/index.js'></script>
+  <script type='text/javascript' src='node_modules/read-last-lines/index.js'></script>
 
   <script type='text/javascript' src='js/components.js'></script>
 
@@ -686,6 +690,7 @@
   <script type='text/javascript' src='js/typescript/components/MainHeader.js'></script>
   <script type='text/javascript' src='js/typescript/components/styles/Colors.js'></script>
   <script type='text/javascript' src='js/typescript/components/Intl.js'></script>
+  <script type='text/javascript' src='js/typescript/components/Spinner.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/DocumentListItem.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/EmptyState.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/MediaGridItem.js'></script>
@@ -750,6 +755,7 @@
   <script type='text/javascript' src='js/modules/indexeddb.js'></script>
   <script type='text/javascript' src='js/modules/logs.js'></script>
   <script type='text/javascript' src='js/modules/debuglogs.js'></script>
+  <script type='text/javascript' src='js/modules/attachment_downloads.js'></script>
   <script type='text/javascript' src='js/logging.js'></script>
 
   <script type='text/javascript' src='js/modules/signal.js'></script>
@@ -762,7 +768,27 @@
   <script type='text/javascript' src='js/storage.js'></script>
   <script type='text/javascript' src='js/legacy_storage.js'></script>
   <script type='text/javascript' src='js/signal_protocol_store.js'></script>
-  <script type='text/javascript' src='js/libtextsecure.js'></script>
+
+  <script type='text/javascript' src='libtextsecure/errors.js'></script>
+  <script type='text/javascript' src='libtextsecure/libsignal-protocol.js'></script>
+  <script type='text/javascript' src='libtextsecure/protocol_wrapper.js'></script>
+  <script type='text/javascript' src='libtextsecure/crypto.js'></script>
+  <script type='text/javascript' src='libtextsecure/storage.js'></script>
+  <script type='text/javascript' src='libtextsecure/storage/user.js'></script>
+  <script type='text/javascript' src='libtextsecure/storage/unprocessed.js'></script>
+  <script type='text/javascript' src='libtextsecure/protobufs.js'></script>
+  <script type='text/javascript' src='libtextsecure/helpers.js'></script>
+  <script type='text/javascript' src='libtextsecure/stringview.js'></script>
+  <script type='text/javascript' src='libtextsecure/event_target.js'></script>
+  <script type='text/javascript' src='libtextsecure/account_manager.js'></script>
+  <script type='text/javascript' src='libtextsecure/websocket-resources.js'></script>
+  <script type='text/javascript' src='libtextsecure/message_receiver.js'></script>
+  <script type='text/javascript' src='libtextsecure/outgoing_message.js'></script>
+  <script type='text/javascript' src='libtextsecure/sendmessage.js'></script>
+  <script type='text/javascript' src='libtextsecure/sync_request.js'></script>
+  <script type='text/javascript' src='libtextsecure/contacts_parser.js'></script>
+  <script type='text/javascript' src='libtextsecure/ProvisioningCipher.js'></script>
+  <script type='text/javascript' src='libtextsecure/task_with_timeout.js'></script>
 
   <script type='text/javascript' src='js/focus_listener.js'></script>
   <script type='text/javascript' src='js/notifications.js'></script>
@@ -791,7 +817,6 @@
   <script type='text/javascript' src='js/views/conversation_list_item_view.js'></script>
   <script type='text/javascript' src='js/views/conversation_list_view.js'></script>
   <script type='text/javascript' src='js/views/contact_list_view.js'></script>
-  <script type='text/javascript' src='js/views/new_group_update_view.js'></script>
   <script type='text/javascript' src='js/views/attachment_view.js'></script>
   <script type='text/javascript' src='js/views/timestamp_view.js'></script>
   <script type='text/javascript' src='js/views/message_view.js'></script>

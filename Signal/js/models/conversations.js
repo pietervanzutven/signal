@@ -211,14 +211,16 @@
     sendTypingMessage(isTyping) {
       const groupId = !this.isPrivate() ? this.id : null;
       const recipientId = this.isPrivate() ? this.id : null;
+      const groupNumbers = this.getRecipients();
 
       const sendOptions = this.getSendOptions();
       this.wrapSend(
         textsecure.messaging.sendTypingMessage(
           {
-            groupId,
             isTyping,
             recipientId,
+            groupId,
+            groupNumbers,
           },
           sendOptions
         )
@@ -314,6 +316,7 @@
       const result = Object.assign({},
         this.format(),
         {
+          isMe: this.isMe(),
           conversationType: this.isPrivate() ? 'direct' : 'group',
 
           lastUpdated: this.get('timestamp'),
@@ -919,13 +922,56 @@
           return null;
         }
 
+        const attachmentsWithData = await Promise.all(
+          messageWithSchema.attachments.map(loadAttachmentData)
+        );
+
+        // Special-case the self-send case - we send only a sync message
+        if (this.isMe()) {
+          const dataMessage = await textsecure.messaging.getMessageProto(
+            destination,
+            body,
+            attachmentsWithData,
+            quote,
+            preview,
+            now,
+            expireTimer,
+            profileKey
+          );
+          return message.sendSyncMessageOnly(dataMessage);
+        }
+
         const conversationType = this.get('type');
-        const sendFunction = (() => {
+        const options = this.getSendOptions();
+        const groupNumbers = this.getRecipients();
+
+        const promise = (() => {
           switch (conversationType) {
             case Message.PRIVATE:
-              return textsecure.messaging.sendMessageToNumber;
+              return textsecure.messaging.sendMessageToNumber(
+                destination,
+                body,
+                attachmentsWithData,
+                quote,
+                preview,
+                now,
+                expireTimer,
+                profileKey,
+                options
+              );
             case Message.GROUP:
-              return textsecure.messaging.sendMessageToGroup;
+              return textsecure.messaging.sendMessageToGroup(
+                destination,
+                groupNumbers,
+                body,
+                attachmentsWithData,
+                quote,
+                preview,
+                now,
+                expireTimer,
+                profileKey,
+                options
+              );
             default:
               throw new TypeError(
                 `Invalid conversation type: '${conversationType}'`
@@ -933,26 +979,7 @@
           }
         })();
 
-        const attachmentsWithData = await Promise.all(
-          messageWithSchema.attachments.map(loadAttachmentData)
-        );
-
-        const options = this.getSendOptions();
-        return message.send(
-          this.wrapSend(
-            sendFunction(
-              destination,
-              body,
-              attachmentsWithData,
-              quote,
-              preview,
-              now,
-              expireTimer,
-              profileKey,
-              options
-            )
-          )
-        );
+        return message.send(this.wrapSend(promise));
       });
     },
 
@@ -1234,25 +1261,45 @@
         return message;
       }
 
-      let sendFunc;
-      if (this.get('type') === 'private') {
-        sendFunc = textsecure.messaging.sendExpirationTimerUpdateToNumber;
-      } else {
-        sendFunc = textsecure.messaging.sendExpirationTimerUpdateToGroup;
-      }
       let profileKey;
       if (this.get('profileSharing')) {
         profileKey = storage.get('profileKey');
       }
-
       const sendOptions = this.getSendOptions();
-      const promise = sendFunc(
-        this.get('id'),
-        this.get('expireTimer'),
-        message.get('sent_at'),
-        profileKey,
-        sendOptions
-      );
+      let promise;
+
+      if (this.isMe()) {
+        const dataMessage = await textsecure.messaging.getMessageProto(
+          this.get('id'),
+          null,
+          [],
+          null,
+          [],
+          message.get('sent_at'),
+          expireTimer,
+          profileKey
+        );
+        return message.sendSyncMessageOnly(dataMessage);
+      }
+
+      if (this.get('type') === 'private') {
+        promise = textsecure.messaging.sendExpirationTimerUpdateToNumber(
+          this.get('id'),
+          expireTimer,
+          message.get('sent_at'),
+          profileKey,
+          sendOptions
+        );
+      } else {
+        promise = textsecure.messaging.sendExpirationTimerUpdateToGroup(
+          this.get('id'),
+          this.getRecipients(),
+          expireTimer,
+          message.get('sent_at'),
+          profileKey,
+          sendOptions
+        );
+      }
 
       await message.send(this.wrapSend(promise));
 
@@ -1330,6 +1377,7 @@
     async leaveGroup() {
       const now = Date.now();
       if (this.get('type') === 'group') {
+        const groupNumbers = this.getRecipients();
         this.set({ left: true });
         await window.Signal.Data.updateConversation(this.id, this.attributes, {
           Conversation: Whisper.Conversation,
@@ -1350,7 +1398,9 @@
 
         const options = this.getSendOptions();
         message.send(
-          this.wrapSend(textsecure.messaging.leaveGroup(this.id, options))
+          this.wrapSend(
+            textsecure.messaging.leaveGroup(this.id, groupNumbers, options)
+          )
         );
       }
     },

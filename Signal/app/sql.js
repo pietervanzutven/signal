@@ -7,9 +7,12 @@
   const mkdirp = window.mkdirp;
   const rimraf = window.rimraf;
   const sql = window.journeyapps.sqlcipher;
+  const { redactAll } = window.privacy;
+  const { remove: removeUserConfig } = window.app.user_config;
+
   const pify = window.pify;
   const uuidv4 = window.uuid.v4;
-  const { map, isString, fromPairs, forEach, last } = window.lodash;
+  const { map, isObject, isString, fromPairs, forEach, last } = window.lodash;
 
   // To get long stack traces
   //   https://github.com/mapbox/node-sqlite3/wiki/API#sqlite3verbose
@@ -21,25 +24,19 @@
     removeDB,
     removeIndexedDBFiles,
 
-    createOrUpdateGroup,
-    getGroupById,
-    getAllGroupIds,
-    getAllGroups,
-    bulkAddGroups,
-    removeGroupById,
-    removeAllGroups,
-
     createOrUpdateIdentityKey,
     getIdentityKeyById,
     bulkAddIdentityKeys,
     removeIdentityKeyById,
     removeAllIdentityKeys,
+    getAllIdentityKeys,
 
     createOrUpdatePreKey,
     getPreKeyById,
     bulkAddPreKeys,
     removePreKeyById,
     removeAllPreKeys,
+    getAllPreKeys,
 
     createOrUpdateSignedPreKey,
     getSignedPreKeyById,
@@ -62,6 +59,7 @@
     removeSessionById,
     removeSessionsByNumber,
     removeAllSessions,
+    getAllSessions,
 
     getConversationCount,
     saveConversation,
@@ -96,10 +94,19 @@
     getUnprocessedCount,
     getAllUnprocessed,
     saveUnprocessed,
+    updateUnprocessedAttempts,
+    updateUnprocessedWithData,
     getUnprocessedById,
     saveUnprocesseds,
     removeUnprocessed,
     removeAllUnprocessed,
+
+    getNextAttachmentDownloadJobs,
+    saveAttachmentDownloadJob,
+    setAttachmentDownloadJobPending,
+    resetAttachmentDownloadPending,
+    removeAttachmentDownloadJob,
+    removeAllAttachmentDownloadJobs,
 
     removeAll,
     removeAllConfiguration,
@@ -530,6 +537,108 @@
     console.log('updateToSchemaVersion8: success!');
   }
 
+  async function updateToSchemaVersion9(currentVersion, instance) {
+    if (currentVersion >= 9) {
+      return;
+    }
+    console.log('updateToSchemaVersion9: starting...');
+    await instance.run('BEGIN TRANSACTION;');
+
+    await instance.run(`CREATE TABLE attachment_downloads(
+    id STRING primary key,
+    timestamp INTEGER,
+    pending INTEGER,
+    json TEXT
+  );`);
+
+    await instance.run(`CREATE INDEX attachment_downloads_timestamp
+    ON attachment_downloads (
+      timestamp
+  ) WHERE pending = 0;`);
+    await instance.run(`CREATE INDEX attachment_downloads_pending
+    ON attachment_downloads (
+      pending
+  ) WHERE pending != 0;`);
+
+    await instance.run('PRAGMA schema_version = 9;');
+    await instance.run('COMMIT TRANSACTION;');
+    console.log('updateToSchemaVersion9: success!');
+  }
+
+  async function updateToSchemaVersion10(currentVersion, instance) {
+    if (currentVersion >= 10) {
+      return;
+    }
+    console.log('updateToSchemaVersion10: starting...');
+    await instance.run('BEGIN TRANSACTION;');
+
+    await instance.run('DROP INDEX unprocessed_id;');
+    await instance.run('DROP INDEX unprocessed_timestamp;');
+    await instance.run('ALTER TABLE unprocessed RENAME TO unprocessed_old;');
+
+    await instance.run(`CREATE TABLE unprocessed(
+    id STRING,
+    timestamp INTEGER,
+    version INTEGER,
+    attempts INTEGER,
+    envelope TEXT,
+    decrypted TEXT,
+    source TEXT,
+    sourceDevice TEXT,
+    serverTimestamp INTEGER
+  );`);
+
+    await instance.run(`CREATE INDEX unprocessed_id ON unprocessed (
+    id
+  );`);
+    await instance.run(`CREATE INDEX unprocessed_timestamp ON unprocessed (
+    timestamp
+  );`);
+
+    await instance.run(`INSERT INTO unprocessed (
+    id,
+    timestamp,
+    version,
+    attempts,
+    envelope,
+    decrypted,
+    source,
+    sourceDevice,
+    serverTimestamp
+  ) SELECT
+    id,
+    timestamp,
+    json_extract(json, '$.version'),
+    json_extract(json, '$.attempts'),
+    json_extract(json, '$.envelope'),
+    json_extract(json, '$.decrypted'),
+    json_extract(json, '$.source'),
+    json_extract(json, '$.sourceDevice'),
+    json_extract(json, '$.serverTimestamp')
+  FROM unprocessed_old;
+  `);
+
+    await instance.run('DROP TABLE unprocessed_old;');
+
+    await instance.run('PRAGMA schema_version = 10;');
+    await instance.run('COMMIT TRANSACTION;');
+    console.log('updateToSchemaVersion10: success!');
+  }
+
+  async function updateToSchemaVersion11(currentVersion, instance) {
+    if (currentVersion >= 11) {
+      return;
+    }
+    console.log('updateToSchemaVersion11: starting...');
+    await instance.run('BEGIN TRANSACTION;');
+
+    await instance.run('DROP TABLE groups;');
+
+    await instance.run('PRAGMA schema_version = 11;');
+    await instance.run('COMMIT TRANSACTION;');
+    console.log('updateToSchemaVersion11: success!');
+  }
+
   const SCHEMA_VERSIONS = [
     updateToSchemaVersion1,
     updateToSchemaVersion2,
@@ -539,6 +648,9 @@
     updateToSchemaVersion6,
     updateToSchemaVersion7,
     updateToSchemaVersion8,
+    updateToSchemaVersion9,
+    updateToSchemaVersion10,
+    updateToSchemaVersion11,
   ];
 
   async function updateSchema(instance) {
@@ -566,7 +678,7 @@
   let filePath;
   let indexedDBPath;
 
-  async function initialize({ configDir, key }) {
+  async function initialize({ configDir, key, messages }) {
     if (db) {
       throw new Error('Cannot initialize more than once!');
     }
@@ -575,7 +687,10 @@
       throw new Error('initialize: configDir is required!');
     }
     if (!isString(key)) {
-      throw new Error('initialize: key` is required!');
+      throw new Error('initialize: key is required!');
+    }
+    if (!isObject(messages)) {
+      throw new Error('initialize: message is required!');
     }
 
     indexedDBPath = path.join(configDir, 'IndexedDB');
@@ -601,6 +716,40 @@
     await updateSchema(promisified);
 
     db = promisified;
+
+    // test database
+    try {
+      await getMessageCount();
+    } catch (error) {
+      console.log('Database startup error:', error.stack);
+      const buttonIndex = dialog.showMessageBox({
+        buttons: [
+          messages.copyErrorAndQuit.message,
+          messages.deleteAndRestart.message,
+        ],
+        defaultId: 0,
+        detail: redactAll(error.stack),
+        message: messages.databaseError.message,
+        noLink: true,
+        type: 'error',
+      });
+
+      if (buttonIndex === 0) {
+        clipboard.writeText(
+          `Database startup error:\n\n${redactAll(error.stack)}`
+        );
+      } else {
+        await close();
+        await removeDB();
+        removeUserConfig();
+        app.relaunch();
+      }
+
+      app.exit(1);
+      return false;
+    }
+
+    return true;
   }
 
   async function close() {
@@ -629,31 +778,6 @@
     indexedDBPath = null;
   }
 
-  const GROUPS_TABLE = 'groups';
-  async function createOrUpdateGroup(data) {
-    return createOrUpdate(GROUPS_TABLE, data);
-  }
-  async function getGroupById(id) {
-    return getById(GROUPS_TABLE, id);
-  }
-  async function getAllGroupIds() {
-    const rows = await db.all('SELECT id FROM groups ORDER BY id ASC;');
-    return map(rows, row => row.id);
-  }
-  async function getAllGroups() {
-    const rows = await db.all('SELECT json FROM groups ORDER BY id ASC;');
-    return map(rows, row => jsonToObject(row.json));
-  }
-  async function bulkAddGroups(array) {
-    return bulkAdd(GROUPS_TABLE, array);
-  }
-  async function removeGroupById(id) {
-    return removeById(GROUPS_TABLE, id);
-  }
-  async function removeAllGroups() {
-    return removeAllFromTable(GROUPS_TABLE);
-  }
-
   const IDENTITY_KEYS_TABLE = 'identityKeys';
   async function createOrUpdateIdentityKey(data) {
     return createOrUpdate(IDENTITY_KEYS_TABLE, data);
@@ -669,6 +793,9 @@
   }
   async function removeAllIdentityKeys() {
     return removeAllFromTable(IDENTITY_KEYS_TABLE);
+  }
+  async function getAllIdentityKeys() {
+    return getAllFromTable(IDENTITY_KEYS_TABLE);
   }
 
   const PRE_KEYS_TABLE = 'preKeys';
@@ -686,6 +813,9 @@
   }
   async function removeAllPreKeys() {
     return removeAllFromTable(PRE_KEYS_TABLE);
+  }
+  async function getAllPreKeys() {
+    return getAllFromTable(PRE_KEYS_TABLE);
   }
 
   const SIGNED_PRE_KEYS_TABLE = 'signedPreKeys';
@@ -784,6 +914,9 @@
   async function removeAllSessions() {
     return removeAllFromTable(SESSIONS_TABLE);
   }
+  async function getAllSessions() {
+    return getAllFromTable(SESSIONS_TABLE);
+  }
 
   async function createOrUpdate(table, data) {
     const { id } = data;
@@ -853,13 +986,20 @@
     await db.run(`DELETE FROM ${table};`);
   }
 
+  async function getAllFromTable(table) {
+    const rows = await db.all(`SELECT json FROM ${table};`);
+    return rows.map(row => jsonToObject(row.json));
+  }
+
   // Conversations
 
   async function getConversationCount() {
     const row = await db.get('SELECT count(*) from conversations;');
 
     if (!row) {
-      throw new Error('getMessageCount: Unable to get count of conversations');
+      throw new Error(
+        'getConversationCount: Unable to get count of conversations'
+      );
     }
 
     return row['count(*)'];
@@ -1384,23 +1524,32 @@
   }
 
   async function saveUnprocessed(data, { forceSave } = {}) {
-    const { id, timestamp } = data;
+    const { id, timestamp, version, attempts, envelope } = data;
+    if (!id) {
+      throw new Error('saveUnprocessed: id was falsey');
+    }
 
     if (forceSave) {
       await db.run(
         `INSERT INTO unprocessed (
         id,
         timestamp,
-        json
+        version,
+        attempts,
+        envelope
       ) values (
         $id,
         $timestamp,
-        $json
+        $version,
+        $attempts,
+        $envelope
       );`,
         {
           $id: id,
           $timestamp: timestamp,
-          $json: objectToJSON(data),
+          $version: version,
+          $attempts: attempts,
+          $envelope: envelope,
         }
       );
 
@@ -1409,13 +1558,17 @@
 
     await db.run(
       `UPDATE unprocessed SET
-      json = $json,
-      timestamp = $timestamp
+      timestamp = $timestamp,
+      version = $version,
+      attempts = $attempts,
+      envelope = $envelope
     WHERE id = $id;`,
       {
         $id: id,
         $timestamp: timestamp,
-        $json: objectToJSON(data),
+        $version: version,
+        $attempts: attempts,
+        $envelope: envelope,
       }
     );
 
@@ -1438,16 +1591,38 @@
     await promise;
   }
 
+  async function updateUnprocessedAttempts(id, attempts) {
+    await db.run('UPDATE unprocessed SET attempts = $attempts WHERE id = $id;', {
+      $id: id,
+      $attempts: attempts,
+    });
+  }
+  async function updateUnprocessedWithData(id, data = {}) {
+    const { source, sourceDevice, serverTimestamp, decrypted } = data;
+
+    await db.run(
+      `UPDATE unprocessed SET
+      source = $source,
+      sourceDevice = $sourceDevice,
+      serverTimestamp = $serverTimestamp,
+      decrypted = $decrypted
+    WHERE id = $id;`,
+      {
+        $id: id,
+        $source: source,
+        $sourceDevice: sourceDevice,
+        $serverTimestamp: serverTimestamp,
+        $decrypted: decrypted,
+      }
+    );
+  }
+
   async function getUnprocessedById(id) {
-    const row = await db.get('SELECT json FROM unprocessed WHERE id = $id;', {
+    const row = await db.get('SELECT * FROM unprocessed WHERE id = $id;', {
       $id: id,
     });
 
-    if (!row) {
-      return null;
-    }
-
-    return jsonToObject(row.json);
+    return row;
   }
 
   async function getUnprocessedCount() {
@@ -1462,10 +1637,10 @@
 
   async function getAllUnprocessed() {
     const rows = await db.all(
-      'SELECT json FROM unprocessed ORDER BY timestamp ASC;'
+      'SELECT * FROM unprocessed ORDER BY timestamp ASC;'
     );
 
-    return map(rows, row => jsonToObject(row.json));
+    return rows;
   }
 
   async function removeUnprocessed(id) {
@@ -1489,6 +1664,72 @@
     await db.run('DELETE FROM unprocessed;');
   }
 
+  const ATTACHMENT_DOWNLOADS_TABLE = 'attachment_downloads';
+  async function getNextAttachmentDownloadJobs(limit, options = {}) {
+    const timestamp = options.timestamp || Date.now();
+
+    const rows = await db.all(
+      `SELECT json FROM attachment_downloads
+    WHERE pending = 0 AND timestamp < $timestamp
+    ORDER BY timestamp DESC
+    LIMIT $limit;`,
+      {
+        $limit: limit,
+        $timestamp: timestamp,
+      }
+    );
+
+    return map(rows, row => jsonToObject(row.json));
+  }
+  async function saveAttachmentDownloadJob(job) {
+    const { id, pending, timestamp } = job;
+    if (!id) {
+      throw new Error(
+        'saveAttachmentDownloadJob: Provided job did not have a truthy id'
+      );
+    }
+
+    await db.run(
+      `INSERT OR REPLACE INTO attachment_downloads (
+      id,
+      pending,
+      timestamp,
+      json
+    ) values (
+      $id,
+      $pending,
+      $timestamp,
+      $json
+    )`,
+      {
+        $id: id,
+        $pending: pending,
+        $timestamp: timestamp,
+        $json: objectToJSON(job),
+      }
+    );
+  }
+  async function setAttachmentDownloadJobPending(id, pending) {
+    await db.run(
+      'UPDATE attachment_downloads SET pending = $pending WHERE id = $id;',
+      {
+        $id: id,
+        $pending: pending,
+      }
+    );
+  }
+  async function resetAttachmentDownloadPending() {
+    await db.run(
+      'UPDATE attachment_downloads SET pending = 0 WHERE pending != 0;'
+    );
+  }
+  async function removeAttachmentDownloadJob(id) {
+    return removeById(ATTACHMENT_DOWNLOADS_TABLE, id);
+  }
+  async function removeAllAttachmentDownloadJobs() {
+    return removeAllFromTable(ATTACHMENT_DOWNLOADS_TABLE);
+  }
+
   // All data in database
   async function removeAll() {
     let promise;
@@ -1497,7 +1738,6 @@
       promise = Promise.all([
         db.run('BEGIN TRANSACTION;'),
         db.run('DELETE FROM conversations;'),
-        db.run('DELETE FROM groups;'),
         db.run('DELETE FROM identityKeys;'),
         db.run('DELETE FROM items;'),
         db.run('DELETE FROM messages;'),
@@ -1505,6 +1745,8 @@
         db.run('DELETE FROM sessions;'),
         db.run('DELETE FROM signedPreKeys;'),
         db.run('DELETE FROM unprocessed;'),
+        db.run('DELETE FROM attachment_downloads;'),
+        db.run('DELETE FROM messages_fts;'),
         db.run('COMMIT TRANSACTION;'),
       ]);
     });

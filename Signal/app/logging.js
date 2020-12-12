@@ -6,6 +6,17 @@
 
   window.app = window.app || {};
 
+  const path = window.path;
+  const fs = window.fs;
+
+  const mkdirp = window.mkdirp;
+  const _ = window.lodash;
+  const readFirstLine = window.firstline;
+  const readLastLines = window.read_last_lines.read;
+  const rimraf = window.rimraf;
+
+  const { redactAll } = window.privacy;
+
   const LEVELS = ['fatal', 'error', 'warn', 'info', 'debug', 'trace'];
   let logger;
 
@@ -27,11 +38,14 @@
 
     const basePath = app.getPath('userData');
     const logPath = path.join(basePath, 'logs');
+    mkdirp.sync(logPath);
 
-    return cleanupLogs('').then(() => {
+    return cleanupLogs(logPath).then(() => {
+      const logFile = path.join(logPath, 'log.log');
+
+      fs.createFileSync(logFile);
       logger = {
-        log: [],
-        add: (level, msg) => logger.log.push({ level: level, time: new Date().toJSON(), msg: msg }),
+        add: (level, msg) => fs.appendFileSync(logFile, JSON.stringify({ level: level, time: new Date().toJSON(), msg: msg })),
         fatal: msg => logger.add(60, msg),
         error: msg => logger.add(50, msg),
         warn: msg => logger.add(40, msg),
@@ -41,14 +55,13 @@
       };
 
       LEVELS.forEach(level => {
-        ipc.on(`log-${level}`, function(first, rest) {
-          var args = Array.prototype.slice.call(arguments, 1);
-          logger[level].apply(logger, args);
+        ipc.on(`log-${level}`, (first, ...rest) => {
+          logger[level](...rest);
         });
       });
 
       ipc.on('fetch-log', event => {
-        fetch().then(
+        fetch(logPath).then(
           data => {
             event.sender.send('fetched-log', data);
           },
@@ -71,7 +84,21 @@
   }
 
   async function deleteAllLogs(logPath) {
-    logger.log = [];
+    return new Promise((resolve, reject) => {
+      rimraf(
+        logPath,
+        {
+          disableGlob: true,
+        },
+        error => {
+          if (error) {
+            return reject(error);
+          }
+
+          return resolve();
+        }
+      );
+    });
   }
 
   function cleanupLogs(logPath) {
@@ -106,7 +133,7 @@
   }
 
   function eliminateOutOfDateFiles(logPath, date) {
-    const files = [];
+    const files = fs.readdirSync(logPath);
     const paths = files.map(file => path.join(logPath, file));
 
     return Promise.all(
@@ -161,32 +188,51 @@
     return logger;
   }
 
-  function fetchLog() {
-    return new Promise(resolve => {
-      const data = _.compact(
-        logger.log.map(line => {
-          try {
-            return _.pick(line, ['level', 'time', 'msg']);
-          } catch (e) {
-            return null;
-          }
-        })
-      );
+  function fetchLog(logFile) {
+    return new Promise((resolve, reject) => {
+      fs.readFile(logFile, { encoding: 'utf8' }, (err, text) => {
+        if (err) {
+          return reject(err);
+        }
 
-      return resolve(data);
+        const lines = _.compact(text.split('\n'));
+        const data = _.compact(
+          lines.map(line => {
+            try {
+              return _.pick(JSON.parse(line), ['level', 'time', 'msg']);
+            } catch (e) {
+              return null;
+            }
+          })
+        );
+
+        return resolve(data);
+      });
     });
   }
 
-  function fetch() {
-    return Promise.all([fetchLog()]).then(results => {
+  function fetch(logPath) {
+    const files = fs.readdirSync(logPath);
+    const paths = files.map(file => path.join(logPath, file));
+
+    // creating a manual log entry for the final log result
+    const now = new Date();
+    const fileListEntry = {
+      level: 30, // INFO
+      time: now.toJSON(),
+      msg: `Loaded this list of log files from logPath: ${files.join(', ')}`,
+    };
+
+    return Promise.all(paths.map(fetchLog)).then(results => {
       const data = _.flatten(results);
+
+      data.push(fileListEntry);
+
       return _.sortBy(data, 'time');
     });
   }
 
-  function logAtLevel(level, rest) {
-    const args = Array.prototype.slice.call(arguments, 1);
-
+  function logAtLevel(level, ...args) {
     if (logger) {
       // To avoid [Object object] in our log since console.log handles non-strings smoothly
       const str = args.map(item => {
@@ -200,9 +246,9 @@
 
         return item;
       });
-      logger[level](str.join(' '));
+      logger[level](redactAll(str.join(' ')));
     } else {
-      console._log.apply(console, args);
+      console._log(...args);
     }
   }
 

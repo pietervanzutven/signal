@@ -1717,6 +1717,30 @@ input.search {
 .ios-theme .module-typing-animation__dot--light {
   background-color: #6b6d70; }
 
+.ios-theme .module-spinner__circle--incoming {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.ios-theme .module-spinner__arc--incoming {
+  background-color: #6b6d70; }
+
+.ios-theme .module-spinner__circle--small-incoming {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.ios-theme .module-spinner__arc--small-incoming {
+  background-color: #6b6d70; }
+
+.ios-theme .module-spinner__circle--outgoing {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.ios-theme .module-spinner__arc--outgoing {
+  background-color: #ffffff; }
+
+.ios-theme .module-spinner__circle--small-outgoing {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.ios-theme .module-spinner__arc--small-outgoing {
+  background-color: #ffffff; }
+
 .ios-theme.dark-theme .module-message__container--outgoing {
   background-color: #2090ea;
   color: #eeefef; }
@@ -1855,6 +1879,30 @@ input.search {
 
 .ios-theme.dark-theme .module-embedded-contact__contact-method--incoming {
   color: #bbbdbe; }
+
+.ios-theme.dark-theme .module-spinner__circle--incoming {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.ios-theme.dark-theme .module-spinner__arc--incoming {
+  background-color: #bbbdbe; }
+
+.ios-theme.dark-theme .module-spinner__circle--small-incoming {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.ios-theme.dark-theme .module-spinner__arc--small-incoming {
+  background-color: #bbbdbe; }
+
+.ios-theme.dark-theme .module-spinner__circle--outgoing {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.ios-theme.dark-theme .module-spinner__arc--outgoing {
+  background-color: #eeefef; }
+
+.ios-theme.dark-theme .module-spinner__circle--small-outgoing {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.ios-theme.dark-theme .module-spinner__arc--small-outgoing {
+  background-color: #eeefef; }
 
 body.dark-theme {
   background-color: #000000;
@@ -2771,6 +2819,9 @@ body.dark-theme {
 .dark-theme .module-conversation-header__title {
   color: #efefef; }
 
+.dark-theme .module-conversation-header__note-to-self {
+  color: #efefef; }
+
 .dark-theme .module-conversation-header__title__verified-icon {
   background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8' standalone='no'?><svg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'><path d='M11 21.34L2.66 13l-2.83 2.83L11 27 31.736 6.425 28.83 3.8' fill-rule='nonzero' fill='%23EFEFEF'/></svg>");
   background-size: 100%;
@@ -2937,16 +2988,13 @@ body.dark-theme {
   color: #eeefef; }
 
 .dark-theme .module-avatar__icon--group {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='28px' height='28px' viewBox='0 0 28 28' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->    <title>Group/group-28</title>    <desc>Created with Sketch.</desc>    <g>        <path d='M18.7272727,13.2857143 C20.6890909,13.2857143 22.2609091,11.6585714 22.2609091,9.64285714 C22.2609091,7.62714286 20.6890909,6 18.7272727,6 C16.7654545,6 15.1818182,7.62714286 15.1818182,9.64285714 C15.1818182,11.6585714 16.7654545,13.2857143 18.7272727,13.2857143 Z M9.27272727,13.2857143 C11.2345455,13.2857143 12.8063636,11.6585714 12.8063636,9.64285714 C12.8063636,7.62714286 11.2345455,6 9.27272727,6 C7.31090909,6 5.72727273,7.62714286 5.72727273,9.64285714 C5.72727273,11.6585714 7.31090909,13.2857143 9.27272727,13.2857143 Z M9.27272727,15.7142857 C6.51909091,15.7142857 1,17.135 1,19.9642857 L1,23 L17.5454545,23 L17.5454545,19.9642857 C17.5454545,17.135 12.0263636,15.7142857 9.27272727,15.7142857 Z M18.7272727,15.7142857 C18.3845455,15.7142857 17.9945455,15.7385714 17.5809091,15.775 C18.9518182,16.795 19.9090909,18.1671429 19.9090909,19.9642857 L19.9090909,23 L27,23 L27,19.9642857 C27,17.135 21.4809091,15.7142857 18.7272727,15.7142857 Z' id='path-1' fill='%23EEEFEF'></path>    </g></svg>");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center; }
+  background-color: #eeefef; }
 
 .dark-theme .module-avatar__icon--direct {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='28px' height='28px' viewBox='0 0 28 28' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->    <title>Profile/profile-28</title>    <desc>Created with Sketch.</desc>    <g>        <path d='M14,14 C16.7625,14 19,11.7625 19,9 C19,6.2375 16.7625,4 14,4 C11.2375,4 9,6.2375 9,9 C9,11.7625 11.2375,14 14,14 Z M14,16.5 C10.6625,16.5 4,18.175 4,21.5 L4,24 L24,24 L24,21.5 C24,18.175 17.3375,16.5 14,16.5 Z' id='path-1' fill='%23EEEFEF'></path>    </g></svg>");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center; }
+  background-color: #eeefef; }
+
+.dark-theme .module-avatar__icon--note-to-self {
+  background-color: #eeefef; }
 
 .dark-theme .module-avatar--no-image {
   background-color: #5a5a63; }
@@ -2990,8 +3038,14 @@ body.dark-theme {
 .dark-theme .module-main-header__app-name {
   color: #efefef; }
 
+.dark-theme .module-image {
+  background-color: #000000; }
+
 .dark-theme .module-image__border-overlay {
   box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.15); }
+
+.dark-theme .module-image__loading-placeholder {
+  background-color: rgba(255, 255, 255, 0.15); }
 
 .dark-theme .module-typing-animation__dot {
   background-color: #ffffff; }
@@ -3050,6 +3104,42 @@ body.dark-theme {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
+
+.dark-theme .module-spinner__circle {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.dark-theme .module-spinner__arc {
+  background-color: #eeefef; }
+
+.dark-theme .module-spinner__circle--small {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.dark-theme .module-spinner__arc--small {
+  background-color: #eeefef; }
+
+.dark-theme .module-spinner__circle--incoming {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.dark-theme .module-spinner__arc--incoming {
+  background-color: #eeefef; }
+
+.dark-theme .module-spinner__circle--small-incoming {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.dark-theme .module-spinner__arc--small-incoming {
+  background-color: #eeefef; }
+
+.dark-theme .module-spinner__circle--outgoing {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.dark-theme .module-spinner__arc--outgoing {
+  background-color: #eeefef; }
+
+.dark-theme .module-spinner__circle--small-outgoing {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.dark-theme .module-spinner__arc--small-outgoing {
+  background-color: #eeefef; }
 
 .dark-theme .react-contextmenu {
   background-color: #1a1c20;
@@ -3310,7 +3400,6 @@ body.dark-theme {
 .module-message__attachment-container {
   text-align: center;
   position: relative;
-  cursor: pointer;
   margin-left: -12px;
   margin-right: -12px;
   margin-top: -10px;
@@ -3344,7 +3433,8 @@ body.dark-theme {
 
 .module-message__generic-attachment {
   display: flex;
-  flex-direction: row; }
+  flex-direction: row;
+  align-items: center; }
 
 .module-message__generic-attachment--with-content-below {
   padding-bottom: 6px; }
@@ -3354,6 +3444,10 @@ body.dark-theme {
 
 .module-message__generic-attachment__icon-container {
   position: relative; }
+
+.module-message__generic-attachment__spinner-container {
+  padding-left: 4px;
+  padding-right: 4px; }
 
 .module-message__generic-attachment__icon {
   background: url("../images/file-gradient.svg") no-repeat center;
@@ -4010,13 +4104,17 @@ body.dark-theme {
   cursor: pointer;
   display: flex;
   flex-direction: row;
-  align-items: stretch; }
+  align-items: center; }
 
 .module-embedded-contact--with-content-above {
   padding-top: 4px; }
 
 .module-embedded-contact--with-content-below {
   padding-bottom: 4px; }
+
+.module-embedded-contact__spinner-container {
+  padding-left: 5px;
+  padding-right: 5px; }
 
 .module-embedded-contact__text-container {
   flex-grow: 1;
@@ -4325,13 +4423,13 @@ body.dark-theme {
   user-select: none; }
 
 .module-conversation-header__title {
-  margin-left: 8px;
+  margin-left: 6px;
   min-width: 0;
   font-size: 16px;
   line-height: 24px;
   font-weight: 300;
   color: #17191d;
-  max-width: calc(100% - 36px);
+  max-width: calc(100% - 34px);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -4945,6 +5043,14 @@ body.dark-theme {
   height: 42px;
   width: 42px; }
 
+.module-avatar__icon--note-to-self {
+  width: 70%;
+  height: 70%;
+  background-image: url("data:image/svg+xml;utf8,<svg id='Export' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><title>note-28</title><path d='M21,3H7A2,2,0,0,0,5,5V23a2,2,0,0,0,2,2H21a2,2,0,0,0,2-2V5A2,2,0,0,0,21,3ZM17,19.5H7V18H17ZM21,16H7V14.5H21Zm0-3.5H7V11H21ZM21,9H7V7.5H21Z' fill='%23FFFFFF'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
 .module-avatar--no-image {
   background-color: #6b6b78; }
 
@@ -5043,6 +5149,12 @@ body.dark-theme {
 
 .module-image__border-overlay--dark {
   background-color: rgba(0, 0, 0, 0.2); }
+
+.module-image__loading-placeholder {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.15); }
 
 .module-image__image {
   object-fit: cover;
@@ -5455,6 +5567,78 @@ body.dark-theme {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
+
+.module-spinner__container {
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  height: 56px;
+  width: 56px; }
+
+.module-spinner__circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='56px' height='56px' viewBox='0 0 56 56' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Track - 56</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Track---56' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M28,54 C42.3594035,54 54,42.3594035 54,28 C54,13.6405965 42.3594035,2 28,2 C13.6405965,2 2,13.6405965 2,28 C2,42.3594035 13.6405965,54 28,54 Z M28,56 C12.536027,56 0,43.463973 0,28 C0,12.536027 12.536027,0 28,0 C43.463973,0 56,12.536027 56,28 C56,43.463973 43.463973,56 28,56 Z' id='Oval' fill='%23FFFFFF' fill-rule='nonzero'></path>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  z-index: 2;
+  height: 56px;
+  width: 56px; }
+
+.module-spinner__arc {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='56px' height='56px' viewBox='0 0 56 56' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Spinner - 56</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Spinner---56' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M52.3599009,14.184516 C54.6768062,18.2609741 56,22.9759628 56,28 C56,43.463973 43.463973,56 28,56 L28,54 C42.3594035,54 54,42.3594035 54,28 C54,23.3403176 52.7742128,18.9669331 50.6275064,15.1847144 L52.3599009,14.184516 Z' id='Path' fill='%236B6D70'></path>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  z-index: 3;
+  height: 56px;
+  width: 56px;
+  animation: spinner-arc-animation 1000ms linear infinite; }
+
+@keyframes spinner-arc-animation {
+  0% {
+    transform: rotate(0deg); }
+  50% {
+    transform: rotate(180deg); }
+  100% {
+    transform: rotate(360deg); } }
+
+.module-spinner__container--small {
+  height: 24px;
+  width: 24px; }
+
+.module-spinner__circle--small {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Track - 24</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Track---24' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M12,24 C5.372583,24 0,18.627417 0,12 C0,5.372583 5.372583,0 12,0 C18.627417,0 24,5.372583 24,12 C24,18.627417 18.627417,24 12,24 Z M12,22 C17.5228475,22 22,17.5228475 22,12 C22,6.4771525 17.5228475,2 12,2 C6.4771525,2 2,6.4771525 2,12 C2,17.5228475 6.4771525,22 12,22 Z' id='Combined-Shape' fill='%23FFFFFF' fill-rule='nonzero'></path>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 24px;
+  width: 24px; }
+
+.module-spinner__arc--small {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Spinner - 24</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Spinner---24' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M22.5600116,6.29547931 C23.4784938,7.99216184 24,9.93517878 24,12 C24,18.627417 18.627417,24 12,24 L12,22 C17.5228475,22 22,17.5228475 22,12 C22,10.2995217 21.5755584,8.6981771 20.8268371,7.29612807 L22.5600116,6.29547931 Z' id='Path' fill='%236B6D70' fill-rule='nonzero'></path>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 24px;
+  width: 24px; }
+
+.module-spinner__circle--incoming {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.module-spinner__arc--incoming {
+  background-color: #ffffff; }
+
+.module-spinner__circle--small-incoming {
+  background-color: rgba(255, 255, 255, 0.4); }
+
+.module-spinner__arc--small-incoming {
+  background-color: #ffffff; }
 
 .react-contextmenu {
   background-color: #f9fafa;
