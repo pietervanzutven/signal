@@ -3,205 +3,205 @@
 (function () {
   'use strict';
 
-const { isNumber, compact } = window.lodash;
-const he = window.he;
-const punycode = window.punycode;
-const LinkifyIt = window.linkify_it.linkify_it;
+  const { isNumber, compact } = window.lodash;
+  const he = window.he;
+  const nodeUrl = window.url;
+  const LinkifyIt = window.linkify_it.linkify_it;
 
-const linkify = LinkifyIt();
-const { concatenateBytes, getViewOfArrayBuffer } = window.crypto;
+  const linkify = LinkifyIt();
+  const { concatenateBytes, getViewOfArrayBuffer } = window.crypto;
 
-window.link_previews = {
-  assembleChunks,
-  findLinks,
-  getChunkPattern,
-  getDomain,
-  getTitleMetaTag,
-  getImageMetaTag,
-  isLinkInWhitelist,
-  isMediaLinkInWhitelist,
-  isLinkSneaky,
-};
+  window.link_previews = {
+    assembleChunks,
+    findLinks,
+    getChunkPattern,
+    getDomain,
+    getTitleMetaTag,
+    getImageMetaTag,
+    isLinkInWhitelist,
+    isMediaLinkInWhitelist,
+    isLinkSneaky,
+  };
 
-const SUPPORTED_DOMAINS = [
-  'youtube.com',
-  'www.youtube.com',
-  'm.youtube.com',
-  'youtu.be',
-  'reddit.com',
-  'www.reddit.com',
-  'm.reddit.com',
-  'imgur.com',
-  'www.imgur.com',
-  'm.imgur.com',
-  'instagram.com',
-  'www.instagram.com',
-  'm.instagram.com',
-];
-function isLinkInWhitelist(link) {
-  try {
-    const url = new URL(link);
+  const SUPPORTED_DOMAINS = [
+    'youtube.com',
+    'www.youtube.com',
+    'm.youtube.com',
+    'youtu.be',
+    'reddit.com',
+    'www.reddit.com',
+    'm.reddit.com',
+    'imgur.com',
+    'www.imgur.com',
+    'm.imgur.com',
+    'instagram.com',
+    'www.instagram.com',
+    'm.instagram.com',
+  ];
+  function isLinkInWhitelist(link) {
+    try {
+      const url = new URL(link);
 
-    if (url.protocol !== 'https:') {
-      return false;
-    }
-
-    if (!url.pathname || url.pathname.length < 2) {
-      return false;
-    }
-
-    const lowercase = url.host.toLowerCase();
-    if (!SUPPORTED_DOMAINS.includes(lowercase)) {
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
-
-const SUPPORTED_MEDIA_DOMAINS = /^([^.]+\.)*(ytimg.com|cdninstagram.com|redd.it|imgur.com|fbcdn.net)$/i;
-function isMediaLinkInWhitelist(link) {
-  try {
-    const url = new URL(link);
-
-    if (url.protocol !== 'https:') {
-      return false;
-    }
-
-    if (!url.pathname || url.pathname.length < 2) {
-      return false;
-    }
-
-    if (!SUPPORTED_MEDIA_DOMAINS.test(url.host)) {
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
-
-const META_TITLE = /<meta\s+property="og:title"\s+content="([\s\S]+?)"\s*\/?\s*>/im;
-const META_IMAGE = /<meta\s+property="og:image"\s+content="([\s\S]+?)"\s*\/?\s*>/im;
-function _getMetaTag(html, regularExpression) {
-  const match = regularExpression.exec(html);
-  if (match && match[1]) {
-    return he.decode(match[1]).trim();
-  }
-
-  return null;
-}
-
-function getTitleMetaTag(html) {
-  return _getMetaTag(html, META_TITLE);
-}
-function getImageMetaTag(html) {
-  return _getMetaTag(html, META_IMAGE);
-}
-
-function findLinks(text, caretLocation) {
-  const haveCaretLocation = isNumber(caretLocation);
-  const textLength = text ? text.length : 0;
-
-  const matches = linkify.match(text || '') || [];
-  return compact(
-    matches.map(match => {
-      if (!haveCaretLocation) {
-        return match.text;
+      if (url.protocol !== 'https:') {
+        return false;
       }
 
-      if (match.lastIndex === textLength && caretLocation === textLength) {
-        return match.text;
+      if (!url.pathname || url.pathname.length < 2) {
+        return false;
       }
 
-      if (match.index > caretLocation || match.lastIndex < caretLocation) {
-        return match.text;
+      const lowercase = url.host.toLowerCase();
+      if (!SUPPORTED_DOMAINS.includes(lowercase)) {
+        return false;
       }
 
-      return null;
-    })
-  );
-}
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 
-function getDomain(url) {
-  try {
-    const urlObject = new URL(url);
-    return urlObject.hostname;
-  } catch (error) {
+  const SUPPORTED_MEDIA_DOMAINS = /^([^.]+\.)*(ytimg.com|cdninstagram.com|redd.it|imgur.com|fbcdn.net)$/i;
+  function isMediaLinkInWhitelist(link) {
+    try {
+      const url = new URL(link);
+
+      if (url.protocol !== 'https:') {
+        return false;
+      }
+
+      if (!url.pathname || url.pathname.length < 2) {
+        return false;
+      }
+
+      if (!SUPPORTED_MEDIA_DOMAINS.test(url.host)) {
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  const META_TITLE = /<meta\s+property="og:title"\s+content="([\s\S]+?)"\s*\/?\s*>/im;
+  const META_IMAGE = /<meta\s+property="og:image"\s+content="([\s\S]+?)"\s*\/?\s*>/im;
+  function _getMetaTag(html, regularExpression) {
+    const match = regularExpression.exec(html);
+    if (match && match[1]) {
+      return he.decode(match[1]).trim();
+    }
+
     return null;
   }
-}
 
-const MB = 1024 * 1024;
-const KB = 1024;
-
-function getChunkPattern(size) {
-  if (size > MB) {
-    return _getRequestPattern(size, MB);
-  } else if (size > 500 * KB) {
-    return _getRequestPattern(size, 500 * KB);
-  } else if (size > 100 * KB) {
-    return _getRequestPattern(size, 100 * KB);
-  } else if (size > 50 * KB) {
-    return _getRequestPattern(size, 50 * KB);
-  } else if (size > 10 * KB) {
-    return _getRequestPattern(size, 10 * KB);
-  } else if (size > KB) {
-    return _getRequestPattern(size, KB);
+  function getTitleMetaTag(html) {
+    return _getMetaTag(html, META_TITLE);
+  }
+  function getImageMetaTag(html) {
+    return _getMetaTag(html, META_IMAGE);
   }
 
-  throw new Error(`getChunkPattern: Unsupported size: ${size}`);
-}
+  function findLinks(text, caretLocation) {
+    const haveCaretLocation = isNumber(caretLocation);
+    const textLength = text ? text.length : 0;
 
-function _getRequestPattern(size, increment) {
-  const results = [];
+    const matches = linkify.match(text || '') || [];
+    return compact(
+      matches.map(match => {
+        if (!haveCaretLocation) {
+          return match.text;
+        }
 
-  let offset = 0;
-  while (size - offset > increment) {
-    results.push({
-      start: offset,
-      end: offset + increment - 1,
-      overlap: 0,
-    });
-    offset += increment;
-  }
+        if (match.lastIndex === textLength && caretLocation === textLength) {
+          return match.text;
+        }
 
-  if (size - offset > 0) {
-    results.push({
-      start: size - increment,
-      end: size - 1,
-      overlap: increment - (size - offset),
-    });
-  }
+        if (match.index > caretLocation || match.lastIndex < caretLocation) {
+          return match.text;
+        }
 
-  return results;
-}
-
-function assembleChunks(chunkDescriptors) {
-  const chunks = chunkDescriptors.map((chunk, index) => {
-    if (index !== chunkDescriptors.length - 1) {
-      return chunk.data;
-    }
-
-    if (!chunk.overlap) {
-      return chunk.data;
-    }
-
-    return getViewOfArrayBuffer(
-      chunk.data,
-      chunk.overlap,
-      chunk.data.byteLength
+        return null;
+      })
     );
-  });
+  }
 
-  return concatenateBytes(...chunks);
-}
+  function getDomain(url) {
+    try {
+      const urlObject = new URL(url);
+      return urlObject.hostname;
+    } catch (error) {
+      return null;
+    }
+  }
 
-const LATIN_PATTERN = new RegExp(
-  '[' +
+  const MB = 1024 * 1024;
+  const KB = 1024;
+
+  function getChunkPattern(size) {
+    if (size > MB) {
+      return _getRequestPattern(size, MB);
+    } else if (size > 500 * KB) {
+      return _getRequestPattern(size, 500 * KB);
+    } else if (size > 100 * KB) {
+      return _getRequestPattern(size, 100 * KB);
+    } else if (size > 50 * KB) {
+      return _getRequestPattern(size, 50 * KB);
+    } else if (size > 10 * KB) {
+      return _getRequestPattern(size, 10 * KB);
+    } else if (size > KB) {
+      return _getRequestPattern(size, KB);
+    }
+
+    throw new Error(`getChunkPattern: Unsupported size: ${size}`);
+  }
+
+  function _getRequestPattern(size, increment) {
+    const results = [];
+
+    let offset = 0;
+    while (size - offset > increment) {
+      results.push({
+        start: offset,
+        end: offset + increment - 1,
+        overlap: 0,
+      });
+      offset += increment;
+    }
+
+    if (size - offset > 0) {
+      results.push({
+        start: size - increment,
+        end: size - 1,
+        overlap: increment - (size - offset),
+      });
+    }
+
+    return results;
+  }
+
+  function assembleChunks(chunkDescriptors) {
+    const chunks = chunkDescriptors.map((chunk, index) => {
+      if (index !== chunkDescriptors.length - 1) {
+        return chunk.data;
+      }
+
+      if (!chunk.overlap) {
+        return chunk.data;
+      }
+
+      return getViewOfArrayBuffer(
+        chunk.data,
+        chunk.overlap,
+        chunk.data.byteLength
+      );
+    });
+
+    return concatenateBytes(...chunks);
+  }
+
+  const LATIN_PATTERN = new RegExp(
+    '[' +
     '\\u0041-\\u005A' +
     '\\u0061-\\u007A' +
     '\\u00AA' +
@@ -210,10 +210,10 @@ const LATIN_PATTERN = new RegExp(
     '\\u00D8-\\u00F6' +
     '\\u00F8-\\u01BA' +
     ']'
-);
+  );
 
-const CYRILLIC_PATTERN = new RegExp(
-  '[' +
+  const CYRILLIC_PATTERN = new RegExp(
+    '[' +
     '\\u0400-\\u0481' +
     '\\u0482' +
     '\\u0483-\\u0484' +
@@ -237,10 +237,10 @@ const CYRILLIC_PATTERN = new RegExp(
     '\\uA69E-\\uA69F' +
     '\\uFE2E-\\uFE2F' +
     ']'
-);
+  );
 
-const GREEK_PATTERN = new RegExp(
-  '[' +
+  const GREEK_PATTERN = new RegExp(
+    '[' +
     '\\u0370-\\u0373' +
     '\\u0375' +
     '\\u0376-\\u0377' +
@@ -288,10 +288,10 @@ const GREEK_PATTERN = new RegExp(
     '\\u2126' +
     '\\uAB65' +
     ']'
-);
+  );
 
-const HIGH_GREEK_PATTERN = new RegExp(
-  '[' +
+  const HIGH_GREEK_PATTERN = new RegExp(
+    '[' +
     `${String.fromCodePoint(0x10140)}-${String.fromCodePoint(0x10174)}` +
     `${String.fromCodePoint(0x10175)}-${String.fromCodePoint(0x10178)}` +
     `${String.fromCodePoint(0x10179)}-${String.fromCodePoint(0x10189)}` +
@@ -302,48 +302,47 @@ const HIGH_GREEK_PATTERN = new RegExp(
     `${String.fromCodePoint(0x1d242)}-${String.fromCodePoint(0x1d244)}` +
     `${String.fromCodePoint(0x1d245)}` +
     ']',
-  'u'
-);
+    'u'
+  );
 
-function isChunkSneaky(chunk) {
-  const hasLatin = LATIN_PATTERN.test(chunk);
-  if (!hasLatin) {
+  function isChunkSneaky(chunk) {
+    const hasLatin = LATIN_PATTERN.test(chunk);
+    if (!hasLatin) {
+      return false;
+    }
+
+    const hasCyrillic = CYRILLIC_PATTERN.test(chunk);
+    if (hasCyrillic) {
+      return true;
+    }
+
+    const hasGreek = GREEK_PATTERN.test(chunk);
+    if (hasGreek) {
+      return true;
+    }
+
+    const hasHighGreek = HIGH_GREEK_PATTERN.test(chunk);
+    if (hasHighGreek) {
+      return true;
+    }
+
     return false;
   }
 
-  const hasCyrillic = CYRILLIC_PATTERN.test(chunk);
-  if (hasCyrillic) {
-    return true;
-  }
+  function isLinkSneaky(link) {
+    const domain = getDomain(link);
 
-  const hasGreek = GREEK_PATTERN.test(chunk);
-  if (hasGreek) {
-    return true;
-  }
+    // This is necesary because getDomain returns domains in punycode form
+    const unicodeDomain = nodeUrl.domainToUnicode(domain);
 
-  const hasHighGreek = HIGH_GREEK_PATTERN.test(chunk);
-  if (hasHighGreek) {
-    return true;
-  }
-
-  return false;
-}
-
-function isLinkSneaky(link) {
-  const domain = getDomain(link);
-
-  // This is necesary because getDomain returns domains in punycode form
-  // We'd like to use require('url').domainToUnicode() but it's a no-op in a BrowserWindow
-  const unicodeDomain = punycode.toUnicode(domain);
-
-  const chunks = unicodeDomain.split('.');
-  for (let i = 0, max = chunks.length; i < max; i += 1) {
-    const chunk = chunks[i];
-    if (isChunkSneaky(chunk)) {
-      return true;
+    const chunks = unicodeDomain.split('.');
+    for (let i = 0, max = chunks.length; i < max; i += 1) {
+      const chunk = chunks[i];
+      if (isChunkSneaky(chunk)) {
+        return true;
+      }
     }
-  }
 
-  return false;
-}
-    })();
+    return false;
+  }
+})();

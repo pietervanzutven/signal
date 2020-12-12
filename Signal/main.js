@@ -75,7 +75,8 @@ const process = {
     HTTPS_PROXY: null,
   },
   argv: [],
-  on: () => {}
+  on: () => { },
+  mas: true
 };
 
 window.requestIdleCallback = () => { };
@@ -143,6 +144,48 @@ const sql = window.app.sql;
 const sqlChannels = window.app.sql_channel;
 const windowState = window.app.window_state;
 
+function showWindow() {
+  if (!mainWindow) {
+    return;
+  }
+
+  // Using focus() instead of show() seems to be important on Windows when our window
+  //   has been docked using Aero Snap/Snap Assist. A full .show() call here will cause
+  //   the window to reposition:
+  //   https://github.com/signalapp/Signal-Desktop/issues/1429
+  if (mainWindow.isVisible()) {
+    mainWindow.focus();
+  } else {
+    mainWindow.show();
+  }
+
+  // toggle the visibility of the show/hide tray icon menu entries
+  if (tray) {
+    tray.updateContextMenu();
+  }
+}
+
+if (!process.mas) {
+  console.log('making app single instance');
+  const gotLock = app.requestSingleInstanceLock();
+  if (!gotLock) {
+    console.log('quitting; we are the second instance');
+    app.exit();
+  } else {
+    app.on('second-instance', () => {
+      // Someone tried to run a second instance, we should focus our window
+      if (mainWindow) {
+        if (mainWindow.isMinimized()) {
+          mainWindow.restore();
+        }
+
+        showWindow();
+      }
+      return true;
+    });
+  }
+}
+
 const windowFromUserConfig = userConfig.get('window');
 const windowFromEphemeral = ephemeralConfig.get('window');
 let windowConfig = windowFromEphemeral || windowFromUserConfig;
@@ -190,8 +233,137 @@ const MIN_WIDTH = 640;
 const MIN_HEIGHT = 360;
 const BOUNDS_BUFFER = 100;
 
+function isVisible(window, bounds) {
+  const boundsX = _.get(bounds, 'x') || 0;
+  const boundsY = _.get(bounds, 'y') || 0;
+  const boundsWidth = _.get(bounds, 'width') || DEFAULT_WIDTH;
+  const boundsHeight = _.get(bounds, 'height') || DEFAULT_HEIGHT;
+
+  // requiring BOUNDS_BUFFER pixels on the left or right side
+  const rightSideClearOfLeftBound =
+    window.x + window.width >= boundsX + BOUNDS_BUFFER;
+  const leftSideClearOfRightBound =
+    window.x <= boundsX + boundsWidth - BOUNDS_BUFFER;
+
+  // top can't be offscreen, and must show at least BOUNDS_BUFFER pixels at bottom
+  const topClearOfUpperBound = window.y >= boundsY;
+  const topClearOfLowerBound =
+    window.y <= boundsY + boundsHeight - BOUNDS_BUFFER;
+
+  return (
+    rightSideClearOfLeftBound &&
+    leftSideClearOfRightBound &&
+    topClearOfUpperBound &&
+    topClearOfLowerBound
+  );
+}
+
+function createWindow() {
+  const { screen } = electron;
+  const windowOptions = Object.assign(
+    {
+      show: !startInTray, // allow to start minimised in tray
+      width: DEFAULT_WIDTH,
+      height: DEFAULT_HEIGHT,
+      minWidth: MIN_WIDTH,
+      minHeight: MIN_HEIGHT,
+      autoHideMenuBar: false,
+      backgroundColor:
+        config.environment === 'test' || config.environment === 'test-lib'
+          ? '#ffffff' // Tests should always be rendered on a white background
+          : '#2090EA',
+      webPreferences: {
+        nodeIntegration: false,
+        nodeIntegrationInWorker: false,
+        contextIsolation: false,
+        preload: path.join(__dirname, 'preload.js'),
+        nativeWindowOpen: true,
+      },
+      icon: path.join(__dirname, 'images', 'icon_256.png'),
+    },
+    _.pick(windowConfig, [
+      'maximized',
+      'autoHideMenuBar',
+      'width',
+      'height',
+      'x',
+      'y',
+    ])
+  );
+
+  if (!_.isNumber(windowOptions.width) || windowOptions.width < MIN_WIDTH) {
+    windowOptions.width = DEFAULT_WIDTH;
+  }
+  if (!_.isNumber(windowOptions.height) || windowOptions.height < MIN_HEIGHT) {
+    windowOptions.height = DEFAULT_HEIGHT;
+  }
+  if (!_.isBoolean(windowOptions.maximized)) {
+    delete windowOptions.maximized;
+  }
+  if (!_.isBoolean(windowOptions.autoHideMenuBar)) {
+    delete windowOptions.autoHideMenuBar;
+  }
+
+  const visibleOnAnyScreen = _.some(screen.getAllDisplays(), display => {
+    if (!_.isNumber(windowOptions.x) || !_.isNumber(windowOptions.y)) {
+      return false;
+    }
+
+    return isVisible(windowOptions, _.get(display, 'bounds'));
+  });
+  if (!visibleOnAnyScreen) {
+    console.log('Location reset needed');
+    delete windowOptions.x;
+    delete windowOptions.y;
+  }
+
+  if (windowOptions.fullscreen === false) {
+    delete windowOptions.fullscreen;
+  }
+
+  logger.info(
+    'Initializing BrowserWindow config: %s',
+    JSON.stringify(windowOptions)
+  );
+}
+
 // Create the browser window.
 mainWindow = new BrowserWindow();
+
+function captureAndSaveWindowStats() {
+  if (!mainWindow) {
+    return;
+  }
+
+  const size = mainWindow.getSize();
+  const position = mainWindow.getPosition();
+
+  // so if we need to recreate the window, we have the most recent settings
+  windowConfig = {
+    maximized: mainWindow.isMaximized(),
+    autoHideMenuBar: mainWindow.isMenuBarAutoHide(),
+    width: size[0],
+    height: size[1],
+    x: position[0],
+    y: position[1],
+  };
+
+  if (mainWindow.isFullScreen()) {
+    // Only include this property if true, because when explicitly set to
+    // false the fullscreen button will be disabled on osx
+    windowConfig.fullscreen = true;
+  }
+
+  logger.info(
+    'Updating BrowserWindow config: %s',
+    JSON.stringify(windowConfig)
+  );
+  ephemeralConfig.set('window', windowConfig);
+}
+
+const debouncedCaptureStats = _.debounce(captureAndSaveWindowStats, 500);
+mainWindow.on('resize', debouncedCaptureStats);
+mainWindow.on('move', debouncedCaptureStats);
 
 // Ingested in preload.js via a sendSync call
 ipc.on('locale-data', event => {
@@ -247,8 +419,8 @@ function showAbout() {
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
+      contextIsolation: false,
       preload: path.join(__dirname, 'about_preload.js'),
-      // sandbox: true,
       nativeWindowOpen: true,
     },
     parent: mainWindow,
@@ -293,8 +465,8 @@ async function showSettingsWindow() {
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
+      contextIsolation: false,
       preload: path.join(__dirname, 'settings_preload.js'),
-      // sandbox: true,
       nativeWindowOpen: true,
     },
     parent: mainWindow,
@@ -338,8 +510,8 @@ async function showDebugLogWindow() {
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
+      contextIsolation: false,
       preload: path.join(__dirname, 'debug_log_preload.js'),
-      // sandbox: true,
       nativeWindowOpen: true,
     },
     parent: mainWindow,
@@ -386,8 +558,8 @@ async function showPermissionsPopupWindow() {
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
+      contextIsolation: false,
       preload: path.join(__dirname, 'permissions_popup_preload.js'),
-      // sandbox: true,
       nativeWindowOpen: true,
     },
     parent: mainWindow,
