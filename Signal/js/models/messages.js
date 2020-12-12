@@ -1386,7 +1386,7 @@
         const { thumbnail } = queryFirst;
 
         if (thumbnail && thumbnail.path) {
-          firstAttachment.thumbnail = Object.assign({}
+          firstAttachment.thumbnail = Object.assign({},
             thumbnail,
             {
               copied: true,
