@@ -37,7 +37,7 @@
         if (thumbnail && thumbnail.objectUrl) {
             return thumbnail.objectUrl;
         }
-        return null;
+        return;
     }
     function getTypeLabel({ i18n, contentType, isVoiceMessage, }) {
         if (GoogleChrome.isVideoTypeSupported(contentType)) {
@@ -52,7 +52,7 @@
         if (MIME.isAudio(contentType)) {
             return i18n('audio');
         }
-        return null;
+        return;
     }
     class Quote extends react_1.default.Component {
         constructor(props) {

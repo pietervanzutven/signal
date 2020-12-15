@@ -32,11 +32,11 @@
     };
     const toSection = (messagesWithSection) => {
         if (!messagesWithSection || messagesWithSection.length === 0) {
-            return null;
+            return;
         }
         const firstMediaItemWithSection = messagesWithSection[0];
         if (!firstMediaItemWithSection) {
-            return null;
+            return;
         }
         const mediaItems = messagesWithSection.map(messageWithSection => messageWithSection.mediaItem);
         switch (firstMediaItemWithSection.type) {
@@ -60,7 +60,7 @@
                 // error TS2345: Argument of type 'any' is not assignable to parameter
                 // of type 'never'.
                 // return missingCaseError(firstMediaItemWithSection.type);
-                return null;
+                return;
         }
     };
     const withSection = (referenceDateTime) => (mediaItem) => {

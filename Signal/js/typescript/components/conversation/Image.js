@@ -19,8 +19,9 @@
             const { alt, attachment, bottomOverlay, closeButton, curveBottomLeft, curveBottomRight, curveTopLeft, curveTopRight, darkOverlay, height, i18n, onClick, onClickClose, onError, overlayText, playIconOverlay, smallCurveTopLeft, softCorners, url, width, } = this.props;
             const { caption, pending } = attachment || { caption: null, pending: true };
             const canClick = onClick && !pending;
+            const role = canClick ? 'button' : undefined;
             return (react_1.default.createElement("div", {
-                role: canClick ? 'button' : undefined, onClick: () => {
+                role: role, onClick: () => {
                     if (canClick && onClick) {
                         onClick(attachment);
                     }

@@ -78,6 +78,7 @@ const process = {
   on: () => { },
   mas: true
 };
+window.getEnvironment = () => process.env.UWP_ENV;
 
 window.requestIdleCallback = () => { };
 

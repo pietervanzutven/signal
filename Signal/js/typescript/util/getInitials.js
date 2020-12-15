@@ -13,13 +13,13 @@
     }
     function getInitials(name) {
         if (!name) {
-            return null;
+            return;
         }
         const cleaned = removeNonInitials(name);
         const parts = cleaned.split(' ');
         const initials = parts.map(part => part.trim()[0]);
         if (!initials.length) {
-            return null;
+            return;
         }
         return initials.slice(0, 2).join('');
     }

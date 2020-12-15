@@ -30,8 +30,7 @@
         renderImage() {
             const { avatarPath, i18n, name, phoneNumber, profileName } = this.props;
             const { imageBroken } = this.state;
-            const hasImage = avatarPath && !imageBroken;
-            if (!hasImage) {
+            if (!avatarPath || imageBroken) {
                 return null;
             }
             const title = `${name || phoneNumber}${!name && profileName ? ` ~${profileName}` : ''}`;

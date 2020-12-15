@@ -13,7 +13,7 @@
     const react_1 = __importDefault(window.react);
     const Contact_1 = window.ts.types.Contact;
     const missingCaseError_1 = require_ts_util_missingCaseError();
-    const EmbeddedContact_1 = window.ts.components.conversation.EmbeddedContact;
+    const _contactUtil_1 = window.ts.components.conversation._contactUtil;
     function getLabelForEmail(method, i18n) {
         switch (method.type) {
             case Contact_1.ContactType.CUSTOM:
@@ -139,9 +139,9 @@
             const isIncoming = false;
             const module = 'contact-detail';
             return (react_1.default.createElement("div", { className: "module-contact-detail" },
-                react_1.default.createElement("div", { className: "module-contact-detail__avatar" }, EmbeddedContact_1.renderAvatar({ contact, i18n, size: 80 })),
-                EmbeddedContact_1.renderName({ contact, isIncoming, module }),
-                EmbeddedContact_1.renderContactShorthand({ contact, isIncoming, module }),
+                react_1.default.createElement("div", { className: "module-contact-detail__avatar" }, _contactUtil_1.renderAvatar({ contact, i18n, size: 80 })),
+                _contactUtil_1.renderName({ contact, isIncoming, module }),
+                _contactUtil_1.renderContactShorthand({ contact, isIncoming, module }),
                 this.renderSendMessage({ hasSignalAccount, i18n, onSendMessage }),
                 this.renderPhone(contact.number, i18n),
                 this.renderEmail(contact.email, i18n),

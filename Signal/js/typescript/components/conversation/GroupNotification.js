@@ -32,7 +32,8 @@
                     if (!contacts || !contacts.length) {
                         throw new Error('Group update is missing contacts');
                     }
-                    return (react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: contacts.length > 1 ? 'multipleJoinedTheGroup' : 'joinedTheGroup', components: [people] }));
+                    const joinKey = contacts.length > 1 ? 'multipleJoinedTheGroup' : 'joinedTheGroup';
+                    return react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: joinKey, components: [people] });
                 case 'remove':
                     if (isMe) {
                         return i18n('youLeftTheGroup');
@@ -40,7 +41,8 @@
                     if (!contacts || !contacts.length) {
                         throw new Error('Group update is missing contacts');
                     }
-                    return (react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: contacts.length > 1 ? 'multipleLeftTheGroup' : 'leftTheGroup', components: [people] }));
+                    const leftKey = contacts.length > 1 ? 'multipleLeftTheGroup' : 'leftTheGroup';
+                    return react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: leftKey, components: [people] });
                 case 'general':
                     return i18n('updatedTheGroup');
                 default:

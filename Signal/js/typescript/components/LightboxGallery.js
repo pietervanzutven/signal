@@ -51,7 +51,9 @@
             const onNext = selectedIndex < lastIndex ? this.handleNext : undefined;
             const objectURL = selectedMedia.objectURL || 'images/alert-outline.svg';
             const { attachment } = selectedMedia;
-            return (react_1.default.createElement(Lightbox_1.Lightbox, { close: close, onPrevious: onPrevious, onNext: onNext, onSave: onSave ? this.handleSave : undefined, objectURL: objectURL, caption: attachment ? attachment.caption : undefined, contentType: selectedMedia.contentType, i18n: i18n }));
+            const saveCallback = onSave ? this.handleSave : undefined;
+            const captionCallback = attachment ? attachment.caption : undefined;
+            return (react_1.default.createElement(Lightbox_1.Lightbox, { close: close, onPrevious: onPrevious, onNext: onNext, onSave: saveCallback, objectURL: objectURL, caption: captionCallback, contentType: selectedMedia.contentType, i18n: i18n }));
         }
     }
     LightboxGallery.defaultProps = {

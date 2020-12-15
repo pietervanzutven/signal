@@ -1,10 +1,12 @@
-/* global ConversationController: false */
-/* global extension: false */
-/* global getInboxCollection: false */
-/* global i18n: false */
-/* global Whisper: false */
-/* global textsecure: false */
-/* global Signal: false */
+/* global
+  ConversationController,
+  extension,
+  getInboxCollection,
+  i18n,
+  Whisper,
+  textsecure,
+  Signal
+*/
 
 // eslint-disable-next-line func-names
 (function() {
@@ -61,38 +63,6 @@
     },
   });
 
-  Whisper.FontSizeView = Whisper.View.extend({
-    defaultSize: 14,
-    maxSize: 30,
-    minSize: 14,
-    initialize() {
-      this.currentSize = this.defaultSize;
-      this.render();
-    },
-    events: { keydown: 'zoomText' },
-    zoomText(e) {
-      if (!e.ctrlKey) {
-        return;
-      }
-      const keyCode = e.which || e.keyCode;
-      const maxSize = 22; // if bigger text goes outside send-message textarea
-      const minSize = 14;
-      if (keyCode === 189 || keyCode === 109) {
-        if (this.currentSize > minSize) {
-          this.currentSize -= 1;
-        }
-      } else if (keyCode === 187 || keyCode === 107) {
-        if (this.currentSize < maxSize) {
-          this.currentSize += 1;
-        }
-      }
-      this.render();
-    },
-    render() {
-      this.$el.css('font-size', `${this.currentSize}px`);
-    },
-  });
-
   Whisper.AppLoadingScreen = Whisper.View.extend({
     templateName: 'app-loading-screen',
     className: 'app-loading-screen',
@@ -115,20 +85,6 @@
       this.render();
       this.$el.attr('tabindex', '1');
 
-      // eslint-disable-next-line no-new
-      new Whisper.FontSizeView({ el: this.$el });
-
-      const ourNumber = textsecure.storage.user.getNumber();
-      const me = ConversationController.getOrCreate(ourNumber, 'private');
-      this.mainHeaderView = new Whisper.ReactWrapperView({
-        className: 'main-header-wrapper',
-        Component: Signal.Components.MainHeader,
-        props: me.format(),
-      });
-      const update = () => this.mainHeaderView.update(me.format());
-      this.listenTo(me, 'change', update);
-      this.$('.main-header-placeholder').append(this.mainHeaderView.el);
-
       this.conversation_stack = new Whisper.ConversationStack({
         el: this.$('.conversation-stack'),
         model: { window: options.window },
@@ -148,40 +104,6 @@
           this.networkStatusView.render();
         }
       });
-      this.listenTo(inboxCollection, 'select', this.openConversation);
-
-      this.inboxListView = new Whisper.ConversationListView({
-        el: this.$('.inbox'),
-        collection: inboxCollection,
-      }).render();
-
-      this.inboxListView.listenTo(
-        inboxCollection,
-        'add change:timestamp change:name change:number',
-        this.inboxListView.updateLocation
-      );
-      this.inboxListView.listenTo(
-        inboxCollection,
-        'remove',
-        this.inboxListView.removeItem
-      );
-
-      this.searchView = new Whisper.ConversationSearchView({
-        el: this.$('.search-results'),
-        input: this.$('input.search'),
-      });
-
-      this.searchView.$el.hide();
-
-      this.listenTo(this.searchView, 'hide', function toggleVisibility() {
-        this.searchView.$el.hide();
-        this.inboxListView.$el.show();
-      });
-      this.listenTo(this.searchView, 'show', function toggleVisibility() {
-        this.searchView.$el.show();
-        this.inboxListView.$el.hide();
-      });
-      this.listenTo(this.searchView, 'open', this.openConversation);
 
       this.networkStatusView = new Whisper.NetworkStatusView();
       this.$el
@@ -193,42 +115,78 @@
         banner.$el.prependTo(this.$el);
         this.$el.addClass('expired');
       }
+
+      this.setupLeftPane();
     },
     render_attributes: {
       welcomeToSignal: i18n('welcomeToSignal'),
       selectAContact: i18n('selectAContact'),
-      searchForPeopleOrGroups: i18n('searchForPeopleOrGroups'),
-      submitDebugLog: i18n('submitDebugLog'),
-      backup: i18n('backup'),
-      settings: i18n('settings'),
-      openReleaseNotes: i18n('goToReleaseNotes'),
-      openForums: i18n('goToForums'),
-      openSupportPage: i18n('goToSupportPage'),
-      openNewBugForm: i18n('menuReportIssue'),
-      showAbout: i18n('aboutSignalDesktop'),
-      setupWithImport: i18n('menuSetupWithImport'),
-      setupAsNewDevice: i18n('menuSetupAsNewDevice'),
-      setupAsStandalone: i18n('menuSetupAsStandalone'),
-      restartSignal: i18n('restartSignal'),
     },
     events: {
       click: 'onClick',
-      'click #header': 'focusHeader',
-      'click .conversation': 'focusConversation',
-      'click .react-contextmenu-wrapper .module-conversation-header__gear-icon': 'toggleMenu',
-      'click .show-debug-log': window.showDebugLogWindow,
-      'click .backup': window.showBackupScreen,
-      'click .show-settings': window.showSettings,
-      'click .open-release-notes': window.openReleaseNotes,
-      'click .open-forums': window.openForums,
-      'click .open-support-page': window.openSupportPage,
-      'click .open-new-bug-form': window.openNewBugForm,
-      'click .show-about': window.showAbout,
-      'click .setup-with-import': window.setupWithImport,
-      'click .setup-as-new-device': window.setupAsNewDevice,
-      'click .setup-as-standalone': window.setupAsStandalone,
-      'select .gutter .conversation-list-item': 'openConversation',
-      'input input.search': 'filterContacts',
+    },
+    setupLeftPane() {
+      // Here we set up a full redux store with initial state for our LeftPane Root
+      const inboxCollection = getInboxCollection();
+      const conversations = inboxCollection.map(
+        conversation => conversation.cachedProps
+      );
+      const initialState = {
+        conversations: {
+          conversationLookup: Signal.Util.makeLookup(conversations, 'id'),
+        },
+        user: {
+          regionCode: window.storage.get('regionCode'),
+          ourNumber: textsecure.storage.user.getNumber(),
+          i18n: window.i18n,
+        },
+      };
+
+      this.store = Signal.State.createStore(initialState);
+      window.inboxStore = this.store;
+      this.leftPaneView = new Whisper.ReactWrapperView({
+        JSX: Signal.State.Roots.createLeftPane(this.store),
+        className: 'left-pane-wrapper',
+      });
+
+      // Enables our redux store to be updated by backbone events in the outside world
+      const {
+        conversationAdded,
+        conversationChanged,
+        conversationRemoved,
+        removeAllConversations,
+        messageExpired,
+        openConversationExternal,
+      } = Signal.State.bindActionCreators(
+        Signal.State.Ducks.conversations.actions,
+        this.store.dispatch
+      );
+      const { userChanged } = Signal.State.bindActionCreators(
+        Signal.State.Ducks.user.actions,
+        this.store.dispatch
+      );
+
+      this.openConversationAction = openConversationExternal;
+
+      this.listenTo(inboxCollection, 'remove', conversation => {
+        const { id } = conversation || {};
+        conversationRemoved(id);
+      });
+      this.listenTo(inboxCollection, 'add', conversation => {
+        const { id, cachedProps } = conversation || {};
+        conversationAdded(id, cachedProps);
+      });
+      this.listenTo(inboxCollection, 'change', conversation => {
+        const { id, cachedProps } = conversation || {};
+        conversationChanged(id, cachedProps);
+      });
+      this.listenTo(inboxCollection, 'reset', removeAllConversations);
+
+      Whisper.events.on('messageExpired', messageExpired);
+      Whisper.events.on('userChanged', userChanged);
+
+      // Finally, add it to the DOM
+      this.$('.left-pane-placeholder').append(this.leftPaneView.el);
     },
     startConnectionListener() {
       this.interval = setInterval(() => {
@@ -284,33 +242,18 @@
     reloadBackgroundPage() {
       window.location.reload();
     },
-    filterContacts(e) {
-      this.searchView.filterContacts(e);
-      const input = this.$('input.search');
-      if (input.val().length > 0) {
-        input.addClass('active');
-        const textDir = window.getComputedStyle(input[0]).direction;
-        if (textDir === 'ltr') {
-          input.removeClass('rtl').addClass('ltr');
-        } else if (textDir === 'rtl') {
-          input.removeClass('ltr').addClass('rtl');
-        }
-      } else {
-        input.removeClass('active');
-      }
-    },
-    openConversation(conversation) {
-      this.searchView.hideHints();
-      if (conversation) {
-        ConversationController.markAsSelected(conversation);
-        this.conversation_stack.open(
-          ConversationController.get(conversation.id)
+    async openConversation(id, messageId) {
+      const conversation = await window.ConversationController.getOrCreateAndWait(
+        id,
+        'private'
         );
-        this.focusConversation();
+
+      if (this.openConversationAction) {
+        this.openConversationAction(id, messageId);
       }
-    },
-    toggleMenu() {
-        this.$('.menu-list').toggle();
+
+      this.conversation_stack.open(conversation);
+        this.focusConversation();
     },
     closeRecording(e) {
       if (e && this.$(e.target).closest('.capture-audio').length > 0) {
@@ -318,15 +261,7 @@
       }
       this.$('.conversation:first .recorder').trigger('close');
     },
-    closeMenu(e) {
-      if (e && this.$(e.target).parent('.react-contextmenu-wrapper').length > 0) {
-        return;
-      }
-
-      this.$('.menu-list').hide();
-    },
     onClick(e) {
-      this.closeMenu(e);
       this.closeRecording(e);
     },
   });

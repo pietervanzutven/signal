@@ -17,16 +17,12 @@
     class ConversationHeader extends react_1.default.Component {
         constructor(props) {
             super(props);
-            this.captureMenuTriggerBound = this.captureMenuTrigger.bind(this);
+            this.menuTriggerRef = react_1.default.createRef();
             this.showMenuBound = this.showMenu.bind(this);
-            this.menuTriggerRef = null;
-        }
-        captureMenuTrigger(triggerRef) {
-            this.menuTriggerRef = triggerRef;
         }
         showMenu(event) {
-            if (this.menuTriggerRef) {
-                this.menuTriggerRef.handleContextClick(event);
+            if (this.menuTriggerRef.current) {
+                this.menuTriggerRef.current.handleContextClick(event);
             }
         }
         renderBackButton() {
@@ -56,8 +52,9 @@
         }
         renderAvatar() {
             const { avatarPath, color, i18n, isGroup, isMe, name, phoneNumber, profileName, } = this.props;
+            const conversationType = isGroup ? 'group' : 'direct';
             return (react_1.default.createElement("span", { className: "module-conversation-header__avatar" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: isGroup ? 'group' : 'direct', i18n: i18n, noteToSelf: isMe, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28 })));
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: conversationType, i18n: i18n, noteToSelf: isMe, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28 })));
         }
         renderExpirationLength() {
             const { expirationSettingName } = this.props;
@@ -73,10 +70,9 @@
             if (showBackButton) {
                 return null;
             }
-            return (react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, { id: triggerId, ref: this.captureMenuTriggerBound },
+            return (react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, { id: triggerId, ref: this.menuTriggerRef },
                 react_1.default.createElement("div", { role: "button", onClick: this.showMenuBound, className: "module-conversation-header__gear-icon" })));
         }
-        /* tslint:disable:jsx-no-lambda react-this-binding-issue */
         renderMenu(triggerId) {
             const { i18n, isMe, isGroup, onDeleteMessages, onResetSession, onSetDisappearingMessages, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, timerOptions, } = this.props;
             const disappearingTitle = i18n('disappearingMessages');
@@ -92,9 +88,9 @@
                 !isGroup ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onResetSession }, i18n('resetSession'))) : null,
                 react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onDeleteMessages }, i18n('deleteMessages'))));
         }
-        /* tslint:enable */
         render() {
             const { id } = this.props;
+            const triggerId = `conversation-${id}`;
             return (react_1.default.createElement("div", { className: "module-conversation-header" },
                 this.renderBackButton(),
                 react_1.default.createElement("div", { className: "module-conversation-header__title-container" },
@@ -102,8 +98,8 @@
                         this.renderAvatar(),
                         this.renderTitle())),
                 this.renderExpirationLength(),
-                this.renderGear(id),
-                this.renderMenu(id)));
+                this.renderGear(triggerId),
+                this.renderMenu(triggerId)));
         }
     }
     exports.ConversationHeader = ConversationHeader;

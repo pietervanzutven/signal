@@ -31,4 +31,18 @@
         return phoneNumber;
     }
     exports.parse = parse;
+    function normalize(phoneNumber, options) {
+        const { regionCode } = options;
+        try {
+            const parsedNumber = libphonenumberInstance_1.instance.parse(phoneNumber, regionCode);
+            if (libphonenumberInstance_1.instance.isValidNumber(parsedNumber)) {
+                return libphonenumberInstance_1.instance.format(parsedNumber, libphonenumberInstance_1.PhoneNumberFormat.E164);
+            }
+            return;
+        }
+        catch (error) {
+            return;
+        }
+    }
+    exports.normalize = normalize;
 })();

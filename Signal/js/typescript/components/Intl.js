@@ -16,7 +16,7 @@
             if (!components || !components.length || components.length <= index) {
                 // tslint:disable-next-line no-console
                 console.log(`Error: Intl missing provided components for id ${id}, index ${index}`);
-                return null;
+                return;
             }
             return components[index];
         }

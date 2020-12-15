@@ -14,6 +14,10 @@
   window.theme = config.theme;
   window.i18n = i18n.setup(locale, localeMessages);
 
+  window.getEnvironment = () => config.environment;
+  window.getVersion = () => config.version;
+  window.getAppInstance = () => config.appInstance;
+
   // So far we're only using this for Signal.Types
   const Signal = window.top.signal;
 
@@ -22,10 +26,6 @@
     userDataPath: null,
     getRegionCode: () => null,
   });
-
-  window.getEnvironment = () => config.environment;
-  window.getVersion = () => config.version;
-  window.getAppInstance = () => config.appInstance;
 
   window.closeSettings = () => ipcRenderer.send('close-settings');
 

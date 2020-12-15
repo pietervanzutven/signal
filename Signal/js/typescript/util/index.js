@@ -22,4 +22,6 @@
     exports.missingCaseError = missingCaseError_1.missingCaseError;
     const migrateColor_1 = require_ts_util_migrateColor();
     exports.migrateColor = migrateColor_1.migrateColor;
+    const makeLookup_1 = require_ts_util_makeLookup();
+    exports.makeLookup = makeLookup_1.makeLookup;
 })();

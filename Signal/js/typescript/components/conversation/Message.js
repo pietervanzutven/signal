@@ -9,13 +9,6 @@
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
-    var __importStar = (this && this.__importStar) || function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-        result["default"] = mod;
-        return result;
-    };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
@@ -29,22 +22,20 @@
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const Quote_1 = window.ts.components.conversation.Quote;
     const EmbeddedContact_1 = window.ts.components.conversation.EmbeddedContact;
-    const MIME = __importStar(window.ts.types.MIME);
+    const Attachment_1 = window.ts.types.Attachment;
+    const timer_1 = window.ts.util.timer;
     const isFileDangerous_1 = require_ts_util_isFileDangerous();
     const react_contextmenu_1 = window.react_contextmenu;
     // Same as MIN_WIDTH in ImageGrid.tsx
     const MINIMUM_LINK_PREVIEW_IMAGE_WIDTH = 200;
     const EXPIRATION_CHECK_MINIMUM = 2000;
     const EXPIRED_DELAY = 600;
-    class Message extends react_1.default.Component {
+    class Message extends react_1.default.PureComponent {
         constructor(props) {
             super(props);
             this.captureMenuTriggerBound = this.captureMenuTrigger.bind(this);
             this.showMenuBound = this.showMenu.bind(this);
             this.handleImageErrorBound = this.handleImageError.bind(this);
-            this.menuTriggerRef = null;
-            this.expirationCheckInterval = null;
-            this.expiredTimeout = null;
             this.state = {
                 expiring: false,
                 expired: false,
@@ -56,7 +47,7 @@
             if (!expirationLength) {
                 return;
             }
-            const increment = ExpireTimer_1.getIncrement(expirationLength);
+            const increment = timer_1.getIncrement(expirationLength);
             const checkFrequency = Math.max(EXPIRATION_CHECK_MINIMUM, increment);
             this.checkExpired();
             this.expirationCheckInterval = setInterval(() => {
@@ -149,11 +140,11 @@
             const withContentBelow = Boolean(text);
             const withContentAbove = Boolean(quote) ||
                 (conversationType === 'group' && direction === 'incoming');
-            const displayImage = canDisplayImage(attachments);
+            const displayImage = Attachment_1.canDisplayImage(attachments);
             if (displayImage &&
                 !imageBroken &&
-                ((ImageGrid_1.isImage(attachments) && ImageGrid_1.hasImage(attachments)) ||
-                    (ImageGrid_1.isVideo(attachments) && ImageGrid_1.hasVideoScreenshot(attachments)))) {
+                ((Attachment_1.isImage(attachments) && Attachment_1.hasImage(attachments)) ||
+                    (Attachment_1.isVideo(attachments) && Attachment_1.hasVideoScreenshot(attachments)))) {
                 return (react_1.default.createElement("div", {
                     className: classnames_1.default('module-message__attachment-container', withContentAbove
                         ? 'module-message__attachment-container--with-content-above'
@@ -163,7 +154,7 @@
                 },
                     react_1.default.createElement(ImageGrid_1.ImageGrid, { attachments: attachments, withContentAbove: withContentAbove, withContentBelow: withContentBelow, bottomOverlay: !collapseMetadata, i18n: i18n, onError: this.handleImageErrorBound, onClickAttachment: onClickAttachment })));
             }
-            else if (!firstAttachment.pending && isAudio(attachments)) {
+            else if (!firstAttachment.pending && Attachment_1.isAudio(attachments)) {
                 return (react_1.default.createElement("audio", {
                     controls: true, className: classnames_1.default('module-message__audio-attachment', withContentBelow
                         ? 'module-message__audio-attachment--with-content-below'
@@ -175,7 +166,7 @@
             }
             else {
                 const { pending, fileName, fileSize, contentType } = firstAttachment;
-                const extension = getExtension({ contentType, fileName });
+                const extension = Attachment_1.getExtensionForDisplay({ contentType, fileName });
                 const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
                 return (react_1.default.createElement("div", {
                     className: classnames_1.default('module-message__generic-attachment', withContentBelow
@@ -210,7 +201,7 @@
             }
             const withContentAbove = Boolean(quote) ||
                 (conversationType === 'group' && direction === 'incoming');
-            const previewHasImage = first.image && ImageGrid_1.isImageAttachment(first.image);
+            const previewHasImage = first.image && Attachment_1.isImageAttachment(first.image);
             const width = first.image && first.image.width;
             const isFullSizeImage = width && width >= MINIMUM_LINK_PREVIEW_IMAGE_WIDTH;
             return (react_1.default.createElement("div", {
@@ -371,7 +362,7 @@
         getWidth() {
             const { attachments, previews } = this.props;
             if (attachments && attachments.length) {
-                const dimensions = ImageGrid_1.getGridDimensions(attachments);
+                const dimensions = Attachment_1.getGridDimensions(attachments);
                 if (dimensions) {
                     return dimensions.width;
                 }
@@ -382,10 +373,10 @@
                     return;
                 }
                 const { width } = first.image;
-                if (ImageGrid_1.isImageAttachment(first.image) &&
+                if (Attachment_1.isImageAttachment(first.image) &&
                     width &&
                     width >= MINIMUM_LINK_PREVIEW_IMAGE_WIDTH) {
-                    const dimensions = ImageGrid_1.getImageDimensions(first.image);
+                    const dimensions = Attachment_1.getImageDimensions(first.image);
                     if (dimensions) {
                         return dimensions.width;
                     }
@@ -400,10 +391,10 @@
                 return false;
             }
             if (attachments && attachments.length) {
-                const displayImage = canDisplayImage(attachments);
+                const displayImage = Attachment_1.canDisplayImage(attachments);
                 return (displayImage &&
-                    ((ImageGrid_1.isImage(attachments) && ImageGrid_1.hasImage(attachments)) ||
-                        (ImageGrid_1.isVideo(attachments) && ImageGrid_1.hasVideoScreenshot(attachments))));
+                    ((Attachment_1.isImage(attachments) && Attachment_1.hasImage(attachments)) ||
+                        (Attachment_1.isVideo(attachments) && Attachment_1.hasVideoScreenshot(attachments))));
             }
             if (previews && previews.length) {
                 const first = previews[0];
@@ -411,7 +402,7 @@
                 if (!image) {
                     return false;
                 }
-                return ImageGrid_1.isImageAttachment(image);
+                return Attachment_1.isImageAttachment(image);
             }
             return false;
         }
@@ -451,37 +442,4 @@
         }
     }
     exports.Message = Message;
-    function getExtension({ fileName, contentType, }) {
-        if (fileName && fileName.indexOf('.') >= 0) {
-            const lastPeriod = fileName.lastIndexOf('.');
-            const extension = fileName.slice(lastPeriod + 1);
-            if (extension.length) {
-                return extension;
-            }
-        }
-        if (!contentType) {
-            return null;
-        }
-        const slash = contentType.indexOf('/');
-        if (slash >= 0) {
-            return contentType.slice(slash + 1);
-        }
-        return null;
-    }
-    exports.getExtension = getExtension;
-    function isAudio(attachments) {
-        return (attachments &&
-            attachments[0] &&
-            attachments[0].contentType &&
-            MIME.isAudio(attachments[0].contentType));
-    }
-    function canDisplayImage(attachments) {
-        const { height, width } = attachments && attachments[0] ? attachments[0] : { height: 0, width: 0 };
-        return (height &&
-            height > 0 &&
-            height <= 4096 &&
-            width &&
-            width > 0 &&
-            width <= 4096);
-    }
 })();

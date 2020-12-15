@@ -5,6 +5,7 @@
 
   const exports = window.signal = {};
 
+  const { bindActionCreators } = window.redux;
   const Backbone = window.ts.backbone;
   const Crypto = window.crypto;
   const Data = window.data;
@@ -35,9 +36,6 @@
     ConversationHeader,
   } = window.ts.components.conversation.ConversationHeader;
   const {
-    ConversationListItem,
-  } = window.ts.components.ConversationListItem;
-  const {
     EmbeddedContact,
   } = window.ts.components.conversation.EmbeddedContact;
   const { Emojify } = window.ts.components.conversation.Emojify;
@@ -49,7 +47,6 @@
   const {
     MediaGallery,
   } = window.ts.components.conversation.media_gallery.MediaGallery;
-  const { MainHeader } = window.ts.components.MainHeader;
   const { Message } = window.ts.components.conversation.Message;
   const { MessageBody } = window.ts.components.conversation.MessageBody;
   const {
@@ -74,6 +71,12 @@
   const {
     VerificationNotification,
   } = window.ts.components.conversation.VerificationNotification;
+
+  // State
+  const { createLeftPane } = window.ts.state.roots.createLeftPane;
+  const { createStore } = window.ts.state.createStore;
+  const conversationsDuck = window.ts.state.ducks.conversations;
+  const userDuck = window.ts.state.ducks.user;
 
   // Migrations
   const {
@@ -206,13 +209,11 @@
       ContactListItem,
       ContactName,
       ConversationHeader,
-      ConversationListItem,
       EmbeddedContact,
       Emojify,
       GroupNotification,
       Lightbox,
       LightboxGallery,
-      MainHeader,
       MediaGallery,
       Message,
       MessageBody,
@@ -227,6 +228,20 @@
       },
       TypingBubble,
       VerificationNotification,
+    };
+
+    const Roots = {
+      createLeftPane,
+    };
+    const Ducks = {
+      conversations: conversationsDuck,
+      user: userDuck,
+    };
+    const State = {
+      bindActionCreators,
+      createStore,
+      Roots,
+      Ducks,
     };
 
     const Types = {
@@ -267,6 +282,7 @@
       OS,
       RefreshSenderCertificate,
       Settings,
+      State,
       Types,
       Util,
       Views,

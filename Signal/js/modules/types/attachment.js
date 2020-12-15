@@ -26,7 +26,7 @@
   //   contentType: MIMEType
   //   data: ArrayBuffer
   //   digest: ArrayBuffer
-  //   fileName: string | null
+  //   fileName?: string
   //   flags: null
   //   key: ArrayBuffer
   //   size: integer
