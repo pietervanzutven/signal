@@ -62,6 +62,17 @@ window.matchMedia && window.matchMedia('(max-width: 600px)').addListener(() => {
   }
 });
 
+window.onload = () => {
+    storage.onready(() => {
+        const color = Windows.UI.ViewManagement.UISettings().getColorValue(Windows.UI.ViewManagement.UIColorType.background);
+        if (color.b === 255) {
+            storage.put('theme-setting', 'light');
+        } else {
+            storage.put('theme-setting', 'dark');
+        }
+    });
+}
+
 const version = Windows.System.Profile.AnalyticsInfo.versionInfo.deviceFamilyVersion;
 const appInstance = Windows.System.Diagnostics.ProcessDiagnosticInfo.getForCurrentProcess().processId;
 const process = {
