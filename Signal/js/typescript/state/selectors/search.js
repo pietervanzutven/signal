@@ -10,6 +10,7 @@
     const lodash_1 = window.lodash;
     const reselect_1 = window.reselect;
     const conversations_1 = window.ts.state.selectors.conversations;
+    const user_1 = window.ts.state.selectors.user;
     exports.getSearch = (state) => state.search;
     exports.getQuery = reselect_1.createSelector(exports.getSearch, (state) => state.query);
     exports.getSelectedMessage = reselect_1.createSelector(exports.getSearch, (state) => state.selectedMessage);
@@ -19,10 +20,11 @@
     });
     exports.getSearchResults = reselect_1.createSelector([
         exports.getSearch,
+        user_1.getRegionCode,
         conversations_1.getConversationLookup,
         conversations_1.getSelectedConversation,
         exports.getSelectedMessage,
-    ], (state, lookup, selectedConversation, selectedMessage) => {
+    ], (state, regionCode, lookup, selectedConversation, selectedMessage) => {
         return {
             contacts: lodash_1.compact(state.contacts.map(id => {
                 const value = lookup[id];
@@ -45,6 +47,7 @@
                 }
                 return message;
             }),
+            regionCode: regionCode,
             searchTerm: state.query,
             showStartNewConversation: Boolean(state.normalizedPhoneNumber && !lookup[state.normalizedPhoneNumber]),
         };

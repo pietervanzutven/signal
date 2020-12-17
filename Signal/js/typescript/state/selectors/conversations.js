@@ -7,7 +7,6 @@
     const exports = window.ts.state.selectors.conversations = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = window.lodash;
     const reselect_1 = window.reselect;
     const PhoneNumber_1 = window.ts.types.PhoneNumber;
     const user_1 = window.ts.state.selectors.user;
@@ -17,6 +16,9 @@
     });
     exports.getSelectedConversation = reselect_1.createSelector(exports.getConversations, (state) => {
         return state.selectedConversation;
+    });
+    exports.getShowArchived = reselect_1.createSelector(exports.getConversations, (state) => {
+        return Boolean(state.showArchived);
     });
     function getConversationTitle(conversation, options) {
         if (conversation.name) {
@@ -54,20 +56,30 @@
         };
     };
     exports.getConversationComparator = reselect_1.createSelector(user_1.getIntl, user_1.getRegionCode, exports._getConversationComparator);
-    exports._getLeftPaneList = (lookup, comparator, selectedConversation) => {
+    exports._getLeftPaneLists = (lookup, comparator, selectedConversation) => {
         const values = Object.values(lookup);
-        const filtered = lodash_1.compact(values.map(conversation => {
+        const sorted = values.sort(comparator);
+        const conversations = [];
+        const archivedConversations = [];
+        const max = sorted.length;
+        for (let i = 0; i < max; i += 1) {
+            let conversation = sorted[i];
             if (!conversation.activeAt) {
-                return null;
+                continue;
             }
             if (selectedConversation === conversation.id) {
-                return Object.assign({}, conversation, { isSelected: true });
+                conversation = Object.assign({}, conversation, { isSelected: true });
             }
-            return conversation;
-        }));
-        return filtered.sort(comparator);
+            if (conversation.isArchived) {
+                archivedConversations.push(conversation);
+            }
+            else {
+                conversations.push(conversation);
+            }
+        }
+        return { conversations, archivedConversations };
     };
-    exports.getLeftPaneList = reselect_1.createSelector(exports.getConversationLookup, exports.getConversationComparator, exports.getSelectedConversation, exports._getLeftPaneList);
+    exports.getLeftPaneLists = reselect_1.createSelector(exports.getConversationLookup, exports.getConversationComparator, exports.getSelectedConversation, exports._getLeftPaneLists);
     exports.getMe = reselect_1.createSelector([exports.getConversationLookup, user_1.getUserNumber], (lookup, ourNumber) => {
         return lookup[ourNumber];
     });

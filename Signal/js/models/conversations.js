@@ -312,6 +312,7 @@
       const result = {
         id: this.id,
 
+        isArchived: this.get('isArchived'),
         activeAt: this.get('active_at'),
         avatarPath: this.getAvatarPath(),
         color,
@@ -897,6 +898,7 @@
           lastMessageStatus: 'sending',
           active_at: now,
           timestamp: now,
+          isArchived: false,
         });
         await window.Signal.Data.updateConversation(this.id, this.attributes, {
           Conversation: Whisper.Conversation,
@@ -1176,6 +1178,13 @@
           Conversation: Whisper.Conversation,
         });
       }
+    },
+
+    async setArchived(isArchived) {
+      this.set({ isArchived });
+      await window.Signal.Data.updateConversation(this.id, this.attributes, {
+        Conversation: Whisper.Conversation,
+      });
     },
 
     async updateExpirationTimer(

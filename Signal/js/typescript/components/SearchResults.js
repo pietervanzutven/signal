@@ -14,8 +14,15 @@
     const MessageSearchResult_1 = window.ts.components.MessageSearchResult;
     const StartNewConversation_1 = window.ts.components.StartNewConversation;
     class SearchResults extends react_1.default.Component {
+        constructor() {
+            super(...arguments);
+            this.handleStartNewConversation = () => {
+                const { regionCode, searchTerm, startNewConversation } = this.props;
+                startNewConversation(searchTerm, { regionCode });
+            };
+        }
         render() {
-            const { conversations, contacts, hideMessagesHeader, i18n, messages, openConversation, startNewConversation, searchTerm, showStartNewConversation, } = this.props;
+            const { conversations, contacts, hideMessagesHeader, i18n, messages, openConversation, searchTerm, showStartNewConversation, } = this.props;
             const haveConversations = conversations && conversations.length;
             const haveContacts = contacts && contacts.length;
             const haveMessages = messages && messages.length;
@@ -25,7 +32,7 @@
                 !haveMessages;
             return (react_1.default.createElement("div", { className: "module-search-results" },
                 noResults ? (react_1.default.createElement("div", { className: "module-search-results__no-results" }, i18n('noSearchResults', [searchTerm]))) : null,
-                showStartNewConversation ? (react_1.default.createElement(StartNewConversation_1.StartNewConversation, { phoneNumber: searchTerm, i18n: i18n, onClick: startNewConversation })) : null,
+                showStartNewConversation ? (react_1.default.createElement(StartNewConversation_1.StartNewConversation, { phoneNumber: searchTerm, i18n: i18n, onClick: this.handleStartNewConversation })) : null,
                 haveConversations ? (react_1.default.createElement("div", { className: "module-search-results__conversations" },
                     react_1.default.createElement("div", { className: "module-search-results__conversations-header" }, i18n('conversationsHeader')),
                     conversations.map(conversation => (react_1.default.createElement(ConversationListItem_1.ConversationListItem, Object.assign({ key: conversation.phoneNumber }, conversation, { onClick: openConversation, i18n: i18n })))))) : null,

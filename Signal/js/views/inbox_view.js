@@ -243,7 +243,7 @@
       window.location.reload();
     },
     async openConversation(id, messageId) {
-      const conversation = await window.ConversationController.getOrCreateAndWait(
+      const conversation = await ConversationController.getOrCreateAndWait(
         id,
         'private'
         );

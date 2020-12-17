@@ -23,14 +23,9 @@
     const FilteredSmartMainHeader = MainHeader_1.SmartMainHeader;
     const mapStateToProps = (state) => {
         const showSearch = search_1.isSearching(state);
-        return {
-            i18n: user_1.getIntl(state),
-            me: conversations_1.getMe(state),
-            query: search_1.getQuery(state),
-            conversations: showSearch ? undefined : conversations_1.getLeftPaneList(state),
-            searchResults: showSearch ? search_1.getSearchResults(state) : undefined,
-            renderMainHeader: () => react_1.default.createElement(FilteredSmartMainHeader, null),
-        };
+        const lists = showSearch ? undefined : conversations_1.getLeftPaneLists(state);
+        const searchResults = showSearch ? search_1.getSearchResults(state) : undefined;
+        return Object.assign({}, lists, { searchResults, showArchived: conversations_1.getShowArchived(state), i18n: user_1.getIntl(state), renderMainHeader: () => react_1.default.createElement(FilteredSmartMainHeader, null) });
     };
     const smart = react_redux_1.connect(mapStateToProps, actions_1.mapDispatchToProps);
     exports.SmartLeftPane = smart(LeftPane_1.LeftPane);

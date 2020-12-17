@@ -74,7 +74,7 @@
                 react_1.default.createElement("div", { role: "button", onClick: this.showMenuBound, className: "module-conversation-header__gear-icon" })));
         }
         renderMenu(triggerId) {
-            const { i18n, isMe, isGroup, onDeleteMessages, onResetSession, onSetDisappearingMessages, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, timerOptions, } = this.props;
+            const { i18n, isMe, isGroup, isArchived, onDeleteMessages, onResetSession, onSetDisappearingMessages, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onMoveToInbox, timerOptions, } = this.props;
             const disappearingTitle = i18n('disappearingMessages');
             return (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
                 react_1.default.createElement(react_contextmenu_1.SubMenu, { title: disappearingTitle }, (timerOptions || []).map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
@@ -86,6 +86,7 @@
                 isGroup ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowGroupMembers }, i18n('showMembers'))) : null,
                 !isGroup && !isMe ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowSafetyNumber }, i18n('showSafetyNumber'))) : null,
                 !isGroup ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onResetSession }, i18n('resetSession'))) : null,
+                isArchived ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onMoveToInbox }, i18n('moveConversationToInbox'))) : (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onArchive }, i18n('archiveConversation'))),
                 react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onDeleteMessages }, i18n('deleteMessages'))));
         }
         render() {
