@@ -1,4 +1,4 @@
-﻿@charset "UTF-8";
+@charset "UTF-8";
 @font-face {
   font-family: 'Roboto-Light';
   src: url("../fonts/Roboto-Light.ttf") format("truetype"); }
@@ -2859,13 +2859,22 @@ body.dark-theme {
   color: #eeefef; }
 
 .dark-theme .module-avatar__icon--group {
-  background-color: #eeefef; }
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='28px' height='28px' viewBox='0 0 28 28' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->    <title>Group/group-28</title>    <desc>Created with Sketch.</desc>    <g>        <path d='M18.7272727,13.2857143 C20.6890909,13.2857143 22.2609091,11.6585714 22.2609091,9.64285714 C22.2609091,7.62714286 20.6890909,6 18.7272727,6 C16.7654545,6 15.1818182,7.62714286 15.1818182,9.64285714 C15.1818182,11.6585714 16.7654545,13.2857143 18.7272727,13.2857143 Z M9.27272727,13.2857143 C11.2345455,13.2857143 12.8063636,11.6585714 12.8063636,9.64285714 C12.8063636,7.62714286 11.2345455,6 9.27272727,6 C7.31090909,6 5.72727273,7.62714286 5.72727273,9.64285714 C5.72727273,11.6585714 7.31090909,13.2857143 9.27272727,13.2857143 Z M9.27272727,15.7142857 C6.51909091,15.7142857 1,17.135 1,19.9642857 L1,23 L17.5454545,23 L17.5454545,19.9642857 C17.5454545,17.135 12.0263636,15.7142857 9.27272727,15.7142857 Z M18.7272727,15.7142857 C18.3845455,15.7142857 17.9945455,15.7385714 17.5809091,15.775 C18.9518182,16.795 19.9090909,18.1671429 19.9090909,19.9642857 L19.9090909,23 L27,23 L27,19.9642857 C27,17.135 21.4809091,15.7142857 18.7272727,15.7142857 Z' id='path-1' fill='%23EEEFEF'></path>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
 
 .dark-theme .module-avatar__icon--direct {
-  background-color: #eeefef; }
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='28px' height='28px' viewBox='0 0 28 28' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->    <title>Profile/profile-28</title>    <desc>Created with Sketch.</desc>    <g>        <path d='M14,14 C16.7625,14 19,11.7625 19,9 C19,6.2375 16.7625,4 14,4 C11.2375,4 9,6.2375 9,9 C9,11.7625 11.2375,14 14,14 Z M14,16.5 C10.6625,16.5 4,18.175 4,21.5 L4,24 L24,24 L24,21.5 C24,18.175 17.3375,16.5 14,16.5 Z' id='path-1' fill='%23EEEFEF'></path>    </g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
 
 .dark-theme .module-avatar__icon--note-to-self {
-  background-color: #eeefef; }
+  background-image: url("data:image/svg+xml;utf8,<svg id='Export' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><title>note-28</title><path d='M21,3H7A2,2,0,0,0,5,5V23a2,2,0,0,0,2,2H21a2,2,0,0,0,2-2V5A2,2,0,0,0,21,3ZM17,19.5H7V18H17ZM21,16H7V14.5H21Zm0-3.5H7V11H21ZM21,9H7V7.5H21Z' fill='%23EEEFEF'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
 
 .dark-theme .module-avatar--no-image {
   background-color: #5a5a63; }
