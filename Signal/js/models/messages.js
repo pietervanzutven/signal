@@ -457,7 +457,7 @@
         snippet: this.get('snippet'),
       };
     },
-    getPropsForMessage() {
+    getPropsForMessage(options) {
       const phoneNumber = this.getSource();
       const contact = this.findAndFormatContact(phoneNumber);
       const contactModel = this.findContact(phoneNumber);
@@ -496,7 +496,7 @@
           .filter(attachment => !attachment.error)
           .map(attachment => this.getPropsForAttachment(attachment)),
         previews: this.getPropsForPreview(),
-        quote: this.getPropsForQuote(),
+        quote: this.getPropsForQuote(options),
         authorAvatarPath,
         isExpired: this.hasExpired,
         expirationLength,
@@ -608,7 +608,8 @@
         }
       )));
     },
-    getPropsForQuote() {
+    getPropsForQuote(options = {}) {
+      const { noClick } = options;
       const quote = this.get('quote');
       if (!quote) {
         return null;
@@ -627,13 +628,15 @@
       const authorProfileName = contact ? contact.getProfileName() : null;
       const authorName = contact ? contact.getName() : null;
       const isFromMe = contact ? contact.id === this.OUR_NUMBER : false;
-      const onClick = () => {
-        this.trigger('scroll-to-message', {
-          author,
-          id,
-          referencedMessageNotFound,
-        });
-      };
+      const onClick = noClick
+        ? null
+        : () => {
+            this.trigger('scroll-to-message', {
+              author,
+              id,
+              referencedMessageNotFound,
+            });
+          };
 
       const firstAttachment = quote.attachments && quote.attachments[0];
 
@@ -768,12 +771,13 @@
         sentAt: this.get('sent_at'),
         receivedAt: this.get('received_at'),
         message: Object.assign({},
-          this.getPropsForMessage(),
+          this.getPropsForMessage({ noClick: true }),
           {
             disableMenu: true,
             // To ensure that group avatar doesn't show up
             conversationType: 'direct',
-          }),
+          }
+        ),
         errors,
         contacts: sortedContacts,
       };
