@@ -421,6 +421,7 @@
     <Content Include="node_modules\react-contextmenu\MenuItem.js" />
     <Content Include="node_modules\react-contextmenu\SubMenu.js" />
     <Content Include="node_modules\react-redux\react-redux.js" />
+    <Content Include="node_modules\react-virtualized\react-virtualized.js" />
     <Content Include="node_modules\read-last-lines\index.js" />
     <Content Include="node_modules\redux-logger\redux-logger.js" />
     <Content Include="node_modules\redux-promise-middleware\index.js" />

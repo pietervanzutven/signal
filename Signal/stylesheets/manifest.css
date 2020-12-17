@@ -5763,8 +5763,10 @@ body.dark-theme {
 
 .module-left-pane__list {
   flex-grow: 1;
-  flex-shrink: 1;
-  overflow-y: scroll; }
+  flex-shrink: 1; }
+
+.module-left-pane__virtual-list {
+  outline: none; }
 
 .module-start-new-conversation {
   display: flex;

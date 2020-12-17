@@ -60,13 +60,13 @@
                 lastMessage && lastMessage.status ? (react_1.default.createElement("div", { className: classnames_1.default('module-conversation-list-item__message__status-icon', `module-conversation-list-item__message__status-icon--${lastMessage.status}`) })) : null));
         }
         render() {
-            const { unreadCount, onClick, id, isSelected } = this.props;
+            const { unreadCount, onClick, id, isSelected, style } = this.props;
             return (react_1.default.createElement("div", {
                 role: "button", onClick: () => {
                     if (onClick) {
                         onClick(id);
                     }
-                }, className: classnames_1.default('module-conversation-list-item', unreadCount > 0 ? 'module-conversation-list-item--has-unread' : null, isSelected ? 'module-conversation-list-item--is-selected' : null)
+                }, style: style, className: classnames_1.default('module-conversation-list-item', unreadCount > 0 ? 'module-conversation-list-item--has-unread' : null, isSelected ? 'module-conversation-list-item--is-selected' : null)
             },
                 this.renderAvatar(),
                 react_1.default.createElement("div", { className: "module-conversation-list-item__content" },
