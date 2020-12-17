@@ -1266,6 +1266,8 @@
       let promise;
 
       if (this.isMe()) {
+        const flags =
+          textsecure.protobuf.DataMessage.Flags.EXPIRATION_TIMER_UPDATE;
         const dataMessage = await textsecure.messaging.getMessageProto(
           this.get('id'),
           null,
@@ -1274,7 +1276,8 @@
           [],
           message.get('sent_at'),
           expireTimer,
-          profileKey
+          profileKey,
+          flags
         );
         return message.sendSyncMessageOnly(dataMessage);
       }
