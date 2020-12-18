@@ -21,9 +21,10 @@
         const avatarPath = avatar && avatar.avatar && avatar.avatar.path;
         const pending = avatar && avatar.avatar && avatar.avatar.pending;
         const name = Contact_1.getName(contact) || '';
+        const spinnerSize = size < 50 ? 'small' : 'normal';
         if (pending) {
             return (react_1.default.createElement("div", { className: "module-embedded-contact__spinner-container" },
-                react_1.default.createElement(Spinner_1.Spinner, { small: size < 50, direction: direction })));
+                react_1.default.createElement(Spinner_1.Spinner, { size: spinnerSize, direction: direction })));
         }
         return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: "grey", conversationType: "direct", i18n: i18n, name: name, size: size }));
     }

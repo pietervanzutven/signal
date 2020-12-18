@@ -14,6 +14,7 @@
     saveMessage,
     setAttachmentDownloadJobPending,
   } = window.data;
+  const { stringFromBytes } = window.crypto;
 
   window.attachment_downloads = {
     start,
@@ -321,6 +322,19 @@
     }
 
     const logPrefix = `${message.idForLogging()} (type: ${type}, index: ${index})`;
+
+    if (type === 'long-message') {
+      try {
+        const { data } = await Signal.Migrations.loadAttachmentData(attachment);
+        message.set({
+          body: attachment.isError ? message.get('body') : stringFromBytes(data),
+          bodyPending: false,
+        });
+      } finally {
+        Signal.Migrations.deleteAttachmentData(attachment.path);
+      }
+      return;
+    }
 
     if (type === 'attachment') {
       const attachments = message.get('attachments');

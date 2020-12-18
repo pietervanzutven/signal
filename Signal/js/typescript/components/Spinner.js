@@ -13,22 +13,10 @@
     const classnames_1 = __importDefault(window.classnames);
     class Spinner extends react_1.default.Component {
         render() {
-            const { small, direction } = this.props;
-            return (react_1.default.createElement("div", {
-                className: classnames_1.default('module-spinner__container', direction ? `module-spinner__container--${direction}` : null, small ? 'module-spinner__container--small' : null, small && direction
-                    ? `module-spinner__container--small-${direction}`
-                    : null)
-            },
-                react_1.default.createElement("div", {
-                    className: classnames_1.default('module-spinner__circle', direction ? `module-spinner__circle--${direction}` : null, small ? 'module-spinner__circle--small' : null, small && direction
-                        ? `module-spinner__circle--small-${direction}`
-                        : null)
-                }),
-                react_1.default.createElement("div", {
-                    className: classnames_1.default('module-spinner__arc', direction ? `module-spinner__arc--${direction}` : null, small ? 'module-spinner__arc--small' : null, small && direction
-                        ? `module-spinner__arc--small-${direction}`
-                        : null)
-                })));
+            const { size, direction } = this.props;
+            return (react_1.default.createElement("div", { className: classnames_1.default('module-spinner__container', `module-spinner__container--${size}`, direction ? `module-spinner__container--${direction}` : null, direction ? `module-spinner__container--${size}-${direction}` : null) },
+                react_1.default.createElement("div", { className: classnames_1.default('module-spinner__circle', `module-spinner__circle--${size}`, direction ? `module-spinner__circle--${direction}` : null, direction ? `module-spinner__circle--${size}-${direction}` : null) }),
+                react_1.default.createElement("div", { className: classnames_1.default('module-spinner__arc', `module-spinner__arc--${size}`, direction ? `module-spinner__arc--${direction}` : null, direction ? `module-spinner__arc--${size}-${direction}` : null) })));
         }
     }
     exports.Spinner = Spinner;

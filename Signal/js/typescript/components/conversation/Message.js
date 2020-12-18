@@ -94,7 +94,7 @@
             });
         }
         renderMetadata() {
-            const { collapseMetadata, direction, expirationLength, expirationTimestamp, i18n, status, text, timestamp, } = this.props;
+            const { collapseMetadata, direction, expirationLength, expirationTimestamp, i18n, status, text, textPending, timestamp, } = this.props;
             if (collapseMetadata) {
                 return null;
             }
@@ -113,7 +113,9 @@
                 }, i18n('sendFailed'))) : (react_1.default.createElement(Timestamp_1.Timestamp, { i18n: i18n, timestamp: timestamp, extended: true, direction: direction, withImageNoCaption: withImageNoCaption, module: "module-message__metadata__date" })),
                 expirationLength && expirationTimestamp ? (react_1.default.createElement(ExpireTimer_1.ExpireTimer, { direction: direction, expirationLength: expirationLength, expirationTimestamp: expirationTimestamp, withImageNoCaption: withImageNoCaption })) : null,
                 react_1.default.createElement("span", { className: "module-message__metadata__spacer" }),
-                direction === 'outgoing' && status !== 'error' ? (react_1.default.createElement("div", {
+                textPending ? (react_1.default.createElement("div", { className: "module-message__metadata__spinner-container" },
+                    react_1.default.createElement(Spinner_1.Spinner, { size: "mini", direction: direction }))) : null,
+                !textPending && direction === 'outgoing' && status !== 'error' ? (react_1.default.createElement("div", {
                     className: classnames_1.default('module-message__metadata__status-icon', `module-message__metadata__status-icon--${status}`, withImageNoCaption
                         ? 'module-message__metadata__status-icon--with-image-no-caption'
                         : null)
@@ -176,7 +178,7 @@
                         : null)
                 },
                     pending ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__spinner-container" },
-                        react_1.default.createElement(Spinner_1.Spinner, { small: true, direction: direction }))) : (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-container" },
+                        react_1.default.createElement(Spinner_1.Spinner, { size: "small", direction: direction }))) : (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-container" },
                             react_1.default.createElement("div", { className: "module-message__generic-attachment__icon" }, extension ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon__extension" }, extension)) : null),
                             isDangerous ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous-container" },
                                 react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous" }))) : null)),
@@ -266,7 +268,7 @@
                 react_1.default.createElement(Avatar_1.Avatar, { avatarPath: authorAvatarPath, color: authorColor, conversationType: "direct", i18n: i18n, name: authorName, phoneNumber: authorPhoneNumber, profileName: authorProfileName, size: 36 })));
         }
         renderText() {
-            const { text, i18n, direction, status } = this.props;
+            const { text, textPending, i18n, direction, status } = this.props;
             const contents = direction === 'incoming' && status === 'error'
                 ? i18n('incomingError')
                 : text;
@@ -278,7 +280,7 @@
                     ? 'module-message__text--error'
                     : null)
             },
-                react_1.default.createElement(MessageBody_1.MessageBody, { text: contents || '', i18n: i18n })));
+                react_1.default.createElement(MessageBody_1.MessageBody, { text: contents || '', i18n: i18n, textPending: textPending })));
         }
         renderError(isCorrectSide) {
             const { status, direction } = this.props;
