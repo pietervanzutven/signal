@@ -16,7 +16,6 @@
     class LeftPane extends react_1.default.Component {
         constructor() {
             super(...arguments);
-            this.listRef = react_1.default.createRef();
             this.renderRow = ({ index, key, style, }) => {
                 const { archivedConversations, conversations, i18n, openConversationInternal, showArchived, } = this.props;
                 if (!conversations || !archivedConversations) {
@@ -30,20 +29,6 @@
                     : conversations[index];
                 return (react_1.default.createElement(ConversationListItem_1.ConversationListItem, Object.assign({ key: key, style: style }, conversation, { onClick: openConversationInternal, i18n: i18n })));
             };
-        }
-        scrollToTop() {
-            if (this.listRef && this.listRef.current) {
-                const { current } = this.listRef;
-                current.scrollToRow(0);
-            }
-        }
-        componentDidUpdate(prevProps) {
-            const { showArchived, searchResults } = this.props;
-            const isNotShowingSearchResults = !searchResults;
-            const hasArchiveViewChanged = showArchived !== prevProps.showArchived;
-            if (isNotShowingSearchResults && hasArchiveViewChanged) {
-                this.scrollToTop();
-            }
         }
         renderArchivedButton({ key, style, }) {
             const { archivedConversations, i18n, showArchivedConversations, } = this.props;
@@ -67,12 +52,18 @@
             const length = showArchived
                 ? archivedConversations.length
                 : conversations.length + (archivedConversations.length ? 1 : 0);
+            const archived = showArchived ? (react_1.default.createElement("div", { className: "module-left-pane__archive-helper-text", key: 0 }, i18n('archiveHelperText'))) : null;
+            // We ensure that the listKey differs between inbox and archive views, which ensures
+            //   that AutoSizer properly detects the new size of its slot in the flexbox. The
+            //   archive explainer text at the top of the archive view causes problems otherwise.
+            //   It also ensures that we scroll to the top when switching views.
+            const listKey = showArchived ? 1 : 0;
             // Note: conversations is not a known prop for List, but it is required to ensure that
             //   it re-renders when our conversation data changes. Otherwise it would just render
             //   on startup and scroll.
-            return (react_1.default.createElement("div", { className: "module-left-pane__list" },
-                showArchived ? (react_1.default.createElement("div", { className: "module-left-pane__archive-helper-text" }, i18n('archiveHelperText'))) : null,
-                react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => (react_1.default.createElement(react_virtualized_1.List, { className: "module-left-pane__virtual-list", ref: this.listRef, conversations: conversations, height: height, rowCount: length, rowHeight: 64, rowRenderer: this.renderRow, width: width })))));
+            const list = (react_1.default.createElement("div", { className: "module-left-pane__list", key: listKey },
+                react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => (react_1.default.createElement(react_virtualized_1.List, { className: "module-left-pane__virtual-list", conversations: conversations, height: height, rowCount: length, rowHeight: 64, rowRenderer: this.renderRow, width: width })))));
+            return [archived, list];
         }
         renderArchivedHeader() {
             const { i18n, showInbox } = this.props;
