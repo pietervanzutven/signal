@@ -15,6 +15,7 @@
     const link_previews_1 = window.link_previews;
     const linkify = linkify_it_1.default();
     const SUPPORTED_PROTOCOLS = /^(http|https):/i;
+    const HAS_AT = /@/;
     class Linkify extends react_1.default.Component {
         render() {
             const { text, renderNonLink } = this.props;
@@ -36,7 +37,9 @@
                     results.push(renderNonLink({ text: textWithNoLink, key: count++ }));
                 }
                 const { url, text: originalText } = match;
-                if (SUPPORTED_PROTOCOLS.test(url) && !link_previews_1.isLinkSneaky(url)) {
+                if (SUPPORTED_PROTOCOLS.test(url) &&
+                    !link_previews_1.isLinkSneaky(url) &&
+                    !HAS_AT.test(url)) {
                     results.push(react_1.default.createElement("a", { key: count++, href: url }, originalText));
                 }
                 else {
