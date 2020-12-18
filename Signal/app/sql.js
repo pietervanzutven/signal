@@ -753,6 +753,10 @@
   }
 
   async function close() {
+    if (!db) {
+      return;
+    }
+
     const dbRef = db;
     db = null;
     await dbRef.close();
