@@ -124,8 +124,6 @@
     class Lightbox extends react_1.default.Component {
         constructor(props) {
             super(props);
-            this.containerRef = null;
-            this.videoRef = null;
             this.renderObject = ({ objectURL, contentType, i18n, }) => {
                 const isImageTypeSupported = GoogleChrome.isImageTypeSupported(contentType);
                 if (isImageTypeSupported) {
@@ -133,20 +131,20 @@
                 }
                 const isVideoTypeSupported = GoogleChrome.isVideoTypeSupported(contentType);
                 if (isVideoTypeSupported) {
-                    return (react_1.default.createElement("video", { role: "button", ref: this.captureVideoBound, onClick: this.playVideoBound, controls: true, style: styles.object, key: objectURL },
+                    return (react_1.default.createElement("video", { role: "button", ref: this.videoRef, onClick: this.playVideoBound, controls: true, style: styles.object, key: objectURL },
                         react_1.default.createElement("source", { src: objectURL })));
                 }
                 const isUnsupportedImageType = !isImageTypeSupported && MIME.isImage(contentType);
                 const isUnsupportedVideoType = !isVideoTypeSupported && MIME.isVideo(contentType);
                 if (isUnsupportedImageType || isUnsupportedVideoType) {
-                    return (react_1.default.createElement(Icon, { url: isUnsupportedVideoType ? 'images/video.svg' : 'images/image.svg', onClick: this.onObjectClick }));
+                    const iconUrl = isUnsupportedVideoType
+                        ? 'images/video.svg'
+                        : 'images/image.svg';
+                    return react_1.default.createElement(Icon, { url: iconUrl, onClick: this.onObjectClick });
                 }
                 // tslint:disable-next-line no-console
                 console.log('Lightbox: Unexpected content type', { contentType });
                 return react_1.default.createElement(Icon, { onClick: this.onObjectClick, url: "images/file.svg" });
-            };
-            this.setContainerRef = (value) => {
-                this.containerRef = value;
             };
             this.onClose = () => {
                 const { close } = this.props;
@@ -175,7 +173,7 @@
                 }
             };
             this.onContainerClick = (event) => {
-                if (event.target !== this.containerRef) {
+                if (this.containerRef && event.target !== this.containerRef.current) {
                     return;
                 }
                 this.onClose();
@@ -184,8 +182,9 @@
                 event.stopPropagation();
                 this.onClose();
             };
-            this.captureVideoBound = this.captureVideo.bind(this);
             this.playVideoBound = this.playVideo.bind(this);
+            this.videoRef = react_1.default.createRef();
+            this.containerRef = react_1.default.createRef();
         }
         componentDidMount() {
             const useCapture = true;
@@ -196,24 +195,25 @@
             const useCapture = true;
             document.removeEventListener('keyup', this.onKeyUp, useCapture);
         }
-        captureVideo(element) {
-            this.videoRef = element;
-        }
         playVideo() {
             if (!this.videoRef) {
                 return;
             }
-            if (this.videoRef.paused) {
+            const { current } = this.videoRef;
+            if (!current) {
+                return;
+            }
+            if (current.paused) {
                 // tslint:disable-next-line no-floating-promises
-                this.videoRef.play();
+                current.play();
             }
             else {
-                this.videoRef.pause();
+                current.pause();
             }
         }
         render() {
             const { caption, contentType, objectURL, onNext, onPrevious, onSave, i18n, } = this.props;
-            return (react_1.default.createElement("div", { style: styles.container, onClick: this.onContainerClick, ref: this.setContainerRef, role: "dialog" },
+            return (react_1.default.createElement("div", { style: styles.container, onClick: this.onContainerClick, ref: this.containerRef, role: "dialog" },
                 react_1.default.createElement("div", { style: styles.mainContainer },
                     react_1.default.createElement("div", { style: styles.controlsOffsetPlaceholder }),
                     react_1.default.createElement("div", { style: styles.objectContainer },

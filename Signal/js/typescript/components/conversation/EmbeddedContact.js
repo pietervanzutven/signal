@@ -12,9 +12,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
-    const Avatar_1 = window.ts.components.Avatar;
-    const Spinner_1 = window.ts.components.Spinner;
-    const Contact_1 = window.ts.types.Contact;
+    const _contactUtil_1 = window.ts.components.conversation._contactUtil;
     class EmbeddedContact extends react_1.default.Component {
         render() {
             const { contact, i18n, isIncoming, onClick, withContentAbove, withContentBelow, } = this.props;
@@ -27,35 +25,11 @@
                     ? 'module-embedded-contact--with-content-below'
                     : null), role: "button", onClick: onClick
             },
-                renderAvatar({ contact, i18n, size: 48, direction }),
+                _contactUtil_1.renderAvatar({ contact, i18n, size: 48, direction }),
                 react_1.default.createElement("div", { className: "module-embedded-contact__text-container" },
-                    renderName({ contact, isIncoming, module }),
-                    renderContactShorthand({ contact, isIncoming, module }))));
+                    _contactUtil_1.renderName({ contact, isIncoming, module }),
+                    _contactUtil_1.renderContactShorthand({ contact, isIncoming, module }))));
         }
     }
     exports.EmbeddedContact = EmbeddedContact;
-    // Note: putting these below the main component so style guide picks up EmbeddedContact
-    function renderAvatar({ contact, i18n, size, direction, }) {
-        const { avatar } = contact;
-        const avatarPath = avatar && avatar.avatar && avatar.avatar.path;
-        const pending = avatar && avatar.avatar && avatar.avatar.pending;
-        const name = Contact_1.getName(contact) || '';
-        if (pending) {
-            return (react_1.default.createElement("div", { className: "module-embedded-contact__spinner-container" },
-                react_1.default.createElement(Spinner_1.Spinner, { small: size < 50, direction: direction })));
-        }
-        return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: "grey", conversationType: "direct", i18n: i18n, name: name, size: size }));
-    }
-    exports.renderAvatar = renderAvatar;
-    function renderName({ contact, isIncoming, module, }) {
-        return (react_1.default.createElement("div", { className: classnames_1.default(`module-${module}__contact-name`, isIncoming ? `module-${module}__contact-name--incoming` : null) }, Contact_1.getName(contact)));
-    }
-    exports.renderName = renderName;
-    function renderContactShorthand({ contact, isIncoming, module, }) {
-        const { number: phoneNumber, email } = contact;
-        const firstNumber = phoneNumber && phoneNumber[0] && phoneNumber[0].value;
-        const firstEmail = email && email[0] && email[0].value;
-        return (react_1.default.createElement("div", { className: classnames_1.default(`module-${module}__contact-method`, isIncoming ? `module-${module}__contact-method--incoming` : null) }, firstNumber || firstEmail));
-    }
-    exports.renderContactShorthand = renderContactShorthand;
 })();

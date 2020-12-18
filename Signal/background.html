@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset='utf-8'>
@@ -38,6 +38,7 @@
       <div class='message'>{{ message }}</div>
     </div>
   </script>
+
   <script type='text/x-tmpl-mustache' id='conversation-loading-screen'>
     <div class='content'>
       <img src='images/icon_128.png'>
@@ -48,40 +49,16 @@
       </div>
     </div>
   </script>
+
   <script type='text/x-tmpl-mustache' id='two-column'>
     <div class='gutter'>
       <div class='network-status-container'></div>
-      <div class='main-header'>
-        <div class='main-header-placeholder'></div>
-        <div class='react-contextmenu-wrapper'>
-          <div class='module-conversation-header__gear-icon' alt='signal menu' role='button'></div>
-          <nav class='react-contextmenu menu-list'>
-            <div class='react-contextmenu-item show-settings'>{{ settings }}</div>
-            <div class='react-contextmenu-item show-debug-log'>{{ submitDebugLog }}</div>
-            <div class='react-contextmenu-item open-release-notes'>{{ openReleaseNotes }}</div>
-            <div class='react-contextmenu-item open-forums'>{{ openForums }}</div>
-            <div class='react-contextmenu-item open-support-page'>{{ openSupportPage }}</div>
-            <div class='react-contextmenu-item open-new-bug-form'>{{ openNewBugForm }}</div>
-            <div class='react-contextmenu-item show-about'>{{ showAbout }}</div>
-            <div class='react-contextmenu-item setup-as-new-device'>{{ setupAsNewDevice }}</div>
-            <div class='react-contextmenu-item setup-as-standalone'>{{ setupAsStandalone }}</div>
-          </nav>
+      <div class='left-pane-placeholder'></div>
         </div>
-      </div>
-      <div class='tool-bar clearfix'>
-        <input type='search' class='search' placeholder='{{ searchForPeopleOrGroups }}' dir='auto'>
-        <span class='search-icon'></span>
-      </div>
-      <div class='content'>
-        <div class='conversations inbox'></div>
-        <div class='conversations search-results hide'>
-          <div class='new-contact contact hide'></div>
-        </div>
-      </div>
-    </div>
     <div class='conversation-stack'>
       <div class='conversation placeholder'>
         <div class='conversation-header'></div>
+        <div class='container'>
         <div class='content'>
           <img src='images/icon_128.png' />
           <h3>{{ welcomeToSignal }}</h3>
@@ -89,27 +66,30 @@
         </div>
       </div>
     </div>
+    </div>
     <div class='lightbox-container'></div>
   </script>
+
   <script type='text/x-tmpl-mustache' id='scroll-down-button-view'>
     <button class='text module-scroll-down__button {{ buttonClass }}' alt='{{ moreBelow }}'>
       <div class='module-scroll-down__icon'></div>
     </button>
   </script>
+
   <script type='text/x-tmpl-mustache' id='last-seen-indicator-view'>
     <div class='module-last-seen-indicator__bar'/>
     <div class='module-last-seen-indicator__text'>
       {{ unreadMessages }}
     </div>
   </script>
+
   <script type='text/x-tmpl-mustache' id='expired_alert'>
     <a target='_blank' href='https://signal.org/download/'>
       <button class='upgrade'>{{ upgrade }}</button>
     </a>
-    <div class='message'>
       {{ expiredWarning }}
-    </div>
   </script>
+
   <script type='text/x-tmpl-mustache' id='banner'>
     <div class='body'>
       <span class='icon warning'></span>
@@ -117,12 +97,11 @@
       <span class='icon dismiss'></span>
     </div>
   </script>
+
   <script type='text/x-tmpl-mustache' id='toast'>
     {{ toastMessage }}
   </script>
-  <script type='text/x-tmpl-mustache' id='hint'>
-    <p> {{ content }}</p>
-  </script>
+
   <script type='text/x-tmpl-mustache' id='conversation'>
     <div class='conversation-header'></div>
     <div class='main panel'>
@@ -133,7 +112,6 @@
       </div>
 
       <div class='bottom-bar' id='footer'>
-          <div class='emoji-panel-container'></div>
           <div class='attachment-list'></div>
           <div class='compose'>
             <form class='send clearfix file-input'>
@@ -141,9 +119,6 @@
                 <textarea class='send-message' placeholder='{{ send-message }}' rows='1' dir='auto'></textarea>
                 <div class='capture-audio'>
                     <button class='microphone'></button>
-                </div>
-                <div class='android-length-warning'>
-                    {{ android-length-warning }}
                 </div>
                 <div class='choose-file'>
                     <button class='paperclip thumbnail'></button>
@@ -153,16 +128,20 @@
           </form>
       </div>
     </div>
+    </div>
   </script>
+
   <script type='text/x-tmpl-mustache' id='message-list'>
     <div class='messages'></div>
     <div class='typing-container'></div>
   </script>
+
   <script type='text/x-tmpl-mustache' id='recorder'>
       <button class='finish'><span class='icon'></span></button>
       <span class='time'>0:00</span>
       <button class='close'><span class='icon'></span></button>
   </script>
+
   <script type='text/x-tmpl-mustache' id='confirmation-dialog'>
     <div class="content">
       <div class='message'>{{ message }}</div>
@@ -174,26 +153,7 @@
       </div>
     </div>
   </script>
-  <script type='text/x-tmpl-mustache' id='file-view'>
-    <div class='icon {{ mediaType }}'></div>
-    <div class='text'>
-      <div class='fileName' title='{{ altText }}'>
-        {{ fileName }}
-      </div>
-      <div class='fileSize'>{{ fileSize }}</div>
-    </div>
-  </script>
-  <script type='text/x-tmpl-mustache' id='new-group-update'>
-      <div class='conversation-header'>
-        <button class='back'></button>
-        <button class='send check'></button>
-        <span class='conversation-title'>Update group</span>
-      </div>
-      {{> group_info_input }}
-      <div class='container'>
-        <div class='scrollable'></div>
-      </div>
-  </script>
+
   <script type='text/x-tmpl-mustache' id='identicon-svg'>
       <svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'>
          <circle cx='50' cy='50' r='40' fill='{{ color }}' />
@@ -202,54 +162,7 @@
           </text>
       </svg>
   </script>
-  <script type='text/x-tmpl-mustache' id='avatar'>
-    <span aria-hidden class='avatar
-      {{ ^avatar.url }}
-        {{ avatar.color }}
-      {{ /avatar.url }}
-      '
-      {{ #avatar.url }}
-        style='background-image: url("{{ avatar.url }}");'
-      {{ /avatar.url }}
-    >
-        {{ avatar.content }}
-    </span>
-  </script>
-  <script type='text/x-tmpl-mustache' id='contact_pill'>
-    <span>{{ name }}</span><span class='remove'>x</span>
-  </script>
-  <script type='text/x-tmpl-mustache' id='contact_name_and_number'>
-    <h3 class='name' dir='auto'>
-      {{ title }}
-      {{ #profileName }}
-        <span class='profileName'>{{ profileName }} </span>
-      {{ /profileName }}
-    </h3>
-    <div class='number'>{{ #isVerified }}<span class='verified-icon'></span> {{ verified }} &middot;{{ /isVerified }} {{ number }}</div>
-  </script>
-  <script type='text/x-tmpl-mustache' id='contact'>
-      {{> avatar }}
-      <div class='contact-details {{ class }}'> {{> contact_name_and_number }} </div>
-  </script>
-  <script type='text/x-tmpl-mustache' id='new-contact'>
-      {{> avatar }}
-      <div class='contact-details'>
-          {{> contact_name_and_number }}
-      </div>
-  </script>
-  <script type='text/x-tmpl-mustache' id='conversation-preview'>
-      {{> avatar }}
-      <div class='contact-details'>
-          <span class='last-timestamp' data-timestamp='{{ last_message_timestamp }}' dir='auto' > </span>
-          <h3 class='name' dir='auto'></h3>
-          {{ #unreadCount }}
-            <span class='unread-count'>{{ unreadCount }}</span>
-          {{ /unreadCount }}
-          {{ #last_message }}
-            <p class='last-message' dir='auto'></p>
-          {{ /last_message }}
-      </div>
-  </script>
+
   <script type='text/x-tmpl-mustache' id='phone-number'>
       <div class='phone-input-form'>
           <div class='number-container'>
@@ -257,18 +170,22 @@
           </div>
       </div>
   </script>
+
   <script type='text/x-tmpl-mustache' id='file-size-modal'>
       {{ file-size-warning }}
       ({{ limit }}{{ units }})
   </script>
+
   <script type='text/x-tmpl-mustache' id='attachment-type-modal'>
       Sorry, your attachment has a type, {{type}}, that is not currently supported.
   </script>
+
   <script type='text/x-tmpl-mustache' id='group-member-list'>
     <div class='container'>
       {{ #summary }} <div class='summary'>{{ summary }}</div>{{ /summary }}
     </div>
   </script>
+
   <script type='text/x-tmpl-mustache' id='key-verification'>
     <div class='container'>
       {{ ^hasTheirKey }}
@@ -299,52 +216,7 @@
       </div>
     </div>
   </script>
-  <!-- index -->
-  <script type='text/x-tmpl-mustache' id='group_info_input'>
-      <div class='group-info-input'>
-        <div class='group-avatar'>
-          <div class='choose-file attachment-previews thumbnail'>
-            {{> avatar }}
-            </div>
-          <input type='file' name='avatar' class='file-input'>
-        </div>
-        <input type='text' name='name' class='name' placeholder='Group Name' value='{{ name }}'>
-      </div>
-  </script>
-  <script type='text/x-tmpl-mustache' id='new-conversation'>
-      <div class='conversation-header'>
-        <button class='back'></button>
-        <button class='create check hide'></button>
-        <span class='conversation-title'>New Message</span>
-      </div>
-      {{> group_info_input }}
-      <div class='container'>
-        <div class='scrollable'>
-        </div>
-      </div>
-  </script>
-  <script type='text/x-tmpl-mustache' id='recipients-input'>
-      <div class='recipients-container'>
-        <span class='recipients'></span>
-        <input type='text' class='search' placeholder='{{ placeholder }}' dir='auto' />
-      </div>
-      <div class='results'>
-        <div class='new-contact contact hide'></div>
-        <div class='contacts'></div>
-      </div>
-  </script>
-  <script type='text/x-tmpl-mustache' id='error-icon'>
-    <span class='error-icon'>
-    </span>
-    {{ #message }}
-      <span class='error-message'>{{message}}</span>
-    {{ /message }}
-  </script>
-  <script type='text/x-tmpl-mustache' id='link_to_support'>
-    <a href='http://support.signal.org/hc/articles/213134107' target='_blank'>
-      {{ learnMore }}
-    </a>
-  </script>
+
   <script type='text/x-tmpl-mustache' id='clear-data'>
     {{#isStep1}}
     <div class='step'>
@@ -437,7 +309,6 @@
         </div>
       </div>
     </div>
-
     {{/isStep3}}
     {{#isStep4}}
     <form id='link-phone'>
@@ -534,6 +405,7 @@
   <script type='text/javascript' src='node_modules/core/uwp-config.js'></script>
   <script type='text/javascript' src='node_modules/lodash/clonedeep.js'></script>
   <script type='text/javascript' src='node_modules/lodash/compact.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/debounce.js'></script>
   <script type='text/javascript' src='node_modules/lodash/escapeRegExp.js'></script>
   <script type='text/javascript' src='node_modules/lodash/get.js'></script>
   <script type='text/javascript' src='node_modules/lodash/filter.js'></script>
@@ -590,6 +462,11 @@
   <script type='text/javascript' src='node_modules/got/got.js'></script>
   <script type='text/javascript' src='node_modules/classnames/index.js'></script>
   <script type='text/javascript' src='node_modules/prop-types/prop-types.js'></script>
+  <script type='text/javascript' src='node_modules/redux/redux.js'></script>
+  <script type='text/javascript' src='node_modules/redux-logger/redux-logger.js'></script>
+  <script type='text/javascript' src='node_modules/redux-promise-middleware/isPromise.js'></script>
+  <script type='text/javascript' src='node_modules/redux-promise-middleware/index.js'></script>
+  <script type='text/javascript' src='node_modules/reselect/reselect.js'></script>
   <script type='text/javascript' src='node_modules/react/index.js'></script>
   <script type='text/javascript' src='node_modules/react-dom/index.js'></script>
   <script type='text/javascript' src='node_modules/react-contextmenu/helpers.js'></script>
@@ -602,6 +479,8 @@
   <script type='text/javascript' src='node_modules/react-contextmenu/SubMenu.js'></script>
   <script type='text/javascript' src='node_modules/react-contextmenu/ContextMenu.js'></script>
   <script type='text/javascript' src='node_modules/react-contextmenu/index.js'></script>
+  <script type='text/javascript' src='node_modules/react-redux/react-redux.js'></script>
+  <script type='text/javascript' src='node_modules/react-virtualized/react-virtualized.js'></script>
   <script type='text/javascript' src='node_modules/moment/moment.js'></script>
   <script type='text/javascript' src='node_modules/uc.micro/categories/Cc/regex.js'></script>
   <script type='text/javascript' src='node_modules/uc.micro/categories/Cf/regex.js'></script>
@@ -637,14 +516,17 @@
   <script type='text/javascript' src='js/typescript/protobuf/protobuf.js'></script>
   <script type='text/javascript' src='js/typescript/OS.js'></script>
   <script type='text/javascript' src='js/typescript/util/arrayBufferToObjectURL.js'></script>
+  <script type='text/javascript' src='js/typescript/util/cleanSearchTerm.js'></script>
   <script type='text/javascript' src='js/typescript/util/emoji.js'></script>
   <script type='text/javascript' src='js/typescript/util/formatRelativeTime.js'></script>
   <script type='text/javascript' src='js/typescript/util/getInitials.js'></script>
   <script type='text/javascript' src='js/typescript/util/GoogleChrome.js'></script>
   <script type='text/javascript' src='js/typescript/util/isFileDangerous.js'></script>
+  <script type='text/javascript' src='js/typescript/util/makeLookup.js'></script>
   <script type='text/javascript' src='js/typescript/util/migrateColor.js'></script>
   <script type='text/javascript' src='js/typescript/util/missingCaseError.js'></script>
   <script type='text/javascript' src='js/typescript/util/saveURLAsFile.js'></script>
+  <script type='text/javascript' src='js/typescript/util/timer.js'></script>
   <script type='text/javascript' src='js/typescript/util/libphonenumberInstance.js'></script>
   <script type='text/javascript' src='js/typescript/util/index.js'></script>
   <script type='text/javascript' src='js/typescript/types/MIME.js'></script>
@@ -724,14 +606,22 @@
   <script type='text/javascript' src='js/typescript/components/conversation/StagedPlaceholderAttachment.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/StagedLinkPreview.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/AttachmentList.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/_contactUtil.js'></script>
   <script type='text/javascript' src='js/typescript/components/CaptionEditor.js'></script>
   <script type='text/javascript' src='js/typescript/components/ContactListItem.js'></script>
   <script type='text/javascript' src='js/typescript/components/ConversationListItem.js'></script>
+  <script type='text/javascript' src='js/typescript/components/MessageBodyHighlight.js'></script>
+  <script type='text/javascript' src='js/typescript/components/MessageSearchResult.js'></script>
+  <script type='text/javascript' src='js/typescript/components/StartNewConversation.js'></script>
+  <script type='text/javascript' src='js/typescript/components/SearchResults.js'></script>
+  <script type='text/javascript' src='js/typescript/components/LeftPane.js'></script>
   <script type='text/javascript' src='js/typescript/backbone/Conversation.js'></script>
   <script type='text/javascript' src='js/typescript/backbone/views/Lightbox.js'></script>
   <script type='text/javascript' src='js/typescript/backbone/views/index.js'></script>
   <script type='text/javascript' src='js/typescript/backbone/index.js'></script>
   <script type='text/javascript' src='js/typescript/notifications/getStatus.js'></script>
+  <script type='text/javascript' src='js/typescript/shims/events.js'></script>
+  <script type='text/javascript' src='js/typescript/shims/Whisper.js'></script>
 
   <script type='text/javascript' src='app/attachments.js'></script>
   <script type='text/javascript' src='app/logging.js'></script>
@@ -746,9 +636,9 @@
   <script type='text/javascript' src='app/attachment_channel.js'></script>
 
   <script type='text/javascript' src='js/modules/debug.js'></script>
-
-  <script type='text/javascript' src='main.js'></script>
   
+  <script type='text/javascript' src='main.js'></script>
+
   <script type='text/javascript' src='js/modules/data.js'></script>
   <script type='text/javascript' src='js/modules/migrate_to_sql.js'></script>
   <script type='text/javascript' src='js/modules/messages_data_migrator.js'></script>
@@ -757,6 +647,21 @@
   <script type='text/javascript' src='js/modules/debuglogs.js'></script>
   <script type='text/javascript' src='js/modules/attachment_downloads.js'></script>
   <script type='text/javascript' src='js/logging.js'></script>
+
+  <script type='text/javascript' src='js/typescript/state/ducks/conversations.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/noop.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/search.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/user.js'></script>
+  <script type='text/javascript' src='js/typescript/state/actions.js'></script>
+  <script type='text/javascript' src='js/typescript/state/reducer.js'></script>
+  <script type='text/javascript' src='js/typescript/state/createStore.js'></script>
+  <script type='text/javascript' src='js/typescript/state/selectors/user.js'></script>
+  <script type='text/javascript' src='js/typescript/state/selectors/conversations.js'></script>
+  <script type='text/javascript' src='js/typescript/state/selectors/search.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/MainHeader.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/MessageSearchResult.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/LeftPane.js'></script>
+  <script type='text/javascript' src='js/typescript/state/roots/createLeftPane.js'></script>
 
   <script type='text/javascript' src='js/modules/signal.js'></script>
   
@@ -814,19 +719,13 @@
   <script type='text/javascript' src='js/views/toast_view.js'></script>
   <script type='text/javascript' src='js/views/file_input_view.js'></script>
   <script type='text/javascript' src='js/views/list_view.js'></script>
-  <script type='text/javascript' src='js/views/conversation_list_item_view.js'></script>
-  <script type='text/javascript' src='js/views/conversation_list_view.js'></script>
   <script type='text/javascript' src='js/views/contact_list_view.js'></script>
-  <script type='text/javascript' src='js/views/attachment_view.js'></script>
-  <script type='text/javascript' src='js/views/timestamp_view.js'></script>
   <script type='text/javascript' src='js/views/message_view.js'></script>
   <script type='text/javascript' src='js/views/key_verification_view.js'></script>
   <script type='text/javascript' src='js/views/message_list_view.js'></script>
   <script type='text/javascript' src='js/views/group_member_list_view.js'></script>
   <script type='text/javascript' src='js/views/recorder_view.js'></script>
   <script type='text/javascript' src='js/views/conversation_view.js'></script>
-  <script type='text/javascript' src='js/views/conversation_search_view.js'></script>
-  <script type='text/javascript' src='js/views/hint_view.js'></script>
   <script type='text/javascript' src='js/views/inbox_view.js'></script>
   <script type='text/javascript' src='js/views/network_status_view.js'></script>
   <script type='text/javascript' src='js/views/confirmation_dialog_view.js'></script>

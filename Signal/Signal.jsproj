@@ -275,15 +275,37 @@
     <Content Include="js\typescript\components\conversation\TypingAnimation.js" />
     <Content Include="js\typescript\components\conversation\TypingBubble.js" />
     <Content Include="js\typescript\components\conversation\VerificationNotification.js" />
+    <Content Include="js\typescript\components\conversation\_contactUtil.js" />
     <Content Include="js\typescript\components\Intl.js" />
+    <Content Include="js\typescript\components\LeftPane.js" />
     <Content Include="js\typescript\components\Lightbox.js" />
     <Content Include="js\typescript\components\LightboxGallery.js" />
     <Content Include="js\typescript\components\MainHeader.js" />
+    <Content Include="js\typescript\components\MessageBodyHighlight.js" />
+    <Content Include="js\typescript\components\MessageSearchResult.js" />
+    <Content Include="js\typescript\components\SearchResults.js" />
     <Content Include="js\typescript\components\Spinner.js" />
+    <Content Include="js\typescript\components\StartNewConversation.js" />
     <Content Include="js\typescript\components\styles\Colors.js" />
     <Content Include="js\typescript\notifications\getStatus.js" />
     <Content Include="js\typescript\OS.js" />
     <Content Include="js\typescript\protobuf\protobuf.js" />
+    <Content Include="js\typescript\shims\events.js" />
+    <Content Include="js\typescript\shims\Whisper.js" />
+    <Content Include="js\typescript\state\actions.js" />
+    <Content Include="js\typescript\state\createStore.js" />
+    <Content Include="js\typescript\state\ducks\conversations.js" />
+    <Content Include="js\typescript\state\ducks\noop.js" />
+    <Content Include="js\typescript\state\ducks\search.js" />
+    <Content Include="js\typescript\state\ducks\user.js" />
+    <Content Include="js\typescript\state\reducer.js" />
+    <Content Include="js\typescript\state\roots\createLeftPane.js" />
+    <Content Include="js\typescript\state\selectors\conversations.js" />
+    <Content Include="js\typescript\state\selectors\search.js" />
+    <Content Include="js\typescript\state\selectors\user.js" />
+    <Content Include="js\typescript\state\smart\LeftPane.js" />
+    <Content Include="js\typescript\state\smart\MainHeader.js" />
+    <Content Include="js\typescript\state\smart\MessageSearchResult.js" />
     <Content Include="js\typescript\types\Attachment.js" />
     <Content Include="js\typescript\types\Contact.js" />
     <Content Include="js\typescript\types\Conversation.js" />
@@ -295,6 +317,7 @@
     <Content Include="js\typescript\types\Settings.js" />
     <Content Include="js\typescript\types\Util.js" />
     <Content Include="js\typescript\util\arrayBufferToObjectURL.js" />
+    <Content Include="js\typescript\util\cleanSearchTerm.js" />
     <Content Include="js\typescript\util\emoji.js" />
     <Content Include="js\typescript\util\formatRelativeTime.js" />
     <Content Include="js\typescript\util\getInitials.js" />
@@ -302,26 +325,23 @@
     <Content Include="js\typescript\util\index.js" />
     <Content Include="js\typescript\util\isFileDangerous.js" />
     <Content Include="js\typescript\util\libphonenumberInstance.js" />
+    <Content Include="js\typescript\util\makeLookup.js" />
     <Content Include="js\typescript\util\migrateColor.js" />
     <Content Include="js\typescript\util\missingCaseError.js" />
     <Content Include="js\typescript\util\saveURLAsFile.js" />
+    <Content Include="js\typescript\util\timer.js" />
     <Content Include="js\util_worker.js" />
     <Content Include="js\views\about_view.js" />
     <Content Include="js\views\app_view.js" />
-    <Content Include="js\views\attachment_view.js" />
     <Content Include="js\views\banner_view.js" />
     <Content Include="js\views\clear_data_view.js" />
     <Content Include="js\views\confirmation_dialog_view.js" />
     <Content Include="js\views\contact_list_view.js" />
-    <Content Include="js\views\conversation_list_item_view.js" />
-    <Content Include="js\views\conversation_list_view.js" />
-    <Content Include="js\views\conversation_search_view.js" />
     <Content Include="js\views\conversation_view.js" />
     <Content Include="js\views\debug_log_view.js" />
     <Content Include="js\views\file_input_view.js" />
     <Content Include="js\views\group_member_list_view.js" />
     <Content Include="js\views\group_update_view.js" />
-    <Content Include="js\views\hint_view.js" />
     <Content Include="js\views\identicon_svg_view.js" />
     <Content Include="js\views\inbox_view.js" />
     <Content Include="js\views\install_view.js" />
@@ -337,7 +357,6 @@
     <Content Include="js\views\scroll_down_button_view.js" />
     <Content Include="js\views\settings_view.js" />
     <Content Include="js\views\standalone_registration_view.js" />
-    <Content Include="js\views\timestamp_view.js" />
     <Content Include="js\views\toast_view.js" />
     <Content Include="js\views\whisper_view.js" />
     <Content Include="js\wall_clock_listener.js" />
@@ -372,6 +391,7 @@
     <Content Include="node_modules\journeyapps\sqlcipher.js" />
     <Content Include="node_modules\jquery\dist\jquery.js" />
     <Content Include="node_modules\lodash\compact.js" />
+    <Content Include="node_modules\lodash\debounce.js" />
     <Content Include="node_modules\lodash\flatten.js" />
     <Content Include="node_modules\lodash\forEach.js" />
     <Content Include="node_modules\lodash\fromPairs.js" />
@@ -400,7 +420,14 @@
     <Content Include="node_modules\react-contextmenu\index.js" />
     <Content Include="node_modules\react-contextmenu\MenuItem.js" />
     <Content Include="node_modules\react-contextmenu\SubMenu.js" />
+    <Content Include="node_modules\react-redux\react-redux.js" />
+    <Content Include="node_modules\react-virtualized\react-virtualized.js" />
     <Content Include="node_modules\read-last-lines\index.js" />
+    <Content Include="node_modules\redux-logger\redux-logger.js" />
+    <Content Include="node_modules\redux-promise-middleware\index.js" />
+    <Content Include="node_modules\redux-promise-middleware\isPromise.js" />
+    <Content Include="node_modules\redux\redux.js" />
+    <Content Include="node_modules\reselect\reselect.js" />
     <Content Include="node_modules\rimraf\index.js" />
     <Content Include="node_modules\semver\functions\lt.js" />
     <Content Include="node_modules\sjcl\sjcl.js" />
@@ -539,6 +566,9 @@
     <Content Include="TextSecure.cer" />
     <Content Include="textsecureservicewhispersystemsorg.cer" />
     <None Include="Signal_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="js\typescript\util\lint\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).targets" />
   <!-- To modify your build process, add your task inside one of the targets below then uncomment

@@ -700,25 +700,25 @@
 
     filePath = path.join(dbDir, 'db.sqlite');
 
-    const sqlInstance = await openDatabase(filePath);
-    const promisified = promisify(sqlInstance);
-
-    // promisified.on('trace', async statement => {
-    //   if (!db || statement.startsWith('--')) {
-    //     console._log(statement);
-    //     return;
-    //   }
-    //   const data = await db.get(`EXPLAIN QUERY PLAN ${statement}`);
-    //   console._log(`EXPLAIN QUERY PLAN ${statement}\n`, data && data.detail);
-    // });
-
-    await setupSQLCipher(promisified, { key });
-    await updateSchema(promisified);
-
-    db = promisified;
-
-    // test database
     try {
+      const sqlInstance = await openDatabase(filePath);
+      const promisified = promisify(sqlInstance);
+
+      // promisified.on('trace', async statement => {
+      //   if (!db || statement.startsWith('--')) {
+      //     console._log(statement);
+      //     return;
+      //   }
+      //   const data = await db.get(`EXPLAIN QUERY PLAN ${statement}`);
+      //   console._log(`EXPLAIN QUERY PLAN ${statement}\n`, data && data.detail);
+      // });
+
+      await setupSQLCipher(promisified, { key });
+      await updateSchema(promisified);
+
+      db = promisified;
+
+      // test database
       await getMessageCount();
     } catch (error) {
       console.log('Database startup error:', error.stack);
@@ -1150,7 +1150,7 @@
     return map(rows, row => jsonToObject(row.json));
   }
 
-  async function searchConversations(query) {
+  async function searchConversations(query, { limit } = {}) {
     const rows = await db.all(
       `SELECT json FROM conversations WHERE
       (
@@ -1158,11 +1158,13 @@
       name LIKE $name OR
       profileName LIKE $profileName
       )
-     ORDER BY id ASC;`,
+     ORDER BY id ASC
+     LIMIT $limit`,
       {
         $id: `%${query}%`,
         $name: `%${query}%`,
         $profileName: `%${query}%`,
+        $limit: limit || 50,
       }
     );
 

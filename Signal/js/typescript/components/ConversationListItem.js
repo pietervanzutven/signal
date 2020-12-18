@@ -18,9 +18,9 @@
     const TypingAnimation_1 = window.ts.components.conversation.TypingAnimation;
     class ConversationListItem extends react_1.default.Component {
         renderAvatar() {
-            const { avatarPath, color, conversationType, i18n, isMe, name, phoneNumber, profileName, } = this.props;
+            const { avatarPath, color, type, i18n, isMe, name, phoneNumber, profileName, } = this.props;
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__avatar-container" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, noteToSelf: isMe, conversationType: conversationType, i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 48 }),
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, noteToSelf: isMe, conversationType: type, i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 48 }),
                 this.renderUnread()));
         }
         renderUnread() {
@@ -50,17 +50,24 @@
             if (!lastMessage && !isTyping) {
                 return null;
             }
+            const text = lastMessage && lastMessage.text ? lastMessage.text : '';
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__message" },
                 react_1.default.createElement("div", {
                     className: classnames_1.default('module-conversation-list-item__message__text', unreadCount > 0
                         ? 'module-conversation-list-item__message__text--has-unread'
                         : null)
-                }, isTyping ? (react_1.default.createElement(TypingAnimation_1.TypingAnimation, { i18n: i18n })) : (react_1.default.createElement(MessageBody_1.MessageBody, { text: lastMessage && lastMessage.text ? lastMessage.text : '', disableJumbomoji: true, disableLinks: true, i18n: i18n }))),
+                }, isTyping ? (react_1.default.createElement(TypingAnimation_1.TypingAnimation, { i18n: i18n })) : (react_1.default.createElement(MessageBody_1.MessageBody, { text: text, disableJumbomoji: true, disableLinks: true, i18n: i18n }))),
                 lastMessage && lastMessage.status ? (react_1.default.createElement("div", { className: classnames_1.default('module-conversation-list-item__message__status-icon', `module-conversation-list-item__message__status-icon--${lastMessage.status}`) })) : null));
         }
         render() {
-            const { unreadCount, onClick, isSelected } = this.props;
-            return (react_1.default.createElement("div", { role: "button", onClick: onClick, className: classnames_1.default('module-conversation-list-item', unreadCount > 0 ? 'module-conversation-list-item--has-unread' : null, isSelected ? 'module-conversation-list-item--is-selected' : null) },
+            const { unreadCount, onClick, id, isSelected, style } = this.props;
+            return (react_1.default.createElement("div", {
+                role: "button", onClick: () => {
+                    if (onClick) {
+                        onClick(id);
+                    }
+                }, style: style, className: classnames_1.default('module-conversation-list-item', unreadCount > 0 ? 'module-conversation-list-item--has-unread' : null, isSelected ? 'module-conversation-list-item--is-selected' : null)
+            },
                 this.renderAvatar(),
                 react_1.default.createElement("div", { className: "module-conversation-list-item__content" },
                     this.renderHeader(),

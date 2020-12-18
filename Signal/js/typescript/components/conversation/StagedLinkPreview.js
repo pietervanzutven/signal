@@ -12,12 +12,12 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
-    const ImageGrid_1 = window.ts.components.conversation.ImageGrid;
     const Image_1 = window.ts.components.conversation.Image;
+    const Attachment_1 = window.ts.typesAttachment;
     class StagedLinkPreview extends react_1.default.Component {
         render() {
             const { isLoaded, onClose, i18n, title, image, domain } = this.props;
-            const isImage = image && ImageGrid_1.isImageAttachment(image);
+            const isImage = image && Attachment_1.isImageAttachment(image);
             return (react_1.default.createElement("div", { className: classnames_1.default('module-staged-link-preview', !isLoaded ? 'module-staged-link-preview--is-loading' : null) },
                 !isLoaded ? (react_1.default.createElement("div", { className: "module-staged-link-preview__loading" }, i18n('loadingPreview'))) : null,
                 isLoaded && image && isImage ? (react_1.default.createElement("div", { className: "module-staged-link-preview__icon-container" },

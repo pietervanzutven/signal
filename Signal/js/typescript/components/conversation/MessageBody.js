@@ -24,20 +24,29 @@
      * them for you.
      */
     class MessageBody extends react_1.default.Component {
+        addDownloading(jsx) {
+            const { i18n, textPending } = this.props;
+            return (react_1.default.createElement("span", null,
+                jsx,
+                textPending ? (react_1.default.createElement("span", { className: "module-message-body__highlight" },
+                    ' ',
+                    i18n('downloading'))) : null));
+        }
         render() {
-            const { text, disableJumbomoji, disableLinks, i18n } = this.props;
+            const { text, textPending, disableJumbomoji, disableLinks, i18n, } = this.props;
             const sizeClass = disableJumbomoji ? undefined : emoji_1.getSizeClass(text);
+            const textWithPending = textPending ? `${text}...` : text;
             if (disableLinks) {
-                return renderEmoji({
+                return this.addDownloading(renderEmoji({
                     i18n,
-                    text,
+                    text: textWithPending,
                     sizeClass,
                     key: 0,
                     renderNonEmoji: renderNewLines,
-                });
+                }));
             }
-            return (react_1.default.createElement(Linkify_1.Linkify, {
-                text: text, renderNonLink: ({ key, text: nonLinkText }) => {
+            return this.addDownloading(react_1.default.createElement(Linkify_1.Linkify, {
+                text: textWithPending, renderNonLink: ({ key, text: nonLinkText }) => {
                     return renderEmoji({
                         i18n,
                         text: nonLinkText,

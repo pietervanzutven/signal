@@ -14,6 +14,7 @@
     saveMessage,
     setAttachmentDownloadJobPending,
   } = window.data;
+  const { stringFromBytes } = window.crypto;
 
   window.attachment_downloads = {
     start,
@@ -290,9 +291,9 @@
 
         if (fromConversation && message !== fromConversation) {
           fromConversation.set(message.attributes);
-          fromConversation.trigger('change');
+          fromConversation.trigger('change', fromConversation);
         } else {
-          message.trigger('change');
+          message.trigger('change', message);
         }
       }
     }
@@ -320,6 +321,21 @@
       return;
     }
 
+    const logPrefix = `${message.idForLogging()} (type: ${type}, index: ${index})`;
+
+    if (type === 'long-message') {
+      try {
+        const { data } = await Signal.Migrations.loadAttachmentData(attachment);
+        message.set({
+          body: attachment.isError ? message.get('body') : stringFromBytes(data),
+          bodyPending: false,
+        });
+      } finally {
+        Signal.Migrations.deleteAttachmentData(attachment.path);
+      }
+      return;
+    }
+
     if (type === 'attachment') {
       const attachments = message.get('attachments');
       if (!attachments || attachments.length <= index) {
@@ -327,7 +343,7 @@
           `_addAttachmentToMessage: attachments didn't exist or ${index} was too large`
         );
       }
-      _replaceAttachment(attachments, index, attachment);
+      _replaceAttachment(attachments, index, attachment, logPrefix);
       return;
     }
 
@@ -342,7 +358,7 @@
       if (!item) {
         throw new Error(`_addAttachmentToMessage: preview ${index} was falsey`);
       }
-      _replaceAttachment(item, 'image', attachment);
+      _replaceAttachment(item, 'image', attachment, logPrefix);
       return;
     }
 
@@ -355,7 +371,7 @@
       }
       const item = contact[index];
       if (item && item.avatar && item.avatar.avatar) {
-        _replaceAttachment(item.avatar, 'avatar', attachment);
+        _replaceAttachment(item.avatar, 'avatar', attachment, logPrefix);
       } else {
         logger.warn(
           `_addAttachmentToMessage: Couldn't update contact with avatar attachment for message ${message.idForLogging()}`
@@ -383,7 +399,7 @@
           `_addAttachmentToMessage: attachment ${index} was falsey`
         );
       }
-      _replaceAttachment(item, 'thumbnail', attachment);
+      _replaceAttachment(item, 'thumbnail', attachment, logPrefix);
       return;
     }
 
@@ -398,7 +414,7 @@
         await Signal.Migrations.deleteAttachmentData(existingAvatar.path);
       }
 
-      _replaceAttachment(group, 'avatar', attachment);
+      _replaceAttachment(group, 'avatar', attachment, logPrefix);
       return;
     }
 
@@ -407,11 +423,11 @@
     );
   }
 
-  function _replaceAttachment(object, key, newAttachment) {
+  function _replaceAttachment(object, key, newAttachment, logPrefix) {
     const oldAttachment = object[key];
     if (oldAttachment && oldAttachment.path) {
       logger.warn(
-        '_replaceAttachment: Old attachment already had path, not replacing'
+        `_replaceAttachment: ${logPrefix} - old attachment already had path, not replacing`
       );
     }
 

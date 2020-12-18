@@ -16,7 +16,7 @@
         render() {
             const { attachment, onClose } = this.props;
             const { fileName, contentType } = attachment;
-            const extension = Message_1.getExtension({ contentType, fileName });
+            const extension = Attachment_1.getExtensionForDisplay({ contentType, fileName });
             return (react_1.default.createElement("div", { className: "module-staged-generic-attachment" },
                 react_1.default.createElement("div", {
                     className: "module-staged-generic-attachment__close-button", role: "button", onClick: () => {

@@ -17,11 +17,14 @@
     class SafetyNumberNotification extends react_1.default.Component {
         render() {
             const { contact, isGroup, i18n, onVerify } = this.props;
+            const changeKey = isGroup
+                ? 'safetyNumberChangedGroup'
+                : 'safetyNumberChanged';
             return (react_1.default.createElement("div", { className: "module-safety-number-notification" },
                 react_1.default.createElement("div", { className: "module-safety-number-notification__icon" }),
                 react_1.default.createElement("div", { className: "module-safety-number-notification__text" },
                     react_1.default.createElement(Intl_1.Intl, {
-                        id: isGroup ? 'safetyNumberChangedGroup' : 'safetyNumberChanged', components: [
+                        id: changeKey, components: [
                             react_1.default.createElement("span", { key: "external-1", className: "module-safety-number-notification__contact" },
                                 react_1.default.createElement(ContactName_1.ContactName, { i18n: i18n, name: contact.name, profileName: contact.profileName, phoneNumber: contact.phoneNumber, module: "module-verification-notification__contact" })),
                         ], i18n: i18n
