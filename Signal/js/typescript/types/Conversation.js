@@ -10,6 +10,8 @@
         if (!lastMessage) {
             return {
                 lastMessage: '',
+                lastMessageStatus: null,
+                timestamp: null,
             };
         }
         const { type, expirationTimerUpdate } = lastMessage;
@@ -25,8 +27,8 @@
             : currentLastMessageText;
         return {
             lastMessage: newLastMessageText || '',
-            lastMessageStatus,
-            timestamp: newTimestamp,
+            lastMessageStatus: lastMessageStatus || null,
+            timestamp: newTimestamp || null,
         };
     };
 })();
