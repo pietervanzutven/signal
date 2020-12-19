@@ -80,8 +80,12 @@
     <Content Include="app\user_config.js" />
     <Content Include="background.html" />
     <Content Include="cdnsignalorg.cer" />
-    <Content Include="config\production.json" />
     <Content Include="config\default.json" />
+    <Content Include="config\development.json" />
+    <Content Include="config\production.json" />
+    <Content Include="config\staging.json" />
+    <Content Include="config\test-lib.json" />
+    <Content Include="config\test.json" />
     <Content Include="debug_log.html" />
     <Content Include="debug_log_preload.js" />
     <Content Include="fonts\Roboto-Black.ttf" />

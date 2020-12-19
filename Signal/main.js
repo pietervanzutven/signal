@@ -148,7 +148,6 @@ const development = config.environment === 'development';
 //   data directory has been set.
 const attachments = window.app.attachments
 const attachmentChannel = window.app.attachment_channel;
-const autoUpdate = window.app.auto_update;
 const createTrayIcon = window.app.tray_icon;
 const ephemeralConfig = window.app.ephemeral_config;
 const logging = window.app.logging;
@@ -377,13 +376,38 @@ const debouncedCaptureStats = _.debounce(captureAndSaveWindowStats, 500);
 mainWindow.on('resize', debouncedCaptureStats);
 mainWindow.on('move', debouncedCaptureStats);
 
-// Ingested in preload.js via a sendSync call
+// Emitted when the window is closed.
+mainWindow.on('closed', () => {
+  // Dereference the window object, usually you would store windows
+  // in an array if your app supports multi windows, this is the time
+  // when you should delete the corresponding element.
+  mainWindow = null;
+});
+
+  // Ingested in preload.js via a sendSync call
 ipc.on('locale-data', event => {
   // eslint-disable-next-line no-param-reassign
   event.returnValue = locale.messages;
 });
 
 ipc.on('show-window', () => { });
+
+let updatesStarted = false;
+ipc.on('ready-for-updates', async () => {
+  if (updatesStarted) {
+    return;
+  }
+  updatesStarted = true;
+
+  try {
+    await updater.start(getMainWindow, locale.messages, logger);
+  } catch (error) {
+    logger.error(
+      'Error starting update checks:',
+      error && error.stack ? error.stack : error
+    );
+  }
+});
 
 function openReleaseNotes() {
   Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/releases/tag/v' + app.getVersion()));
@@ -606,6 +630,7 @@ let ready = false;
   await logging.initialize();
   logger = logging.getLogger();
   logger.info('app ready');
+  logger.info(`starting version ${packageJson.version}`);
 
   if (!locale) {
     const appLocale = process.env.UWP_ENV === 'test' ? 'en' : Windows.Globalization.ApplicationLanguages.languages[0];
