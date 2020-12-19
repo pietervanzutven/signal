@@ -21,7 +21,7 @@
             const profileElement = shouldShowProfile ? (react_1.default.createElement("span", { className: `${prefix}__profile-name` },
                 "~",
                 react_1.default.createElement(Emojify_1.Emojify, { text: profileName || '', i18n: i18n }))) : null;
-            return (react_1.default.createElement("span", { className: prefix },
+            return (react_1.default.createElement("span", { className: prefix, dir: "auto" },
                 react_1.default.createElement(Emojify_1.Emojify, { text: title, i18n: i18n }),
                 shouldShowProfile ? ' ' : null,
                 profileElement));
