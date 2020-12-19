@@ -4,6 +4,7 @@
   Backbone,
   libphonenumber,
   ConversationController,
+  MessageController,
   libsignal,
   storage,
   textsecure,
@@ -677,14 +678,6 @@
     },
 
     async onReadMessage(message, readAt) {
-      const existing = this.messageCollection.get(message.id);
-      if (existing) {
-        const fetched = await window.Signal.Data.getMessageById(existing.id, {
-          Message: Whisper.Message,
-        });
-        existing.merge(fetched);
-      }
-
       // We mark as read everything older than this message - to clean up old stuff
       //   still marked unread in the database. If the user generally doesn't read in
       //   the desktop app, so the desktop app only gets read syncs, we can very
@@ -891,10 +884,25 @@
           recipients,
         });
 
-        const message = this.addSingleMessage(messageWithSchema);
+        if (this.isPrivate()) {
+          messageWithSchema.destination = destination;
+        }
+        const attributes = Object.assign({},
+          messageWithSchema,
+          {
+            id: window.getGuid(),
+          }
+        );
+
+        const model = this.addSingleMessage(attributes);
+        const message = MessageController.register(model.id, model);
+        await window.Signal.Data.saveMessage(message.attributes, {
+          forceSave: true,
+          Message: Whisper.Message,
+        });
 
         this.set({
-          lastMessage: message.getNotificationText(),
+          lastMessage: model.getNotificationText(),
           lastMessageStatus: 'sending',
           active_at: now,
           timestamp: now,
@@ -903,15 +911,6 @@
         await window.Signal.Data.updateConversation(this.id, this.attributes, {
           Conversation: Whisper.Conversation,
         });
-
-        if (this.isPrivate()) {
-          message.set({ destination });
-        }
-
-        const id = await window.Signal.Data.saveMessage(message.attributes, {
-          Message: Whisper.Message,
-        });
-        message.set({ id });
 
         // We're offline!
         if (!textsecure.messaging) {
@@ -1432,11 +1431,9 @@
 
       let read = await Promise.all(
         _.map(oldUnread, async providedM => {
-          let m = providedM;
+          const m = MessageController.register(providedM.id, providedM);
 
-          if (this.messageCollection.get(m.id)) {
-            m = this.messageCollection.get(m.id);
-          } else {
+          if (!this.messageCollection.get(m.id)) {
             window.log.warn(
               'Marked a message as read in the database, but ' +
                 'it was not in messageCollection.'
