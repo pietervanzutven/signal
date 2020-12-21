@@ -33,7 +33,7 @@
     exports.findImage = findImage;
     function replaceColons(str) {
         return str.replace(instance.rx_colons, m => {
-            const name = m.substr(1, m.length - 2);
+            const name = m.substr(1, m.length - 2).toLowerCase();
             const code = instance.map.colons[name];
             if (code) {
                 return instance.data[code][0][0];

@@ -6,10 +6,12 @@
     const exports = window.ts.types.Conversation = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.createLastMessageUpdate = ({ currentLastMessageText, currentTimestamp, lastMessage, lastMessageStatus, lastMessageNotificationText, }) => {
+    exports.createLastMessageUpdate = ({ currentTimestamp, lastMessage, lastMessageStatus, lastMessageNotificationText, }) => {
         if (!lastMessage) {
             return {
                 lastMessage: '',
+                lastMessageStatus: null,
+                timestamp: null,
             };
         }
         const { type, expirationTimerUpdate } = lastMessage;
@@ -22,11 +24,11 @@
         const shouldUpdateLastMessageText = !isVerifiedChangeMessage;
         const newLastMessageText = shouldUpdateLastMessageText
             ? lastMessageNotificationText
-            : currentLastMessageText;
+            : '';
         return {
             lastMessage: newLastMessageText || '',
-            lastMessageStatus,
-            timestamp: newTimestamp,
+            lastMessageStatus: lastMessageStatus || null,
+            timestamp: newTimestamp || null,
         };
     };
 })();
