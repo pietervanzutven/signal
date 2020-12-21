@@ -3,21 +3,52 @@
 
   window.app = window.app || {};
 
-  const environment = 'production';
+  const path = window.path;
 
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'config/default.json', false);
-  xhr.send(null);
+  const electronIsDev = window.electron_is_dev;
 
-  window.app.config = JSON.parse(xhr.response);
+  let environment;
 
-  xhr.open('GET', 'config/' + environment + '.json', false);
-  xhr.send(null);
+  // In production mode, UWP_ENV cannot be customized by the user
+  if (electronIsDev) {
+    environment = process.env.UWP_ENV || 'development';
+  } else {
+    environment = 'production';
+  }
 
-  window.app.config = Object.assign(window.app.config, JSON.parse(xhr.response));
-  window.app.config.environment = environment;
+  // Set environment vars to configure uwp-config before requiring it
+  process.env.UWP_ENV = environment;
+  process.env.UWP_CONFIG_DIR = path.join(__dirname, '..', 'config');
 
-  window.app.config.get = name => window.app.config[name];
-  window.app.config.has = name => window.app.config.hasOwnProperty(name);
+  if (environment === 'production') {
+    // harden production config against the local env
+    process.env.UWP_CONFIG = '';
+    process.env.UWP_CONFIG_STRICT_MODE = true;
+    process.env.HOSTNAME = '';
+    process.env.UWP_APP_INSTANCE = '';
+    process.env.ALLOW_CONFIG_MUTATIONS = '';
+    process.env.SUPPRESS_NO_CONFIG_WARNING = '';
+    process.env.UWP_TLS_REJECT_UNAUTHORIZED = '';
+  }
+
+  // We load config after we've made our modifications to UWP_ENV
+  const config = window.require_config();
+
+  config.environment = environment;
+
+  // Log resulting env vars in use by config
+  [
+    'UWP_ENV',
+    'UWP_CONFIG_DIR',
+    'UWP_CONFIG',
+    'ALLOW_CONFIG_MUTATIONS',
+    'HOSTNAME',
+    'UWP_APP_INSTANCE',
+    'SUPPRESS_NO_CONFIG_WARNING',
+  ].forEach(s => {
+    console.log(`${s} ${config.util.getEnv(s)}`);
+  });
+
+  window.app.config = config;
 
 })();

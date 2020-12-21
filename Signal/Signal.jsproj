@@ -385,10 +385,12 @@
     <Content Include="libtextsecure\sync_request.js" />
     <Content Include="libtextsecure\task_with_timeout.js" />
     <Content Include="main.js" />
+    <Content Include="node_modules\config\config.js" />
     <Content Include="node_modules\core\app.js" />
     <Content Include="node_modules\core\browserwindow.js" />
     <Content Include="node_modules\core\fs.js" />
     <Content Include="node_modules\core\ipc.js" />
+    <Content Include="node_modules\core\process.js" />
     <Content Include="node_modules\core\uwp-config.js" />
     <Content Include="node_modules\firstline\index.js" />
     <Content Include="node_modules\glob\glob.js" />

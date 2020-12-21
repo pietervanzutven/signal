@@ -73,24 +73,6 @@ window.onload = () => {
     });
 }
 
-const version = Windows.System.Profile.AnalyticsInfo.versionInfo.deviceFamilyVersion;
-const appInstance = Windows.System.Diagnostics.ProcessDiagnosticInfo.getForCurrentProcess().processId;
-const process = {
-  platform: 'win32',
-  versions: {
-    uwp: version,
-  },
-  env: {
-    UWP_ENV: 'production',
-    UWP_APP_INSTANCE: appInstance,
-    HTTPS_PROXY: null,
-  },
-  argv: [],
-  on: () => { },
-  mas: true
-};
-window.getEnvironment = () => process.env.UWP_ENV;
-
 window.requestIdleCallback = () => { };
 
 const path = window.path;
