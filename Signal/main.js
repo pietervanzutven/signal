@@ -131,6 +131,7 @@ const development = config.environment === 'development';
 const attachments = window.app.attachments
 const attachmentChannel = window.app.attachment_channel;
 const createTrayIcon = window.app.tray_icon;
+const dockIcon = window.app.dock_icon;
 const ephemeralConfig = window.app.ephemeral_config;
 const logging = window.app.logging;
 const sql = window.app.sql;
@@ -156,6 +157,9 @@ function showWindow() {
   if (tray) {
     tray.updateContextMenu();
   }
+
+  // show the app on the Dock in case it was hidden before
+  dockIcon.show();
 }
 
 if (!process.mas) {
@@ -346,13 +350,50 @@ function captureAndSaveWindowStats() {
     // false the fullscreen button will be disabled on osx
     windowConfig.fullscreen = true;
   }
-
-  logger.info(
-    'Updating BrowserWindow config: %s',
-    JSON.stringify(windowConfig)
-  );
-  ephemeralConfig.set('window', windowConfig);
 }
+
+captureClicks(mainWindow);
+
+// Emitted when the window is about to be closed.
+// Note: We do most of our shutdown logic here because all windows are closed by
+//   Electron before the app quits.
+mainWindow.on('close', async e => {
+  console.log('close event', {
+    readyForShutdown: mainWindow ? mainWindow.readyForShutdown : null,
+    shouldQuit: windowState.shouldQuit(),
+  });
+  // If the application is terminating, just do the default
+  if (
+    config.environment === 'test' ||
+    config.environment === 'test-lib' ||
+    (mainWindow.readyForShutdown && windowState.shouldQuit())
+  ) {
+    return;
+  }
+
+  // Prevent the shutdown
+  e.preventDefault();
+  mainWindow.hide();
+
+  // On Mac, or on other platforms when the tray icon is in use, the window
+  // should be only hidden, not closed, when the user clicks the close button
+  if (
+    !windowState.shouldQuit() &&
+    (usingTrayIcon || process.platform === 'darwin')
+  ) {
+    // toggle the visibility of the show/hide tray icon menu entries
+    if (tray) {
+      tray.updateContextMenu();
+    }
+
+    // hide the app from the Dock on macOS if the tray icon is enabled
+    if (usingTrayIcon) {
+      dockIcon.hide();
+    }
+
+    return;
+  }
+});
 
 const debouncedCaptureStats = _.debounce(captureAndSaveWindowStats, 500);
 mainWindow.on('resize', debouncedCaptureStats);
