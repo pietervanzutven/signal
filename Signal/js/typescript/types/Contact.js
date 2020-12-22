@@ -7,13 +7,13 @@
 
     Object.defineProperty(exports, "__esModule", { value: true });
     const PhoneNumber_1 = window.ts.types.PhoneNumber;
-    var ContactType;
-    (function (ContactType) {
-        ContactType[ContactType["HOME"] = 1] = "HOME";
-        ContactType[ContactType["MOBILE"] = 2] = "MOBILE";
-        ContactType[ContactType["WORK"] = 3] = "WORK";
-        ContactType[ContactType["CUSTOM"] = 4] = "CUSTOM";
-    })(ContactType = exports.ContactType || (exports.ContactType = {}));
+    var ContactFormType;
+    (function (ContactFormType) {
+        ContactFormType[ContactFormType["HOME"] = 1] = "HOME";
+        ContactFormType[ContactFormType["MOBILE"] = 2] = "MOBILE";
+        ContactFormType[ContactFormType["WORK"] = 3] = "WORK";
+        ContactFormType[ContactFormType["CUSTOM"] = 4] = "CUSTOM";
+    })(ContactFormType = exports.ContactFormType || (exports.ContactFormType = {}));
     var AddressType;
     (function (AddressType) {
         AddressType[AddressType["HOME"] = 1] = "HOME";
@@ -21,7 +21,7 @@
         AddressType[AddressType["CUSTOM"] = 3] = "CUSTOM";
     })(AddressType = exports.AddressType || (exports.AddressType = {}));
     function contactSelector(contact, options) {
-        const { getAbsoluteAttachmentPath, hasSignalAccount, onClick, onSendMessage, regionCode, } = options;
+        const { getAbsoluteAttachmentPath, signalAccount, regionCode } = options;
         let { avatar } = contact;
         if (avatar && avatar.avatar) {
             if (avatar.avatar.error) {
@@ -38,9 +38,7 @@
             }
         }
         return Object.assign({}, contact, {
-            hasSignalAccount,
-            onSendMessage,
-            onClick,
+            signalAccount,
             avatar, number: contact.number &&
                 contact.number.map(item => (Object.assign({}, item, {
                     value: PhoneNumber_1.format(item.value, {

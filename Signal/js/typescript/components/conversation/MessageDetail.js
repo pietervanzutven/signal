@@ -25,7 +25,11 @@
         renderDeleteButton() {
             const { i18n, message } = this.props;
             return (react_1.default.createElement("div", { className: "module-message-detail__delete-button-container" },
-                react_1.default.createElement("button", { onClick: message.onDelete, className: "module-message-detail__delete-button" }, i18n('deleteThisMessage'))));
+                react_1.default.createElement("button", {
+                    onClick: () => {
+                        message.deleteMessage(message.id);
+                    }, className: "module-message-detail__delete-button"
+                }, i18n('deleteThisMessage'))));
         }
         renderContact(contact) {
             const { i18n } = this.props;

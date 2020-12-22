@@ -16,7 +16,7 @@
     const Intl_1 = window.ts.components.Intl;
     class SafetyNumberNotification extends react_1.default.Component {
         render() {
-            const { contact, isGroup, i18n, onVerify } = this.props;
+            const { contact, isGroup, i18n, showIdentity } = this.props;
             const changeKey = isGroup
                 ? 'safetyNumberChangedGroup'
                 : 'safetyNumberChanged';
@@ -29,7 +29,11 @@
                                 react_1.default.createElement(ContactName_1.ContactName, { i18n: i18n, name: contact.name, profileName: contact.profileName, phoneNumber: contact.phoneNumber, module: "module-verification-notification__contact" })),
                         ], i18n: i18n
                     })),
-                react_1.default.createElement("div", { role: "button", onClick: onVerify, className: "module-verification-notification__button" }, i18n('verifyNewNumber'))));
+                react_1.default.createElement("div", {
+                    role: "button", onClick: () => {
+                        showIdentity(contact.id);
+                    }, className: "module-verification-notification__button"
+                }, i18n('verifyNewNumber'))));
         }
     }
     exports.SafetyNumberNotification = SafetyNumberNotification;

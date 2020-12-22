@@ -162,17 +162,8 @@
     isUnread() {
       return !!this.get('unread');
     },
-    // Important to allow for this.unset('unread'), save to db, then fetch()
-    // to propagate. We don't want the unset key in the db so our unread index
-    // stays small.
     merge(model) {
       const attributes = model.attributes || model;
-
-      const { unread } = attributes;
-      if (typeof unread === 'undefined') {
-        this.unset('unread');
-      }
-
       this.set(attributes);
     },
     getNameForNumber(number) {
@@ -316,13 +307,12 @@
       const conversation = this.getConversation();
       const isGroup = conversation && !conversation.isPrivate();
       const phoneNumber = this.get('key_changed');
-      const onVerify = () =>
-        this.trigger('show-identity', this.findContact(phoneNumber));
+      const showIdentity = id => this.trigger('show-identity', id);
 
       return {
         isGroup,
         contact: this.findAndFormatContact(phoneNumber),
-        onVerify,
+        showIdentity,
       };
     },
     getPropsForVerificationNotification() {
@@ -344,21 +334,17 @@
       return ConversationController.get(phoneNumber);
     },
     findAndFormatContact(phoneNumber) {
+      const contactModel = this.findContact(phoneNumber);
+      if (contactModel) {
+        return contactModel.getProps();
+      }
+
       const { format } = PhoneNumber;
       const regionCode = storage.get('regionCode');
-
-      const contactModel = this.findContact(phoneNumber);
-      const color = contactModel ? contactModel.getColor() : null;
-
       return {
         phoneNumber: format(phoneNumber, {
           ourRegionCode: regionCode,
         }),
-        color,
-        avatarPath: contactModel ? contactModel.getAvatarPath() : null,
-        name: contactModel ? contactModel.getName() : null,
-        profileName: contactModel ? contactModel.getProfileName() : null,
-        title: contactModel ? contactModel.getTitle() : null,
       };
     },
     getPropsForGroupNotification() {
@@ -465,7 +451,7 @@
         snippet: this.get('snippet'),
       };
     },
-    getPropsForMessage(options) {
+    getPropsForMessage() {
       const phoneNumber = this.getSource();
       const contact = this.findAndFormatContact(phoneNumber);
       const contactModel = this.findContact(phoneNumber);
@@ -484,9 +470,7 @@
 
       const conversation = this.getConversation();
       const isGroup = conversation && !conversation.isPrivate();
-
       const attachments = this.get('attachments') || [];
-      const firstAttachment = attachments[0];
 
       return {
         text: this.createNonBreakingLastSeparator(this.get('body')),
@@ -505,28 +489,30 @@
           .filter(attachment => !attachment.error)
           .map(attachment => this.getPropsForAttachment(attachment)),
         previews: this.getPropsForPreview(),
-        quote: this.getPropsForQuote(options),
+        quote: this.getPropsForQuote(),
         authorAvatarPath,
         isExpired: this.hasExpired,
         expirationLength,
         expirationTimestamp,
-        onReply: () => this.trigger('reply', this),
-        onRetrySend: () => this.retrySend(),
-        onShowDetail: () => this.trigger('show-message-detail', this),
-        onDelete: () => this.trigger('delete', this),
-        onClickLinkPreview: url => this.trigger('navigate-to', url),
-        onClickAttachment: attachment =>
-          this.trigger('show-lightbox', {
-            attachment,
-            message: this,
-          }),
 
-        onDownload: isDangerous =>
-          this.trigger('download', {
-            attachment: firstAttachment,
-            message: this,
-            isDangerous,
-          }),
+        replyToMessage: id => this.trigger('reply', id),
+        retrySend: id => this.trigger('retry', id),
+        deleteMessage: id => this.trigger('delete', id),
+        showMessageDetail: id => this.trigger('show-message-detail', id),
+
+        openConversation: conversationId =>
+          this.trigger('open-conversation', conversationId),
+        showContactDetail: contactOptions =>
+          this.trigger('show-contact-detail', contactOptions),
+
+        showVisualAttachment: lightboxOptions =>
+          this.trigger('show-lightbox', lightboxOptions),
+        downloadAttachment: downloadOptions =>
+          this.trigger('download', downloadOptions),
+
+        openLink: url => this.trigger('navigate-to', url),
+        scrollToMessage: scrollOptions =>
+          this.trigger('scroll-to-message', scrollOptions),
       };
     },
     createNonBreakingLastSeparator(text) {
@@ -556,20 +542,6 @@
       const contact = contacts[0];
       const firstNumber =
         contact.number && contact.number[0] && contact.number[0].value;
-      const onSendMessage = firstNumber
-        ? () => {
-          this.trigger('open-conversation', firstNumber);
-        }
-        : null;
-      const onClick = async () => {
-        // First let's be sure that the signal account check is complete.
-        await window.checkForSignalAccount(firstNumber);
-
-        this.trigger('show-contact-detail', {
-          contact,
-          hasSignalAccount: window.hasSignalAccount(firstNumber),
-        });
-      };
 
       // Would be nice to do this before render, on initial load of message
       if (!window.isSignalAccountCheckComplete(firstNumber)) {
@@ -581,9 +553,9 @@
       return contactSelector(contact, {
         regionCode,
         getAbsoluteAttachmentPath,
-        onSendMessage,
-        onClick,
-        hasSignalAccount: window.hasSignalAccount(firstNumber),
+        signalAccount: window.hasSignalAccount(firstNumber)
+          ? firstNumber
+          : null,
       });
     },
     processQuoteAttachment(attachment) {
@@ -617,8 +589,7 @@
         }
       )));
     },
-    getPropsForQuote(options = {}) {
-      const { noClick } = options;
+    getPropsForQuote() {
       const quote = this.get('quote');
       if (!quote) {
         return null;
@@ -627,7 +598,7 @@
       const { format } = PhoneNumber;
       const regionCode = storage.get('regionCode');
 
-      const { author, id, referencedMessageNotFound } = quote;
+      const { author, id: sentAt, referencedMessageNotFound } = quote;
       const contact = author && ConversationController.get(author);
       const authorColor = contact ? contact.getColor() : 'grey';
 
@@ -637,16 +608,6 @@
       const authorProfileName = contact ? contact.getProfileName() : null;
       const authorName = contact ? contact.getName() : null;
       const isFromMe = contact ? contact.id === this.OUR_NUMBER : false;
-      const onClick = noClick
-        ? null
-        : () => {
-            this.trigger('scroll-to-message', {
-              author,
-              id,
-              referencedMessageNotFound,
-            });
-          };
-
       const firstAttachment = quote.attachments && quote.attachments[0];
 
       return {
@@ -655,11 +616,12 @@
           ? this.processQuoteAttachment(firstAttachment)
           : null,
         isFromMe,
+        sentAt,
+        authorId: author,
         authorPhoneNumber,
         authorProfileName,
         authorName,
         authorColor,
-        onClick,
         referencedMessageNotFound,
       };
     },
@@ -753,6 +715,7 @@
 
         return Object.assign({},
           this.findAndFormatContact(id),
+
           {
             status: this.getStatus(id),
             errors: errorsForContact,
@@ -780,9 +743,10 @@
         sentAt: this.get('sent_at'),
         receivedAt: this.get('received_at'),
         message: Object.assign({},
-          this.getPropsForMessage({ noClick: true }),
+          this.getPropsForMessage(),
           {
             disableMenu: true,
+            disableScroll: true,
             // To ensure that group avatar doesn't show up
             conversationType: 'direct',
           }

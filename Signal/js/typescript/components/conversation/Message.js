@@ -132,7 +132,7 @@
         }
         // tslint:disable-next-line max-func-body-length cyclomatic-complexity
         renderAttachment() {
-            const { attachments, text, collapseMetadata, conversationType, direction, i18n, quote, onClickAttachment, } = this.props;
+            const { id, attachments, text, collapseMetadata, conversationType, direction, i18n, quote, showVisualAttachment, } = this.props;
             const { imageBroken } = this.state;
             if (!attachments || !attachments[0]) {
                 return null;
@@ -154,7 +154,11 @@
                         ? 'module-message__attachment-container--with-content-below'
                         : null)
                 },
-                    react_1.default.createElement(ImageGrid_1.ImageGrid, { attachments: attachments, withContentAbove: withContentAbove, withContentBelow: withContentBelow, bottomOverlay: !collapseMetadata, i18n: i18n, onError: this.handleImageErrorBound, onClickAttachment: onClickAttachment })));
+                    react_1.default.createElement(ImageGrid_1.ImageGrid, {
+                        attachments: attachments, withContentAbove: withContentAbove, withContentBelow: withContentBelow, bottomOverlay: !collapseMetadata, i18n: i18n, onError: this.handleImageErrorBound, onClick: attachment => {
+                            showVisualAttachment({ attachment, messageId: id });
+                        }
+                    })));
             }
             else if (!firstAttachment.pending && Attachment_1.isAudio(attachments)) {
                 return (react_1.default.createElement("audio", {
@@ -189,7 +193,7 @@
         }
         // tslint:disable-next-line cyclomatic-complexity
         renderPreview() {
-            const { attachments, conversationType, direction, i18n, onClickLinkPreview, previews, quote, } = this.props;
+            const { attachments, conversationType, direction, i18n, openLink, previews, quote, } = this.props;
             // Attachments take precedence over Link Previews
             if (attachments && attachments.length) {
                 return null;
@@ -210,9 +214,7 @@
                 role: "button", className: classnames_1.default('module-message__link-preview', withContentAbove
                     ? 'module-message__link-preview--with-content-above'
                     : null), onClick: () => {
-                        if (onClickLinkPreview) {
-                            onClickLinkPreview(first.url);
-                        }
+                        openLink(first.url);
                     }
             },
                 first.image && previewHasImage && isFullSizeImage ? (react_1.default.createElement(ImageGrid_1.ImageGrid, { attachments: [first.image], withContentAbove: withContentAbove, withContentBelow: true, onError: this.handleImageErrorBound, i18n: i18n })) : null,
@@ -232,30 +234,50 @@
                         react_1.default.createElement("div", { className: "module-message__link-preview__location" }, first.domain)))));
         }
         renderQuote() {
-            const { conversationType, authorColor, direction, i18n, quote, } = this.props;
+            const { conversationType, authorColor, direction, disableScroll, i18n, quote, scrollToMessage, } = this.props;
             if (!quote) {
                 return null;
             }
             const withContentAbove = conversationType === 'group' && direction === 'incoming';
             const quoteColor = direction === 'incoming' ? authorColor : quote.authorColor;
-            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: quote.onClick, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quoteColor, referencedMessageNotFound: quote.referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
+            const { referencedMessageNotFound } = quote;
+            const clickHandler = disableScroll
+                ? undefined
+                : () => {
+                    scrollToMessage({
+                        author: quote.authorId,
+                        sentAt: quote.sentAt,
+                        referencedMessageNotFound,
+                    });
+                };
+            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: clickHandler, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quoteColor, referencedMessageNotFound: referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
         }
         renderEmbeddedContact() {
-            const { collapseMetadata, contact, conversationType, direction, i18n, text, } = this.props;
+            const { collapseMetadata, contact, conversationType, direction, i18n, showContactDetail, text, } = this.props;
             if (!contact) {
                 return null;
             }
             const withCaption = Boolean(text);
             const withContentAbove = conversationType === 'group' && direction === 'incoming';
             const withContentBelow = withCaption || !collapseMetadata;
-            return (react_1.default.createElement(EmbeddedContact_1.EmbeddedContact, { contact: contact, hasSignalAccount: contact.hasSignalAccount, isIncoming: direction === 'incoming', i18n: i18n, onClick: contact.onClick, withContentAbove: withContentAbove, withContentBelow: withContentBelow }));
+            return (react_1.default.createElement(EmbeddedContact_1.EmbeddedContact, {
+                contact: contact, isIncoming: direction === 'incoming', i18n: i18n, onClick: () => {
+                    showContactDetail({ contact, signalAccount: contact.signalAccount });
+                }, withContentAbove: withContentAbove, withContentBelow: withContentBelow
+            }));
         }
         renderSendMessageButton() {
-            const { contact, i18n } = this.props;
-            if (!contact || !contact.hasSignalAccount) {
+            const { contact, openConversation, i18n } = this.props;
+            if (!contact || !contact.signalAccount) {
                 return null;
             }
-            return (react_1.default.createElement("div", { role: "button", onClick: contact.onSendMessage, className: "module-message__send-message-button" }, i18n('sendMessageToContact')));
+            return (react_1.default.createElement("div", {
+                role: "button", onClick: () => {
+                    if (contact.signalAccount) {
+                        openConversation(contact.signalAccount);
+                    }
+                }, className: "module-message__send-message-button"
+            }, i18n('sendMessageToContact')));
         }
         renderAvatar() {
             const { authorAvatarPath, authorName, authorPhoneNumber, authorProfileName, collapseMetadata, authorColor, conversationType, direction, i18n, } = this.props;
@@ -299,7 +321,7 @@
             }
         }
         renderMenu(isCorrectSide, triggerId) {
-            const { attachments, direction, disableMenu, onDownload, onReply, } = this.props;
+            const { attachments, direction, disableMenu, downloadAttachment, id, replyToMessage, timestamp, } = this.props;
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
@@ -309,12 +331,18 @@
             const firstAttachment = attachments && attachments[0];
             const downloadButton = !multipleAttachments && firstAttachment && !firstAttachment.pending ? (react_1.default.createElement("div", {
                 onClick: () => {
-                    if (onDownload) {
-                        onDownload(isDangerous);
-                    }
+                    downloadAttachment({
+                        isDangerous,
+                        attachment: firstAttachment,
+                        timestamp,
+                    });
                 }, role: "button", className: classnames_1.default('module-message__buttons__download', `module-message__buttons__download--${direction}`)
             })) : null;
-            const replyButton = (react_1.default.createElement("div", { onClick: onReply, role: "button", className: classnames_1.default('module-message__buttons__reply', `module-message__buttons__download--${direction}`) }));
+            const replyButton = (react_1.default.createElement("div", {
+                onClick: () => {
+                    replyToMessage(id);
+                }, role: "button", className: classnames_1.default('module-message__buttons__reply', `module-message__buttons__download--${direction}`)
+            }));
             const menuButton = (react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, { id: triggerId, ref: this.captureMenuTriggerBound },
                 react_1.default.createElement("div", { role: "button", onClick: this.showMenuBound, className: classnames_1.default('module-message__buttons__menu', `module-message__buttons__download--${direction}`) })));
             const first = direction === 'incoming' ? downloadButton : menuButton;
@@ -325,7 +353,7 @@
                 last));
         }
         renderContextMenu(triggerId) {
-            const { attachments, direction, status, onDelete, onDownload, onReply, onRetrySend, onShowDetail, i18n, } = this.props;
+            const { attachments, direction, downloadAttachment, i18n, id, deleteMessage, showMessageDetail, replyToMessage, retrySend, status, timestamp, } = this.props;
             const showRetry = status === 'error' && direction === 'outgoing';
             const fileName = attachments && attachments[0] ? attachments[0].fileName : null;
             const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
@@ -335,30 +363,40 @@
                     attributes: {
                         className: 'module-message__context__download',
                     }, onClick: () => {
-                        if (onDownload) {
-                            onDownload(isDangerous);
-                        }
+                        downloadAttachment({
+                            attachment: attachments[0],
+                            timestamp,
+                            isDangerous,
+                        });
                     }
                 }, i18n('downloadAttachment'))) : null,
                 react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__reply',
-                    }, onClick: onReply
+                    }, onClick: () => {
+                        replyToMessage(id);
+                    }
                 }, i18n('replyToMessage')),
                 react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__more-info',
-                    }, onClick: onShowDetail
+                    }, onClick: () => {
+                        showMessageDetail(id);
+                    }
                 }, i18n('moreInfo')),
                 showRetry ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__retry-send',
-                    }, onClick: onRetrySend
+                    }, onClick: () => {
+                        retrySend(id);
+                    }
                 }, i18n('retrySend'))) : null,
                 react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__delete-message',
-                    }, onClick: onDelete
+                    }, onClick: () => {
+                        deleteMessage(id);
+                    }
                 }, i18n('deleteMessage'))));
         }
         getWidth() {
