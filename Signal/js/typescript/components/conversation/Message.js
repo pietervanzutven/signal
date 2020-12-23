@@ -11,6 +11,7 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
+    const react_dom_1 = __importDefault(window.react_dom);
     const classnames_1 = __importDefault(window.classnames);
     const Avatar_1 = window.ts.components.Avatar;
     const Spinner_1 = window.ts.components.Spinner;
@@ -358,7 +359,7 @@
             const fileName = attachments && attachments[0] ? attachments[0].fileName : null;
             const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
             const multipleAttachments = attachments && attachments.length > 1;
-            return (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
+            const menu = (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
                 !multipleAttachments && attachments && attachments[0] ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__download',
@@ -398,6 +399,7 @@
                         deleteMessage(id);
                     }
                 }, i18n('deleteMessage'))));
+            return react_dom_1.default.createPortal(menu, document.body);
         }
         getWidth() {
             const { attachments, previews } = this.props;

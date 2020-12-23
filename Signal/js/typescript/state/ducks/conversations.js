@@ -98,6 +98,8 @@
         return {
             conversationLookup: {},
             showArchived: false,
+            messagesLookup: {},
+            messagesByConversation: {},
         };
     }
     function reducer(state, action) {

@@ -256,6 +256,7 @@
     <Content Include="js\typescript\components\conversation\GroupNotification.js" />
     <Content Include="js\typescript\components\conversation\Image.js" />
     <Content Include="js\typescript\components\conversation\ImageGrid.js" />
+    <Content Include="js\typescript\components\conversation\LastSeenIndicator.js" />
     <Content Include="js\typescript\components\conversation\Linkify.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\AttachmentSection.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\DocumentListItem.js" />
@@ -271,9 +272,12 @@
     <Content Include="js\typescript\components\conversation\Quote.js" />
     <Content Include="js\typescript\components\conversation\ResetSessionNotification.js" />
     <Content Include="js\typescript\components\conversation\SafetyNumberNotification.js" />
+    <Content Include="js\typescript\components\conversation\ScrollDownButton.js" />
     <Content Include="js\typescript\components\conversation\StagedGenericAttachment.js" />
     <Content Include="js\typescript\components\conversation\StagedLinkPreview.js" />
     <Content Include="js\typescript\components\conversation\StagedPlaceholderAttachment.js" />
+    <Content Include="js\typescript\components\conversation\Timeline.js" />
+    <Content Include="js\typescript\components\conversation\TimelineItem.js" />
     <Content Include="js\typescript\components\conversation\TimerNotification.js" />
     <Content Include="js\typescript\components\conversation\Timestamp.js" />
     <Content Include="js\typescript\components\conversation\types.js" />
@@ -305,12 +309,15 @@
     <Content Include="js\typescript\state\ducks\user.js" />
     <Content Include="js\typescript\state\reducer.js" />
     <Content Include="js\typescript\state\roots\createLeftPane.js" />
+    <Content Include="js\typescript\state\roots\createTimeline.js" />
     <Content Include="js\typescript\state\selectors\conversations.js" />
     <Content Include="js\typescript\state\selectors\search.js" />
     <Content Include="js\typescript\state\selectors\user.js" />
     <Content Include="js\typescript\state\smart\LeftPane.js" />
     <Content Include="js\typescript\state\smart\MainHeader.js" />
     <Content Include="js\typescript\state\smart\MessageSearchResult.js" />
+    <Content Include="js\typescript\state\smart\Timeline.js" />
+    <Content Include="js\typescript\state\smart\TimelineItem.js" />
     <Content Include="js\typescript\types\Attachment.js" />
     <Content Include="js\typescript\types\Contact.js" />
     <Content Include="js\typescript\types\Conversation.js" />
@@ -410,6 +417,7 @@
     <Content Include="node_modules\lodash\clonedeep.js" />
     <Content Include="node_modules\lodash\pick.js" />
     <Content Include="node_modules\lodash\set.js" />
+    <Content Include="node_modules\memoizee\index.js" />
     <Content Include="node_modules\mkdirp\index.js" />
     <Content Include="node_modules\pify\index.js" />
     <Content Include="node_modules\prop-types\prop-types.js" />

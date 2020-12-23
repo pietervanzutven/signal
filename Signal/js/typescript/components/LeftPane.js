@@ -27,7 +27,8 @@
                 const conversation = showArchived
                     ? archivedConversations[index]
                     : conversations[index];
-                return (react_1.default.createElement(ConversationListItem_1.ConversationListItem, Object.assign({ key: key, style: style }, conversation, { onClick: openConversationInternal, i18n: i18n })));
+                return (react_1.default.createElement("div", { key: key, className: "module-left-pane__conversation-container", style: style },
+                    react_1.default.createElement(ConversationListItem_1.ConversationListItem, Object.assign({}, conversation, { onClick: openConversationInternal, i18n: i18n }))));
             };
         }
         renderArchivedButton({ key, style, }) {

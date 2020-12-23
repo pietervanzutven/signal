@@ -68,7 +68,7 @@
         };
     }
     // Helper functions for search
-    // const getMessageProps = (messages: Array<MessageType>) => {
+    // const getMessageProps = (messages: Array<MessageSearchResultType>) => {
     //   if (!messages || !messages.length) {
     //     return [];
     //   }
