@@ -23,7 +23,6 @@ function Message(options) {
   this.flags = options.flags;
   this.recipients = options.recipients;
   this.timestamp = options.timestamp;
-  this.needsSync = options.needsSync;
   this.expireTimer = options.expireTimer;
   this.profileKey = options.profileKey;
 
@@ -440,6 +439,7 @@ MessageSender.prototype = {
     expirationStartTimestamp,
     sentTo = [],
     unidentifiedDeliveries = [],
+    isUpdate = false,
     options
   ) {
     const myNumber = textsecure.storage.user.getNumber();
@@ -469,6 +469,10 @@ MessageSender.prototype = {
       },
       Object.create(null)
     );
+
+    if (isUpdate) {
+      syncMessage.isRecipientUpdate = true;
+    }
 
     // Though this field has 'unidenified' in the name, it should have entries for each
     //   number we sent to.
@@ -845,7 +849,6 @@ MessageSender.prototype = {
         attachments,
         quote,
         preview,
-        needsSync: true,
         expireTimer,
         profileKey,
       },
@@ -943,7 +946,6 @@ MessageSender.prototype = {
       attachments,
       quote,
       preview,
-      needsSync: true,
       expireTimer,
       profileKey,
       group: {
@@ -1058,7 +1060,6 @@ MessageSender.prototype = {
     const attrs = {
       recipients: numbers,
       timestamp,
-      needsSync: true,
       expireTimer,
       profileKey,
       flags: textsecure.protobuf.DataMessage.Flags.EXPIRATION_TIMER_UPDATE,
@@ -1091,7 +1092,6 @@ MessageSender.prototype = {
       {
         recipients: [number],
         timestamp,
-        needsSync: true,
         expireTimer,
         profileKey,
         flags: textsecure.protobuf.DataMessage.Flags.EXPIRATION_TIMER_UPDATE,

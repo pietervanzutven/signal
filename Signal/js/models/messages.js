@@ -1131,7 +1131,7 @@
           this.trigger('done');
 
           // This is used by sendSyncMessage, then set to null
-          if (!this.get('synced') && result.dataMessage) {
+          if (result.dataMessage) {
             this.set({ dataMessage: result.dataMessage });
           }
 
@@ -1262,9 +1262,16 @@
       this.syncPromise = this.syncPromise || Promise.resolve();
       const next = () => {
         const dataMessage = this.get('dataMessage');
-        if (this.get('synced') || !dataMessage) {
+        if (!dataMessage) {
           return Promise.resolve();
         }
+        const isUpdate = Boolean(this.get('synced'));
+
+        // Until isRecipientUpdate sync messages are widely supported, will not send them
+        if (isUpdate) {
+          return Promise.resolve();
+        }
+
         return wrap(
           textsecure.messaging.sendSyncMessage(
             dataMessage,
@@ -1273,6 +1280,7 @@
             this.get('expirationStartTimestamp'),
             this.get('sent_to'),
             this.get('unidentifiedDeliveries'),
+            isUpdate,
             sendOptions
           )
         ).then(result => {
