@@ -1497,6 +1497,7 @@
         try {
           await this.model.destroyMessages();
           this.unload('delete messages');
+          this.model.updateLastMessage();
         } catch (error) {
           window.log.error(
             'destroyMessages: Failed to successfully delete conversation',
