@@ -165,6 +165,7 @@
     <Content Include="images\Wide310x150Logo.scale-150.png" />
     <Content Include="images\Wide310x150Logo.scale-200.png" />
     <Content Include="images\Wide310x150Logo.scale-400.png" />
+    <Content Include="images\x-shadow-16.svg" />
     <Content Include="images\x.svg" />
     <Content Include="images\x_white.svg" />
     <Content Include="js\about_start.js" />
