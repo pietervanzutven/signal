@@ -37,6 +37,9 @@
     'instagram.com',
     'www.instagram.com',
     'm.instagram.com',
+    'pinterest.com',
+    'www.pinterest.com',
+    'pin.it',
   ];
   function isLinkInWhitelist(link) {
     try {
@@ -61,7 +64,7 @@
     }
   }
 
-  const SUPPORTED_MEDIA_DOMAINS = /^([^.]+\.)*(ytimg.com|cdninstagram.com|redd.it|imgur.com|fbcdn.net)$/i;
+  const SUPPORTED_MEDIA_DOMAINS = /^([^.]+\.)*(ytimg.com|cdninstagram.com|redd.it|imgur.com|fbcdn.net|pinimg.com)$/i;
   function isMediaLinkInWhitelist(link) {
     try {
       const url = new URL(link);
@@ -84,8 +87,8 @@
     }
   }
 
-  const META_TITLE = /<meta\s+property="og:title"\s+content="([\s\S]+?)"\s*\/?\s*>/im;
-  const META_IMAGE = /<meta\s+property="og:image"\s+content="([\s\S]+?)"\s*\/?\s*>/im;
+  const META_TITLE = /<meta\s+property="og:title"[^>]+?content="([\s\S]+?)"[^>]*>/im;
+  const META_IMAGE = /<meta\s+property="og:image"[^>]+?content="([\s\S]+?)"[^>]*>/im;
   function _getMetaTag(html, regularExpression) {
     const match = regularExpression.exec(html);
     if (match && match[1]) {
