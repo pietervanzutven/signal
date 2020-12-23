@@ -1397,6 +1397,14 @@
       }
       const envelope = ev.proto;
       const message = await initIncomingMessage(envelope, { isError: true });
+      const isDuplicate = await isMessageDuplicate(message);
+      if (isDuplicate) {
+        ev.confirm();
+        window.log.warn(
+          `Got duplicate error for message ${message.idForLogging()}`
+        );
+        return;
+      }
 
       await message.saveErrors(error || new Error('Error was null'));
       const id = message.get('conversationId');
