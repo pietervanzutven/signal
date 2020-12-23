@@ -3,7 +3,7 @@
 
   const is = window.sindresorhus.is;
 
-  /* global Buffer, setTimeout, log, _ */
+  /* global Buffer, setTimeout, log, _, getGuid */
 
   /* eslint-disable more/no-then, no-bitwise, no-nested-ternary */
 
@@ -183,7 +183,7 @@
           `${options.type} ${url}${options.unauthenticated ? ' (unauth)' : ''}`
         );
       }
-      
+
       const timeout =
         typeof options.timeout !== 'undefined' ? options.timeout : 10000;
 
@@ -220,6 +220,9 @@
       };
       if (options.data) {
         fetchOptions.body = options.data;
+      }
+      if (Buffer.isBuffer(fetchOptions.body)) {
+        fetchOptions.body = options.data.bytebuffer.toBuffer();
       }
 
       if (fetchOptions.body instanceof ArrayBuffer) {
@@ -376,7 +379,7 @@
     accounts: 'v1/accounts',
     updateDeviceName: 'v1/accounts/name',
     removeSignalingKey: 'v1/accounts/signaling_key',
-    attachment: 'v1/attachments',
+    attachmentId: 'v2/attachments/form/upload',
     deliveryCert: 'v1/certificate/delivery',
     supportUnauthenticatedDelivery: 'v1/devices/unauthenticated_delivery',
     devices: 'v1/devices',
@@ -822,41 +825,88 @@
         });
       }
 
-      function getAttachment(id) {
-        return _ajax({
-          call: 'attachment',
-          httpType: 'GET',
-          urlParameters: `/${id}`,
-          responseType: 'json',
-          validateResponse: { location: 'string' },
-        }).then(response =>
-          // Using _outerAJAX, since it's not hardcoded to the Signal Server
-          _outerAjax(response.location, {
-            contentType: 'application/octet-stream',
-            proxyUrl,
-            responseType: 'arraybuffer',
-            timeout: 0,
-            type: 'GET',
-          })
-        );
+      async function getAttachment(id) {
+        // This is going to the CDN, not the service, so we use _outerAjax
+        return _outerAjax(`${cdnUrl}/attachments/${id}`, {
+          certificateAuthority,
+          proxyUrl,
+          responseType: 'arraybuffer',
+          timeout: 0,
+          type: 'GET',
+        });
       }
 
-      function putAttachment(encryptedBin) {
-        return _ajax({
-          call: 'attachment',
+      async function putAttachment(encryptedBin) {
+        const response = await _ajax({
+          call: 'attachmentId',
           httpType: 'GET',
           responseType: 'json',
-        }).then(response =>
-          // Using _outerAJAX, since it's not hardcoded to the Signal Server
-          _outerAjax(response.location, {
-            contentType: 'application/octet-stream',
-            data: encryptedBin,
-            processData: false,
-            proxyUrl,
-            timeout: 0,
-            type: 'PUT',
-          }).then(() => response.idString)
+        });
+
+        const {
+          key,
+          credential,
+          acl,
+          algorithm,
+          date,
+          policy,
+          signature,
+          attachmentIdString,
+        } = response;
+
+        // Note: when using the boundary string in the POST body, it needs to be prefixed by
+        //   an extra --, and the final boundary string at the end gets a -- prefix and a --
+        //   suffix.
+        const boundaryString = `----------------${getGuid().replace(/-/g, '')}`;
+        const CRLF = '\r\n';
+        const getSection = (name, value) =>
+          [
+            `--${boundaryString}`,
+            `Content-Disposition: form-data; name="${name}"${CRLF}`,
+            value,
+          ].join(CRLF);
+
+        const start = [
+          getSection('key', key),
+          getSection('x-amz-credential', credential),
+          getSection('acl', acl),
+          getSection('x-amz-algorithm', algorithm),
+          getSection('x-amz-date', date),
+          getSection('policy', policy),
+          getSection('x-amz-signature', signature),
+          getSection('Content-Type', 'application/octet-stream'),
+          `--${boundaryString}`,
+          'Content-Disposition: form-data; name="file"',
+          `Content-Type: application/octet-stream${CRLF}${CRLF}`,
+        ].join(CRLF);
+        const end = `${CRLF}--${boundaryString}--${CRLF}`;
+
+        const startBuffer = Buffer.from(start, 'utf8');
+        const attachmentBuffer = Buffer.from(encryptedBin);
+        const endBuffer = Buffer.from(end, 'utf8');
+
+        const contentLength =
+          startBuffer.length + attachmentBuffer.length + endBuffer.length;
+        const data = Buffer.concat(
+          [startBuffer, attachmentBuffer, endBuffer],
+          contentLength
         );
+
+        // This is going to the CDN, not the service, so we use _outerAjax
+        await _outerAjax(`${cdnUrl}/attachments/`, {
+          certificateAuthority,
+          contentType: `multipart/form-data; boundary=${boundaryString}`,
+          data,
+          proxyUrl,
+          timeout: 0,
+          type: 'POST',
+          headers: {
+            'Content-Length': contentLength,
+          },
+          processData: false,
+        });
+
+        return attachmentIdString;
       }
 
       // eslint-disable-next-line no-shadow

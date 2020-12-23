@@ -9,6 +9,7 @@
   window.sjcl.beware["CTR mode is dangerous because it doesn't protect message integrity."]();
 
   window.crypto.arrayBufferToBase64 = arrayBufferToBase64;
+  window.crypto.typedArrayToArrayBuffer = typedArrayToArrayBuffer;
   window.crypto.base64ToArrayBuffer = base64ToArrayBuffer;
   window.crypto.bytesFromString = bytesFromString;
   window.crypto.concatenateBytes = concatenateBytes;
@@ -26,6 +27,7 @@
   window.crypto.encryptSymmetric = encryptSymmetric;
   window.crypto.fromEncodedBinaryToArrayBuffer = fromEncodedBinaryToArrayBuffer;
   window.crypto.getAccessKeyVerifier = getAccessKeyVerifier;
+  window.crypto.getFirstBytes = getFirstBytes;
   window.crypto.getRandomBytes = getRandomBytes;
   window.crypto.getViewOfArrayBuffer = getViewOfArrayBuffer;
   window.crypto.getZeroes = getZeroes;
@@ -38,6 +40,11 @@
   window.crypto.verifyAccessKey = verifyAccessKey;
 
   window.crypto.randomBytes = n => Buffer.from(window.crypto.getRandomBytes(n));
+
+  function typedArrayToArrayBuffer(typedArray) {
+    const { buffer, byteOffset, byteLength } = typedArray;
+    return buffer.slice(byteOffset, byteLength + byteOffset);
+  }
 
   function arrayBufferToBase64(arrayBuffer) {
     return dcodeIO.ByteBuffer.wrap(arrayBuffer).toString('base64');
@@ -68,7 +75,7 @@
     );
 
     const key1 = await hmacSha256(masterSecret, bytesFromString('auth'));
-    const syntheticIv = _getFirstBytes(await hmacSha256(key1, plaintext), 16);
+    const syntheticIv = getFirstBytes(await hmacSha256(key1, plaintext), 16);
 
     const key2 = await hmacSha256(masterSecret, bytesFromString('cipher'));
     const cipherKey = await hmacSha256(key2, syntheticIv);
@@ -99,7 +106,7 @@
     const plaintext = await decryptAesCtr(cipherKey, ciphertext, counter);
 
     const key1 = await hmacSha256(masterSecret, bytesFromString('auth'));
-    const ourSyntheticIv = _getFirstBytes(await hmacSha256(key1, plaintext), 16);
+    const ourSyntheticIv = getFirstBytes(await hmacSha256(key1, plaintext), 16);
 
     if (!constantTimeEqual(ourSyntheticIv, syntheticIv)) {
       throw new Error('decryptDeviceName: synthetic IV did not match');
@@ -138,7 +145,7 @@
   }
 
   async function decryptFile(staticPrivateKey, uniqueId, data) {
-    const ephemeralPublicKey = _getFirstBytes(data, PUB_KEY_LENGTH);
+    const ephemeralPublicKey = getFirstBytes(data, PUB_KEY_LENGTH);
     const ciphertext = _getBytes(data, PUB_KEY_LENGTH, data.byteLength);
     const agreement = await libsignal.Curve.async.calculateAgreement(
       ephemeralPublicKey,
@@ -154,7 +161,7 @@
     const iv = getZeroes(12);
     const plaintext = getZeroes(16);
     const accessKey = await _encrypt_aes_gcm(profileKey, iv, plaintext);
-    return _getFirstBytes(accessKey, 16);
+    return getFirstBytes(accessKey, 16);
   }
 
   async function getAccessKeyVerifier(accessKey) {
@@ -190,7 +197,7 @@
       iv,
       plaintext
     );
-    const mac = _getFirstBytes(await hmacSha256(macKey, cipherText), MAC_LENGTH);
+    const mac = getFirstBytes(await hmacSha256(macKey, cipherText), MAC_LENGTH);
 
     return concatenateBytes(nonce, cipherText, mac);
   }
@@ -198,7 +205,7 @@
   async function decryptSymmetric(key, data) {
     const iv = getZeroes(IV_LENGTH);
 
-    const nonce = _getFirstBytes(data, NONCE_LENGTH);
+    const nonce = getFirstBytes(data, NONCE_LENGTH);
     const cipherText = _getBytes(
       data,
       NONCE_LENGTH,
@@ -209,7 +216,7 @@
     const cipherKey = await hmacSha256(key, nonce);
     const macKey = await hmacSha256(key, cipherKey);
 
-    const ourMac = _getFirstBytes(
+    const ourMac = getFirstBytes(
       await hmacSha256(macKey, cipherText),
       MAC_LENGTH
     );
@@ -355,7 +362,7 @@
   }
 
   function trimBytes(buffer, length) {
-    return _getFirstBytes(buffer, length);
+    return getFirstBytes(buffer, length);
   }
 
   function getViewOfArrayBuffer(buffer, start, finish) {
@@ -412,12 +419,12 @@
     return results;
   }
 
-  // Internal-only
-
-  function _getFirstBytes(data, n) {
+  function getFirstBytes(data, n) {
     const source = new Uint8Array(data);
     return source.subarray(0, n);
   }
+
+  // Internal-only
 
   function _getBytes(data, start, n) {
     const source = new Uint8Array(data);

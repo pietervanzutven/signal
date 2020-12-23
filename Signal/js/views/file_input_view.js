@@ -534,6 +534,7 @@
       return new Promise((resolve, reject) => {
         const FR = new FileReader();
         FR.onload = e => {
+          const data = e.target.result;
           resolve(Object.assign({},
             attachment,
             {
