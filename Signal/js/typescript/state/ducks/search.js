@@ -121,10 +121,7 @@
             contacts: [],
         };
     }
-    function reducer(state, action) {
-        if (!state) {
-            return getEmptyState();
-        }
+    function reducer(state = getEmptyState(), action) {
         if (action.type === 'SEARCH_CLEAR') {
             return getEmptyState();
         }

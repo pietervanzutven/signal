@@ -29,6 +29,7 @@
     const react_contextmenu_1 = window.react_contextmenu;
     // Same as MIN_WIDTH in ImageGrid.tsx
     const MINIMUM_LINK_PREVIEW_IMAGE_WIDTH = 200;
+    const STICKER_SIZE = 128;
     const EXPIRATION_CHECK_MINIMUM = 2000;
     const EXPIRED_DELAY = 600;
     class Message extends react_1.default.PureComponent {
@@ -95,45 +96,55 @@
             });
         }
         renderMetadata() {
-            const { collapseMetadata, direction, expirationLength, expirationTimestamp, i18n, status, text, textPending, timestamp, } = this.props;
+            const { collapseMetadata, direction, expirationLength, expirationTimestamp, i18n, isSticker, status, text, textPending, timestamp, } = this.props;
             if (collapseMetadata) {
                 return null;
             }
             const isShowingImage = this.isShowingImage();
-            const withImageNoCaption = Boolean(!text && isShowingImage);
+            const withImageNoCaption = Boolean(!isSticker && !text && isShowingImage);
             const showError = status === 'error' && direction === 'outgoing';
+            const metadataDirection = isSticker ? undefined : direction;
             return (react_1.default.createElement("div", {
                 className: classnames_1.default('module-message__metadata', withImageNoCaption
                     ? 'module-message__metadata--with-image-no-caption'
                     : null)
             },
                 showError ? (react_1.default.createElement("span", {
-                    className: classnames_1.default('module-message__metadata__date', `module-message__metadata__date--${direction}`, withImageNoCaption
+                    className: classnames_1.default('module-message__metadata__date', isSticker ? 'module-message__metadata__date--with-sticker' : null, !isSticker
+                        ? `module-message__metadata__date--${direction}`
+                        : null, withImageNoCaption
                         ? 'module-message__metadata__date--with-image-no-caption'
                         : null)
-                }, i18n('sendFailed'))) : (react_1.default.createElement(Timestamp_1.Timestamp, { i18n: i18n, timestamp: timestamp, extended: true, direction: direction, withImageNoCaption: withImageNoCaption, module: "module-message__metadata__date" })),
-                expirationLength && expirationTimestamp ? (react_1.default.createElement(ExpireTimer_1.ExpireTimer, { direction: direction, expirationLength: expirationLength, expirationTimestamp: expirationTimestamp, withImageNoCaption: withImageNoCaption })) : null,
+                }, i18n('sendFailed'))) : (react_1.default.createElement(Timestamp_1.Timestamp, { i18n: i18n, timestamp: timestamp, extended: true, direction: metadataDirection, withImageNoCaption: withImageNoCaption, withSticker: isSticker, module: "module-message__metadata__date" })),
+                expirationLength && expirationTimestamp ? (react_1.default.createElement(ExpireTimer_1.ExpireTimer, { direction: metadataDirection, expirationLength: expirationLength, expirationTimestamp: expirationTimestamp, withImageNoCaption: withImageNoCaption, withSticker: isSticker })) : null,
                 react_1.default.createElement("span", { className: "module-message__metadata__spacer" }),
                 textPending ? (react_1.default.createElement("div", { className: "module-message__metadata__spinner-container" },
                     react_1.default.createElement(Spinner_1.Spinner, { size: "mini", direction: direction }))) : null,
                 !textPending && direction === 'outgoing' && status !== 'error' ? (react_1.default.createElement("div", {
-                    className: classnames_1.default('module-message__metadata__status-icon', `module-message__metadata__status-icon--${status}`, withImageNoCaption
+                    className: classnames_1.default('module-message__metadata__status-icon', `module-message__metadata__status-icon--${status}`, isSticker
+                        ? 'module-message__metadata__status-icon--with-sticker'
+                        : null, withImageNoCaption
                         ? 'module-message__metadata__status-icon--with-image-no-caption'
                         : null)
                 })) : null));
         }
         renderAuthor() {
-            const { authorName, authorPhoneNumber, authorProfileName, conversationType, direction, i18n, } = this.props;
+            const { authorName, authorPhoneNumber, authorProfileName, collapseMetadata, conversationType, direction, i18n, isSticker, } = this.props;
+            if (collapseMetadata) {
+                return;
+            }
             const title = authorName ? authorName : authorPhoneNumber;
             if (direction !== 'incoming' || conversationType !== 'group' || !title) {
                 return null;
             }
-            return (react_1.default.createElement("div", { className: "module-message__author" },
-                react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, module: "module-message__author", i18n: i18n })));
+            const suffix = isSticker ? '_with_sticker' : '';
+            const moduleName = `module-message__author${suffix}`;
+            return (react_1.default.createElement("div", { className: moduleName },
+                react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, module: moduleName, i18n: i18n })));
         }
         // tslint:disable-next-line max-func-body-length cyclomatic-complexity
         renderAttachment() {
-            const { id, attachments, text, collapseMetadata, conversationType, direction, i18n, quote, showVisualAttachment, } = this.props;
+            const { attachments, collapseMetadata, conversationType, direction, i18n, id, quote, showVisualAttachment, isSticker, text, } = this.props;
             const { imageBroken } = this.state;
             if (!attachments || !attachments[0]) {
                 return null;
@@ -148,15 +159,19 @@
                 !imageBroken &&
                 ((Attachment_1.isImage(attachments) && Attachment_1.hasImage(attachments)) ||
                     (Attachment_1.isVideo(attachments) && Attachment_1.hasVideoScreenshot(attachments)))) {
+                const prefix = isSticker ? 'sticker' : 'attachment';
+                const bottomOverlay = !isSticker && !collapseMetadata;
                 return (react_1.default.createElement("div", {
-                    className: classnames_1.default('module-message__attachment-container', withContentAbove
-                        ? 'module-message__attachment-container--with-content-above'
+                    className: classnames_1.default(`module-message__${prefix}-container`, withContentAbove
+                        ? `module-message__${prefix}-container--with-content-above`
                         : null, withContentBelow
                         ? 'module-message__attachment-container--with-content-below'
+                        : null, isSticker && !collapseMetadata
+                        ? 'module-message__sticker-container--with-content-below'
                         : null)
                 },
                     react_1.default.createElement(ImageGrid_1.ImageGrid, {
-                        attachments: attachments, withContentAbove: withContentAbove, withContentBelow: withContentBelow, bottomOverlay: !collapseMetadata, i18n: i18n, onError: this.handleImageErrorBound, onClick: attachment => {
+                        attachments: attachments, withContentAbove: isSticker || withContentAbove, withContentBelow: isSticker || withContentBelow, isSticker: isSticker, stickerSize: STICKER_SIZE, bottomOverlay: bottomOverlay, i18n: i18n, onError: this.handleImageErrorBound, onClick: attachment => {
                             showVisualAttachment({ attachment, messageId: id });
                         }
                     })));
@@ -210,7 +225,9 @@
                 (conversationType === 'group' && direction === 'incoming');
             const previewHasImage = first.image && Attachment_1.isImageAttachment(first.image);
             const width = first.image && first.image.width;
-            const isFullSizeImage = width && width >= MINIMUM_LINK_PREVIEW_IMAGE_WIDTH;
+            const isFullSizeImage = !first.isStickerPack &&
+                width &&
+                width >= MINIMUM_LINK_PREVIEW_IMAGE_WIDTH;
             return (react_1.default.createElement("div", {
                 role: "button", className: classnames_1.default('module-message__link-preview', withContentAbove
                     ? 'module-message__link-preview--with-content-above'
@@ -322,7 +339,7 @@
             }
         }
         renderMenu(isCorrectSide, triggerId) {
-            const { attachments, direction, disableMenu, downloadAttachment, id, replyToMessage, timestamp, } = this.props;
+            const { attachments, direction, disableMenu, downloadAttachment, id, isSticker, replyToMessage, timestamp, } = this.props;
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
@@ -330,15 +347,18 @@
             const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
             const multipleAttachments = attachments && attachments.length > 1;
             const firstAttachment = attachments && attachments[0];
-            const downloadButton = !multipleAttachments && firstAttachment && !firstAttachment.pending ? (react_1.default.createElement("div", {
-                onClick: () => {
-                    downloadAttachment({
-                        isDangerous,
-                        attachment: firstAttachment,
-                        timestamp,
-                    });
-                }, role: "button", className: classnames_1.default('module-message__buttons__download', `module-message__buttons__download--${direction}`)
-            })) : null;
+            const downloadButton = !isSticker &&
+                !multipleAttachments &&
+                firstAttachment &&
+                !firstAttachment.pending ? (react_1.default.createElement("div", {
+                    onClick: () => {
+                        downloadAttachment({
+                            isDangerous,
+                            attachment: firstAttachment,
+                            timestamp,
+                        });
+                    }, role: "button", className: classnames_1.default('module-message__buttons__download', `module-message__buttons__download--${direction}`)
+                })) : null;
             const replyButton = (react_1.default.createElement("div", {
                 onClick: () => {
                     replyToMessage(id);
@@ -354,13 +374,13 @@
                 last));
         }
         renderContextMenu(triggerId) {
-            const { attachments, direction, downloadAttachment, i18n, id, deleteMessage, showMessageDetail, replyToMessage, retrySend, status, timestamp, } = this.props;
+            const { attachments, direction, downloadAttachment, i18n, id, isSticker, deleteMessage, showMessageDetail, replyToMessage, retrySend, status, timestamp, } = this.props;
             const showRetry = status === 'error' && direction === 'outgoing';
             const fileName = attachments && attachments[0] ? attachments[0].fileName : null;
             const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
             const multipleAttachments = attachments && attachments.length > 1;
             const menu = (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
-                !multipleAttachments && attachments && attachments[0] ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                !isSticker && !multipleAttachments && attachments && attachments[0] ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__download',
                     }, onClick: () => {
@@ -402,8 +422,12 @@
             return react_dom_1.default.createPortal(menu, document.body);
         }
         getWidth() {
-            const { attachments, previews } = this.props;
+            const { attachments, isSticker, previews } = this.props;
             if (attachments && attachments.length) {
+                if (isSticker) {
+                    // Padding is 8px, on both sides
+                    return STICKER_SIZE + 8 * 2;
+                }
                 const dimensions = Attachment_1.getGridDimensions(attachments);
                 if (dimensions) {
                     return dimensions.width;
@@ -415,7 +439,8 @@
                     return;
                 }
                 const { width } = first.image;
-                if (Attachment_1.isImageAttachment(first.image) &&
+                if (!first.isStickerPack &&
+                    Attachment_1.isImageAttachment(first.image) &&
                     width &&
                     width >= MINIMUM_LINK_PREVIEW_IMAGE_WIDTH) {
                     const dimensions = Attachment_1.getImageDimensions(first.image);
@@ -449,12 +474,15 @@
             return false;
         }
         render() {
-            const { authorPhoneNumber, authorColor, direction, id, timestamp, } = this.props;
-            const { expired, expiring } = this.state;
+            const { authorPhoneNumber, authorColor, attachments, direction, id, isSticker, timestamp, } = this.props;
+            const { expired, expiring, imageBroken } = this.state;
             // This id is what connects our triple-dot click with our associated pop-up menu.
             //   It needs to be unique.
             const triggerId = String(id || `${authorPhoneNumber}-${timestamp}`);
             if (expired) {
+                return null;
+            }
+            if (isSticker && (imageBroken || !attachments || !attachments.length)) {
                 return null;
             }
             const width = this.getWidth();
@@ -463,7 +491,7 @@
                 this.renderError(direction === 'incoming'),
                 this.renderMenu(direction === 'outgoing', triggerId),
                 react_1.default.createElement("div", {
-                    className: classnames_1.default('module-message__container', `module-message__container--${direction}`, direction === 'incoming'
+                    className: classnames_1.default('module-message__container', isSticker ? 'module-message__container--with-sticker' : null, !isSticker ? `module-message__container--${direction}` : null, !isSticker && direction === 'incoming'
                         ? `module-message__container--incoming-${authorColor}`
                         : null), style: {
                             width: isShowingImage ? width : undefined,

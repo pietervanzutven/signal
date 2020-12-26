@@ -3,7 +3,7 @@
 
   window.app = window.app || {};
 
-  const path = window.path;
+  const { join } = window.path;
   const mkdirp = window.mkdirp;
   const rimraf = window.rimraf;
   const sql = window.journeyapps.sqlcipher;
@@ -12,7 +12,15 @@
 
   const pify = window.pify;
   const uuidv4 = window.uuid.v4;
-  const { map, isObject, isString, fromPairs, forEach, last } = window.lodash;
+  const {
+    forEach,
+    fromPairs,
+    isNumber,
+    isObject,
+    isString,
+    last,
+    map,
+  } = window.lodash;
 
   // To get long stack traces
   //   https://github.com/mapbox/node-sqlite3/wiki/API#sqlite3verbose
@@ -108,6 +116,17 @@
     removeAttachmentDownloadJob,
     removeAllAttachmentDownloadJobs,
 
+    createOrUpdateStickerPack,
+    updateStickerPackStatus,
+    createOrUpdateSticker,
+    updateStickerLastUsed,
+    addStickerPackReference,
+    deleteStickerPackReference,
+    deleteStickerPack,
+    getAllStickerPacks,
+    getAllStickers,
+    getRecentStickers,
+
     removeAll,
     removeAllConfiguration,
 
@@ -116,6 +135,7 @@
     getMessagesWithFileAttachments,
 
     removeKnownAttachments,
+    removeKnownStickers,
   };
 
   function generateUUID() {
@@ -183,6 +203,9 @@
 
     // https://www.zetetic.net/sqlcipher/sqlcipher-api/#key
     await instance.run(`PRAGMA key = "x'${key}'";`);
+
+    // Because foreign key support is not enabled by default!
+    await instance.run('PRAGMA foreign_keys = ON;');
   }
 
   async function updateToSchemaVersion1(currentVersion, instance) {
@@ -639,6 +662,83 @@
     console.log('updateToSchemaVersion11: success!');
   }
 
+  async function updateToSchemaVersion12(currentVersion, instance) {
+    if (currentVersion >= 12) {
+      return;
+    }
+
+    console.log('updateToSchemaVersion12: starting...');
+    await instance.run('BEGIN TRANSACTION;');
+
+    await instance.run(`CREATE TABLE sticker_packs(
+    id TEXT PRIMARY KEY,
+    key TEXT NOT NULL,
+
+    author STRING,
+    coverStickerId INTEGER,
+    createdAt INTEGER,
+    downloadAttempts INTEGER,
+    installedAt INTEGER,
+    lastUsed INTEGER,
+    status STRING,
+    stickerCount INTEGER,
+    title STRING
+  );`);
+
+    await instance.run(`CREATE TABLE stickers(
+    id INTEGER NOT NULL,
+    packId TEXT NOT NULL,
+
+    emoji STRING,
+    height INTEGER,
+    isCoverOnly INTEGER,
+    lastUsed INTEGER,
+    path STRING,
+    width INTEGER,
+
+    PRIMARY KEY (id, packId),
+    CONSTRAINT stickers_fk
+      FOREIGN KEY (packId)
+      REFERENCES sticker_packs(id)
+      ON DELETE CASCADE
+  );`);
+
+    await instance.run(`CREATE INDEX stickers_recents
+    ON stickers (
+      lastUsed
+  ) WHERE lastUsed IS NOT NULL;`);
+
+    await instance.run(`CREATE TABLE sticker_references(
+    messageId STRING,
+    packId TEXT,
+    CONSTRAINT sticker_references_fk
+      FOREIGN KEY(packId)
+      REFERENCES sticker_packs(id)
+      ON DELETE CASCADE
+  );`);
+
+    await instance.run('PRAGMA schema_version = 12;');
+    await instance.run('COMMIT TRANSACTION;');
+    console.log('updateToSchemaVersion12: success!');
+  }
+
+  async function updateToSchemaVersion13(currentVersion, instance) {
+    if (currentVersion >= 13) {
+      return;
+    }
+
+    console.log('updateToSchemaVersion13: starting...');
+    await instance.run('BEGIN TRANSACTION;');
+
+    await instance.run(
+      'ALTER TABLE sticker_packs ADD COLUMN attemptedStatus STRING;'
+    );
+
+    await instance.run('PRAGMA schema_version = 13;');
+    await instance.run('COMMIT TRANSACTION;');
+    console.log('updateToSchemaVersion13: success!');
+  }
+
   const SCHEMA_VERSIONS = [
     updateToSchemaVersion1,
     updateToSchemaVersion2,
@@ -651,6 +751,8 @@
     updateToSchemaVersion9,
     updateToSchemaVersion10,
     updateToSchemaVersion11,
+    updateToSchemaVersion12,
+    updateToSchemaVersion13,
   ];
 
   async function updateSchema(instance) {
@@ -693,12 +795,12 @@
       throw new Error('initialize: message is required!');
     }
 
-    indexedDBPath = path.join(configDir, 'IndexedDB');
+    indexedDBPath = join(configDir, 'IndexedDB');
 
-    const dbDir = path.join(configDir, 'sql');
+    const dbDir = join(configDir, 'sql');
     mkdirp.sync(dbDir);
 
-    filePath = path.join(dbDir, 'db.sqlite');
+    filePath = join(dbDir, 'db.sqlite');
 
     try {
       const sqlInstance = await openDatabase(filePath);
@@ -777,7 +879,7 @@
       );
     }
 
-    const pattern = path.join(indexedDBPath, '*.leveldb');
+    const pattern = join(indexedDBPath, '*.leveldb');
     rimraf.sync(pattern);
     indexedDBPath = null;
   }
@@ -1519,6 +1621,7 @@
   }
 
   async function getNextExpiringMessage() {
+    // Note: we avoid 'IS NOT NULL' here because it does seem to bypass our index
     const rows = await db.all(`
     SELECT json FROM messages
     WHERE expires_at > 0
@@ -1670,6 +1773,8 @@
     await db.run('DELETE FROM unprocessed;');
   }
 
+  // Attachment Downloads
+
   const ATTACHMENT_DOWNLOADS_TABLE = 'attachment_downloads';
   async function getNextAttachmentDownloadJobs(limit, options = {}) {
     const timestamp = options.timestamp || Date.now();
@@ -1736,6 +1841,359 @@
     return removeAllFromTable(ATTACHMENT_DOWNLOADS_TABLE);
   }
 
+  // Stickers
+
+  async function createOrUpdateStickerPack(pack) {
+    const {
+      attemptedStatus,
+      author,
+      coverStickerId,
+      createdAt,
+      downloadAttempts,
+      id,
+      installedAt,
+      key,
+      lastUsed,
+      status,
+      stickerCount,
+      title,
+    } = pack;
+    if (!id) {
+      throw new Error(
+        'createOrUpdateStickerPack: Provided data did not have a truthy id'
+      );
+    }
+
+    await db.run(
+      `INSERT OR REPLACE INTO sticker_packs (
+      attemptedStatus,
+      author,
+      coverStickerId,
+      createdAt,
+      downloadAttempts,
+      id,
+      installedAt,
+      key,
+      lastUsed,
+      status,
+      stickerCount,
+      title
+    ) values (
+      $attemptedStatus,
+      $author,
+      $coverStickerId,
+      $createdAt,
+      $downloadAttempts,
+      $id,
+      $installedAt,
+      $key,
+      $lastUsed,
+      $status,
+      $stickerCount,
+      $title
+    )`,
+      {
+        $attemptedStatus: attemptedStatus,
+        $author: author,
+        $coverStickerId: coverStickerId,
+        $createdAt: createdAt || Date.now(),
+        $downloadAttempts: downloadAttempts || 1,
+        $id: id,
+        $installedAt: installedAt,
+        $key: key,
+        $lastUsed: lastUsed || null,
+        $status: status,
+        $stickerCount: stickerCount,
+        $title: title,
+      }
+    );
+  }
+  async function updateStickerPackStatus(id, status, options) {
+    // Strange, but an undefined parameter gets coerced into null via ipc
+    const timestamp = (options || {}).timestamp || Date.now();
+    const installedAt = status === 'installed' ? timestamp : null;
+
+    await db.run(
+      `UPDATE sticker_packs
+    SET status = $status, installedAt = $installedAt
+    WHERE id = $id;
+    )`,
+      {
+        $id: id,
+        $status: status,
+        $installedAt: installedAt,
+      }
+    );
+  }
+  async function createOrUpdateSticker(sticker) {
+    const {
+      emoji,
+      height,
+      id,
+      isCoverOnly,
+      lastUsed,
+      packId,
+      path,
+      width,
+    } = sticker;
+    if (!isNumber(id)) {
+      throw new Error(
+        'createOrUpdateSticker: Provided data did not have a numeric id'
+      );
+    }
+    if (!packId) {
+      throw new Error(
+        'createOrUpdateSticker: Provided data did not have a truthy id'
+      );
+    }
+
+    await db.run(
+      `INSERT OR REPLACE INTO stickers (
+      emoji,
+      height,
+      id,
+      isCoverOnly,
+      lastUsed,
+      packId,
+      path,
+      width
+    ) values (
+      $emoji,
+      $height,
+      $id,
+      $isCoverOnly,
+      $lastUsed,
+      $packId,
+      $path,
+      $width
+    )`,
+      {
+        $emoji: emoji,
+        $height: height,
+        $id: id,
+        $isCoverOnly: isCoverOnly,
+        $lastUsed: lastUsed,
+        $packId: packId,
+        $path: path,
+        $width: width,
+      }
+    );
+  }
+  async function updateStickerLastUsed(packId, stickerId, lastUsed) {
+    await db.run(
+      `UPDATE stickers
+    SET lastUsed = $lastUsed
+    WHERE id = $id AND packId = $packId;`,
+      {
+        $id: stickerId,
+        $packId: packId,
+        $lastUsed: lastUsed,
+      }
+    );
+    await db.run(
+      `UPDATE sticker_packs
+    SET lastUsed = $lastUsed
+    WHERE id = $id;`,
+      {
+        $id: packId,
+        $lastUsed: lastUsed,
+      }
+    );
+  }
+  async function addStickerPackReference(messageId, packId) {
+    if (!messageId) {
+      throw new Error(
+        'addStickerPackReference: Provided data did not have a truthy messageId'
+      );
+    }
+    if (!packId) {
+      throw new Error(
+        'addStickerPackReference: Provided data did not have a truthy packId'
+      );
+    }
+
+    await db.run(
+      `INSERT OR REPLACE INTO sticker_references (
+      messageId,
+      packId
+    ) values (
+      $messageId,
+      $packId
+    )`,
+      {
+        $messageId: messageId,
+        $packId: packId,
+      }
+    );
+  }
+  async function deleteStickerPackReference(messageId, packId) {
+    if (!messageId) {
+      throw new Error(
+        'addStickerPackReference: Provided data did not have a truthy messageId'
+      );
+    }
+    if (!packId) {
+      throw new Error(
+        'addStickerPackReference: Provided data did not have a truthy packId'
+      );
+    }
+
+    try {
+      // We use an immediate transaction here to immediately acquire an exclusive lock,
+      //   which would normally only happen when we did our first write.
+
+      // We need this to ensure that our five queries are all atomic, with no other changes
+      //   happening while we do it:
+      // 1. Delete our target messageId/packId references
+      // 2. Check the number of references still pointing at packId
+      // 3. If that number is zero, get pack from sticker_packs database
+      // 4. If it's not installed, then grab all of its sticker paths
+      // 5. If it's not installed, then sticker pack (which cascades to all stickers and
+      //      references)
+      await db.run('BEGIN IMMEDIATE TRANSACTION;');
+
+      await db.run(
+        `DELETE FROM sticker_references
+      WHERE messageId = $messageId AND packId = $packId;`,
+        {
+          $messageId: messageId,
+          $packId: packId,
+        }
+      );
+
+      const countRow = await db.get(
+        `SELECT count(*) FROM sticker_references
+      WHERE packId = $packId;`,
+        { $packId: packId }
+      );
+      if (!countRow) {
+        throw new Error(
+          'deleteStickerPackReference: Unable to get count of references'
+        );
+      }
+      const count = countRow['count(*)'];
+      if (count > 0) {
+        await db.run('COMMIT TRANSACTION');
+        return null;
+      }
+
+      const packRow = await db.get(
+        `SELECT status FROM sticker_packs
+      WHERE id = $packId;`,
+        { $packId: packId }
+      );
+      if (!packRow) {
+        console.log('deleteStickerPackReference: did not find referenced pack');
+        await db.run('COMMIT TRANSACTION');
+        return null;
+      }
+      const { status } = packRow;
+
+      if (status === 'installed') {
+        await db.run('COMMIT TRANSACTION');
+        return null;
+      }
+
+      const stickerPathRows = await db.all(
+        `SELECT path FROM stickers
+      WHERE packId = $packId;`,
+        {
+          $packId: packId,
+        }
+      );
+      await db.run(
+        `DELETE FROM sticker_packs
+      WHERE id = $packId;`,
+        { $packId: packId }
+      );
+
+      await db.run('COMMIT TRANSACTION;');
+
+      return (stickerPathRows || []).map(row => row.path);
+    } catch (error) {
+      await db.run('ROLLBACK;');
+      throw error;
+    }
+  }
+  async function deleteStickerPack(packId) {
+    if (!packId) {
+      throw new Error(
+        'deleteStickerPack: Provided data did not have a truthy packId'
+      );
+    }
+
+    try {
+      // We use an immediate transaction here to immediately acquire an exclusive lock,
+      //   which would normally only happen when we did our first write.
+
+      // We need this to ensure that our two queries are atomic, with no other changes
+      //   happening while we do it:
+      // 1. Grab all of target pack's sticker paths
+      // 2. Delete sticker pack (which cascades to all stickers and references)
+      await db.run('BEGIN IMMEDIATE TRANSACTION;');
+
+      const stickerPathRows = await db.all(
+        `SELECT path FROM stickers
+      WHERE packId = $packId;`,
+        {
+          $packId: packId,
+        }
+      );
+      await db.run(
+        `DELETE FROM sticker_packs
+      WHERE id = $packId;`,
+        { $packId: packId }
+      );
+
+      await db.run('COMMIT TRANSACTION;');
+
+      return (stickerPathRows || []).map(row => row.path);
+    } catch (error) {
+      await db.run('ROLLBACK;');
+      throw error;
+    }
+  }
+  async function getStickerCount() {
+    const row = await db.get('SELECT count(*) from stickers;');
+
+    if (!row) {
+      throw new Error('getStickerCount: Unable to get count of stickers');
+    }
+
+    return row['count(*)'];
+  }
+  async function getAllStickerPacks() {
+    const rows = await db.all(
+      `SELECT * FROM sticker_packs
+    ORDER BY installedAt DESC, createdAt DESC`
+    );
+
+    return rows || [];
+  }
+  async function getAllStickers() {
+    const rows = await db.all(
+      `SELECT * FROM stickers
+    ORDER BY packId ASC, id ASC`
+    );
+
+    return rows || [];
+  }
+  async function getRecentStickers({ limit } = {}) {
+    // Note: we avoid 'IS NOT NULL' here because it does seem to bypass our index
+    const rows = await db.all(
+      `SELECT stickers.* FROM stickers
+    JOIN sticker_packs on stickers.packId = sticker_packs.id
+    WHERE stickers.lastUsed > 0 AND sticker_packs.status = 'installed'
+    ORDER BY stickers.lastUsed DESC
+    LIMIT $limit`,
+      {
+        $limit: limit || 24,
+      }
+    );
+
+    return rows || [];
+  }
+
   // All data in database
   async function removeAll() {
     let promise;
@@ -1753,6 +2211,9 @@
         db.run('DELETE FROM unprocessed;'),
         db.run('DELETE FROM attachment_downloads;'),
         db.run('DELETE FROM messages_fts;'),
+        db.run('DELETE FROM stickers;'),
+        db.run('DELETE FROM sticker_packs;'),
+        db.run('DELETE FROM sticker_references;'),
         db.run('COMMIT TRANSACTION;'),
       ]);
     });
@@ -1830,7 +2291,7 @@
   }
 
   function getExternalFilesForMessage(message) {
-    const { attachments, contact, quote, preview } = message;
+    const { attachments, contact, quote, preview, sticker } = message;
     const files = [];
 
     forEach(attachments, attachment => {
@@ -1876,6 +2337,14 @@
           files.push(image.path);
         }
       });
+    }
+
+    if (sticker && sticker.data && sticker.data.path) {
+      files.push(sticker.data.path);
+
+      if (sticker.data.thumbnail && sticker.data.thumbnail.path) {
+        files.push(sticker.data.thumbnail.path);
+      }
     }
 
     return files;
@@ -1981,6 +2450,50 @@
     }
 
     console.log(`removeKnownAttachments: Done processing ${count} conversations`);
+
+    return Object.keys(lookup);
+  }
+
+  async function removeKnownStickers(allStickers) {
+    const lookup = fromPairs(map(allStickers, file => [file, true]));
+    const chunkSize = 50;
+
+    const total = await getStickerCount();
+    console.log(
+      `removeKnownStickers: About to iterate through ${total} stickers`
+    );
+
+    let count = 0;
+    let complete = false;
+    let rowid = 0;
+
+    while (!complete) {
+      // eslint-disable-next-line no-await-in-loop
+      const rows = await db.all(
+        `SELECT rowid, path FROM stickers
+       WHERE rowid > $rowid
+       ORDER BY rowid ASC
+       LIMIT $chunkSize;`,
+        {
+          $rowid: rowid,
+          $chunkSize: chunkSize,
+        }
+      );
+
+      const files = map(rows, row => row.path);
+      forEach(files, file => {
+        delete lookup[file];
+      });
+
+      const lastSticker = last(rows);
+      if (lastSticker) {
+        ({ rowid } = lastSticker);
+      }
+      complete = rows.length < chunkSize;
+      count += rows.length;
+    }
+
+    console.log(`removeKnownStickers: Done processing ${count} stickers`);
 
     return Object.keys(lookup);
   }

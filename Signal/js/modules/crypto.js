@@ -11,6 +11,7 @@
   window.crypto.arrayBufferToBase64 = arrayBufferToBase64;
   window.crypto.typedArrayToArrayBuffer = typedArrayToArrayBuffer;
   window.crypto.base64ToArrayBuffer = base64ToArrayBuffer;
+  window.crypto.bytesFromHexString = bytesFromHexString;
   window.crypto.bytesFromString = bytesFromString;
   window.crypto.concatenateBytes = concatenateBytes;
   window.crypto.constantTimeEqual = constantTimeEqual;
@@ -20,6 +21,7 @@
   window.crypto.decryptFile = decryptFile;
   window.crypto.decryptSymmetric = decryptSymmetric;
   window.crypto.deriveAccessKey = deriveAccessKey;
+  window.crypto.deriveStickerPackKey = deriveStickerPackKey;
   window.crypto.encryptAesCtr = encryptAesCtr;
   window.crypto.encryptDeviceName = encryptDeviceName;
   window.crypto.encryptAttachment = encryptAttachment;
@@ -29,8 +31,10 @@
   window.crypto.getAccessKeyVerifier = getAccessKeyVerifier;
   window.crypto.getFirstBytes = getFirstBytes;
   window.crypto.getRandomBytes = getRandomBytes;
+  window.crypto.getRandomValue = getRandomValue;
   window.crypto.getViewOfArrayBuffer = getViewOfArrayBuffer;
   window.crypto.getZeroes = getZeroes;
+  window.crypto.hexFromBytes = hexFromBytes;
   window.crypto.highBitsToInt = highBitsToInt;
   window.crypto.hmacSha256 = hmacSha256;
   window.crypto.intsToByteHighAndLow = intsToByteHighAndLow;
@@ -62,6 +66,25 @@
   }
   function stringFromBytes(buffer) {
     return dcodeIO.ByteBuffer.wrap(buffer).toString('utf8');
+  }
+  function hexFromBytes(buffer) {
+    return dcodeIO.ByteBuffer.wrap(buffer).toString('hex');
+  }
+  function bytesFromHexString(string) {
+    return dcodeIO.ByteBuffer.wrap(string, 'hex').toArrayBuffer();
+  }
+
+  async function deriveStickerPackKey(packKey) {
+    const salt = getZeroes(32);
+    const info = bytesFromString('Sticker Pack');
+
+    const [part1, part2] = await libsignal.HKDF.deriveSecrets(
+      packKey,
+      salt,
+      info
+    );
+
+    return concatenateBytes(part1, part2);
   }
 
   // High-level Operations
@@ -340,6 +363,16 @@
     const bytes = new Uint8Array(n);
     window.crypto.getRandomValues(bytes);
     return bytes;
+  }
+
+  function getRandomValue(low, high) {
+    const diff = high - low;
+    const bytes = new Uint32Array(1);
+    window.crypto.getRandomValues(bytes);
+
+    // Because high and low are inclusive
+    const mod = diff + 1;
+    return bytes[0] % mod + low;
   }
 
   function getZeroes(n) {

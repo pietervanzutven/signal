@@ -20,12 +20,14 @@
     // Reducer
     function getEmptyState() {
         return {
+            attachmentsPath: 'missing',
+            stickersPath: 'missing',
             ourNumber: 'missing',
             regionCode: 'missing',
             i18n: () => 'missing',
         };
     }
-    function reducer(state, action) {
+    function reducer(state = getEmptyState(), action) {
         if (!state) {
             return getEmptyState();
         }

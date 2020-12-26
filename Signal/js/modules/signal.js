@@ -14,6 +14,7 @@
   const IndexedDB = window.indexeddb;
   const Notifications = window.ts.notifications;
   const OS = window.ts.OS;
+  const Stickers = window.stickers;
   const Settings = window.settings;
   const Util = window.ts.util;
   const { migrateToSQL } = window.migrate_to_sql;
@@ -74,8 +75,20 @@
 
   // State
   const { createLeftPane } = window.ts.state.roots.createLeftPane;
+  const {
+    createStickerButton,
+  } = window.ts.state.roots.createStickerButton;
+  const {
+    createStickerManager,
+  } = window.ts.state.roots.createStickerManager;
+  const {
+    createStickerPreviewModal,
+  } = window.ts.state.roots.createStickerPreviewModal;
+
   const { createStore } = window.ts.state.createStore;
   const conversationsDuck = window.ts.state.ducks.conversations;
+  const itemsDuck = window.ts.state.ducks.items;
+  const stickersDuck = window.ts.state.ducks.stickers;
   const userDuck = window.ts.state.ducks.user;
 
   // Migrations
@@ -117,6 +130,7 @@
     }
     const {
       getPath,
+      getStickersPath,
       createReader,
       createAbsolutePathGetter,
       createWriterForNew,
@@ -135,25 +149,40 @@
     const loadAttachmentData = Type.loadData(readAttachmentData);
     const loadPreviewData = MessageType.loadPreviewData(loadAttachmentData);
     const loadQuoteData = MessageType.loadQuoteData(loadAttachmentData);
+    const loadStickerData = MessageType.loadStickerData(loadAttachmentData);
     const getAbsoluteAttachmentPath = createAbsolutePathGetter(attachmentsPath);
     const deleteOnDisk = Attachments.createDeleter(attachmentsPath);
     const writeNewAttachmentData = createWriterForNew(attachmentsPath);
+    const copyIntoAttachmentsDirectory = Attachments.copyIntoAttachmentsDirectory(
+      attachmentsPath
+    );
+
+    const stickersPath = getStickersPath(userDataPath);
+    const writeNewStickerData = createWriterForNew(stickersPath);
+    const getAbsoluteStickerPath = createAbsolutePathGetter(stickersPath);
+    const deleteSticker = Attachments.createDeleter(stickersPath);
+    const readStickerData = createReader(stickersPath);
 
     return {
       attachmentsPath,
+      copyIntoAttachmentsDirectory,
       deleteAttachmentData: deleteOnDisk,
       deleteExternalMessageFiles: MessageType.deleteAllExternalFiles({
         deleteAttachmentData: Type.deleteData(deleteOnDisk),
         deleteOnDisk,
       }),
+      deleteSticker,
       getAbsoluteAttachmentPath,
+      getAbsoluteStickerPath,
       getPlaceholderMigrations,
       getCurrentVersion,
       loadAttachmentData,
       loadMessage: MessageType.createAttachmentLoader(loadAttachmentData),
       loadPreviewData,
       loadQuoteData,
+      loadStickerData,
       readAttachmentData,
+      readStickerData,
       run,
       processNewAttachment: attachment =>
         MessageType.processNewAttachment(attachment, {
@@ -164,6 +193,13 @@
           getImageDimensions,
           makeImageThumbnail,
           makeVideoScreenshot,
+          logger,
+        }),
+      processNewSticker: stickerData =>
+        MessageType.processNewSticker(stickerData, {
+          writeNewStickerData,
+          getAbsoluteStickerPath,
+          getImageDimensions,
           logger,
         }),
       upgradeMessageSchema: (message, options = {}) => {
@@ -232,10 +268,15 @@
 
     const Roots = {
       createLeftPane,
+      createStickerButton,
+      createStickerManager,
+      createStickerPreviewModal,
     };
     const Ducks = {
       conversations: conversationsDuck,
+      items: itemsDuck,
       user: userDuck,
+      stickers: stickersDuck,
     };
     const State = {
       bindActionCreators,
@@ -283,6 +324,7 @@
       RefreshSenderCertificate,
       Settings,
       State,
+      Stickers,
       Types,
       Util,
       Views,

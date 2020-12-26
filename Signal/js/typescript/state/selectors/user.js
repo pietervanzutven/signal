@@ -12,4 +12,6 @@
     exports.getUserNumber = reselect_1.createSelector(exports.getUser, (state) => state.ourNumber);
     exports.getRegionCode = reselect_1.createSelector(exports.getUser, (state) => state.regionCode);
     exports.getIntl = reselect_1.createSelector(exports.getUser, (state) => state.i18n);
+    exports.getAttachmentsPath = reselect_1.createSelector(exports.getUser, (state) => state.attachmentsPath);
+    exports.getStickersPath = reselect_1.createSelector(exports.getUser, (state) => state.stickersPath);
 })();

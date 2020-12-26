@@ -34,12 +34,12 @@
             }
         }
         render() {
-            const { direction, i18n, module, timestamp, withImageNoCaption, extended, } = this.props;
+            const { direction, i18n, module, timestamp, withImageNoCaption, withSticker, extended, } = this.props;
             const moduleName = module || 'module-timestamp';
             if (timestamp === null || timestamp === undefined) {
                 return null;
             }
-            return (react_1.default.createElement("span", { className: classnames_1.default(moduleName, direction ? `${moduleName}--${direction}` : null, withImageNoCaption ? `${moduleName}--with-image-no-caption` : null), title: moment_1.default(timestamp).format('llll') }, formatRelativeTime_1.formatRelativeTime(timestamp, { i18n, extended })));
+            return (react_1.default.createElement("span", { className: classnames_1.default(moduleName, direction ? `${moduleName}--${direction}` : null, withImageNoCaption ? `${moduleName}--with-image-no-caption` : null, withSticker ? `${moduleName}--with-sticker` : null), title: moment_1.default(timestamp).format('llll') }, formatRelativeTime_1.formatRelativeTime(timestamp, { i18n, extended })));
         }
     }
     exports.Timestamp = Timestamp;

@@ -102,10 +102,7 @@
             messagesByConversation: {},
         };
     }
-    function reducer(state, action) {
-        if (!state) {
-            return getEmptyState();
-        }
+    function reducer(state = getEmptyState(), action) {
         if (action.type === 'CONVERSATION_ADDED') {
             const { payload } = action;
             const { id, data } = payload;

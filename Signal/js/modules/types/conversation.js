@@ -158,12 +158,13 @@
   }
 
   window.types.conversation = {
-    deleteExternalFiles,
-    migrateConversation,
-    maybeUpdateAvatar,
-    maybeUpdateProfileAvatar,
-    createLastMessageUpdate,
     arrayBufferToBase64,
     base64ToArrayBuffer,
+    computeHash,
+    createLastMessageUpdate,
+    deleteExternalFiles,
+    maybeUpdateAvatar,
+    maybeUpdateProfileAvatar,
+    migrateConversation,
   };
 })();

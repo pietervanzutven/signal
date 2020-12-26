@@ -63,14 +63,14 @@ window.matchMedia && window.matchMedia('(max-width: 600px)').addListener(() => {
 });
 
 window.onload = () => {
-    storage.onready(() => {
-        const color = Windows.UI.ViewManagement.UISettings().getColorValue(Windows.UI.ViewManagement.UIColorType.background);
-        if (color.b === 255) {
-            storage.put('theme-setting', 'light');
-        } else {
-            storage.put('theme-setting', 'dark');
-        }
-    });
+  storage.onready(() => {
+    const color = Windows.UI.ViewManagement.UISettings().getColorValue(Windows.UI.ViewManagement.UIColorType.background);
+    if (color.b === 255) {
+      storage.put('theme-setting', 'light');
+    } else {
+      storage.put('theme-setting', 'dark');
+    }
+  });
 }
 
 window.requestIdleCallback = () => { };
@@ -79,7 +79,8 @@ const path = window.path;
 const url = window.url;
 const os = window.os;
 const fs = window.fs;
-const crypte = window.crypto;
+const crypto = window.crypto;
+const qs = window.qs;
 
 const pify = window.pify;
 
@@ -91,10 +92,13 @@ const GlobalErrors = window.app.global_errors;
 
 GlobalErrors.addHandler();
 
+const getRealPath = pify(fs.realpath);
+
 const appUserModelId = `org.whispersystems.${packageJson.name}`;
 console.log('Set Windows Application User Model ID (AUMID)', {
   appUserModelId,
 });
+app.setAppUserModelId(appUserModelId);
 
 // Keep a global reference of the window object, if you don't, the window will
 //   be closed automatically when the JavaScript object is garbage collected.
@@ -110,19 +114,14 @@ const startInTray = process.argv.some(arg => arg === '--start-in-tray');
 const usingTrayIcon =
   startInTray || process.argv.some(arg => arg === '--use-tray-icon');
 
-var config = window.app.config;
-config.name = Windows.ApplicationModel.Package.current.id.name;
-config.locale = Windows.Globalization.ApplicationLanguages.languages[0];
-config.version = app.getVersion();
-config.uwp_version = process.versions.uwp;
-config.hostname = 'Windows';
-config.appInstance = process.env.UWP_APP_INSTANCE;
+const config = window.app.config;
 
 // Very important to put before the single instance check, since it is based on the
 //   userData directory.
 const userConfig = window.app.user_config;
 
-const importMode = false;
+const importMode =
+  process.argv.some(arg => arg === '--import') || config.get('import');
 
 const development = config.environment === 'development';
 
@@ -202,24 +201,35 @@ function prepareURL(pathSegments, moreKeys) {
     pathname: path.join.apply(null, pathSegments),
     protocol: 'file:',
     slashes: true,
-    query: Object.assign({
-      name: packageJson.productName,
-      locale: locale.name,
-      version: app.getVersion(),
-      buildExpiration: config.get('buildExpiration'),
-      serverUrl: config.get('serverUrl'),
-      cdnUrl: config.get('cdnUrl'),
-      certificateAuthority: config.get('certificateAuthority'),
-      environment: config.environment,
-      node_version: process.versions.node,
-      hostname: os.hostname(),
-      appInstance: process.env.NODE_APP_INSTANCE,
-      proxyUrl: process.env.HTTPS_PROXY || process.env.https_proxy,
-      contentProxyUrl: config.contentProxyUrl,
-      importMode: importMode ? true : undefined, // for stringify()
-      serverTrustRoot: config.get('serverTrustRoot'),
-    }, moreKeys),
+    query: Object.assign({},
+      {
+        name: packageJson.productName,
+        locale: locale.name,
+        version: app.getVersion(),
+        buildExpiration: config.get('buildExpiration'),
+        serverUrl: config.get('serverUrl'),
+        cdnUrl: config.get('cdnUrl'),
+        certificateAuthority: config.get('certificateAuthority'),
+        environment: config.environment,
+        uwp_version: process.versions.uwp,
+        hostname: os.hostname(),
+        appInstance: process.env.NODE_APP_INSTANCE,
+        proxyUrl: process.env.HTTPS_PROXY || process.env.https_proxy,
+        contentProxyUrl: config.contentProxyUrl,
+        importMode: importMode ? true : undefined, // for stringify()
+        serverTrustRoot: config.get('serverTrustRoot'),
+      },
+      moreKeys,
+    ),
   });
+}
+
+function handleUrl(event, target) {
+  event.preventDefault();
+  const { protocol } = url.parse(target);
+  if (protocol === 'http:' || protocol === 'https:') {
+    shell.openExternal(target);
+  }
 }
 
 function captureClicks(window) { }
@@ -350,6 +360,31 @@ function captureAndSaveWindowStats() {
     // false the fullscreen button will be disabled on osx
     windowConfig.fullscreen = true;
   }
+
+  logger.info(
+    'Updating BrowserWindow config: %s',
+    JSON.stringify(windowConfig)
+  );
+  ephemeralConfig.set('window', windowConfig);
+}
+
+const debouncedCaptureStats = _.debounce(captureAndSaveWindowStats, 500);
+mainWindow.on('resize', debouncedCaptureStats);
+mainWindow.on('move', debouncedCaptureStats);
+
+mainWindow.on('focus', () => {
+  mainWindow.flashFrame(false);
+});
+
+// Ingested in preload.js via a sendSync call
+ipc.on('locale-data', event => {
+  // eslint-disable-next-line no-param-reassign
+  event.returnValue = locale.messages;
+});
+
+if (config.get('openDevTools')) {
+  // Open the DevTools.
+  mainWindow.webContents.openDevTools();
 }
 
 captureClicks(mainWindow);
@@ -393,11 +428,13 @@ mainWindow.on('close', async e => {
 
     return;
   }
-});
 
-const debouncedCaptureStats = _.debounce(captureAndSaveWindowStats, 500);
-mainWindow.on('resize', debouncedCaptureStats);
-mainWindow.on('move', debouncedCaptureStats);
+  await requestShutdown();
+  if (mainWindow) {
+    mainWindow.readyForShutdown = true;
+  }
+  app.quit();
+});
 
 // Emitted when the window is closed.
 mainWindow.on('closed', () => {
@@ -407,21 +444,20 @@ mainWindow.on('closed', () => {
   mainWindow = null;
 });
 
-  // Ingested in preload.js via a sendSync call
-ipc.on('locale-data', event => {
-  // eslint-disable-next-line no-param-reassign
-  event.returnValue = locale.messages;
+ipc.on('show-window', () => {
+  showWindow();
 });
 
-ipc.on('show-window', () => { });
-
-let updatesStarted = false;
-ipc.on('ready-for-updates', async () => {
-  if (updatesStarted) {
-    return;
+ipc.once('ready-for-updates', async () => {
+  // First, install requested sticker pack
+  if (process.argv.length > 1) {
+    const [incomingUrl] = process.argv;
+    if (incomingUrl.startsWith('sgnl://')) {
+      handleSgnlLink(incomingUrl);
+    }
   }
-  updatesStarted = true;
 
+  // Second, start checking for app updates
   try {
     await updater.start(getMainWindow, locale.messages, logger);
   } catch (error) {
@@ -647,7 +683,7 @@ async function showPermissionsPopupWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 let ready = false;
-(async function () {
+(async () => {
   const userDataPath = app.getPath('userData');
 
   await logging.initialize();
@@ -656,7 +692,7 @@ let ready = false;
   logger.info(`starting version ${packageJson.version}`);
 
   if (!locale) {
-    const appLocale = process.env.UWP_ENV === 'test' ? 'en' : Windows.Globalization.ApplicationLanguages.languages[0];
+    const appLocale = process.env.UWP_ENV === 'test' ? 'en' : app.getLocale();
     locale = loadLocale({ appLocale, logger });
   }
 
@@ -705,6 +741,13 @@ let ready = false;
       userDataPath,
       attachments: orphanedAttachments,
     });
+
+    const allStickers = await attachments.getAllStickers(userDataPath);
+    const orphanedStickers = await sql.removeKnownStickers(allStickers);
+    await attachments.deleteAllStickers({
+      userDataPath,
+      stickers: orphanedStickers,
+    });
   }
 
   await attachmentChannel.initialize({
@@ -732,6 +775,9 @@ function setupMenu(options) {
     setupAsNewDevice,
     setupAsStandalone,
   });
+  const template = createTemplate(menuOptions, locale.messages);
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 }
 
 async function requestShutdown() {
@@ -942,4 +988,16 @@ function installSettingsSetter(name) {
       mainWindow.webContents.send(`set-${name}`, value);
     }
   });
+}
+
+function handleSgnlLink(incomingUrl) {
+  const { host: command, query } = url.parse(incomingUrl);
+  const args = qs.parse(query);
+  if (command === 'addstickers' && mainWindow && mainWindow.webContents) {
+    const { pack_id: packId, pack_key: packKeyHex } = args;
+    const packKey = Buffer.from(packKeyHex, 'hex').toString('base64');
+    mainWindow.webContents.send('add-sticker-pack', { packId, packKey });
+  } else {
+    console.error('Unhandled sgnl link');
+  }
 }

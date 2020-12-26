@@ -16,7 +16,7 @@
     class Image extends react_1.default.Component {
         // tslint:disable-next-line max-func-body-length cyclomatic-complexity
         render() {
-            const { alt, attachment, bottomOverlay, closeButton, curveBottomLeft, curveBottomRight, curveTopLeft, curveTopRight, darkOverlay, height, i18n, onClick, onClickClose, onError, overlayText, playIconOverlay, smallCurveTopLeft, softCorners, url, width, } = this.props;
+            const { alt, attachment, bottomOverlay, closeButton, curveBottomLeft, curveBottomRight, curveTopLeft, curveTopRight, darkOverlay, height, i18n, noBackground, noBorder, onClick, onClickClose, onError, overlayText, playIconOverlay, smallCurveTopLeft, softCorners, url, width, } = this.props;
             const { caption, pending } = attachment || { caption: null, pending: true };
             const canClick = onClick && !pending;
             const role = canClick ? 'button' : undefined;
@@ -25,7 +25,7 @@
                     if (canClick && onClick) {
                         onClick(attachment);
                     }
-                }, className: classnames_1.default('module-image', canClick ? 'module-image__with-click-handler' : null, curveBottomLeft ? 'module-image--curved-bottom-left' : null, curveBottomRight ? 'module-image--curved-bottom-right' : null, curveTopLeft ? 'module-image--curved-top-left' : null, curveTopRight ? 'module-image--curved-top-right' : null, smallCurveTopLeft ? 'module-image--small-curved-top-left' : null, softCorners ? 'module-image--soft-corners' : null)
+                }, className: classnames_1.default('module-image', !noBackground ? 'module-image--with-background' : null, canClick ? 'module-image__with-click-handler' : null, curveBottomLeft ? 'module-image--curved-bottom-left' : null, curveBottomRight ? 'module-image--curved-bottom-right' : null, curveTopLeft ? 'module-image--curved-top-left' : null, curveTopRight ? 'module-image--curved-top-right' : null, smallCurveTopLeft ? 'module-image--small-curved-top-left' : null, softCorners ? 'module-image--soft-corners' : null)
             },
                 pending ? (react_1.default.createElement("div", {
                     className: "module-image__loading-placeholder", style: {
@@ -37,7 +37,7 @@
                 },
                     react_1.default.createElement(Spinner_1.Spinner, { size: "normal" }))) : (react_1.default.createElement("img", { onError: onError, className: "module-image__image", alt: alt, height: height, width: width, src: url })),
                 caption ? (react_1.default.createElement("img", { className: "module-image__caption-icon", src: "images/caption-shadow.svg", alt: i18n('imageCaptionIconAlt') })) : null,
-                react_1.default.createElement("div", { className: classnames_1.default('module-image__border-overlay', curveTopLeft ? 'module-image--curved-top-left' : null, curveTopRight ? 'module-image--curved-top-right' : null, curveBottomLeft ? 'module-image--curved-bottom-left' : null, curveBottomRight ? 'module-image--curved-bottom-right' : null, smallCurveTopLeft ? 'module-image--small-curved-top-left' : null, softCorners ? 'module-image--soft-corners' : null, darkOverlay ? 'module-image__border-overlay--dark' : null) }),
+                !noBorder ? (react_1.default.createElement("div", { className: classnames_1.default('module-image__border-overlay', curveTopLeft ? 'module-image--curved-top-left' : null, curveTopRight ? 'module-image--curved-top-right' : null, curveBottomLeft ? 'module-image--curved-bottom-left' : null, curveBottomRight ? 'module-image--curved-bottom-right' : null, smallCurveTopLeft ? 'module-image--small-curved-top-left' : null, softCorners ? 'module-image--soft-corners' : null, darkOverlay ? 'module-image__border-overlay--dark' : null) })) : null,
                 closeButton ? (react_1.default.createElement("div", {
                     role: "button", onClick: (e) => {
                         e.stopPropagation();

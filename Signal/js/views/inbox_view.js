@@ -13,6 +13,12 @@
 
   window.Whisper = window.Whisper || {};
 
+  Whisper.StickerPackInstallFailedToast = Whisper.ToastView.extend({
+    render_attributes() {
+      return { toastMessage: i18n('stickers--toast--InstallFailed') };
+    },
+  });
+
   Whisper.ConversationStack = Whisper.View.extend({
     className: 'conversation-stack',
     open(conversation) {
@@ -59,6 +65,9 @@
           event.detail[0].handled = true;
         }
       };
+      
+      // Make sure poppers are positioned properly
+      window.dispatchEvent(new Event('resize'));
     },
   });
 
@@ -114,6 +123,12 @@
         banner.$el.prependTo(this.$el);
         this.$el.addClass('expired');
       }
+
+      Whisper.events.on('pack-install-failed', () => {
+        const toast = new Whisper.StickerPackInstallFailedToast();
+        toast.$el.appendTo(this.$el);
+        toast.render();
+      });
 
       this.setupLeftPane();
     },
@@ -191,7 +206,7 @@
       const conversation = await ConversationController.getOrCreateAndWait(
         id,
         'private'
-        );
+      );
 
       const { openConversationExternal } = window.reduxActions.conversations;
       if (openConversationExternal) {
@@ -199,7 +214,7 @@
       }
 
       this.conversation_stack.open(conversation);
-        this.focusConversation();
+      this.focusConversation();
     },
     closeRecording(e) {
       if (e && this.$(e.target).closest('.capture-audio').length > 0) {

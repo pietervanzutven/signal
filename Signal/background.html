@@ -117,6 +117,7 @@
             <form class='send clearfix file-input'>
               <div class='flex'>
                 <textarea class='send-message' placeholder='{{ send-message }}' rows='1' dir='auto'></textarea>
+                <div class='sticker-button-placeholder'></div>
                 <div class='capture-audio'>
                     <button class='microphone'></button>
                 </div>
@@ -430,6 +431,7 @@
   <script type='text/javascript' src='node_modules/lodash/map.js'></script>
   <script type='text/javascript' src='node_modules/lodash/merge.js'></script>
   <script type='text/javascript' src='node_modules/lodash/omit.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/orderBy.js'></script>
   <script type='text/javascript' src='node_modules/lodash/partial.js'></script>
   <script type='text/javascript' src='node_modules/lodash/partition.js'></script>
   <script type='text/javascript' src='node_modules/lodash/pick.js'></script>
@@ -470,6 +472,8 @@
   <script type='text/javascript' src='node_modules/redux-promise-middleware/isPromise.js'></script>
   <script type='text/javascript' src='node_modules/redux-promise-middleware/index.js'></script>
   <script type='text/javascript' src='node_modules/reselect/reselect.js'></script>
+  <script type='text/javascript' src='node_modules/popper.js/popper-utils.js'></script>
+  <script type='text/javascript' src='node_modules/popper.js/popper.js'></script>
   <script type='text/javascript' src='node_modules/react/index.js'></script>
   <script type='text/javascript' src='node_modules/react-dom/index.js'></script>
   <script type='text/javascript' src='node_modules/react-contextmenu/helpers.js'></script>
@@ -484,6 +488,7 @@
   <script type='text/javascript' src='node_modules/react-contextmenu/index.js'></script>
   <script type='text/javascript' src='node_modules/react-redux/react-redux.js'></script>
   <script type='text/javascript' src='node_modules/react-virtualized/react-virtualized.js'></script>
+  <script type='text/javascript' src='node_modules/react-popper/index.umd.js'></script>
   <script type='text/javascript' src='node_modules/moment/moment.js'></script>
   <script type='text/javascript' src='node_modules/uc.micro/categories/Cc/regex.js'></script>
   <script type='text/javascript' src='node_modules/uc.micro/categories/Cf/regex.js'></script>
@@ -513,6 +518,10 @@
   <script type='text/javascript' src='node_modules/read-last-lines/index.js'></script>
   <script type='text/javascript' src='node_modules/config/config.js'></script>
   <script type='text/javascript' src='node_modules/memoizee/index.js'></script>
+  <script type='text/javascript' src='node_modules/eventemitter3/index.js'></script>
+  <script type='text/javascript' src='node_modules/p-queue/index.js'></script>
+  <script type='text/javascript' src='node_modules/p-map/index.js'></script>
+  <script type='text/javascript' src='node_modules/qs/qs.js'></script>
 
   <script type='text/javascript' src='js/modules/auto_orient_image.js'></script>
   <script type='text/javascript' src='js/modules/types/schema_version.js'></script>
@@ -561,7 +570,6 @@
   <script type='text/javascript' src='js/modules/views/initialization.js'></script>
   <script type='text/javascript' src='js/modules/i18n.js'></script>
   <script type='text/javascript' src='js/modules/string_to_array_buffer.js'></script>
-  <script type='text/javascript' src='js/modules/web_api.js'></script>
   <script type='text/javascript' src='js/modules/link_previews.js'></script>
   <script type='text/javascript' src='js/modules/migrations/run_migrations.js'></script>
   <script type='text/javascript' src='js/modules/migrations/18/index.js'></script>
@@ -576,6 +584,8 @@
   <script type='text/javascript' src='js/typescript/components/styles/Colors.js'></script>
   <script type='text/javascript' src='js/typescript/components/Intl.js'></script>
   <script type='text/javascript' src='js/typescript/components/Spinner.js'></script>
+  <script type='text/javascript' src='js/typescript/components/ConfirmationDialog.js'></script>
+  <script type='text/javascript' src='js/typescript/components/ConfirmationModal.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/DocumentListItem.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/EmptyState.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/MediaGridItem.js'></script>
@@ -614,6 +624,12 @@
   <script type='text/javascript' src='js/typescript/components/conversation/TimeLine.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/TimelineItem.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/_contactUtil.js'></script>
+  <script type='text/javascript' src='js/typescript/components/stickers/StickerPicker.js'></script>
+  <script type='text/javascript' src='js/typescript/components/stickers/StickerButton.js'></script>
+  <script type='text/javascript' src='js/typescript/components/stickers/StickerPackInstallButton.js'></script>
+  <script type='text/javascript' src='js/typescript/components/stickers/StickerManagerPackRow.js'></script>
+  <script type='text/javascript' src='js/typescript/components/stickers/StickerPreviewModal.js'></script>
+  <script type='text/javascript' src='js/typescript/components/stickers/StickerManager.js'></script>
   <script type='text/javascript' src='js/typescript/components/CaptionEditor.js'></script>
   <script type='text/javascript' src='js/typescript/components/ContactListItem.js'></script>
   <script type='text/javascript' src='js/typescript/components/ConversationListItem.js'></script>
@@ -628,6 +644,8 @@
   <script type='text/javascript' src='js/typescript/backbone/index.js'></script>
   <script type='text/javascript' src='js/typescript/notifications/getStatus.js'></script>
   <script type='text/javascript' src='js/typescript/shims/events.js'></script>
+  <script type='text/javascript' src='js/typescript/shims/storage.js'></script>
+  <script type='text/javascript' src='js/typescript/shims/textsecure.js'></script>
   <script type='text/javascript' src='js/typescript/shims/Whisper.js'></script>
 
   <script type='text/javascript' src='app/attachments.js'></script>
@@ -653,11 +671,15 @@
   <script type='text/javascript' src='js/modules/logs.js'></script>
   <script type='text/javascript' src='js/modules/debuglogs.js'></script>
   <script type='text/javascript' src='js/modules/attachment_downloads.js'></script>
+  <script type='text/javascript' src='js/modules/stickers.js'></script>
+  <script type='text/javascript' src='js/modules/web_api.js'></script>
   <script type='text/javascript' src='js/logging.js'></script>
 
   <script type='text/javascript' src='js/typescript/state/ducks/conversations.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/items.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/noop.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/search.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/stickers.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/user.js'></script>
   <script type='text/javascript' src='js/typescript/state/actions.js'></script>
   <script type='text/javascript' src='js/typescript/state/reducer.js'></script>
@@ -665,13 +687,20 @@
   <script type='text/javascript' src='js/typescript/state/selectors/user.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/conversations.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/search.js'></script>
+  <script type='text/javascript' src='js/typescript/state/selectors/stickers.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/MainHeader.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/MessageSearchResult.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/LeftPane.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/StickerButton.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/StickerManager.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/StickerPreviewModal.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/TimelineItem.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/Timeline.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createLeftPane.js'></script>
-    <script type='text/javascript' src='js/typescript/state/roots/createTimeline.js'></script>
+  <script type='text/javascript' src='js/typescript/state/roots/createStickerButton.js'></script>
+  <script type='text/javascript' src='js/typescript/state/roots/createStickerManager.js'></script>
+  <script type='text/javascript' src='js/typescript/state/roots/createStickerPreviewModal.js'></script>
+  <script type='text/javascript' src='js/typescript/state/roots/createTimeline.js'></script>
 
   <script type='text/javascript' src='js/modules/signal.js'></script>
   
@@ -750,7 +779,7 @@
   <script type='text/javascript' src='js/rotate_signed_prekey_listener.js'></script>
   <script type='text/javascript' src='js/keychange_listener.js'></script>
 </head>
-<body>
+<body class="overflow-hidden">
   <div class='app-loading-screen'>
     <div class='content'>
       <img src='images/icon_250.png' height='150'>

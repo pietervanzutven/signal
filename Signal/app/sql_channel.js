@@ -3,6 +3,7 @@
 
   window.app = window.app || {};
 
+  const Queue = window.p_queue;
   const sql = window.app.sql;
   const { remove: removeUserConfig } = window.app.user_config;
   const { remove: removeEphemeralConfig } = window.app.ephemeral_config;
@@ -17,6 +18,8 @@
 
   const SQL_CHANNEL_KEY = 'sql-channel';
   const ERASE_SQL_KEY = 'erase-sql-key';
+
+  const queue = new Queue({ concurrency: 1 });
 
   function initialize() {
     if (initialized) {
@@ -33,7 +36,10 @@
           );
         }
 
-        const result = await fn(...args);
+        // Note: we queue here to keep multi-query operations atomic. Without it, any
+        //   multistage data operation (even within a BEGIN/COMMIT) can become interleaved,
+        //   since all requests share one database connection.
+        const result = await queue.add(() => fn(...args));
         event.sender.send(`${SQL_CHANNEL_KEY}-done`, jobId, null, result);
       } catch (error) {
         const errorForDisplay = error && error.stack ? error.stack : error;
