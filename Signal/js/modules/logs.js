@@ -1,5 +1,7 @@
 (function () {
-    const ipcRenderer = window.ipc;
+    'use strict';
+
+    const { ipcRenderer } = window.electron;
 
     /* eslint-env node */
 

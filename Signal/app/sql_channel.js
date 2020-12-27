@@ -2,13 +2,14 @@
   'use strict';
 
   window.app = window.app || {};
-
+  
+  const electron = window.electron;
   const Queue = window.p_queue;
   const sql = window.app.sql;
   const { remove: removeUserConfig } = window.app.user_config;
   const { remove: removeEphemeralConfig } = window.app.ephemeral_config;
 
-  const { ipcMain } = window.ipc;
+  const { ipcMain } = electron;
 
   window.app.sql_channel = {
     initialize,

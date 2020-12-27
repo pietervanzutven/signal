@@ -3,10 +3,11 @@
 
   window.app = window.app || {};
 
+  const electron = window.electron;
   const Attachments = window.app.attachments;
   const rimraf = window.rimraf;
 
-  const { ipcMain } = window.ipc;
+  const { ipcMain } = electron;
 
   window.app.attachment_channel = {
     initialize,

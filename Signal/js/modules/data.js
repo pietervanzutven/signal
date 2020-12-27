@@ -3,6 +3,8 @@
 (function () {
   'use strict';
 
+  const electron = window.electron;
+
   const {
     cloneDeep,
     forEach,
@@ -17,7 +19,7 @@
   const { base64ToArrayBuffer, arrayBufferToBase64 } = window.crypto;
   const MessageType = window.types.message;
 
-  const { ipcRenderer } = window.ipc;
+  const { ipcRenderer } = electron;
 
   // We listen to a lot of events on ipcRenderer, often on the same channel. This prevents
   //   any warnings that might be sent to the console in that case.

@@ -3,7 +3,8 @@
 (function () {
   'use strict';
 
-  const ipcRenderer = window.top.ipc;
+  const { ipcRenderer, remote } = window.top.electron;
+
   const url = window.top.url;
   const i18n = window.top.modules.i18n;
 
@@ -11,8 +12,30 @@
   const { locale } = config;
   const localeMessages = ipcRenderer.sendSync('locale-data');
 
+  const { systemPreferences } = remote.require('electron');
+
+  window.platform = process.platform;
   window.theme = config.theme;
   window.i18n = i18n.setup(locale, localeMessages);
+
+  function setSystemTheme() {
+    window.systemTheme = systemPreferences.isDarkMode() ? 'dark' : 'light';
+  }
+
+  setSystemTheme();
+
+  window.subscribeToSystemThemeChange = fn => {
+    if (!systemPreferences.subscribeNotification) {
+      return;
+    }
+    systemPreferences.subscribeNotification(
+      'AppleInterfaceThemeChangedNotification',
+      () => {
+        setSystemTheme();
+        fn();
+      }
+    );
+  };
 
   window.getEnvironment = () => config.environment;
   window.getVersion = () => config.version;

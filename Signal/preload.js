@@ -4,9 +4,13 @@
 (function () {
   'use strict';
 
+  const electron = window.electron;
   const semver = window.semver;
 
   const { deferredToPromise } = window.deferred_to_promise;
+
+  const { app } = electron.remote;
+  const { systemPreferences } = electron.remote.require('electron');
 
   window.PROTO_ROOT = '/protos';
   const config = window.app.config || {};
@@ -31,6 +35,25 @@
   window.getServerTrustRoot = () => config.serverTrustRoot;
   window.isBehindProxy = () => Boolean(config.proxyUrl);
 
+  function setSystemTheme() {
+    window.systemTheme = systemPreferences.isDarkMode() ? 'dark' : 'light';
+  }
+
+  setSystemTheme();
+
+  window.subscribeToSystemThemeChange = fn => {
+    if (!systemPreferences.subscribeNotification) {
+      return;
+    }
+    systemPreferences.subscribeNotification(
+      'AppleInterfaceThemeChangedNotification',
+      () => {
+        setSystemTheme();
+        fn();
+      }
+    );
+  };
+
   window.isBeforeVersion = (toCheck, baseVersion) => {
     try {
       return semver.lt(toCheck, baseVersion);
@@ -45,7 +68,7 @@
 
   window.wrapDeferred = deferredToPromise;
 
-  const ipc = window.ipc;
+  const ipc = electron.ipcRenderer;
   const localeMessages = ipc.sendSync('locale-data');
 
   window.setBadgeCount = count => ipc.send('set-badge-count', count);

@@ -5,6 +5,8 @@
 
   const path = window.path;
 
+  const { app } = window.electron;
+
   const { start } = window.app.base_config;
 
   const userDataPath = app.getPath('userData');
