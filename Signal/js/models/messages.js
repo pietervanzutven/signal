@@ -1081,7 +1081,6 @@
             quote: quoteWithData,
             preview: previewWithData,
             sticker: stickerWithData,
-            needsSync: !this.get('synced'),
             expireTimer: this.get('expireTimer'),
             profileKey,
             group: {
@@ -1185,7 +1184,11 @@
 
           // This is used by sendSyncMessage, then set to null
           if (result.dataMessage) {
-            this.set({ dataMessage: result.dataMessage });
+            // When we're not sending recipient updates, we won't save the dataMessage
+            //   unless it's the first time we attempt to send the message.
+            if (!this.get('synced') || window.SEND_RECIPIENT_UPDATES) {
+              this.set({ dataMessage: result.dataMessage });
+            }
           }
 
           const sentTo = this.get('sent_to') || [];
@@ -1321,7 +1324,7 @@
         const isUpdate = Boolean(this.get('synced'));
 
         // Until isRecipientUpdate sync messages are widely supported, will not send them
-        if (isUpdate) {
+        if (isUpdate && !window.SEND_RECIPIENT_UPDATES) {
           return Promise.resolve();
         }
 

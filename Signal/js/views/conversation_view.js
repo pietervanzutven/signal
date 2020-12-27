@@ -315,6 +315,10 @@
     },
 
     setupStickerPickerButton() {
+      if (!window.ENABLE_STICKER_SEND) {
+        return;
+      }
+
       const props = {
         onClickAddPack: () => this.showStickerManager(),
         onPickSticker: (packId, stickerId) =>
@@ -1326,6 +1330,10 @@
     },
 
     showStickerPackPreview(packId) {
+      if (!window.ENABLE_STICKER_SEND) {
+        return;
+      }
+
       const props = {
         packId,
         onClose: () => {

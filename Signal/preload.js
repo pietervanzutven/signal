@@ -1,5 +1,4 @@
-/* global Whisper: false */
-/* global window: false */
+/* global Whisper, window */
 
 (function () {
   'use strict';
@@ -11,6 +10,12 @@
 
   const { app } = electron.remote;
   const { systemPreferences } = electron.remote.require('electron');
+
+  // Waiting for clients to implement changes on receive side
+  window.ENABLE_STICKER_SEND = false;
+  window.TIMESTAMP_VALIDATION = false;
+  window.PAD_ALL_ATTACHMENTS = false;
+  window.SEND_RECIPIENT_UPDATES = false;
 
   window.PROTO_ROOT = '/protos';
   const config = window.app.config || {};
