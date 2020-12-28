@@ -10,6 +10,7 @@
   const Crypto = window.crypto;
   const Data = window.data;
   const Database = window.database;
+  const Emojis = window.emojis;
   const Emoji = window.ts.util.emoji;
   const IndexedDB = window.indexeddb;
   const Notifications = window.ts.notifications;
@@ -74,6 +75,7 @@
   } = window.ts.components.conversation.VerificationNotification;
 
   // State
+  const { createEmojiButton } = window.ts.state.roots.createEmojiButton;
   const { createLeftPane } = window.ts.state.roots.createLeftPane;
   const {
     createStickerButton,
@@ -87,6 +89,7 @@
 
   const { createStore } = window.ts.state.createStore;
   const conversationsDuck = window.ts.state.ducks.conversations;
+  const emojisDuck = window.ts.state.ducks.emojis;
   const itemsDuck = window.ts.state.ducks.items;
   const stickersDuck = window.ts.state.ducks.stickers;
   const userDuck = window.ts.state.ducks.user;
@@ -267,6 +270,7 @@
     };
 
     const Roots = {
+      createEmojiButton,
       createLeftPane,
       createStickerButton,
       createStickerManager,
@@ -274,6 +278,7 @@
     };
     const Ducks = {
       conversations: conversationsDuck,
+      emojis: emojisDuck,
       items: itemsDuck,
       user: userDuck,
       stickers: stickersDuck,
@@ -313,6 +318,7 @@
       Crypto,
       Data,
       Database,
+      Emojis,
       Emoji,
       IndexedDB,
       LinkPreviews,

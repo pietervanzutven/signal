@@ -116,6 +116,7 @@
           <div class='compose'>
             <form class='send clearfix file-input'>
               <div class='flex'>
+                <div class='emoji-button-placeholder'></div>
                 <textarea class='send-message' placeholder='{{ send-message }}' rows='1' dir='auto'></textarea>
                 <div class='sticker-button-placeholder'></div>
                 <div class='capture-audio'>
@@ -405,12 +406,15 @@
   <script type='text/javascript' src='node_modules/core/path.js'></script>
   <script type='text/javascript' src='node_modules/core/process.js'></script>
   <script type='text/javascript' src='node_modules/core/uwp-config.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/chunk.js'></script>
   <script type='text/javascript' src='node_modules/lodash/clonedeep.js'></script>
   <script type='text/javascript' src='node_modules/lodash/compact.js'></script>
   <script type='text/javascript' src='node_modules/lodash/debounce.js'></script>
   <script type='text/javascript' src='node_modules/lodash/escapeRegExp.js'></script>
   <script type='text/javascript' src='node_modules/lodash/get.js'></script>
   <script type='text/javascript' src='node_modules/lodash/filter.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/findLast.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/flatMap.js'></script>
   <script type='text/javascript' src='node_modules/lodash/flatten.js'></script>
   <script type='text/javascript' src='node_modules/lodash/flowRight.js'></script>
   <script type='text/javascript' src='node_modules/lodash/forEach.js'></script>
@@ -418,6 +422,7 @@
   <script type='text/javascript' src='node_modules/lodash/groupBy.js'></script>
   <script type='text/javascript' src='node_modules/lodash/head.js'></script>
   <script type='text/javascript' src='node_modules/lodash/includes.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/initial.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isArrayBuffer.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isFunction.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isNumber.js'></script>
@@ -425,8 +430,10 @@
   <script type='text/javascript' src='node_modules/lodash/isRegExp.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isString.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isUndefined.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/keyBy.js'></script>
   <script type='text/javascript' src='node_modules/lodash/last.js'></script>
   <script type='text/javascript' src='node_modules/lodash/map.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/mapValues.js'></script>
   <script type='text/javascript' src='node_modules/lodash/merge.js'></script>
   <script type='text/javascript' src='node_modules/lodash/omit.js'></script>
   <script type='text/javascript' src='node_modules/lodash/orderBy.js'></script>
@@ -438,6 +445,9 @@
   <script type='text/javascript' src='node_modules/lodash/sample.js'></script>
   <script type='text/javascript' src='node_modules/lodash/set.js'></script>
   <script type='text/javascript' src='node_modules/lodash/sortBy.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/take.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/uniq.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/zipObject.js'></script>
   <script type='text/javascript' src='node_modules/blueimp-canvas-to-blob/canvas-to-blob.js'></script>
   <script type='text/javascript' src='node_modules/blueimp-load-image/load-image.js'></script>
   <script type='text/javascript' src='node_modules/blueimp-load-image/load-image-scale.js'></script>
@@ -460,7 +470,8 @@
   <script type='text/javascript' src='node_modules/semver/index.js'></script>
   <script type='text/javascript' src='node_modules/protobuf/protobuf.js'></script>
   <script type='text/javascript' src='node_modules/google-libphonenumber/libphonenumber.js'></script>
-  <script type='text/javascript' src='node_modules/emoji-js/index.js'></script>
+  <script type='text/javascript' src='node_modules/emoji-datasource/index.js'></script>
+  <script type='text/javascript' src='node_modules/emoji-js/emoji.js'></script>
   <script type='text/javascript' src='node_modules/form-data/form-data.js'></script>
   <script type='text/javascript' src='node_modules/got/got.js'></script>
   <script type='text/javascript' src='node_modules/classnames/index.js'></script>
@@ -520,6 +531,7 @@
   <script type='text/javascript' src='node_modules/p-queue/index.js'></script>
   <script type='text/javascript' src='node_modules/p-map/index.js'></script>
   <script type='text/javascript' src='node_modules/qs/qs.js'></script>
+  <script type='text/javascript' src='node_modules/fuse.js/fuse.js'></script>
 
   <script type='text/javascript' src='js/modules/auto_orient_image.js'></script>
   <script type='text/javascript' src='js/modules/types/schema_version.js'></script>
@@ -622,6 +634,10 @@
   <script type='text/javascript' src='js/typescript/components/conversation/TimeLine.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/TimelineItem.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/_contactUtil.js'></script>
+  <script type='text/javascript' src='js/typescript/components/emoji/lib.js'></script>
+  <script type='text/javascript' src='js/typescript/components/emoji/Emoji.js'></script>
+  <script type='text/javascript' src='js/typescript/components/emoji/EmojiPicker.js'></script>
+  <script type='text/javascript' src='js/typescript/components/emoji/EmojiButton.js'></script>
   <script type='text/javascript' src='js/typescript/components/stickers/StickerPicker.js'></script>
   <script type='text/javascript' src='js/typescript/components/stickers/StickerButton.js'></script>
   <script type='text/javascript' src='js/typescript/components/stickers/StickerPackInstallButton.js'></script>
@@ -663,6 +679,7 @@
   <script type='text/javascript' src='main.js'></script>
 
   <script type='text/javascript' src='js/modules/data.js'></script>
+  <script type='text/javascript' src='js/modules/emojis.js'></script>
   <script type='text/javascript' src='js/modules/migrate_to_sql.js'></script>
   <script type='text/javascript' src='js/modules/messages_data_migrator.js'></script>
   <script type='text/javascript' src='js/modules/indexeddb.js'></script>
@@ -674,6 +691,7 @@
   <script type='text/javascript' src='js/logging.js'></script>
 
   <script type='text/javascript' src='js/typescript/state/ducks/conversations.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/emojis.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/items.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/noop.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/search.js'></script>
@@ -686,6 +704,7 @@
   <script type='text/javascript' src='js/typescript/state/selectors/conversations.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/search.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/stickers.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/EmojiButton.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/MainHeader.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/MessageSearchResult.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/LeftPane.js'></script>
@@ -694,6 +713,7 @@
   <script type='text/javascript' src='js/typescript/state/smart/StickerPreviewModal.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/TimelineItem.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/Timeline.js'></script>
+  <script type='text/javascript' src='js/typescript/state/roots/createEmojiButton.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createLeftPane.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createStickerButton.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createStickerManager.js'></script>

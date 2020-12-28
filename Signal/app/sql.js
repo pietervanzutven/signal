@@ -7,6 +7,7 @@
   const mkdirp = window.mkdirp;
   const rimraf = window.rimraf;
   const sql = window.journeyapps.sqlcipher;
+  const { app, dialog, clipboard } = window.electron;
   const { redactAll } = window.privacy;
   const { remove: removeUserConfig } = window.app.user_config;
 
@@ -126,6 +127,9 @@
     getAllStickerPacks,
     getAllStickers,
     getRecentStickers,
+
+    updateEmojiUsage,
+    getRecentEmojis,
 
     removeAll,
     removeAllConfiguration,
@@ -739,6 +743,29 @@
     console.log('updateToSchemaVersion13: success!');
   }
 
+  async function updateToSchemaVersion14(currentVersion, instance) {
+    if (currentVersion >= 14) {
+      return;
+    }
+
+    console.log('updateToSchemaVersion14: starting...');
+    await instance.run('BEGIN TRANSACTION;');
+
+    await instance.run(`CREATE TABLE emojis(
+    shortName STRING PRIMARY KEY,
+    lastUsage INTEGER
+  );`);
+
+    await instance.run(`CREATE INDEX emojis_lastUsage
+    ON emojis (
+      lastUsage
+  );`);
+
+    await instance.run('PRAGMA schema_version = 14;');
+    await instance.run('COMMIT TRANSACTION;');
+    console.log('updateToSchemaVersion14: success!');
+  }
+
   const SCHEMA_VERSIONS = [
     updateToSchemaVersion1,
     updateToSchemaVersion2,
@@ -753,6 +780,7 @@
     updateToSchemaVersion11,
     updateToSchemaVersion12,
     updateToSchemaVersion13,
+    updateToSchemaVersion14,
   ];
 
   async function updateSchema(instance) {
@@ -2188,6 +2216,43 @@
     LIMIT $limit`,
       {
         $limit: limit || 24,
+      }
+    );
+
+    return rows || [];
+  }
+
+  // Emojis
+  async function updateEmojiUsage(shortName, timeUsed = Date.now()) {
+    await db.run('BEGIN TRANSACTION;');
+
+    const rows = await db.get(
+      'SELECT * FROM emojis WHERE shortName = $shortName;',
+      {
+        $shortName: shortName,
+      }
+    );
+
+    if (rows) {
+      await db.run(
+        'UPDATE emojis SET lastUsage = $timeUsed WHERE shortName = $shortName;',
+        { $shortName: shortName, $timeUsed: timeUsed }
+      );
+    } else {
+      await db.run(
+        'INSERT INTO emojis(shortName, lastUsage) VALUES ($shortName, $timeUsed);',
+        { $shortName: shortName, $timeUsed: timeUsed }
+      );
+    }
+
+    await db.run('COMMIT TRANSACTION;');
+  }
+
+  async function getRecentEmojis(limit = 32) {
+    const rows = await db.all(
+      'SELECT * FROM emojis ORDER BY lastUsage DESC LIMIT $limit;',
+      {
+        $limit: limit,
       }
     );
 
