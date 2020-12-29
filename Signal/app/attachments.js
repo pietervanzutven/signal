@@ -15,6 +15,7 @@
 
   const PATH = 'attachments.noindex';
   const STICKER_PATH = 'stickers.noindex';
+  const TEMP_PATH = 'temp';
 
   exports.getAllAttachments = async userDataPath => {
     const dir = exports.getPath(userDataPath);
@@ -46,6 +47,20 @@
       throw new TypeError("'userDataPath' must be a string");
     }
     return path.join(userDataPath, STICKER_PATH);
+  };
+
+  //      getTempPath :: AbsolutePath -> AbsolutePath
+  exports.getTempPath = userDataPath => {
+    if (!isString(userDataPath)) {
+      throw new TypeError("'userDataPath' must be a string");
+    }
+    return path.join(userDataPath, TEMP_PATH);
+  };
+
+  //      clearTempPath :: AbsolutePath -> AbsolutePath
+  exports.clearTempPath = userDataPath => {
+    const tempPath = exports.getTempPath(userDataPath);
+    return fse.emptyDir(tempPath);
   };
 
   //      createReader :: AttachmentsPath ->

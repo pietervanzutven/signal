@@ -21,8 +21,16 @@
     const classnames_1 = __importDefault(window.classnames);
     const StickerManagerPackRow_1 = window.ts.components.stickers.StickerManagerPackRow;
     const StickerPreviewModal_1 = window.ts.components.stickers.StickerPreviewModal;
-    exports.StickerManager = React.memo(({ installedPacks, receivedPacks, blessedPacks, installStickerPack, uninstallStickerPack, i18n, }) => {
+    exports.StickerManager = React.memo(({ installedPacks, receivedPacks, knownPacks, blessedPacks, downloadStickerPack, installStickerPack, uninstallStickerPack, i18n, }) => {
         const [packToPreview, setPackToPreview,] = React.useState(null);
+        React.useEffect(() => {
+            if (!knownPacks) {
+                return;
+            }
+            knownPacks.forEach(pack => {
+                downloadStickerPack(pack.id, pack.key);
+            });
+        }, []);
         const clearPackToPreview = React.useCallback(() => {
             setPackToPreview(null);
         }, [setPackToPreview]);
@@ -30,7 +38,7 @@
             setPackToPreview(pack);
         }, [clearPackToPreview]);
         return (React.createElement(React.Fragment, null,
-            packToPreview ? (React.createElement(StickerPreviewModal_1.StickerPreviewModal, { i18n: i18n, pack: packToPreview, onClose: clearPackToPreview, installStickerPack: installStickerPack, uninstallStickerPack: uninstallStickerPack })) : null,
+            packToPreview ? (React.createElement(StickerPreviewModal_1.StickerPreviewModal, { i18n: i18n, pack: packToPreview, onClose: clearPackToPreview, downloadStickerPack: downloadStickerPack, installStickerPack: installStickerPack, uninstallStickerPack: uninstallStickerPack })) : null,
             React.createElement("div", { className: "module-sticker-manager" }, [
                 {
                     i18nKey: 'stickers--StickerManager--InstalledPacks',

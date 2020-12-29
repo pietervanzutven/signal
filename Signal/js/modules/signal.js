@@ -134,6 +134,7 @@
     const {
       getPath,
       getStickersPath,
+      getTempPath,
       createReader,
       createAbsolutePathGetter,
       createWriterForNew,
@@ -166,6 +167,12 @@
     const deleteSticker = Attachments.createDeleter(stickersPath);
     const readStickerData = createReader(stickersPath);
 
+    const tempPath = getTempPath(userDataPath);
+    const getAbsoluteTempPath = createAbsolutePathGetter(tempPath);
+    const writeNewTempData = createWriterForNew(tempPath);
+    const deleteTempFile = Attachments.createDeleter(tempPath);
+    const readTempData = createReader(tempPath);
+
     return {
       attachmentsPath,
       copyIntoAttachmentsDirectory,
@@ -175,6 +182,7 @@
         deleteOnDisk,
       }),
       deleteSticker,
+      deleteTempFile,
       getAbsoluteAttachmentPath,
       getAbsoluteStickerPath,
       getPlaceholderMigrations,
@@ -186,6 +194,7 @@
       loadStickerData,
       readAttachmentData,
       readStickerData,
+      readTempData,
       run,
       processNewAttachment: attachment =>
         MessageType.processNewAttachment(attachment, {
@@ -202,6 +211,13 @@
         MessageType.processNewSticker(stickerData, {
           writeNewStickerData,
           getAbsoluteStickerPath,
+          getImageDimensions,
+          logger,
+        }),
+      processNewEphemeralSticker: stickerData =>
+        MessageType.processNewSticker(stickerData, {
+          writeNewStickerData: writeNewTempData,
+          getAbsoluteStickerPath: getAbsoluteTempPath,
           getImageDimensions,
           logger,
         }),

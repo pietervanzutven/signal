@@ -31,6 +31,7 @@
   const ERASE_SQL_KEY = 'erase-sql-key';
   const ERASE_ATTACHMENTS_KEY = 'erase-attachments';
   const ERASE_STICKERS_KEY = 'erase-stickers';
+  const ERASE_TEMP_KEY = 'erase-temp';
   const CLEANUP_ORPHANED_ATTACHMENTS_KEY = 'cleanup-orphaned-attachments';
 
   const _jobs = Object.create(null);
@@ -970,6 +971,7 @@
       callChannel(ERASE_SQL_KEY),
       callChannel(ERASE_ATTACHMENTS_KEY),
       callChannel(ERASE_STICKERS_KEY),
+      callChannel(ERASE_TEMP_KEY),
     ]);
   }
 

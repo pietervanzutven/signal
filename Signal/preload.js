@@ -12,7 +12,7 @@
   const { systemPreferences } = electron.remote.require('electron');
 
   // Waiting for clients to implement changes on receive side
-  window.ENABLE_STICKER_SEND = false;
+  window.ENABLE_STICKER_SEND = true;
   window.TIMESTAMP_VALIDATION = false;
   window.PAD_ALL_ATTACHMENTS = false;
   window.SEND_RECIPIENT_UPDATES = false;
@@ -169,11 +169,11 @@
     }
   });
 
-  ipc.on('add-sticker-pack', (_event, info) => {
+  ipc.on('show-sticker-pack', (_event, info) => {
     const { packId, packKey } = info;
-    const { installStickerPack } = window.Events;
-    if (installStickerPack) {
-      installStickerPack(packId, packKey);
+    const { showStickerPack } = window.Events;
+    if (showStickerPack) {
+      showStickerPack(packId, packKey);
     }
   });
 
@@ -293,6 +293,7 @@
   const userDataPath = app.getPath('userData');
   window.baseAttachmentsPath = Attachments.getPath(userDataPath);
   window.baseStickersPath = Attachments.getStickersPath(userDataPath);
+  window.baseTempPath = Attachments.getTempPath(userDataPath);
   window.Signal = Signal.setup({
     Attachments,
     userDataPath,

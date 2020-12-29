@@ -1339,15 +1339,19 @@
       dialog.focusCancel();
     },
 
-    showStickerPackPreview(packId) {
+    showStickerPackPreview(packId, packKey) {
       if (!window.ENABLE_STICKER_SEND) {
         return;
       }
 
+      window.Signal.Stickers.downloadEphemeralPack(packId, packKey);
+
       const props = {
         packId,
-        onClose: () => {
+        onClose: async () => {
           this.stickerPreviewModalView.remove();
+          this.stickerPreviewModalView = null;
+          await window.Signal.Stickers.removeEphemeralPack(packId);
         },
       };
 
@@ -1357,9 +1361,6 @@
           window.reduxStore,
           props
         ),
-        onClose: () => {
-          this.stickerPreviewModalView = null;
-        },
       });
     },
 
@@ -1372,8 +1373,8 @@
       }
       const sticker = message.get('sticker');
       if (sticker) {
-        const { packId } = sticker;
-        this.showStickerPackPreview(packId);
+        const { packId, packKey } = sticker;
+        this.showStickerPackPreview(packId, packKey);
         return;
       }
 
@@ -2015,17 +2016,25 @@
     },
 
     async getStickerPackPreview(url) {
+      const isPackDownloaded = pack =>
+        pack && (pack.status === 'downloaded' || pack.status === 'installed');
       const isPackValid = pack =>
-        pack && (pack.status === 'advertised' || pack.status === 'installed');
+        pack &&
+        (pack.status === 'ephemeral' ||
+          pack.status === 'downloaded' ||
+          pack.status === 'installed');
+
+      let id;
+      let key;
 
       try {
-        const { id, key } = window.Signal.Stickers.getDataFromLink(url);
+        ({ id, key } = window.Signal.Stickers.getDataFromLink(url));
         const keyBytes = window.Signal.Crypto.bytesFromHexString(key);
         const keyBase64 = window.Signal.Crypto.arrayBufferToBase64(keyBytes);
 
         const existing = window.Signal.Stickers.getStickerPack(id);
-        if (!isPackValid(existing)) {
-          await window.Signal.Stickers.downloadStickerPack(id, keyBase64);
+        if (!isPackDownloaded(existing)) {
+          await window.Signal.Stickers.downloadEphemeralPack(id, keyBase64);
         }
 
         const pack = window.Signal.Stickers.getStickerPack(id);
@@ -2038,9 +2047,10 @@
 
         const { title, coverStickerId } = pack;
         const sticker = pack.stickers[coverStickerId];
-        const data = await window.Signal.Migrations.readStickerData(
-          sticker.path
-        );
+        const data =
+          pack.status === 'ephemeral'
+            ? await window.Signal.Migrations.readTempData(sticker.path)
+            : await window.Signal.Migrations.readStickerData(sticker.path);
 
         return {
           title,
@@ -2060,6 +2070,10 @@
           error && error.stack ? error.stack : error
         );
         return null;
+      } finally {
+        if (id) {
+          await window.Signal.Stickers.removeEphemeralPack(id);
+        }
       }
     },
 

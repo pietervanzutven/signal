@@ -1892,8 +1892,46 @@
       );
     }
 
+    const rows = await db.all('SELECT id FROM sticker_packs WHERE id = $id;', {
+      $id: id,
+    });
+    const payload = {
+      $attemptedStatus: attemptedStatus,
+      $author: author,
+      $coverStickerId: coverStickerId,
+      $createdAt: createdAt || Date.now(),
+      $downloadAttempts: downloadAttempts || 1,
+      $id: id,
+      $installedAt: installedAt,
+      $key: key,
+      $lastUsed: lastUsed || null,
+      $status: status,
+      $stickerCount: stickerCount,
+      $title: title,
+    };
+
+    if (rows && rows.length) {
+      await db.run(
+        `UPDATE sticker_packs SET
+        attemptedStatus = $attemptedStatus,
+        author = $author,
+        coverStickerId = $coverStickerId,
+        createdAt = $createdAt,
+        downloadAttempts = $downloadAttempts,
+        installedAt = $installedAt,
+        key = $key,
+        lastUsed = $lastUsed,
+        status = $status,
+        stickerCount = $stickerCount,
+        title = $title
+      WHERE id = $id;`,
+        payload
+      );
+      return;
+    }
+
     await db.run(
-      `INSERT OR REPLACE INTO sticker_packs (
+      `INSERT INTO sticker_packs (
       attemptedStatus,
       author,
       coverStickerId,
@@ -1920,20 +1958,7 @@
       $stickerCount,
       $title
     )`,
-      {
-        $attemptedStatus: attemptedStatus,
-        $author: author,
-        $coverStickerId: coverStickerId,
-        $createdAt: createdAt || Date.now(),
-        $downloadAttempts: downloadAttempts || 1,
-        $id: id,
-        $installedAt: installedAt,
-        $key: key,
-        $lastUsed: lastUsed || null,
-        $status: status,
-        $stickerCount: stickerCount,
-        $title: title,
-      }
+      payload
     );
   }
   async function updateStickerPackStatus(id, status, options) {

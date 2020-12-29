@@ -16,10 +16,12 @@
         const blessedPacks = stickers_1.getBlessedStickerPacks(state);
         const receivedPacks = stickers_1.getReceivedStickerPacks(state);
         const installedPacks = stickers_1.getInstalledStickerPacks(state);
+        const knownPacks = stickers_1.getKnownStickerPacks(state);
         return {
             blessedPacks,
             receivedPacks,
             installedPacks,
+            knownPacks,
             i18n: user_1.getIntl(state),
         };
     };

@@ -54,12 +54,12 @@
             return (React.createElement(React.Fragment, null,
                 uninstalling ? (React.createElement(ConfirmationModal_1.ConfirmationModal, { i18n: i18n, onClose: clearUninstalling, negativeText: i18n('stickers--StickerManager--Uninstall'), onNegative: handleConfirmUninstall }, i18n('stickers--StickerManager--UninstallWarning'))) : null,
                 React.createElement("div", { role: "button", onClick: handleClickPreview, className: "module-sticker-manager__pack-row" },
-                    React.createElement("img", { src: pack.cover.url, alt: pack.title, className: "module-sticker-manager__pack-row__cover" }),
+                    pack.cover ? (React.createElement("img", { src: pack.cover.url, alt: pack.title, className: "module-sticker-manager__pack-row__cover" })) : (React.createElement("div", { className: "module-sticker-manager__pack-row__cover-placeholder" })),
                     React.createElement("div", { className: "module-sticker-manager__pack-row__meta" },
                         React.createElement("div", { className: "module-sticker-manager__pack-row__meta__title" },
                             pack.title,
                             pack.isBlessed ? (React.createElement("span", { className: "module-sticker-manager__pack-row__meta__blessed-icon" })) : null),
                         React.createElement("div", { className: "module-sticker-manager__pack-row__meta__author" }, pack.author)),
-                    React.createElement("div", { className: "module-sticker-manager__pack-row__controls" }, pack.status === 'advertised' ? (React.createElement(StickerPackInstallButton_1.StickerPackInstallButton, { installed: false, i18n: i18n, onClick: handleInstall })) : (React.createElement(StickerPackInstallButton_1.StickerPackInstallButton, { installed: true, i18n: i18n, onClick: handleUninstall }))))));
+                    React.createElement("div", { className: "module-sticker-manager__pack-row__controls" }, pack.status === 'installed' ? (React.createElement(StickerPackInstallButton_1.StickerPackInstallButton, { installed: true, i18n: i18n, onClick: handleUninstall })) : (React.createElement(StickerPackInstallButton_1.StickerPackInstallButton, { installed: false, i18n: i18n, onClick: handleInstall }))))));
         });
 })();

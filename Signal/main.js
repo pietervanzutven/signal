@@ -758,6 +758,14 @@ let ready = false;
     });
   }
 
+  try {
+    await attachments.clearTempPath(userDataPath);
+  } catch (error) {
+    logger.error(
+      'main/ready: Error deleting temp dir:',
+      error && error.stack ? error.stack : error
+    );
+  }
   await attachmentChannel.initialize({
     configDir: userDataPath,
     cleanupOrphanedAttachments,
@@ -1004,7 +1012,7 @@ function handleSgnlLink(incomingUrl) {
   if (command === 'addstickers' && mainWindow && mainWindow.webContents) {
     const { pack_id: packId, pack_key: packKeyHex } = args;
     const packKey = Buffer.from(packKeyHex, 'hex').toString('base64');
-    mainWindow.webContents.send('add-sticker-pack', { packId, packKey });
+    mainWindow.webContents.send('show-sticker-pack', { packId, packKey });
   } else {
     console.error('Unhandled sgnl link');
   }

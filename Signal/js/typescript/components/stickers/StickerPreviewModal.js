@@ -13,19 +13,38 @@
         result["default"] = mod;
         return result;
     };
+    var __importDefault = (this && this.__importDefault) || function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
     Object.defineProperty(exports, "__esModule", { value: true });
     const React = __importStar(window.react);
     const react_dom_1 = window.react_dom;
+    const lodash_1 = window.lodash;
+    const classnames_1 = __importDefault(window.classnames);
     const StickerPackInstallButton_1 = window.ts.components.stickers.StickerPackInstallButton;
     const ConfirmationDialog_1 = window.ts.components.ConfirmationDialog;
+    const Spinner_1 = window.ts.components.Spinner;
     function focusRef(el) {
         if (el) {
             el.focus();
         }
     }
+    function renderBody({ pack, i18n }) {
+        if (pack && pack.status === 'error') {
+            return (React.createElement("div", { className: "module-sticker-manager__preview-modal__container__error" }, i18n('stickers--StickerPreview--Error')));
+        }
+        if (!pack || pack.stickerCount === 0 || !lodash_1.isNumber(pack.stickerCount)) {
+            return React.createElement(Spinner_1.Spinner, { size: "normal" });
+        }
+        return (React.createElement("div", { className: "module-sticker-manager__preview-modal__container__sticker-grid" },
+            pack.stickers.map(({ id, url }) => (React.createElement("div", { key: id, className: "module-sticker-manager__preview-modal__container__sticker-grid__cell" },
+                React.createElement("img", { className: "module-sticker-manager__preview-modal__container__sticker-grid__cell__image", src: url, alt: pack.title })))),
+            lodash_1.range(pack.stickerCount - pack.stickers.length).map(i => (React.createElement("div", { key: `placeholder-${i}`, className: classnames_1.default('module-sticker-manager__preview-modal__container__sticker-grid__cell', 'module-sticker-manager__preview-modal__container__sticker-grid__cell--placeholder') })))));
+    }
     exports.StickerPreviewModal = React.memo(
         // tslint:disable-next-line max-func-body-length
-        ({ onClose, pack, i18n, installStickerPack, uninstallStickerPack, }) => {
+        (props) => {
+            const { onClose, pack, i18n, downloadStickerPack, installStickerPack, uninstallStickerPack, } = props;
             const [root, setRoot] = React.useState(null);
             const [confirmingUninstall, setConfirmingUninstall] = React.useState(false);
             React.useEffect(() => {
@@ -34,13 +53,32 @@
                 setRoot(div);
                 return () => {
                     document.body.removeChild(div);
-                    setRoot(null);
                 };
             }, []);
-            const isInstalled = pack.status === 'installed';
+            React.useEffect(() => {
+                if (pack && pack.status === 'known') {
+                    downloadStickerPack(pack.id, pack.key);
+                }
+                if (pack &&
+                    pack.status === 'error' &&
+                    (pack.attemptedStatus === 'downloaded' ||
+                        pack.attemptedStatus === 'installed')) {
+                    downloadStickerPack(pack.id, pack.key, {
+                        finalStatus: pack.attemptedStatus,
+                    });
+                }
+            }, []);
+            const isInstalled = Boolean(pack && pack.status === 'installed');
             const handleToggleInstall = React.useCallback(() => {
+                if (!pack) {
+                    return;
+                }
                 if (isInstalled) {
                     setConfirmingUninstall(true);
+                }
+                else if (pack.status === 'ephemeral') {
+                    downloadStickerPack(pack.id, pack.key, { finalStatus: 'installed' });
+                    onClose();
                 }
                 else {
                     installStickerPack(pack.id, pack.key);
@@ -48,6 +86,9 @@
                 }
             }, [isInstalled, pack, setConfirmingUninstall, installStickerPack, onClose]);
             const handleUninstall = React.useCallback(() => {
+                if (!pack) {
+                    return;
+                }
                 uninstallStickerPack(pack.id, pack.key);
                 setConfirmingUninstall(false);
                 // onClose is called by the confirmation modal
@@ -73,16 +114,14 @@
                     React.createElement("header", { className: "module-sticker-manager__preview-modal__container__header" },
                         React.createElement("h2", { className: "module-sticker-manager__preview-modal__container__header__text" }, i18n('stickers--StickerPreview--Title')),
                         React.createElement("button", { onClick: onClose, className: "module-sticker-manager__preview-modal__container__header__close-button" })),
-                    React.createElement("div", { className: "module-sticker-manager__preview-modal__container__sticker-grid" }, pack.stickers.map(({ id, url }) => (React.createElement("div", { key: id, className: "module-sticker-manager__preview-modal__container__sticker-grid__cell" },
-                        React.createElement("img", { className: "module-sticker-manager__preview-modal__container__sticker-grid__cell__image", src: url, alt: pack.title }))))),
-                    React.createElement("div", { className: "module-sticker-manager__preview-modal__container__meta-overlay" },
+                    renderBody(props),
+                    pack && pack.status !== 'error' ? (React.createElement("div", { className: "module-sticker-manager__preview-modal__container__meta-overlay" },
                         React.createElement("div", { className: "module-sticker-manager__preview-modal__container__meta-overlay__info" },
                             React.createElement("h3", { className: "module-sticker-manager__preview-modal__container__meta-overlay__info__title" },
                                 pack.title,
                                 pack.isBlessed ? (React.createElement("span", { className: "module-sticker-manager__preview-modal__container__meta-overlay__info__blessed-icon" })) : null),
                             React.createElement("h4", { className: "module-sticker-manager__preview-modal__container__meta-overlay__info__author" }, pack.author)),
-                        React.createElement("div", { className: "module-sticker-manager__preview-modal__container__meta-overlay__install" },
-                            React.createElement(StickerPackInstallButton_1.StickerPackInstallButton, { ref: focusRef, installed: isInstalled, i18n: i18n, onClick: handleToggleInstall, blue: true })))))), root)
+                        React.createElement("div", { className: "module-sticker-manager__preview-modal__container__meta-overlay__install" }, pack.status === 'pending' ? (React.createElement(Spinner_1.Spinner, { size: "mini" })) : (React.createElement(StickerPackInstallButton_1.StickerPackInstallButton, { ref: focusRef, installed: isInstalled, i18n: i18n, onClick: handleToggleInstall, blue: true }))))) : null))), root)
                 : null;
         });
 })();

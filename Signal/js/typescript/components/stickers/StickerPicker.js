@@ -92,8 +92,7 @@
                                 'module-sticker-picker__header__button--selected': currentTab === pack.id,
                                 'module-sticker-picker__header__button--error': pack.status === 'error',
                             })
-                        },
-                            React.createElement("img", { className: "module-sticker-picker__header__button__image", src: pack.cover.url, alt: pack.title, title: pack.title }))))),
+                        }, pack.cover ? (React.createElement("img", { className: "module-sticker-picker__header__button__image", src: pack.cover.url, alt: pack.title, title: pack.title })) : (React.createElement("div", { className: "module-sticker-picker__header__button__image-placeholder" })))))),
                     packsPage > 0 ? (React.createElement("button", { className: classnames_1.default('module-sticker-picker__header__button', 'module-sticker-picker__header__button--prev-page'), onClick: onClickPrevPackPage })) : null,
                     !isLastPacksPage(packsPage, packs.length) ? (React.createElement("button", { className: classnames_1.default('module-sticker-picker__header__button', 'module-sticker-picker__header__button--next-page'), onClick: onClickNextPackPage })) : null),
                 React.createElement("button", {

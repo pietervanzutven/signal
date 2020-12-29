@@ -25,7 +25,7 @@
     const StickerPicker_1 = window.ts.components.stickers.StickerPicker;
     exports.StickerButton = React.memo(
         // tslint:disable-next-line max-func-body-length
-        ({ i18n, clearInstalledStickerPack, onClickAddPack, onPickSticker, recentStickers, receivedPacks, installedPack, installedPacks, showIntroduction, clearShowIntroduction, showPickerHint, clearShowPickerHint, }) => {
+        ({ i18n, clearInstalledStickerPack, onClickAddPack, onPickSticker, recentStickers, receivedPacks, installedPack, installedPacks, blessedPacks, knownPacks, showIntroduction, clearShowIntroduction, showPickerHint, clearShowPickerHint, }) => {
             const [open, setOpen] = React.useState(false);
             const [popperRoot, setPopperRoot] = React.useState(null);
             const handleClickButton = React.useCallback(() => {
@@ -94,7 +94,11 @@
                 }
                 return lodash_1.noop;
             }, [installedPack, clearInstalledStickerPack]);
-            if (installedPacks.length + receivedPacks.length === 0) {
+            const totalPacks = knownPacks.length +
+                blessedPacks.length +
+                installedPacks.length +
+                receivedPacks.length;
+            if (totalPacks === 0) {
                 return null;
             }
             return (React.createElement(react_popper_1.Manager, null,
@@ -105,14 +109,13 @@
                     })
                 }))),
                 !open && !showIntroduction && installedPack ? (React.createElement(react_popper_1.Popper, { placement: "top-end", key: installedPack.id }, ({ ref, style, placement, arrowProps }) => (React.createElement("div", { ref: ref, style: style, className: "module-sticker-button__tooltip", role: "button", onClick: clearInstalledStickerPack },
-                    React.createElement("img", { className: "module-sticker-button__tooltip__image", src: installedPack.cover.url, alt: installedPack.title }),
+                    installedPack.cover ? (React.createElement("img", { className: "module-sticker-button__tooltip__image", src: installedPack.cover.url, alt: installedPack.title })) : (React.createElement("div", { className: "module-sticker-button__tooltip__image-placeholder" })),
                     React.createElement("span", { className: "module-sticker-button__tooltip__text" },
                         React.createElement("span", { className: "module-sticker-button__tooltip__text__title" }, installedPack.title),
                         ' ',
                         "installed"),
                     React.createElement("div", { ref: arrowProps.ref, style: arrowProps.style, className: classnames_1.default('module-sticker-button__tooltip__triangle', `module-sticker-button__tooltip__triangle--${placement}`) }))))) : null,
                 !open && showIntroduction ? (React.createElement(react_popper_1.Popper, { placement: "top-end" }, ({ ref, style, placement, arrowProps }) => (React.createElement("div", { ref: ref, style: style, className: classnames_1.default('module-sticker-button__tooltip', 'module-sticker-button__tooltip--introduction'), role: "button", onClick: handleClearIntroduction },
-                    React.createElement("div", { className: "module-sticker-button__tooltip--introduction__image" }),
                     React.createElement("div", { className: "module-sticker-button__tooltip--introduction__meta" },
                         React.createElement("div", { className: "module-sticker-button__tooltip--introduction__meta__title" }, i18n('stickers--StickerManager--Introduction--Title')),
                         React.createElement("div", { className: "module-sticker-button__tooltip--introduction__meta__subtitle" }, i18n('stickers--StickerManager--Introduction--Body'))),

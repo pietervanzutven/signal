@@ -14,4 +14,5 @@
     exports.getIntl = reselect_1.createSelector(exports.getUser, (state) => state.i18n);
     exports.getAttachmentsPath = reselect_1.createSelector(exports.getUser, (state) => state.attachmentsPath);
     exports.getStickersPath = reselect_1.createSelector(exports.getUser, (state) => state.stickersPath);
+    exports.getTempPath = reselect_1.createSelector(exports.getUser, (state) => state.tempPath);
 })();

@@ -14,6 +14,7 @@
     const events_1 = window.ts.shims.events;
     // Action Creators
     exports.actions = {
+        downloadStickerPack,
         clearInstalledStickerPack,
         removeStickerPack,
         stickerAdded,
@@ -44,6 +45,16 @@
         return {
             type: 'stickers/STICKER_PACK_ADDED',
             payload,
+        };
+    }
+    function downloadStickerPack(packId, packKey, options) {
+        const { finalStatus } = options || { finalStatus: undefined };
+        // We're just kicking this off, since it will generate more redux events
+        // tslint:disable-next-line:no-floating-promises
+        stickers_1.downloadStickerPack(packId, packKey, { finalStatus });
+        return {
+            type: 'NOOP',
+            payload: null,
         };
     }
     function installStickerPack(packId, packKey, options = null) {
@@ -80,7 +91,7 @@
     }
     async function doUninstallStickerPack(packId, packKey, options) {
         const { fromSync } = options || { fromSync: false };
-        const status = 'advertised';
+        const status = 'downloaded';
         await data_1.updateStickerPackStatus(packId, status);
         // If there are no more references, it should be removed
         await stickers_1.maybeDeletePack(packId);
@@ -103,6 +114,11 @@
         return { type: 'stickers/CLEAR_INSTALLED_STICKER_PACK' };
     }
     function stickerPackUpdated(packId, patch) {
+        const { status, attemptedStatus } = patch;
+        // We do this to trigger a toast, which is still done via Backbone
+        if (status === 'error' && attemptedStatus === 'installed') {
+            events_1.trigger('pack-install-failed');
+        }
         return {
             type: 'stickers/STICKER_PACK_UPDATED',
             payload: {

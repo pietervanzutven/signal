@@ -22,6 +22,7 @@
         return {
             attachmentsPath: 'missing',
             stickersPath: 'missing',
+            tempPath: 'missing',
             ourNumber: 'missing',
             regionCode: 'missing',
             i18n: () => 'missing',
