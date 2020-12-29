@@ -13,7 +13,7 @@
 
   const BLESSED_PACKS = {};
 
-  const { isNumber, pick, reject, groupBy } = window.lodash;
+  const { isNumber, pick, reject, groupBy, values } = window.lodash;
   const pMap = window.p_map;
   const Queue = window.p_queue;
   const qs = window.qs;
@@ -152,10 +152,12 @@
       }
 
       if (doesPackNeedDownload(existing)) {
+        const status =
+          existing.attemptedStatus === 'installed' ? 'installed' : null;
         toDownload[id] = {
           id,
           key: existing.key,
-          status: existing.attemptedStatus,
+          status,
         };
       }
     });
