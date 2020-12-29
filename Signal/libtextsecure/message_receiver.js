@@ -1311,6 +1311,10 @@ MessageReceiver.prototype.extend({
     //   fields after the first action.
 
     if (window.TIMESTAMP_VALIDATION) {
+      if (!envelope.timestamp || !decrypted.timestamp) {
+        throw new Error('Missing timestamp on dataMessage or envelope');
+      }
+
       const envelopeTimestamp = envelope.timestamp.toNumber();
       const decryptedTimestamp = decrypted.timestamp.toNumber();
 
