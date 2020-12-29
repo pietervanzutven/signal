@@ -518,7 +518,7 @@ MessageSender.prototype = {
     );
 
     if (isUpdate) {
-      syncMessage.isRecipientUpdate = true;
+      sentMessage.isRecipientUpdate = true;
     }
 
     // Though this field has 'unidenified' in the name, it should have entries for each
