@@ -31,6 +31,7 @@
             const handleClickButton = React.useCallback(() => {
                 // Clear tooltip state
                 clearInstalledStickerPack();
+                clearShowIntroduction();
                 // Handle button click
                 if (installedPacks.length === 0) {
                     onClickAddPack();
