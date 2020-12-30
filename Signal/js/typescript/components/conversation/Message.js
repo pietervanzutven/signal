@@ -207,7 +207,7 @@
                         react_1.default.createElement("div", { className: classnames_1.default('module-message__generic-attachment__file-size', `module-message__generic-attachment__file-size--${direction}`) }, fileSize))));
             }
         }
-        // tslint:disable-next-line cyclomatic-complexity
+        // tslint:disable-next-line cyclomatic-complexity max-func-body-length
         renderPreview() {
             const { attachments, conversationType, direction, i18n, openLink, previews, quote, } = this.props;
             // Attachments take precedence over Link Previews
@@ -242,7 +242,7 @@
                         : null)
                 },
                     first.image && previewHasImage && !isFullSizeImage ? (react_1.default.createElement("div", { className: "module-message__link-preview__icon_container" },
-                        react_1.default.createElement(Image_1.Image, { smallCurveTopLeft: !withContentAbove, softCorners: true, alt: i18n('previewThumbnail', [first.domain]), height: 72, width: 72, url: first.image.url, attachment: first.image, onError: this.handleImageErrorBound, i18n: i18n }))) : null,
+                        react_1.default.createElement(Image_1.Image, { smallCurveTopLeft: !withContentAbove, noBorder: true, noBackground: true, softCorners: true, alt: i18n('previewThumbnail', [first.domain]), height: 72, width: 72, url: first.image.url, attachment: first.image, onError: this.handleImageErrorBound, i18n: i18n }))) : null,
                     react_1.default.createElement("div", {
                         className: classnames_1.default('module-message__link-preview__text', previewHasImage && !isFullSizeImage
                             ? 'module-message__link-preview__text--with-icon'
