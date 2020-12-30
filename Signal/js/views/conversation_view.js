@@ -1735,7 +1735,6 @@
       } else {
         textarea.value += colons;
       }
-      this.focusMessageField();
     },
 
     async setQuoteMessage(messageId) {
