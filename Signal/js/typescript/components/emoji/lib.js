@@ -90,6 +90,21 @@
             .join('');
     }
     exports.unifiedToEmoji = unifiedToEmoji;
+    function hasVariation(shortName, skinTone = 0) {
+        if (skinTone === 0) {
+            return false;
+        }
+        const base = exports.dataByShortName[shortName];
+        if (!base) {
+            return false;
+        }
+        if (skinTone > 0 && base.skin_variations) {
+            const toneKey = exports.skinTones[skinTone - 1];
+            return Boolean(base.skin_variations[toneKey]);
+        }
+        return false;
+    }
+    exports.hasVariation = hasVariation;
     function convertShortName(shortName, skinTone = 0) {
         const base = exports.dataByShortName[shortName];
         if (!base) {
