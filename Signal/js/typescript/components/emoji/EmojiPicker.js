@@ -90,6 +90,7 @@
                             'ArrowDown',
                             'ArrowLeft',
                             'ArrowRight',
+                            'Shift',
                             'Tab',
                             ' ',
                         ].includes(e.key)) {

@@ -23,7 +23,7 @@
     const react_popper_1 = window.react_popper;
     const react_dom_1 = window.react_dom;
     const EmojiPicker_1 = window.ts.components.emoji.EmojiPicker;
-    exports.EmojiButton = React.memo(({ i18n, onPickEmoji, skinTone, onSetSkinTone, recentEmojis }) => {
+    exports.EmojiButton = React.memo(({ i18n, onClose, onPickEmoji, skinTone, onSetSkinTone, recentEmojis, }) => {
         const [open, setOpen] = React.useState(false);
         const [popperRoot, setPopperRoot] = React.useState(null);
         const handleClickButton = React.useCallback(() => {
@@ -35,8 +35,9 @@
             }
         }, [popperRoot, setOpen]);
         const handleClose = React.useCallback(() => {
+            onClose();
             setOpen(false);
-        }, [setOpen]);
+        }, [setOpen, onClose]);
         // Create popper root and handle outside clicks
         React.useEffect(() => {
             if (open) {
