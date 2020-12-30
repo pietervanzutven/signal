@@ -99,8 +99,8 @@
         if (!base) {
             return '';
         }
-        if (skinTone && base.skin_variations) {
-            const toneKey = exports.skinTones[0];
+        if (skinTone > 0 && base.skin_variations) {
+            const toneKey = exports.skinTones[skinTone - 1];
             const variation = base.skin_variations[toneKey];
             if (variation) {
                 return unifiedToEmoji(variation.unified);
@@ -110,7 +110,7 @@
     }
     exports.convertShortName = convertShortName;
     function replaceColons(str) {
-        return str.replace(/:[a-z0-9-_+]+:(?::skin-tone-[1-4]:)?/gi, m => {
+        return str.replace(/:[a-z0-9-_+]+:(?::skin-tone-[1-5]:)?/gi, m => {
             const [shortName = '', skinTone = '0'] = m
                 .replace('skin-tone-', '')
                 .split(':')
