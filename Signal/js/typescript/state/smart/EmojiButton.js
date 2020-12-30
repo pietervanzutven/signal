@@ -14,11 +14,11 @@
     const EmojiButton_1 = window.ts.components.emoji.EmojiButton;
     const lib_1 = window.ts.components.emoji.lib;
     const user_1 = window.ts.state.selectors.user;
+    const selectRecentEmojis = reselect_1.createSelector(({ emojis }) => emojis.recents, recents => recents.filter(lib_1.isShortNameValid));
     const mapStateToProps = (state) => {
-        const { recents } = state.emojis;
         return {
             i18n: user_1.getIntl(state),
-            recentEmojis: recents.filter(lib_1.isShortNameValid),
+            recentEmojis: selectRecentEmojis(state),
             skinTone: lodash_1.get(state, ['items', 'skinTone'], 0),
         };
     };
