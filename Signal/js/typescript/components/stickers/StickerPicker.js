@@ -44,7 +44,7 @@
     function isLastPacksPage(page, packs) {
         return page === Math.floor(packs / PACKS_PAGE_SIZE);
     }
-    exports.StickerPicker = React.memo(React.forwardRef(({ i18n, packs, recentStickers, onClickAddPack, onPickSticker, showPickerHint, style, }, ref) => {
+    exports.StickerPicker = React.memo(React.forwardRef(({ i18n, packs, recentStickers, onClose, onClickAddPack, onPickSticker, showPickerHint, style, }, ref) => {
         const tabIds = React.useMemo(() => ['recents', ...packs.map(({ id }) => id)], packs);
         const [currentTab, [recentsHandler, ...packsHandlers]] = useTabs(tabIds,
             // If there are no recent stickers, default to the first sticker pack, unless there are no sticker packs.
@@ -58,6 +58,18 @@
         const onClickNextPackPage = React.useCallback(() => {
             setPacksPage(i => i + 1);
         }, [setPacksPage]);
+        // Handle escape key
+        React.useEffect(() => {
+            const handler = (e) => {
+                if (e.key === 'Escape') {
+                    onClose();
+                }
+            };
+            document.addEventListener('keyup', handler);
+            return () => {
+                document.removeEventListener('keyup', handler);
+            };
+        }, [onClose]);
         const isEmpty = stickers.length === 0;
         const downloadError = selectedPack &&
             selectedPack.status === 'error' &&

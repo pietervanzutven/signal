@@ -53,6 +53,9 @@
                 setOpen(false);
                 onPickSticker(packId, stickerId);
             }, [setOpen, onPickSticker]);
+            const handleClose = React.useCallback(() => {
+                setOpen(false);
+            }, [setOpen]);
             const handleClickAddPack = React.useCallback(() => {
                 setOpen(false);
                 if (showPickerHint) {
@@ -124,7 +127,7 @@
                         React.createElement("button", { className: "module-sticker-button__tooltip--introduction__close__button", onClick: handleClearIntroduction })),
                     React.createElement("div", { ref: arrowProps.ref, style: arrowProps.style, className: classnames_1.default('module-sticker-button__tooltip__triangle', 'module-sticker-button__tooltip__triangle--introduction', `module-sticker-button__tooltip__triangle--${placement}`) }))))) : null,
                 open && popperRoot
-                    ? react_dom_1.createPortal(React.createElement(react_popper_1.Popper, { placement: "top-end" }, ({ ref, style }) => (React.createElement(StickerPicker_1.StickerPicker, { ref: ref, i18n: i18n, style: style, packs: installedPacks, onClickAddPack: handleClickAddPack, onPickSticker: handlePickSticker, recentStickers: recentStickers, showPickerHint: showPickerHint }))), popperRoot)
+                    ? react_dom_1.createPortal(React.createElement(react_popper_1.Popper, { placement: "top-end" }, ({ ref, style }) => (React.createElement(StickerPicker_1.StickerPicker, { ref: ref, i18n: i18n, style: style, packs: installedPacks, onClose: handleClose, onClickAddPack: handleClickAddPack, onPickSticker: handlePickSticker, recentStickers: recentStickers, showPickerHint: showPickerHint }))), popperRoot)
                     : null));
         });
 })();
