@@ -20,8 +20,8 @@
         const knownPacks = stickers_1.getKnownStickerPacks(state);
         const recentStickers = stickers_1.getRecentStickers(state);
         const installedPack = stickers_1.getRecentlyInstalledStickerPack(state);
-        const showIntroduction = lodash_1.get(state.items, ['showStickersIntroduction', 'value'], false);
-        const showPickerHint = lodash_1.get(state.items, ['showStickerPickerHint', 'value'], false) &&
+        const showIntroduction = lodash_1.get(state.items, ['showStickersIntroduction'], false);
+        const showPickerHint = lodash_1.get(state.items, ['showStickerPickerHint'], false) &&
             receivedPacks.length > 0;
         return {
             receivedPacks,

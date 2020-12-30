@@ -12,13 +12,14 @@
     const lodash_1 = window.lodash;
     const actions_1 = window.ts.state.actions;
     const EmojiButton_1 = window.ts.components.emoji.EmojiButton;
+    const lib_1 = window.ts.components.emoji.lib;
     const user_1 = window.ts.state.selectors.user;
     const mapStateToProps = (state) => {
         const { recents } = state.emojis;
         return {
             i18n: user_1.getIntl(state),
-            recentEmojis: recents,
-            skinTone: lodash_1.get(state, ['items', 'skinTone', 'value'], 0),
+            recentEmojis: recents.filter(lib_1.isShortNameValid),
+            skinTone: lodash_1.get(state, ['items', 'skinTone'], 0),
         };
     };
     const dispatchPropsMap = Object.assign({}, actions_1.mapDispatchToProps, { onSetSkinTone: (tone) => actions_1.mapDispatchToProps.putItem('skinTone', tone) });
