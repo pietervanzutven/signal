@@ -126,7 +126,7 @@
                 .replace('skin-tone-', '')
                 .split(':')
                 .filter(Boolean);
-            if (shortName) {
+            if (shortName && isShortName(shortName)) {
                 return convertShortName(shortName, parseInt(skinTone, 10));
             }
             return m;
