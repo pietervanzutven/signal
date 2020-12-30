@@ -52,10 +52,6 @@
         }
         return 'misc';
     }), arr => lodash_1.sortBy(arr, 'sort_order'));
-    function isShortNameValid(shortName) {
-        return Boolean(exports.dataByShortName[shortName]);
-    }
-    exports.isShortNameValid = isShortNameValid;
     function getSheetCoordinates(shortName, skinTone) {
         const base = exports.dataByShortName[shortName];
         if (skinTone && base.skin_variations) {
