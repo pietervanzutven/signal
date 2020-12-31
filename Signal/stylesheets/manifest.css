@@ -1604,18 +1604,6 @@ input.search {
 .ios-theme .module-typing-animation__dot--light {
   background-color: #6b6d70; }
 
-.ios-theme .module-spinner__circle--incoming {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.ios-theme .module-spinner__arc--incoming {
-  background-color: #6b6d70; }
-
-.ios-theme .module-spinner__circle--outgoing {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.ios-theme .module-spinner__arc--outgoing {
-  background-color: #ffffff; }
-
 .ios-theme.dark-theme .module-message__container--outgoing {
   background-color: #2090ea;
   color: #eeefef; }
@@ -1754,30 +1742,6 @@ input.search {
 
 .ios-theme.dark-theme .module-embedded-contact__contact-method--incoming {
   color: #bbbdbe; }
-
-.ios-theme.dark-theme .module-spinner__circle--incoming {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.ios-theme.dark-theme .module-spinner__arc--incoming {
-  background-color: #bbbdbe; }
-
-.ios-theme.dark-theme .module-spinner__circle--small-incoming {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.ios-theme.dark-theme .module-spinner__arc--small-incoming {
-  background-color: #bbbdbe; }
-
-.ios-theme.dark-theme .module-spinner__circle--outgoing {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.ios-theme.dark-theme .module-spinner__arc--outgoing {
-  background-color: #eeefef; }
-
-.ios-theme.dark-theme .module-spinner__circle--small-outgoing {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.ios-theme.dark-theme .module-spinner__arc--small-outgoing {
-  background-color: #eeefef; }
 
 body.dark-theme {
   background-color: #000000;
@@ -3001,24 +2965,6 @@ body.dark-theme {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
-
-.dark-theme .module-spinner__circle {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.dark-theme .module-spinner__arc {
-  background-color: #eeefef; }
-
-.dark-theme .module-spinner__circle--incoming {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.dark-theme .module-spinner__arc--incoming {
-  background-color: #eeefef; }
-
-.dark-theme .module-spinner__circle--outgoing {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.dark-theme .module-spinner__arc--outgoing {
-  background-color: #eeefef; }
 
 .dark-theme .module-caption-editor {
   background-color: #000000; }
@@ -5266,7 +5212,7 @@ body.dark-theme {
 
 .module-typing-animation {
   display: inline-flex;
-  flex-directin: row;
+  flex-direction: row;
   align-items: center;
   height: 8px;
   width: 38px;
@@ -5676,12 +5622,6 @@ body.dark-theme {
   background-position: center center;
   height: 14px;
   width: 14px; }
-
-.module-spinner__circle--incoming {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.module-spinner__arc--incoming {
-  background-color: #ffffff; }
 
 .module-message-body__highlight {
   font-weight: bold; }
