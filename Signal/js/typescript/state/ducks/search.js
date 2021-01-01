@@ -68,7 +68,7 @@
         };
     }
     // Helper functions for search
-    // const getMessageProps = (messages: Array<MessageType>) => {
+    // const getMessageProps = (messages: Array<MessageSearchResultType>) => {
     //   if (!messages || !messages.length) {
     //     return [];
     //   }
@@ -121,10 +121,7 @@
             contacts: [],
         };
     }
-    function reducer(state, action) {
-        if (!state) {
-            return getEmptyState();
-        }
+    function reducer(state = getEmptyState(), action) {
         if (action.type === 'SEARCH_CLEAR') {
             return getEmptyState();
         }

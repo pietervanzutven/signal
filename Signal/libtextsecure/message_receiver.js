@@ -867,12 +867,14 @@ MessageReceiver.prototype.extend({
       throw e;
     }
   },
-  handleSentMessage(envelope, sentContainer, msg) {
+  handleSentMessage(envelope, sentContainer) {
     const {
       destination,
       timestamp,
+      message: msg,
       expirationStartTimestamp,
       unidentifiedStatus,
+      isRecipientUpdate,
     } = sentContainer;
 
     let p = Promise.resolve();
@@ -907,6 +909,7 @@ MessageReceiver.prototype.extend({
           device: envelope.sourceDevice,
           unidentifiedStatus,
           message,
+          isRecipientUpdate,
         };
         if (expirationStartTimestamp) {
           ev.data.expirationStartTimestamp = expirationStartTimestamp.toNumber();
@@ -1092,7 +1095,7 @@ MessageReceiver.prototype.extend({
         'from',
         this.getEnvelopeId(envelope)
       );
-      return this.handleSentMessage(envelope, sentMessage, sentMessage.message);
+      return this.handleSentMessage(envelope, sentMessage);
     } else if (syncMessage.contacts) {
       return this.handleContacts(envelope, syncMessage.contacts);
     } else if (syncMessage.groups) {
@@ -1109,6 +1112,11 @@ MessageReceiver.prototype.extend({
       return this.handleVerified(envelope, syncMessage.verified);
     } else if (syncMessage.configuration) {
       return this.handleConfiguration(envelope, syncMessage.configuration);
+    } else if (syncMessage.stickerPackOperation) {
+      return this.handleStickerPackOperation(
+        envelope,
+        syncMessage.stickerPackOperation
+      );
     }
     throw new Error('Got empty SyncMessage');
   },
@@ -1117,6 +1125,19 @@ MessageReceiver.prototype.extend({
     const ev = new Event('configuration');
     ev.confirm = this.removeFromCache.bind(this, envelope);
     ev.configuration = configuration;
+    return this.dispatchAndWait(ev);
+  },
+  handleStickerPackOperation(envelope, operations) {
+    const ENUM = textsecure.protobuf.SyncMessage.StickerPackOperation.Type;
+    window.log.info('got sticker pack operation sync message');
+    const ev = new Event('sticker-pack');
+    ev.confirm = this.removeFromCache.bind(this, envelope);
+    ev.stickerPacks = operations.map(operation => ({
+      id: operation.packId ? operation.packId.toString('hex') : null,
+      key: operation.packKey ? operation.packKey.toString('base64') : null,
+      isInstall: operation.type === ENUM.INSTALL,
+      isRemove: operation.type === ENUM.REMOVE,
+    }));
     return this.dispatchAndWait(ev);
   },
   handleVerified(envelope, verified) {
@@ -1232,24 +1253,30 @@ MessageReceiver.prototype.extend({
     const encrypted = await this.server.getAttachment(attachment.id);
     const { key, digest, size } = attachment;
 
+    if (!digest) {
+      throw new Error('Failure: Ask sender to update Signal and resend.');
+    }
+
     const data = await textsecure.crypto.decryptAttachment(
       encrypted,
       window.Signal.Crypto.base64ToArrayBuffer(key),
       window.Signal.Crypto.base64ToArrayBuffer(digest)
     );
 
-    if (!size || size !== data.byteLength) {
+    if (!size) {
       throw new Error(
-        `downloadAttachment: Size ${size} did not match downloaded attachment size ${
+        `downloadAttachment: Size was not provided, actual size was ${
           data.byteLength
         }`
       );
     }
 
+    const typedArray = window.Signal.Crypto.getFirstBytes(data, size);
+
     return Object.assign({},
       _.omit(attachment, 'digest', 'key'),
       {
-        data,
+        data: window.Signal.Crypto.typedArrayToArrayBuffer(typedArray),
       }
     );
   },
@@ -1282,6 +1309,25 @@ MessageReceiver.prototype.extend({
     //   processing
     // Note that messages may (generally) only perform one action and we ignore remaining
     //   fields after the first action.
+
+    if (window.TIMESTAMP_VALIDATION) {
+      if (!envelope.timestamp || !decrypted.timestamp) {
+        throw new Error('Missing timestamp on dataMessage or envelope');
+      }
+
+      const envelopeTimestamp = envelope.timestamp.toNumber();
+      const decryptedTimestamp = decrypted.timestamp.toNumber();
+
+      if (envelopeTimestamp !== decryptedTimestamp) {
+        throw new Error(
+          `Timestamp ${
+            decrypted.timestamp
+          } in DataMessage did not match envelope timestamp ${
+            envelope.timestamp
+          }`
+        );
+      }
+    }
 
     if (decrypted.flags == null) {
       decrypted.flags = 0;
@@ -1407,6 +1453,19 @@ MessageReceiver.prototype.extend({
           );
         }
       );
+    }
+
+    const { sticker } = decrypted;
+    if (sticker) {
+      if (sticker.packId) {
+        sticker.packId = sticker.packId.toString('hex');
+      }
+      if (sticker.packKey) {
+        sticker.packKey = sticker.packKey.toString('base64');
+      }
+      if (sticker.data) {
+        sticker.data = this.cleanAttachment(sticker.data);
+      }
     }
 
     return Promise.all(promises).then(() => decrypted);

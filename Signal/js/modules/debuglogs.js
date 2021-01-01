@@ -2,75 +2,77 @@
 /* global window */
 
 function require_debuglogs() {
-    'use strict';
+  'use strict';
 
-    const exports = {};
+  const exports = {};
 
-    const FormData = window.form_data;
-    const got = window.got;
+  const FormData = window.form_data;
+  const got = window.got;
 
-    const BASE_URL = 'https://debuglogs.org';
-    const VERSION = window.getVersion();
-    const USER_AGENT = `Signal Desktop ${VERSION}`;
+  const BASE_URL = 'https://debuglogs.org';
+  const VERSION = window.getVersion();
+  const USER_AGENT = `Signal Desktop ${VERSION}`;
 
-    // Workaround: Submitting `FormData` using native `FormData::submit` procedure
-    // as integration with `got` results in S3 error saying we haven’t set the
-    // `Content-Length` header:
-    // https://github.com/sindresorhus/got/pull/466
-    const submitFormData = (form, url) =>
-        new Promise((resolve, reject) => {
-            form.submit(url, (error, response) => {
-                if (error) {
-                    return reject(error);
-                }
-
-                const { statusCode } = response;
-                if (statusCode !== 204) {
-                    return reject(
-                      new Error(`Failed to upload to S3, got status ${statusCode}`)
-                    );
-                }
-
-                return resolve();
-            });
-        });
-
-    //      upload :: String -> Promise URL
-    exports.upload = async content => {
-        const signedForm = await got.get(BASE_URL, {
-            json: true,
-            headers: {
-                'user-agent': USER_AGENT,
-            },
-        });
-        if (!signedForm.body) {
-            throw new Error('Failed to retrieve token');
+  // Workaround: Submitting `FormData` using native `FormData::submit` procedure
+  // as integration with `got` results in S3 error saying we haven’t set the
+  // `Content-Length` header:
+  // https://github.com/sindresorhus/got/pull/466
+  const submitFormData = (form, url) =>
+    new Promise((resolve, reject) => {
+      form.submit(url, (error, response) => {
+        if (error) {
+          return reject(error);
         }
-        const { fields, url } = signedForm.body;
 
-        const form = new FormData();
-        // The API expects `key` to be the first field:
-        form.append('key', fields.key);
-        Object.entries(fields)
-          .filter(([key]) => key !== 'key')
-          .forEach(([key, value]) => {
-              form.append(key, value);
-          });
+        const { statusCode } = response;
+        if (statusCode !== 204) {
+          return reject(
+            new Error(`Failed to upload to S3, got status ${statusCode}`)
+          );
+        }
 
-        const contentBuffer = Buffer.from(content, 'utf8');
-        const contentType = 'text/plain';
-        form.append('Content-Type', contentType);
-        form.append('file', contentBuffer, {
-            contentType,
-            filename: `signal-desktop-debug-log-${VERSION}.txt`,
-        });
+        return resolve();
+      });
+    });
 
-        // WORKAROUND: See comment on `submitFormData`:
-        // await got.post(url, { body: form });
-        await submitFormData(form, url);
+  //      upload :: String -> Promise URL
+  exports.upload = async content => {
+    const signedForm = await got.get(BASE_URL, {
+      json: true,
+      headers: {
+        'user-agent': USER_AGENT,
+      },
+    });
+    if (!signedForm.body) {
+      throw new Error('Failed to retrieve token');
+    }
+    const { fields, url } = signedForm.body;
 
-        return `${BASE_URL}/${fields.key}`;
-    };
+    const form = new FormData();
+    // The API expects `key` to be the first field:
+    form.append('key', fields.key);
+    Object.entries(fields)
+      .filter(([key]) => key !== 'key')
+      .forEach(([key, value]) => {
+        form.append(key, value);
+      });
 
-    return exports;
+    const contentBuffer = Buffer.from(content, 'utf8');
+    const contentType = 'text/plain';
+    form.append('Content-Type', contentType);
+    form.append('file', contentBuffer, {
+      contentType,
+      filename: `signal-desktop-debug-log-${VERSION}.txt`,
+    });
+
+    window.log.info('Debug log upload starting...');
+    // WORKAROUND: See comment on `submitFormData`:
+    // await got.post(url, { body: form });
+    await submitFormData(form, url);
+    window.log.info('Debug log upload complete.');
+
+    return `${BASE_URL}/${fields.key}`;
+  };
+
+  return exports;
 };

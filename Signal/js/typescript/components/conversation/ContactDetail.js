@@ -16,13 +16,13 @@
     const _contactUtil_1 = window.ts.components.conversation._contactUtil;
     function getLabelForEmail(method, i18n) {
         switch (method.type) {
-            case Contact_1.ContactType.CUSTOM:
+            case Contact_1.ContactFormType.CUSTOM:
                 return method.label || i18n('email');
-            case Contact_1.ContactType.HOME:
+            case Contact_1.ContactFormType.HOME:
                 return i18n('home');
-            case Contact_1.ContactType.MOBILE:
+            case Contact_1.ContactFormType.MOBILE:
                 return i18n('mobile');
-            case Contact_1.ContactType.WORK:
+            case Contact_1.ContactFormType.WORK:
                 return i18n('work');
             default:
                 throw missingCaseError_1.missingCaseError(method.type);
@@ -30,13 +30,13 @@
     }
     function getLabelForPhone(method, i18n) {
         switch (method.type) {
-            case Contact_1.ContactType.CUSTOM:
+            case Contact_1.ContactFormType.CUSTOM:
                 return method.label || i18n('phone');
-            case Contact_1.ContactType.HOME:
+            case Contact_1.ContactFormType.HOME:
                 return i18n('home');
-            case Contact_1.ContactType.MOBILE:
+            case Contact_1.ContactFormType.MOBILE:
                 return i18n('mobile');
-            case Contact_1.ContactType.WORK:
+            case Contact_1.ContactFormType.WORK:
                 return i18n('work');
             default:
                 throw missingCaseError_1.missingCaseError(method.type);

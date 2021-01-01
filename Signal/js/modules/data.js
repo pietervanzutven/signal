@@ -3,6 +3,8 @@
 (function () {
   'use strict';
 
+  const electron = window.electron;
+
   const {
     cloneDeep,
     forEach,
@@ -17,7 +19,7 @@
   const { base64ToArrayBuffer, arrayBufferToBase64 } = window.crypto;
   const MessageType = window.types.message;
 
-  const { ipcRenderer } = window.ipc;
+  const { ipcRenderer } = electron;
 
   // We listen to a lot of events on ipcRenderer, often on the same channel. This prevents
   //   any warnings that might be sent to the console in that case.
@@ -28,6 +30,8 @@
   const SQL_CHANNEL_KEY = 'sql-channel';
   const ERASE_SQL_KEY = 'erase-sql-key';
   const ERASE_ATTACHMENTS_KEY = 'erase-attachments';
+  const ERASE_STICKERS_KEY = 'erase-stickers';
+  const ERASE_TEMP_KEY = 'erase-temp';
   const CLEANUP_ORPHANED_ATTACHMENTS_KEY = 'cleanup-orphaned-attachments';
 
   const _jobs = Object.create(null);
@@ -138,6 +142,20 @@
     setAttachmentDownloadJobPending,
     removeAttachmentDownloadJob,
     removeAllAttachmentDownloadJobs,
+
+    createOrUpdateStickerPack,
+    updateStickerPackStatus,
+    createOrUpdateSticker,
+    updateStickerLastUsed,
+    addStickerPackReference,
+    deleteStickerPackReference,
+    deleteStickerPack,
+    getAllStickerPacks,
+    getAllStickers,
+    getRecentStickers,
+
+    updateEmojiUsage,
+    getRecentEmojis,
 
     removeAll,
     removeAllConfiguration,
@@ -887,6 +905,52 @@
     await channels.removeAllAttachmentDownloadJobs();
   }
 
+  // Stickers
+
+  async function createOrUpdateStickerPack(pack) {
+    await channels.createOrUpdateStickerPack(pack);
+  }
+  async function updateStickerPackStatus(packId, status, options) {
+    await channels.updateStickerPackStatus(packId, status, options);
+  }
+  async function createOrUpdateSticker(sticker) {
+    await channels.createOrUpdateSticker(sticker);
+  }
+  async function updateStickerLastUsed(packId, stickerId, timestamp) {
+    await channels.updateStickerLastUsed(packId, stickerId, timestamp);
+  }
+  async function addStickerPackReference(messageId, packId) {
+    await channels.addStickerPackReference(messageId, packId);
+  }
+  async function deleteStickerPackReference(messageId, packId) {
+    const paths = await channels.deleteStickerPackReference(messageId, packId);
+    return paths;
+  }
+  async function deleteStickerPack(packId) {
+    const paths = await channels.deleteStickerPack(packId);
+    return paths;
+  }
+  async function getAllStickerPacks() {
+    const packs = await channels.getAllStickerPacks();
+    return packs;
+  }
+  async function getAllStickers() {
+    const stickers = await channels.getAllStickers();
+    return stickers;
+  }
+  async function getRecentStickers() {
+    const recentStickers = await channels.getRecentStickers();
+    return recentStickers;
+  }
+
+  // Emojis
+  async function updateEmojiUsage(shortName) {
+    await channels.updateEmojiUsage(shortName);
+  }
+  async function getRecentEmojis(limit = 32) {
+    return channels.getRecentEmojis(limit);
+  }
+
   // Other
 
   async function removeAll() {
@@ -906,6 +970,8 @@
     await Promise.all([
       callChannel(ERASE_SQL_KEY),
       callChannel(ERASE_ATTACHMENTS_KEY),
+      callChannel(ERASE_STICKERS_KEY),
+      callChannel(ERASE_TEMP_KEY),
     ]);
   }
 

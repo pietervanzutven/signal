@@ -1,12 +1,21 @@
-/* global Whisper: false */
-/* global window: false */
+/* global Whisper, window */
 
 (function () {
   'use strict';
 
+  const electron = window.electron;
   const semver = window.semver;
 
   const { deferredToPromise } = window.deferred_to_promise;
+
+  const { app } = electron.remote;
+  const { systemPreferences } = electron.remote.require('electron');
+
+  // Waiting for clients to implement changes on receive side
+  window.ENABLE_STICKER_SEND = true;
+  window.TIMESTAMP_VALIDATION = false;
+  window.PAD_ALL_ATTACHMENTS = false;
+  window.SEND_RECIPIENT_UPDATES = false;
 
   window.PROTO_ROOT = '/protos';
   const config = window.app.config || {};
@@ -31,6 +40,25 @@
   window.getServerTrustRoot = () => config.serverTrustRoot;
   window.isBehindProxy = () => Boolean(config.proxyUrl);
 
+  function setSystemTheme() {
+    window.systemTheme = systemPreferences.isDarkMode() ? 'dark' : 'light';
+  }
+
+  setSystemTheme();
+
+  window.subscribeToSystemThemeChange = fn => {
+    if (!systemPreferences.subscribeNotification) {
+      return;
+    }
+    systemPreferences.subscribeNotification(
+      'AppleInterfaceThemeChangedNotification',
+      () => {
+        setSystemTheme();
+        fn();
+      }
+    );
+  };
+
   window.isBeforeVersion = (toCheck, baseVersion) => {
     try {
       return semver.lt(toCheck, baseVersion);
@@ -45,7 +73,7 @@
 
   window.wrapDeferred = deferredToPromise;
 
-  const ipc = window.ipc;
+  const ipc = electron.ipcRenderer;
   const localeMessages = ipc.sendSync('locale-data');
 
   window.setBadgeCount = count => ipc.send('set-badge-count', count);
@@ -141,6 +169,14 @@
     }
   });
 
+  ipc.on('show-sticker-pack', (_event, info) => {
+    const { packId, packKey } = info;
+    const { showStickerPack } = window.Events;
+    if (showStickerPack) {
+      showStickerPack(packId, packKey);
+    }
+  });
+
   ipc.on('get-ready-for-shutdown', async () => {
     const { shutdown } = window.Events || {};
     if (!shutdown) {
@@ -228,6 +264,7 @@
 
   window.autoOrientImage = autoOrientImage;
   window.dataURLToBlobSync = window.blueimp_canvas_to_blob;
+  window.emojiData = window.emoji_datasource;
   window.filesize = window.filesize;
   window.libphonenumber = window.google_libphonenumber.PhoneNumberUtil.getInstance();
   window.libphonenumber.PhoneNumberFormat = window.google_libphonenumber.PhoneNumberFormat;
@@ -253,9 +290,13 @@
   });
   window.moment.locale(locale);
 
+  const userDataPath = app.getPath('userData');
+  window.baseAttachmentsPath = Attachments.getPath(userDataPath);
+  window.baseStickersPath = Attachments.getStickersPath(userDataPath);
+  window.baseTempPath = Attachments.getTempPath(userDataPath);
   window.Signal = Signal.setup({
     Attachments,
-    userDataPath: app.getPath('userData'),
+    userDataPath,
     getRegionCode: () => window.storage.get('regionCode'),
     logger: window.log,
   });

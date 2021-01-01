@@ -116,7 +116,9 @@
           <div class='compose'>
             <form class='send clearfix file-input'>
               <div class='flex'>
+                <div class='emoji-button-placeholder'></div>
                 <textarea class='send-message' placeholder='{{ send-message }}' rows='1' dir='auto'></textarea>
+                <div class='sticker-button-placeholder'></div>
                 <div class='capture-audio'>
                     <button class='microphone'></button>
                 </div>
@@ -391,25 +393,28 @@
     </div>
   </script>
 
-  <script type='text/javascript' src='node_modules/core/app.js'></script>
-  <script type='text/javascript' src='node_modules/core/browserwindow.js'></script>
+  <script type='text/javascript' src='js/components.js'></script>
+
   <script type='text/javascript' src='node_modules/core/buffer.js'></script>
+  <script type='text/javascript' src='node_modules/core/electron.js'></script>
   <script type='text/javascript' src='node_modules/core/events.js'></script>
   <script type='text/javascript' src='node_modules/core/fs.js'></script>
   <script type='text/javascript' src='node_modules/core/fs_extra.js'></script>
   <script type='text/javascript' src='node_modules/core/indexedDB.js'></script>
-  <script type='text/javascript' src='node_modules/core/ipc.js'></script>
   <script type='text/javascript' src='node_modules/core/notification.js'></script>
   <script type='text/javascript' src='node_modules/core/os.js'></script>
   <script type='text/javascript' src='node_modules/core/path.js'></script>
   <script type='text/javascript' src='node_modules/core/process.js'></script>
   <script type='text/javascript' src='node_modules/core/uwp-config.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/chunk.js'></script>
   <script type='text/javascript' src='node_modules/lodash/clonedeep.js'></script>
   <script type='text/javascript' src='node_modules/lodash/compact.js'></script>
   <script type='text/javascript' src='node_modules/lodash/debounce.js'></script>
   <script type='text/javascript' src='node_modules/lodash/escapeRegExp.js'></script>
   <script type='text/javascript' src='node_modules/lodash/get.js'></script>
   <script type='text/javascript' src='node_modules/lodash/filter.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/findLast.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/flatMap.js'></script>
   <script type='text/javascript' src='node_modules/lodash/flatten.js'></script>
   <script type='text/javascript' src='node_modules/lodash/flowRight.js'></script>
   <script type='text/javascript' src='node_modules/lodash/forEach.js'></script>
@@ -417,6 +422,7 @@
   <script type='text/javascript' src='node_modules/lodash/groupBy.js'></script>
   <script type='text/javascript' src='node_modules/lodash/head.js'></script>
   <script type='text/javascript' src='node_modules/lodash/includes.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/initial.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isArrayBuffer.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isFunction.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isNumber.js'></script>
@@ -424,10 +430,13 @@
   <script type='text/javascript' src='node_modules/lodash/isRegExp.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isString.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isUndefined.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/keyBy.js'></script>
   <script type='text/javascript' src='node_modules/lodash/last.js'></script>
   <script type='text/javascript' src='node_modules/lodash/map.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/mapValues.js'></script>
   <script type='text/javascript' src='node_modules/lodash/merge.js'></script>
   <script type='text/javascript' src='node_modules/lodash/omit.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/orderBy.js'></script>
   <script type='text/javascript' src='node_modules/lodash/partial.js'></script>
   <script type='text/javascript' src='node_modules/lodash/partition.js'></script>
   <script type='text/javascript' src='node_modules/lodash/pick.js'></script>
@@ -436,6 +445,9 @@
   <script type='text/javascript' src='node_modules/lodash/sample.js'></script>
   <script type='text/javascript' src='node_modules/lodash/set.js'></script>
   <script type='text/javascript' src='node_modules/lodash/sortBy.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/take.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/uniq.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/zipObject.js'></script>
   <script type='text/javascript' src='node_modules/blueimp-canvas-to-blob/canvas-to-blob.js'></script>
   <script type='text/javascript' src='node_modules/blueimp-load-image/load-image.js'></script>
   <script type='text/javascript' src='node_modules/blueimp-load-image/load-image-scale.js'></script>
@@ -458,7 +470,8 @@
   <script type='text/javascript' src='node_modules/semver/index.js'></script>
   <script type='text/javascript' src='node_modules/protobuf/protobuf.js'></script>
   <script type='text/javascript' src='node_modules/google-libphonenumber/libphonenumber.js'></script>
-  <script type='text/javascript' src='node_modules/emoji-js/index.js'></script>
+  <script type='text/javascript' src='node_modules/emoji-datasource/index.js'></script>
+  <script type='text/javascript' src='node_modules/emoji-js/emoji.js'></script>
   <script type='text/javascript' src='node_modules/form-data/form-data.js'></script>
   <script type='text/javascript' src='node_modules/got/got.js'></script>
   <script type='text/javascript' src='node_modules/classnames/index.js'></script>
@@ -468,6 +481,8 @@
   <script type='text/javascript' src='node_modules/redux-promise-middleware/isPromise.js'></script>
   <script type='text/javascript' src='node_modules/redux-promise-middleware/index.js'></script>
   <script type='text/javascript' src='node_modules/reselect/reselect.js'></script>
+  <script type='text/javascript' src='node_modules/popper.js/popper-utils.js'></script>
+  <script type='text/javascript' src='node_modules/popper.js/popper.js'></script>
   <script type='text/javascript' src='node_modules/react/index.js'></script>
   <script type='text/javascript' src='node_modules/react-dom/index.js'></script>
   <script type='text/javascript' src='node_modules/react-contextmenu/helpers.js'></script>
@@ -482,6 +497,7 @@
   <script type='text/javascript' src='node_modules/react-contextmenu/index.js'></script>
   <script type='text/javascript' src='node_modules/react-redux/react-redux.js'></script>
   <script type='text/javascript' src='node_modules/react-virtualized/react-virtualized.js'></script>
+  <script type='text/javascript' src='node_modules/react-popper/index.umd.js'></script>
   <script type='text/javascript' src='node_modules/moment/moment.js'></script>
   <script type='text/javascript' src='node_modules/uc.micro/categories/Cc/regex.js'></script>
   <script type='text/javascript' src='node_modules/uc.micro/categories/Cf/regex.js'></script>
@@ -510,8 +526,12 @@
   <script type='text/javascript' src='node_modules/firstline/index.js'></script>
   <script type='text/javascript' src='node_modules/read-last-lines/index.js'></script>
   <script type='text/javascript' src='node_modules/config/config.js'></script>
-
-  <script type='text/javascript' src='js/components.js'></script>
+  <script type='text/javascript' src='node_modules/memoizee/index.js'></script>
+  <script type='text/javascript' src='node_modules/eventemitter3/index.js'></script>
+  <script type='text/javascript' src='node_modules/p-queue/index.js'></script>
+  <script type='text/javascript' src='node_modules/p-map/index.js'></script>
+  <script type='text/javascript' src='node_modules/qs/qs.js'></script>
+  <script type='text/javascript' src='node_modules/fuse.js/fuse.js'></script>
 
   <script type='text/javascript' src='js/modules/auto_orient_image.js'></script>
   <script type='text/javascript' src='js/modules/types/schema_version.js'></script>
@@ -560,7 +580,6 @@
   <script type='text/javascript' src='js/modules/views/initialization.js'></script>
   <script type='text/javascript' src='js/modules/i18n.js'></script>
   <script type='text/javascript' src='js/modules/string_to_array_buffer.js'></script>
-  <script type='text/javascript' src='js/modules/web_api.js'></script>
   <script type='text/javascript' src='js/modules/link_previews.js'></script>
   <script type='text/javascript' src='js/modules/migrations/run_migrations.js'></script>
   <script type='text/javascript' src='js/modules/migrations/18/index.js'></script>
@@ -575,6 +594,8 @@
   <script type='text/javascript' src='js/typescript/components/styles/Colors.js'></script>
   <script type='text/javascript' src='js/typescript/components/Intl.js'></script>
   <script type='text/javascript' src='js/typescript/components/Spinner.js'></script>
+  <script type='text/javascript' src='js/typescript/components/ConfirmationDialog.js'></script>
+  <script type='text/javascript' src='js/typescript/components/ConfirmationModal.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/DocumentListItem.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/EmptyState.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/media-gallery/MediaGridItem.js'></script>
@@ -608,7 +629,21 @@
   <script type='text/javascript' src='js/typescript/components/conversation/StagedPlaceholderAttachment.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/StagedLinkPreview.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/AttachmentList.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/LastSeenIndicator.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/ScrollDownButton.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/TimeLine.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/TimelineItem.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/_contactUtil.js'></script>
+  <script type='text/javascript' src='js/typescript/components/emoji/lib.js'></script>
+  <script type='text/javascript' src='js/typescript/components/emoji/Emoji.js'></script>
+  <script type='text/javascript' src='js/typescript/components/emoji/EmojiPicker.js'></script>
+  <script type='text/javascript' src='js/typescript/components/emoji/EmojiButton.js'></script>
+  <script type='text/javascript' src='js/typescript/components/stickers/StickerPicker.js'></script>
+  <script type='text/javascript' src='js/typescript/components/stickers/StickerButton.js'></script>
+  <script type='text/javascript' src='js/typescript/components/stickers/StickerPackInstallButton.js'></script>
+  <script type='text/javascript' src='js/typescript/components/stickers/StickerManagerPackRow.js'></script>
+  <script type='text/javascript' src='js/typescript/components/stickers/StickerPreviewModal.js'></script>
+  <script type='text/javascript' src='js/typescript/components/stickers/StickerManager.js'></script>
   <script type='text/javascript' src='js/typescript/components/CaptionEditor.js'></script>
   <script type='text/javascript' src='js/typescript/components/ContactListItem.js'></script>
   <script type='text/javascript' src='js/typescript/components/ConversationListItem.js'></script>
@@ -623,6 +658,8 @@
   <script type='text/javascript' src='js/typescript/backbone/index.js'></script>
   <script type='text/javascript' src='js/typescript/notifications/getStatus.js'></script>
   <script type='text/javascript' src='js/typescript/shims/events.js'></script>
+  <script type='text/javascript' src='js/typescript/shims/storage.js'></script>
+  <script type='text/javascript' src='js/typescript/shims/textsecure.js'></script>
   <script type='text/javascript' src='js/typescript/shims/Whisper.js'></script>
 
   <script type='text/javascript' src='app/attachments.js'></script>
@@ -642,17 +679,23 @@
   <script type='text/javascript' src='main.js'></script>
 
   <script type='text/javascript' src='js/modules/data.js'></script>
+  <script type='text/javascript' src='js/modules/emojis.js'></script>
   <script type='text/javascript' src='js/modules/migrate_to_sql.js'></script>
   <script type='text/javascript' src='js/modules/messages_data_migrator.js'></script>
   <script type='text/javascript' src='js/modules/indexeddb.js'></script>
   <script type='text/javascript' src='js/modules/logs.js'></script>
   <script type='text/javascript' src='js/modules/debuglogs.js'></script>
   <script type='text/javascript' src='js/modules/attachment_downloads.js'></script>
+  <script type='text/javascript' src='js/modules/stickers.js'></script>
+  <script type='text/javascript' src='js/modules/web_api.js'></script>
   <script type='text/javascript' src='js/logging.js'></script>
 
   <script type='text/javascript' src='js/typescript/state/ducks/conversations.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/emojis.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/items.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/noop.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/search.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/stickers.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/user.js'></script>
   <script type='text/javascript' src='js/typescript/state/actions.js'></script>
   <script type='text/javascript' src='js/typescript/state/reducer.js'></script>
@@ -660,10 +703,22 @@
   <script type='text/javascript' src='js/typescript/state/selectors/user.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/conversations.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/search.js'></script>
+  <script type='text/javascript' src='js/typescript/state/selectors/stickers.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/EmojiButton.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/MainHeader.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/MessageSearchResult.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/LeftPane.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/StickerButton.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/StickerManager.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/StickerPreviewModal.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/TimelineItem.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/Timeline.js'></script>
+  <script type='text/javascript' src='js/typescript/state/roots/createEmojiButton.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createLeftPane.js'></script>
+  <script type='text/javascript' src='js/typescript/state/roots/createStickerButton.js'></script>
+  <script type='text/javascript' src='js/typescript/state/roots/createStickerManager.js'></script>
+  <script type='text/javascript' src='js/typescript/state/roots/createStickerPreviewModal.js'></script>
+  <script type='text/javascript' src='js/typescript/state/roots/createTimeline.js'></script>
 
   <script type='text/javascript' src='js/modules/signal.js'></script>
   
@@ -743,7 +798,7 @@
   <script type='text/javascript' src='js/rotate_signed_prekey_listener.js'></script>
   <script type='text/javascript' src='js/keychange_listener.js'></script>
 </head>
-<body>
+<body class="overflow-hidden">
   <div class='app-loading-screen'>
     <div class='content'>
       <img src='images/icon_250.png' height='150'>

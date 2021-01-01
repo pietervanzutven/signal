@@ -38,11 +38,10 @@ body {
   color: #070c14; }
 
 ::-webkit-scrollbar {
-  width: 9px;
-  height: 9px; }
+  width: 9px; }
 
 ::-webkit-scrollbar-track {
-  background: #ffffff; }
+  background: transparent; }
 
 ::-webkit-scrollbar-thumb {
   background: #a4a6a9;
@@ -534,6 +533,9 @@ a {
 .inbox {
   position: relative; }
 
+.overflow-hidden {
+  overflow: hidden; }
+
 @keyframes progress-bar-stripes {
   from {
     background-position: 40px 0; }
@@ -891,8 +893,11 @@ img.emoji.jumbo {
 .new-conversation,
 .inbox,
 .gutter {
-  height: 100%;
-  overflow: hidden; }
+  height: 100%; }
+
+.inbox {
+  display: flex;
+  flex-direction: row; }
 
 .expired .conversation-stack,
 .expired .gutter {
@@ -945,11 +950,12 @@ img.emoji.jumbo {
 .left-pane-wrapper {
   height: 100%; }
 
-.conversation-stack .conversation {
-  display: none; }
-
-.conversation-stack .conversation:first-child {
-  display: block; }
+.conversation-stack {
+  flex-grow: 1; }
+  .conversation-stack .conversation {
+    display: none; }
+  .conversation-stack .conversation:first-child {
+    display: block; }
 
 .tool-bar {
   color: #070c14;
@@ -1143,6 +1149,9 @@ input.search {
       overflow-y: auto;
       overflow-x: hidden; }
 
+.panel + .main.panel {
+  display: none; }
+
 .message-detail-wrapper {
   height: calc(100% - 48px);
   width: 100%;
@@ -1324,7 +1333,6 @@ input.search {
     color: #070c14;
     border: 1px solid rgba(0, 0, 0, 0.2);
     outline: 0;
-    z-index: 5;
     resize: none;
     font-size: 1em;
     font-family: inherit; }
@@ -1509,6 +1517,9 @@ input.search {
 .ios-theme .module-message__metadata__date--with-image-no-caption {
   color: #ffffff; }
 
+.ios-theme .module-message__metadata__date--with-sticker {
+  color: #6b6d70; }
+
 .ios-theme .module-message__metadata__status-icon--sending {
   background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>sending</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='iOS-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='iOS-Light/Message/Status/Sending' transform='translate(-6.000000, 0.000000)' fill='%23000000'>            <path d='M11.5,0 L12.5,0 L12.5,1 L11.5,1 L11.5,0 Z M11.5,11 L12.5,11 L12.5,12 L11.5,12 L11.5,11 Z M6,5.5 L7,5.5 L7,6.5 L6,6.5 L6,5.5 Z M17,5.5 L18,5.5 L18,6.5 L17,6.5 L17,5.5 Z M16.9461524,2.5669873 L17.4461524,3.4330127 L16.580127,3.9330127 L16.080127,3.0669873 L16.9461524,2.5669873 Z M7.41987298,8.0669873 L7.91987298,8.9330127 L7.05384758,9.4330127 L6.55384758,8.5669873 L7.41987298,8.0669873 Z M9.4330127,0.553847577 L9.9330127,1.41987298 L9.0669873,1.91987298 L8.5669873,1.05384758 L9.4330127,0.553847577 Z M14.9330127,10.080127 L15.4330127,10.9461524 L14.5669873,11.4461524 L14.0669873,10.580127 L14.9330127,10.080127 Z M14.5669873,0.553847577 L15.4330127,1.05384758 L14.9330127,1.91987298 L14.0669873,1.41987298 L14.5669873,0.553847577 Z M9.0669873,10.080127 L9.9330127,10.580127 L9.4330127,11.4461524 L8.5669873,10.9461524 L9.0669873,10.080127 Z M7.05384758,2.5669873 L7.91987298,3.0669873 L7.41987298,3.9330127 L6.55384758,3.4330127 L7.05384758,2.5669873 Z M16.580127,8.0669873 L17.4461524,8.5669873 L16.9461524,9.4330127 L16.080127,8.9330127 L16.580127,8.0669873 Z' id='sending' fill='%23FFFFFF'></path>        </g>    </g></svg>");
   background-size: 100%;
@@ -1536,6 +1547,9 @@ input.search {
 .ios-theme .module-message__metadata__status-icon--with-image-no-caption {
   background-color: #ffffff; }
 
+.ios-theme .module-message__metadata__status-icon--with-sticker {
+  background-color: #6b6d70; }
+
 .ios-theme .module-message__generic-attachment__file-name {
   color: #ffffff; }
 
@@ -1552,6 +1566,9 @@ input.search {
   background-color: rgba(255, 255, 255, 0.8); }
 
 .ios-theme .module-expire-timer--incoming {
+  background-color: #6b6d70; }
+
+.ios-theme .module-expire-timer--with-sticker {
   background-color: #6b6d70; }
 
 .ios-theme .module-quote--outgoing {
@@ -1586,18 +1603,6 @@ input.search {
 
 .ios-theme .module-typing-animation__dot--light {
   background-color: #6b6d70; }
-
-.ios-theme .module-spinner__circle--incoming {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.ios-theme .module-spinner__arc--incoming {
-  background-color: #6b6d70; }
-
-.ios-theme .module-spinner__circle--outgoing {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.ios-theme .module-spinner__arc--outgoing {
-  background-color: #ffffff; }
 
 .ios-theme.dark-theme .module-message__container--outgoing {
   background-color: #2090ea;
@@ -1738,30 +1743,6 @@ input.search {
 .ios-theme.dark-theme .module-embedded-contact__contact-method--incoming {
   color: #bbbdbe; }
 
-.ios-theme.dark-theme .module-spinner__circle--incoming {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.ios-theme.dark-theme .module-spinner__arc--incoming {
-  background-color: #bbbdbe; }
-
-.ios-theme.dark-theme .module-spinner__circle--small-incoming {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.ios-theme.dark-theme .module-spinner__arc--small-incoming {
-  background-color: #bbbdbe; }
-
-.ios-theme.dark-theme .module-spinner__circle--outgoing {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.ios-theme.dark-theme .module-spinner__arc--outgoing {
-  background-color: #eeefef; }
-
-.ios-theme.dark-theme .module-spinner__circle--small-outgoing {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.ios-theme.dark-theme .module-spinner__arc--small-outgoing {
-  background-color: #eeefef; }
-
 body.dark-theme {
   background-color: #000000;
   color: #eeefef; }
@@ -1882,24 +1863,12 @@ body.dark-theme {
 .dark-theme .ep-categories {
   background-color: #1a1c20; }
 
-.dark-theme button.emoji:before {
-  margin-top: 4px;
-  background-image: url("data:image/svg+xml;utf8,<svg fill='%23000000' height='48' viewBox='0 0 24 24' width='48' xmlns='http://www.w3.org/2000/svg'>    <path d='M0 0h24v24H0z' fill='none'/>    <path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z' fill='%23A8A9AA'/></svg>");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center; }
-
-.dark-theme .emoji-panel-container .ep ::-webkit-scrollbar-thumb {
-  background: #88898c; }
-  .dark-theme .emoji-panel-container .ep ::-webkit-scrollbar-thumb:hover {
-    background: #a8a9aa; }
-
 .dark-theme ::-webkit-scrollbar-track {
-  background: #000000; }
+  background: transparent; }
 
 .dark-theme ::-webkit-scrollbar-thumb {
   background: #88898c;
-  border: 2px solid #000000; }
+  border: 2px solid #1a1c20; }
   .dark-theme ::-webkit-scrollbar-thumb:hover {
     background: #a8a9aa; }
 
@@ -2043,8 +2012,6 @@ body.dark-theme {
   background-color: #1a1c20; }
   .dark-theme .gutter ::-webkit-scrollbar-track {
     background: #1a1c20; }
-  .dark-theme .gutter ::-webkit-scrollbar-thumb {
-    border: 2px solid #1a1c20; }
 
 .dark-theme .network-status-container .network-status {
   background: url("../images/error_red.svg") no-repeat left 10px center;
@@ -2262,6 +2229,9 @@ body.dark-theme {
 
 .dark-theme .module-message__author {
   color: #ffffff; }
+
+.dark-theme .module-message__author_with_sticker {
+  color: #eeefef; }
 
 .dark-theme .module-message__text {
   color: #efefef; }
@@ -2929,7 +2899,7 @@ body.dark-theme {
   background-repeat: no-repeat;
   background-position: center center; }
 
-.dark-theme .module-image {
+.dark-theme .module-image--with-background {
   background-color: #000000; }
 
 .dark-theme .module-image__border-overlay {
@@ -2995,24 +2965,6 @@ body.dark-theme {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
-
-.dark-theme .module-spinner__circle {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.dark-theme .module-spinner__arc {
-  background-color: #eeefef; }
-
-.dark-theme .module-spinner__circle--incoming {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.dark-theme .module-spinner__arc--incoming {
-  background-color: #eeefef; }
-
-.dark-theme .module-spinner__circle--outgoing {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.dark-theme .module-spinner__arc--outgoing {
-  background-color: #eeefef; }
 
 .dark-theme .module-caption-editor {
   background-color: #000000; }
@@ -3109,8 +3061,7 @@ body.dark-theme {
 .dark-theme .react-contextmenu-item--checked:before {
   color: #efefef; }
 
-.dark-theme .react-contextmenu-item.react-contextmenu-submenu
-> .react-contextmenu-item:after {
+.dark-theme .react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item:after {
   color: #efefef; }
 
 .dark-theme .react-contextmenu-item.react-contextmenu-item--active,
@@ -3122,10 +3073,8 @@ body.dark-theme {
 .dark-theme .react-contextmenu-item.react-contextmenu-item--selected.react-contextmenu-item--checked:before {
   color: #ffffff; }
 
-.dark-theme .react-contextmenu-item.react-contextmenu-submenu
-> .react-contextmenu-item.react-contextmenu-item--active:after,
-.dark-theme .react-contextmenu-item.react-contextmenu-submenu
-> .react-contextmenu-item.react-contextmenu-item--selected:after {
+.dark-theme .react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item.react-contextmenu-item--active:after,
+.dark-theme .react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item.react-contextmenu-item--selected:after {
   color: #ffffff; }
 
 .dark-theme .intl-tel-input .country-list .country .country-name {
@@ -3316,6 +3265,9 @@ body.dark-theme {
   padding-bottom: 10px;
   min-width: 0px; }
 
+.module-message__container--with-sticker {
+  padding-bottom: 0px; }
+
 .module-message__container--outgoing {
   background-color: #eeefef; }
 
@@ -3365,16 +3317,25 @@ body.dark-theme {
   border-radius: 16px;
   overflow: hidden;
   background-color: #ffffff; }
+  .module-message__attachment-container--with-content-below {
+    margin-bottom: 7px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px; }
+  .module-message__attachment-container--with-content-above {
+    margin-top: 4px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px; }
 
-.module-message__attachment-container--with-content-below {
-  margin-bottom: 7px;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px; }
-
-.module-message__attachment-container--with-content-above {
-  margin-top: 4px;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px; }
+.module-message__sticker-container {
+  text-align: center;
+  margin-left: -12px;
+  margin-right: -12px;
+  margin-top: -9px;
+  margin-bottom: -5px; }
+  .module-message__sticker-container--with-content-below {
+    margin-bottom: 5px; }
+  .module-message__sticker-container--with-content-above {
+    margin-top: 4px; }
 
 .module-message__img-attachment {
   margin-bottom: -3px;
@@ -3548,9 +3509,22 @@ body.dark-theme {
   overflow-y: hidden;
   white-space: nowrap;
   text-overflow: ellipsis; }
+  .module-message__author__profile-name {
+    font-style: italic; }
 
-.module-message__author__profile-name {
-  font-style: italic; }
+.module-message__author_with_sticker {
+  color: #17191d;
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 18px;
+  height: 18px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 300px; }
+  .module-message__author_with_sticker__profile-name {
+    font-style: italic; }
 
 .module-message__text {
   color: #17191d;
@@ -5102,11 +5076,13 @@ body.dark-theme {
 
 .module-image {
   overflow: hidden;
-  background-color: #ffffff;
   position: relative;
   display: inline-block;
   margin: 1px;
   vertical-align: middle; }
+
+.module-image--with-background {
+  background-color: #ffffff; }
 
 .module-image__caption-icon {
   position: absolute;
@@ -5220,6 +5196,9 @@ body.dark-theme {
 .module-image-grid--one-image {
   margin-bottom: -5px; }
 
+.module-image-grid--with-sticker {
+  padding: 8px; }
+
 .module-image-grid__column {
   display: inline-flex;
   flex-direction: column;
@@ -5233,7 +5212,7 @@ body.dark-theme {
 
 .module-typing-animation {
   display: inline-flex;
-  flex-directin: row;
+  flex-direction: row;
   align-items: center;
   height: 8px;
   width: 38px;
@@ -5644,12 +5623,6 @@ body.dark-theme {
   height: 14px;
   width: 14px; }
 
-.module-spinner__circle--incoming {
-  background-color: rgba(255, 255, 255, 0.4); }
-
-.module-spinner__arc--incoming {
-  background-color: #ffffff; }
-
 .module-message-body__highlight {
   font-weight: bold; }
 
@@ -5849,6 +5822,952 @@ body.dark-theme {
   color: #6b6d70;
   font-size: 13px; }
 
+.module-timeline {
+  height: 100%; }
+
+.module-timeline__message-container {
+  padding-top: 10px; }
+
+.ReactVirtualized__List {
+  outline: none; }
+
+.module-sticker-picker, .module-emoji-picker {
+  width: 332px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  z-index: 2;
+  user-select: none;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 8px 20px 0 rgba(0, 0, 0, 0.33);
+  background: #f8f9f9; }
+  .module-sticker-picker ::-webkit-scrollbar-thumb, .module-emoji-picker ::-webkit-scrollbar-thumb {
+    border: 2px solid #f8f9f9; }
+  .dark-theme .module-sticker-picker, .dark-theme .module-emoji-picker {
+    background: #3d3e44; }
+    .dark-theme .module-sticker-picker ::-webkit-scrollbar-thumb, .dark-theme .module-emoji-picker ::-webkit-scrollbar-thumb {
+      border: 2px solid #3d3e44; }
+
+.module-sticker-picker {
+  height: 400px;
+  display: grid;
+  grid-template-rows: 44px 1fr;
+  grid-template-columns: 1fr; }
+
+.module-sticker-picker__header {
+  display: flex;
+  flex-direction: row;
+  padding: 0 8px;
+  justify-content: flex-start;
+  align-items: center; }
+
+.module-sticker-picker__header__packs {
+  width: 288px;
+  overflow: hidden;
+  position: relative; }
+  .module-sticker-picker__header__packs__slider {
+    display: flex;
+    flex-direction: row;
+    transform: translateX(0);
+    transition: transform 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+
+.module-sticker-picker__header__button {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  margin-right: 4px; }
+  .module-sticker-picker__header__button:active, .module-sticker-picker__header__button:focus {
+    outline: none; }
+  .module-sticker-picker__header__button--selected {
+    background: #e1e2e3; }
+    .dark-theme .module-sticker-picker__header__button--selected {
+      background: #6b6d70; }
+  .module-sticker-picker__header__button--recents::after, .module-sticker-picker__header__button--add-pack::after {
+    content: '';
+    display: block;
+    min-width: 20px;
+    min-height: 20px; }
+  .module-sticker-picker__header__button--recents::after {
+    background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 24 24' style='enable-background:new 0 0 24 24;' xml:space='preserve'><path d='M12,2.5c5.2,0,9.5,4.3,9.5,9.5s-4.3,9.5-9.5,9.5S2.5,17.2,2.5,12C2.5,6.8,6.8,2.5,12,2.5 M12,1C5.9,1,1,5.9,1,12	s4.9,11,11,11s11-4.9,11-11S18.1,1,12,1z M13,4h-1l-0.4,7.6L5,12v1l7.5,0.5c0.6,0,1-0.4,1-1L13,4z' fill='%236B6D70'/></svg>");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center; }
+    .dark-theme .module-sticker-picker__header__button--recents::after {
+      background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 24 24' style='enable-background:new 0 0 24 24;' xml:space='preserve'><path d='M12,2.5c5.2,0,9.5,4.3,9.5,9.5s-4.3,9.5-9.5,9.5S2.5,17.2,2.5,12C2.5,6.8,6.8,2.5,12,2.5 M12,1C5.9,1,1,5.9,1,12	s4.9,11,11,11s11-4.9,11-11S18.1,1,12,1z M13,4h-1l-0.4,7.6L5,12v1l7.5,0.5c0.6,0,1-0.4,1-1L13,4z' fill='%23BBBDBE'/></svg>");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+  .module-sticker-picker__header__button--add-pack::after {
+    background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><polygon points='18,9.2 10.8,9.2 10.8,2 9.2,2 9.2,9.2 2,9.2 2,10.8 9.2,10.8 9.2,18 10.8,18 10.8,10.8 18,10.8 ' fill='%236B6D70'/></svg>");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center; }
+    .dark-theme .module-sticker-picker__header__button--add-pack::after {
+      background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><polygon points='18,9.2 10.8,9.2 10.8,2 9.2,2 9.2,9.2 2,9.2 2,10.8 9.2,10.8 9.2,18 10.8,18 10.8,10.8 18,10.8 ' fill='%23BBBDBE'/></svg>");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+  .module-sticker-picker__header__button--prev-page, .module-sticker-picker__header__button--next-page {
+    top: 0;
+    margin: 0;
+    border-radius: 0;
+    background: #f8f9f9; }
+    .module-sticker-picker__header__button--prev-page::after, .module-sticker-picker__header__button--next-page::after {
+      content: '';
+      display: block;
+      min-width: 12px;
+      min-height: 12px; }
+    .dark-theme .module-sticker-picker__header__button--prev-page, .dark-theme .module-sticker-picker__header__button--next-page {
+      background: #3d3e44; }
+  .module-sticker-picker__header__button--prev-page {
+    position: absolute;
+    left: 0; }
+    .module-sticker-picker__header__button--prev-page::after {
+      background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 12 12' style='enable-background:new 0 0 12 12;' xml:space='preserve'><path d='M7.9,11.5L2.8,6.3c-0.2-0.2-0.2-0.5,0-0.7l5.1-5.1l0.7,0.7L3.8,6l4.8,4.8L7.9,11.5z' fill='%236B6D70'/></svg>");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+      .dark-theme .module-sticker-picker__header__button--prev-page::after {
+        background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 12 12' style='enable-background:new 0 0 12 12;' xml:space='preserve'><path d='M7.9,11.5L2.8,6.3c-0.2-0.2-0.2-0.5,0-0.7l5.1-5.1l0.7,0.7L3.8,6l4.8,4.8L7.9,11.5z' fill='%23BBBDBE'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+  .module-sticker-picker__header__button--next-page {
+    position: absolute;
+    right: 0; }
+    .module-sticker-picker__header__button--next-page::after {
+      background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 12 12' style='enable-background:new 0 0 12 12;' xml:space='preserve'><path d='M4.1,11.5l-0.7-0.7L8.2,6L3.4,1.2l0.7-0.7l5.1,5.1c0.2,0.2,0.2,0.5,0,0.7L4.1,11.5z' fill='%236B6D70'/></svg>");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+      .dark-theme .module-sticker-picker__header__button--next-page::after {
+        background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 12 12' style='enable-background:new 0 0 12 12;' xml:space='preserve'><path d='M4.1,11.5l-0.7-0.7L8.2,6L3.4,1.2l0.7-0.7l5.1,5.1c0.2,0.2,0.2,0.5,0,0.7L4.1,11.5z' fill='%23BBBDBE'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+  .module-sticker-picker__header__button--error {
+    position: relative; }
+    .module-sticker-picker__header__button--error::before {
+      display: block;
+      content: '';
+      width: 12px;
+      height: 12px;
+      position: absolute;
+      left: 14px;
+      top: 2px;
+      background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->    <title>Error/error-filled-16</title>    <desc>Created with Sketch.</desc>    <g>        <path d='M8,1 C11.864,1 15,4.136 15,8 C15,11.864 11.864,15 8,15 C4.136,15 1,11.864 1,8 C1,4.136 4.136,1 8,1 Z M8,3.5 C7.98736684,3.5 7.9747349,3.50024902 7.96211155,3.50074693 C7.43159364,3.52167214 7.01848713,3.96870512 7.03941235,4.49922303 L7.20654214,8.7364722 C7.22336326,9.16293903 7.57398102,9.5 8.00077946,9.5 C8.42754697,9.5 8.77810943,9.16290468 8.79481871,8.73646441 L8.96084687,4.49923322 C8.96133837,4.48668956 8.96158419,4.47413748 8.96158419,4.46158419 C8.96158419,3.93051591 8.53106829,3.5 8,3.5 Z M8,10.5 C7.44771525,10.5 7,10.9477153 7,11.5 C7,12.0522847 7.44771525,12.5 8,12.5 C8.55228475,12.5 9,12.0522847 9,11.5 C9,10.9477153 8.55228475,10.5 8,10.5 Z' id='path-1' fill='%23F44336'></path>    </g></svg>");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+  .module-sticker-picker__header__button--hint {
+    position: relative; }
+    .module-sticker-picker__header__button--hint::before {
+      display: block;
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 14px;
+      height: 14px;
+      border-radius: 7px;
+      background: #2090ea; }
+
+.module-sticker-picker__header__button__image {
+  min-width: 20px;
+  min-height: 20px;
+  max-width: 20px;
+  max-height: 20px; }
+
+.module-sticker-picker__header__button__image--placeholder {
+  min-width: 20px;
+  min-height: 20px;
+  max-width: 20px;
+  max-height: 20px;
+  background-color: #e1e2e3; }
+
+.module-sticker-picker__body {
+  position: relative; }
+  .module-sticker-picker__body__content {
+    width: 332px;
+    height: 356px;
+    padding: 8px 20px 16px 16px;
+    overflow-y: auto;
+    display: grid;
+    grid-gap: 8px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 68px; }
+    .module-sticker-picker__body__content--under-text {
+      height: 320px; }
+    .module-sticker-picker__body__content--under-long-text {
+      height: 304px; }
+  .module-sticker-picker__body__cell {
+    border: none;
+    background: none;
+    padding: 0;
+    width: 68px;
+    height: 68px;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+    .module-sticker-picker__body__cell__image, .module-sticker-picker__body__cell__placeholder {
+      width: 100%;
+      height: 100%; }
+    .module-sticker-picker__body__cell__placeholder {
+      border-radius: 4px;
+      background-color: #eeefef; }
+      .dark-theme .module-sticker-picker__body__cell__placeholder {
+        background-color: #6b6d70; }
+  .module-sticker-picker__body--empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; }
+  .module-sticker-picker__body__text {
+    font-family: Roboto;
+    font-weight: 300;
+    font-size: 14px;
+    text-align: center;
+    padding: 8px 16px 12px 0;
+    color: #6b6d70; }
+    .dark-theme .module-sticker-picker__body__text {
+      color: #bbbdbe; }
+    .module-sticker-picker__body__text:only-child {
+      padding: 0 0 28px 0; }
+    .module-sticker-picker__body__text--error {
+      color: #f44336; }
+      .dark-theme .module-sticker-picker__body__text--error {
+        color: #f44336; }
+    .module-sticker-picker__body__text--hint {
+      color: #2090ea; }
+      .dark-theme .module-sticker-picker__body__text--hint {
+        color: #2090ea; }
+    .module-sticker-picker__body__text--pin {
+      padding: 8px 16px 12px 0px;
+      position: absolute;
+      top: 0; }
+
+.module-sticker-manager {
+  padding: 0 16px; }
+
+.module-sticker-manager__text {
+  height: 18px;
+  font-size: 13px;
+  font-weight: normal;
+  font-family: Roboto;
+  letter-spacing: 0px;
+  line-height: 18px;
+  color: #6b6d70; }
+  .dark-theme .module-sticker-manager__text {
+    color: #bbbdbe; }
+  .module-sticker-manager__text--heading {
+    font-size: 14px;
+    font-weight: 300;
+    color: #17191d; }
+    .dark-theme .module-sticker-manager__text--heading {
+      color: #eeefef; }
+
+.module-sticker-manager__empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 64px;
+  border-radius: 8px;
+  font-family: Roboto-Light;
+  font-size: 13px;
+  background: #f8f9f9;
+  color: #6b6d70; }
+  .dark-theme .module-sticker-manager__empty {
+    background: #17191d;
+    color: #bbbdbe; }
+
+.module-sticker-manager__pack-row {
+  display: flex;
+  flex-direction: row;
+  padding: 16px 0; }
+  .module-sticker-manager__pack-row:hover {
+    cursor: pointer; }
+  .module-sticker-manager__pack-row + .module-sticker-manager__pack-row {
+    border-top: 1px solid #d5d6d6; }
+  .module-sticker-manager__pack-row__cover {
+    width: 48px;
+    height: 48px; }
+  .module-sticker-manager__pack-row__cover-placeholder {
+    width: 48px;
+    height: 48px;
+    background: #e1e2e3; }
+  .module-sticker-manager__pack-row__meta {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column; }
+    .module-sticker-manager__pack-row__meta:not(:first-child) {
+      padding: 0 12px; }
+    .module-sticker-manager__pack-row__meta__title {
+      flex: 1; }
+    .module-sticker-manager__pack-row__meta__author {
+      flex: 1;
+      font-family: Roboto-Light;
+      font-size: 13px;
+      color: #6b6d70; }
+      .dark-theme .module-sticker-manager__pack-row__meta__author {
+        color: #bbbdbe; }
+    .module-sticker-manager__pack-row__meta__blessed-icon {
+      height: 16px;
+      width: 16px;
+      display: inline-block;
+      margin-left: 3px;
+      vertical-align: top;
+      background-image: url("../images/check-circle-filled-16.svg"); }
+  .module-sticker-manager__pack-row__controls {
+    flex-shrink: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+    .module-sticker-manager__pack-row__controls__button {
+      background: none;
+      border: 0; }
+      .module-sticker-manager__pack-row__controls__button--menu:after {
+        content: '';
+        display: block;
+        min-width: 24px;
+        min-height: 24px;
+        background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 24 24' style='enable-background:new 0 0 24 24;' xml:space='preserve'><circle cx='18.5' cy='12' r='1.5' fill='%236B6D70'/><circle cx='12' cy='12' r='1.5' fill='%236B6D70'/><circle cx='5.5' cy='12' r='1.5' fill='%236B6D70'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+        .dark-theme .module-sticker-manager__pack-row__controls__button--menu:after {
+          background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 24 24' style='enable-background:new 0 0 24 24;' xml:space='preserve'><circle cx='18.5' cy='12' r='1.5' fill='%23BBBDBE'/><circle cx='12' cy='12' r='1.5' fill='%23BBBDBE'/><circle cx='5.5' cy='12' r='1.5' fill='%23BBBDBE'/></svg>");
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: center center; }
+
+.module-sticker-manager__install-button {
+  background: none;
+  border: 0;
+  font-family: Roboto;
+  color: #17191d;
+  font-weight: 300;
+  font-size: 13px;
+  height: 24px;
+  background: #eeefef;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 12px; }
+  .dark-theme .module-sticker-manager__install-button {
+    color: #eeefef;
+    background: #3d3e44; }
+  .module-sticker-manager__install-button--blue {
+    background: #2090ea;
+    color: #ffffff; }
+    .dark-theme .module-sticker-manager__install-button--blue {
+      background: #2090ea;
+      color: #ffffff; }
+
+.module-sticker-manager__preview-modal__overlay {
+  background: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5; }
+
+.module-sticker-manager__preview-modal__container {
+  position: relative;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.2);
+  width: 440px;
+  height: 360px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff; }
+  .dark-theme .module-sticker-manager__preview-modal__container {
+    background: #3d3e44; }
+  .module-sticker-manager__preview-modal__container__error {
+    color: #f44336;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 80px 30px 80px;
+    font-family: Roboto;
+    font-weight: 300; }
+  .module-sticker-manager__preview-modal__container__header {
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 0;
+    height: 36px;
+    padding: 0 8px 0 16px;
+    justify-content: space-between;
+    align-items: center; }
+    .module-sticker-manager__preview-modal__container__header__text {
+      font-weight: 300;
+      font-size: 14px;
+      color: #17191d; }
+      .dark-theme .module-sticker-manager__preview-modal__container__header__text {
+        color: #eeefef; }
+    .module-sticker-manager__preview-modal__container__header__close-button {
+      border: none;
+      width: 20px;
+      height: 20px;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><path d='M38 12.83L35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z'  fill='%236B6D70'/></svg>");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+      .dark-theme .module-sticker-manager__preview-modal__container__header__close-button {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><path d='M38 12.83L35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z'  fill='%23EEEFEF'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+  .module-sticker-manager__preview-modal__container__sticker-grid {
+    width: 100%;
+    display: grid;
+    grid-gap: 8px;
+    grid-template-columns: repeat(4, 1fr);
+    overflow-y: auto;
+    padding: 0 16px 80px 16px; }
+    .module-sticker-manager__preview-modal__container__sticker-grid__cell {
+      width: 96px;
+      height: 96px; }
+      .module-sticker-manager__preview-modal__container__sticker-grid__cell__image {
+        width: 100%;
+        height: 100%; }
+      .module-sticker-manager__preview-modal__container__sticker-grid__cell--placeholder {
+        border-radius: 4px;
+        background: #eeefef; }
+        .dark-theme .module-sticker-manager__preview-modal__container__sticker-grid__cell--placeholder {
+          background: #6b6d70; }
+  .module-sticker-manager__preview-modal__container__meta-overlay {
+    border-radius: 4px;
+    width: 408px;
+    height: 52px;
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    padding: 0 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background: #eeefef; }
+    .dark-theme .module-sticker-manager__preview-modal__container__meta-overlay {
+      background: #6b6d70; }
+    .module-sticker-manager__preview-modal__container__meta-overlay__info {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center; }
+      .module-sticker-manager__preview-modal__container__meta-overlay__info__title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 300;
+        height: 20px;
+        line-height: 20px;
+        color: #17191d; }
+        .dark-theme .module-sticker-manager__preview-modal__container__meta-overlay__info__title {
+          color: #eeefef; }
+      .module-sticker-manager__preview-modal__container__meta-overlay__info__author {
+        margin: 0;
+        font-family: Roboto-Light;
+        font-size: 13px;
+        height: 18px;
+        line-height: 18px;
+        color: #6b6d70; }
+        .dark-theme .module-sticker-manager__preview-modal__container__meta-overlay__info__author {
+          color: #bbbdbe; }
+      .module-sticker-manager__preview-modal__container__meta-overlay__info__blessed-icon {
+        height: 16px;
+        width: 16px;
+        display: inline-block;
+        margin-left: 3px;
+        vertical-align: top;
+        background-image: url("../images/check-circle-filled-16.svg"); }
+        .dark-theme .module-sticker-manager__preview-modal__container__meta-overlay__info__blessed-icon {
+          background-image: url("../images/check-circle-filled-16.svg"); }
+    .module-sticker-manager__preview-modal__container__meta-overlay__install {
+      flex-shrink: 1; }
+
+.sticker-button-wrapper {
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 6px; }
+
+.module-sticker-button__button {
+  border: 0;
+  background: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.5; }
+  .module-sticker-button__button:hover {
+    opacity: 1; }
+  .module-sticker-button__button:after {
+    display: block;
+    content: '';
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 24 24' style='enable-background:new 0 0 24 24;' xml:space='preserve'><path d='M9,22H7.1c-1.1,0.1-2.1-0.1-3.1-0.5c-0.6-0.3-1.2-0.8-1.5-1.5c-0.5-1-0.6-2.1-0.5-3.1V7.1C1.9,6.1,2.1,5,2.5,4.1	c0.3-0.6,0.9-1.2,1.5-1.5c1-0.5,2-0.6,3.1-0.5h9.7C17.9,1.9,19,2.1,20,2.5c0.6,0.3,1.2,0.9,1.5,1.5c0.4,1,0.6,2,0.5,3.1V9	c0,0.5,0,1-1.5,1h-4.6c-1.2-0.1-2.4,0.1-3.4,0.6c-0.8,0.4-1.4,1.1-1.8,1.8c-0.5,1.1-0.7,2.3-0.6,3.4v4.6C10,21.9,9.6,22,9,22z	 M15.9,11.5c-0.9-0.1-1.9,0-2.7,0.4c-0.5,0.3-0.9,0.7-1.2,1.2c-0.4,0.8-0.6,1.8-0.4,2.7v4.6c0,0.2,0,0.4,0,0.5l9.5-9.6	c-0.2,0-0.4,0-0.5,0L15.9,11.5z' fill='%236B6D70'/></svg>");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center; }
+    .dark-theme .module-sticker-button__button:after {
+      background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 24 24' style='enable-background:new 0 0 24 24;' xml:space='preserve'><path d='M9,22H7.1c-1.1,0.1-2.1-0.1-3.1-0.5c-0.6-0.3-1.2-0.8-1.5-1.5c-0.5-1-0.6-2.1-0.5-3.1V7.1C1.9,6.1,2.1,5,2.5,4.1	c0.3-0.6,0.9-1.2,1.5-1.5c1-0.5,2-0.6,3.1-0.5h9.7C17.9,1.9,19,2.1,20,2.5c0.6,0.3,1.2,0.9,1.5,1.5c0.4,1,0.6,2,0.5,3.1V9	c0,0.5,0,1-1.5,1h-4.6c-1.2-0.1-2.4,0.1-3.4,0.6c-0.8,0.4-1.4,1.1-1.8,1.8c-0.5,1.1-0.7,2.3-0.6,3.4v4.6C10,21.9,9.6,22,9,22z	 M15.9,11.5c-0.9-0.1-1.9,0-2.7,0.4c-0.5,0.3-0.9,0.7-1.2,1.2c-0.4,0.8-0.6,1.8-0.4,2.7v4.6c0,0.2,0,0.4,0,0.5l9.5-9.6	c-0.2,0-0.4,0-0.5,0L15.9,11.5z' fill='%23BBBDBE'/></svg>");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+  .module-sticker-button__button--active {
+    background: #e1e2e3;
+    opacity: 1; }
+    .dark-theme .module-sticker-button__button--active {
+      background: #3d3e44; }
+
+.module-sticker-button__tooltip {
+  height: 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  z-index: 1;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 8px 20px 0 rgba(0, 0, 0, 0.33); }
+  .dark-theme .module-sticker-button__tooltip {
+    background: #3d3e44; }
+  .module-sticker-button__tooltip__triangle {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 8px 8px 0 8px;
+    border-color: #ffffff transparent transparent transparent; }
+    .dark-theme .module-sticker-button__tooltip__triangle {
+      border-color: #3d3e44 transparent transparent transparent; }
+    .module-sticker-button__tooltip__triangle--top-end {
+      top: 34px; }
+    .module-sticker-button__tooltip__triangle--introduction {
+      top: 72px; }
+  .module-sticker-button__tooltip__image {
+    width: 20px;
+    height: 20px; }
+  .module-sticker-button__tooltip__image-placeholder {
+    width: 20px;
+    height: 20px;
+    background-color: #e1e2e3; }
+  .module-sticker-button__tooltip__text {
+    margin-left: 4px;
+    font-size: 14px;
+    cursor: default;
+    color: #17191d; }
+    .dark-theme .module-sticker-button__tooltip__text {
+      color: #eeefef; }
+    .module-sticker-button__tooltip__text__title {
+      font-weight: 300; }
+  .module-sticker-button__tooltip--introduction {
+    width: 420px;
+    height: 72px;
+    display: flex;
+    flex-direction: row; }
+    .module-sticker-button__tooltip--introduction__meta {
+      flex-grow: 1;
+      padding: 0 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: #17191d; }
+      .dark-theme .module-sticker-button__tooltip--introduction__meta {
+        color: #eeefef; }
+      .module-sticker-button__tooltip--introduction__meta__title {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 300;
+        height: 16px;
+        line-height: 20px; }
+      .module-sticker-button__tooltip--introduction__meta__subtitle {
+        margin-top: 3px;
+        font-size: 14px;
+        height: 16px; }
+    .module-sticker-button__tooltip--introduction__close {
+      flex-shrink: 1;
+      height: 100%; }
+      .module-sticker-button__tooltip--introduction__close__button {
+        width: 20px;
+        height: 20px;
+        border: none;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><path d='M38 12.83L35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z'  fill='%236B6D70'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+        .dark-theme .module-sticker-button__tooltip--introduction__close__button {
+          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><path d='M38 12.83L35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z'  fill='%23EEEFEF'/></svg>");
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: center center; }
+
+.module-confirmation-dialog__overlay {
+  background: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5; }
+
+.module-confirmation-dialog__container {
+  width: 360px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 8px 20px 0 rgba(0, 0, 0, 0.33);
+  background: #ffffff;
+  color: #17191d; }
+  .dark-theme .module-confirmation-dialog__container {
+    background: #3d3e44;
+    color: #eeefef; }
+  .module-confirmation-dialog__container__content {
+    margin-bottom: 20px; }
+  .module-confirmation-dialog__container__buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end; }
+    .module-confirmation-dialog__container__buttons__button {
+      margin-left: 4px;
+      border-radius: 14px;
+      height: 28px;
+      padding: 5px 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: Roboto;
+      background: #ffffff;
+      color: #6b6d70;
+      border: 1px solid #6b6d70; }
+      .dark-theme .module-confirmation-dialog__container__buttons__button {
+        background: #3d3e44;
+        color: #bbbdbe;
+        border: 1px solid #bbbdbe; }
+      .module-confirmation-dialog__container__buttons__button--negative {
+        border: none;
+        background: #f44336;
+        color: #ffffff; }
+        .dark-theme .module-confirmation-dialog__container__buttons__button--negative {
+          border: none;
+          background: #f44336;
+          color: #ffffff; }
+      .module-confirmation-dialog__container__buttons__button--affirmative {
+        border: none;
+        background: #4caf50;
+        color: #ffffff; }
+        .dark-theme .module-confirmation-dialog__container__buttons__button--affirmative {
+          border: none;
+          background: #4caf50;
+          color: #ffffff; }
+
+.module-emoji-picker__header, .module-emoji-picker__footer {
+  height: 44px;
+  display: flex;
+  flex-direction: row;
+  align-items: center; }
+
+.module-emoji-picker {
+  height: 428px;
+  display: grid;
+  grid-template-rows: 44px 1fr;
+  grid-template-columns: 1fr; }
+  .module-emoji-picker__header {
+    justify-content: space-between;
+    margin: 0 12px; }
+    .module-emoji-picker__header__search-field {
+      flex-grow: 1;
+      margin-left: 8px;
+      position: relative; }
+      .module-emoji-picker__header__search-field::after {
+        display: block;
+        content: '';
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        left: 8px;
+        top: 6px;
+        background-image: url("data:image/svg+xml;utf8,<svg id='Final' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><title>search-16</title><path d='M11.34,10.28a1.14,1.14,0,0,1-1-.29,1,1,0,0,1-.18-.27,5.31,5.31,0,1,0-.44.44,1,1,0,0,1,.27.18,1.14,1.14,0,0,1,.29,1L13.94,15,15,13.94ZM6.25,10A3.75,3.75,0,1,1,10,6.25,3.75,3.75,0,0,1,6.25,10Z'  fill='%236B6D70'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+        .dark-theme .module-emoji-picker__header__search-field::after {
+          background-image: url("data:image/svg+xml;utf8,<svg id='Final' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><title>search-16</title><path d='M11.34,10.28a1.14,1.14,0,0,1-1-.29,1,1,0,0,1-.18-.27,5.31,5.31,0,1,0-.44.44,1,1,0,0,1,.27.18,1.14,1.14,0,0,1,.29,1L13.94,15,15,13.94ZM6.25,10A3.75,3.75,0,1,1,10,6.25,3.75,3.75,0,0,1,6.25,10Z'  fill='%23BBBDBE'/></svg>");
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: center center; }
+      .module-emoji-picker__header__search-field__input {
+        width: 100%;
+        height: 28px;
+        line-height: 28px;
+        font-size: 14px;
+        border-radius: 17px;
+        border-width: 1px;
+        border-style: solid;
+        padding: 0 8px 0 30px;
+        background: #ffffff;
+        color: #17191d;
+        border-color: #6b6d70; }
+        .module-emoji-picker__header__search-field__input:focus {
+          outline: none; }
+        .module-emoji-picker__header__search-field__input:focus {
+          border-color: #2090ea; }
+        .module-emoji-picker__header__search-field__input::placeholder {
+          color: #898a8c; }
+        .dark-theme .module-emoji-picker__header__search-field__input {
+          border-color: #bbbdbe;
+          background: #3d3e44;
+          color: #eeefef; }
+          .dark-theme .module-emoji-picker__header__search-field__input:focus {
+            border-color: #2090ea; }
+          .dark-theme .module-emoji-picker__header__search-field__input::placeholder {
+            color: #898a8c; }
+  .module-emoji-picker__footer {
+    justify-content: center; }
+  .module-emoji-picker__button {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 8px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none; }
+    .module-emoji-picker__button--footer:not(:first-of-type) {
+      margin-left: 4px; }
+    .module-emoji-picker__button--selected {
+      background: #e1e2e3; }
+      .dark-theme .module-emoji-picker__button--selected {
+        background: #6b6d70; }
+    .module-emoji-picker__button--icon {
+      display: flex;
+      justify-content: center;
+      align-items: center; }
+      .module-emoji-picker__button--icon::after {
+        display: block;
+        content: '';
+        width: 20px;
+        height: 20px; }
+      .module-emoji-picker__button--icon--search::after {
+        background-image: url("data:image/svg+xml;utf8,<svg id='Final' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><title>search-16</title><path d='M11.34,10.28a1.14,1.14,0,0,1-1-.29,1,1,0,0,1-.18-.27,5.31,5.31,0,1,0-.44.44,1,1,0,0,1,.27.18,1.14,1.14,0,0,1,.29,1L13.94,15,15,13.94ZM6.25,10A3.75,3.75,0,1,1,10,6.25,3.75,3.75,0,0,1,6.25,10Z'  fill='%236B6D70'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+        .dark-theme .module-emoji-picker__button--icon--search::after {
+          background-image: url("data:image/svg+xml;utf8,<svg id='Final' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><title>search-16</title><path d='M11.34,10.28a1.14,1.14,0,0,1-1-.29,1,1,0,0,1-.18-.27,5.31,5.31,0,1,0-.44.44,1,1,0,0,1,.27.18,1.14,1.14,0,0,1,.29,1L13.94,15,15,13.94ZM6.25,10A3.75,3.75,0,1,1,10,6.25,3.75,3.75,0,0,1,6.25,10Z'  fill='%23BBBDBE'/></svg>");
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: center center; }
+      .module-emoji-picker__button--icon--close::after {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><path d='M38 12.83L35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z'  fill='%236B6D70'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+        .dark-theme .module-emoji-picker__button--icon--close::after {
+          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><path d='M38 12.83L35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z'  fill='%23BBBDBE'/></svg>");
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: center center; }
+      .module-emoji-picker__button--icon--recents::after {
+        background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M10,2.5c4.1,0,7.5,3.4,7.5,7.5s-3.4,7.5-7.5,7.5S2.5,14.1,2.5,10S5.9,2.5,10,2.5 M10,1c-5,0-9,4-9,9s4,9,9,9s9-4,9-9	S15,1,10,1z M11,4h-1L9.6,9.6L5,10v1l5.5,0.5c0.6,0,1-0.4,1-1L11,4z'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+        .dark-theme .module-emoji-picker__button--icon--recents::after {
+          background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M10,2.5c4.1,0,7.5,3.4,7.5,7.5s-3.4,7.5-7.5,7.5S2.5,14.1,2.5,10S5.9,2.5,10,2.5 M10,1c-5,0-9,4-9,9s4,9,9,9s9-4,9-9	S15,1,10,1z M11,4h-1L9.6,9.6L5,10v1l5.5,0.5c0.6,0,1-0.4,1-1L11,4z'/></svg>");
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: center center; }
+      .module-emoji-picker__button--icon--emoji::after {
+        background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M10,15.5c-1.8,0-3.5-0.8-4.6-2.3c-0.2-0.3-0.2-0.8,0.2-1.1c0.3-0.2,0.8-0.2,1.1,0.2c1.4,1.9,4.1,2.2,6,0.8	c0.3-0.2,0.6-0.5,0.8-0.8c0.2-0.3,0.7-0.4,1.1-0.2s0.4,0.7,0.2,1.1l0,0C13.5,14.7,11.8,15.5,10,15.5z M10,2.5c-4-0.1-7.4,3-7.5,7	c0,0.2,0,0.3,0,0.5c-0.1,4,3,7.4,7,7.5c0.2,0,0.3,0,0.5,0c4,0.1,7.4-3,7.5-7c0-0.2,0-0.3,0-0.5c0.1-4-3-7.4-7-7.5	C10.3,2.5,10.2,2.5,10,2.5 M10,1c4.8-0.1,8.9,3.7,9,8.5c0,0.2,0,0.3,0,0.5c0.1,4.8-3.7,8.9-8.5,9c-0.2,0-0.3,0-0.5,0	c-4.8,0.1-8.9-3.7-9-8.5c0-0.2,0-0.3,0-0.5C0.9,5.2,4.7,1.1,9.5,1C9.7,1,9.8,1,10,1z M7.2,6.8C6.5,6.9,5.9,7.6,6,8.4	C5.9,9.2,6.5,9.9,7.2,10C8,9.9,8.6,9.2,8.5,8.4C8.6,7.6,8,6.9,7.2,6.8z M12.8,6.8c-0.8,0.1-1.3,0.8-1.2,1.6C11.4,9.2,12,9.9,12.8,10	c0.8-0.1,1.3-0.8,1.2-1.6C14.1,7.6,13.5,6.9,12.8,6.8z' fill='%236B6D70'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+        .dark-theme .module-emoji-picker__button--icon--emoji::after {
+          background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M10,1C5.2,0.9,1.1,4.7,1,9.5C1,9.7,1,9.8,1,10c-0.1,4.8,3.7,8.9,8.5,9c0.2,0,0.3,0,0.5,0c4.8,0.1,8.9-3.7,9-8.5	c0-0.2,0-0.3,0-0.5c0.1-4.8-3.7-8.9-8.5-9C10.3,1,10.2,1,10,1z M12.8,6.8c0.8,0.1,1.3,0.8,1.2,1.6c0.1,0.8-0.5,1.5-1.2,1.6	c-0.8-0.1-1.3-0.8-1.2-1.6C11.4,7.6,12,6.9,12.8,6.8z M7.2,6.8C8,6.9,8.6,7.6,8.5,8.4C8.6,9.2,8,9.9,7.2,10C6.5,9.9,5.9,9.2,6,8.4	C5.9,7.6,6.5,6.9,7.2,6.8z M14.6,13.2c-1.9,2.5-5.5,3.1-8.1,1.1c-0.4-0.3-0.8-0.7-1.1-1.1c-0.2-0.3-0.2-0.8,0.2-1.1s0.8-0.2,1.1,0.2	c1.4,1.9,4.1,2.2,6,0.8c0.3-0.2,0.6-0.5,0.8-0.8c0.2-0.3,0.7-0.4,1.1-0.2S14.9,12.9,14.6,13.2z' fill='%23BBBDBE'/></svg>");
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: center center; }
+      .module-emoji-picker__button--icon--animal::after {
+        background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M8,11c0,0.8-0.4,1.5-1,1.5S6,11.8,6,11s0.4-1.5,1-1.5S8,10.2,8,11z M13,9.5c-0.6,0-1,0.7-1,1.5s0.4,1.5,1,1.5s1-0.7,1-1.5	S13.6,9.5,13,9.5z M19,13c0,2.8-2.2,5-5,5l0,0c-0.1,0-0.9,0-1.8-0.1c-0.9,1.2-2.6,1.4-3.8,0.5c-0.2-0.2-0.4-0.3-0.5-0.5	C6.9,18,6.1,18,6,18l0,0c-2.8,0-5-2.3-4.9-5.1c0-1.5,0.8-3,2-3.9c0-0.3,0.1-0.5,0.2-0.8C3.2,8.1,3.1,8.1,3,8	C1.2,6.2,0.9,3.7,2.3,2.3c0.6-0.6,1.4-0.9,2.2-0.9C5.9,1.5,7.1,2,8,3c0.1,0.1,0.1,0.2,0.2,0.2c1.2-0.3,2.4-0.3,3.6,0	C11.9,3.2,11.9,3.1,12,3c0.9-1,2.1-1.5,3.5-1.5c0.8,0,1.6,0.3,2.2,0.9C19.1,3.7,18.8,6.2,17,8c-0.1,0.1-0.2,0.1-0.2,0.2	c0.1,0.2,0.1,0.5,0.2,0.8C18.2,9.9,19,11.4,19,13z M13.3,3.8c1.2,0.7,2.2,1.6,2.8,2.8c0.4-0.5,0.7-1.2,0.8-1.8	c0.1-0.5-0.1-1.1-0.4-1.5C16.3,3.1,15.9,3,15.5,3C14.7,3,13.9,3.4,13.3,3.8L13.3,3.8z M3.8,6.7c0.6-1.2,1.6-2.2,2.8-2.9l0,0	C6.1,3.3,5.3,3,4.5,3C4.1,3,3.7,3.1,3.4,3.4C3.1,3.8,2.9,4.3,3,4.8C3.1,5.5,3.4,6.2,3.8,6.7z M17.5,13c0-1.1-0.6-2.2-1.5-2.8	l-0.5-0.4l-0.1-0.6c-0.4-3-3.2-5.1-6.2-4.6C6.8,4.9,4.9,6.8,4.5,9.2L4.4,9.8L4,10.2c-0.9,0.6-1.5,1.7-1.5,2.8c0,1.9,1.6,3.5,3.5,3.5	c0,0,0.8,0,1.7-0.1l0.8-0.1L9,17c0.4,0.6,1.1,0.7,1.7,0.3c0.1-0.1,0.2-0.2,0.3-0.3l0.5-0.6l0.8,0.1c0.9,0.1,1.6,0.1,1.7,0.1	C15.9,16.5,17.5,14.9,17.5,13z M11.8,14.8c0-0.6-0.4-1-1-1H9.3c-0.6,0-1,0.4-1,1c0,0.3,0.2,0.7,0.4,0.8l0.9,0.7	c0.2,0.2,0.6,0.2,0.8,0l0.9-0.7C11.6,15.4,11.8,15.1,11.8,14.8z' fill='%236B6D70'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+        .dark-theme .module-emoji-picker__button--icon--animal::after {
+          background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M16.9,9c0-0.2-0.1-0.5-0.1-0.7c0.1-0.1,0.2-0.1,0.2-0.2c1.8-1.8,2.1-4.3,0.7-5.7S13.8,1.2,12,3c-0.1,0.1-0.1,0.2-0.2,0.2	c-1.2-0.3-2.4-0.3-3.6,0C8.1,3.2,8.1,3.1,8,3C6.2,1.2,3.7,0.9,2.3,2.3S1.2,6.2,3,8l0.2,0.2C3.2,8.4,3.1,8.7,3.1,8.9	c-2.2,1.6-2.7,4.7-1.1,7C2.9,17.2,4.4,18,6,18c0,0,0.8,0,1.8-0.1c0.9,1.2,2.6,1.4,3.8,0.5c0.2-0.2,0.4-0.3,0.5-0.5	C13.1,18,14,18,14,18c2.8,0,5-2.3,4.9-5.1C18.9,11.4,18.1,9.9,16.9,9z M3.8,6.7C3.4,6.2,3.1,5.5,3,4.8C2.9,4.3,3.1,3.8,3.4,3.4	C3.7,3.1,4.1,3,4.5,3c0.8,0,1.6,0.4,2.1,0.9l0,0C5.5,4.5,4.5,5.5,3.8,6.7z M7,12.5c-0.6,0-1-0.7-1-1.5s0.4-1.5,1-1.5s1,0.7,1,1.5	S7.6,12.5,7,12.5z M11.2,16l-0.8,0.7c-0.2,0.2-0.5,0.2-0.7,0L8.8,16c-0.4-0.3-0.5-0.9-0.2-1.3c0.2-0.2,0.5-0.4,0.7-0.4h1.4	c0.5,0,0.9,0.4,0.9,0.9C11.6,15.5,11.4,15.8,11.2,16z M13,12.5c-0.6,0-1-0.7-1-1.5s0.4-1.5,1-1.5s1,0.7,1,1.5S13.6,12.5,13,12.5z	 M13.3,3.8L13.3,3.8C13.9,3.3,14.7,3,15.5,3c0.4,0,0.8,0.1,1.2,0.4c0.3,0.4,0.5,0.9,0.4,1.4c-0.1,0.7-0.4,1.3-0.9,1.8	C15.5,5.5,14.5,4.5,13.3,3.8z' fill='%23BBBDBE'/></svg>");
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: center center; }
+      .module-emoji-picker__button--icon--food::after {
+        background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M12.1,10.4c-0.4-0.7-0.6-1.5-0.6-2.3c0-0.8,0.2-1.6,0.6-2.3c0.3-0.5,0.4-1.1,0.4-1.8c0-0.6-0.2-1.2-0.4-1.7l1.4-0.6	C13.8,2.6,14,3.4,14,4.2c0,0.8-0.2,1.6-0.6,2.3C13.2,7,13,7.6,13,8.2c0,0.6,0.2,1.1,0.4,1.6L12.1,10.4z M10.4,9.8	C10.2,9.3,10,8.8,10,8.2c0-0.6,0.2-1.2,0.4-1.7C10.8,5.8,11,5,11,4.2c0-0.8-0.2-1.6-0.6-2.3L9.1,2.5C9.3,3,9.5,3.6,9.5,4.2	c0,0.6-0.2,1.2-0.4,1.8C8.7,6.6,8.5,7.4,8.5,8.2c0,0.8,0.2,1.6,0.6,2.3L10.4,9.8z M19,10.3L19,10.3c0,2.7-2.3,8.7-9,8.7	c-4.9,0-8.8-3.8-9-8.7l0,0C1,9.1,2.8,8,5.6,7.4c0.1-0.5,0.3-1,0.5-1.5c0.3-0.5,0.4-1.1,0.4-1.8c0-0.6-0.2-1.2-0.4-1.7l1.4-0.6	C7.8,2.6,8,3.4,8,4.2C8,5,7.8,5.8,7.4,6.5C7.2,7,7,7.6,7,8.2c0,0.2,0,0.3,0,0.5c0.1,0.4,0.2,0.8,0.4,1.2L6,10.4	C5.8,10,5.7,9.5,5.6,9c-1.1,0.2-2.2,0.6-3,1.4c0.4,0.6,2.9,1.9,7.5,1.9s7.1-1.3,7.5-1.9c-0.8-0.7-1.8-1.2-2.9-1.4	c-0.1-0.3-0.1-0.5-0.1-0.8c0-0.2,0-0.5,0.1-0.7C17.2,8,19,9.1,19,10.3z M17.2,12c-0.2,0.3-0.5,0.5-0.8,0.6c-2.1,0.7-4.2,1-6.4,1	c-2.2,0-4.3-0.3-6.3-1C3.3,12.5,3,12.3,2.8,12c0.1,0.4,0.2,0.7,0.4,1.1c1.1,2.8,3.8,4.5,6.8,4.5c3,0.1,5.7-1.7,6.9-4.5	C17,12.7,17.1,12.4,17.2,12z' fill='%236B6D70'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+        .dark-theme .module-emoji-picker__button--icon--food::after {
+          background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M9.1,10.4C8.7,9.7,8.5,9,8.5,8.2c0-0.8,0.2-1.6,0.6-2.3c0.3-0.5,0.4-1.1,0.4-1.8c0-0.6-0.2-1.2-0.4-1.7l1.4-0.6	C10.8,2.6,11,3.4,11,4.2c0,0.8-0.2,1.6-0.6,2.3C10.2,7,10,7.6,10,8.2c0,0.6,0.2,1.1,0.4,1.6L9.1,10.4z M13.4,9.8	C13.2,9.3,13,8.8,13,8.2c0-0.6,0.2-1.2,0.4-1.7C13.8,5.8,14,5,14,4.2c0-0.8-0.2-1.6-0.6-2.3l-1.4,0.6c0.3,0.5,0.4,1.1,0.4,1.7	c0,0.6-0.2,1.2-0.4,1.8c-0.4,0.7-0.5,1.5-0.6,2.3c0,0.8,0.2,1.6,0.6,2.3L13.4,9.8z M19,10.3L19,10.3c0,2.7-2.3,8.7-9,8.7	c-4.9,0-8.8-3.8-9-8.7l0,0C1,9.1,2.8,8,5.6,7.4c0.1-0.5,0.3-1,0.5-1.5c0.3-0.5,0.4-1.1,0.4-1.8c0-0.6-0.2-1.2-0.4-1.7l1.4-0.6	C7.8,2.6,8,3.4,8,4.2C8,5,7.8,5.8,7.4,6.5C7.2,7,7,7.6,7,8.2c0,0.2,0,0.3,0,0.5c0.1,0.4,0.2,0.8,0.4,1.2L6,10.4	C5.8,10,5.7,9.5,5.6,9c-1.1,0.2-2.2,0.6-3,1.4c0.4,0.6,2.9,1.9,7.5,1.9s7.1-1.3,7.5-1.9c-0.8-0.7-1.8-1.2-2.9-1.4	c-0.1-0.3-0.1-0.5-0.1-0.8c0-0.2,0-0.5,0.1-0.7C17.2,8,19,9.1,19,10.3z' fill='%23BBBDBE'/></svg>");
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: center center; }
+      .module-emoji-picker__button--icon--activity::after {
+        background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M10,1c-5,0-9,4-9,9s4,9,9,9s9-4,9-9S15,1,10,1z M17.3,8.4c-0.6,0.9-1.3,1.8-1.9,2.6l-3.3-1.3c-0.4-0.9-0.8-1.8-1.2-2.8	l2.4-2.4C14,4.6,14.8,4.8,15.6,5C16.4,5.9,17,7.1,17.3,8.4z M11.1,2.6C11.6,3.1,12,3.5,12.4,4L10,6.4c-0.9,0-1.9,0-2.8,0.1L6.1,5	C6.5,4.3,7,3.6,7.4,3C8.2,2.7,9.1,2.5,10,2.5C10.4,2.5,10.8,2.5,11.1,2.6z M5.6,10L5.6,10l-1.8,1C3.4,10.4,3,9.7,2.6,9.1	c0.1-1,0.4-1.9,0.9-2.7l1.9-0.7l1.1,1.6C6.1,8.1,5.8,9.1,5.6,10z M3.9,14.3C3.9,13.5,4,12.7,4,12l1.8-1c0.9,0.6,1.8,1.2,2.6,1.8	L9,16l-2.3,0.7C5.6,16.1,4.6,15.3,3.9,14.3z M12.8,17c-1-0.3-1.9-0.6-2.8-0.9l-0.6-3.3c0.8-0.7,1.6-1.4,2.5-2l3.2,1.2	c0.1,1,0.2,2.1,0.3,3.2C14.7,16,13.8,16.6,12.8,17z' fill='%236B6D70'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+        .dark-theme .module-emoji-picker__button--icon--activity::after {
+          background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M10,1c-5,0-9,4-9,9s4,9,9,9s9-4,9-9S15,1,10,1z M15.5,15.1c-0.1-1-0.2-2.2-0.3-3.2l-3.2-1.2c-0.9,0.7-1.7,1.4-2.5,2L10,16	c0.8,0.3,1.9,0.6,2.8,0.9c-2,0.8-4.2,0.7-6.1-0.2L9,16l-0.6-3.3c-0.8-0.6-1.7-1.2-2.6-1.8L4,12c0,0.7-0.1,1.6-0.1,2.3	C3,13.1,2.5,11.6,2.5,10c0-0.3,0-0.6,0.1-0.9L3.8,11l1.8-1l0,0c0.3-0.9,0.6-1.9,0.9-2.8L5.3,5.6L3.5,6.4C4.3,4.8,5.7,3.6,7.4,3	C7,3.6,6.5,4.4,6.1,5l1.1,1.6C8.2,6.5,9.1,6.4,10,6.4L12.4,4c-0.3-0.4-0.8-1-1.2-1.4c1.7,0.3,3.3,1.1,4.4,2.4	c-0.7-0.2-1.5-0.3-2.2-0.5l-2.4,2.4c0.4,1,0.8,1.9,1.2,2.8l3.3,1.3c0.6-0.8,1.3-1.7,1.9-2.6c0.1,0.5,0.2,1.1,0.2,1.6	C17.5,11.9,16.8,13.7,15.5,15.1z' fill='%23BBBDBE'/></svg>");
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: center center; }
+      .module-emoji-picker__button--icon--travel::after {
+        background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M16,8.2L17.2,7c1.6-1.6,1.9-3.9,0.8-5c-0.5-0.4-1.1-0.7-1.8-0.7c-1.2,0-2.4,0.5-3.2,1.4L11.7,4L8.3,3.6L3.2,1.9L0.9,4.2	L5.5,8l1.1,1.1l-1.2,1.2c-0.3,0.4-0.5,0.8-0.7,1.2l-2.6,0.2l-1.2,1.2l2.9,1.7c-0.1,0.6-0.2,1.1-0.2,1.1l0.8,0.8l1-0.2L7,19l1.2-1.2	l0.2-2.5c0.4-0.2,0.8-0.4,1.2-0.7l1.2-1.2l1.1,1.1l3.7,4.7l2.3-2.3l-1.5-5.3L16,8.2z M6.5,6.9l-3.6-3l0.5-0.5L8,5.1l2.5,0.2L7.6,8.1	L6.5,6.9z M8.1,13.9c-1,0.6-2.1,1-3.2,1.2C5.1,14,5.5,12.8,6,11.8l8-8c0.6-0.6,1.3-1,2.2-1c0.3,0,0.5,0.1,0.7,0.2	c0.4,0.4,0.3,1.8-0.8,2.9L8.1,13.9z M15.9,17L13,13.4l-1.1-1.1l2.8-2.8l0.2,2.5l1.5,4.7L15.9,17z' fill='%236B6D70'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+        .dark-theme .module-emoji-picker__button--icon--travel::after {
+          background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M14.5,8.5l2.2-2.2c1.6-1.6,2.2-3.6,1.4-4.4s-2.9-0.1-4.4,1.4l-2.2,2.2L7.7,4.2l-4.8-2L1.1,4l4.5,3.9l1.7,1.7l-1.2,1.2	c-0.2,0.3-0.4,0.5-0.6,0.9H2.1l-1,1.1l3.1,1.9c-0.2,0.5-0.3,0.9-0.3,0.9l0.6,0.6l0.9-0.3l1.9,3l1-1v-3.4c0.3-0.2,0.6-0.4,0.9-0.6	l1.1-1.1l1.7,1.8l3.8,4.6l1.8-1.8l-1.9-4.9L14.5,8.5z' fill='%23BBBDBE'/></svg>");
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: center center; }
+      .module-emoji-picker__button--icon--object::after {
+        background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M10,1C6.4,1,3.5,3.9,3.5,7.5c0,1.5,0.5,2.9,1.4,4.1c1.3,1.7,2.6,2.9,2.6,4.4v1.5c0,0.6,0.4,1.2,1,1.5h3c0.6-0.3,1-0.9,1-1.5	H9V16h3.5c0-1.5,1.2-2.8,2.6-4.4c2.3-2.8,1.8-6.9-1-9.1C12.9,1.5,11.5,1,10,1z M8.7,14.5c-0.5-1.2-1.2-2.2-2.1-3.2l-0.5-0.7	C5.4,9.8,5,8.6,5,7.5c0-2.8,2.2-5,5-5s5,2.2,5,5c0,1.2-0.4,2.3-1.1,3.2l-0.5,0.6c-0.9,0.9-1.6,2-2.1,3.2H8.7z' fill='%236B6D70'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+        .dark-theme .module-emoji-picker__button--icon--object::after {
+          background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M16.5,7.5C16.5,3.9,13.6,1,10,1C6.4,1,3.5,3.9,3.5,7.5c0,1.5,0.5,2.9,1.4,4.1l0,0l0,0v0.1c1.4,1.6,2.6,2.9,2.6,4.4v1.5	c0,0.6,0.4,1.2,1,1.5h3c0.6-0.3,1-0.9,1-1.5H9V16h3.5c0-1.5,1.2-2.8,2.5-4.3v-0.1l0,0l0,0C16,10.5,16.5,9,16.5,7.5z' fill='%23BBBDBE'/></svg>");
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: center center; }
+      .module-emoji-picker__button--icon--symbol::after {
+        background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M14.2,3.5c1.6,0,2.9,1.1,3.2,2.6c0,0.2,0.1,0.4,0.1,0.5c0,3.6-4,7.5-7.5,10.4c-2.8-2.3-7.5-6.6-7.5-10.4	c0-0.2,0-0.4,0.1-0.6l0,0C2.7,5.5,3,4.9,3.4,4.5c1.3-1.3,3.3-1.3,4.6,0l0,0l0,0C8.3,4.7,8.5,5,8.7,5.3L10,7.1l1.2-1.9	c0.2-0.3,0.4-0.5,0.6-0.8l0,0l0,0l0,0C12.5,3.9,13.3,3.5,14.2,3.5 M14.2,2c-1.3,0-2.5,0.5-3.4,1.4c-0.3,0.3-0.6,0.7-0.8,1	c-0.3-0.4-0.6-0.7-0.9-1c-1.9-1.9-4.9-1.9-6.7,0C1.7,4,1.3,4.8,1.1,5.7C1,6,1,6.3,1,6.7c0,4.6,5.1,9.1,9,12.4c4-3.2,9-7.8,9-12.4	c0-0.3,0-0.6-0.1-0.9C18.4,3.6,16.5,2,14.2,2L14.2,2z' fill='%236B6D70'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+        .dark-theme .module-emoji-picker__button--icon--symbol::after {
+          background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M18.9,5.8c-0.2-0.9-0.6-1.7-1.3-2.4c-1.9-1.9-4.9-1.9-6.7,0c-0.3,0.3-0.6,0.7-0.9,1c-0.3-0.4-0.6-0.7-0.9-1	c-1.9-1.9-4.9-1.9-6.7,0C1.7,4,1.3,4.8,1.1,5.7C1,6,1,6.3,1,6.7c0,4.6,5.1,9.1,9,12.4c4-3.2,9-7.8,9-12.4C19,6.4,19,6.1,18.9,5.8z' fill='%23BBBDBE'	/></svg>");
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: center center; }
+      .module-emoji-picker__button--icon--flag::after {
+        background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M17.5,3.3c-2.4-0.8-4.9-0.8-7.3,0C8.1,4,5.8,4,3.8,3.3L3.5,3.2V2H2v16h1.5v-4.2c1,0.4,2.1,0.5,3.2,0.6	c1.3,0,2.6-0.2,3.8-0.6c2.1-0.7,4.4-0.7,6.4,0l1,0.4V3.5L17.5,3.3z M16.5,12c-2.1-0.5-4.3-0.4-6.3,0.3c-2.1,0.7-4.4,0.7-6.4,0	l-0.2-0.1V4.8c2.3,0.7,4.8,0.7,7.1,0c1.9-0.7,4-0.7,5.9-0.2V12z' fill='%236B6D70'/></svg>");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center; }
+        .dark-theme .module-emoji-picker__button--icon--flag::after {
+          background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 20 20' style='enable-background:new 0 0 20 20;' xml:space='preserve'><path d='M17.5,3.3c-2.4-0.8-4.9-0.8-7.3,0C8.1,4,5.8,4,3.8,3.3L3.5,3.2V2H2v16h1.5v-4.2c1,0.4,2.1,0.5,3.2,0.6	c1.3,0,2.6-0.2,3.8-0.6c2.1-0.7,4.4-0.7,6.4,0l1,0.4V3.5L17.5,3.3z M5,12.6c-0.4-0.1-0.8-0.2-1.2-0.4l-0.2-0.1V4.8	C4,4.9,4.5,5.1,5,5.2V12.6z' fill='%23BBBDBE'/></svg>");
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: center center; }
+  .module-emoji-picker__body {
+    padding: 8px 16px 0 12px; }
+    .module-emoji-picker__body__emoji-cell {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start; }
+    .module-emoji-picker__body--empty {
+      display: flex;
+      padding: 0;
+      justify-content: center;
+      align-items: center;
+      color: #6b6d70; }
+      .dark-theme .module-emoji-picker__body--empty {
+        color: #bbbdbe; }
+
+.emoji-button-wrapper {
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 6px;
+  padding-top: 4px; }
+
+.module-emoji-button__button {
+  border: 0;
+  background: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.5; }
+  .module-emoji-button__button:hover {
+    opacity: 1; }
+  .module-emoji-button__button:after {
+    display: block;
+    content: '';
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23000000' height='48' viewBox='0 0 24 24' width='48' xmlns='http://www.w3.org/2000/svg'>    <path d='M0 0h24v24H0z' fill='none'/>    <path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z' fill='%236B6D70'/></svg>");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center; }
+    .dark-theme .module-emoji-button__button:after {
+      background-image: url("data:image/svg+xml;utf8,<svg fill='%23000000' height='48' viewBox='0 0 24 24' width='48' xmlns='http://www.w3.org/2000/svg'>    <path d='M0 0h24v24H0z' fill='none'/>    <path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z' fill='%23BBBDBE'/></svg>");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center center; }
+  .module-emoji-button__button--active {
+    background: #e1e2e3;
+    opacity: 1; }
+    .dark-theme .module-emoji-button__button--active {
+      background: #3d3e44; }
+
+.module-emoji {
+  display: block;
+  background-image: url("../node_modules/emoji-datasource-apple/img/apple/sheets-256/64.png"); }
+  .module-emoji--16px {
+    width: 16px;
+    height: 16px;
+    background-size: 816px; }
+  .module-emoji--20px {
+    width: 20px;
+    height: 20px;
+    background-size: 1020px; }
+  .module-emoji--28px {
+    width: 28px;
+    height: 28px;
+    background-size: 1428px; }
+  .module-emoji--32px {
+    width: 32px;
+    height: 32px;
+    background-size: 1632px; }
+  .module-emoji--64px {
+    width: 64px;
+    height: 64px;
+    background-size: 3264px; }
+  .module-emoji--66px {
+    width: 66px;
+    height: 66px;
+    background-size: 3366px; }
+  .module-emoji--inline {
+    display: inline-block; }
+
 .react-contextmenu {
   background-color: #f9fafa;
   border-radius: 4px;
@@ -5888,8 +6807,7 @@ body.dark-theme {
 .react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item {
   padding-right: 36px; }
 
-.react-contextmenu-item.react-contextmenu-submenu
-> .react-contextmenu-item:after {
+.react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item:after {
   content: '\25B6';
   display: inline-block;
   position: absolute;
@@ -5905,10 +6823,8 @@ body.dark-theme {
 .react-contextmenu-item.react-contextmenu-item--selected.react-contextmenu-item--checked:before {
   color: #ffffff; }
 
-.react-contextmenu-item.react-contextmenu-submenu
-> .react-contextmenu-item.react-contextmenu-item--active:after,
-.react-contextmenu-item.react-contextmenu-submenu
-> .react-contextmenu-item.react-contextmenu-item--selected:after {
+.react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item.react-contextmenu-item--active:after,
+.react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item.react-contextmenu-item--selected:after {
   color: #ffffff; }
 
 .module-message__buttons__download {

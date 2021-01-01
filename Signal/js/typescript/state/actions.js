@@ -6,13 +6,11 @@
     const exports = window.ts.state.actions = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const redux_1 = window.redux;
-    const search_1 = window.ts.state.ducks.search;
     const conversations_1 = window.ts.state.ducks.conversations;
+    const emojis_1 = window.ts.state.ducks.emojis;
+    const items_1 = window.ts.state.ducks.items;
+    const search_1 = window.ts.state.ducks.search;
+    const stickers_1 = window.ts.state.ducks.stickers;
     const user_1 = window.ts.state.ducks.user;
-    const actions = Object.assign({}, search_1.actions, conversations_1.actions, user_1.actions);
-    function mapDispatchToProps(dispatch) {
-        return redux_1.bindActionCreators(actions, dispatch);
-    }
-    exports.mapDispatchToProps = mapDispatchToProps;
+    exports.mapDispatchToProps = Object.assign({}, conversations_1.actions, emojis_1.actions, items_1.actions, search_1.actions, stickers_1.actions, user_1.actions);
 })();

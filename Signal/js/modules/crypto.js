@@ -9,7 +9,9 @@
   window.sjcl.beware["CTR mode is dangerous because it doesn't protect message integrity."]();
 
   window.crypto.arrayBufferToBase64 = arrayBufferToBase64;
+  window.crypto.typedArrayToArrayBuffer = typedArrayToArrayBuffer;
   window.crypto.base64ToArrayBuffer = base64ToArrayBuffer;
+  window.crypto.bytesFromHexString = bytesFromHexString;
   window.crypto.bytesFromString = bytesFromString;
   window.crypto.concatenateBytes = concatenateBytes;
   window.crypto.constantTimeEqual = constantTimeEqual;
@@ -19,6 +21,7 @@
   window.crypto.decryptFile = decryptFile;
   window.crypto.decryptSymmetric = decryptSymmetric;
   window.crypto.deriveAccessKey = deriveAccessKey;
+  window.crypto.deriveStickerPackKey = deriveStickerPackKey;
   window.crypto.encryptAesCtr = encryptAesCtr;
   window.crypto.encryptDeviceName = encryptDeviceName;
   window.crypto.encryptAttachment = encryptAttachment;
@@ -26,9 +29,12 @@
   window.crypto.encryptSymmetric = encryptSymmetric;
   window.crypto.fromEncodedBinaryToArrayBuffer = fromEncodedBinaryToArrayBuffer;
   window.crypto.getAccessKeyVerifier = getAccessKeyVerifier;
+  window.crypto.getFirstBytes = getFirstBytes;
   window.crypto.getRandomBytes = getRandomBytes;
+  window.crypto.getRandomValue = getRandomValue;
   window.crypto.getViewOfArrayBuffer = getViewOfArrayBuffer;
   window.crypto.getZeroes = getZeroes;
+  window.crypto.hexFromBytes = hexFromBytes;
   window.crypto.highBitsToInt = highBitsToInt;
   window.crypto.hmacSha256 = hmacSha256;
   window.crypto.intsToByteHighAndLow = intsToByteHighAndLow;
@@ -38,6 +44,11 @@
   window.crypto.verifyAccessKey = verifyAccessKey;
 
   window.crypto.randomBytes = n => Buffer.from(window.crypto.getRandomBytes(n));
+
+  function typedArrayToArrayBuffer(typedArray) {
+    const { buffer, byteOffset, byteLength } = typedArray;
+    return buffer.slice(byteOffset, byteLength + byteOffset);
+  }
 
   function arrayBufferToBase64(arrayBuffer) {
     return dcodeIO.ByteBuffer.wrap(arrayBuffer).toString('base64');
@@ -56,6 +67,25 @@
   function stringFromBytes(buffer) {
     return dcodeIO.ByteBuffer.wrap(buffer).toString('utf8');
   }
+  function hexFromBytes(buffer) {
+    return dcodeIO.ByteBuffer.wrap(buffer).toString('hex');
+  }
+  function bytesFromHexString(string) {
+    return dcodeIO.ByteBuffer.wrap(string, 'hex').toArrayBuffer();
+  }
+
+  async function deriveStickerPackKey(packKey) {
+    const salt = getZeroes(32);
+    const info = bytesFromString('Sticker Pack');
+
+    const [part1, part2] = await libsignal.HKDF.deriveSecrets(
+      packKey,
+      salt,
+      info
+    );
+
+    return concatenateBytes(part1, part2);
+  }
 
   // High-level Operations
 
@@ -68,7 +98,7 @@
     );
 
     const key1 = await hmacSha256(masterSecret, bytesFromString('auth'));
-    const syntheticIv = _getFirstBytes(await hmacSha256(key1, plaintext), 16);
+    const syntheticIv = getFirstBytes(await hmacSha256(key1, plaintext), 16);
 
     const key2 = await hmacSha256(masterSecret, bytesFromString('cipher'));
     const cipherKey = await hmacSha256(key2, syntheticIv);
@@ -99,7 +129,7 @@
     const plaintext = await decryptAesCtr(cipherKey, ciphertext, counter);
 
     const key1 = await hmacSha256(masterSecret, bytesFromString('auth'));
-    const ourSyntheticIv = _getFirstBytes(await hmacSha256(key1, plaintext), 16);
+    const ourSyntheticIv = getFirstBytes(await hmacSha256(key1, plaintext), 16);
 
     if (!constantTimeEqual(ourSyntheticIv, syntheticIv)) {
       throw new Error('decryptDeviceName: synthetic IV did not match');
@@ -138,7 +168,7 @@
   }
 
   async function decryptFile(staticPrivateKey, uniqueId, data) {
-    const ephemeralPublicKey = _getFirstBytes(data, PUB_KEY_LENGTH);
+    const ephemeralPublicKey = getFirstBytes(data, PUB_KEY_LENGTH);
     const ciphertext = _getBytes(data, PUB_KEY_LENGTH, data.byteLength);
     const agreement = await libsignal.Curve.async.calculateAgreement(
       ephemeralPublicKey,
@@ -154,7 +184,7 @@
     const iv = getZeroes(12);
     const plaintext = getZeroes(16);
     const accessKey = await _encrypt_aes_gcm(profileKey, iv, plaintext);
-    return _getFirstBytes(accessKey, 16);
+    return getFirstBytes(accessKey, 16);
   }
 
   async function getAccessKeyVerifier(accessKey) {
@@ -190,7 +220,7 @@
       iv,
       plaintext
     );
-    const mac = _getFirstBytes(await hmacSha256(macKey, cipherText), MAC_LENGTH);
+    const mac = getFirstBytes(await hmacSha256(macKey, cipherText), MAC_LENGTH);
 
     return concatenateBytes(nonce, cipherText, mac);
   }
@@ -198,7 +228,7 @@
   async function decryptSymmetric(key, data) {
     const iv = getZeroes(IV_LENGTH);
 
-    const nonce = _getFirstBytes(data, NONCE_LENGTH);
+    const nonce = getFirstBytes(data, NONCE_LENGTH);
     const cipherText = _getBytes(
       data,
       NONCE_LENGTH,
@@ -209,7 +239,7 @@
     const cipherKey = await hmacSha256(key, nonce);
     const macKey = await hmacSha256(key, cipherKey);
 
-    const ourMac = _getFirstBytes(
+    const ourMac = getFirstBytes(
       await hmacSha256(macKey, cipherText),
       MAC_LENGTH
     );
@@ -335,6 +365,16 @@
     return bytes;
   }
 
+  function getRandomValue(low, high) {
+    const diff = high - low;
+    const bytes = new Uint32Array(1);
+    window.crypto.getRandomValues(bytes);
+
+    // Because high and low are inclusive
+    const mod = diff + 1;
+    return bytes[0] % mod + low;
+  }
+
   function getZeroes(n) {
     const result = new Uint8Array(n);
 
@@ -355,7 +395,7 @@
   }
 
   function trimBytes(buffer, length) {
-    return _getFirstBytes(buffer, length);
+    return getFirstBytes(buffer, length);
   }
 
   function getViewOfArrayBuffer(buffer, start, finish) {
@@ -412,12 +452,12 @@
     return results;
   }
 
-  // Internal-only
-
-  function _getFirstBytes(data, n) {
+  function getFirstBytes(data, n) {
     const source = new Uint8Array(data);
     return source.subarray(0, n);
   }
+
+  // Internal-only
 
   function _getBytes(data, start, n) {
     const source = new Uint8Array(data);

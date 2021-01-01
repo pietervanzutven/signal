@@ -314,7 +314,37 @@
   });
   const toVersion10 = exports._withSchemaVersion({
     schemaVersion: 10,
-    upgrade: exports._mapPreviewAttachments(Attachment.migrateDataToFileSystem),
+    upgrade: async (message, context) => {
+      const processPreviews = exports._mapPreviewAttachments(
+        Attachment.migrateDataToFileSystem
+      );
+      const processSticker = async (stickerMessage, stickerContext) => {
+        const { sticker } = stickerMessage;
+        if (!sticker || !sticker.data || !sticker.data.data) {
+          return stickerMessage;
+        }
+
+        return Object.assign({},
+          stickerMessage,
+          {
+            sticker: Object.assign({},
+              sticker,
+              {
+                data: await Attachment.migrateDataToFileSystem(
+                  sticker.data,
+                  stickerContext
+                ),
+              }
+            ),
+          }
+        );
+      };
+
+      const previewProcessed = await processPreviews(message, context);
+      const stickerProcessed = await processSticker(previewProcessed, context);
+
+      return stickerProcessed;
+    },
   });
 
   const VERSIONS = [
@@ -468,6 +498,44 @@
     return finalAttachment;
   };
 
+  exports.processNewSticker = async (
+    stickerData,
+    {
+      writeNewStickerData,
+      getAbsoluteStickerPath,
+      getImageDimensions,
+      logger,
+    } = {}
+  ) => {
+    if (!isFunction(writeNewStickerData)) {
+      throw new TypeError('context.writeNewStickerData is required');
+    }
+    if (!isFunction(getAbsoluteStickerPath)) {
+      throw new TypeError('context.getAbsoluteStickerPath is required');
+    }
+    if (!isFunction(getImageDimensions)) {
+      throw new TypeError('context.getImageDimensions is required');
+    }
+    if (!isObject(logger)) {
+      throw new TypeError('context.logger is required');
+    }
+
+    const path = await writeNewStickerData(stickerData);
+    const absolutePath = await getAbsoluteStickerPath(path);
+
+    const { width, height } = await getImageDimensions({
+      objectUrl: absolutePath,
+      logger,
+    });
+
+    return {
+      contentType: 'image/webp',
+      path,
+      width,
+      height,
+    };
+  };
+
   exports.createAttachmentLoader = loadAttachmentData => {
     if (!isFunction(loadAttachmentData)) {
       throw new TypeError(
@@ -544,6 +612,25 @@
     };
   };
 
+  exports.loadStickerData = loadAttachmentData => {
+    if (!isFunction(loadAttachmentData)) {
+      throw new TypeError('loadStickerData: loadAttachmentData is required');
+    }
+
+    return async sticker => {
+      if (!sticker || !sticker.data) {
+        return null;
+      }
+
+      return Object.assign({},
+        sticker,
+        {
+          data: await loadAttachmentData(sticker.data),
+        }
+      );
+    };
+  };
+
   exports.deleteAllExternalFiles = ({ deleteAttachmentData, deleteOnDisk }) => {
     if (!isFunction(deleteAttachmentData)) {
       throw new TypeError(
@@ -558,7 +645,7 @@
     }
 
     return async message => {
-      const { attachments, quote, contact, preview } = message;
+      const { attachments, quote, contact, preview, sticker } = message;
 
       if (attachments && attachments.length) {
         await Promise.all(attachments.map(deleteAttachmentData));
@@ -601,6 +688,14 @@
             }
           })
         );
+      }
+
+      if (sticker && sticker.data && sticker.data.path) {
+        await deleteOnDisk(sticker.data.path);
+
+        if (sticker.data.thumbnail && sticker.data.thumbnail.path) {
+          await deleteOnDisk(sticker.data.thumbnail.path);
+        }
       }
     };
   };

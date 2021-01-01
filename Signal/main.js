@@ -63,14 +63,14 @@ window.matchMedia && window.matchMedia('(max-width: 600px)').addListener(() => {
 });
 
 window.onload = () => {
-    storage.onready(() => {
-        const color = Windows.UI.ViewManagement.UISettings().getColorValue(Windows.UI.ViewManagement.UIColorType.background);
-        if (color.b === 255) {
-            storage.put('theme-setting', 'light');
-        } else {
-            storage.put('theme-setting', 'dark');
-        }
-    });
+  storage.onready(() => {
+    const color = Windows.UI.ViewManagement.UISettings().getColorValue(Windows.UI.ViewManagement.UIColorType.background);
+    if (color.b === 255) {
+      storage.put('theme-setting', 'light');
+    } else {
+      storage.put('theme-setting', 'dark');
+    }
+  });
 }
 
 window.requestIdleCallback = () => { };
@@ -79,7 +79,8 @@ const path = window.path;
 const url = window.url;
 const os = window.os;
 const fs = window.fs;
-const crypte = window.crypto;
+const crypto = window.crypto;
+const qs = window.qs;
 
 const pify = window.pify;
 
@@ -91,10 +92,22 @@ const GlobalErrors = window.app.global_errors;
 
 GlobalErrors.addHandler();
 
+const getRealPath = pify(fs.realpath);
+const {
+  app,
+  BrowserWindow,
+  ipcMain: ipc,
+  Menu,
+  protocol: electronProtocol,
+  session,
+  shell,
+} = electron;
+
 const appUserModelId = `org.whispersystems.${packageJson.name}`;
 console.log('Set Windows Application User Model ID (AUMID)', {
   appUserModelId,
 });
+app.setAppUserModelId(appUserModelId);
 
 // Keep a global reference of the window object, if you don't, the window will
 //   be closed automatically when the JavaScript object is garbage collected.
@@ -110,19 +123,14 @@ const startInTray = process.argv.some(arg => arg === '--start-in-tray');
 const usingTrayIcon =
   startInTray || process.argv.some(arg => arg === '--use-tray-icon');
 
-var config = window.app.config;
-config.name = Windows.ApplicationModel.Package.current.id.name;
-config.locale = Windows.Globalization.ApplicationLanguages.languages[0];
-config.version = app.getVersion();
-config.uwp_version = process.versions.uwp;
-config.hostname = 'Windows';
-config.appInstance = process.env.UWP_APP_INSTANCE;
+const config = window.app.config;
 
 // Very important to put before the single instance check, since it is based on the
 //   userData directory.
 const userConfig = window.app.user_config;
 
-const importMode = false;
+const importMode =
+  process.argv.some(arg => arg === '--import') || config.get('import');
 
 const development = config.environment === 'development';
 
@@ -131,6 +139,7 @@ const development = config.environment === 'development';
 const attachments = window.app.attachments
 const attachmentChannel = window.app.attachment_channel;
 const createTrayIcon = window.app.tray_icon;
+const dockIcon = window.app.dock_icon;
 const ephemeralConfig = window.app.ephemeral_config;
 const logging = window.app.logging;
 const sql = window.app.sql;
@@ -156,6 +165,9 @@ function showWindow() {
   if (tray) {
     tray.updateContextMenu();
   }
+
+  // show the app on the Dock in case it was hidden before
+  dockIcon.show();
 }
 
 if (!process.mas) {
@@ -198,24 +210,35 @@ function prepareURL(pathSegments, moreKeys) {
     pathname: path.join.apply(null, pathSegments),
     protocol: 'file:',
     slashes: true,
-    query: Object.assign({
-      name: packageJson.productName,
-      locale: locale.name,
-      version: app.getVersion(),
-      buildExpiration: config.get('buildExpiration'),
-      serverUrl: config.get('serverUrl'),
-      cdnUrl: config.get('cdnUrl'),
-      certificateAuthority: config.get('certificateAuthority'),
-      environment: config.environment,
-      node_version: process.versions.node,
-      hostname: os.hostname(),
-      appInstance: process.env.NODE_APP_INSTANCE,
-      proxyUrl: process.env.HTTPS_PROXY || process.env.https_proxy,
-      contentProxyUrl: config.contentProxyUrl,
-      importMode: importMode ? true : undefined, // for stringify()
-      serverTrustRoot: config.get('serverTrustRoot'),
-    }, moreKeys),
+    query: Object.assign({},
+      {
+        name: packageJson.productName,
+        locale: locale.name,
+        version: app.getVersion(),
+        buildExpiration: config.get('buildExpiration'),
+        serverUrl: config.get('serverUrl'),
+        cdnUrl: config.get('cdnUrl'),
+        certificateAuthority: config.get('certificateAuthority'),
+        environment: config.environment,
+        uwp_version: process.versions.uwp,
+        hostname: os.hostname(),
+        appInstance: process.env.NODE_APP_INSTANCE,
+        proxyUrl: process.env.HTTPS_PROXY || process.env.https_proxy,
+        contentProxyUrl: config.contentProxyUrl,
+        importMode: importMode ? true : undefined, // for stringify()
+        serverTrustRoot: config.get('serverTrustRoot'),
+      },
+      moreKeys,
+    ),
   });
+}
+
+function handleUrl(event, target) {
+  event.preventDefault();
+  const { protocol } = url.parse(target);
+  if (protocol === 'http:' || protocol === 'https:') {
+    shell.openExternal(target);
+  }
 }
 
 function captureClicks(window) { }
@@ -358,6 +381,70 @@ const debouncedCaptureStats = _.debounce(captureAndSaveWindowStats, 500);
 mainWindow.on('resize', debouncedCaptureStats);
 mainWindow.on('move', debouncedCaptureStats);
 
+mainWindow.on('focus', () => {
+  mainWindow.flashFrame(false);
+});
+
+// Ingested in preload.js via a sendSync call
+ipc.on('locale-data', event => {
+  // eslint-disable-next-line no-param-reassign
+  event.returnValue = locale.messages;
+});
+
+if (config.get('openDevTools')) {
+  // Open the DevTools.
+  mainWindow.webContents.openDevTools();
+}
+
+captureClicks(mainWindow);
+
+// Emitted when the window is about to be closed.
+// Note: We do most of our shutdown logic here because all windows are closed by
+//   Electron before the app quits.
+mainWindow.on('close', async e => {
+  console.log('close event', {
+    readyForShutdown: mainWindow ? mainWindow.readyForShutdown : null,
+    shouldQuit: windowState.shouldQuit(),
+  });
+  // If the application is terminating, just do the default
+  if (
+    config.environment === 'test' ||
+    config.environment === 'test-lib' ||
+    (mainWindow.readyForShutdown && windowState.shouldQuit())
+  ) {
+    return;
+  }
+
+  // Prevent the shutdown
+  e.preventDefault();
+  mainWindow.hide();
+
+  // On Mac, or on other platforms when the tray icon is in use, the window
+  // should be only hidden, not closed, when the user clicks the close button
+  if (
+    !windowState.shouldQuit() &&
+    (usingTrayIcon || process.platform === 'darwin')
+  ) {
+    // toggle the visibility of the show/hide tray icon menu entries
+    if (tray) {
+      tray.updateContextMenu();
+    }
+
+    // hide the app from the Dock on macOS if the tray icon is enabled
+    if (usingTrayIcon) {
+      dockIcon.hide();
+    }
+
+    return;
+  }
+
+  await requestShutdown();
+  if (mainWindow) {
+    mainWindow.readyForShutdown = true;
+  }
+  app.quit();
+});
+
 // Emitted when the window is closed.
 mainWindow.on('closed', () => {
   // Dereference the window object, usually you would store windows
@@ -366,21 +453,20 @@ mainWindow.on('closed', () => {
   mainWindow = null;
 });
 
-  // Ingested in preload.js via a sendSync call
-ipc.on('locale-data', event => {
-  // eslint-disable-next-line no-param-reassign
-  event.returnValue = locale.messages;
+ipc.on('show-window', () => {
+  showWindow();
 });
 
-ipc.on('show-window', () => { });
-
-let updatesStarted = false;
-ipc.on('ready-for-updates', async () => {
-  if (updatesStarted) {
-    return;
+ipc.once('ready-for-updates', async () => {
+  // First, install requested sticker pack
+  if (process.argv.length > 1) {
+    const [incomingUrl] = process.argv;
+    if (incomingUrl.startsWith('sgnl://')) {
+      handleSgnlLink(incomingUrl);
+    }
   }
-  updatesStarted = true;
 
+  // Second, start checking for app updates
   try {
     await updater.start(getMainWindow, locale.messages, logger);
   } catch (error) {
@@ -469,7 +555,6 @@ async function showSettingsWindow() {
     return;
   }
 
-  const theme = await pify(getDataFromMainWindow)('theme-setting');
   const size = mainWindow.getSize();
   const options = {
     width: Math.min(500, size[0]),
@@ -494,7 +579,7 @@ async function showSettingsWindow() {
 
   captureClicks(settingsWindow);
 
-  settingsWindow.loadURL(prepareURL([__dirname, 'settings.html'], { theme }));
+  settingsWindow.loadURL(prepareURL([__dirname, 'settings.html']));
 
   settingsWindow.on('closed', () => {
     removeDarkOverlay();
@@ -606,7 +691,7 @@ async function showPermissionsPopupWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 let ready = false;
-(async function () {
+(async () => {
   const userDataPath = app.getPath('userData');
 
   await logging.initialize();
@@ -615,7 +700,7 @@ let ready = false;
   logger.info(`starting version ${packageJson.version}`);
 
   if (!locale) {
-    const appLocale = process.env.UWP_ENV === 'test' ? 'en' : Windows.Globalization.ApplicationLanguages.languages[0];
+    const appLocale = process.env.UWP_ENV === 'test' ? 'en' : app.getLocale();
     locale = loadLocale({ appLocale, logger });
   }
 
@@ -664,8 +749,23 @@ let ready = false;
       userDataPath,
       attachments: orphanedAttachments,
     });
+
+    const allStickers = await attachments.getAllStickers(userDataPath);
+    const orphanedStickers = await sql.removeKnownStickers(allStickers);
+    await attachments.deleteAllStickers({
+      userDataPath,
+      stickers: orphanedStickers,
+    });
   }
 
+  try {
+    await attachments.clearTempPath(userDataPath);
+  } catch (error) {
+    logger.error(
+      'main/ready: Error deleting temp dir:',
+      error && error.stack ? error.stack : error
+    );
+  }
   await attachmentChannel.initialize({
     configDir: userDataPath,
     cleanupOrphanedAttachments,
@@ -691,6 +791,9 @@ function setupMenu(options) {
     setupAsNewDevice,
     setupAsStandalone,
   });
+  const template = createTemplate(menuOptions, locale.messages);
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 }
 
 async function requestShutdown() {
@@ -901,4 +1004,16 @@ function installSettingsSetter(name) {
       mainWindow.webContents.send(`set-${name}`, value);
     }
   });
+}
+
+function handleSgnlLink(incomingUrl) {
+  const { host: command, query } = url.parse(incomingUrl);
+  const args = qs.parse(query);
+  if (command === 'addstickers' && mainWindow && mainWindow.webContents) {
+    const { pack_id: packId, pack_key: packKeyHex } = args;
+    const packKey = Buffer.from(packKeyHex, 'hex').toString('base64');
+    mainWindow.webContents.send('show-sticker-pack', { packId, packKey });
+  } else {
+    console.error('Unhandled sgnl link');
+  }
 }

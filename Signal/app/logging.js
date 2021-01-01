@@ -9,6 +9,7 @@
   const path = window.path;
   const fs = window.fs;
 
+  const electron = window.electron;
   const mkdirp = window.mkdirp;
   const _ = window.lodash;
   const readFirstLine = window.firstline;
@@ -17,7 +18,7 @@
 
   const { redactAll } = window.privacy;
 
-  ipc = window.ipc;
+  const { app, ipcMain: ipc } = electron;
   const LEVELS = ['fatal', 'error', 'warn', 'info', 'debug', 'trace'];
   let logger;
 
