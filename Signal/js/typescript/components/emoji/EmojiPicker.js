@@ -42,7 +42,7 @@
     ];
     exports.EmojiPicker = React.memo(React.forwardRef(
         // tslint:disable-next-line max-func-body-length
-        ({ i18n, onPickEmoji, skinTone = 0, onSetSkinTone, recentEmojis, style, onClose, }, ref) => {
+        ({ i18n, onForceSend, onPickEmoji, skinTone = 0, onSetSkinTone, recentEmojis, style, onClose, }, ref) => {
             // Per design: memoize the initial recent emojis so the grid only updates after re-opening the picker.
             const firstRecent = React.useMemo(() => {
                 return recentEmojis;
@@ -71,11 +71,19 @@
                 onSetSkinTone(parsedTone);
             }, []);
             const handlePickEmoji = React.useCallback((e) => {
-                const { shortName } = e.currentTarget.dataset;
-                if (shortName) {
-                    onPickEmoji({ skinTone: selectedTone, shortName });
+                if ('key' in e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        onForceSend();
+                    }
                 }
-            }, [onClose, onPickEmoji, selectedTone]);
+                else {
+                    const { shortName } = e.currentTarget.dataset;
+                    if (shortName) {
+                        onPickEmoji({ skinTone: selectedTone, shortName });
+                    }
+                }
+            }, [onClose, onForceSend, onPickEmoji, selectedTone]);
             // Handle escape key
             React.useEffect(() => {
                 const handler = (e) => {
@@ -136,7 +144,7 @@
             const cellRenderer = React.useCallback(({ key, style: cellStyle, rowIndex, columnIndex }) => {
                 const shortName = emojiGrid[rowIndex][columnIndex];
                 return shortName ? (React.createElement("div", { key: key, className: "module-emoji-picker__body__emoji-cell", style: cellStyle },
-                    React.createElement("button", { className: "module-emoji-picker__button", onClick: handlePickEmoji, "data-short-name": shortName, title: shortName },
+                    React.createElement("button", { className: "module-emoji-picker__button", onClick: handlePickEmoji, onKeyDown: handlePickEmoji, "data-short-name": shortName, title: shortName },
                         React.createElement(Emoji_1.Emoji, { shortName: shortName, skinTone: selectedTone })))) : null;
             }, [emojiGrid, selectedTone]);
             const getRowHeight = React.useCallback(({ index }) => {

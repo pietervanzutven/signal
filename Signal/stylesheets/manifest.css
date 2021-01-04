@@ -893,11 +893,8 @@ img.emoji.jumbo {
 .new-conversation,
 .inbox,
 .gutter {
-  height: 100%; }
-
-.inbox {
-  display: flex;
-  flex-direction: row; }
+  height: 100%;
+  overflow: hidden; }
 
 .expired .conversation-stack,
 .expired .gutter {
@@ -950,12 +947,11 @@ img.emoji.jumbo {
 .left-pane-wrapper {
   height: 100%; }
 
-.conversation-stack {
-  flex-grow: 1; }
-  .conversation-stack .conversation {
-    display: none; }
-  .conversation-stack .conversation:first-child {
-    display: block; }
+.conversation-stack .conversation {
+  display: none; }
+
+.conversation-stack .conversation:first-child {
+  display: block; }
 
 .tool-bar {
   color: #070c14;
