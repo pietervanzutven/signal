@@ -6487,9 +6487,8 @@ body.dark-theme {
 
 .module-emoji-picker {
   height: 428px;
-  display: grid;
-  grid-template-rows: 44px 1fr;
-  grid-template-columns: 1fr; }
+  display: flex;
+  flex-direction: column; }
   .module-emoji-picker__header {
     justify-content: space-between;
     margin: 0 12px; }
@@ -6692,6 +6691,9 @@ body.dark-theme {
       color: #6b6d70; }
       .dark-theme .module-emoji-picker__body--empty {
         color: #bbbdbe; }
+
+.module-emoji-picker > div {
+  flex-grow: 1; }
 
 .emoji-button-wrapper {
   height: 36px;
