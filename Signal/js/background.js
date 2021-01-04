@@ -651,7 +651,10 @@
     Whisper.WallClockListener.init(Whisper.events);
     Whisper.ExpiringMessagesListener.init(Whisper.events);
       
-    if (Whisper.Registration.everDone()) {
+    if (Whisper.Import.isIncomplete()) {
+      window.log.info('Import was interrupted, showing import error screen');
+      appView.openImporter();
+    } else if (Whisper.Registration.everDone()) {
       // listeners
       Whisper.RotateSignedPreKeyListener.init(Whisper.events, newVersion);
       window.Signal.RefreshSenderCertificate.initialize({
@@ -665,6 +668,8 @@
       appView.openInbox({
         initialLoadComplete,
       });
+    } else if (window.isImportMode()) {
+      appView.openImporter();
     } else {
       appView.openInstaller();
     }
@@ -778,6 +783,9 @@
     }
 
     if (!Whisper.Registration.everDone()) {
+      return;
+    }
+    if (Whisper.Import.isIncomplete()) {
       return;
     }
 
