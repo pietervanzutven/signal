@@ -20,20 +20,22 @@
         return `node_modules/emoji-datasource-apple/img/apple/64/${src}`;
     };
     exports.images = new Set();
-    // Preload images
-    const preload = (src) => {
-        const img = new Image();
-        img.src = src;
-        exports.images.add(img);
+    exports.preloadImages = () => {
+        // Preload images
+        const preload = (src) => {
+            const img = new Image();
+            img.src = src;
+            exports.images.add(img);
+        };
+        data.forEach(emoji => {
+            preload(makeImagePath(emoji.image));
+            if (emoji.skin_variations) {
+                Object.values(emoji.skin_variations).forEach(variation => {
+                    preload(makeImagePath(variation.image));
+                });
+            }
+        });
     };
-    data.forEach(emoji => {
-        preload(makeImagePath(emoji.image));
-        if (emoji.skin_variations) {
-            Object.values(emoji.skin_variations).forEach(variation => {
-                preload(makeImagePath(variation.image));
-            });
-        }
-    });
     exports.dataByShortName = lodash_1.keyBy(data, 'short_name');
     data.forEach(emoji => {
         const { short_names } = emoji;

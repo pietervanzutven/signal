@@ -12,6 +12,7 @@
   const Database = window.database;
   const Emojis = window.emojis;
   const Emoji = window.ts.util.emoji;
+  const EmojiLib = window.ts.components.emoji.lib;
   const IndexedDB = window.indexeddb;
   const Notifications = window.ts.notifications;
   const OS = window.ts.OS;
@@ -340,6 +341,7 @@
       Database,
       Emojis,
       Emoji,
+      EmojiLib,
       IndexedDB,
       LinkPreviews,
       Metadata,
