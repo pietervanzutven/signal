@@ -65,14 +65,14 @@
     const fuse = new fuse_js_1.default(data, {
         shouldSort: true,
         threshold: 0.3,
-        location: 0,
-        distance: 5,
-        maxPatternLength: 20,
+        location: 4,
+        distance: 10,
+        maxPatternLength: 32,
         minMatchCharLength: 1,
         keys: ['name', 'short_name', 'short_names'],
     });
     function search(query) {
-        return fuse.search(query);
+        return fuse.search(query.substr(0, 32));
     }
     exports.search = search;
     const shortNames = new Set([
