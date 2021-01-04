@@ -28,9 +28,7 @@
     exports.format = memoizee_1.default(_format, {
         primitive: true,
         // Convert the arguments to a unique string, required for primitive mode.
-        normalizer: function (args) {
-            return JSON.stringify(args);
-        }
+        normalizer: (...args) => JSON.stringify(args),
     });
     function parse(phoneNumber, options) {
         const { regionCode } = options;
