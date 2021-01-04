@@ -3008,7 +3008,6 @@
     <Content Include="node_modules\emoji-datasource-apple\img\apple\64\303d-fe0f.png" />
     <Content Include="node_modules\emoji-datasource-apple\img\apple\64\3297-fe0f.png" />
     <Content Include="node_modules\emoji-datasource-apple\img\apple\64\3299-fe0f.png" />
-    <Content Include="node_modules\emoji-datasource-apple\img\apple\sheets-256\64.png" />
     <Content Include="node_modules\emoji-datasource\emoji.json" />
     <Content Include="node_modules\emoji-datasource\index.js" />
     <Content Include="node_modules\emoji-js\emoji.js" />

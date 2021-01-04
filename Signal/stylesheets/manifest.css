@@ -6735,32 +6735,49 @@ body.dark-theme {
       background: #3d3e44; }
 
 .module-emoji {
-  display: block;
-  background-image: url("../node_modules/emoji-datasource-apple/img/apple/sheets-256/64.png"); }
+  display: block; }
   .module-emoji--16px {
     width: 16px;
+    height: 16px; }
+  .module-emoji__image--16px {
+    width: 16px;
     height: 16px;
-    background-size: 832px; }
+    transform: translate3d(0, 0, 0); }
   .module-emoji--20px {
     width: 20px;
+    height: 20px; }
+  .module-emoji__image--20px {
+    width: 20px;
     height: 20px;
-    background-size: 1040px; }
+    transform: translate3d(0, 0, 0); }
   .module-emoji--28px {
     width: 28px;
+    height: 28px; }
+  .module-emoji__image--28px {
+    width: 28px;
     height: 28px;
-    background-size: 1456px; }
+    transform: translate3d(0, 0, 0); }
   .module-emoji--32px {
     width: 32px;
+    height: 32px; }
+  .module-emoji__image--32px {
+    width: 32px;
     height: 32px;
-    background-size: 1664px; }
+    transform: translate3d(0, 0, 0); }
   .module-emoji--64px {
     width: 64px;
+    height: 64px; }
+  .module-emoji__image--64px {
+    width: 64px;
     height: 64px;
-    background-size: 3328px; }
+    transform: translate3d(0, 0, 0); }
   .module-emoji--66px {
     width: 66px;
+    height: 66px; }
+  .module-emoji__image--66px {
+    width: 66px;
     height: 66px;
-    background-size: 3432px; }
+    transform: translate3d(0, 0, 0); }
   .module-emoji--inline {
     display: inline-block; }
 

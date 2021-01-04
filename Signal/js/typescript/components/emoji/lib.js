@@ -15,7 +15,25 @@
     const lodash_1 = window.lodash;
     const fuse_js_1 = __importDefault(window.fuse_js);
     exports.skinTones = ['1F3FB', '1F3FC', '1F3FD', '1F3FE', '1F3FF'];
-    const data = emoji_datasource_1.default;
+    const data = emoji_datasource_1.default.filter(emoji => emoji.has_img_apple);
+    const makeImagePath = (src) => {
+        return `node_modules/emoji-datasource-apple/img/apple/64/${src}`;
+    };
+    exports.images = new Set();
+    // Preload images
+    const preload = (src) => {
+        const img = new Image();
+        img.src = src;
+        exports.images.add(img);
+    };
+    data.forEach(emoji => {
+        preload(makeImagePath(emoji.image));
+        if (emoji.skin_variations) {
+            Object.values(emoji.skin_variations).forEach(variation => {
+                preload(makeImagePath(variation.image));
+            });
+        }
+    });
     exports.dataByShortName = lodash_1.keyBy(data, 'short_name');
     data.forEach(emoji => {
         const { short_names } = emoji;
@@ -52,16 +70,20 @@
         }
         return 'misc';
     }), arr => lodash_1.sortBy(arr, 'sort_order'));
-    function getSheetCoordinates(shortName, skinTone) {
+    function getEmojiData(shortName, skinTone) {
         const base = exports.dataByShortName[shortName];
         if (skinTone && base.skin_variations) {
             const variation = lodash_1.isNumber(skinTone) ? exports.skinTones[skinTone - 1] : skinTone;
-            const { sheet_x, sheet_y } = base.skin_variations[variation];
-            return [sheet_x, sheet_y];
+            return base.skin_variations[variation];
         }
-        return [base.sheet_x, base.sheet_y];
+        return base;
     }
-    exports.getSheetCoordinates = getSheetCoordinates;
+    exports.getEmojiData = getEmojiData;
+    function getImagePath(shortName, skinTone) {
+        const { image } = getEmojiData(shortName, skinTone);
+        return makeImagePath(image);
+    }
+    exports.getImagePath = getImagePath;
     const fuse = new fuse_js_1.default(data, {
         shouldSort: true,
         threshold: 0.3,
