@@ -274,6 +274,7 @@
   window.React = window.react;
   window.ReactDOM = window.react_dom;
   window.moment = window.moment;
+  window.PQueue = window.p_queue;
 
   const Signal = window.signal;
   const i18n = window.modules.i18n;
