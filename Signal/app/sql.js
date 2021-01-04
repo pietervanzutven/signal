@@ -221,8 +221,9 @@
 
     await instance.run('BEGIN TRANSACTION;');
 
-    await instance.run(
-      `CREATE TABLE messages(
+    try {
+      await instance.run(
+        `CREATE TABLE messages(
         id STRING PRIMARY KEY ASC,
         json TEXT,
 
@@ -238,63 +239,67 @@
         hasFileAttachments INTEGER,
         hasVisualMediaAttachments INTEGER
       );`
-    );
+      );
 
-    await instance.run(`CREATE INDEX messages_unread ON messages (
+      await instance.run(`CREATE INDEX messages_unread ON messages (
       unread
     );`);
-    await instance.run(`CREATE INDEX messages_expires_at ON messages (
+      await instance.run(`CREATE INDEX messages_expires_at ON messages (
       expires_at
     );`);
-    await instance.run(`CREATE INDEX messages_receipt ON messages (
+      await instance.run(`CREATE INDEX messages_receipt ON messages (
       sent_at
     );`);
-    await instance.run(`CREATE INDEX messages_schemaVersion ON messages (
+      await instance.run(`CREATE INDEX messages_schemaVersion ON messages (
       schemaVersion
     );`);
 
-    await instance.run(`CREATE INDEX messages_conversation ON messages (
+      await instance.run(`CREATE INDEX messages_conversation ON messages (
       conversationId,
       received_at
     );`);
 
-    await instance.run(`CREATE INDEX messages_duplicate_check ON messages (
+      await instance.run(`CREATE INDEX messages_duplicate_check ON messages (
       source,
       sourceDevice,
       sent_at
     );`);
-    await instance.run(`CREATE INDEX messages_hasAttachments ON messages (
+      await instance.run(`CREATE INDEX messages_hasAttachments ON messages (
       conversationId,
       hasAttachments,
       received_at
     );`);
-    await instance.run(`CREATE INDEX messages_hasFileAttachments ON messages (
+      await instance.run(`CREATE INDEX messages_hasFileAttachments ON messages (
       conversationId,
       hasFileAttachments,
       received_at
     );`);
-    await instance.run(`CREATE INDEX messages_hasVisualMediaAttachments ON messages (
+      await instance.run(`CREATE INDEX messages_hasVisualMediaAttachments ON messages (
       conversationId,
       hasVisualMediaAttachments,
       received_at
     );`);
 
-    await instance.run(`CREATE TABLE unprocessed(
+      await instance.run(`CREATE TABLE unprocessed(
     id STRING,
     timestamp INTEGER,
     json TEXT
   );`);
-    await instance.run(`CREATE INDEX unprocessed_id ON unprocessed (
+      await instance.run(`CREATE INDEX unprocessed_id ON unprocessed (
     id
   );`);
-    await instance.run(`CREATE INDEX unprocessed_timestamp ON unprocessed (
+      await instance.run(`CREATE INDEX unprocessed_timestamp ON unprocessed (
     timestamp
   );`);
 
-    await instance.run('PRAGMA schema_version = 1;');
-    await instance.run('COMMIT TRANSACTION;');
+      await instance.run('PRAGMA schema_version = 1;');
+      await instance.run('COMMIT TRANSACTION;');
 
-    console.log('updateToSchemaVersion1: success!');
+      console.log('updateToSchemaVersion1: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateToSchemaVersion2(currentVersion, instance) {
@@ -306,38 +311,43 @@
 
     await instance.run('BEGIN TRANSACTION;');
 
-    await instance.run(
-      `ALTER TABLE messages
+    try {
+      await instance.run(
+        `ALTER TABLE messages
      ADD COLUMN expireTimer INTEGER;`
-    );
+      );
 
-    await instance.run(
-      `ALTER TABLE messages
+      await instance.run(
+        `ALTER TABLE messages
      ADD COLUMN expirationStartTimestamp INTEGER;`
-    );
+      );
 
-    await instance.run(
-      `ALTER TABLE messages
+      await instance.run(
+        `ALTER TABLE messages
      ADD COLUMN type STRING;`
-    );
+      );
 
-    await instance.run(`CREATE INDEX messages_expiring ON messages (
+      await instance.run(`CREATE INDEX messages_expiring ON messages (
       expireTimer,
       expirationStartTimestamp,
       expires_at
     );`);
 
-    await instance.run(
-      `UPDATE messages SET
+      await instance.run(
+        `UPDATE messages SET
       expirationStartTimestamp = json_extract(json, '$.expirationStartTimestamp'),
       expireTimer = json_extract(json, '$.expireTimer'),
       type = json_extract(json, '$.type');`
-    );
+      );
 
-    await instance.run('PRAGMA schema_version = 2;');
-    await instance.run('COMMIT TRANSACTION;');
+      await instance.run('PRAGMA schema_version = 2;');
+      await instance.run('COMMIT TRANSACTION;');
 
-    console.log('updateToSchemaVersion2: success!');
+      console.log('updateToSchemaVersion2: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateToSchemaVersion3(currentVersion, instance) {
@@ -349,25 +359,30 @@
 
     await instance.run('BEGIN TRANSACTION;');
 
-    await instance.run('DROP INDEX messages_expiring;');
-    await instance.run('DROP INDEX messages_unread;');
+    try {
+      await instance.run('DROP INDEX messages_expiring;');
+      await instance.run('DROP INDEX messages_unread;');
 
-    await instance.run(`CREATE INDEX messages_without_timer ON messages (
+      await instance.run(`CREATE INDEX messages_without_timer ON messages (
       expireTimer,
       expires_at,
       type
     ) WHERE expires_at IS NULL AND expireTimer IS NOT NULL;`);
 
-    await instance.run(`CREATE INDEX messages_unread ON messages (
+      await instance.run(`CREATE INDEX messages_unread ON messages (
       conversationId,
       unread
     ) WHERE unread IS NOT NULL;`);
 
-    await instance.run('ANALYZE;');
-    await instance.run('PRAGMA schema_version = 3;');
-    await instance.run('COMMIT TRANSACTION;');
+      await instance.run('ANALYZE;');
+      await instance.run('PRAGMA schema_version = 3;');
+      await instance.run('COMMIT TRANSACTION;');
 
-    console.log('updateToSchemaVersion3: success!');
+      console.log('updateToSchemaVersion3: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateToSchemaVersion4(currentVersion, instance) {
@@ -379,8 +394,9 @@
 
     await instance.run('BEGIN TRANSACTION;');
 
-    await instance.run(
-      `CREATE TABLE conversations(
+    try {
+      await instance.run(
+        `CREATE TABLE conversations(
       id STRING PRIMARY KEY ASC,
       json TEXT,
 
@@ -390,20 +406,24 @@
       name TEXT,
       profileName TEXT
     );`
-    );
+      );
 
-    await instance.run(`CREATE INDEX conversations_active ON conversations (
+      await instance.run(`CREATE INDEX conversations_active ON conversations (
       active_at
     ) WHERE active_at IS NOT NULL;`);
 
-    await instance.run(`CREATE INDEX conversations_type ON conversations (
+      await instance.run(`CREATE INDEX conversations_type ON conversations (
       type
     ) WHERE type IS NOT NULL;`);
 
-    await instance.run('PRAGMA schema_version = 4;');
-    await instance.run('COMMIT TRANSACTION;');
+      await instance.run('PRAGMA schema_version = 4;');
+      await instance.run('COMMIT TRANSACTION;');
 
-    console.log('updateToSchemaVersion4: success!');
+      console.log('updateToSchemaVersion4: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateToSchemaVersion6(currentVersion, instance) {
@@ -413,56 +433,61 @@
     console.log('updateToSchemaVersion6: starting...');
     await instance.run('BEGIN TRANSACTION;');
 
-    // key-value, ids are strings, one extra column
-    await instance.run(
-      `CREATE TABLE sessions(
+    try {
+      // key-value, ids are strings, one extra column
+      await instance.run(
+        `CREATE TABLE sessions(
       id STRING PRIMARY KEY ASC,
       number STRING,
       json TEXT
     );`
-    );
+      );
 
-    await instance.run(`CREATE INDEX sessions_number ON sessions (
+      await instance.run(`CREATE INDEX sessions_number ON sessions (
     number
   ) WHERE number IS NOT NULL;`);
 
-    // key-value, ids are strings
-    await instance.run(
-      `CREATE TABLE groups(
+      // key-value, ids are strings
+      await instance.run(
+        `CREATE TABLE groups(
       id STRING PRIMARY KEY ASC,
       json TEXT
     );`
-    );
-    await instance.run(
-      `CREATE TABLE identityKeys(
+      );
+      await instance.run(
+        `CREATE TABLE identityKeys(
       id STRING PRIMARY KEY ASC,
       json TEXT
     );`
-    );
-    await instance.run(
-      `CREATE TABLE items(
+      );
+      await instance.run(
+        `CREATE TABLE items(
       id STRING PRIMARY KEY ASC,
       json TEXT
     );`
-    );
+      );
 
-    // key-value, ids are integers
-    await instance.run(
-      `CREATE TABLE preKeys(
+      // key-value, ids are integers
+      await instance.run(
+        `CREATE TABLE preKeys(
       id INTEGER PRIMARY KEY ASC,
       json TEXT
     );`
-    );
-    await instance.run(
-      `CREATE TABLE signedPreKeys(
+      );
+      await instance.run(
+        `CREATE TABLE signedPreKeys(
       id INTEGER PRIMARY KEY ASC,
       json TEXT
     );`
-    );
+      );
 
-    await instance.run('PRAGMA schema_version = 6;');
-    await instance.run('COMMIT TRANSACTION;');
-    console.log('updateToSchemaVersion6: success!');
+      await instance.run('PRAGMA schema_version = 6;');
+      await instance.run('COMMIT TRANSACTION;');
+      console.log('updateToSchemaVersion6: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateToSchemaVersion7(currentVersion, instance) {
@@ -472,33 +497,38 @@
     console.log('updateToSchemaVersion7: starting...');
     await instance.run('BEGIN TRANSACTION;');
 
-    // SQLite has been coercing our STRINGs into numbers, so we force it with TEXT
-    // We create a new table then copy the data into it, since we can't modify columns
+    try {
+      // SQLite has been coercing our STRINGs into numbers, so we force it with TEXT
+      // We create a new table then copy the data into it, since we can't modify columns
 
-    await instance.run('DROP INDEX sessions_number;');
-    await instance.run('ALTER TABLE sessions RENAME TO sessions_old;');
+      await instance.run('DROP INDEX sessions_number;');
+      await instance.run('ALTER TABLE sessions RENAME TO sessions_old;');
 
-    await instance.run(
-      `CREATE TABLE sessions(
+      await instance.run(
+        `CREATE TABLE sessions(
       id TEXT PRIMARY KEY,
       number TEXT,
       json TEXT
     );`
-    );
+      );
 
-    await instance.run(`CREATE INDEX sessions_number ON sessions (
+      await instance.run(`CREATE INDEX sessions_number ON sessions (
     number
   ) WHERE number IS NOT NULL;`);
 
-    await instance.run(`INSERT INTO sessions(id, number, json)
+      await instance.run(`INSERT INTO sessions(id, number, json)
     SELECT "+" || id, number, json FROM sessions_old;
   `);
 
-    await instance.run('DROP TABLE sessions_old;');
+      await instance.run('DROP TABLE sessions_old;');
 
-    await instance.run('PRAGMA schema_version = 7;');
-    await instance.run('COMMIT TRANSACTION;');
-    console.log('updateToSchemaVersion7: success!');
+      await instance.run('PRAGMA schema_version = 7;');
+      await instance.run('COMMIT TRANSACTION;');
+      console.log('updateToSchemaVersion7: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateToSchemaVersion8(currentVersion, instance) {
@@ -508,25 +538,28 @@
     console.log('updateToSchemaVersion8: starting...');
     await instance.run('BEGIN TRANSACTION;');
 
-    // First, we pull a new body field out of the message table's json blob
-    await instance.run(
-      `ALTER TABLE messages
+    try {
+      // First, we pull a new body field out of the message table's json blob
+      await instance.run(
+        `ALTER TABLE messages
      ADD COLUMN body TEXT;`
-    );
-    await instance.run("UPDATE messages SET body = json_extract(json, '$.body')");
+      );
+      await instance.run(
+        "UPDATE messages SET body = json_extract(json, '$.body')"
+      );
 
-    // Then we create our full-text search table and populate it
-    await instance.run(`
+      // Then we create our full-text search table and populate it
+      await instance.run(`
     CREATE VIRTUAL TABLE messages_fts
     USING fts5(id UNINDEXED, body);
   `);
-    await instance.run(`
+      await instance.run(`
     INSERT INTO messages_fts(id, body)
     SELECT id, body FROM messages;
   `);
 
-    // Then we set up triggers to keep the full-text search table up to date
-    await instance.run(`
+      // Then we set up triggers to keep the full-text search table up to date
+      await instance.run(`
     CREATE TRIGGER messages_on_insert AFTER INSERT ON messages BEGIN
       INSERT INTO messages_fts (
         id,
@@ -537,12 +570,12 @@
       );
     END;
   `);
-    await instance.run(`
+      await instance.run(`
     CREATE TRIGGER messages_on_delete AFTER DELETE ON messages BEGIN
       DELETE FROM messages_fts WHERE id = old.id;
     END;
   `);
-    await instance.run(`
+      await instance.run(`
     CREATE TRIGGER messages_on_update AFTER UPDATE ON messages BEGIN
       DELETE FROM messages_fts WHERE id = old.id;
       INSERT INTO messages_fts(
@@ -555,13 +588,17 @@
     END;
   `);
 
-    // For formatting search results:
-    //   https://sqlite.org/fts5.html#the_highlight_function
-    //   https://sqlite.org/fts5.html#the_snippet_function
+      // For formatting search results:
+      //   https://sqlite.org/fts5.html#the_highlight_function
+      //   https://sqlite.org/fts5.html#the_snippet_function
 
-    await instance.run('PRAGMA schema_version = 8;');
-    await instance.run('COMMIT TRANSACTION;');
-    console.log('updateToSchemaVersion8: success!');
+      await instance.run('PRAGMA schema_version = 8;');
+      await instance.run('COMMIT TRANSACTION;');
+      console.log('updateToSchemaVersion8: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateToSchemaVersion9(currentVersion, instance) {
@@ -571,25 +608,30 @@
     console.log('updateToSchemaVersion9: starting...');
     await instance.run('BEGIN TRANSACTION;');
 
-    await instance.run(`CREATE TABLE attachment_downloads(
+    try {
+      await instance.run(`CREATE TABLE attachment_downloads(
     id STRING primary key,
     timestamp INTEGER,
     pending INTEGER,
     json TEXT
   );`);
 
-    await instance.run(`CREATE INDEX attachment_downloads_timestamp
+      await instance.run(`CREATE INDEX attachment_downloads_timestamp
     ON attachment_downloads (
       timestamp
   ) WHERE pending = 0;`);
-    await instance.run(`CREATE INDEX attachment_downloads_pending
+      await instance.run(`CREATE INDEX attachment_downloads_pending
     ON attachment_downloads (
       pending
   ) WHERE pending != 0;`);
 
-    await instance.run('PRAGMA schema_version = 9;');
-    await instance.run('COMMIT TRANSACTION;');
-    console.log('updateToSchemaVersion9: success!');
+      await instance.run('PRAGMA schema_version = 9;');
+      await instance.run('COMMIT TRANSACTION;');
+      console.log('updateToSchemaVersion9: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateToSchemaVersion10(currentVersion, instance) {
@@ -599,11 +641,12 @@
     console.log('updateToSchemaVersion10: starting...');
     await instance.run('BEGIN TRANSACTION;');
 
-    await instance.run('DROP INDEX unprocessed_id;');
-    await instance.run('DROP INDEX unprocessed_timestamp;');
-    await instance.run('ALTER TABLE unprocessed RENAME TO unprocessed_old;');
+    try {
+      await instance.run('DROP INDEX unprocessed_id;');
+      await instance.run('DROP INDEX unprocessed_timestamp;');
+      await instance.run('ALTER TABLE unprocessed RENAME TO unprocessed_old;');
 
-    await instance.run(`CREATE TABLE unprocessed(
+      await instance.run(`CREATE TABLE unprocessed(
     id STRING,
     timestamp INTEGER,
     version INTEGER,
@@ -615,14 +658,14 @@
     serverTimestamp INTEGER
   );`);
 
-    await instance.run(`CREATE INDEX unprocessed_id ON unprocessed (
+      await instance.run(`CREATE INDEX unprocessed_id ON unprocessed (
     id
   );`);
-    await instance.run(`CREATE INDEX unprocessed_timestamp ON unprocessed (
+      await instance.run(`CREATE INDEX unprocessed_timestamp ON unprocessed (
     timestamp
   );`);
 
-    await instance.run(`INSERT INTO unprocessed (
+      await instance.run(`INSERT INTO unprocessed (
     id,
     timestamp,
     version,
@@ -645,11 +688,15 @@
   FROM unprocessed_old;
   `);
 
-    await instance.run('DROP TABLE unprocessed_old;');
+      await instance.run('DROP TABLE unprocessed_old;');
 
-    await instance.run('PRAGMA schema_version = 10;');
-    await instance.run('COMMIT TRANSACTION;');
-    console.log('updateToSchemaVersion10: success!');
+      await instance.run('PRAGMA schema_version = 10;');
+      await instance.run('COMMIT TRANSACTION;');
+      console.log('updateToSchemaVersion10: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateToSchemaVersion11(currentVersion, instance) {
@@ -659,11 +706,16 @@
     console.log('updateToSchemaVersion11: starting...');
     await instance.run('BEGIN TRANSACTION;');
 
-    await instance.run('DROP TABLE groups;');
+    try {
+      await instance.run('DROP TABLE groups;');
 
-    await instance.run('PRAGMA schema_version = 11;');
-    await instance.run('COMMIT TRANSACTION;');
-    console.log('updateToSchemaVersion11: success!');
+      await instance.run('PRAGMA schema_version = 11;');
+      await instance.run('COMMIT TRANSACTION;');
+      console.log('updateToSchemaVersion11: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateToSchemaVersion12(currentVersion, instance) {
@@ -674,7 +726,8 @@
     console.log('updateToSchemaVersion12: starting...');
     await instance.run('BEGIN TRANSACTION;');
 
-    await instance.run(`CREATE TABLE sticker_packs(
+    try {
+      await instance.run(`CREATE TABLE sticker_packs(
     id TEXT PRIMARY KEY,
     key TEXT NOT NULL,
 
@@ -689,7 +742,7 @@
     title STRING
   );`);
 
-    await instance.run(`CREATE TABLE stickers(
+      await instance.run(`CREATE TABLE stickers(
     id INTEGER NOT NULL,
     packId TEXT NOT NULL,
 
@@ -707,12 +760,12 @@
       ON DELETE CASCADE
   );`);
 
-    await instance.run(`CREATE INDEX stickers_recents
+      await instance.run(`CREATE INDEX stickers_recents
     ON stickers (
       lastUsed
   ) WHERE lastUsed IS NOT NULL;`);
 
-    await instance.run(`CREATE TABLE sticker_references(
+      await instance.run(`CREATE TABLE sticker_references(
     messageId STRING,
     packId TEXT,
     CONSTRAINT sticker_references_fk
@@ -721,9 +774,13 @@
       ON DELETE CASCADE
   );`);
 
-    await instance.run('PRAGMA schema_version = 12;');
-    await instance.run('COMMIT TRANSACTION;');
-    console.log('updateToSchemaVersion12: success!');
+      await instance.run('PRAGMA schema_version = 12;');
+      await instance.run('COMMIT TRANSACTION;');
+      console.log('updateToSchemaVersion12: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateToSchemaVersion13(currentVersion, instance) {
@@ -734,13 +791,18 @@
     console.log('updateToSchemaVersion13: starting...');
     await instance.run('BEGIN TRANSACTION;');
 
-    await instance.run(
-      'ALTER TABLE sticker_packs ADD COLUMN attemptedStatus STRING;'
-    );
+    try {
+      await instance.run(
+        'ALTER TABLE sticker_packs ADD COLUMN attemptedStatus STRING;'
+      );
 
-    await instance.run('PRAGMA schema_version = 13;');
-    await instance.run('COMMIT TRANSACTION;');
-    console.log('updateToSchemaVersion13: success!');
+      await instance.run('PRAGMA schema_version = 13;');
+      await instance.run('COMMIT TRANSACTION;');
+      console.log('updateToSchemaVersion13: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateToSchemaVersion14(currentVersion, instance) {
@@ -751,19 +813,24 @@
     console.log('updateToSchemaVersion14: starting...');
     await instance.run('BEGIN TRANSACTION;');
 
-    await instance.run(`CREATE TABLE emojis(
+    try {
+      await instance.run(`CREATE TABLE emojis(
     shortName STRING PRIMARY KEY,
     lastUsage INTEGER
   );`);
 
-    await instance.run(`CREATE INDEX emojis_lastUsage
+      await instance.run(`CREATE INDEX emojis_lastUsage
     ON emojis (
       lastUsage
   );`);
 
-    await instance.run('PRAGMA schema_version = 14;');
-    await instance.run('COMMIT TRANSACTION;');
-    console.log('updateToSchemaVersion14: success!');
+      await instance.run('PRAGMA schema_version = 14;');
+      await instance.run('COMMIT TRANSACTION;');
+      console.log('updateToSchemaVersion14: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateToSchemaVersion15(currentVersion, instance) {
@@ -774,31 +841,36 @@
     console.log('updateToSchemaVersion15: starting...');
     await instance.run('BEGIN TRANSACTION;');
 
-    // SQLite has again coerced our STRINGs into numbers, so we force it with TEXT
-    // We create a new table then copy the data into it, since we can't modify columns
+    try {
+      // SQLite has again coerced our STRINGs into numbers, so we force it with TEXT
+      // We create a new table then copy the data into it, since we can't modify columns
 
-    await instance.run('DROP INDEX emojis_lastUsage;');
-    await instance.run('ALTER TABLE emojis RENAME TO emojis_old;');
+      await instance.run('DROP INDEX emojis_lastUsage;');
+      await instance.run('ALTER TABLE emojis RENAME TO emojis_old;');
 
-    await instance.run(`CREATE TABLE emojis(
+      await instance.run(`CREATE TABLE emojis(
     shortName TEXT PRIMARY KEY,
     lastUsage INTEGER
   );`);
-    await instance.run(`CREATE INDEX emojis_lastUsage
+      await instance.run(`CREATE INDEX emojis_lastUsage
     ON emojis (
       lastUsage
   );`);
 
-    await instance.run('DELETE FROM emojis WHERE shortName = 1');
-    await instance.run(`INSERT INTO emojis(shortName, lastUsage)
+      await instance.run('DELETE FROM emojis WHERE shortName = 1');
+      await instance.run(`INSERT INTO emojis(shortName, lastUsage)
     SELECT shortName, lastUsage FROM emojis_old;
   `);
 
-    await instance.run('DROP TABLE emojis_old;');
+      await instance.run('DROP TABLE emojis_old;');
 
-    await instance.run('PRAGMA schema_version = 15;');
-    await instance.run('COMMIT TRANSACTION;');
-    console.log('updateToSchemaVersion15: success!');
+      await instance.run('PRAGMA schema_version = 15;');
+      await instance.run('COMMIT TRANSACTION;');
+      console.log('updateToSchemaVersion15: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   const SCHEMA_VERSIONS = [
@@ -1110,17 +1182,16 @@
   }
 
   async function bulkAdd(table, array) {
-    let promise;
+    await db.run('BEGIN TRANSACTION;');
 
-    db.serialize(() => {
-      promise = Promise.all([
-        db.run('BEGIN TRANSACTION;'),
-        ...map(array, data => createOrUpdate(table, data)),
-        db.run('COMMIT TRANSACTION;'),
-      ]);
-    });
+    try {
+      await Promise.all([...map(array, data => createOrUpdate(table, data))]);
 
-    await promise;
+      await db.run('COMMIT TRANSACTION;');
+    } catch (error) {
+      await db.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function getById(table, id) {
@@ -1213,19 +1284,20 @@
   }
 
   async function saveConversations(arrayOfConversations) {
-    let promise;
+    await db.run('BEGIN TRANSACTION;');
 
-    db.serialize(() => {
-      promise = Promise.all([
-        db.run('BEGIN TRANSACTION;'),
+    try {
+      await Promise.all([
         ...map(arrayOfConversations, conversation =>
           saveConversation(conversation)
         ),
-        db.run('COMMIT TRANSACTION;'),
       ]);
-    });
 
-    await promise;
+      await db.run('COMMIT TRANSACTION;');
+    } catch (error) {
+      await db.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateConversation(data) {
@@ -1538,17 +1610,18 @@
   }
 
   async function saveMessages(arrayOfMessages, { forceSave } = {}) {
-    let promise;
+    await db.run('BEGIN TRANSACTION;');
 
-    db.serialize(() => {
-      promise = Promise.all([
-        db.run('BEGIN TRANSACTION;'),
+    try {
+      await Promise.all([
         ...map(arrayOfMessages, message => saveMessage(message, { forceSave })),
-        db.run('COMMIT TRANSACTION;'),
       ]);
-    });
 
-    await promise;
+      await db.run('COMMIT TRANSACTION;');
+    } catch (error) {
+      await db.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function removeMessage(id) {
@@ -1749,19 +1822,20 @@
   }
 
   async function saveUnprocesseds(arrayOfUnprocessed, { forceSave } = {}) {
-    let promise;
+    await db.run('BEGIN TRANSACTION;');
 
-    db.serialize(() => {
-      promise = Promise.all([
-        db.run('BEGIN TRANSACTION;'),
+    try {
+      await Promise.all([
         ...map(arrayOfUnprocessed, unprocessed =>
           saveUnprocessed(unprocessed, { forceSave })
         ),
-        db.run('COMMIT TRANSACTION;'),
       ]);
-    });
 
-    await promise;
+      await db.run('COMMIT TRANSACTION;');
+    } catch (error) {
+      await db.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function updateUnprocessedAttempts(id, attempts) {
@@ -2162,7 +2236,7 @@
       }
       const count = countRow['count(*)'];
       if (count > 0) {
-        await db.run('COMMIT TRANSACTION');
+        await db.run('COMMIT TRANSACTION;');
         return null;
       }
 
@@ -2173,13 +2247,13 @@
       );
       if (!packRow) {
         console.log('deleteStickerPackReference: did not find referenced pack');
-        await db.run('COMMIT TRANSACTION');
+        await db.run('COMMIT TRANSACTION;');
         return null;
       }
       const { status } = packRow;
 
       if (status === 'installed') {
-        await db.run('COMMIT TRANSACTION');
+        await db.run('COMMIT TRANSACTION;');
         return null;
       }
 
@@ -2287,26 +2361,31 @@
   async function updateEmojiUsage(shortName, timeUsed = Date.now()) {
     await db.run('BEGIN TRANSACTION;');
 
-    const rows = await db.get(
-      'SELECT * FROM emojis WHERE shortName = $shortName;',
-      {
-        $shortName: shortName,
+    try {
+      const rows = await db.get(
+        'SELECT * FROM emojis WHERE shortName = $shortName;',
+        {
+          $shortName: shortName,
+        }
+      );
+
+      if (rows) {
+        await db.run(
+          'UPDATE emojis SET lastUsage = $timeUsed WHERE shortName = $shortName;',
+          { $shortName: shortName, $timeUsed: timeUsed }
+        );
+      } else {
+        await db.run(
+          'INSERT INTO emojis(shortName, lastUsage) VALUES ($shortName, $timeUsed);',
+          { $shortName: shortName, $timeUsed: timeUsed }
+        );
       }
-    );
 
-    if (rows) {
-      await db.run(
-        'UPDATE emojis SET lastUsage = $timeUsed WHERE shortName = $shortName;',
-        { $shortName: shortName, $timeUsed: timeUsed }
-      );
-    } else {
-      await db.run(
-        'INSERT INTO emojis(shortName, lastUsage) VALUES ($shortName, $timeUsed);',
-        { $shortName: shortName, $timeUsed: timeUsed }
-      );
+      await db.run('COMMIT TRANSACTION;');
+    } catch (error) {
+      await db.run('ROLLBACK;');
+      throw error;
     }
-
-    await db.run('COMMIT TRANSACTION;');
   }
 
   async function getRecentEmojis(limit = 32) {
@@ -2322,11 +2401,10 @@
 
   // All data in database
   async function removeAll() {
-    let promise;
+    await db.run('BEGIN TRANSACTION;');
 
-    db.serialize(() => {
-      promise = Promise.all([
-        db.run('BEGIN TRANSACTION;'),
+    try {
+      await Promise.all([
         db.run('DELETE FROM conversations;'),
         db.run('DELETE FROM identityKeys;'),
         db.run('DELETE FROM items;'),
@@ -2340,19 +2418,21 @@
         db.run('DELETE FROM stickers;'),
         db.run('DELETE FROM sticker_packs;'),
         db.run('DELETE FROM sticker_references;'),
-        db.run('COMMIT TRANSACTION;'),
       ]);
-    });
 
-    await promise;
+      await db.run('COMMIT TRANSACTION;');
+    } catch (error) {
+      await db.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   // Anything that isn't user-visible data
   async function removeAllConfiguration() {
-    let promise;
+    await db.run('BEGIN TRANSACTION;');
 
-    db.serialize(() => {
-      promise = Promise.all([
+    try {
+      await Promise.all([
         db.run('BEGIN TRANSACTION;'),
         db.run('DELETE FROM identityKeys;'),
         db.run('DELETE FROM items;'),
@@ -2360,11 +2440,13 @@
         db.run('DELETE FROM sessions;'),
         db.run('DELETE FROM signedPreKeys;'),
         db.run('DELETE FROM unprocessed;'),
-        db.run('COMMIT TRANSACTION;'),
       ]);
-    });
 
-    await promise;
+      await db.run('COMMIT TRANSACTION;');
+    } catch (error) {
+      await db.run('ROLLBACK;');
+      throw error;
+    }
   }
 
   async function getMessagesNeedingUpgrade(limit, { maxVersion }) {
