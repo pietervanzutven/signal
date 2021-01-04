@@ -1597,12 +1597,13 @@
       //   clear the changed fields here so our hasChanged() check is useful.
       c.changed = {};
 
+      let profile;
+
       try {
         await c.deriveAccessKeyIfNeeded();
         const numberInfo = c.getNumberInfo({ disableMeCheck: true }) || {};
         const getInfo = numberInfo[c.id] || {};
 
-        let profile;
         if (getInfo.accessKey) {
           try {
             profile = await textsecure.messaging.getProfile(id, {
@@ -1683,11 +1684,6 @@
             sealedSender: SEALED_SENDER.DISABLED,
           });
         }
-
-        await c.setProfileName(profile.name);
-
-        // This might throw if we can't pull the avatar down, so we do it last
-        await c.setProfileAvatar(profile.avatar);
       } catch (error) {
         if (error.code !== 403 && error.code !== 404) {
           window.log.error(
@@ -1695,14 +1691,39 @@
             id,
             error && error.stack ? error.stack : error
           );
+        } else {
+          await c.dropProfileKey();
         }
-      } finally {
+        return;
+      }
+
+      try {
+        await c.setProfileName(profile.name);
+      } catch (error) {
+          window.log.error(
+          'getProfile decryption error:',
+            id,
+            error && error.stack ? error.stack : error
+          );
+        await c.dropProfileKey();
+        return;
+        }
+
+      try {
+        await c.setProfileAvatar(profile.avatar);
+      } catch (error) {
+        if (error.code === 403 || error.code === 404) {
+          c.set({
+            profileAvatar: null,
+          });
+        }
+      }
+
         if (c.hasChanged()) {
           await window.Signal.Data.updateConversation(id, c.attributes, {
             Conversation: Whisper.Conversation,
           });
         }
-      }
     },
     async setProfileName(encryptedName) {
       if (!encryptedName) {
@@ -1769,10 +1790,35 @@
         this.set({
           profileKey,
           accessKey: null,
+          profileName: null,
+          profileAvatar: null,
           sealedSender: SEALED_SENDER.UNKNOWN,
         });
 
         await this.deriveAccessKeyIfNeeded();
+
+        await window.Signal.Data.updateConversation(this.id, this.attributes, {
+          Conversation: Whisper.Conversation,
+        });
+      }
+    },
+    async dropProfileKey() {
+      if (this.get('profileKey')) {
+        window.log.info(
+          `Dropping profileKey, setting sealedSender to UNKNOWN for conversation ${this.idForLogging()}`
+        );
+        const profileAvatar = this.get('profileAvatar');
+        if (profileAvatar && profileAvatar.path) {
+          await deleteAttachmentData(profileAvatar.path);
+        }
+
+        this.set({
+          profileAvatar: null,
+          profileKey: null,
+          profileName: null,
+          accessKey: null,
+          sealedSender: SEALED_SENDER.UNKNOWN,
+        });
 
         await window.Signal.Data.updateConversation(this.id, this.attributes, {
           Conversation: Whisper.Conversation,

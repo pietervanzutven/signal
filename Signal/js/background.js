@@ -1117,6 +1117,8 @@
           details.profileKey
         );
         conversation.setProfileKey(profileKey);
+      } else {
+        conversation.dropProfileKey();
       }
 
       if (typeof details.blocked !== 'undefined') {
