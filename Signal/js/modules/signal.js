@@ -71,6 +71,9 @@
     TypingBubble,
   } = window.ts.components.conversation.TypingBubble;
   const {
+    UnsupportedMessage,
+  } = window.ts.components.conversation.UnsupportedMessage;
+  const {
     VerificationNotification,
   } = window.ts.components.conversation.VerificationNotification;
 
@@ -282,6 +285,7 @@
         Message: MediaGalleryMessage,
       },
       TypingBubble,
+      UnsupportedMessage,
       VerificationNotification,
     };
 

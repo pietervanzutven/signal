@@ -289,6 +289,7 @@
     <Content Include="js\typescript\components\conversation\types.js" />
     <Content Include="js\typescript\components\conversation\TypingAnimation.js" />
     <Content Include="js\typescript\components\conversation\TypingBubble.js" />
+    <Content Include="js\typescript\components\conversation\UnsupportedMessage.js" />
     <Content Include="js\typescript\components\conversation\VerificationNotification.js" />
     <Content Include="js\typescript\components\conversation\_contactUtil.js" />
     <Content Include="js\typescript\components\emoji\Emoji.js" />
