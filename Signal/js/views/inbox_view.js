@@ -57,6 +57,7 @@
       currentView.onbackrequested = function (event) {
         if (currentView.appViewBackButtonVisibility === Windows.UI.Core.AppViewBackButtonVisibility.visible) {
           $('.conversation.placeholder').prependTo(stack);
+          $('.module-emoji-picker').hide();
           if (window.innerWidth < 600) {
             gutter.show();
             stack.hide();
