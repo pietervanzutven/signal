@@ -96,7 +96,7 @@
             });
         }
         renderMetadata() {
-            const { collapseMetadata, direction, expirationLength, expirationTimestamp, i18n, isSticker, status, text, textPending, timestamp, } = this.props;
+            const { collapseMetadata, direction, expirationLength, expirationTimestamp, i18n, isSticker, isTapToViewExpired, status, text, textPending, timestamp, } = this.props;
             if (collapseMetadata) {
                 return null;
             }
@@ -115,21 +115,23 @@
                         : null, withImageNoCaption
                         ? 'module-message__metadata__date--with-image-no-caption'
                         : null)
-                }, i18n('sendFailed'))) : (react_1.default.createElement(Timestamp_1.Timestamp, { i18n: i18n, timestamp: timestamp, extended: true, direction: metadataDirection, withImageNoCaption: withImageNoCaption, withSticker: isSticker, module: "module-message__metadata__date" })),
-                expirationLength && expirationTimestamp ? (react_1.default.createElement(ExpireTimer_1.ExpireTimer, { direction: metadataDirection, expirationLength: expirationLength, expirationTimestamp: expirationTimestamp, withImageNoCaption: withImageNoCaption, withSticker: isSticker })) : null,
+                }, i18n('sendFailed'))) : (react_1.default.createElement(Timestamp_1.Timestamp, { i18n: i18n, timestamp: timestamp, extended: true, direction: metadataDirection, withImageNoCaption: withImageNoCaption, withSticker: isSticker, withTapToViewExpired: isTapToViewExpired, module: "module-message__metadata__date" })),
+                expirationLength && expirationTimestamp ? (react_1.default.createElement(ExpireTimer_1.ExpireTimer, { direction: metadataDirection, expirationLength: expirationLength, expirationTimestamp: expirationTimestamp, withImageNoCaption: withImageNoCaption, withSticker: isSticker, withTapToViewExpired: isTapToViewExpired })) : null,
                 react_1.default.createElement("span", { className: "module-message__metadata__spacer" }),
                 textPending ? (react_1.default.createElement("div", { className: "module-message__metadata__spinner-container" },
-                    react_1.default.createElement(Spinner_1.Spinner, { size: "mini", direction: direction }))) : null,
+                    react_1.default.createElement(Spinner_1.Spinner, { svgSize: "small", size: "14px", direction: direction }))) : null,
                 !textPending && direction === 'outgoing' && status !== 'error' ? (react_1.default.createElement("div", {
                     className: classnames_1.default('module-message__metadata__status-icon', `module-message__metadata__status-icon--${status}`, isSticker
                         ? 'module-message__metadata__status-icon--with-sticker'
                         : null, withImageNoCaption
                         ? 'module-message__metadata__status-icon--with-image-no-caption'
+                        : null, isTapToViewExpired
+                        ? 'module-message__metadata__status-icon--with-tap-to-view-expired'
                         : null)
                 })) : null));
         }
         renderAuthor() {
-            const { authorName, authorPhoneNumber, authorProfileName, collapseMetadata, conversationType, direction, i18n, isSticker, } = this.props;
+            const { authorName, authorPhoneNumber, authorProfileName, collapseMetadata, conversationType, direction, i18n, isSticker, isTapToView, isTapToViewExpired, } = this.props;
             if (collapseMetadata) {
                 return;
             }
@@ -137,8 +139,12 @@
             if (direction !== 'incoming' || conversationType !== 'group' || !title) {
                 return null;
             }
-            const suffix = isSticker ? '_with_sticker' : '';
-            const moduleName = `module-message__author${suffix}`;
+            const withTapToViewExpired = isTapToView && isTapToViewExpired;
+            const stickerSuffix = isSticker ? '_with_sticker' : '';
+            const tapToViewSuffix = withTapToViewExpired
+                ? '--with-tap-to-view-expired'
+                : '';
+            const moduleName = `module-message__author${stickerSuffix}${tapToViewSuffix}`;
             return (react_1.default.createElement("div", { className: moduleName },
                 react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, module: moduleName, i18n: i18n })));
         }
@@ -198,7 +204,7 @@
                         : null)
                 },
                     pending ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__spinner-container" },
-                        react_1.default.createElement(Spinner_1.Spinner, { size: "small", direction: direction }))) : (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-container" },
+                        react_1.default.createElement(Spinner_1.Spinner, { svgSize: "small", size: "24px", direction: direction }))) : (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-container" },
                             react_1.default.createElement("div", { className: "module-message__generic-attachment__icon" }, extension ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon__extension" }, extension)) : null),
                             isDangerous ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous-container" },
                                 react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous" }))) : null)),
@@ -339,7 +345,7 @@
             }
         }
         renderMenu(isCorrectSide, triggerId) {
-            const { attachments, direction, disableMenu, downloadAttachment, id, isSticker, replyToMessage, timestamp, } = this.props;
+            const { attachments, direction, disableMenu, downloadAttachment, id, isSticker, isTapToView, replyToMessage, timestamp, } = this.props;
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
@@ -349,6 +355,7 @@
             const firstAttachment = attachments && attachments[0];
             const downloadButton = !isSticker &&
                 !multipleAttachments &&
+                !isTapToView &&
                 firstAttachment &&
                 !firstAttachment.pending ? (react_1.default.createElement("div", {
                     onClick: () => {
@@ -374,23 +381,27 @@
                 last));
         }
         renderContextMenu(triggerId) {
-            const { attachments, direction, downloadAttachment, i18n, id, isSticker, deleteMessage, showMessageDetail, replyToMessage, retrySend, status, timestamp, } = this.props;
+            const { attachments, deleteMessage, direction, downloadAttachment, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, timestamp, } = this.props;
             const showRetry = status === 'error' && direction === 'outgoing';
             const fileName = attachments && attachments[0] ? attachments[0].fileName : null;
             const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
             const multipleAttachments = attachments && attachments.length > 1;
             const menu = (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
-                !isSticker && !multipleAttachments && attachments && attachments[0] ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
-                    attributes: {
-                        className: 'module-message__context__download',
-                    }, onClick: () => {
-                        downloadAttachment({
-                            attachment: attachments[0],
-                            timestamp,
-                            isDangerous,
-                        });
-                    }
-                }, i18n('downloadAttachment'))) : null,
+                !isSticker &&
+                    !multipleAttachments &&
+                    !isTapToView &&
+                    attachments &&
+                    attachments[0] ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                        attributes: {
+                            className: 'module-message__context__download',
+                        }, onClick: () => {
+                            downloadAttachment({
+                                attachment: attachments[0],
+                                timestamp,
+                                isDangerous,
+                            });
+                        }
+                    }, i18n('downloadAttachment'))) : null,
                 react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__reply',
@@ -452,9 +463,9 @@
             return;
         }
         isShowingImage() {
-            const { attachments, previews } = this.props;
+            const { isTapToView, attachments, previews } = this.props;
             const { imageBroken } = this.state;
-            if (imageBroken) {
+            if (imageBroken || isTapToView) {
                 return false;
             }
             if (attachments && attachments.length) {
@@ -473,9 +484,84 @@
             }
             return false;
         }
+        isAttachmentPending() {
+            const { attachments } = this.props;
+            if (!attachments || attachments.length < 1) {
+                return false;
+            }
+            const first = attachments[0];
+            return Boolean(first.pending);
+        }
+        renderTapToViewIcon() {
+            const { direction, isTapToViewExpired } = this.props;
+            const isDownloadPending = this.isAttachmentPending();
+            return !isTapToViewExpired && isDownloadPending ? (react_1.default.createElement("div", { className: "module-message__tap-to-view__spinner-container" },
+                react_1.default.createElement(Spinner_1.Spinner, { svgSize: "small", size: "20px", direction: direction }))) : (react_1.default.createElement("div", {
+                    className: classnames_1.default('module-message__tap-to-view__icon', `module-message__tap-to-view__icon--${direction}`, isTapToViewExpired
+                        ? 'module-message__tap-to-view__icon--expired'
+                        : null)
+                }));
+        }
+        renderTapToViewText() {
+            const { direction, i18n, isTapToViewExpired, isTapToViewError, } = this.props;
+            const incomingString = isTapToViewExpired
+                ? i18n('Message--tap-to-view-expired')
+                : i18n('Message--tap-to-view--incoming');
+            const outgoingString = i18n('Message--tap-to-view--outgoing');
+            const isDownloadPending = this.isAttachmentPending();
+            if (isDownloadPending) {
+                return;
+            }
+            return isTapToViewError
+                ? i18n('incomingError')
+                : direction === 'outgoing'
+                    ? outgoingString
+                    : incomingString;
+        }
+        renderTapToView() {
+            const { collapseMetadata, conversationType, direction, isTapToViewExpired, isTapToViewError, } = this.props;
+            const withContentBelow = !collapseMetadata;
+            const withContentAbove = !collapseMetadata &&
+                conversationType === 'group' &&
+                direction === 'incoming';
+            return (react_1.default.createElement("div", {
+                className: classnames_1.default('module-message__tap-to-view', withContentBelow
+                    ? 'module-message__tap-to-view--with-content-below'
+                    : null, withContentAbove
+                    ? 'module-message__tap-to-view--with-content-above'
+                    : null)
+            },
+                isTapToViewError ? null : this.renderTapToViewIcon(),
+                react_1.default.createElement("div", {
+                    className: classnames_1.default('module-message__tap-to-view__text', `module-message__tap-to-view__text--${direction}`, isTapToViewExpired
+                        ? `module-message__tap-to-view__text--${direction}-expired`
+                        : null, isTapToViewError
+                        ? `module-message__tap-to-view__text--${direction}-error`
+                        : null)
+                }, this.renderTapToViewText())));
+        }
+        renderContents() {
+            const { isTapToView } = this.props;
+            if (isTapToView) {
+                return (react_1.default.createElement(react_1.default.Fragment, null,
+                    this.renderTapToView(),
+                    this.renderMetadata()));
+            }
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                this.renderQuote(),
+                this.renderAttachment(),
+                this.renderPreview(),
+                this.renderEmbeddedContact(),
+                this.renderText(),
+                this.renderMetadata(),
+                this.renderSendMessageButton()));
+        }
+        // tslint:disable-next-line cyclomatic-complexity
         render() {
-            const { authorPhoneNumber, authorColor, attachments, direction, id, isSticker, timestamp, } = this.props;
+            const { authorPhoneNumber, authorColor, attachments, direction, displayTapToViewMessage, id, isSticker, isTapToView, isTapToViewExpired, isTapToViewError, timestamp, } = this.props;
             const { expired, expiring, imageBroken } = this.state;
+            const isAttachmentPending = this.isAttachmentPending();
+            const isButton = isTapToView && !isTapToViewExpired && !isAttachmentPending;
             // This id is what connects our triple-dot click with our associated pop-up menu.
             //   It needs to be unique.
             const triggerId = String(id || `${authorPhoneNumber}-${timestamp}`);
@@ -487,24 +573,28 @@
             }
             const width = this.getWidth();
             const isShowingImage = this.isShowingImage();
+            const role = isButton ? 'button' : undefined;
+            const onClick = isButton ? () => displayTapToViewMessage(id) : undefined;
             return (react_1.default.createElement("div", { className: classnames_1.default('module-message', `module-message--${direction}`, expiring ? 'module-message--expired' : null) },
                 this.renderError(direction === 'incoming'),
                 this.renderMenu(direction === 'outgoing', triggerId),
                 react_1.default.createElement("div", {
-                    className: classnames_1.default('module-message__container', isSticker ? 'module-message__container--with-sticker' : null, !isSticker ? `module-message__container--${direction}` : null, !isSticker && direction === 'incoming'
+                    className: classnames_1.default('module-message__container', isSticker ? 'module-message__container--with-sticker' : null, !isSticker ? `module-message__container--${direction}` : null, isTapToView ? 'module-message__container--with-tap-to-view' : null, isTapToView && isTapToViewExpired
+                        ? 'module-message__container--with-tap-to-view-expired'
+                        : null, !isSticker && direction === 'incoming'
                         ? `module-message__container--incoming-${authorColor}`
+                        : null, isTapToView && isAttachmentPending && !isTapToViewExpired
+                        ? 'module-message__container--with-tap-to-view-pending'
+                        : null, isTapToView && isAttachmentPending && !isTapToViewExpired
+                        ? `module-message__container--${direction}-${authorColor}-tap-to-view-pending`
+                        : null, isTapToViewError
+                        ? 'module-message__container--with-tap-to-view-error'
                         : null), style: {
                             width: isShowingImage ? width : undefined,
-                        }
+                        }, role: role, onClick: onClick
                 },
                     this.renderAuthor(),
-                    this.renderQuote(),
-                    this.renderAttachment(),
-                    this.renderPreview(),
-                    this.renderEmbeddedContact(),
-                    this.renderText(),
-                    this.renderMetadata(),
-                    this.renderSendMessageButton(),
+                    this.renderContents(),
                     this.renderAvatar()),
                 this.renderError(direction === 'outgoing'),
                 this.renderMenu(direction === 'incoming', triggerId),

@@ -1488,6 +1488,53 @@ input.search {
   background-color: #eeefef;
   color: #17191d; }
 
+.ios-theme .module-message__container--with-tap-to-view-expired {
+  border: 1px solid #d5d6d6;
+  background-color: #ffffff; }
+
+.ios-theme .module-message__container--with-tap-to-view-error {
+  background-color: #ffffff;
+  border: 1px solid #ff261f; }
+
+.ios-theme .module-message__tap-to-view__icon {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 24 24' style='enable-background:new 0 0 24 24;' xml:space='preserve'><path d='M21.5,11.1l-16-9.3C4.7,1.4,4,1.8,4,2.7v18.6c0,1,0.7,1.3,1.5,0.9l16-9.3c0.5-0.2,0.7-0.7,0.6-1.2	C22,11.4,21.8,11.2,21.5,11.1z' fill='%2317191D'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.ios-theme .module-message__tap-to-view__icon--outgoing {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 24 24' style='enable-background:new 0 0 24 24;' xml:space='preserve'><path d='M21.5,11.1l-16-9.3C4.7,1.4,4,1.8,4,2.7v18.6c0,1,0.7,1.3,1.5,0.9l16-9.3c0.5-0.2,0.7-0.7,0.6-1.2	C22,11.4,21.8,11.2,21.5,11.1z' fill='%23FFFFFF'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.ios-theme .module-message__tap-to-view__icon--expired {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 24 24' style='enable-background:new 0 0 24 24;' xml:space='preserve'><path d='M5.5,3.6L20,12L5.5,20.4V3.6 M4.8,1.6C4.3,1.6,4,2,4,2.7v18.6c0,0.7,0.3,1.1,0.8,1.1c0.2,0,0.5-0.1,0.7-0.2l16-9.3	c0.5-0.2,0.7-0.7,0.6-1.2c-0.1-0.3-0.3-0.5-0.6-0.6l-16-9.3C5.3,1.7,5.1,1.6,4.8,1.6z' fill='%233D3E44'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.ios-theme .module-message__tap-to-view__text {
+  color: #17191d; }
+
+.ios-theme .module-message__tap-to-view__text--incoming {
+  color: #17191d; }
+
+.ios-theme .module-message__tap-to-view__text--outgoing {
+  color: #ffffff; }
+
+.ios-theme .module-message__tap-to-view__text--outgoing-expired {
+  color: #17191d; }
+
+.ios-theme .module-message__tap-to-view__text--incoming-expired {
+  color: #17191d; }
+
+.ios-theme .module-message__tap-to-view__text--incoming-error {
+  color: #6b6d70; }
+
+.ios-theme .module-message__container--with-tap-to-view-pending {
+  background-color: #d5d6d6; }
+
 .ios-theme .module-message__author {
   color: #17191d; }
 
@@ -1515,6 +1562,9 @@ input.search {
 
 .ios-theme .module-message__metadata__date--with-sticker {
   color: #6b6d70; }
+
+.ios-theme .module-message__metadata__date--outgoing-with-tap-to-view-expired {
+  color: #3d3e44; }
 
 .ios-theme .module-message__metadata__status-icon--sending {
   background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='12px' height='12px' viewBox='0 0 12 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>sending</title>    <desc>Created with Sketch.</desc>    <defs></defs>    <g id='iOS-Light' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <g id='iOS-Light/Message/Status/Sending' transform='translate(-6.000000, 0.000000)' fill='%23000000'>            <path d='M11.5,0 L12.5,0 L12.5,1 L11.5,1 L11.5,0 Z M11.5,11 L12.5,11 L12.5,12 L11.5,12 L11.5,11 Z M6,5.5 L7,5.5 L7,6.5 L6,6.5 L6,5.5 Z M17,5.5 L18,5.5 L18,6.5 L17,6.5 L17,5.5 Z M16.9461524,2.5669873 L17.4461524,3.4330127 L16.580127,3.9330127 L16.080127,3.0669873 L16.9461524,2.5669873 Z M7.41987298,8.0669873 L7.91987298,8.9330127 L7.05384758,9.4330127 L6.55384758,8.5669873 L7.41987298,8.0669873 Z M9.4330127,0.553847577 L9.9330127,1.41987298 L9.0669873,1.91987298 L8.5669873,1.05384758 L9.4330127,0.553847577 Z M14.9330127,10.080127 L15.4330127,10.9461524 L14.5669873,11.4461524 L14.0669873,10.580127 L14.9330127,10.080127 Z M14.5669873,0.553847577 L15.4330127,1.05384758 L14.9330127,1.91987298 L14.0669873,1.41987298 L14.5669873,0.553847577 Z M9.0669873,10.080127 L9.9330127,10.580127 L9.4330127,11.4461524 L8.5669873,10.9461524 L9.0669873,10.080127 Z M7.05384758,2.5669873 L7.91987298,3.0669873 L7.41987298,3.9330127 L6.55384758,3.4330127 L7.05384758,2.5669873 Z M16.580127,8.0669873 L17.4461524,8.5669873 L16.9461524,9.4330127 L16.080127,8.9330127 L16.580127,8.0669873 Z' id='sending' fill='%23FFFFFF'></path>        </g>    </g></svg>");
@@ -1546,6 +1596,9 @@ input.search {
 .ios-theme .module-message__metadata__status-icon--with-sticker {
   background-color: #6b6d70; }
 
+.ios-theme .module-message__metadata__status-icon--with-tap-to-view-expired {
+  background-color: #3d3e44; }
+
 .ios-theme .module-message__generic-attachment__file-name {
   color: #ffffff; }
 
@@ -1566,6 +1619,9 @@ input.search {
 
 .ios-theme .module-expire-timer--with-sticker {
   background-color: #6b6d70; }
+
+.ios-theme .module-expire-timer--outgoing-with-tap-to-view-expired {
+  background-color: #3d3e44; }
 
 .ios-theme .module-quote--outgoing {
   border-left-color: #ffffff;
@@ -1607,6 +1663,14 @@ input.search {
 .ios-theme.dark-theme .module-message__container--incoming {
   background-color: #3d3e44;
   color: #eeefef; }
+
+.ios-theme.dark-theme .module-message__container--with-tap-to-view-expired {
+  border: 1px solid #6b6d70;
+  background-color: #000000; }
+
+.ios-theme.dark-theme .module-message__container--with-tap-to-view-error {
+  background-color: #000000;
+  border: 1px solid #ff261f; }
 
 .ios-theme.dark-theme .module-message__author {
   color: #eeefef; }
@@ -2167,6 +2231,71 @@ body.dark-theme {
 .dark-theme .module-message__container--incoming-blue_grey {
   background-color: #895d66; }
 
+.dark-theme .module-message__container--incoming--tap-to-view-pending {
+  background-color: #5a5a63; }
+
+.dark-theme .module-message__container--incoming-red-tap-to-view-pending {
+  background-color: #8a0f29; }
+
+.dark-theme .module-message__container--incoming-deep_orange-tap-to-view-pending {
+  background-color: #872600; }
+
+.dark-theme .module-message__container--incoming-brown-tap-to-view-pending {
+  background-color: #58513c; }
+
+.dark-theme .module-message__container--incoming-pink-tap-to-view-pending {
+  background-color: #881b5b; }
+
+.dark-theme .module-message__container--incoming-purple-tap-to-view-pending {
+  background-color: #6b248a; }
+
+.dark-theme .module-message__container--incoming-indigo-tap-to-view-pending {
+  background-color: #4840a0; }
+
+.dark-theme .module-message__container--incoming-blue-tap-to-view-pending {
+  background-color: #285480; }
+
+.dark-theme .module-message__container--incoming-teal-tap-to-view-pending {
+  background-color: #055968; }
+
+.dark-theme .module-message__container--incoming-green-tap-to-view-pending {
+  background-color: #2b5934; }
+
+.dark-theme .module-message__container--incoming-light_green-tap-to-view-pending {
+  background-color: #36544a; }
+
+.dark-theme .module-message__container--incoming-blue_grey-tap-to-view-pending {
+  background-color: #6a4e54; }
+
+.dark-theme .module-message__container--with-tap-to-view-expired {
+  border: 1px solid #6b6d70;
+  background-color: #000000; }
+
+.dark-theme .module-message__container--with-tap-to-view-error {
+  background-color: #0f1012;
+  border: 1px solid #ff261f; }
+
+.dark-theme .module-message__tap-to-view__icon {
+  background-color: #eeefef; }
+
+.dark-theme .module-message__tap-to-view__icon--outgoing {
+  background-color: #eeefef; }
+
+.dark-theme .module-message__tap-to-view__icon--expired {
+  background-color: #eeefef; }
+
+.dark-theme .module-message__tap-to-view__text {
+  color: #eeefef; }
+
+.dark-theme .module-message__tap-to-view__text--incoming {
+  color: #eeefef; }
+
+.dark-theme .module-message__tap-to-view__text--incoming-expired {
+  color: #eeefef; }
+
+.dark-theme .module-message__tap-to-view__text--incoming-error {
+  color: #bbbdbe; }
+
 .dark-theme .module-message__attachment-container {
   background-color: #0f1012; }
 
@@ -2224,6 +2353,9 @@ body.dark-theme {
   color: #bbbdbe; }
 
 .dark-theme .module-message__author {
+  color: #ffffff; }
+
+.dark-theme .module-message__author--with-tap-to-view-expired {
   color: #ffffff; }
 
 .dark-theme .module-message__author_with_sticker {
@@ -3303,6 +3435,117 @@ body.dark-theme {
 .module-message__container--incoming-blue_grey {
   background-color: #895d66; }
 
+.module-message__container--with-tap-to-view {
+  min-width: 148px;
+  cursor: pointer; }
+
+.module-message__container--incoming--tap-to-view-pending {
+  background-color: #5a5a63; }
+
+.module-message__container--incoming-red-tap-to-view-pending {
+  background-color: #8a0f29; }
+
+.module-message__container--incoming-deep_orange-tap-to-view-pending {
+  background-color: #872600; }
+
+.module-message__container--incoming-brown-tap-to-view-pending {
+  background-color: #58513c; }
+
+.module-message__container--incoming-pink-tap-to-view-pending {
+  background-color: #881b5b; }
+
+.module-message__container--incoming-purple-tap-to-view-pending {
+  background-color: #6b248a; }
+
+.module-message__container--incoming-indigo-tap-to-view-pending {
+  background-color: #4840a0; }
+
+.module-message__container--incoming-blue-tap-to-view-pending {
+  background-color: #285480; }
+
+.module-message__container--incoming-teal-tap-to-view-pending {
+  background-color: #055968; }
+
+.module-message__container--incoming-green-tap-to-view-pending {
+  background-color: #2b5934; }
+
+.module-message__container--incoming-light_green-tap-to-view-pending {
+  background-color: #36544a; }
+
+.module-message__container--incoming-blue_grey-tap-to-view-pending {
+  background-color: #6a4e54; }
+
+.module-message__container--with-tap-to-view-pending {
+  cursor: default; }
+
+.module-message__container--with-tap-to-view-expired {
+  cursor: default;
+  border: 1px solid #d5d6d6;
+  background-color: #ffffff; }
+
+.module-message__container--with-tap-to-view-error {
+  background-color: #ffffff;
+  border: 1px solid #f44336;
+  width: auto;
+  cursor: default; }
+
+.module-message__tap-to-view {
+  margin-top: 2px;
+  display: flex;
+  flex-direction: row;
+  align-items: center; }
+
+.module-message__tap-to-view--with-content-above {
+  margin-top: 8px; }
+
+.module-message__tap-to-view--with-content-below {
+  margin-bottom: 8px; }
+
+.module-message__tap-to-view__spinner-container {
+  margin-right: 6px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px; }
+
+.module-message__tap-to-view__icon {
+  margin-right: 6px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 24 24' style='enable-background:new 0 0 24 24;' xml:space='preserve'><path d='M21.5,11.1l-16-9.3C4.7,1.4,4,1.8,4,2.7v18.6c0,1,0.7,1.3,1.5,0.9l16-9.3c0.5-0.2,0.7-0.7,0.6-1.2	C22,11.4,21.8,11.2,21.5,11.1z' fill='%23FFFFFF'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.module-message__tap-to-view__icon--outgoing {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 24 24' style='enable-background:new 0 0 24 24;' xml:space='preserve'><path d='M21.5,11.1l-16-9.3C4.7,1.4,4,1.8,4,2.7v18.6c0,1,0.7,1.3,1.5,0.9l16-9.3c0.5-0.2,0.7-0.7,0.6-1.2	C22,11.4,21.8,11.2,21.5,11.1z' fill='%233D3E44'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.module-message__tap-to-view__icon--expired {
+  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8'?><!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg version='1.1' id='Export' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'	 viewBox='0 0 24 24' style='enable-background:new 0 0 24 24;' xml:space='preserve'><path d='M5.5,3.6L20,12L5.5,20.4V3.6 M4.8,1.6C4.3,1.6,4,2,4,2.7v18.6c0,0.7,0.3,1.1,0.8,1.1c0.2,0,0.5-0.1,0.7-0.2l16-9.3	c0.5-0.2,0.7-0.7,0.6-1.2c-0.1-0.3-0.3-0.5-0.6-0.6l-16-9.3C5.3,1.7,5.1,1.6,4.8,1.6z' fill='%233D3E44'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.module-message__tap-to-view__text {
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 18px;
+  color: #17191d; }
+
+.module-message__tap-to-view__text--incoming {
+  color: #ffffff; }
+
+.module-message__tap-to-view__text--incoming-expired {
+  color: #17191d; }
+
+.module-message__tap-to-view__text--incoming-error {
+  color: #6b6d70; }
+
 .module-message__attachment-container {
   text-align: center;
   position: relative;
@@ -3508,6 +3751,19 @@ body.dark-theme {
   .module-message__author__profile-name {
     font-style: italic; }
 
+.module-message__author--with-tap-to-view-expired {
+  color: #3d3e44;
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 18px;
+  height: 18px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; }
+  .module-message__author--with-tap-to-view-expired__profile-name {
+    font-style: italic; }
+
 .module-message__author_with_sticker {
   color: #17191d;
   font-size: 13px;
@@ -3570,6 +3826,9 @@ body.dark-theme {
 
 .module-message__metadata__date--with-image-no-caption {
   color: #ffffff; }
+
+.module-message__metadata__date--incoming-with-tap-to-view-expired {
+  color: #3d3e44; }
 
 .module-message__metadata__spacer {
   flex-grow: 1; }
@@ -3729,6 +3988,9 @@ body.dark-theme {
 
 .module-expire-timer--incoming {
   background-color: rgba(255, 255, 255, 0.8); }
+
+.module-expire-timer--incoming-with-tap-to-view-expired {
+  background-color: #3d3e44; }
 
 .module-expire-timer--with-image-no-caption {
   background-color: #ffffff; }
@@ -5555,8 +5817,8 @@ body.dark-theme {
   background-repeat: no-repeat;
   background-position: center center;
   z-index: 2;
-  height: 56px;
-  width: 56px; }
+  height: 100%;
+  width: 100%; }
 
 .module-spinner__arc {
   position: absolute;
@@ -5567,8 +5829,8 @@ body.dark-theme {
   background-repeat: no-repeat;
   background-position: center center;
   z-index: 3;
-  height: 56px;
-  width: 56px;
+  height: 100%;
+  width: 100%;
   animation: spinner-arc-animation 1000ms linear infinite; }
 
 @keyframes spinner-arc-animation {
@@ -5579,45 +5841,17 @@ body.dark-theme {
   100% {
     transform: rotate(360deg); } }
 
-.module-spinner__container--small {
-  height: 24px;
-  width: 24px; }
-
 .module-spinner__circle--small {
   background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Track - 24</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Track---24' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M12,24 C5.372583,24 0,18.627417 0,12 C0,5.372583 5.372583,0 12,0 C18.627417,0 24,5.372583 24,12 C24,18.627417 18.627417,24 12,24 Z M12,22 C17.5228475,22 22,17.5228475 22,12 C22,6.4771525 17.5228475,2 12,2 C6.4771525,2 2,6.4771525 2,12 C2,17.5228475 6.4771525,22 12,22 Z' id='Combined-Shape' fill='%23FFFFFF' fill-rule='nonzero'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  height: 24px;
-  width: 24px; }
+  background-position: center center; }
 
 .module-spinner__arc--small {
   background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Spinner - 24</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Spinner---24' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M22.5600116,6.29547931 C23.4784938,7.99216184 24,9.93517878 24,12 C24,18.627417 18.627417,24 12,24 L12,22 C17.5228475,22 22,17.5228475 22,12 C22,10.2995217 21.5755584,8.6981771 20.8268371,7.29612807 L22.5600116,6.29547931 Z' id='Path' fill='%236B6D70' fill-rule='nonzero'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center;
-  height: 24px;
-  width: 24px; }
-
-.module-spinner__container--mini {
-  height: 14px;
-  width: 14px; }
-
-.module-spinner__circle--mini {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Track - 24</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Track---24' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M12,24 C5.372583,24 0,18.627417 0,12 C0,5.372583 5.372583,0 12,0 C18.627417,0 24,5.372583 24,12 C24,18.627417 18.627417,24 12,24 Z M12,22 C17.5228475,22 22,17.5228475 22,12 C22,6.4771525 17.5228475,2 12,2 C6.4771525,2 2,6.4771525 2,12 C2,17.5228475 6.4771525,22 12,22 Z' id='Combined-Shape' fill='%23FFFFFF' fill-rule='nonzero'></path>    </g></svg>");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-  height: 14px;
-  width: 14px; }
-
-.module-spinner__arc--mini {
-  background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Spinner - 24</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Spinner---24' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M22.5600116,6.29547931 C23.4784938,7.99216184 24,9.93517878 24,12 C24,18.627417 18.627417,24 12,24 L12,22 C17.5228475,22 22,17.5228475 22,12 C22,10.2995217 21.5755584,8.6981771 20.8268371,7.29612807 L22.5600116,6.29547931 Z' id='Path' fill='%236B6D70' fill-rule='nonzero'></path>    </g></svg>");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-  height: 14px;
-  width: 14px; }
+  background-position: center center; }
 
 .module-message-body__highlight {
   font-weight: bold; }
@@ -6842,6 +7076,15 @@ body.dark-theme {
   .dark-theme .module-unsupported-message__button {
     color: #2090ea;
     background-color: #3d3e44; }
+
+.module-countdown {
+  display: block;
+  width: 100%; }
+
+.module-countdown__path {
+  fill-opacity: 0;
+  stroke: #ffffff;
+  stroke-width: 2; }
 
 .react-contextmenu {
   background-color: #f9fafa;

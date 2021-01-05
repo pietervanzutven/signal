@@ -35,10 +35,12 @@
             }
         }
         render() {
-            const { direction, expirationLength, expirationTimestamp, withImageNoCaption, withSticker, } = this.props;
+            const { direction, expirationLength, expirationTimestamp, withImageNoCaption, withSticker, withTapToViewExpired, } = this.props;
             const bucket = timer_1.getTimerBucket(expirationTimestamp, expirationLength);
             return (react_1.default.createElement("div", {
-                className: classnames_1.default('module-expire-timer', `module-expire-timer--${bucket}`, `module-expire-timer--${direction}`, withImageNoCaption
+                className: classnames_1.default('module-expire-timer', `module-expire-timer--${bucket}`, direction ? `module-expire-timer--${direction}` : null, withTapToViewExpired
+                    ? `module-expire-timer--${direction}-with-tap-to-view-expired`
+                    : null, direction && withImageNoCaption
                     ? 'module-expire-timer--with-image-no-caption'
                     : null, withSticker ? 'module-expire-timer--with-sticker' : null)
             }));

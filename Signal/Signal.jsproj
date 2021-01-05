@@ -180,6 +180,7 @@
     <Content Include="js\delivery_receipts.js" />
     <Content Include="js\expire.js" />
     <Content Include="js\expiring_messages.js" />
+    <Content Include="js\expiring_tap_to_view_messages.js" />
     <Content Include="js\focus_listener.js" />
     <Content Include="js\keychange_listener.js" />
     <Content Include="js\legacy_storage.js" />
@@ -292,6 +293,7 @@
     <Content Include="js\typescript\components\conversation\UnsupportedMessage.js" />
     <Content Include="js\typescript\components\conversation\VerificationNotification.js" />
     <Content Include="js\typescript\components\conversation\_contactUtil.js" />
+    <Content Include="js\typescript\components\Countdown.js" />
     <Content Include="js\typescript\components\emoji\Emoji.js" />
     <Content Include="js\typescript\components\emoji\EmojiButton.js" />
     <Content Include="js\typescript\components\emoji\EmojiPicker.js" />
@@ -403,6 +405,7 @@
     <Content Include="js\views\standalone_registration_view.js" />
     <Content Include="js\views\toast_view.js" />
     <Content Include="js\views\whisper_view.js" />
+    <Content Include="js\view_syncs.js" />
     <Content Include="js\wall_clock_listener.js" />
     <Content Include="js\WebAudioRecorderMp3.js" />
     <Content Include="libtextsecure\account_manager.js" />

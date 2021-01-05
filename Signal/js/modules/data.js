@@ -125,6 +125,9 @@
     getOutgoingWithoutExpiresAt,
     getNextExpiringMessage,
     getMessagesByConversation,
+    getNextTapToViewMessageToExpire,
+    getNextTapToViewMessageToAgeOut,
+    getTapToViewMessagesNeedingErase,
 
     getUnprocessedCount,
     getAllUnprocessed,
@@ -679,7 +682,7 @@
 
   async function saveMessage(data, { forceSave, Message } = {}) {
     const id = await channels.saveMessage(_cleanData(data), { forceSave });
-    Message.refreshExpirationTimer();
+    Message.updateTimers();
     return id;
   }
 
@@ -841,6 +844,27 @@
 
   async function getNextExpiringMessage({ MessageCollection }) {
     const messages = await channels.getNextExpiringMessage();
+    return new MessageCollection(messages);
+  }
+
+  async function getNextTapToViewMessageToExpire({ Message }) {
+    const message = await channels.getNextTapToViewMessageToExpire();
+    if (!message) {
+      return null;
+    }
+
+    return new Message(message);
+  }
+  async function getNextTapToViewMessageToAgeOut({ Message }) {
+    const message = await channels.getNextTapToViewMessageToAgeOut();
+    if (!message) {
+      return null;
+    }
+
+    return new Message(message);
+  }
+  async function getTapToViewMessagesNeedingErase({ MessageCollection }) {
+    const messages = await channels.getTapToViewMessagesNeedingErase();
     return new MessageCollection(messages);
   }
 
