@@ -163,6 +163,7 @@
         return str.replace(/:[a-z0-9-_+]+:(?::skin-tone-[1-5]:)?/gi, m => {
             const [shortName = '', skinTone = '0'] = m
                 .replace('skin-tone-', '')
+                .toLowerCase()
                 .split(':')
                 .filter(Boolean);
             if (shortName && isShortName(shortName)) {
