@@ -57,23 +57,22 @@
             const leftTitle = getConversationTitle(left, {
                 i18n,
                 ourRegionCode,
-            }).toLowerCase();
+            });
             const rightTitle = getConversationTitle(right, {
                 i18n,
                 ourRegionCode,
-            }).toLowerCase();
+            });
             return collator.compare(leftTitle, rightTitle);
         };
     };
     exports.getConversationComparator = reselect_1.createSelector(user_1.getIntl, user_1.getRegionCode, exports._getConversationComparator);
     exports._getLeftPaneLists = (lookup, comparator, selectedConversation) => {
-        const values = Object.values(lookup);
-        const sorted = values.sort(comparator);
         const conversations = [];
         const archivedConversations = [];
-        const max = sorted.length;
+        const values = Object.values(lookup);
+        const max = values.length;
         for (let i = 0; i < max; i += 1) {
-            let conversation = sorted[i];
+            let conversation = values[i];
             if (!conversation.activeAt) {
                 continue;
             }
@@ -87,6 +86,8 @@
                 conversations.push(conversation);
             }
         }
+        conversations.sort(comparator);
+        archivedConversations.sort(comparator);
         return { conversations, archivedConversations };
     };
     exports.getLeftPaneLists = reselect_1.createSelector(exports.getConversationLookup, exports.getConversationComparator, exports.getSelectedConversation, exports._getLeftPaneLists);

@@ -289,6 +289,7 @@
     <Content Include="js\typescript\components\conversation\types.js" />
     <Content Include="js\typescript\components\conversation\TypingAnimation.js" />
     <Content Include="js\typescript\components\conversation\TypingBubble.js" />
+    <Content Include="js\typescript\components\conversation\UnsupportedMessage.js" />
     <Content Include="js\typescript\components\conversation\VerificationNotification.js" />
     <Content Include="js\typescript\components\conversation\_contactUtil.js" />
     <Content Include="js\typescript\components\emoji\Emoji.js" />
@@ -385,6 +386,7 @@
     <Content Include="js\views\group_member_list_view.js" />
     <Content Include="js\views\group_update_view.js" />
     <Content Include="js\views\identicon_svg_view.js" />
+    <Content Include="js\views\import_view.js" />
     <Content Include="js\views\inbox_view.js" />
     <Content Include="js\views\install_view.js" />
     <Content Include="js\views\key_verification_view.js" />
@@ -3006,7 +3008,6 @@
     <Content Include="node_modules\emoji-datasource-apple\img\apple\64\303d-fe0f.png" />
     <Content Include="node_modules\emoji-datasource-apple\img\apple\64\3297-fe0f.png" />
     <Content Include="node_modules\emoji-datasource-apple\img\apple\64\3299-fe0f.png" />
-    <Content Include="node_modules\emoji-datasource-apple\img\apple\sheets-256\64.png" />
     <Content Include="node_modules\emoji-datasource\emoji.json" />
     <Content Include="node_modules\emoji-datasource\index.js" />
     <Content Include="node_modules\emoji-js\emoji.js" />

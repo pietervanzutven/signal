@@ -6,14 +6,6 @@
     window.ts.types.message = window.ts.types.message || {};
     const exports = window.ts.types.message.initializeAttachmentMetadata = {}
 
-    var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-        return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-            step((generator = generator.apply(thisArg, _arguments || [])).next());
-        });
-    };
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
@@ -27,17 +19,18 @@
     const hasAttachment = (predicate) => (message) => IndexedDB.toIndexablePresence(message.attachments.some(predicate));
     const hasFileAttachment = hasAttachment(Attachment.isFile);
     const hasVisualMediaAttachment = hasAttachment(Attachment.isVisualMedia);
-    exports.initializeAttachmentMetadata = (message) => __awaiter(this, void 0, void 0, function* () {
+    exports.initializeAttachmentMetadata = async (message) => {
         if (message.type === 'verified-change') {
             return message;
         }
-        const hasAttachments = IndexedDB.toIndexableBoolean(message.attachments.length > 0);
-        const hasFileAttachments = hasFileAttachment(message);
-        const hasVisualMediaAttachments = hasVisualMediaAttachment(message);
+        const attachments = message.attachments.filter((attachment) => attachment.contentType !== 'text/x-signal-plain');
+        const hasAttachments = IndexedDB.toIndexableBoolean(attachments.length > 0);
+        const hasFileAttachments = hasFileAttachment(Object.assign({}, message, { attachments }));
+        const hasVisualMediaAttachments = hasVisualMediaAttachment(Object.assign({}, message, { attachments }));
         return Object.assign({}, message, {
             hasAttachments,
             hasFileAttachments,
             hasVisualMediaAttachments
         });
-    });
+    };
 })();

@@ -233,7 +233,7 @@
         }
     };
     exports.getSuggestedFilename = ({ attachment, timestamp, index, }) => {
-        if (attachment.fileName) {
+        if (!lodash_1.isNumber(index) && attachment.fileName) {
             return attachment.fileName;
         }
         const prefix = 'signal-attachment';

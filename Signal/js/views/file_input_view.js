@@ -475,6 +475,7 @@
             return;
           }
 
+          const targetContentType = 'image/jpeg';
           const canvas = loadImage.scale(img, {
             canvas: true,
             maxWidth,
@@ -487,7 +488,7 @@
           do {
             i -= 1;
             blob = window.dataURLToBlobSync(
-              canvas.toDataURL('image/jpeg', quality)
+              canvas.toDataURL(targetContentType, quality)
             );
             quality = quality * maxSize / blob.size;
             // NOTE: During testing with a large image, we observed the
@@ -501,12 +502,47 @@
           resolve(Object.assign({},
             attachment,
             {
+              fileName: this.fixExtension(attachment.fileName, targetContentType),
+              contentType: targetContentType,
               file: blob,
             }
           ));
         };
         img.src = url;
       });
+    },
+
+    getFileName(fileName) {
+      if (!fileName) {
+        return '';
+      }
+
+      if (!fileName.includes('.')) {
+        return fileName;
+      }
+
+      return fileName
+        .split('.')
+        .slice(0, -1)
+        .join('.');
+    },
+
+    getType(contentType) {
+      if (!contentType) {
+        return '';
+      }
+
+      if (!contentType.includes('/')) {
+        return contentType;
+      }
+
+      return contentType.split('/')[1];
+    },
+
+    fixExtension(fileName, contentType) {
+      const extension = this.getType(contentType);
+      const name = this.getFileName(fileName);
+      return `${name}.${extension}`;
     },
 
     async getFile(attachment) {

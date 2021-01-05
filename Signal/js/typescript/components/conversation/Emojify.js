@@ -18,10 +18,14 @@
     function getImageTag({ match, sizeClass, key, i18n, }) {
         const result = emoji_1.getReplacementData(match[0], match[1], match[2]);
         if (is_1.default.string(result)) {
-            return react_1.default.createElement("span", { key: key }, match[0]);
+            return match[0];
         }
         const img = emoji_1.findImage(result.value, result.variation);
         const title = emoji_1.getTitle(result.value);
+        if (!img.path ||
+            !img.path.startsWith('node_modules/emoji-datasource-apple')) {
+            return match[0];
+        }
         return (
             // tslint:disable-next-line react-a11y-img-has-alt
             react_1.default.createElement("img", { key: key, src: img.path, "aria-label": i18n('emojiAlt', [title || '']), className: classnames_1.default('emoji', sizeClass), "data-codepoints": img.full_idx, title: `:${title}:` }));

@@ -21,9 +21,8 @@
     const classnames_1 = __importDefault(window.classnames);
     const lib_1 = window.ts.components.emoji.lib;
     exports.Emoji = React.memo(React.forwardRef(({ style = {}, size = 28, shortName, skinTone, inline, className }, ref) => {
-        const [sheetX, sheetY] = lib_1.getSheetCoordinates(shortName, skinTone);
-        const x = -(size * sheetX);
-        const y = -(size * sheetY);
-        return (React.createElement("div", { ref: ref, className: classnames_1.default('module-emoji', `module-emoji--${size}px`, inline ? 'module-emoji--inline' : null, className), style: Object.assign({}, style, { backgroundPositionX: `${x}px`, backgroundPositionY: `${y}px` }) }));
+        const image = lib_1.getImagePath(shortName, skinTone);
+        return (React.createElement("div", { ref: ref, className: classnames_1.default('module-emoji', `module-emoji--${size}px`, inline ? 'module-emoji--inline' : null, className), style: style },
+            React.createElement("img", { className: `module-emoji__image--${size}px`, src: image, alt: shortName })));
     }));
 })();

@@ -5,9 +5,13 @@
     window.ts.types = window.ts.types || {};
     const exports = window.ts.types.PhoneNumber = {};
 
+    var __importDefault = (this && this.__importDefault) || function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
     Object.defineProperty(exports, "__esModule", { value: true });
     const libphonenumberInstance_1 = window.ts.util.libphonenumberInstance;
-    function format(phoneNumber, options) {
+    const memoizee_1 = __importDefault(window.memoizee);
+    function _format(phoneNumber, options) {
         try {
             const { ourRegionCode } = options;
             const parsedNumber = libphonenumberInstance_1.instance.parse(phoneNumber);
@@ -21,7 +25,11 @@
             return phoneNumber;
         }
     }
-    exports.format = format;
+    exports.format = memoizee_1.default(_format, {
+        primitive: true,
+        // Convert the arguments to a unique string, required for primitive mode.
+        normalizer: (...args) => JSON.stringify(args),
+    });
     function parse(phoneNumber, options) {
         const { regionCode } = options;
         const parsedNumber = libphonenumberInstance_1.instance.parse(phoneNumber, regionCode);
