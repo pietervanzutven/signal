@@ -374,10 +374,11 @@
     }
 
     if (type === 'group-avatar') {
-      const conversationId = message.get('conversationid');
+      const conversationId = message.get('conversationId');
       const conversation = ConversationController.get(conversationId);
       if (!conversation) {
         logger.warn("_addAttachmentToMessage: conversation didn't exist");
+        return;
       }
 
       const existingAvatar = conversation.get('avatar');
@@ -385,12 +386,14 @@
         await Signal.Migrations.deleteAttachmentData(existingAvatar.path);
       }
 
-      const data = await Signal.Migrations.loadAttachmentData(attachment.path);
+      const loadedAttachment = await Signal.Migrations.loadAttachmentData(
+        attachment
+      );
       conversation.set({
         avatar: Object.assign({},
           attachment,
           {
-            hash: await computeHash(data),
+            hash: await computeHash(loadedAttachment.data),
           }
         ),
       });
