@@ -14,27 +14,39 @@
     const emoji_datasource_1 = __importDefault(window.emoji_datasource);
     const lodash_1 = window.lodash;
     const fuse_js_1 = __importDefault(window.fuse_js);
+    const p_queue_1 = __importDefault(window.p_queue);
     exports.skinTones = ['1F3FB', '1F3FC', '1F3FD', '1F3FE', '1F3FF'];
     const data = emoji_datasource_1.default.filter(emoji => emoji.has_img_apple);
     const makeImagePath = (src) => {
         return `node_modules/emoji-datasource-apple/img/apple/64/${src}`;
     };
-    exports.images = new Set();
-    exports.preloadImages = () => {
+    const imageQueue = new p_queue_1.default({ concurrency: 10 });
+    const images = new Set();
+    exports.preloadImages = async () => {
         // Preload images
-        const preload = (src) => {
+        const preload = (src) => new Promise((resolve, reject) => {
             const img = new Image();
+            img.onload = resolve;
+            img.onerror = reject;
             img.src = src;
-            exports.images.add(img);
-        };
+            images.add(img);
+            setTimeout(reject, 5000);
+        });
+        // tslint:disable-next-line no-console
+        console.log('Preloading emoji images');
+        const start = Date.now();
         data.forEach(emoji => {
-            preload(makeImagePath(emoji.image));
+            imageQueue.add(() => preload(makeImagePath(emoji.image)));
             if (emoji.skin_variations) {
                 Object.values(emoji.skin_variations).forEach(variation => {
-                    preload(makeImagePath(variation.image));
+                    imageQueue.add(() => preload(makeImagePath(variation.image)));
                 });
             }
         });
+        await imageQueue.onEmpty();
+        const end = Date.now();
+        // tslint:disable-next-line no-console
+        console.log(`Done preloading emoji images in ${end - start}ms`);
     };
     exports.dataByShortName = lodash_1.keyBy(data, 'short_name');
     data.forEach(emoji => {
