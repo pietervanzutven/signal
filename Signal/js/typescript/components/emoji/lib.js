@@ -24,21 +24,24 @@
     const images = new Set();
     exports.preloadImages = async () => {
         // Preload images
-        const preload = (src) => new Promise((resolve, reject) => {
+        const preload = async (src) => new Promise((resolve, reject) => {
             const img = new Image();
             img.onload = resolve;
             img.onerror = reject;
             img.src = src;
             images.add(img);
+            // tslint:disable-next-line  no-string-based-set-timeout
             setTimeout(reject, 5000);
         });
         // tslint:disable-next-line no-console
         console.log('Preloading emoji images');
         const start = Date.now();
         data.forEach(emoji => {
+            // tslint:disable-next-line no-floating-promises promise-function-async
             imageQueue.add(() => preload(makeImagePath(emoji.image)));
             if (emoji.skin_variations) {
                 Object.values(emoji.skin_variations).forEach(variation => {
+                    // tslint:disable-next-line no-floating-promises promise-function-async
                     imageQueue.add(() => preload(makeImagePath(variation.image)));
                 });
             }
