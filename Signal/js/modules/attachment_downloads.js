@@ -117,6 +117,11 @@
   }
 
   async function _tick() {
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+
     _maybeStartJob();
     timeout = setTimeout(_tick, TICK_INTERVAL);
   }
