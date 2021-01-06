@@ -145,7 +145,19 @@
             const match = getTrimmedMatchAtIndex(content, caretLocation, colonsRegex);
             // Update the state to indicate emojiable text at the current position.
             const newSearchText = match ? match.trim().substr(1) : '';
-            if (newSearchText.length >= 2 && focusRef.current) {
+            if (newSearchText.endsWith(':')) {
+                const bareText = lodash_1.trimEnd(newSearchText, ':');
+                const emoji = lodash_1.head(lib_1.search(bareText));
+                if (emoji && bareText === emoji.short_name) {
+                    handleEditorCommand('enter-emoji', newState, emoji);
+                    // Prevent inserted colon from persisting to state
+                    return;
+                }
+                else {
+                    resetEmojiResults();
+                }
+            }
+            else if (newSearchText.length >= 2 && focusRef.current) {
                 setEmojiResults(lib_1.search(newSearchText, 10));
                 setSearchText(newSearchText);
                 setEmojiResultsIndex(0);
@@ -187,13 +199,25 @@
                     e.preventDefault();
                 }
                 if (dir === 'next') {
-                    setEmojiResultsIndex(lodash_1.clamp(emojiResultsIndex + 1, 0, emojiResults.length - 1));
+                    setEmojiResultsIndex(index => {
+                        const next = index + 1;
+                        if (next >= emojiResults.length) {
+                            return 0;
+                        }
+                        return next;
+                    });
                 }
                 if (dir === 'prev') {
-                    setEmojiResultsIndex(lodash_1.clamp(emojiResultsIndex - 1, 0, emojiResults.length - 1));
+                    setEmojiResultsIndex(index => {
+                        const next = index - 1;
+                        if (next < 0) {
+                            return emojiResults.length - 1;
+                        }
+                        return next;
+                    });
                 }
             }
-        }, [setEmojiResultsIndex, emojiResultsIndex, emojiResults]);
+        }, [emojiResultsIndex, emojiResults]);
         const handleEditorArrowKey = React.useCallback((e) => {
             if (e.key === 'ArrowUp') {
                 selectEmojiResult('prev', e);
@@ -208,14 +232,14 @@
                 resetEmojiResults();
             }
         }, [resetEmojiResults, emojiResults]);
-        const getWordAtCaret = React.useCallback(() => {
-            const selection = editorState.getSelection();
+        const getWordAtCaret = React.useCallback((state = editorStateRef.current) => {
+            const selection = state.getSelection();
             const index = selection.getAnchorOffset();
-            return getWordAtIndex(editorState
+            return getWordAtIndex(state
                 .getCurrentContent()
                 .getBlockForKey(selection.getAnchorKey())
                 .getText(), index);
-        }, [editorState]);
+        }, []);
         const insertEmoji = React.useCallback((e, replaceWord = false) => {
             const selection = editorState.getSelection();
             const oldContent = editorState.getCurrentContent();
@@ -242,12 +266,12 @@
             setAndTrackEditorState(newState);
             resetEmojiResults();
         }, [editorState, setAndTrackEditorState, resetEmojiResults]);
-        const handleEditorCommand = React.useCallback((command, state) => {
+        const handleEditorCommand = React.useCallback((command, state, emojiOverride) => {
             if (command === 'enter-emoji') {
-                const shortName = emojiResults[emojiResultsIndex].short_name;
+                const { short_name: shortName } = emojiOverride || emojiResults[emojiResultsIndex];
                 const content = state.getCurrentContent();
                 const selection = state.getSelection();
-                const word = getWordAtCaret();
+                const word = getWordAtCaret(state);
                 const emojiContent = lib_1.convertShortName(shortName, skinTone);
                 const emojiEntityKey = content
                     .createEntity('emoji', 'IMMUTABLE', {
