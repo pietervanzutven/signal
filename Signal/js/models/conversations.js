@@ -613,9 +613,8 @@
       const id = await window.Signal.Data.saveMessage(message, {
         Message: Whisper.Message,
       });
-
-      this.trigger(
-        'newmessage',
+      const model = MessageController.register(
+        id,
         new Whisper.Message(Object.assign({},
           message,
           {
@@ -623,6 +622,8 @@
           }
         ))
       );
+
+      this.trigger('newmessage', model);
     },
     async addVerifiedChange(verifiedChangeId, verified, providedOptions) {
       const options = providedOptions || {};
@@ -659,9 +660,8 @@
       const id = await window.Signal.Data.saveMessage(message, {
         Message: Whisper.Message,
       });
-
-      this.trigger(
-        'newmessage',
+      const model = MessageController.register(
+        id,
         new Whisper.Message(Object.assign({},
           message,
           {
@@ -669,6 +669,8 @@
           }
         ))
       );
+
+      this.trigger('newmessage', model);
 
       if (this.isPrivate()) {
         ConversationController.getAllGroupsInvolvingId(this.id).then(groups => {
@@ -1290,7 +1292,7 @@
         Conversation: Whisper.Conversation,
       });
 
-      const message = this.messageCollection.add({
+      const model = new Whisper.Message({
         // Even though this isn't reflected to the user, we want to place the last seen
         //   indicator above it. We set it to 'unread' to trigger that placement.
         unread: 1,
@@ -1306,17 +1308,21 @@
           fromGroupUpdate: options.fromGroupUpdate,
         },
       });
-      if (this.isPrivate()) {
-        message.set({ destination: this.id });
-      }
-      if (message.isOutgoing()) {
-        message.set({ recipients: this.getRecipients() });
-      }
 
-      const id = await window.Signal.Data.saveMessage(message.attributes, {
+      if (this.isPrivate()) {
+        model.set({ destination: this.id });
+      }
+      if (model.isOutgoing()) {
+        model.set({ recipients: this.getRecipients() });
+      }
+      const id = await window.Signal.Data.saveMessage(model.attributes, {
         Message: Whisper.Message,
       });
-      message.set({ id });
+
+      model.set({ id });
+
+      const message = MessageController.register(id, model);
+      this.messageCollection.add(message);
 
       // if change was made remotely, don't send it to the number/group
       if (receivedAt) {
