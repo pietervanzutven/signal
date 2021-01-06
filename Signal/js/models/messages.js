@@ -1676,6 +1676,7 @@
 
       let group = this.get('group_update');
       if (group && group.avatar) {
+        count += 1;
         group = Object.assign({},
           group,
           {
@@ -1745,7 +1746,7 @@
           preview,
           contact,
           quote,
-          group,
+          group_update: group,
           sticker,
         });
 
