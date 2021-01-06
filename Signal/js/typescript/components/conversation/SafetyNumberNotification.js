@@ -26,7 +26,7 @@
                     react_1.default.createElement(Intl_1.Intl, {
                         id: changeKey, components: [
                             react_1.default.createElement("span", { key: "external-1", className: "module-safety-number-notification__contact" },
-                                react_1.default.createElement(ContactName_1.ContactName, { i18n: i18n, name: contact.name, profileName: contact.profileName, phoneNumber: contact.phoneNumber, module: "module-safety-number-notification__contact" })),
+                                react_1.default.createElement(ContactName_1.ContactName, { name: contact.name, profileName: contact.profileName, phoneNumber: contact.phoneNumber, module: "module-safety-number-notification__contact" })),
                         ], i18n: i18n
                     })),
                 react_1.default.createElement("div", {

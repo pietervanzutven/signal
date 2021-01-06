@@ -110,8 +110,12 @@
         tokenSeparator: /[-_\s]+/,
         keys: ['name', 'short_name', 'short_names'],
     });
-    function search(query) {
-        return fuse.search(query.substr(0, 32));
+    function search(query, count = 0) {
+        const results = fuse.search(query.substr(0, 32));
+        if (count) {
+            return lodash_1.take(results, count);
+        }
+        return results;
     }
     exports.search = search;
     const shortNames = new Set([

@@ -22,6 +22,7 @@
   <title>Signal</title>
   <link href='images/icon_128.png' rel='shortcut icon'>
   <link href="stylesheets/manifest.css" rel="stylesheet" type="text/css" />
+  <link href="node_modules/draft-js/dist/Draft.css" rel="stylesheet" type="text/css" />
 
   <!--
     When making changes to these templates, be sure to update test/index.html as well
@@ -116,9 +117,7 @@
           <div class='compose'>
             <form class='send clearfix file-input'>
               <div class='flex'>
-                <div class='emoji-button-placeholder'></div>
-                <textarea class='send-message' placeholder='{{ send-message }}' rows='1' dir='auto'></textarea>
-                <div class='sticker-button-placeholder'></div>
+                <div class='composition-area-placeholder'></div>
                 <div class='capture-audio'>
                     <button class='microphone'></button>
                 </div>
@@ -269,6 +268,82 @@
         <button class='small blue {{ buttonClass }}'>{{ action }}</button>
       </div>
     {{/action }}
+  </script>
+
+  <script type='text/x-tmpl-mustache' id='import-flow-template'>
+    {{#isStep2}}
+    <div id='step2' class='step'>
+      <div class='inner'>
+        <div class='step-body'>
+          <span class='banner-icon folder-outline'></span>
+          <div class='header'>{{ chooseHeader }}</div>
+          <div class='body-text'>{{ choose }}</div>
+        </div>
+        <div class='nav'>
+          <div>
+            <a class='button choose'>{{ chooseButton }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/isStep2}}
+    {{#isStep3}}
+    <div id='step3' class='step'>
+      <div class='inner'>
+        <div class='step-body'>
+          <span class='banner-icon import'></span>
+          <div class='header'>{{ importingHeader }}</div>
+        </div>
+        <div class='progress'>
+          <div class='bar-container'>
+            <div class='bar progress-bar progress-bar-striped active'></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/isStep3}}
+    {{#isStep4}}
+    <div id='step4' class='step'>
+      <div class='inner'>
+        <div class='step-body'>
+          <span class='banner-icon check-circle-outline'></span>
+          <div class='header'>{{ completeHeader }}</div>
+        </div>
+        <div class='nav'>
+          {{#restartButton}}
+          <div>
+            <a class='button restart'>{{ restartButton }}</a>
+          </div>
+          {{/restartButton}}
+          {{#registerButton}}
+          <div>
+            <a class='button register'>{{ registerButton }}</a>
+          </div>
+          {{/registerButton}}
+        </div>
+      </div>
+    </div>
+    {{/isStep4}}
+
+    {{#isError}}
+    <div id='error' class='step'>
+      <div class='inner error-dialog clearfix'>
+        <div class='step-body'>
+          <span class='banner-icon alert-outline'></span>
+          <div class='header'>{{ errorHeader }}</div>
+          <div class='body-text-wide'>
+            {{ errorMessageFirst }}
+            <p>{{ errorMessageSecond }}</p>
+          </div>
+        </div>
+        <div class='nav'>
+          <div>
+            <a class='button choose'>{{ chooseButton }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/isError}}
   </script>
 
   <script type='text/x-tmpl-mustache' id='link-flow-template'>
@@ -472,6 +547,7 @@
   <script type='text/javascript' src='node_modules/google-libphonenumber/libphonenumber.js'></script>
   <script type='text/javascript' src='node_modules/emoji-datasource/index.js'></script>
   <script type='text/javascript' src='node_modules/emoji-js/emoji.js'></script>
+  <script type='text/javascript' src='node_modules/emoji-regex/index.js'></script>
   <script type='text/javascript' src='node_modules/form-data/form-data.js'></script>
   <script type='text/javascript' src='node_modules/got/got.js'></script>
   <script type='text/javascript' src='node_modules/classnames/index.js'></script>
@@ -498,6 +574,7 @@
   <script type='text/javascript' src='node_modules/react-redux/react-redux.js'></script>
   <script type='text/javascript' src='node_modules/react-virtualized/react-virtualized.js'></script>
   <script type='text/javascript' src='node_modules/react-popper/index.umd.js'></script>
+  <script type='text/javascript' src='node_modules/react-measure/index.umd.js'></script>
   <script type='text/javascript' src='node_modules/moment/moment.js'></script>
   <script type='text/javascript' src='node_modules/uc.micro/categories/Cc/regex.js'></script>
   <script type='text/javascript' src='node_modules/uc.micro/categories/Cf/regex.js'></script>
@@ -532,6 +609,8 @@
   <script type='text/javascript' src='node_modules/p-map/index.js'></script>
   <script type='text/javascript' src='node_modules/qs/qs.js'></script>
   <script type='text/javascript' src='node_modules/fuse.js/fuse.js'></script>
+  <script type='text/javascript' src='node_modules/immutable/immutable.js'></script>
+  <script type='text/javascript' src='node_modules/draft-js/Draft.js'></script>
 
   <script type='text/javascript' src='js/modules/auto_orient_image.js'></script>
   <script type='text/javascript' src='js/modules/types/schema_version.js'></script>
@@ -640,6 +719,7 @@
   <script type='text/javascript' src='js/typescript/components/emoji/Emoji.js'></script>
   <script type='text/javascript' src='js/typescript/components/emoji/EmojiPicker.js'></script>
   <script type='text/javascript' src='js/typescript/components/emoji/EmojiButton.js'></script>
+  <script type='text/javascript' src='js/typescript/components/stickers/lib.js'></script>
   <script type='text/javascript' src='js/typescript/components/stickers/StickerPicker.js'></script>
   <script type='text/javascript' src='js/typescript/components/stickers/StickerButton.js'></script>
   <script type='text/javascript' src='js/typescript/components/stickers/StickerPackInstallButton.js'></script>
@@ -654,6 +734,8 @@
   <script type='text/javascript' src='js/typescript/components/StartNewConversation.js'></script>
   <script type='text/javascript' src='js/typescript/components/SearchResults.js'></script>
   <script type='text/javascript' src='js/typescript/components/LeftPane.js'></script>
+  <script type='text/javascript' src='js/typescript/components/CompositionInput.js'></script>
+  <script type='text/javascript' src='js/typescript/components/CompositionArea.js'></script>
   <script type='text/javascript' src='js/typescript/backbone/Conversation.js'></script>
   <script type='text/javascript' src='js/typescript/backbone/views/Lightbox.js'></script>
   <script type='text/javascript' src='js/typescript/backbone/views/index.js'></script>
@@ -706,18 +788,16 @@
   <script type='text/javascript' src='js/typescript/state/selectors/conversations.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/search.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/stickers.js'></script>
-  <script type='text/javascript' src='js/typescript/state/smart/EmojiButton.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/CompositionArea.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/MainHeader.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/MessageSearchResult.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/LeftPane.js'></script>
-  <script type='text/javascript' src='js/typescript/state/smart/StickerButton.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/StickerManager.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/StickerPreviewModal.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/TimelineItem.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/Timeline.js'></script>
-  <script type='text/javascript' src='js/typescript/state/roots/createEmojiButton.js'></script>
+  <script type='text/javascript' src='js/typescript/state/roots/createCompositionArea.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createLeftPane.js'></script>
-  <script type='text/javascript' src='js/typescript/state/roots/createStickerButton.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createStickerManager.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createStickerPreviewModal.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createTimeline.js'></script>

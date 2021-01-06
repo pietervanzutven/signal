@@ -22,7 +22,7 @@
             const { i18n } = this.props;
             const people = lodash_1.compact(lodash_1.flatten((contacts || []).map((contact, index) => {
                 const element = (react_1.default.createElement("span", { key: `external-${contact.phoneNumber}`, className: "module-group-notification__contact" },
-                    react_1.default.createElement(ContactName_1.ContactName, { i18n: i18n, phoneNumber: contact.phoneNumber, profileName: contact.profileName, name: contact.name })));
+                    react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: contact.phoneNumber, profileName: contact.profileName, name: contact.name })));
                 return [index > 0 ? ', ' : null, element];
             })));
             switch (type) {

@@ -38,13 +38,13 @@
                 return (react_1.default.createElement("div", { className: "module-conversation-header__title" }, i18n('noteToSelf')));
             }
             return (react_1.default.createElement("div", { className: "module-conversation-header__title" },
-                name ? react_1.default.createElement(Emojify_1.Emojify, { text: name, i18n: i18n }) : null,
+                name ? react_1.default.createElement(Emojify_1.Emojify, { text: name }) : null,
                 name && phoneNumber ? ' · ' : null,
                 phoneNumber ? phoneNumber : null,
                 ' ',
                 profileName && !name ? (react_1.default.createElement("span", { className: "module-conversation-header__title__profile-name" },
                     "~",
-                    react_1.default.createElement(Emojify_1.Emojify, { text: profileName, i18n: i18n }))) : null,
+                    react_1.default.createElement(Emojify_1.Emojify, { text: profileName }))) : null,
                 isVerified ? ' · ' : null,
                 isVerified ? (react_1.default.createElement("span", null,
                     react_1.default.createElement("span", { className: "module-conversation-header__title__verified-icon" }),

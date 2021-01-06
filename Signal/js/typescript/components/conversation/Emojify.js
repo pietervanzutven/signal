@@ -15,24 +15,23 @@
     const is_1 = __importDefault(window.sindresorhus.is);
     const emoji_1 = window.ts.util.emoji;
     // Some of this logic taken from emoji-js/replacement
-    function getImageTag({ match, sizeClass, key, i18n, }) {
+    function getImageTag({ match, sizeClass, key, }) {
         const result = emoji_1.getReplacementData(match[0], match[1], match[2]);
         if (is_1.default.string(result)) {
             return match[0];
         }
         const img = emoji_1.findImage(result.value, result.variation);
-        const title = emoji_1.getTitle(result.value);
         if (!img.path ||
             !img.path.startsWith('node_modules/emoji-datasource-apple')) {
             return match[0];
         }
         return (
             // tslint:disable-next-line react-a11y-img-has-alt
-            react_1.default.createElement("img", { key: key, src: img.path, "aria-label": i18n('emojiAlt', [title || '']), className: classnames_1.default('emoji', sizeClass), "data-codepoints": img.full_idx, title: `:${title}:` }));
+            react_1.default.createElement("img", { key: key, src: img.path, "aria-label": match[0], className: classnames_1.default('emoji', sizeClass), "data-codepoints": img.full_idx, title: match[0] }));
     }
     class Emojify extends react_1.default.Component {
         render() {
-            const { text, sizeClass, renderNonEmoji, i18n } = this.props;
+            const { text, sizeClass, renderNonEmoji } = this.props;
             const results = [];
             const regex = emoji_1.getRegex();
             // We have to do this, because renderNonEmoji is not required in our Props object,
@@ -51,7 +50,7 @@
                     const textWithNoEmoji = text.slice(last, match.index);
                     results.push(renderNonEmoji({ text: textWithNoEmoji, key: count++ }));
                 }
-                results.push(getImageTag({ match, sizeClass, key: count++, i18n }));
+                results.push(getImageTag({ match, sizeClass, key: count++ }));
                 last = regex.lastIndex;
                 match = regex.exec(text);
             }

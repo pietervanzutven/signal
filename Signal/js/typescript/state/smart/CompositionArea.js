@@ -4,15 +4,18 @@
     window.ts = window.ts || {};
     window.ts.state = window.ts.state || {};
     window.ts.state.smart = window.ts.state.smart || {};
-    const exports = window.ts.state.smart.StickerButton = {};
+    const exports = window.ts.state.smart.CompositionArea = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_redux_1 = window.react_redux;
+    const reselect_1 = window.reselect;
     const lodash_1 = window.lodash;
     const actions_1 = window.ts.state.actions;
-    const StickerButton_1 = window.ts.components.stickers.StickerButton;
+    const CompositionArea_1 = window.ts.components.CompositionArea;
+    const lib_1 = window.ts.components.emoji.lib;
     const user_1 = window.ts.state.selectors.user;
     const stickers_1 = window.ts.state.selectors.stickers;
+    const selectRecentEmojis = reselect_1.createSelector(({ emojis }) => emojis.recents, recents => recents.filter(lib_1.isShortName));
     const mapStateToProps = (state) => {
         const receivedPacks = stickers_1.getReceivedStickerPacks(state);
         const installedPacks = stickers_1.getInstalledStickerPacks(state);
@@ -23,7 +26,14 @@
         const showIntroduction = lodash_1.get(state.items, ['showStickersIntroduction'], false);
         const showPickerHint = lodash_1.get(state.items, ['showStickerPickerHint'], false) &&
             receivedPacks.length > 0;
+        const recentEmojis = selectRecentEmojis(state);
         return {
+            // Base
+            i18n: user_1.getIntl(state),
+            // Emojis
+            recentEmojis,
+            skinTone: lodash_1.get(state, ['items', 'skinTone'], 0),
+            // Stickers
             receivedPacks,
             installedPack,
             blessedPacks,
@@ -32,9 +42,9 @@
             recentStickers,
             showIntroduction,
             showPickerHint,
-            i18n: user_1.getIntl(state),
         };
     };
-    const smart = react_redux_1.connect(mapStateToProps, Object.assign({}, actions_1.mapDispatchToProps, { clearShowIntroduction: () => actions_1.mapDispatchToProps.removeItem('showStickersIntroduction'), clearShowPickerHint: () => actions_1.mapDispatchToProps.removeItem('showStickerPickerHint') }));
-    exports.SmartStickerButton = smart(StickerButton_1.StickerButton);
+    const dispatchPropsMap = Object.assign({}, actions_1.mapDispatchToProps, { onSetSkinTone: (tone) => actions_1.mapDispatchToProps.putItem('skinTone', tone), clearShowIntroduction: () => actions_1.mapDispatchToProps.removeItem('showStickersIntroduction'), clearShowPickerHint: () => actions_1.mapDispatchToProps.removeItem('showStickerPickerHint'), onPickEmoji: actions_1.mapDispatchToProps.useEmoji });
+    const smart = react_redux_1.connect(mapStateToProps, dispatchPropsMap);
+    exports.SmartCompositionArea = smart(CompositionArea_1.CompositionArea);
 })();

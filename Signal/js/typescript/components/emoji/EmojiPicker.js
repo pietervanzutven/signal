@@ -42,7 +42,7 @@
     ];
     exports.EmojiPicker = React.memo(React.forwardRef(
         // tslint:disable-next-line max-func-body-length
-        ({ i18n, onForceSend, onPickEmoji, skinTone = 0, onSetSkinTone, recentEmojis, style, onClose, }, ref) => {
+        ({ i18n, doSend, onPickEmoji, skinTone = 0, onSetSkinTone, recentEmojis, style, onClose, }, ref) => {
             // Per design: memoize the initial recent emojis so the grid only updates after re-opening the picker.
             const firstRecent = React.useMemo(() => {
                 return recentEmojis;
@@ -74,7 +74,7 @@
                 if ('key' in e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
-                        onForceSend();
+                        doSend();
                     }
                 }
                 else {
@@ -83,7 +83,7 @@
                         onPickEmoji({ skinTone: selectedTone, shortName });
                     }
                 }
-            }, [onClose, onForceSend, onPickEmoji, selectedTone]);
+            }, [doSend, onPickEmoji, selectedTone]);
             // Handle escape key
             React.useEffect(() => {
                 const handler = (e) => {

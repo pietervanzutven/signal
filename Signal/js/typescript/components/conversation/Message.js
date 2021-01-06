@@ -131,7 +131,7 @@
                 })) : null));
         }
         renderAuthor() {
-            const { authorName, authorPhoneNumber, authorProfileName, collapseMetadata, conversationType, direction, i18n, isSticker, isTapToView, isTapToViewExpired, } = this.props;
+            const { authorName, authorPhoneNumber, authorProfileName, collapseMetadata, conversationType, direction, isSticker, isTapToView, isTapToViewExpired, } = this.props;
             if (collapseMetadata) {
                 return;
             }
@@ -146,7 +146,7 @@
                 : '';
             const moduleName = `module-message__author${stickerSuffix}${tapToViewSuffix}`;
             return (react_1.default.createElement("div", { className: moduleName },
-                react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, module: moduleName, i18n: i18n })));
+                react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, module: moduleName })));
         }
         // tslint:disable-next-line max-func-body-length cyclomatic-complexity
         renderAttachment() {

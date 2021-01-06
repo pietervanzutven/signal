@@ -79,11 +79,10 @@
   } = window.ts.components.conversation.VerificationNotification;
 
   // State
-  const { createEmojiButton } = window.ts.state.roots.createEmojiButton;
-  const { createLeftPane } = window.ts.state.roots.createLeftPane;
   const {
-    createStickerButton,
-  } = window.ts.state.roots.createStickerButton;
+    createCompositionArea,
+  } = window.ts.state.roots.createCompositionArea;
+  const { createLeftPane } = window.ts.state.roots.createLeftPane;
   const {
     createStickerManager,
   } = window.ts.state.roots.createStickerManager;
@@ -291,9 +290,8 @@
     };
 
     const Roots = {
-      createEmojiButton,
+      createCompositionArea,
       createLeftPane,
-      createStickerButton,
       createStickerManager,
       createStickerPreviewModal,
     };

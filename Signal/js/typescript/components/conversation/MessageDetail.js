@@ -43,7 +43,7 @@
                 this.renderAvatar(contact),
                 react_1.default.createElement("div", { className: "module-message-detail__contact__text" },
                     react_1.default.createElement("div", { className: "module-message-detail__contact__name" },
-                        react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: contact.phoneNumber, name: contact.name, profileName: contact.profileName, i18n: i18n })),
+                        react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: contact.phoneNumber, name: contact.name, profileName: contact.profileName })),
                     errors.map((error, index) => (react_1.default.createElement("div", { key: index, className: "module-message-detail__contact__error" }, error.message)))),
                 errorComponent,
                 unidentifiedDeliveryComponent,
