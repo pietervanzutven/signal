@@ -75,7 +75,15 @@
                     setPopperRoot(root);
                     document.body.appendChild(root);
                     const handleOutsideClick = ({ target }) => {
-                        if (!root.contains(target)) {
+                        const targetElement = target;
+                        const className = targetElement
+                            ? targetElement.className || ''
+                            : '';
+                        // We need to special-case sticker picker header buttons, because they can
+                        //   disappear after being clicked, which breaks the .contains() check below.
+                        const isMissingButtonClass = !className ||
+                            className.indexOf('module-sticker-picker__header__button') < 0;
+                        if (!root.contains(targetElement) && isMissingButtonClass) {
                             setOpen(false);
                         }
                     };
