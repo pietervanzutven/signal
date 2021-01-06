@@ -125,7 +125,6 @@
     getOutgoingWithoutExpiresAt,
     getNextExpiringMessage,
     getMessagesByConversation,
-    getNextTapToViewMessageToExpire,
     getNextTapToViewMessageToAgeOut,
     getTapToViewMessagesNeedingErase,
 
@@ -847,14 +846,6 @@
     return new MessageCollection(messages);
   }
 
-  async function getNextTapToViewMessageToExpire({ Message }) {
-    const message = await channels.getNextTapToViewMessageToExpire();
-    if (!message) {
-      return null;
-    }
-
-    return new Message(message);
-  }
   async function getNextTapToViewMessageToAgeOut({ Message }) {
     const message = await channels.getNextTapToViewMessageToAgeOut();
     if (!message) {

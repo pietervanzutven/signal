@@ -751,7 +751,7 @@ MessageSender.prototype = {
     return Promise.resolve();
   },
 
-  async syncMessageTimerRead(sender, timestamp, options) {
+  async syncViewOnceOpen(sender, timestamp, options) {
     const myNumber = textsecure.storage.user.getNumber();
     const myDevice = textsecure.storage.user.getDeviceId();
     if (myDevice === 1 || myDevice === '1') {
@@ -760,10 +760,10 @@ MessageSender.prototype = {
 
     const syncMessage = this.createSyncMessage();
 
-    const messageTimerRead = new textsecure.protobuf.SyncMessage.MessageTimerRead();
-    messageTimerRead.sender = sender;
-    messageTimerRead.timestamp = timestamp;
-    syncMessage.messageTimerRead = messageTimerRead;
+    const viewOnceOpen = new textsecure.protobuf.SyncMessage.ViewOnceOpen();
+    viewOnceOpen.sender = sender;
+    viewOnceOpen.timestamp = timestamp;
+    syncMessage.viewOnceOpen = viewOnceOpen;
 
     const contentMessage = new textsecure.protobuf.Content();
     contentMessage.syncMessage = syncMessage;
@@ -1266,7 +1266,7 @@ textsecure.MessageSender = function MessageSenderWrapper(username, password) {
   this.getSticker = sender.getSticker.bind(sender);
   this.getStickerPackManifest = sender.getStickerPackManifest.bind(sender);
   this.sendStickerPackSync = sender.sendStickerPackSync.bind(sender);
-  this.syncMessageTimerRead = sender.syncMessageTimerRead.bind(sender);
+  this.syncViewOnceOpen = sender.syncViewOnceOpen.bind(sender);
 };
 
 textsecure.MessageSender.prototype = {
