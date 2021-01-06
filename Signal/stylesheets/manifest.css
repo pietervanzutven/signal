@@ -1109,21 +1109,44 @@ input.search {
     border-color: transparent transparent #2eace0 transparent;
     top: -30px; }
 
+@keyframes panel--in {
+  from {
+    transform: translateX(500px);
+    opacity: 0; }
+  to {
+    transform: translateX(0);
+    opacity: 1; } }
+
 .conversation {
   background-color: #ffffff;
   height: 100%;
   position: relative; }
-  .conversation .panel,
-  .conversation .panel-wrapper {
+  .conversation .panel {
     height: calc(100% - 48px);
-    overflow-y: scroll; }
+    overflow-y: scroll;
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 48px;
+    width: 100%;
+    height: calc(100% - 48px);
+    background-color: #ffffff; }
+    .dark-theme .conversation .panel {
+      background-color: #000000; }
+  .conversation .panel:not(.main) {
+    animation: panel--in 250ms ease-out; }
+  .conversation .panel--static {
+    animation: none; }
+  .conversation .panel--remove {
+    transform: translateX(500px);
+    opacity: 0;
+    transition: all 250ms ease-out; }
   .conversation .panel .container {
     padding-top: 20px;
     max-width: 750px;
     margin: 0 auto;
     padding: 20px; }
-  .conversation .main.panel,
-  .conversation .panel-wrapper {
+  .conversation .main.panel {
     display: flex;
     flex-direction: column;
     overflow: initial; }
@@ -4712,6 +4735,26 @@ body.dark-theme {
   background-color: #ffffff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2); }
 
+.module-conversation-header__back-icon {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><path d='M30.83 14.83L28 12 16 24l12 12 2.83-2.83L21.66 24z' fill='%2317191D'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: none;
+  margin-left: -10px;
+  margin-right: -2px;
+  width: 35px;
+  height: 35px;
+  min-width: 35px;
+  vertical-align: text-bottom;
+  border: none;
+  opacity: 0;
+  transition: opacity 250ms ease-out; }
+  .module-conversation-header__back-icon:disabled {
+    cursor: default; }
+  .module-conversation-header__back-icon--show {
+    opacity: 1; }
+
 .module-conversation-header__title-container {
   flex-grow: 1;
   flex-shrink: 1;
@@ -4784,10 +4827,17 @@ body.dark-theme {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
+  background-color: white;
   height: 20px;
   width: 20px;
   margin-left: 4px;
-  cursor: pointer; }
+  border: none;
+  opacity: 0;
+  transition: opacity 250ms ease-out; }
+  .module-conversation-header__gear-icon:disabled {
+    cursor: default; }
+  .module-conversation-header__gear-icon--show {
+    opacity: 1; }
 
 .module-message-detail {
   max-width: 650px;
