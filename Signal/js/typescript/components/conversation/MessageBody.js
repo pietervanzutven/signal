@@ -11,7 +11,7 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
-    const emoji_1 = window.ts.util.emoji;
+    const lib_1 = window.ts.components.emoji.lib;
     const Emojify_1 = window.ts.components.conversation.Emojify;
     const AddNewLines_1 = window.ts.components.conversation.AddNewLines;
     const Linkify_1 = window.ts.components.conversation.Linkify;
@@ -34,7 +34,7 @@
         }
         render() {
             const { text, textPending, disableJumbomoji, disableLinks, i18n, } = this.props;
-            const sizeClass = disableJumbomoji ? undefined : emoji_1.getSizeClass(text);
+            const sizeClass = disableJumbomoji ? undefined : lib_1.getSizeClass(text);
             const textWithPending = textPending ? `${text}...` : text;
             if (disableLinks) {
                 return this.addDownloading(renderEmoji({

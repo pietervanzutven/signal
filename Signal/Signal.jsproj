@@ -364,7 +364,6 @@
     <Content Include="js\typescript\types\Util.js" />
     <Content Include="js\typescript\util\arrayBufferToObjectURL.js" />
     <Content Include="js\typescript\util\cleanSearchTerm.js" />
-    <Content Include="js\typescript\util\emoji.js" />
     <Content Include="js\typescript\util\formatRelativeTime.js" />
     <Content Include="js\typescript\util\getInitials.js" />
     <Content Include="js\typescript\util\GoogleChrome.js" />
@@ -3016,7 +3015,6 @@
     <Content Include="node_modules\emoji-datasource-apple\img\apple\64\3299-fe0f.png" />
     <Content Include="node_modules\emoji-datasource\emoji.json" />
     <Content Include="node_modules\emoji-datasource\index.js" />
-    <Content Include="node_modules\emoji-js\emoji.js" />
     <Content Include="node_modules\emoji-regex\index.js" />
     <Content Include="node_modules\eventemitter3\index.js" />
     <Content Include="node_modules\firstline\index.js" />

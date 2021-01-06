@@ -3,16 +3,12 @@
 
   const { take } = window.lodash;
   const { getRecentEmojis } = window.data;
-  const {
-    replaceColons,
-    hasVariation,
-  } = window.ts.components.emoji.lib;
+  const { replaceColons } = window.ts.components.emoji.lib;
 
   window.emojis = {
     getInitialState,
     load,
     replaceColons,
-    hasVariation,
   };
 
   let initialState = null;

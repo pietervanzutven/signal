@@ -12,28 +12,23 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
-    const is_1 = __importDefault(window.sindresorhus.is);
-    const emoji_1 = window.ts.util.emoji;
+    const emoji_regex_1 = __importDefault(window.emoji_regex);
+    const lib_1 = window.ts.components.emoji.lib;
     // Some of this logic taken from emoji-js/replacement
     function getImageTag({ match, sizeClass, key, }) {
-        const result = emoji_1.getReplacementData(match[0], match[1], match[2]);
-        if (is_1.default.string(result)) {
-            return match[0];
-        }
-        const img = emoji_1.findImage(result.value, result.variation);
-        if (!img.path ||
-            !img.path.startsWith('node_modules/emoji-datasource-apple')) {
+        const img = lib_1.emojiToImage(match[0]);
+        if (!img) {
             return match[0];
         }
         return (
             // tslint:disable-next-line react-a11y-img-has-alt
-            react_1.default.createElement("img", { key: key, src: img.path, "aria-label": match[0], className: classnames_1.default('emoji', sizeClass), "data-codepoints": img.full_idx, title: match[0] }));
+            react_1.default.createElement("img", { key: key, src: img, "aria-label": match[0], className: classnames_1.default('emoji', sizeClass), title: match[0] }));
     }
     class Emojify extends react_1.default.Component {
         render() {
             const { text, sizeClass, renderNonEmoji } = this.props;
             const results = [];
-            const regex = emoji_1.getRegex();
+            const regex = emoji_regex_1.default();
             // We have to do this, because renderNonEmoji is not required in our Props object,
             //  but it is always provided via defaultProps.
             if (!renderNonEmoji) {
