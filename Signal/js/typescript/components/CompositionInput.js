@@ -79,7 +79,7 @@
     });
     // tslint:disable-next-line max-func-body-length
     exports.CompositionInput = ({ i18n, disabled, editorRef, inputApi, onDirtyChange, onEditorStateChange, onEditorSizeChange, onPickEmoji, onSubmit, skinTone, }) => {
-        const [editorState, setEditorState] = React.useState(draft_js_1.EditorState.createEmpty(compositeDecorator));
+        const [editorRenderState, setEditorRenderState] = React.useState(draft_js_1.EditorState.createEmpty(compositeDecorator));
         const [searchText, setSearchText] = React.useState('');
         const [emojiResults, setEmojiResults] = React.useState([]);
         const [emojiResultsIndex, setEmojiResultsIndex] = React.useState(0);
@@ -87,19 +87,19 @@
         const [popperRoot, setPopperRoot] = React.useState(null);
         const dirtyRef = React.useRef(false);
         const focusRef = React.useRef(false);
-        const editorStateRef = React.useRef(editorState);
+        const editorStateRef = React.useRef(editorRenderState);
         const rootElRef = React.useRef();
         // This function sets editorState and also keeps a reference to the newly set
         // state so we can reference the state in effects and callbacks without
         // excessive cleanup
         const setAndTrackEditorState = React.useCallback((newState) => {
-            setEditorState(newState);
+            setEditorRenderState(newState);
             editorStateRef.current = newState;
-        }, [setEditorState, editorStateRef]);
+        }, [setEditorRenderState, editorStateRef]);
         const updateExternalStateListeners = React.useCallback((newState) => {
             const plainText = newState.getCurrentContent().getPlainText();
             const currentBlockKey = newState.getSelection().getStartKey();
-            const currentBlockIndex = editorState
+            const currentBlockIndex = editorStateRef.current
                 .getCurrentContent()
                 .getBlockMap()
                 .keySeq()
@@ -128,7 +128,7 @@
             if (onEditorStateChange) {
                 onEditorStateChange(plainText, caretLocation);
             }
-        }, [onDirtyChange, onEditorStateChange]);
+        }, [onDirtyChange, onEditorStateChange, editorStateRef]);
         const resetEmojiResults = React.useCallback(() => {
             setEmojiResults([]);
             setEmojiResultsIndex(0);
@@ -181,10 +181,11 @@
             resetEmojiResults();
         }, [editorStateRef, resetEmojiResults, setAndTrackEditorState]);
         const submit = React.useCallback(() => {
-            const text = editorState.getCurrentContent().getPlainText();
+            const { current: state } = editorStateRef;
+            const text = state.getCurrentContent().getPlainText();
             const emojidText = lib_1.replaceColons(text);
             onSubmit(emojidText);
-        }, [editorState, onSubmit]);
+        }, [editorStateRef, onSubmit]);
         const handleEditorSizeChange = React.useCallback((rect) => {
             if (rect.bounds) {
                 setEditorWidth(rect.bounds.width);
@@ -241,8 +242,9 @@
                 .getText(), index);
         }, []);
         const insertEmoji = React.useCallback((e, replaceWord = false) => {
-            const selection = editorState.getSelection();
-            const oldContent = editorState.getCurrentContent();
+            const { current: state } = editorStateRef;
+            const selection = state.getSelection();
+            const oldContent = state.getCurrentContent();
             const emojiContent = lib_1.convertShortName(e.shortName, e.skinTone);
             const emojiEntityKey = oldContent
                 .createEntity('emoji', 'IMMUTABLE', {
@@ -262,10 +264,10 @@
                 newContent.getBlockForKey(afterSelection.getAnchorKey()).getLength()) {
                 newContent = draft_js_1.Modifier.insertText(newContent, afterSelection, ' ');
             }
-            const newState = draft_js_1.EditorState.push(editorState, newContent, 'insert-emoji');
+            const newState = draft_js_1.EditorState.push(state, newContent, 'insert-emoji');
             setAndTrackEditorState(newState);
             resetEmojiResults();
-        }, [editorState, setAndTrackEditorState, resetEmojiResults]);
+        }, [editorStateRef, setAndTrackEditorState, resetEmojiResults]);
         const handleEditorCommand = React.useCallback((command, state, emojiOverride) => {
             if (command === 'enter-emoji') {
                 const { short_name: shortName } = emojiOverride || emojiResults[emojiResultsIndex];
@@ -320,8 +322,8 @@
                 return;
             }
             e.preventDefault();
-            handleEditorCommand('enter-emoji', editorState);
-        }, [emojiResults, editorState, handleEditorCommand, resetEmojiResults]);
+            handleEditorCommand('enter-emoji', editorStateRef.current);
+        }, [emojiResults, editorStateRef, handleEditorCommand, resetEmojiResults]);
         const editorKeybindingFn = React.useCallback((e) => {
             if (e.key === 'Enter' && emojiResults.length > 0) {
                 e.preventDefault();
@@ -391,7 +393,7 @@
         return (React.createElement(react_popper_1.Manager, null,
             React.createElement(react_popper_1.Reference, null, ({ ref: popperRef }) => (React.createElement(react_measure_1.default, { bounds: true, onResize: handleEditorSizeChange }, ({ measureRef }) => (React.createElement("div", { className: "module-composition-input__input", ref: combineRefs(popperRef, measureRef, rootElRef) },
                 React.createElement("div", { className: "module-composition-input__input__scroller" },
-                    React.createElement(draft_js_1.Editor, { ref: editorRef, editorState: editorState, onChange: handleEditorStateChange, placeholder: i18n('sendMessage'), onUpArrow: handleEditorArrowKey, onDownArrow: handleEditorArrowKey, onEscape: handleEscapeKey, onTab: onTab, handleKeyCommand: handleEditorCommand, keyBindingFn: editorKeybindingFn, spellCheck: true, stripPastedStyles: true, readOnly: disabled, onFocus: onFocus, onBlur: onBlur }))))))),
+                    React.createElement(draft_js_1.Editor, { ref: editorRef, editorState: editorRenderState, onChange: handleEditorStateChange, placeholder: i18n('sendMessage'), onUpArrow: handleEditorArrowKey, onDownArrow: handleEditorArrowKey, onEscape: handleEscapeKey, onTab: onTab, handleKeyCommand: handleEditorCommand, keyBindingFn: editorKeybindingFn, spellCheck: true, stripPastedStyles: true, readOnly: disabled, onFocus: onFocus, onBlur: onBlur }))))))),
             emojiResults.length > 0 && popperRoot
                 ? react_dom_1.createPortal(React.createElement(react_popper_1.Popper, { placement: "top", key: searchText }, ({ ref, style }) => (React.createElement("div", { ref: ref, className: "module-composition-input__emoji-suggestions", style: Object.assign({}, style, { width: editorWidth }), role: "listbox", "aria-expanded": true, "aria-activedescendant": `emoji-result--${emojiResults[emojiResultsIndex].short_name}` }, emojiResults.map((emoji, index) => (React.createElement("button", {
                     key: emoji.short_name, id: `emoji-result--${emoji.short_name}`, role: "option button", "aria-selected": emojiResultsIndex === index, onMouseDown: () => {
