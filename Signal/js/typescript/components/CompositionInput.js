@@ -341,6 +341,16 @@
                 e.preventDefault();
                 return 'prev-emoji';
             }
+            // Get rid of default draft.js ctrl-m binding which interferes with Windows minimize
+            if (e.key === 'm' && e.ctrlKey) {
+                return null;
+            }
+            if (lodash_1.get(window, 'platform') === 'linux') {
+                // Get rid of default draft.js shift-del binding which interferes with Linux cut
+                if (e.key === 'Delete' && e.shiftKey) {
+                    return null;
+                }
+            }
             return draft_js_1.getDefaultKeyBinding(e);
         }, [emojiResults]);
         // Create popper root
