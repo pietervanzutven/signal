@@ -13,7 +13,7 @@
     exports.actions = {
         useEmoji,
     };
-    function useEmoji(shortName) {
+    function useEmoji({ shortName }) {
         return {
             type: 'emojis/USE_EMOJI',
             payload: doUseEmoji(shortName),
