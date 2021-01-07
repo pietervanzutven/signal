@@ -13,10 +13,17 @@
     const classnames_1 = __importDefault(window.classnames);
     class Spinner extends react_1.default.Component {
         render() {
-            const { size, direction } = this.props;
-            return (react_1.default.createElement("div", { className: classnames_1.default('module-spinner__container', `module-spinner__container--${size}`, direction ? `module-spinner__container--${direction}` : null, direction ? `module-spinner__container--${size}-${direction}` : null) },
-                react_1.default.createElement("div", { className: classnames_1.default('module-spinner__circle', `module-spinner__circle--${size}`, direction ? `module-spinner__circle--${direction}` : null, direction ? `module-spinner__circle--${size}-${direction}` : null) }),
-                react_1.default.createElement("div", { className: classnames_1.default('module-spinner__arc', `module-spinner__arc--${size}`, direction ? `module-spinner__arc--${direction}` : null, direction ? `module-spinner__arc--${size}-${direction}` : null) })));
+            const { size, svgSize, direction } = this.props;
+            return (react_1.default.createElement("div", {
+                className: classnames_1.default('module-spinner__container', `module-spinner__container--${svgSize}`, direction ? `module-spinner__container--${direction}` : null, direction
+                    ? `module-spinner__container--${svgSize}-${direction}`
+                    : null), style: {
+                        height: size,
+                        width: size,
+                    }
+            },
+                react_1.default.createElement("div", { className: classnames_1.default('module-spinner__circle', `module-spinner__circle--${svgSize}`, direction ? `module-spinner__circle--${direction}` : null, direction ? `module-spinner__circle--${svgSize}-${direction}` : null) }),
+                react_1.default.createElement("div", { className: classnames_1.default('module-spinner__arc', `module-spinner__arc--${svgSize}`, direction ? `module-spinner__arc--${direction}` : null, direction ? `module-spinner__arc--${svgSize}-${direction}` : null) })));
         }
     }
     exports.Spinner = Spinner;

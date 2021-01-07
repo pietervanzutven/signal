@@ -23,6 +23,7 @@
     const react_popper_1 = window.react_popper;
     const react_dom_1 = window.react_dom;
     const StickerPicker_1 = window.ts.components.stickers.StickerPicker;
+    const lib_1 = window.ts.components.stickers.lib;
     exports.StickerButton = React.memo(
         // tslint:disable-next-line max-func-body-length
         ({ i18n, clearInstalledStickerPack, onClickAddPack, onPickSticker, recentStickers, receivedPacks, installedPack, installedPacks, blessedPacks, knownPacks, showIntroduction, clearShowIntroduction, showPickerHint, clearShowPickerHint, }) => {
@@ -74,7 +75,15 @@
                     setPopperRoot(root);
                     document.body.appendChild(root);
                     const handleOutsideClick = ({ target }) => {
-                        if (!root.contains(target)) {
+                        const targetElement = target;
+                        const className = targetElement
+                            ? targetElement.className || ''
+                            : '';
+                        // We need to special-case sticker picker header buttons, because they can
+                        //   disappear after being clicked, which breaks the .contains() check below.
+                        const isMissingButtonClass = !className ||
+                            className.indexOf('module-sticker-picker__header__button') < 0;
+                        if (!root.contains(targetElement) && isMissingButtonClass) {
                             setOpen(false);
                         }
                     };
@@ -98,11 +107,12 @@
                 }
                 return lodash_1.noop;
             }, [installedPack, clearInstalledStickerPack]);
-            const totalPacks = knownPacks.length +
-                blessedPacks.length +
-                installedPacks.length +
-                receivedPacks.length;
-            if (totalPacks === 0) {
+            if (lib_1.countStickers({
+                knownPacks,
+                blessedPacks,
+                installedPacks,
+                receivedPacks,
+            }) === 0) {
                 return null;
             }
             return (React.createElement(react_popper_1.Manager, null,

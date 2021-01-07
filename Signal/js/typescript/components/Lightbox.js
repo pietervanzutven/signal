@@ -102,6 +102,9 @@
         saveButton: {
             marginTop: 10,
         },
+        countdownContainer: {
+            padding: 8,
+        },
         iconButtonPlaceholder: {
             // Dimensions match `.iconButton`:
             display: 'inline-block',
@@ -212,7 +215,7 @@
             }
         }
         render() {
-            const { caption, contentType, objectURL, onNext, onPrevious, onSave, i18n, } = this.props;
+            const { caption, contentType, i18n, objectURL, onNext, onPrevious, onSave, } = this.props;
             return (react_1.default.createElement("div", { style: styles.container, onClick: this.onContainerClick, ref: this.containerRef, role: "dialog" },
                 react_1.default.createElement("div", { style: styles.mainContainer },
                     react_1.default.createElement("div", { style: styles.controlsOffsetPlaceholder }),

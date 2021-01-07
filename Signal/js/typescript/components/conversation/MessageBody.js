@@ -11,12 +11,12 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
-    const emoji_1 = window.ts.util.emoji;
+    const lib_1 = window.ts.components.emoji.lib;
     const Emojify_1 = window.ts.components.conversation.Emojify;
     const AddNewLines_1 = window.ts.components.conversation.AddNewLines;
     const Linkify_1 = window.ts.components.conversation.Linkify;
     const renderNewLines = ({ text: textWithNewLines, key, }) => react_1.default.createElement(AddNewLines_1.AddNewLines, { key: key, text: textWithNewLines });
-    const renderEmoji = ({ i18n, text, key, sizeClass, renderNonEmoji, }) => (react_1.default.createElement(Emojify_1.Emojify, { i18n: i18n, key: key, text: text, sizeClass: sizeClass, renderNonEmoji: renderNonEmoji }));
+    const renderEmoji = ({ text, key, sizeClass, renderNonEmoji, }) => (react_1.default.createElement(Emojify_1.Emojify, { key: key, text: text, sizeClass: sizeClass, renderNonEmoji: renderNonEmoji }));
     /**
      * This component makes it very easy to use all three of our message formatting
      * components: `Emojify`, `Linkify`, and `AddNewLines`. Because each of them is fully
@@ -34,7 +34,7 @@
         }
         render() {
             const { text, textPending, disableJumbomoji, disableLinks, i18n, } = this.props;
-            const sizeClass = disableJumbomoji ? undefined : emoji_1.getSizeClass(text);
+            const sizeClass = disableJumbomoji ? undefined : lib_1.getSizeClass(text);
             const textWithPending = textPending ? `${text}...` : text;
             if (disableLinks) {
                 return this.addDownloading(renderEmoji({

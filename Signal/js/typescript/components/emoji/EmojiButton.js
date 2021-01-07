@@ -23,7 +23,7 @@
     const react_popper_1 = window.react_popper;
     const react_dom_1 = window.react_dom;
     const EmojiPicker_1 = window.ts.components.emoji.EmojiPicker;
-    exports.EmojiButton = React.memo(({ i18n, onClose, onForceSend, onPickEmoji, skinTone, onSetSkinTone, recentEmojis, }) => {
+    exports.EmojiButton = React.memo(({ i18n, doSend, onPickEmoji, skinTone, onSetSkinTone, recentEmojis, onClose, }) => {
         const [open, setOpen] = React.useState(false);
         const [popperRoot, setPopperRoot] = React.useState(null);
         const handleClickButton = React.useCallback(() => {
@@ -35,8 +35,8 @@
             }
         }, [popperRoot, setOpen]);
         const handleClose = React.useCallback(() => {
-            onClose();
             setOpen(false);
+            onClose();
         }, [setOpen, onClose]);
         // Create popper root and handle outside clicks
         React.useEffect(() => {
@@ -47,6 +47,7 @@
                 const handleOutsideClick = ({ target }) => {
                     if (!root.contains(target)) {
                         setOpen(false);
+                        onClose();
                     }
                 };
                 document.addEventListener('click', handleOutsideClick);
@@ -66,7 +67,7 @@
                 })
             }))),
             open && popperRoot
-                ? react_dom_1.createPortal(React.createElement(react_popper_1.Popper, { placement: "top-start" }, ({ ref, style }) => (React.createElement(EmojiPicker_1.EmojiPicker, { ref: ref, i18n: i18n, style: style, onPickEmoji: onPickEmoji, onForceSend: onForceSend, onClose: handleClose, skinTone: skinTone, onSetSkinTone: onSetSkinTone, recentEmojis: recentEmojis }))), popperRoot)
+                ? react_dom_1.createPortal(React.createElement(react_popper_1.Popper, { placement: "top-start" }, ({ ref, style }) => (React.createElement(EmojiPicker_1.EmojiPicker, { ref: ref, i18n: i18n, style: style, onPickEmoji: onPickEmoji, doSend: doSend, onClose: handleClose, skinTone: skinTone, onSetSkinTone: onSetSkinTone, recentEmojis: recentEmojis }))), popperRoot)
                 : null));
     });
 })();

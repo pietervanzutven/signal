@@ -12,9 +12,11 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     // @ts-ignore: untyped json
     const emoji_datasource_1 = __importDefault(window.emoji_datasource);
+    const emoji_regex_1 = __importDefault(window.emoji_regex);
     const lodash_1 = window.lodash;
     const fuse_js_1 = __importDefault(window.fuse_js);
     const p_queue_1 = __importDefault(window.p_queue);
+    const is_1 = __importDefault(window.sindresorhus.is);
     exports.skinTones = ['1F3FB', '1F3FC', '1F3FD', '1F3FE', '1F3FF'];
     const data = emoji_datasource_1.default.filter(emoji => emoji.has_img_apple);
     const makeImagePath = (src) => {
@@ -51,15 +53,8 @@
         // tslint:disable-next-line no-console
         console.log(`Done preloading emoji images in ${end - start}ms`);
     };
-    exports.dataByShortName = lodash_1.keyBy(data, 'short_name');
-    data.forEach(emoji => {
-        const { short_names } = emoji;
-        if (short_names) {
-            short_names.forEach(name => {
-                exports.dataByShortName[name] = emoji;
-            });
-        }
-    });
+    const dataByShortName = lodash_1.keyBy(data, 'short_name');
+    const imageByEmoji = {};
     exports.dataByCategory = lodash_1.mapValues(lodash_1.groupBy(data, ({ category }) => {
         if (category === 'Activities') {
             return 'activity';
@@ -88,7 +83,7 @@
         return 'misc';
     }), arr => lodash_1.sortBy(arr, 'sort_order'));
     function getEmojiData(shortName, skinTone) {
-        const base = exports.dataByShortName[shortName];
+        const base = dataByShortName[shortName];
         if (skinTone && base.skin_variations) {
             const variation = lodash_1.isNumber(skinTone) ? exports.skinTones[skinTone - 1] : skinTone;
             return base.skin_variations[variation];
@@ -110,8 +105,12 @@
         tokenSeparator: /[-_\s]+/,
         keys: ['name', 'short_name', 'short_names'],
     });
-    function search(query) {
-        return fuse.search(query.substr(0, 32));
+    function search(query, count = 0) {
+        const results = fuse.search(query.substr(0, 32));
+        if (count) {
+            return lodash_1.take(results, count);
+        }
+        return results;
     }
     exports.search = search;
     const shortNames = new Set([
@@ -129,28 +128,13 @@
             .join('');
     }
     exports.unifiedToEmoji = unifiedToEmoji;
-    function hasVariation(shortName, skinTone = 0) {
-        if (skinTone === 0) {
-            return false;
-        }
-        const base = exports.dataByShortName[shortName];
-        if (!base) {
-            return false;
-        }
-        if (skinTone > 0 && base.skin_variations) {
-            const toneKey = exports.skinTones[skinTone - 1];
-            return Boolean(base.skin_variations[toneKey]);
-        }
-        return false;
-    }
-    exports.hasVariation = hasVariation;
     function convertShortName(shortName, skinTone = 0) {
-        const base = exports.dataByShortName[shortName];
+        const base = dataByShortName[shortName];
         if (!base) {
             return '';
         }
-        if (skinTone > 0 && base.skin_variations) {
-            const toneKey = exports.skinTones[skinTone - 1];
+        const toneKey = is_1.default.number(skinTone) ? exports.skinTones[skinTone - 1] : skinTone;
+        if (skinTone && base.skin_variations) {
             const variation = base.skin_variations[toneKey];
             if (variation) {
                 return unifiedToEmoji(variation.unified);
@@ -159,10 +143,15 @@
         return unifiedToEmoji(base.unified);
     }
     exports.convertShortName = convertShortName;
+    function emojiToImage(emoji) {
+        return imageByEmoji[emoji];
+    }
+    exports.emojiToImage = emojiToImage;
     function replaceColons(str) {
         return str.replace(/:[a-z0-9-_+]+:(?::skin-tone-[1-5]:)?/gi, m => {
             const [shortName = '', skinTone = '0'] = m
                 .replace('skin-tone-', '')
+                .toLowerCase()
                 .split(':')
                 .filter(Boolean);
             if (shortName && isShortName(shortName)) {
@@ -172,4 +161,53 @@
         });
     }
     exports.replaceColons = replaceColons;
+    function getCountOfAllMatches(str, regex) {
+        let match = regex.exec(str);
+        let count = 0;
+        if (!regex.global) {
+            return match ? 1 : 0;
+        }
+        while (match) {
+            count += 1;
+            match = regex.exec(str);
+        }
+        return count;
+    }
+    function getSizeClass(str) {
+        // Do we have non-emoji characters?
+        if (str.replace(emoji_regex_1.default(), '').trim().length > 0) {
+            return '';
+        }
+        const emojiCount = getCountOfAllMatches(str, emoji_regex_1.default());
+        if (emojiCount > 8) {
+            return '';
+        }
+        else if (emojiCount > 6) {
+            return 'small';
+        }
+        else if (emojiCount > 4) {
+            return 'medium';
+        }
+        else if (emojiCount > 2) {
+            return 'large';
+        }
+        else {
+            return 'jumbo';
+        }
+    }
+    exports.getSizeClass = getSizeClass;
+    data.forEach(emoji => {
+        const { short_name, short_names, skin_variations, image } = emoji;
+        if (short_names) {
+            short_names.forEach(name => {
+                dataByShortName[name] = emoji;
+            });
+        }
+        imageByEmoji[convertShortName(short_name)] = makeImagePath(image);
+        if (skin_variations) {
+            Object.entries(skin_variations).forEach(([tone, variation]) => {
+                imageByEmoji[convertShortName(short_name, tone)] = makeImagePath(variation.image);
+            });
+        }
+    });
 })();

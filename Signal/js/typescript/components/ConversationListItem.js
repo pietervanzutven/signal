@@ -16,7 +16,7 @@
     const Timestamp_1 = window.ts.components.conversation.Timestamp;
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const TypingAnimation_1 = window.ts.components.conversation.TypingAnimation;
-    class ConversationListItem extends react_1.default.Component {
+    class ConversationListItem extends react_1.default.PureComponent {
         renderAvatar() {
             const { avatarPath, color, type, i18n, isMe, name, phoneNumber, profileName, } = this.props;
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__avatar-container" },
@@ -37,7 +37,7 @@
                     className: classnames_1.default('module-conversation-list-item__header__name', unreadCount > 0
                         ? 'module-conversation-list-item__header__name--with-unread'
                         : null)
-                }, isMe ? (i18n('noteToSelf')) : (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: phoneNumber, name: name, profileName: profileName, i18n: i18n }))),
+                }, isMe ? (i18n('noteToSelf')) : (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: phoneNumber, name: name, profileName: profileName }))),
                 react_1.default.createElement("div", {
                     className: classnames_1.default('module-conversation-list-item__header__date', unreadCount > 0
                         ? 'module-conversation-list-item__header__date--has-unread'

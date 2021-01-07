@@ -34,7 +34,7 @@
             return (React.createElement("div", { className: "module-sticker-manager__preview-modal__container__error" }, i18n('stickers--StickerPreview--Error')));
         }
         if (!pack || pack.stickerCount === 0 || !lodash_1.isNumber(pack.stickerCount)) {
-            return React.createElement(Spinner_1.Spinner, { size: "normal" });
+            return React.createElement(Spinner_1.Spinner, { svgSize: "normal" });
         }
         return (React.createElement("div", { className: "module-sticker-manager__preview-modal__container__sticker-grid" },
             pack.stickers.map(({ id, url }) => (React.createElement("div", { key: id, className: "module-sticker-manager__preview-modal__container__sticker-grid__cell" },
@@ -121,7 +121,7 @@
                                 pack.title,
                                 pack.isBlessed ? (React.createElement("span", { className: "module-sticker-manager__preview-modal__container__meta-overlay__info__blessed-icon" })) : null),
                             React.createElement("h4", { className: "module-sticker-manager__preview-modal__container__meta-overlay__info__author" }, pack.author)),
-                        React.createElement("div", { className: "module-sticker-manager__preview-modal__container__meta-overlay__install" }, pack.status === 'pending' ? (React.createElement(Spinner_1.Spinner, { size: "mini" })) : (React.createElement(StickerPackInstallButton_1.StickerPackInstallButton, { ref: focusRef, installed: isInstalled, i18n: i18n, onClick: handleToggleInstall, blue: true }))))) : null))), root)
+                        React.createElement("div", { className: "module-sticker-manager__preview-modal__container__meta-overlay__install" }, pack.status === 'pending' ? (React.createElement(Spinner_1.Spinner, { svgSize: "small", size: "14px" })) : (React.createElement(StickerPackInstallButton_1.StickerPackInstallButton, { ref: focusRef, installed: isInstalled, i18n: i18n, onClick: handleToggleInstall, blue: true }))))) : null))), root)
                 : null;
         });
 })();

@@ -155,7 +155,7 @@
         }
         renderAuthor() {
             const { authorProfileName, authorPhoneNumber, authorName, i18n, isFromMe, isIncoming, } = this.props;
-            return (react_1.default.createElement("div", { className: classnames_1.default('module-quote__primary__author', isIncoming ? 'module-quote__primary__author--incoming' : null) }, isFromMe ? (i18n('you')) : (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, i18n: i18n }))));
+            return (react_1.default.createElement("div", { className: classnames_1.default('module-quote__primary__author', isIncoming ? 'module-quote__primary__author--incoming' : null) }, isFromMe ? (i18n('you')) : (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName }))));
         }
         renderReferenceWarning() {
             const { i18n, isIncoming, referencedMessageNotFound } = this.props;

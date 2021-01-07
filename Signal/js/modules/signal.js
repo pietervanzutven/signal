@@ -11,7 +11,6 @@
   const Data = window.data;
   const Database = window.database;
   const Emojis = window.emojis;
-  const Emoji = window.ts.util.emoji;
   const EmojiLib = window.ts.components.emoji.lib;
   const IndexedDB = window.indexeddb;
   const Notifications = window.ts.notifications;
@@ -79,11 +78,10 @@
   } = window.ts.components.conversation.VerificationNotification;
 
   // State
-  const { createEmojiButton } = window.ts.state.roots.createEmojiButton;
-  const { createLeftPane } = window.ts.state.roots.createLeftPane;
   const {
-    createStickerButton,
-  } = window.ts.state.roots.createStickerButton;
+    createCompositionArea,
+  } = window.ts.state.roots.createCompositionArea;
+  const { createLeftPane } = window.ts.state.roots.createLeftPane;
   const {
     createStickerManager,
   } = window.ts.state.roots.createStickerManager;
@@ -176,10 +174,14 @@
     const writeNewTempData = createWriterForNew(tempPath);
     const deleteTempFile = Attachments.createDeleter(tempPath);
     const readTempData = createReader(tempPath);
+    const copyIntoTempDirectory = Attachments.copyIntoAttachmentsDirectory(
+      tempPath
+    );
 
     return {
       attachmentsPath,
       copyIntoAttachmentsDirectory,
+      copyIntoTempDirectory,
       deleteAttachmentData: deleteOnDisk,
       deleteExternalMessageFiles: MessageType.deleteAllExternalFiles({
         deleteAttachmentData: Type.deleteData(deleteOnDisk),
@@ -189,6 +191,7 @@
       deleteTempFile,
       getAbsoluteAttachmentPath,
       getAbsoluteStickerPath,
+      getAbsoluteTempPath,
       getPlaceholderMigrations,
       getCurrentVersion,
       loadAttachmentData,
@@ -291,9 +294,8 @@
     };
 
     const Roots = {
-      createEmojiButton,
+      createCompositionArea,
       createLeftPane,
-      createStickerButton,
       createStickerManager,
       createStickerPreviewModal,
     };
@@ -340,7 +342,6 @@
       Data,
       Database,
       Emojis,
-      Emoji,
       EmojiLib,
       IndexedDB,
       LinkPreviews,

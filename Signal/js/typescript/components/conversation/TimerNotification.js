@@ -25,7 +25,7 @@
                 case 'fromOther':
                     return (react_1.default.createElement(Intl_1.Intl, {
                         i18n: i18n, id: changeKey, components: [
-                            react_1.default.createElement(ContactName_1.ContactName, { i18n: i18n, key: "external-1", phoneNumber: phoneNumber, profileName: profileName, name: name }),
+                            react_1.default.createElement(ContactName_1.ContactName, { key: "external-1", phoneNumber: phoneNumber, profileName: profileName, name: name }),
                             timespan,
                         ]
                     }));

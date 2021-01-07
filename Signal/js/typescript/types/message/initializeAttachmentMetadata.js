@@ -23,6 +23,9 @@
         if (message.type === 'verified-change') {
             return message;
         }
+        if (message.messageTimer || message.isViewOnce) {
+            return message;
+        }
         const attachments = message.attachments.filter((attachment) => attachment.contentType !== 'text/x-signal-plain');
         const hasAttachments = IndexedDB.toIndexableBoolean(attachments.length > 0);
         const hasFileAttachments = hasFileAttachment(Object.assign({}, message, { attachments }));

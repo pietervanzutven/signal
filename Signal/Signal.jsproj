@@ -180,6 +180,7 @@
     <Content Include="js\delivery_receipts.js" />
     <Content Include="js\expire.js" />
     <Content Include="js\expiring_messages.js" />
+    <Content Include="js\expiring_tap_to_view_messages.js" />
     <Content Include="js\focus_listener.js" />
     <Content Include="js\keychange_listener.js" />
     <Content Include="js\legacy_storage.js" />
@@ -247,6 +248,8 @@
     <Content Include="js\typescript\backbone\views\Lightbox.js" />
     <Content Include="js\typescript\components\Avatar.js" />
     <Content Include="js\typescript\components\CaptionEditor.js" />
+    <Content Include="js\typescript\components\CompositionArea.js" />
+    <Content Include="js\typescript\components\CompositionInput.js" />
     <Content Include="js\typescript\components\ConfirmationDialog.js" />
     <Content Include="js\typescript\components\ConfirmationModal.js" />
     <Content Include="js\typescript\components\ContactListItem.js" />
@@ -292,6 +295,7 @@
     <Content Include="js\typescript\components\conversation\UnsupportedMessage.js" />
     <Content Include="js\typescript\components\conversation\VerificationNotification.js" />
     <Content Include="js\typescript\components\conversation\_contactUtil.js" />
+    <Content Include="js\typescript\components\Countdown.js" />
     <Content Include="js\typescript\components\emoji\Emoji.js" />
     <Content Include="js\typescript\components\emoji\EmojiButton.js" />
     <Content Include="js\typescript\components\emoji\EmojiPicker.js" />
@@ -306,6 +310,7 @@
     <Content Include="js\typescript\components\SearchResults.js" />
     <Content Include="js\typescript\components\Spinner.js" />
     <Content Include="js\typescript\components\StartNewConversation.js" />
+    <Content Include="js\typescript\components\stickers\lib.js" />
     <Content Include="js\typescript\components\stickers\StickerButton.js" />
     <Content Include="js\typescript\components\stickers\StickerManager.js" />
     <Content Include="js\typescript\components\stickers\StickerManagerPackRow.js" />
@@ -330,9 +335,8 @@
     <Content Include="js\typescript\state\ducks\stickers.js" />
     <Content Include="js\typescript\state\ducks\user.js" />
     <Content Include="js\typescript\state\reducer.js" />
-    <Content Include="js\typescript\state\roots\createEmojiButton.js" />
+    <Content Include="js\typescript\state\roots\createCompositionArea.js" />
     <Content Include="js\typescript\state\roots\createLeftPane.js" />
-    <Content Include="js\typescript\state\roots\createStickerButton.js" />
     <Content Include="js\typescript\state\roots\createStickerManager.js" />
     <Content Include="js\typescript\state\roots\createStickerPreviewModal.js" />
     <Content Include="js\typescript\state\roots\createTimeline.js" />
@@ -340,11 +344,10 @@
     <Content Include="js\typescript\state\selectors\search.js" />
     <Content Include="js\typescript\state\selectors\stickers.js" />
     <Content Include="js\typescript\state\selectors\user.js" />
-    <Content Include="js\typescript\state\smart\EmojiButton.js" />
+    <Content Include="js\typescript\state\smart\CompositionArea.js" />
     <Content Include="js\typescript\state\smart\LeftPane.js" />
     <Content Include="js\typescript\state\smart\MainHeader.js" />
     <Content Include="js\typescript\state\smart\MessageSearchResult.js" />
-    <Content Include="js\typescript\state\smart\StickerButton.js" />
     <Content Include="js\typescript\state\smart\StickerManager.js" />
     <Content Include="js\typescript\state\smart\StickerPreviewModal.js" />
     <Content Include="js\typescript\state\smart\Timeline.js" />
@@ -361,7 +364,6 @@
     <Content Include="js\typescript\types\Util.js" />
     <Content Include="js\typescript\util\arrayBufferToObjectURL.js" />
     <Content Include="js\typescript\util\cleanSearchTerm.js" />
-    <Content Include="js\typescript\util\emoji.js" />
     <Content Include="js\typescript\util\formatRelativeTime.js" />
     <Content Include="js\typescript\util\getInitials.js" />
     <Content Include="js\typescript\util\GoogleChrome.js" />
@@ -403,6 +405,7 @@
     <Content Include="js\views\standalone_registration_view.js" />
     <Content Include="js\views\toast_view.js" />
     <Content Include="js\views\whisper_view.js" />
+    <Content Include="js\view_syncs.js" />
     <Content Include="js\wall_clock_listener.js" />
     <Content Include="js\WebAudioRecorderMp3.js" />
     <Content Include="libtextsecure\account_manager.js" />
@@ -429,6 +432,8 @@
     <Content Include="node_modules\core\fs.js" />
     <Content Include="node_modules\core\process.js" />
     <Content Include="node_modules\core\uwp-config.js" />
+    <Content Include="node_modules\draft-js\dist\Draft.css" />
+    <Content Include="node_modules\draft-js\Draft.js" />
     <Content Include="node_modules\emoji-datasource-apple\img\apple\64\0023-fe0f-20e3.png" />
     <Content Include="node_modules\emoji-datasource-apple\img\apple\64\002a-fe0f-20e3.png" />
     <Content Include="node_modules\emoji-datasource-apple\img\apple\64\0030-fe0f-20e3.png" />
@@ -3010,12 +3015,13 @@
     <Content Include="node_modules\emoji-datasource-apple\img\apple\64\3299-fe0f.png" />
     <Content Include="node_modules\emoji-datasource\emoji.json" />
     <Content Include="node_modules\emoji-datasource\index.js" />
-    <Content Include="node_modules\emoji-js\emoji.js" />
+    <Content Include="node_modules\emoji-regex\index.js" />
     <Content Include="node_modules\eventemitter3\index.js" />
     <Content Include="node_modules\firstline\index.js" />
     <Content Include="node_modules\fuse.js\fuse.js" />
     <Content Include="node_modules\glob\glob.js" />
     <Content Include="node_modules\he\he.js" />
+    <Content Include="node_modules\immutable\immutable.js" />
     <Content Include="node_modules\journeyapps\sqlcipher.js" />
     <Content Include="node_modules\jquery\dist\jquery.js" />
     <Content Include="node_modules\lodash\chunk.js" />
@@ -3064,6 +3070,7 @@
     <Content Include="node_modules\react-contextmenu\index.js" />
     <Content Include="node_modules\react-contextmenu\MenuItem.js" />
     <Content Include="node_modules\react-contextmenu\SubMenu.js" />
+    <Content Include="node_modules\react-measure\index.umd.js" />
     <Content Include="node_modules\react-popper\index.umd.js" />
     <Content Include="node_modules\react-redux\react-redux.js" />
     <Content Include="node_modules\react-virtualized\react-virtualized.js" />

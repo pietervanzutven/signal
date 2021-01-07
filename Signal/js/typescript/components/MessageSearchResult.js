@@ -24,7 +24,7 @@
             if (from.isMe) {
                 return (react_1.default.createElement("span", { className: "module-message-search-result__header__name" }, i18n('you')));
             }
-            return (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: from.phoneNumber, name: from.name, profileName: from.profileName, i18n: i18n, module: "module-message-search-result__header__name" }));
+            return (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: from.phoneNumber, name: from.name, profileName: from.profileName, module: "module-message-search-result__header__name" }));
         }
         renderFrom() {
             const { i18n, to } = this.props;
@@ -36,7 +36,7 @@
                     i18n('to'),
                     ' ',
                     react_1.default.createElement("span", { className: "module-mesages-search-result__header__group" },
-                        react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: to.phoneNumber, name: to.name, profileName: to.profileName, i18n: i18n }))));
+                        react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: to.phoneNumber, name: to.name, profileName: to.profileName }))));
             }
             return (react_1.default.createElement("div", { className: "module-message-search-result__header__from" }, fromName));
         }

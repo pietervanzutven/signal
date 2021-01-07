@@ -11,6 +11,7 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
+    const classnames_1 = __importDefault(window.classnames);
     const Emojify_1 = window.ts.components.conversation.Emojify;
     const Avatar_1 = window.ts.components.Avatar;
     const react_contextmenu_1 = window.react_contextmenu;
@@ -27,10 +28,7 @@
         }
         renderBackButton() {
             const { onGoBack, showBackButton } = this.props;
-            if (!showBackButton) {
-                return null;
-            }
-            return (react_1.default.createElement("div", { onClick: onGoBack, role: "button", className: "module-conversation-header__back-icon" }));
+            return (react_1.default.createElement("button", { onClick: onGoBack, className: classnames_1.default('module-conversation-header__back-icon', showBackButton ? 'module-conversation-header__back-icon--show' : null), disabled: !showBackButton }));
         }
         renderTitle() {
             const { name, phoneNumber, i18n, isMe, profileName, isVerified, } = this.props;
@@ -38,13 +36,13 @@
                 return (react_1.default.createElement("div", { className: "module-conversation-header__title" }, i18n('noteToSelf')));
             }
             return (react_1.default.createElement("div", { className: "module-conversation-header__title" },
-                name ? react_1.default.createElement(Emojify_1.Emojify, { text: name, i18n: i18n }) : null,
+                name ? react_1.default.createElement(Emojify_1.Emojify, { text: name }) : null,
                 name && phoneNumber ? ' · ' : null,
                 phoneNumber ? phoneNumber : null,
                 ' ',
                 profileName && !name ? (react_1.default.createElement("span", { className: "module-conversation-header__title__profile-name" },
                     "~",
-                    react_1.default.createElement(Emojify_1.Emojify, { text: profileName, i18n: i18n }))) : null,
+                    react_1.default.createElement(Emojify_1.Emojify, { text: profileName }))) : null,
                 isVerified ? ' · ' : null,
                 isVerified ? (react_1.default.createElement("span", null,
                     react_1.default.createElement("span", { className: "module-conversation-header__title__verified-icon" }),
@@ -67,11 +65,12 @@
         }
         renderGear(triggerId) {
             const { showBackButton } = this.props;
-            if (showBackButton) {
-                return null;
-            }
             return (react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, { id: triggerId, ref: this.menuTriggerRef },
-                react_1.default.createElement("div", { role: "button", onClick: this.showMenuBound, className: "module-conversation-header__gear-icon" })));
+                react_1.default.createElement("button", {
+                    onClick: this.showMenuBound, className: classnames_1.default('module-conversation-header__gear-icon', showBackButton
+                        ? null
+                        : 'module-conversation-header__gear-icon--show'), disabled: showBackButton
+                })));
         }
         renderMenu(triggerId) {
             const { i18n, isMe, isGroup, isArchived, onDeleteMessages, onResetSession, onSetDisappearingMessages, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onMoveToInbox, timerOptions, } = this.props;

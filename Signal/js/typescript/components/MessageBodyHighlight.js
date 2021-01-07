@@ -14,7 +14,7 @@
     const Emojify_1 = window.ts.components.conversation.Emojify;
     const AddNewLines_1 = window.ts.components.conversation.AddNewLines;
     const renderNewLines = ({ text, key }) => (react_1.default.createElement(AddNewLines_1.AddNewLines, { key: key, text: text }));
-    const renderEmoji = ({ i18n, text, key, sizeClass, renderNonEmoji, }) => (react_1.default.createElement(Emojify_1.Emojify, { i18n: i18n, key: key, text: text, sizeClass: sizeClass, renderNonEmoji: renderNonEmoji }));
+    const renderEmoji = ({ text, key, sizeClass, renderNonEmoji, }) => (react_1.default.createElement(Emojify_1.Emojify, { key: key, text: text, sizeClass: sizeClass, renderNonEmoji: renderNonEmoji }));
     class MessageBodyHighlight extends react_1.default.Component {
         render() {
             const { text, i18n } = this.props;

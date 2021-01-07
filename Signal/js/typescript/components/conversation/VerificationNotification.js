@@ -36,7 +36,7 @@
             const id = this.getStringId();
             return (react_1.default.createElement(Intl_1.Intl, {
                 id: id, components: [
-                    react_1.default.createElement(ContactName_1.ContactName, { i18n: i18n, key: "external-1", name: contact.name, profileName: contact.profileName, phoneNumber: contact.phoneNumber, module: "module-verification-notification__contact" }),
+                    react_1.default.createElement(ContactName_1.ContactName, { key: "external-1", name: contact.name, profileName: contact.profileName, phoneNumber: contact.phoneNumber, module: "module-verification-notification__contact" }),
                 ], i18n: i18n
             }));
         }
