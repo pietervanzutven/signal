@@ -11,6 +11,7 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const memoizee_1 = __importDefault(window.memoizee);
+    const lodash_1 = window.lodash;
     const reselect_1 = window.reselect;
     const PhoneNumber_1 = window.ts.types.PhoneNumber;
     const Whisper_1 = window.ts.shims.Whisper;
@@ -208,7 +209,7 @@
             loadCountdownStart,
             items,
             messageHeightChanges,
-            oldestUnreadIndex: oldestUnreadIndex && oldestUnreadIndex >= 0
+            oldestUnreadIndex: lodash_1.isNumber(oldestUnreadIndex) && oldestUnreadIndex >= 0
                 ? oldestUnreadIndex
                 : undefined,
             resetCounter,

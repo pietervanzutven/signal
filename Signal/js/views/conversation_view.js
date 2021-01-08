@@ -2285,12 +2285,18 @@
 
       const existing = this.model.get('quotedMessageId');
       if (existing !== messageId) {
-        const timestamp = messageId ? Date.now() : null;
         this.model.set({
           quotedMessageId: messageId,
-          draftTimestamp: timestamp,
-          timestamp,
         });
+
+        if (messageId) {
+          const timestamp = Date.now();
+          this.model.set({
+            draftTimestamp: timestamp,
+            timestamp,
+          });
+        }
+
         await this.saveModel();
       }
 

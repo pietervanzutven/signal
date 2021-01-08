@@ -413,6 +413,23 @@
                 return state;
             }
             let { newest, oldest, oldestUnread, totalUnread, } = existingConversation.metrics;
+            if (messages.length < 1) {
+                return state;
+            }
+            const lookup = lodash_1.fromPairs(existingConversation.messageIds.map(id => [id, messagesLookup[id]]));
+            messages.forEach(message => {
+                lookup[message.id] = message;
+            });
+            const sorted = lodash_1.orderBy(lodash_1.values(lookup), ['received_at'], ['ASC']);
+            const messageIds = sorted.map(message => message.id);
+            const first = sorted[0];
+            const last = sorted[sorted.length - 1];
+            if (!newest) {
+                newest = lodash_1.pick(first, ['id', 'received_at']);
+            }
+            if (!oldest) {
+                oldest = lodash_1.pick(last, ['id', 'received_at']);
+            }
             const existingTotal = existingConversation.messageIds.length;
             if (isNewMessage && existingTotal > 0) {
                 const lastMessageId = existingConversation.messageIds[existingTotal - 1];
@@ -423,26 +440,13 @@
                     return state;
                 }
             }
-            const newIds = messages.map(message => message.id);
-            const newChanges = lodash_1.intersection(newIds, existingConversation.messageIds);
-            const heightChangeMessageIds = lodash_1.uniq([
-                ...newChanges,
-                ...existingConversation.heightChangeMessageIds,
-            ]);
-            const lookup = lodash_1.fromPairs(existingConversation.messageIds.map(id => [id, messagesLookup[id]]));
-            messages.forEach(message => {
-                lookup[message.id] = message;
-            });
-            const sorted = lodash_1.orderBy(lodash_1.values(lookup), ['received_at'], ['ASC']);
-            const messageIds = sorted.map(message => message.id);
-            const first = sorted[0];
-            const last = sorted.length > 0 ? sorted[sorted.length - 1] : null;
             if (first && oldest && first.received_at < oldest.received_at) {
                 oldest = lodash_1.pick(first, ['id', 'received_at']);
             }
             if (last && newest && last.received_at > newest.received_at) {
                 newest = lodash_1.pick(last, ['id', 'received_at']);
             }
+            const newIds = messages.map(message => message.id);
             const newMessageIds = lodash_1.difference(newIds, existingConversation.messageIds);
             const { isNearBottom } = existingConversation;
             if ((!isNearBottom || !isFocused) && !oldestUnread) {
@@ -464,6 +468,11 @@
                 }, 0);
                 totalUnread = (totalUnread || 0) + newUnread;
             }
+            const changedIds = lodash_1.intersection(newIds, existingConversation.messageIds);
+            const heightChangeMessageIds = lodash_1.uniq([
+                ...changedIds,
+                ...existingConversation.heightChangeMessageIds,
+            ]);
             return Object.assign({}, state, {
                 messagesLookup: Object.assign({}, messagesLookup, lookup), messagesByConversation: Object.assign({}, messagesByConversation, {
                     [conversationId]: Object.assign({}, existingConversation, {
