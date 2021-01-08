@@ -23,29 +23,8 @@
     className: 'conversation-stack',
     lastConversation: null,
     open(conversation, messageId) {
-      const id = `conversation-${conversation.cid}`;
-      if (id !== this.el.lastChild.id) {
-        const view = new Whisper.ConversationView({
-          model: conversation,
-          window: this.model.window,
-        });
-        view.$el.appendTo(this.el);
-
-        if (this.lastConversation) {
-          this.lastConversation.trigger(
-            'unload',
-            'opened another conversation'
-          );
-        }
-
-        this.lastConversation = conversation;
-        conversation.trigger('opened', messageId);
-      } else if (messageId) {
-        conversation.trigger('scroll-to-message', messageId);
-      }
-      
-      var gutter = $('.gutter');
-      var stack = $('.conversation-stack');
+      const gutter = $('.gutter');
+      const stack = $('.conversation-stack');
       while (window.onbackrequested) {
         Windows.UI.Core.SystemNavigationManager.getForCurrentView().onbackrequested.call();
       }
@@ -67,6 +46,27 @@
           event.detail[0].handled = true;
         }
       };
+      
+      const id = `conversation-${conversation.cid}`;
+      if (id !== this.el.lastChild.id) {
+        const view = new Whisper.ConversationView({
+          model: conversation,
+          window: this.model.window,
+        });
+        view.$el.appendTo(this.el);
+
+        if (this.lastConversation) {
+          this.lastConversation.trigger(
+            'unload',
+            'opened another conversation'
+          );
+        }
+
+        this.lastConversation = conversation;
+        conversation.trigger('opened', messageId);
+      } else if (messageId) {
+        conversation.trigger('scroll-to-message', messageId);
+      }
       
       // Make sure poppers are positioned properly
       window.dispatchEvent(new Event('resize'));
