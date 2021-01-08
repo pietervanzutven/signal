@@ -14,9 +14,16 @@
     const CompositionArea_1 = window.ts.components.CompositionArea;
     const lib_1 = window.ts.components.emoji.lib;
     const user_1 = window.ts.state.selectors.user;
+    const conversations_1 = window.ts.state.selectors.conversations;
     const stickers_1 = window.ts.state.selectors.stickers;
     const selectRecentEmojis = reselect_1.createSelector(({ emojis }) => emojis.recents, recents => recents.filter(lib_1.isShortName));
-    const mapStateToProps = (state) => {
+    const mapStateToProps = (state, props) => {
+        const { id } = props;
+        const conversation = conversations_1.getConversationSelector(state)(id);
+        if (!conversation) {
+            throw new Error(`Conversation id ${id} not found!`);
+        }
+        const { draftText } = conversation;
         const receivedPacks = stickers_1.getReceivedStickerPacks(state);
         const installedPacks = stickers_1.getInstalledStickerPacks(state);
         const blessedPacks = stickers_1.getBlessedStickerPacks(state);
@@ -30,6 +37,7 @@
         return {
             // Base
             i18n: user_1.getIntl(state),
+            startingText: draftText,
             // Emojis
             recentEmojis,
             skinTone: lodash_1.get(state, ['items', 'skinTone'], 0),

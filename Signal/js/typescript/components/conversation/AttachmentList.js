@@ -39,7 +39,9 @@
                             return (react_1.default.createElement(Image_1.Image, {
                                 key: imageKey, alt: i18n('stagedImageAttachment', [
                                     Attachment_1.getUrl(attachment) || attachment.fileName,
-                                ]), i18n: i18n, attachment: attachment, softCorners: true, playIconOverlay: Attachment_1.isVideoAttachment(attachment), height: IMAGE_HEIGHT, width: IMAGE_WIDTH, url: Attachment_1.getUrl(attachment), closeButton: true, onClick: clickCallback, onClickClose: onCloseAttachment
+                                ]), i18n: i18n, attachment: attachment, softCorners: true, playIconOverlay: Attachment_1.isVideoAttachment(attachment), height: IMAGE_HEIGHT, width: IMAGE_WIDTH, url: Attachment_1.getUrl(attachment), closeButton: true, onClick: clickCallback, onClickClose: onCloseAttachment, onError: () => {
+                                    onCloseAttachment(attachment);
+                                }
                             }));
                         }
                         const genericKey = Attachment_1.getUrl(attachment) || attachment.fileName || index;

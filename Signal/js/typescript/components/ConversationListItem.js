@@ -46,11 +46,15 @@
                     react_1.default.createElement(Timestamp_1.Timestamp, { timestamp: lastUpdated, extended: false, module: "module-conversation-list-item__header__timestamp", i18n: i18n }))));
         }
         renderMessage() {
-            const { lastMessage, typingContact, unreadCount, i18n } = this.props;
+            const { draftPreview, i18n, lastMessage, shouldShowDraft, typingContact, unreadCount, } = this.props;
             if (!lastMessage && !typingContact) {
                 return null;
             }
-            const text = lastMessage && lastMessage.text ? lastMessage.text : '';
+            const text = shouldShowDraft && draftPreview
+                ? draftPreview
+                : lastMessage && lastMessage.text
+                    ? lastMessage.text
+                    : '';
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__message" },
                 react_1.default.createElement("div", {
                     className: classnames_1.default('module-conversation-list-item__message__text', unreadCount > 0

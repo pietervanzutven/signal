@@ -193,7 +193,7 @@
                 this.visibleRows = { newest, oldest };
             };
             // tslint:disable-next-line member-ordering cyclomatic-complexity
-            this.updateWithVisibleRows = lodash_1.debounce(() => {
+            this.updateWithVisibleRows = lodash_1.debounce((forceFocus) => {
                 const { unreadCount, haveNewest, isLoadingMessages, items, loadNewerMessages, markMessageRead, } = this.props;
                 if (!items || items.length < 1) {
                     return;
@@ -206,7 +206,7 @@
                 if (!newest || !newest.id) {
                     return;
                 }
-                markMessageRead(newest.id);
+                markMessageRead(newest.id, forceFocus);
                 const rowCount = this.getRowCount();
                 const lastId = items[items.length - 1];
                 if (!isLoadingMessages &&
@@ -312,6 +312,10 @@
                     loadNewestMessages(lastId);
                 }
             };
+            this.forceFocusVisibleRowUpdate = () => {
+                const forceFocus = true;
+                this.updateWithVisibleRows(forceFocus);
+            };
             this.getScrollTarget = () => {
                 const { oneTimeScrollRow, atBottom, propScrollToIndex } = this.state;
                 const rowCount = this.getRowCount();
@@ -407,6 +411,15 @@
             const last = items.length - 1;
             return this.fromItemIndexToRow(last) + 1;
         }
+        componentDidMount() {
+            this.updateWithVisibleRows();
+            // @ts-ignore
+            window.registerForFocus(this.forceFocusVisibleRowUpdate);
+        }
+        componentWillUnmount() {
+            // @ts-ignore
+            window.unregisterForFocus(this.forceFocusVisibleRowUpdate);
+        }
         componentDidUpdate(prevProps) {
             const { id, clearChangedMessages, items, messageHeightChanges, oldestUnreadIndex, resetCounter, scrollToIndex, typingContact, } = this.props;
             // There are a number of situations which can necessitate that we drop our row height
@@ -427,7 +440,6 @@
                 if (prevProps.items && prevProps.items.length > 0) {
                     this.resizeAll();
                 }
-                return;
             }
             else if (!typingContact && prevProps.typingContact) {
                 this.resizeAll();
@@ -475,6 +487,9 @@
             }
             else if (this.resizeAllFlag) {
                 this.resizeAll();
+            }
+            else {
+                this.updateWithVisibleRows();
             }
         }
         render() {

@@ -28,15 +28,15 @@
         el.innerHTML = '';
     };
     // tslint:disable-next-line max-func-body-length
-    exports.CompositionArea = ({ i18n, attachmentListEl, micCellEl, attCellEl,
+    exports.CompositionArea = ({ i18n, attachmentListEl, micCellEl, onChooseAttachment,
         // CompositionInput
-        onSubmit, compositionApi, onEditorSizeChange, onEditorStateChange,
+        onSubmit, compositionApi, onEditorSizeChange, onEditorStateChange, startingText,
         // EmojiButton
         onPickEmoji, onSetSkinTone, recentEmojis, skinTone,
         // StickerButton
         knownPacks, receivedPacks, installedPacks, blessedPacks, recentStickers, clearInstalledStickerPack, onClickAddPack, onPickSticker, clearShowIntroduction, showPickerHint, clearShowPickerHint, }) => {
         const [disabled, setDisabled] = React.useState(false);
-        const [showMic, setShowMic] = React.useState(true);
+        const [showMic, setShowMic] = React.useState(!startingText);
         const [micActive, setMicActive] = React.useState(false);
         const [dirty, setDirty] = React.useState(false);
         const [large, setLarge] = React.useState(false);
@@ -96,20 +96,14 @@
         // The following is a work-around to allow react to lay-out backbone-managed
         // dom nodes until those functions are in React
         const micCellRef = React.useRef(null);
-        const attCellRef = React.useRef(null);
         React.useLayoutEffect(() => {
             const { current: micCellContainer } = micCellRef;
-            const { current: attCellContainer } = attCellRef;
             if (micCellContainer && micCellEl) {
                 emptyElement(micCellContainer);
                 micCellContainer.appendChild(micCellEl);
             }
-            if (attCellContainer && attCellEl) {
-                emptyElement(attCellContainer);
-                attCellContainer.appendChild(attCellEl);
-            }
             return lodash_1.noop;
-        }, [micCellRef, attCellRef, micCellEl, attCellEl, large, dirty, showMic]);
+        }, [micCellRef, micCellEl, large, dirty, showMic]);
         React.useLayoutEffect(() => {
             const { current: attSlot } = attSlotRef;
             if (attSlot && attachmentListEl) {
@@ -120,7 +114,9 @@
         const emojiButtonFragment = (React.createElement("div", { className: "module-composition-area__button-cell" },
             React.createElement(EmojiButton_1.EmojiButton, { i18n: i18n, doSend: handleForceSend, onPickEmoji: insertEmoji, recentEmojis: recentEmojis, skinTone: skinTone, onSetSkinTone: onSetSkinTone, onClose: focusInput })));
         const micButtonFragment = showMic ? (React.createElement("div", { className: classnames_1.default('module-composition-area__button-cell', micActive ? 'module-composition-area__button-cell--mic-active' : null, large ? 'module-composition-area__button-cell--large-right' : null), ref: micCellRef })) : null;
-        const attButtonFragment = (React.createElement("div", { className: "module-composition-area__button-cell", ref: attCellRef }));
+        const attButton = (React.createElement("div", { className: "module-composition-area__button-cell" },
+            React.createElement("div", { className: "choose-file" },
+                React.createElement("button", { className: "paperclip thumbnail", onClick: onChooseAttachment }))));
         const sendButtonFragment = (React.createElement("div", { className: classnames_1.default('module-composition-area__button-cell', large ? 'module-composition-area__button-cell--large-right' : null) },
             React.createElement("button", { className: "module-composition-area__send-button", onClick: handleForceSend })));
         const stickerButtonPlacement = large ? 'top-start' : 'top-end';
@@ -133,15 +129,15 @@
             React.createElement("div", { className: classnames_1.default('module-composition-area__row', large ? 'module-composition-area__row--padded' : null) },
                 !large ? emojiButtonFragment : null,
                 React.createElement("div", { className: "module-composition-area__input" },
-                    React.createElement(CompositionInput_1.CompositionInput, { i18n: i18n, disabled: disabled, large: large, editorRef: editorRef, inputApi: inputApiRef, onPickEmoji: onPickEmoji, onSubmit: handleSubmit, onEditorSizeChange: onEditorSizeChange, onEditorStateChange: onEditorStateChange, onDirtyChange: setDirty, skinTone: skinTone })),
+                    React.createElement(CompositionInput_1.CompositionInput, { i18n: i18n, disabled: disabled, large: large, editorRef: editorRef, inputApi: inputApiRef, onPickEmoji: onPickEmoji, onSubmit: handleSubmit, onEditorSizeChange: onEditorSizeChange, onEditorStateChange: onEditorStateChange, onDirtyChange: setDirty, skinTone: skinTone, startingText: startingText })),
                 !large ? (React.createElement(React.Fragment, null,
                     stickerButtonFragment,
                     !dirty ? micButtonFragment : null,
-                    attButtonFragment)) : null),
+                    attButton)) : null),
             large ? (React.createElement("div", { className: classnames_1.default('module-composition-area__row', 'module-composition-area__row--control-row') },
                 emojiButtonFragment,
                 stickerButtonFragment,
-                attButtonFragment,
+                attButton,
                 !dirty ? micButtonFragment : null,
                 dirty || !showMic ? sendButtonFragment : null)) : null));
     };

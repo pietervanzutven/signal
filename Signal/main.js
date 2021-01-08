@@ -756,6 +756,17 @@ let ready = false;
       userDataPath,
       stickers: orphanedStickers,
     });
+
+    const allDraftAttachments = await attachments.getAllDraftAttachments(
+      userDataPath
+    );
+    const orphanedDraftAttachments = await sql.removeKnownDraftAttachments(
+      allDraftAttachments
+    );
+    await attachments.deleteAllDraftAttachments({
+      userDataPath,
+      stickers: orphanedDraftAttachments,
+    });
   }
 
   try {

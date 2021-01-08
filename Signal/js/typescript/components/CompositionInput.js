@@ -77,9 +77,22 @@
         r2(el);
         r3.current = el;
     });
+    const getInitialEditorState = (startingText) => {
+        if (!startingText) {
+            return draft_js_1.EditorState.createEmpty(compositeDecorator);
+        }
+        const end = startingText.length;
+        const state = draft_js_1.EditorState.createWithContent(draft_js_1.ContentState.createFromText(startingText), compositeDecorator);
+        const selection = state.getSelection();
+        const selectionAtEnd = selection.merge({
+            anchorOffset: end,
+            focusOffset: end,
+        });
+        return draft_js_1.EditorState.forceSelection(state, selectionAtEnd);
+    };
     // tslint:disable-next-line max-func-body-length
-    exports.CompositionInput = ({ i18n, disabled, large, editorRef, inputApi, onDirtyChange, onEditorStateChange, onEditorSizeChange, onPickEmoji, onSubmit, skinTone, }) => {
-        const [editorRenderState, setEditorRenderState] = React.useState(draft_js_1.EditorState.createEmpty(compositeDecorator));
+    exports.CompositionInput = ({ i18n, disabled, large, editorRef, inputApi, onDirtyChange, onEditorStateChange, onEditorSizeChange, onPickEmoji, onSubmit, skinTone, startingText, }) => {
+        const [editorRenderState, setEditorRenderState] = React.useState(getInitialEditorState(startingText));
         const [searchText, setSearchText] = React.useState('');
         const [emojiResults, setEmojiResults] = React.useState([]);
         const [emojiResultsIndex, setEmojiResultsIndex] = React.useState(0);
