@@ -22,6 +22,8 @@
   const LEVELS = ['fatal', 'error', 'warn', 'info', 'debug', 'trace'];
   let logger;
 
+  const isRunningFromConsole = Boolean(process.stdout.isTTY);
+
   window.app.logging = {
     initialize,
     getLogger,
@@ -44,6 +46,24 @@
 
     return cleanupLogs(logPath).then(() => {
       const logFile = path.join(logPath, 'log.log');
+      const loggerOptions = {
+        name: 'log',
+        streams: [
+          {
+            type: 'rotating-file',
+            path: logFile,
+            period: '1d',
+            count: 3,
+          },
+        ],
+      };
+
+      if (isRunningFromConsole) {
+        loggerOptions.streams.push({
+          level: 'debug',
+          stream: process.stdout,
+        });
+      }
 
       fs.createFileSync(logFile);
       logger = {
@@ -259,7 +279,7 @@
         return item;
       });
       logger[level](redactAll(str.join(' ')));
-    } else {
+    } else if (isRunningFromConsole) {
       console._log(...args);
     }
   }
