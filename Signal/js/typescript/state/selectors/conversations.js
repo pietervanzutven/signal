@@ -13,6 +13,7 @@
     const memoizee_1 = __importDefault(window.memoizee);
     const reselect_1 = window.reselect;
     const PhoneNumber_1 = window.ts.types.PhoneNumber;
+    const Whisper_1 = window.ts.shims.Whisper;
     const user_1 = window.ts.state.selectors.user;
     exports.getConversations = (state) => state.conversations;
     exports.getConversationLookup = reselect_1.createSelector(exports.getConversations, (state) => {
@@ -20,6 +21,15 @@
     });
     exports.getSelectedConversation = reselect_1.createSelector(exports.getConversations, (state) => {
         return state.selectedConversation;
+    });
+    exports.getSelectedMessage = reselect_1.createSelector(exports.getConversations, (state) => {
+        if (!state.selectedMessage) {
+            return;
+        }
+        return {
+            id: state.selectedMessage,
+            counter: state.selectedMessageCounter,
+        };
     });
     exports.getShowArchived = reselect_1.createSelector(exports.getConversations, (state) => {
         return Boolean(state.showArchived);
@@ -95,9 +105,12 @@
         return lookup[ourNumber];
     });
     // This is where we will put Conversation selector logic, replicating what
-    //   is currently in models/conversation.getProps()
-    //   Blockers:
-    //     1) contactTypingTimers - that UI-only state needs to be moved to redux
+    // is currently in models/conversation.getProps()
+    // What needs to happen to pull that selector logic here?
+    //   1) contactTypingTimers - that UI-only state needs to be moved to redux
+    //   2) all of the message selectors need to be reselect-based; today those
+    //      Backbone-based prop-generation functions expect to get Conversation information
+    //      directly via ConversationController
     function _conversationSelector(conversation
         // regionCode: string,
         // userNumber: string
@@ -106,6 +119,8 @@
     }
     exports._conversationSelector = _conversationSelector;
     exports.getCachedSelectorForConversation = reselect_1.createSelector(user_1.getRegionCode, user_1.getUserNumber, () => {
+        // Note: memoizee will check all parameters provided, and only run our selector
+        //   if any of them have changed.
         return memoizee_1.default(_conversationSelector, { max: 100 });
     });
     exports.getConversationSelector = reselect_1.createSelector(exports.getCachedSelectorForConversation, exports.getConversationLookup, (selector, lookup) => {
@@ -117,32 +132,104 @@
             return selector(conversation);
         };
     });
-    // For now we pass through, as selector logic is still happening in the Backbone Model.
-    //   Blockers:
-    //     1) it's a lot of code to pull over - ~500 lines
-    //     2) a couple places still rely on all that code - will need to move these to Roots:
-    //       - quote compose
-    //       - message details
-    function _messageSelector(message
-        // ourNumber: string,
-        // regionCode: string,
-        // conversation?: ConversationType,
-        // sender?: ConversationType,
-        // quoted?: ConversationType
-    ) {
-        return message;
+    // For now we use a shim, as selector logic is still happening in the Backbone Model.
+    // What needs to happen to pull that selector logic here?
+    //   1) translate ~500 lines of selector logic into TypeScript
+    //   2) other places still rely on that prop-gen code - need to put these under Roots:
+    //     - quote compose
+    //     - message details
+    function _messageSelector(message,
+        // @ts-ignore
+        ourNumber,
+        // @ts-ignore
+        regionCode,
+        // @ts-ignore
+        conversation,
+        // @ts-ignore
+        author,
+        // @ts-ignore
+        quoted, selectedMessageId, selectedMessageCounter) {
+        // Note: We don't use all of those parameters here, but the shim we call does.
+        //   We want to call this function again if any of those parameters change.
+        const props = Whisper_1.getBubbleProps(message);
+        if (selectedMessageId === message.id) {
+            return Object.assign({}, props, { data: Object.assign({}, props.data, { isSelected: true, isSelectedCounter: selectedMessageCounter }) });
+        }
+        return props;
     }
     exports._messageSelector = _messageSelector;
     exports.getCachedSelectorForMessage = reselect_1.createSelector(user_1.getRegionCode, user_1.getUserNumber, () => {
+        // Note: memoizee will check all parameters provided, and only run our selector
+        //   if any of them have changed.
         return memoizee_1.default(_messageSelector, { max: 500 });
     });
-    exports.getMessageSelector = reselect_1.createSelector(exports.getCachedSelectorForMessage, exports.getMessages, (selector, lookup) => {
+    exports.getMessageSelector = reselect_1.createSelector(exports.getCachedSelectorForMessage, exports.getMessages, exports.getSelectedMessage, exports.getConversationSelector, user_1.getRegionCode, user_1.getUserNumber, (messageSelector, messageLookup, selectedMessage, conversationSelector, regionCode, ourNumber) => {
         return (id) => {
-            const message = lookup[id];
+            const message = messageLookup[id];
             if (!message) {
                 return;
             }
-            return selector(message);
+            const { conversationId, source, type, quote } = message;
+            const conversation = conversationSelector(conversationId);
+            let author;
+            let quoted;
+            if (type === 'incoming') {
+                author = conversationSelector(source);
+            }
+            else if (type === 'outgoing') {
+                author = conversationSelector(ourNumber);
+            }
+            if (quote) {
+                quoted = conversationSelector(quote.author);
+            }
+            return messageSelector(message, ourNumber, regionCode, conversation, author, quoted, selectedMessage ? selectedMessage.id : undefined, selectedMessage ? selectedMessage.counter : undefined);
+        };
+    });
+    function _conversationMessagesSelector(conversation) {
+        const { heightChangeMessageIds, isLoadingMessages, loadCountdownStart, messageIds, metrics, resetCounter, scrollToMessageId, scrollToMessageCounter, } = conversation;
+        const firstId = messageIds[0];
+        const lastId = messageIds.length === 0 ? undefined : messageIds[messageIds.length - 1];
+        const { oldestUnread } = metrics;
+        const haveNewest = !metrics.newest || !lastId || lastId === metrics.newest.id;
+        const haveOldest = !metrics.oldest || !firstId || firstId === metrics.oldest.id;
+        const items = messageIds;
+        const messageHeightChanges = Boolean(heightChangeMessageIds && heightChangeMessageIds.length);
+        const oldestUnreadIndex = oldestUnread
+            ? messageIds.findIndex(id => id === oldestUnread.id)
+            : undefined;
+        const scrollToIndex = scrollToMessageId
+            ? messageIds.findIndex(id => id === scrollToMessageId)
+            : undefined;
+        const { totalUnread } = metrics;
+        return {
+            haveNewest,
+            haveOldest,
+            isLoadingMessages,
+            loadCountdownStart,
+            items,
+            messageHeightChanges,
+            oldestUnreadIndex: oldestUnreadIndex && oldestUnreadIndex >= 0
+                ? oldestUnreadIndex
+                : undefined,
+            resetCounter,
+            scrollToIndex: scrollToIndex && scrollToIndex >= 0 ? scrollToIndex : undefined,
+            scrollToIndexCounter: scrollToMessageCounter,
+            totalUnread,
+        };
+    }
+    exports._conversationMessagesSelector = _conversationMessagesSelector;
+    exports.getCachedSelectorForConversationMessages = reselect_1.createSelector(user_1.getRegionCode, user_1.getUserNumber, () => {
+        // Note: memoizee will check all parameters provided, and only run our selector
+        //   if any of them have changed.
+        return memoizee_1.default(_conversationMessagesSelector, { max: 50 });
+    });
+    exports.getConversationMessagesSelector = reselect_1.createSelector(exports.getCachedSelectorForConversationMessages, exports.getMessagesByConversation, (conversationMessagesSelector, messagesByConversation) => {
+        return (id) => {
+            const conversation = messagesByConversation[id];
+            if (!conversation) {
+                return;
+            }
+            return conversationMessagesSelector(conversation);
         };
     });
 })();

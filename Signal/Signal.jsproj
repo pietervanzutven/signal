@@ -287,6 +287,7 @@
     <Content Include="js\typescript\components\conversation\StagedPlaceholderAttachment.js" />
     <Content Include="js\typescript\components\conversation\Timeline.js" />
     <Content Include="js\typescript\components\conversation\TimelineItem.js" />
+    <Content Include="js\typescript\components\conversation\TimelineLoadingRow.js" />
     <Content Include="js\typescript\components\conversation\TimerNotification.js" />
     <Content Include="js\typescript\components\conversation\Timestamp.js" />
     <Content Include="js\typescript\components\conversation\types.js" />
@@ -345,6 +346,7 @@
     <Content Include="js\typescript\state\selectors\stickers.js" />
     <Content Include="js\typescript\state\selectors\user.js" />
     <Content Include="js\typescript\state\smart\CompositionArea.js" />
+    <Content Include="js\typescript\state\smart\LastSeenIndicator.js" />
     <Content Include="js\typescript\state\smart\LeftPane.js" />
     <Content Include="js\typescript\state\smart\MainHeader.js" />
     <Content Include="js\typescript\state\smart\MessageSearchResult.js" />
@@ -352,6 +354,8 @@
     <Content Include="js\typescript\state\smart\StickerPreviewModal.js" />
     <Content Include="js\typescript\state\smart\Timeline.js" />
     <Content Include="js\typescript\state\smart\TimelineItem.js" />
+    <Content Include="js\typescript\state\smart\TimelineLoadingRow.js" />
+    <Content Include="js\typescript\state\smart\TypingBubble.js" />
     <Content Include="js\typescript\types\Attachment.js" />
     <Content Include="js\typescript\types\Contact.js" />
     <Content Include="js\typescript\types\Conversation.js" />
@@ -386,21 +390,16 @@
     <Content Include="js\views\debug_log_view.js" />
     <Content Include="js\views\file_input_view.js" />
     <Content Include="js\views\group_member_list_view.js" />
-    <Content Include="js\views\group_update_view.js" />
     <Content Include="js\views\identicon_svg_view.js" />
     <Content Include="js\views\import_view.js" />
     <Content Include="js\views\inbox_view.js" />
     <Content Include="js\views\install_view.js" />
     <Content Include="js\views\key_verification_view.js" />
-    <Content Include="js\views\last_seen_indicator_view.js" />
     <Content Include="js\views\list_view.js" />
-    <Content Include="js\views\message_list_view.js" />
-    <Content Include="js\views\message_view.js" />
     <Content Include="js\views\network_status_view.js" />
     <Content Include="js\views\phone-input-view.js" />
     <Content Include="js\views\react_wrapper_view.js" />
     <Content Include="js\views\recorder_view.js" />
-    <Content Include="js\views\scroll_down_button_view.js" />
     <Content Include="js\views\settings_view.js" />
     <Content Include="js\views\standalone_registration_view.js" />
     <Content Include="js\views\toast_view.js" />

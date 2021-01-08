@@ -58,13 +58,19 @@
         render() {
             const { ratio } = this.state;
             const strokeDashoffset = ratio * CIRCUMFERENCE;
-            return (react_1.default.createElement("svg", { className: "module-countdown", viewBox: "0 0 24 24" },
-                react_1.default.createElement("path", {
-                    d: "M12,1 A11,11,0,1,1,1,12,11.013,11.013,0,0,1,12,1Z", className: "module-countdown__path", style: {
-                        strokeDasharray: `${CIRCUMFERENCE}, ${CIRCUMFERENCE}`,
-                        strokeDashoffset,
-                    }
-                })));
+            return (react_1.default.createElement("div", { className: "module-countdown" },
+                react_1.default.createElement("svg", { viewBox: "0 0 24 24" },
+                    react_1.default.createElement("path", {
+                        d: "M12,1 A11,11,0,1,1,1,12,11.013,11.013,0,0,1,12,1Z", className: "module-countdown__back-path", style: {
+                            strokeDasharray: `${CIRCUMFERENCE}, ${CIRCUMFERENCE}`,
+                        }
+                    }),
+                    react_1.default.createElement("path", {
+                        d: "M12,1 A11,11,0,1,1,1,12,11.013,11.013,0,0,1,12,1Z", className: "module-countdown__front-path", style: {
+                            strokeDasharray: `${CIRCUMFERENCE}, ${CIRCUMFERENCE}`,
+                            strokeDashoffset,
+                        }
+                    }))));
         }
     }
     exports.Countdown = Countdown;

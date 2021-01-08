@@ -945,12 +945,6 @@ img.emoji.jumbo {
 .left-pane-wrapper {
   height: 100%; }
 
-.conversation-stack .conversation {
-  display: none; }
-
-.conversation-stack .conversation:first-child {
-  display: block; }
-
 .tool-bar {
   color: #070c14;
   padding: 8px;
@@ -1130,7 +1124,7 @@ input.search {
     height: calc(100% - 48px);
     background-color: #ffffff; }
     .dark-theme .conversation .panel {
-      background-color: #000000; }
+      background-color: #0f1012; }
   .conversation .panel:not(.main) {
     animation: panel--in 250ms ease-out; }
   .conversation .panel--static {
@@ -1148,21 +1142,20 @@ input.search {
     display: flex;
     flex-direction: column;
     overflow: initial; }
-  .conversation .main.panel .discussion-container {
+  .conversation .main.panel .timeline-placeholder {
     flex-grow: 1;
     position: relative;
     max-width: 100%;
-    margin: 0; }
-    .conversation .main.panel .discussion-container .bar-container {
-      height: 5px; }
-    .conversation .main.panel .discussion-container .message-list {
+    margin: 0;
+    margin-bottom: 10px; }
+    .conversation .main.panel .timeline-placeholder .timeline-wrapper {
       -webkit-padding-start: 0px;
       position: absolute;
       top: 0;
       height: 100%;
       width: 100%;
       margin: 0;
-      padding: 10px 0 0 0;
+      padding: 0;
       overflow-y: auto;
       overflow-x: hidden; }
 
@@ -1242,29 +1235,6 @@ input.search {
   padding: 10px;
   margin: 0; }
 
-.message-container,
-.message-list {
-  list-style: none; }
-  .message-container .message-wrapper,
-  .message-list .message-wrapper {
-    margin-left: 16px;
-    margin-right: 16px; }
-  .message-container li,
-  .message-list li {
-    margin-bottom: 10px; }
-    .message-container li::after,
-    .message-list li::after {
-      visibility: hidden;
-      display: block;
-      font-size: 0;
-      content: ' ';
-      clear: both;
-      height: 0; }
-
-.group .message-container .message-wrapper,
-.group .message-list .message-wrapper {
-  margin-left: 44px; }
-
 .typing-bubble-wrapper {
   margin-bottom: 20px; }
 
@@ -1314,22 +1284,6 @@ input.search {
         background-size: 100%;
         background-repeat: no-repeat;
         background-position: center center; }
-  .bottom-bar .attachment-previews {
-    padding: 0 36px;
-    margin-bottom: 3px; }
-    .bottom-bar .attachment-previews .attachment-preview {
-      padding: 13px 10px 0; }
-    .bottom-bar .attachment-previews img {
-      border: 2px solid #ddd;
-      border-radius: 5px;
-      max-height: 100px; }
-    .bottom-bar .attachment-previews .close {
-      position: absolute;
-      top: 5px;
-      right: 2px;
-      background: #999; }
-      .bottom-bar .attachment-previews .close:hover {
-        background: #616161; }
   .bottom-bar .flex {
     display: flex;
     flex-direction: row; }
@@ -1448,57 +1402,6 @@ input.search {
       animation: loading 1500ms ease infinite 333ms; }
     .conversation-loading-screen .dot:nth-child(3) {
       animation: loading 1500ms ease infinite 666ms; }
-
-.module-last-seen-indicator {
-  padding-top: 25px;
-  padding-bottom: 35px;
-  margin-left: 28px;
-  margin-right: 28px; }
-
-.module-last-seen-indicator__bar {
-  background-color: #62656a;
-  width: 100%;
-  height: 4px; }
-
-.module-last-seen-indicator__text {
-  margin-top: 3px;
-  font-size: 11px;
-  line-height: 16px;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  text-align: center;
-  color: #070c14; }
-
-.module-scroll-down {
-  z-index: 100;
-  position: absolute;
-  right: 20px;
-  bottom: 10px; }
-
-.module-scroll-down__button {
-  height: 44px;
-  width: 44px;
-  border-radius: 22px;
-  text-align: center;
-  background-color: #a4a6a9;
-  border: none;
-  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
-  outline: none; }
-  .module-scroll-down__button:hover {
-    background-color: #8b8e91; }
-
-.module-scroll-down__button--new-messages {
-  background-color: #2090ea; }
-  .module-scroll-down__button--new-messages:hover {
-    background-color: #1472bd; }
-
-.module-scroll-down__icon {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><g fill='none' fill-rule='evenodd'><path d='M0 0h48v48H0z'/><g stroke='%23FFFFFF' stroke-width='3.78'><path d='M24 6.41v32.814M38.29 23.028L24 39.226 9.706 23.028'/></g></g></svg>");
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-  height: 100%;
-  width: 100%; }
 
 .ios-theme .module-message__container--outgoing {
   background-color: #2090ea;
@@ -3232,6 +3135,12 @@ body.dark-theme {
   background-repeat: no-repeat;
   background-position: center center; }
 
+.dark-theme .module-spinner__circle--on-background {
+  background-color: #3d3e44; }
+
+.dark-theme .module-spinner__arc--on-background {
+  background-color: #bbbdbe; }
+
 .dark-theme .module-caption-editor {
   background-color: #000000; }
 
@@ -3389,6 +3298,17 @@ body.dark-theme {
 .module-contact-name__profile-name {
   font-style: italic; }
 
+.module-message-container {
+  width: 100%;
+  margin-top: 10px; }
+  .module-message-container:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: ' ';
+    clear: both;
+    height: 0; }
+
 .module-message {
   position: relative;
   display: inline-flex;
@@ -3411,13 +3331,16 @@ body.dark-theme {
     transform: translateX(0px); } }
 
 .module-message--incoming {
-  margin-left: 0;
+  margin-left: 16px;
   margin-right: 32px; }
 
 .module-message--outgoing {
   float: right;
-  margin-right: 0;
+  margin-right: 16px;
   margin-left: 32px; }
+
+.module-message--incoming.module-message--group {
+  margin-left: 44px; }
 
 .module-message__buttons {
   position: absolute;
@@ -3536,6 +3459,28 @@ body.dark-theme {
 
 .module-message__container--outgoing {
   background-color: #eeefef; }
+
+.module-message__container__selection {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 16px;
+  background-color: #000000;
+  opacity: 0;
+  animation: message--selected 1s ease-in-out; }
+
+@keyframes message--selected {
+  0% {
+    opacity: 0; }
+  20% {
+    opacity: 0.3; }
+  80% {
+    opacity: 0.3; }
+  100% {
+    opacity: 0; } }
 
 .module-message__container--incoming {
   background-color: #6b6b78; }
@@ -3983,9 +3928,9 @@ body.dark-theme {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center;
-  animation: module-message__metdata__status-icon--spinning 4s linear infinite; }
+  animation: module-message__metadata__status-icon--spinning 4s linear infinite; }
 
-@keyframes module-message__metdata__status-icon--spinning {
+@keyframes module-message__metadata__status-icon--spinning {
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg); } }
@@ -4143,6 +4088,7 @@ body.dark-theme {
   margin-top: 3px; }
 
 .module-quote {
+  min-height: 54px;
   position: relative;
   border-radius: 4px;
   border-top-left-radius: 10px;
@@ -4540,6 +4486,8 @@ body.dark-theme {
 
 .module-group-notification {
   margin-top: 14px;
+  margin-left: 1em;
+  margin-right: 1em;
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.3px;
@@ -5545,6 +5493,11 @@ body.dark-theme {
 .module-image__border-overlay--dark {
   background-color: rgba(0, 0, 0, 0.2); }
 
+.module-image__border-overlay--selected {
+  background-color: #000000;
+  opacity: 0;
+  animation: message--selected 1s ease-in-out; }
+
 .module-image__loading-placeholder {
   display: inline-flex;
   flex-direction: row;
@@ -6003,11 +5956,17 @@ body.dark-theme {
   100% {
     transform: rotate(360deg); } }
 
+.module-spinner__container--small {
+  height: 24px;
+  width: 24px; }
+
 .module-spinner__circle--small {
   background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Track - 24</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Track---24' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M12,24 C5.372583,24 0,18.627417 0,12 C0,5.372583 5.372583,0 12,0 C18.627417,0 24,5.372583 24,12 C24,18.627417 18.627417,24 12,24 Z M12,22 C17.5228475,22 22,17.5228475 22,12 C22,6.4771525 17.5228475,2 12,2 C6.4771525,2 2,6.4771525 2,12 C2,17.5228475 6.4771525,22 12,22 Z' id='Combined-Shape' fill='%23FFFFFF' fill-rule='nonzero'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center; }
+  background-position: center center;
+  height: 24px;
+  width: 24px; }
 
 .module-spinner__arc--small {
   background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Spinner - 24</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Spinner---24' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M22.5600116,6.29547931 C23.4784938,7.99216184 24,9.93517878 24,12 C24,18.627417 18.627417,24 12,24 L12,22 C17.5228475,22 22,17.5228475 22,12 C22,10.2995217 21.5755584,8.6981771 20.8268371,7.29612807 L22.5600116,6.29547931 Z' id='Path' fill='%236B6D70' fill-rule='nonzero'></path>    </g></svg>");
@@ -6033,7 +5992,9 @@ body.dark-theme {
   background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Spinner - 24</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Spinner---24' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M22.5600116,6.29547931 C23.4784938,7.99216184 24,9.93517878 24,12 C24,18.627417 18.627417,24 12,24 L12,22 C17.5228475,22 22,17.5228475 22,12 C22,10.2995217 21.5755584,8.6981771 20.8268371,7.29612807 L22.5600116,6.29547931 Z' id='Path' fill='%236B6D70' fill-rule='nonzero'></path>    </g></svg>");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center center; }
+  background-position: center center;
+  height: 14px;
+  width: 14px; }
 
 .module-spinner__circle--incoming {
   background-image: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='56px' height='56px' viewBox='0 0 56 56' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->    <title>Interderminate Track - 56</title>    <desc>Created with Sketch.</desc>    <g id='Interderminate-Track---56' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>        <path d='M28,54 C42.3594035,54 54,42.3594035 54,28 C54,13.6405965 42.3594035,2 28,2 C13.6405965,2 2,13.6405965 2,28 C2,42.3594035 13.6405965,54 28,54 Z M28,56 C12.536027,56 0,43.463973 0,28 C0,12.536027 12.536027,0 28,0 C43.463973,0 56,12.536027 56,28 C56,43.463973 43.463973,56 28,56 Z' id='Oval' fill='%23FFFFFF' fill-rule='nonzero'></path>    </g></svg>");
@@ -6046,6 +6007,12 @@ body.dark-theme {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
+
+.module-spinner__circle--on-background {
+  background-color: #eeefef; }
+
+.module-spinner__arc--on-background {
+  background-color: #6b6d70; }
 
 .module-message-body__highlight {
   font-weight: bold; }
@@ -6246,8 +6213,20 @@ body.dark-theme {
   color: #6b6d70;
   font-size: 13px; }
 
+.module-timeline-loading-row {
+  height: 48px;
+  padding: 12px;
+  display: flex;
+  flex-direction: columns;
+  justify-content: center;
+  align-items: center;
+  color: #3d3e44; }
+  .dark-theme .module-timeline-loading-row {
+    color: #bbbdbe; }
+
 .module-timeline {
-  height: 100%; }
+  height: 100%;
+  overflow: hidden; }
 
 .module-timeline__message-container {
   padding-top: 10px; }
@@ -7310,12 +7289,22 @@ body.dark-theme {
 
 .module-countdown {
   display: block;
-  width: 100%; }
+  width: 24px;
+  height: 24px; }
 
-.module-countdown__path {
+.module-countdown__front-path {
   fill-opacity: 0;
-  stroke: #ffffff;
-  stroke-width: 2; }
+  stroke-width: 2;
+  stroke: #6b6d70; }
+  .dark-theme .module-countdown__front-path {
+    stroke: #bbbdbe; }
+
+.module-countdown__back-path {
+  fill-opacity: 0;
+  stroke-width: 2;
+  stroke: #eeefef; }
+  .dark-theme .module-countdown__back-path {
+    stroke: #3d3e44; }
 
 .module-composition-input__input {
   line-height: 20px;
@@ -7469,6 +7458,57 @@ body.dark-theme {
   margin-top: 3px;
   margin-bottom: 6px; }
 
+.module-last-seen-indicator {
+  padding-top: 25px;
+  padding-bottom: 35px;
+  margin-left: 28px;
+  margin-right: 28px; }
+
+.module-last-seen-indicator__bar {
+  background-color: #62656a;
+  width: 100%;
+  height: 4px; }
+
+.module-last-seen-indicator__text {
+  margin-top: 3px;
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  text-align: center;
+  color: #070c14; }
+
+.module-scroll-down {
+  z-index: 100;
+  position: absolute;
+  right: 20px;
+  bottom: 10px; }
+
+.module-scroll-down__button {
+  height: 44px;
+  width: 44px;
+  border-radius: 22px;
+  text-align: center;
+  background-color: #a4a6a9;
+  border: none;
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
+  outline: none; }
+  .module-scroll-down__button:hover {
+    background-color: #8b8e91; }
+
+.module-scroll-down__button--new-messages {
+  background-color: #2090ea; }
+  .module-scroll-down__button--new-messages:hover {
+    background-color: #1472bd; }
+
+.module-scroll-down__icon {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><g fill='none' fill-rule='evenodd'><path d='M0 0h48v48H0z'/><g stroke='%23FFFFFF' stroke-width='3.78'><path d='M24 6.41v32.814M38.29 23.028L24 39.226 9.706 23.028'/></g></g></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 100%;
+  width: 100%; }
+
 .react-contextmenu {
   background-color: #f9fafa;
   border-radius: 4px;
@@ -7544,10 +7584,8 @@ body.dark-theme {
   .module-message__container {
     max-width: 100%; }
   .module-message--incoming {
-    margin-left: 0;
     margin-right: auto; }
   .module-message--outgoing {
-    margin-right: 0;
     margin-left: auto; }
   .module-message__buttons__download {
     display: inline-block; }
@@ -7564,10 +7602,8 @@ body.dark-theme {
   .module-message__container {
     max-width: 100%; }
   .module-message--incoming {
-    margin-left: 0;
     margin-right: auto; }
   .module-message--outgoing {
-    margin-right: 0;
     margin-left: auto; }
   .module-message__buttons__download {
     display: inline-block; }

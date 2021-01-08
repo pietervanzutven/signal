@@ -46,8 +46,8 @@
                     react_1.default.createElement(Timestamp_1.Timestamp, { timestamp: lastUpdated, extended: false, module: "module-conversation-list-item__header__timestamp", i18n: i18n }))));
         }
         renderMessage() {
-            const { lastMessage, isTyping, unreadCount, i18n } = this.props;
-            if (!lastMessage && !isTyping) {
+            const { lastMessage, typingContact, unreadCount, i18n } = this.props;
+            if (!lastMessage && !typingContact) {
                 return null;
             }
             const text = lastMessage && lastMessage.text ? lastMessage.text : '';
@@ -56,7 +56,9 @@
                     className: classnames_1.default('module-conversation-list-item__message__text', unreadCount > 0
                         ? 'module-conversation-list-item__message__text--has-unread'
                         : null)
-                }, isTyping ? (react_1.default.createElement(TypingAnimation_1.TypingAnimation, { i18n: i18n })) : (react_1.default.createElement(MessageBody_1.MessageBody, { text: text, disableJumbomoji: true, disableLinks: true, i18n: i18n }))),
+                }, typingContact ? (react_1.default.createElement(TypingAnimation_1.TypingAnimation, { i18n: i18n })) : (react_1.default.createElement(react_1.default.Fragment, null,
+                    shouldShowDraft ? (react_1.default.createElement("span", { className: "module-conversation-list-item__message__draft-prefix" }, i18n('ConversationListItem--draft-prefix'))) : null,
+                    react_1.default.createElement(MessageBody_1.MessageBody, { text: text, disableJumbomoji: true, disableLinks: true, i18n: i18n })))),
                 lastMessage && lastMessage.status ? (react_1.default.createElement("div", { className: classnames_1.default('module-conversation-list-item__message__status-icon', `module-conversation-list-item__message__status-icon--${lastMessage.status}`) })) : null));
         }
         render() {

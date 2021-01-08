@@ -9,6 +9,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = window.lodash;
     const reselect_1 = window.reselect;
+    const Whisper_1 = window.ts.shims.Whisper;
     const conversations_1 = window.ts.state.selectors.conversations;
     const user_1 = window.ts.state.selectors.user;
     exports.getSearch = (state) => state.search;
@@ -42,10 +43,11 @@
             })),
             hideMessagesHeader: false,
             messages: state.messages.map(message => {
+                const props = Whisper_1.getSearchResultsProps(message);
                 if (message.id === selectedMessage) {
-                    return Object.assign({}, message, { isSelected: true });
+                    return Object.assign({}, props, { isSelected: true });
                 }
-                return message;
+                return props;
             }),
             regionCode: regionCode,
             searchTerm: state.query,

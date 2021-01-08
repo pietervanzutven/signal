@@ -21,11 +21,14 @@
     // Workaround: A react component's required properties are filtering up through connect()
     //   https://github.com/DefinitelyTyped/DefinitelyTyped/issues/31363
     const FilteredSmartMainHeader = MainHeader_1.SmartMainHeader;
+    function renderMainHeader() {
+        return react_1.default.createElement(FilteredSmartMainHeader, null);
+    }
     const mapStateToProps = (state) => {
         const showSearch = search_1.isSearching(state);
         const lists = showSearch ? undefined : conversations_1.getLeftPaneLists(state);
         const searchResults = showSearch ? search_1.getSearchResults(state) : undefined;
-        return Object.assign({}, lists, { searchResults, showArchived: conversations_1.getShowArchived(state), i18n: user_1.getIntl(state), renderMainHeader: () => react_1.default.createElement(FilteredSmartMainHeader, null) });
+        return Object.assign({}, lists, { searchResults, showArchived: conversations_1.getShowArchived(state), i18n: user_1.getIntl(state), renderMainHeader });
     };
     const smart = react_redux_1.connect(mapStateToProps, actions_1.mapDispatchToProps);
     exports.SmartLeftPane = smart(LeftPane_1.LeftPane);

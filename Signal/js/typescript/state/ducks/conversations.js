@@ -14,8 +14,19 @@
         conversationAdded,
         conversationChanged,
         conversationRemoved,
+        conversationUnloaded,
         removeAllConversations,
-        messageExpired,
+        messageDeleted,
+        messageChanged,
+        messagesAdded,
+        messagesReset,
+        setMessagesLoading,
+        setLoadCountdownStart,
+        setIsNearBottom,
+        clearChangedMessages,
+        clearSelectedMessage,
+        clearUnreadMetrics,
+        scrollToMessage,
         openConversationInternal,
         openConversationExternal,
         showInbox,
@@ -47,24 +58,123 @@
             },
         };
     }
+    function conversationUnloaded(id) {
+        return {
+            type: 'CONVERSATION_UNLOADED',
+            payload: {
+                id,
+            },
+        };
+    }
     function removeAllConversations() {
         return {
             type: 'CONVERSATIONS_REMOVE_ALL',
             payload: null,
         };
     }
-    function messageExpired(id, conversationId) {
+    function messageChanged(id, conversationId, data) {
         return {
-            type: 'MESSAGE_EXPIRED',
+            type: 'MESSAGE_CHANGED',
+            payload: {
+                id,
+                conversationId,
+                data,
+            },
+        };
+    }
+    function messageDeleted(id, conversationId) {
+        return {
+            type: 'MESSAGE_DELETED',
             payload: {
                 id,
                 conversationId,
             },
         };
     }
+    function messagesAdded(conversationId, messages, isNewMessage, isFocused) {
+        return {
+            type: 'MESSAGES_ADDED',
+            payload: {
+                conversationId,
+                messages,
+                isNewMessage,
+                isFocused,
+            },
+        };
+    }
+    function messagesReset(conversationId, messages, metrics, scrollToMessageId) {
+        return {
+            type: 'MESSAGES_RESET',
+            payload: {
+                conversationId,
+                messages,
+                metrics,
+                scrollToMessageId,
+            },
+        };
+    }
+    function setMessagesLoading(conversationId, isLoadingMessages) {
+        return {
+            type: 'SET_MESSAGES_LOADING',
+            payload: {
+                conversationId,
+                isLoadingMessages,
+            },
+        };
+    }
+    function setLoadCountdownStart(conversationId, loadCountdownStart) {
+        return {
+            type: 'SET_LOAD_COUNTDOWN_START',
+            payload: {
+                conversationId,
+                loadCountdownStart,
+            },
+        };
+    }
+    function setIsNearBottom(conversationId, isNearBottom) {
+        return {
+            type: 'SET_NEAR_BOTTOM',
+            payload: {
+                conversationId,
+                isNearBottom,
+            },
+        };
+    }
+    function clearChangedMessages(conversationId) {
+        return {
+            type: 'CLEAR_CHANGED_MESSAGES',
+            payload: {
+                conversationId,
+            },
+        };
+    }
+    function clearSelectedMessage() {
+        return {
+            type: 'CLEAR_SELECTED_MESSAGE',
+            payload: null,
+        };
+    }
+    function clearUnreadMetrics(conversationId) {
+        return {
+            type: 'CLEAR_UNREAD_METRICS',
+            payload: {
+                conversationId,
+            },
+        };
+    }
+    function scrollToMessage(conversationId, messageId) {
+        return {
+            type: 'SCROLL_TO_MESSAGE',
+            payload: {
+                conversationId,
+                messageId,
+            },
+        };
+    }
     // Note: we need two actions here to simplify. Operations outside of the left pane can
-    //   trigger an 'openConversation' so we go through Whisper.events for all conversation
-    //   selection.
+    //   trigger an 'openConversation' so we go through Whisper.events for all
+    //   conversation selection. Internal just triggers the Whisper.event, and External
+    //   makes the changes to the store.
     function openConversationInternal(id, messageId) {
         events_1.trigger('showConversation', id, messageId);
         return {
@@ -97,11 +207,17 @@
     function getEmptyState() {
         return {
             conversationLookup: {},
-            showArchived: false,
-            messagesLookup: {},
             messagesByConversation: {},
+            messagesLookup: {},
+            selectedMessageCounter: 0,
+            showArchived: false,
         };
     }
+    function hasMessageHeightChanged(message, previous) {
+        return (Boolean(message.hasSignalAccount || previous.hasSignalAccount) &&
+            message.hasSignalAccount !== previous.hasSignalAccount);
+    }
+    // tslint:disable-next-line cyclomatic-complexity max-func-body-length
     function reducer(state = getEmptyState(), action) {
         if (action.type === 'CONVERSATION_ADDED') {
             const { payload } = action;
@@ -144,11 +260,244 @@
             const { conversationLookup } = state;
             return Object.assign({}, state, { conversationLookup: lodash_1.omit(conversationLookup, [id]) });
         }
+        if (action.type === 'CONVERSATION_UNLOADED') {
+            const { payload } = action;
+            const { id } = payload;
+            const existingConversation = state.messagesByConversation[id];
+            if (!existingConversation) {
+                return state;
+            }
+            const { messageIds } = existingConversation;
+            return Object.assign({}, state, { messagesLookup: lodash_1.omit(state.messagesLookup, messageIds), messagesByConversation: lodash_1.omit(state.messagesByConversation, [id]) });
+        }
         if (action.type === 'CONVERSATIONS_REMOVE_ALL') {
             return getEmptyState();
         }
-        if (action.type === 'MESSAGE_EXPIRED') {
-            // noop - for now this is only important for search
+        if (action.type === 'MESSAGE_CHANGED') {
+            const { id, conversationId, data } = action.payload;
+            const existingConversation = state.messagesByConversation[conversationId];
+            // We don't keep track of messages unless their conversation is loaded...
+            if (!existingConversation) {
+                return state;
+            }
+            // ...and we've already loaded that message once
+            const existingMessage = state.messagesLookup[id];
+            if (!existingMessage) {
+                return state;
+            }
+            // Check for changes which could affect height - that's why we need this
+            //   heightChangeMessageIds field. It tells Timeline to recalculate all of its heights
+            const hasHeightChanged = hasMessageHeightChanged(data, existingMessage);
+            const { heightChangeMessageIds } = existingConversation;
+            const updatedChanges = hasHeightChanged
+                ? lodash_1.uniq([...heightChangeMessageIds, id])
+                : heightChangeMessageIds;
+            return Object.assign({}, state, { messagesLookup: Object.assign({}, state.messagesLookup, { [id]: data }), messagesByConversation: Object.assign({}, state.messagesByConversation, { [conversationId]: Object.assign({}, existingConversation, { heightChangeMessageIds: updatedChanges }) }) });
+        }
+        if (action.type === 'MESSAGES_RESET') {
+            const { conversationId, messages, metrics, scrollToMessageId, } = action.payload;
+            const { messagesByConversation, messagesLookup } = state;
+            const existingConversation = messagesByConversation[conversationId];
+            const resetCounter = existingConversation
+                ? existingConversation.resetCounter + 1
+                : 0;
+            const sorted = lodash_1.orderBy(messages, ['received_at'], ['ASC']);
+            const messageIds = sorted.map(message => message.id);
+            const lookup = lodash_1.fromPairs(messages.map(message => [message.id, message]));
+            return Object.assign({}, state, {
+                selectedMessage: scrollToMessageId, selectedMessageCounter: state.selectedMessageCounter + 1, messagesLookup: Object.assign({}, messagesLookup, lookup), messagesByConversation: Object.assign({}, messagesByConversation, {
+                    [conversationId]: {
+                        isLoadingMessages: false,
+                        scrollToMessageId,
+                        scrollToMessageCounter: 0,
+                        messageIds,
+                        metrics,
+                        resetCounter,
+                        heightChangeMessageIds: [],
+                    }
+                })
+            });
+        }
+        if (action.type === 'SET_MESSAGES_LOADING') {
+            const { payload } = action;
+            const { conversationId, isLoadingMessages } = payload;
+            const { messagesByConversation } = state;
+            const existingConversation = messagesByConversation[conversationId];
+            if (!existingConversation) {
+                return state;
+            }
+            return Object.assign({}, state, { messagesByConversation: Object.assign({}, messagesByConversation, { [conversationId]: Object.assign({}, existingConversation, { loadCountdownStart: undefined, isLoadingMessages }) }) });
+        }
+        if (action.type === 'SET_LOAD_COUNTDOWN_START') {
+            const { payload } = action;
+            const { conversationId, loadCountdownStart } = payload;
+            const { messagesByConversation } = state;
+            const existingConversation = messagesByConversation[conversationId];
+            if (!existingConversation) {
+                return state;
+            }
+            return Object.assign({}, state, { messagesByConversation: Object.assign({}, messagesByConversation, { [conversationId]: Object.assign({}, existingConversation, { loadCountdownStart }) }) });
+        }
+        if (action.type === 'SET_NEAR_BOTTOM') {
+            const { payload } = action;
+            const { conversationId, isNearBottom } = payload;
+            const { messagesByConversation } = state;
+            const existingConversation = messagesByConversation[conversationId];
+            if (!existingConversation) {
+                return state;
+            }
+            return Object.assign({}, state, { messagesByConversation: Object.assign({}, messagesByConversation, { [conversationId]: Object.assign({}, existingConversation, { isNearBottom }) }) });
+        }
+        if (action.type === 'SCROLL_TO_MESSAGE') {
+            const { payload } = action;
+            const { conversationId, messageId } = payload;
+            const { messagesByConversation, messagesLookup } = state;
+            const existingConversation = messagesByConversation[conversationId];
+            if (!existingConversation) {
+                return state;
+            }
+            if (!messagesLookup[messageId]) {
+                return state;
+            }
+            if (!existingConversation.messageIds.includes(messageId)) {
+                return state;
+            }
+            return Object.assign({}, state, { selectedMessage: messageId, selectedMessageCounter: state.selectedMessageCounter + 1, messagesByConversation: Object.assign({}, messagesByConversation, { [conversationId]: Object.assign({}, existingConversation, { isLoadingMessages: false, scrollToMessageId: messageId, scrollToMessageCounter: existingConversation.scrollToMessageCounter + 1 }) }) });
+        }
+        if (action.type === 'MESSAGE_DELETED') {
+            const { id, conversationId } = action.payload;
+            const { messagesByConversation, messagesLookup } = state;
+            const existingConversation = messagesByConversation[conversationId];
+            if (!existingConversation) {
+                return state;
+            }
+            // Assuming that we always have contiguous groups of messages in memory, the removal
+            //   of one message at one end of our message set be replaced with the message right
+            //   next to it.
+            const oldIds = existingConversation.messageIds;
+            let { newest, oldest } = existingConversation.metrics;
+            if (oldIds.length > 1) {
+                const firstId = oldIds[0];
+                const lastId = oldIds[oldIds.length - 1];
+                if (oldest && oldest.id === firstId && firstId === id) {
+                    const second = messagesLookup[oldIds[1]];
+                    oldest = second ? lodash_1.pick(second, ['id', 'received_at']) : undefined;
+                }
+                if (newest && newest.id === lastId && lastId === id) {
+                    const penultimate = messagesLookup[oldIds[oldIds.length - 2]];
+                    newest = penultimate
+                        ? lodash_1.pick(penultimate, ['id', 'received_at'])
+                        : undefined;
+                }
+            }
+            // Removing it from our caches
+            const messageIds = lodash_1.without(existingConversation.messageIds, id);
+            const heightChangeMessageIds = lodash_1.without(existingConversation.heightChangeMessageIds, id);
+            return Object.assign({}, state, {
+                messagesLookup: lodash_1.omit(messagesLookup, id), messagesByConversation: {
+                    [conversationId]: Object.assign({}, existingConversation, {
+                        messageIds,
+                        heightChangeMessageIds, metrics: Object.assign({}, existingConversation.metrics, {
+                            oldest,
+                            newest
+                        })
+                    }),
+                }
+            });
+        }
+        if (action.type === 'MESSAGES_ADDED') {
+            const { conversationId, isFocused, isNewMessage, messages, } = action.payload;
+            const { messagesByConversation, messagesLookup } = state;
+            const existingConversation = messagesByConversation[conversationId];
+            if (!existingConversation) {
+                return state;
+            }
+            let { newest, oldest, oldestUnread, totalUnread, } = existingConversation.metrics;
+            const existingTotal = existingConversation.messageIds.length;
+            if (isNewMessage && existingTotal > 0) {
+                const lastMessageId = existingConversation.messageIds[existingTotal - 1];
+                // If our messages in memory don't include the most recent messages, then we
+                //   won't add new messages to our message list.
+                const haveLatest = newest && newest.id === lastMessageId;
+                if (!haveLatest) {
+                    return state;
+                }
+            }
+            const newIds = messages.map(message => message.id);
+            const newChanges = lodash_1.intersection(newIds, existingConversation.messageIds);
+            const heightChangeMessageIds = lodash_1.uniq([
+                ...newChanges,
+                ...existingConversation.heightChangeMessageIds,
+            ]);
+            const lookup = lodash_1.fromPairs(existingConversation.messageIds.map(id => [id, messagesLookup[id]]));
+            messages.forEach(message => {
+                lookup[message.id] = message;
+            });
+            const sorted = lodash_1.orderBy(lodash_1.values(lookup), ['received_at'], ['ASC']);
+            const messageIds = sorted.map(message => message.id);
+            const first = sorted[0];
+            const last = sorted.length > 0 ? sorted[sorted.length - 1] : null;
+            if (first && oldest && first.received_at < oldest.received_at) {
+                oldest = lodash_1.pick(first, ['id', 'received_at']);
+            }
+            if (last && newest && last.received_at > newest.received_at) {
+                newest = lodash_1.pick(last, ['id', 'received_at']);
+            }
+            const newMessageIds = lodash_1.difference(newIds, existingConversation.messageIds);
+            const { isNearBottom } = existingConversation;
+            if ((!isNearBottom || !isFocused) && !oldestUnread) {
+                const oldestId = newMessageIds.find(messageId => {
+                    const message = lookup[messageId];
+                    return Boolean(message.unread);
+                });
+                if (oldestId) {
+                    oldestUnread = lodash_1.pick(lookup[oldestId], [
+                        'id',
+                        'received_at',
+                    ]);
+                }
+            }
+            if (oldestUnread) {
+                const newUnread = newMessageIds.reduce((sum, messageId) => {
+                    const message = lookup[messageId];
+                    return sum + (message && message.unread ? 1 : 0);
+                }, 0);
+                totalUnread = (totalUnread || 0) + newUnread;
+            }
+            return Object.assign({}, state, {
+                messagesLookup: Object.assign({}, messagesLookup, lookup), messagesByConversation: Object.assign({}, messagesByConversation, {
+                    [conversationId]: Object.assign({}, existingConversation, {
+                        isLoadingMessages: false, messageIds,
+                        heightChangeMessageIds, scrollToMessageId: undefined, metrics: Object.assign({}, existingConversation.metrics, {
+                            newest,
+                            oldest,
+                            totalUnread,
+                            oldestUnread
+                        })
+                    })
+                })
+            });
+        }
+        if (action.type === 'CLEAR_SELECTED_MESSAGE') {
+            return Object.assign({}, state, { selectedMessage: undefined });
+        }
+        if (action.type === 'CLEAR_CHANGED_MESSAGES') {
+            const { payload } = action;
+            const { conversationId } = payload;
+            const existingConversation = state.messagesByConversation[conversationId];
+            if (!existingConversation) {
+                return state;
+            }
+            return Object.assign({}, state, { messagesByConversation: Object.assign({}, state.messagesByConversation, { [conversationId]: Object.assign({}, existingConversation, { heightChangeMessageIds: [] }) }) });
+        }
+        if (action.type === 'CLEAR_UNREAD_METRICS') {
+            const { payload } = action;
+            const { conversationId } = payload;
+            const existingConversation = state.messagesByConversation[conversationId];
+            if (!existingConversation) {
+                return state;
+            }
+            return Object.assign({}, state, { messagesByConversation: Object.assign({}, state.messagesByConversation, { [conversationId]: Object.assign({}, existingConversation, { metrics: Object.assign({}, existingConversation.metrics, { oldestUnread: undefined, totalUnread: 0 }) }) }) });
         }
         if (action.type === 'SELECTED_CONVERSATION_CHANGED') {
             const { payload } = action;

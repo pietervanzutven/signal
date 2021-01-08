@@ -10,8 +10,7 @@
     const lodash_1 = window.lodash;
     const PhoneNumber_1 = window.ts.types.PhoneNumber;
     const events_1 = window.ts.shims.events;
-    // import { getMessageModel } from '../../shims/Whisper';
-    // import { cleanSearchTerm } from '../../util/cleanSearchTerm';
+    const cleanSearchTerm_1 = window.ts.util.cleanSearchTerm;
     const data_1 = window.data;
     const makeLookup_1 = require_ts_util_makeLookup();
     // Action Creators
@@ -29,8 +28,9 @@
     }
     async function doSearch(query, options) {
         const { regionCode, ourNumber, noteToSelf } = options;
-        const [discussions /*, messages */] = await Promise.all([
+        const [discussions, messages] = await Promise.all([
             queryConversationsAndContacts(query, { ourNumber, noteToSelf }),
+            queryMessages(query),
         ]);
         const { conversations, contacts } = discussions;
         return {
@@ -38,7 +38,7 @@
             normalizedPhoneNumber: PhoneNumber_1.normalize(query, { regionCode }),
             conversations,
             contacts,
-            messages: [],
+            messages,
         };
     }
     function clearSearch() {
@@ -67,24 +67,15 @@
             payload: null,
         };
     }
-    // Helper functions for search
-    // const getMessageProps = (messages: Array<MessageSearchResultType>) => {
-    //   if (!messages || !messages.length) {
-    //     return [];
-    //   }
-    //   return messages.map(message => {
-    //     const model = getMessageModel(message);
-    //     return model.propsForSearchResult;
-    //   });
-    // };
-    // async function queryMessages(query: string) {
-    //   try {
-    //     const normalized = cleanSearchTerm(query);
-    //     return searchMessages(normalized);
-    //   } catch (e) {
-    //     return [];
-    //   }
-    // }
+    async function queryMessages(query) {
+        try {
+            const normalized = cleanSearchTerm_1.cleanSearchTerm(query);
+            return data_1.searchMessages(normalized);
+        }
+        catch (e) {
+            return [];
+        }
+    }
     async function queryConversationsAndContacts(providedQuery, options) {
         const { ourNumber, noteToSelf } = options;
         const query = providedQuery.replace(/[+-.()]*/g, '');
@@ -150,7 +141,7 @@
             }
             return Object.assign({}, state, { selectedMessage: messageId });
         }
-        if (action.type === 'MESSAGE_EXPIRED') {
+        if (action.type === 'MESSAGE_DELETED') {
             const { messages, messageLookup } = state;
             if (!messages.length) {
                 return state;
