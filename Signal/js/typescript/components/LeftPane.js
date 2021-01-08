@@ -42,9 +42,9 @@
                 react_1.default.createElement("span", { className: "module-left-pane__archived-button__archived-count" }, archivedConversations.length)));
         }
         renderList() {
-            const { archivedConversations, i18n, conversations, openConversationInternal, startNewConversation, searchResults, showArchived, } = this.props;
+            const { archivedConversations, i18n, conversations, openConversationInternal, renderMessageSearchResult, startNewConversation, searchResults, showArchived, } = this.props;
             if (searchResults) {
-                return (react_1.default.createElement(SearchResults_1.SearchResults, Object.assign({}, searchResults, { openConversation: openConversationInternal, startNewConversation: startNewConversation, i18n: i18n })));
+                return (react_1.default.createElement(SearchResults_1.SearchResults, Object.assign({}, searchResults, { openConversationInternal: openConversationInternal, startNewConversation: startNewConversation, renderMessageSearchResult: renderMessageSearchResult, i18n: i18n })));
             }
             if (!conversations || !archivedConversations) {
                 throw new Error('render: must provided conversations and archivedConverstions if no search results are provided');

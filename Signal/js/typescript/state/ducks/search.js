@@ -106,7 +106,7 @@
     function getEmptyState() {
         return {
             query: '',
-            messages: [],
+            messageIds: [],
             messageLookup: {},
             conversations: [],
             contacts: [],
@@ -123,12 +123,19 @@
         }
         if (action.type === 'SEARCH_RESULTS_FULFILLED') {
             const { payload } = action;
-            const { query, messages } = payload;
+            const { contacts, conversations, messages, normalizedPhoneNumber, query, } = payload;
             // Reject if the associated query is not the most recent user-provided query
             if (state.query !== query) {
                 return state;
             }
-            return Object.assign({}, state, payload, { messageLookup: makeLookup_1.makeLookup(messages, 'id') });
+            const messageIds = messages.map(message => message.id);
+            return Object.assign({}, state, {
+                contacts,
+                conversations,
+                normalizedPhoneNumber,
+                query,
+                messageIds, messageLookup: makeLookup_1.makeLookup(messages, 'id')
+            });
         }
         if (action.type === 'CONVERSATIONS_REMOVE_ALL') {
             return getEmptyState();
@@ -142,13 +149,13 @@
             return Object.assign({}, state, { selectedMessage: messageId });
         }
         if (action.type === 'MESSAGE_DELETED') {
-            const { messages, messageLookup } = state;
-            if (!messages.length) {
+            const { messageIds, messageLookup } = state;
+            if (!messageIds || messageIds.length < 1) {
                 return state;
             }
             const { payload } = action;
             const { id } = payload;
-            return Object.assign({}, state, { messages: lodash_1.reject(messages, message => id === message.id), messageLookup: lodash_1.omit(messageLookup, ['id']) });
+            return Object.assign({}, state, { messageIds: lodash_1.reject(messageIds, messageId => id === messageId), messageLookup: lodash_1.omit(messageLookup, ['id']) });
         }
         return state;
     }

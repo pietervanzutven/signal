@@ -46,14 +46,14 @@
             return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, color: from.color, conversationType: "direct", i18n: i18n, name: name, noteToSelf: isNoteToSelf, phoneNumber: from.phoneNumber, profileName: from.profileName, size: 48 }));
         }
         render() {
-            const { from, i18n, id, isSelected, conversationId, onClick, receivedAt, snippet, to, } = this.props;
+            const { from, i18n, id, isSelected, conversationId, openConversationInternal, receivedAt, snippet, to, } = this.props;
             if (!from || !to) {
                 return null;
             }
             return (react_1.default.createElement("div", {
                 role: "button", onClick: () => {
-                    if (onClick) {
-                        onClick(conversationId, id);
+                    if (openConversationInternal) {
+                        openConversationInternal(conversationId, id);
                     }
                 }, className: classnames_1.default('module-message-search-result', isSelected ? 'module-message-search-result--is-selected' : null)
             },

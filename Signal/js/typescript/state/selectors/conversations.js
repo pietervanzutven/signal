@@ -121,7 +121,7 @@
     exports.getCachedSelectorForConversation = reselect_1.createSelector(user_1.getRegionCode, user_1.getUserNumber, () => {
         // Note: memoizee will check all parameters provided, and only run our selector
         //   if any of them have changed.
-        return memoizee_1.default(_conversationSelector, { max: 100 });
+        return memoizee_1.default(_conversationSelector, { max: 2000 });
     });
     exports.getConversationSelector = reselect_1.createSelector(exports.getCachedSelectorForConversation, exports.getConversationLookup, (selector, lookup) => {
         return (id) => {
@@ -161,7 +161,7 @@
     exports.getCachedSelectorForMessage = reselect_1.createSelector(user_1.getRegionCode, user_1.getUserNumber, () => {
         // Note: memoizee will check all parameters provided, and only run our selector
         //   if any of them have changed.
-        return memoizee_1.default(_messageSelector, { max: 500 });
+        return memoizee_1.default(_messageSelector, { max: 2000 });
     });
     exports.getMessageSelector = reselect_1.createSelector(exports.getCachedSelectorForMessage, exports.getMessages, exports.getSelectedMessage, exports.getConversationSelector, user_1.getRegionCode, user_1.getUserNumber, (messageSelector, messageLookup, selectedMessage, conversationSelector, regionCode, ourNumber) => {
         return (id) => {

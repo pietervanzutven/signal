@@ -1146,8 +1146,7 @@ input.search {
     flex-grow: 1;
     position: relative;
     max-width: 100%;
-    margin: 0;
-    margin-bottom: 10px; }
+    margin: 0; }
     .conversation .main.panel .timeline-placeholder .timeline-wrapper {
       -webkit-padding-start: 0px;
       position: absolute;
@@ -3189,7 +3188,7 @@ body.dark-theme {
   color: #bbbdbe; }
 
 .dark-theme .module-message-search-result__body {
-  color: #eeefef; }
+  color: #d5d6d6; }
 
 .dark-theme .module-left-pane {
   background-color: #1a1c20;
@@ -6022,8 +6021,8 @@ body.dark-theme {
   font-weight: bold; }
 
 .module-search-results {
-  overflow-y: scroll;
-  max-height: 100%; }
+  overflow: hidden;
+  flex-grow: 1; }
 
 .module-search-results__conversations-header {
   height: 36px;
