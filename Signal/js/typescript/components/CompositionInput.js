@@ -78,7 +78,7 @@
         r3.current = el;
     });
     // tslint:disable-next-line max-func-body-length
-    exports.CompositionInput = ({ i18n, disabled, editorRef, inputApi, onDirtyChange, onEditorStateChange, onEditorSizeChange, onPickEmoji, onSubmit, skinTone, }) => {
+    exports.CompositionInput = ({ i18n, disabled, large, editorRef, inputApi, onDirtyChange, onEditorStateChange, onEditorSizeChange, onPickEmoji, onSubmit, skinTone, }) => {
         const [editorRenderState, setEditorRenderState] = React.useState(draft_js_1.EditorState.createEmpty(compositeDecorator));
         const [searchText, setSearchText] = React.useState('');
         const [emojiResults, setEmojiResults] = React.useState([]);
@@ -330,6 +330,9 @@
                 return 'enter-emoji';
             }
             if (e.key === 'Enter' && !e.shiftKey) {
+                if (large && !(e.ctrlKey || e.metaKey)) {
+                    return draft_js_1.getDefaultKeyBinding(e);
+                }
                 e.preventDefault();
                 return 'submit';
             }
@@ -352,7 +355,7 @@
                 }
             }
             return draft_js_1.getDefaultKeyBinding(e);
-        }, [emojiResults]);
+        }, [emojiResults, large]);
         // Create popper root
         React.useEffect(() => {
             if (emojiResults.length > 0) {
@@ -402,7 +405,11 @@
         }
         return (React.createElement(react_popper_1.Manager, null,
             React.createElement(react_popper_1.Reference, null, ({ ref: popperRef }) => (React.createElement(react_measure_1.default, { bounds: true, onResize: handleEditorSizeChange }, ({ measureRef }) => (React.createElement("div", { className: "module-composition-input__input", ref: combineRefs(popperRef, measureRef, rootElRef) },
-                React.createElement("div", { className: "module-composition-input__input__scroller" },
+                React.createElement("div", {
+                    className: classnames_1.default('module-composition-input__input__scroller', large
+                        ? 'module-composition-input__input__scroller--large'
+                        : null)
+                },
                     React.createElement(draft_js_1.Editor, { ref: editorRef, editorState: editorRenderState, onChange: handleEditorStateChange, placeholder: i18n('sendMessage'), onUpArrow: handleEditorArrowKey, onDownArrow: handleEditorArrowKey, onEscape: handleEscapeKey, onTab: onTab, handleKeyCommand: handleEditorCommand, keyBindingFn: editorKeybindingFn, spellCheck: true, stripPastedStyles: true, readOnly: disabled, onFocus: onFocus, onBlur: onBlur }))))))),
             emojiResults.length > 0 && popperRoot
                 ? react_dom_1.createPortal(React.createElement(react_popper_1.Popper, { placement: "top", key: searchText }, ({ ref, style }) => (React.createElement("div", { ref: ref, className: "module-composition-input__emoji-suggestions", style: Object.assign({}, style, { width: editorWidth }), role: "listbox", "aria-expanded": true, "aria-activedescendant": `emoji-result--${emojiResults[emojiResultsIndex].short_name}` }, emojiResults.map((emoji, index) => (React.createElement("button", {

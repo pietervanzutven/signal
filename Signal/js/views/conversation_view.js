@@ -181,8 +181,11 @@
       this.loadingScreen.$el.prependTo(this.$('.discussion-container'));
 
       this.window = options.window;
+      const attachmentListEl = $(
+        '<div class="module-composition-area__attachment-list"></div>'
+      );
       this.fileInput = new Whisper.FileInputView({
-        el: this.$('.attachment-list'),
+        el: attachmentListEl,
       });
       this.listenTo(
         this.fileInput,
@@ -221,7 +224,7 @@
       this.$('.send-message').blur(this.unfocusBottomBar.bind(this));
 
       this.setupHeader();
-      this.setupCompositionArea();
+      this.setupCompositionArea({ attachmentListEl: attachmentListEl[0] });
     },
 
     events: {
@@ -316,9 +319,20 @@
       this.$('.conversation-header').append(this.titleView.el);
     },
 
-    setupCompositionArea() {
+    setupCompositionArea({ attachmentListEl }) {
       const compositionApi = { current: null };
       this.compositionApi = compositionApi;
+
+      const micCellEl = $(`
+        <div class="capture-audio">
+          <button class="microphone"></button>
+        </div>
+      `)[0];
+      const attCellEl = $(`
+        <div class="choose-file">
+          <button class="paperclip thumbnail"></button>
+        </div>
+      `)[0];
 
       const props = {
         compositionApi,
@@ -326,10 +340,12 @@
         onPickSticker: (packId, stickerId) =>
           this.sendStickerMessage({ packId, stickerId }),
         onSubmit: message => this.sendMessage(message),
-        onDirtyChange: dirty => this.toggleMicrophone(dirty),
         onEditorStateChange: (msg, caretLocation) =>
           this.onEditorStateChange(msg, caretLocation),
         onEditorSizeChange: rect => this.onEditorSizeChange(rect),
+        micCellEl,
+        attCellEl,
+        attachmentListEl,
       };
 
       this.compositionAreaView = new Whisper.ReactWrapperView({
@@ -587,13 +603,10 @@
       }
     },
 
-    toggleMicrophone(dirty = false) {
-      if (dirty || this.fileInput.hasFiles()) {
-        this.$('.capture-audio').hide();
-      } else {
-        this.$('.capture-audio').show();
-      }
+    toggleMicrophone() {
+      this.compositionApi.current.setShowMic(!this.fileInput.hasFiles());
     },
+
     captureAudio(e) {
       e.preventDefault();
 
@@ -619,6 +632,7 @@
       view.on('send', this.handleAudioCapture.bind(this));
       view.on('closed', this.endCaptureAudio.bind(this));
       view.$el.appendTo(this.$('.capture-audio'));
+      this.compositionApi.current.setMicActive(true);
 
       this.disableMessageField();
       this.$('.microphone').hide();
@@ -635,6 +649,7 @@
       this.enableMessageField();
       this.$('.microphone').show();
       this.captureAudioView = null;
+      this.compositionApi.current.setMicActive(false);
     },
 
     unfocusBottomBar() {
@@ -1832,7 +1847,8 @@
       this.quoteView = new Whisper.ReactWrapperView({
         className: 'quote-wrapper',
         Component: window.Signal.Components.Quote,
-        elCallback: el => this.$('.send').prepend(el),
+        elCallback: el =>
+          this.$(this.compositionApi.current.attSlotRef.current).prepend(el),
         props: Object.assign({}, props, {
           withContentAbove: true,
           onClose: () => {
@@ -2294,7 +2310,8 @@
       this.previewView = new Whisper.ReactWrapperView({
         className: 'preview-wrapper',
         Component: window.Signal.Components.StagedLinkPreview,
-        elCallback: el => this.$('.send').prepend(el),
+        elCallback: el =>
+          this.$(this.compositionApi.current.attSlotRef.current).prepend(el),
         props,
         onInitialRender: () => {
           this.view.restoreBottomOffset();
