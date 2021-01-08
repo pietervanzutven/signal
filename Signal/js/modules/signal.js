@@ -67,6 +67,7 @@
   const conversationsDuck = window.ts.state.ducks.conversations;
   const emojisDuck = window.ts.state.ducks.emojis;
   const itemsDuck = window.ts.state.ducks.items;
+  const searchDuck = window.ts.state.ducks.search;
   const stickersDuck = window.ts.state.ducks.stickers;
   const userDuck = window.ts.state.ducks.user;
 
@@ -279,6 +280,7 @@
       emojis: emojisDuck,
       items: itemsDuck,
       user: userDuck,
+      search: searchDuck,
       stickers: stickersDuck,
     };
     const State = {

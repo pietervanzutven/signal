@@ -11,6 +11,8 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const react_virtualized_1 = window.react_virtualized;
+    const Intl_1 = window.ts.components.Intl;
+    const Emojify_1 = window.ts.components.conversation.Emojify;
     const ConversationListItem_1 = window.ts.components.ConversationListItem;
     const StartNewConversation_1 = window.ts.components.StartNewConversation;
     class SearchResults extends react_1.default.Component {
@@ -98,10 +100,14 @@
             return items ? items.length : 0;
         }
         render() {
-            const { items, i18n, noResults, searchTerm } = this.props;
+            const { i18n, items, noResults, searchConversationName, searchTerm, } = this.props;
             if (noResults) {
-                return (react_1.default.createElement("div", { className: "module-search-results" },
-                    react_1.default.createElement("div", { className: "module-search-results__no-results" }, i18n('noSearchResults', [searchTerm]))));
+                return (react_1.default.createElement("div", { className: "module-search-results" }, !searchConversationName || searchTerm ? (react_1.default.createElement("div", { className: "module-search-results__no-results", key: searchTerm }, searchConversationName ? (react_1.default.createElement(Intl_1.Intl, {
+                    id: "noSearchResultsInConversation", i18n: i18n, components: [
+                        searchTerm,
+                        react_1.default.createElement(Emojify_1.Emojify, { key: "item-1", text: searchConversationName }),
+                    ]
+                })) : (i18n('noSearchResults', [searchTerm])))) : null));
             }
             return (react_1.default.createElement("div", { className: "module-search-results", key: searchTerm },
                 react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => {

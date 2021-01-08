@@ -526,6 +526,10 @@
       Signal.State.Ducks.user.actions,
       store.dispatch
     );
+    actions.search = Signal.State.bindActionCreators(
+      Signal.State.Ducks.search.actions,
+      store.dispatch
+    );
     actions.stickers = Signal.State.bindActionCreators(
       Signal.State.Ducks.stickers.actions,
       store.dispatch

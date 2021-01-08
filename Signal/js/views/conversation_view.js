@@ -257,6 +257,13 @@
             this.setDisappearingMessages(seconds),
           onDeleteMessages: () => this.destroyMessages(),
           onResetSession: () => this.endSession(),
+          onSearchInConversation: () => {
+            const { searchInConversation } = window.reduxActions.search;
+            const name = this.model.isMe()
+              ? i18n('noteToSelf')
+              : this.model.getTitle();
+            searchInConversation(this.model.id, name);
+          },
 
           // These are view only and don't update the Conversation model, so they
           //   need a manual update call.
@@ -1500,8 +1507,6 @@
 
       this.focusMessageField();
 
-      this.model.updateLastMessage();
-
       const statusPromise = this.throttledGetProfiles();
       // eslint-disable-next-line more/no-then
       this.statusFetch = statusPromise.then(() =>
@@ -1532,12 +1537,14 @@
       if (quotedMessageId) {
         this.setQuoteMessage(quotedMessageId);
       }
-      
+
+      this.model.updateLastMessage();
+
       if (window.fileToken) {
-        const file = await Windows.ApplicationModel.DataTransfer.SharedStorageAccessManager.redeemTokenForFileAsync(window.fileToken);
-        this.fileInput.file = file;
-        this.fileInput.previewImages();
-        window.fileToken = null;
+          const file = await Windows.ApplicationModel.DataTransfer.SharedStorageAccessManager.redeemTokenForFileAsync(window.fileToken);
+          this.fileInput.file = file;
+          this.fileInput.previewImages();
+          window.fileToken = null;
       }
     },
 

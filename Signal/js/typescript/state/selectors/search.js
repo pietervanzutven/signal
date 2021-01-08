@@ -18,13 +18,15 @@
     exports.getSearch = (state) => state.search;
     exports.getQuery = reselect_1.createSelector(exports.getSearch, (state) => state.query);
     exports.getSelectedMessage = reselect_1.createSelector(exports.getSearch, (state) => state.selectedMessage);
+    exports.getSearchConversationId = reselect_1.createSelector(exports.getSearch, (state) => state.searchConversationId);
+    exports.getSearchConversationName = reselect_1.createSelector(exports.getSearch, (state) => state.searchConversationName);
     exports.isSearching = reselect_1.createSelector(exports.getSearch, (state) => {
-        const { query } = state;
-        return query && query.trim().length > 1;
+        const { query, searchConversationId } = state;
+        return (query && query.trim().length > 1) || searchConversationId;
     });
     exports.getMessageSearchResultLookup = reselect_1.createSelector(exports.getSearch, (state) => state.messageLookup);
     exports.getSearchResults = reselect_1.createSelector([exports.getSearch, user_1.getRegionCode, conversations_1.getConversationLookup, conversations_1.getSelectedConversation], (state, regionCode, lookup, selectedConversation) => {
-        const { conversations, contacts, messageIds } = state;
+        const { contacts, conversations, messageIds, searchConversationName, } = state;
         const showStartNewConversation = Boolean(state.normalizedPhoneNumber && !lookup[state.normalizedPhoneNumber]);
         const haveConversations = conversations && conversations.length;
         const haveContacts = contacts && contacts.length;
@@ -82,6 +84,7 @@
             items,
             noResults,
             regionCode: regionCode,
+            searchConversationName,
             searchTerm: state.query,
         };
     });
@@ -93,10 +96,10 @@
         // @ts-ignore
         sender,
         // @ts-ignore
-        recipient, selectedMessageId) {
+        recipient, searchConversationId, selectedMessageId) {
         // Note: We don't use all of those parameters here, but the shim we call does.
         //   We want to call this function again if any of those parameters change.
-        return Object.assign({}, Whisper_1.getSearchResultsProps(message), { isSelected: message.id === selectedMessageId });
+        return Object.assign({}, Whisper_1.getSearchResultsProps(message), { isSelected: message.id === selectedMessageId, isSearchingInConversation: Boolean(searchConversationId) });
     }
     exports._messageSearchResultSelector = _messageSearchResultSelector;
     exports.getCachedSelectorForMessageSearchResult = reselect_1.createSelector(user_1.getRegionCode, user_1.getUserNumber, () => {
@@ -104,7 +107,7 @@
         //   if any of them have changed.
         return memoizee_1.default(_messageSearchResultSelector, { max: 500 });
     });
-    exports.getMessageSearchResultSelector = reselect_1.createSelector(exports.getCachedSelectorForMessageSearchResult, exports.getMessageSearchResultLookup, exports.getSelectedMessage, conversations_1.getConversationSelector, user_1.getRegionCode, user_1.getUserNumber, (messageSearchResultSelector, messageSearchResultLookup, selectedMessage, conversationSelector, regionCode, ourNumber) => {
+    exports.getMessageSearchResultSelector = reselect_1.createSelector(exports.getCachedSelectorForMessageSearchResult, exports.getMessageSearchResultLookup, exports.getSelectedMessage, conversations_1.getConversationSelector, exports.getSearchConversationId, user_1.getRegionCode, user_1.getUserNumber, (messageSearchResultSelector, messageSearchResultLookup, selectedMessage, conversationSelector, searchConversationId, regionCode, ourNumber) => {
         return (id) => {
             const message = messageSearchResultLookup[id];
             if (!message) {
@@ -121,7 +124,7 @@
                 sender = conversationSelector(ourNumber);
                 recipient = conversationSelector(conversationId);
             }
-            return messageSearchResultSelector(message, ourNumber, regionCode, sender, recipient, selectedMessage);
+            return messageSearchResultSelector(message, ourNumber, regionCode, sender, recipient, searchConversationId, selectedMessage);
         };
     });
 })();

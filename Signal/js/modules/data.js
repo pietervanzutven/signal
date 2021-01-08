@@ -660,9 +660,18 @@
     return conversations;
   }
 
+  function handleSearchMessageJSON(messages) {
+    return messages.map(message => (Object.assign({},
+      JSON.parse(message.json),
+      {
+        snippet: message.snippet,
+      }
+    )));
+  }
+
   async function searchMessages(query, { limit } = {}) {
     const messages = await channels.searchMessages(query, { limit });
-    return messages;
+    return handleSearchMessageJSON(messages);
   }
 
   async function searchMessagesInConversation(
@@ -675,7 +684,7 @@
       conversationId,
       { limit }
     );
-    return messages;
+    return handleSearchMessageJSON(messages);
   }
 
   // Message
@@ -789,6 +798,10 @@
     return new MessageCollection(messages);
   }
 
+  function handleMessageJSON(messages) {
+    return messages.map(message => JSON.parse(message.json));
+  }
+
   async function getOlderMessagesByConversation(
     conversationId,
     { limit = 100, receivedAt = Number.MAX_VALUE, MessageCollection }
@@ -801,7 +814,7 @@
       }
     );
 
-    return new MessageCollection(messages);
+    return new MessageCollection(handleMessageJSON(messages));
   }
   async function getNewerMessagesByConversation(
     conversationId,
@@ -815,7 +828,7 @@
       }
     );
 
-    return new MessageCollection(messages);
+    return new MessageCollection(handleMessageJSON(messages));
   }
   async function getMessageMetricsForConversation(conversationId) {
     const result = await channels.getMessageMetricsForConversation(

@@ -27,9 +27,9 @@
             return (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: from.phoneNumber, name: from.name, profileName: from.profileName, module: "module-message-search-result__header__name" }));
         }
         renderFrom() {
-            const { i18n, to } = this.props;
+            const { i18n, to, isSearchingInConversation } = this.props;
             const fromName = this.renderFromName();
-            if (!to.isMe) {
+            if (!to.isMe && !isSearchingInConversation) {
                 return (react_1.default.createElement("div", { className: "module-message-search-result__header__from" },
                     fromName,
                     " ",

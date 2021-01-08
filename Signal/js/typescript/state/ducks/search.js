@@ -17,6 +17,8 @@
     exports.actions = {
         search,
         clearSearch,
+        clearConversationSearch,
+        searchInConversation,
         updateSearchTerm,
         startNewConversation,
     };
@@ -27,24 +29,52 @@
         };
     }
     async function doSearch(query, options) {
-        const { regionCode, ourNumber, noteToSelf } = options;
-        const [discussions, messages] = await Promise.all([
-            queryConversationsAndContacts(query, { ourNumber, noteToSelf }),
-            queryMessages(query),
-        ]);
-        const { conversations, contacts } = discussions;
-        return {
-            query,
-            normalizedPhoneNumber: PhoneNumber_1.normalize(query, { regionCode }),
-            conversations,
-            contacts,
-            messages,
-        };
+        const { regionCode, ourNumber, noteToSelf, searchConversationId } = options;
+        const normalizedPhoneNumber = PhoneNumber_1.normalize(query, { regionCode });
+        if (searchConversationId) {
+            const messages = await queryMessages(query, searchConversationId);
+            return {
+                contacts: [],
+                conversations: [],
+                messages,
+                normalizedPhoneNumber,
+                query,
+            };
+        }
+        else {
+            const [discussions, messages] = await Promise.all([
+                queryConversationsAndContacts(query, { ourNumber, noteToSelf }),
+                queryMessages(query),
+            ]);
+            const { conversations, contacts } = discussions;
+            return {
+                contacts,
+                conversations,
+                messages,
+                normalizedPhoneNumber,
+                query,
+            };
+        }
     }
     function clearSearch() {
         return {
             type: 'SEARCH_CLEAR',
             payload: null,
+        };
+    }
+    function clearConversationSearch() {
+        return {
+            type: 'CLEAR_CONVERSATION_SEARCH',
+            payload: null,
+        };
+    }
+    function searchInConversation(searchConversationId, searchConversationName) {
+        return {
+            type: 'SEARCH_IN_CONVERSATION',
+            payload: {
+                searchConversationId,
+                searchConversationName,
+            },
         };
     }
     function updateSearchTerm(query) {
@@ -67,9 +97,12 @@
             payload: null,
         };
     }
-    async function queryMessages(query) {
+    async function queryMessages(query, searchConversationId) {
         try {
             const normalized = cleanSearchTerm_1.cleanSearchTerm(query);
+            if (searchConversationId) {
+                return data_1.searchMessagesInConversation(normalized, searchConversationId);
+            }
             return data_1.searchMessages(normalized);
         }
         catch (e) {
@@ -112,6 +145,7 @@
             contacts: [],
         };
     }
+    // tslint:disable-next-line max-func-body-length
     function reducer(state = getEmptyState(), action) {
         if (action.type === 'SEARCH_CLEAR') {
             return getEmptyState();
@@ -120,6 +154,24 @@
             const { payload } = action;
             const { query } = payload;
             return Object.assign({}, state, { query });
+        }
+        if (action.type === 'SEARCH_IN_CONVERSATION') {
+            const { payload } = action;
+            const { searchConversationId, searchConversationName } = payload;
+            if (searchConversationId === state.searchConversationId) {
+                return state;
+            }
+            return Object.assign({}, getEmptyState(), {
+                searchConversationId,
+                searchConversationName
+            });
+        }
+        if (action.type === 'CLEAR_CONVERSATION_SEARCH') {
+            const { searchConversationId, searchConversationName } = state;
+            return Object.assign({}, getEmptyState(), {
+                searchConversationId,
+                searchConversationName
+            });
         }
         if (action.type === 'SEARCH_RESULTS_FULFILLED') {
             const { payload } = action;
@@ -142,9 +194,10 @@
         }
         if (action.type === 'SELECTED_CONVERSATION_CHANGED') {
             const { payload } = action;
-            const { messageId } = payload;
-            if (!messageId) {
-                return state;
+            const { id, messageId } = payload;
+            const { searchConversationId } = state;
+            if (searchConversationId && searchConversationId !== id) {
+                return getEmptyState();
             }
             return Object.assign({}, state, { selectedMessage: messageId });
         }
