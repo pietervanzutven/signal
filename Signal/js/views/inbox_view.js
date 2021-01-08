@@ -25,6 +25,7 @@
     open(conversation, messageId) {
       const gutter = $('.gutter');
       const stack = $('.conversation-stack');
+      const placeholder = $('.conversation.placeholder');
       while (window.onbackrequested) {
         Windows.UI.Core.SystemNavigationManager.getForCurrentView().onbackrequested.call();
       }
@@ -32,11 +33,12 @@
         gutter.hide();
         stack.show();
       }
-      var currentView = Windows.UI.Core.SystemNavigationManager.getForCurrentView();
+      placeholder.hide();
+      const currentView = Windows.UI.Core.SystemNavigationManager.getForCurrentView();
       currentView.appViewBackButtonVisibility = Windows.UI.Core.AppViewBackButtonVisibility.visible;
       currentView.onbackrequested = function (event) {
         if (currentView.appViewBackButtonVisibility === Windows.UI.Core.AppViewBackButtonVisibility.visible) {
-          $('.conversation.placeholder').prependTo(stack);
+          placeholder.show();
           $('.module-emoji-picker').hide();
           if (window.innerWidth < 600) {
             gutter.show();
