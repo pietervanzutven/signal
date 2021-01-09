@@ -288,6 +288,7 @@ function createWindow() {
         config.environment === 'test' || config.environment === 'test-lib'
           ? '#ffffff' // Tests should always be rendered on a white background
           : '#2090EA',
+      vibrancy: 'appearance-based',
       webPreferences: {
         nodeIntegration: false,
         nodeIntegrationInWorker: false,
@@ -520,6 +521,7 @@ function showAbout() {
     autoHideMenuBar: true,
     backgroundColor: '#2090EA',
     show: false,
+    vibrancy: 'appearance-based',
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
@@ -565,6 +567,7 @@ async function showSettingsWindow() {
     backgroundColor: '#FFFFFF',
     show: false,
     modal: true,
+    vibrancy: 'appearance-based',
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
@@ -610,6 +613,7 @@ async function showDebugLogWindow() {
     backgroundColor: '#FFFFFF',
     show: false,
     modal: true,
+    vibrancy: 'appearance-based',
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
@@ -658,6 +662,7 @@ async function showPermissionsPopupWindow() {
     backgroundColor: '#FFFFFF',
     show: false,
     modal: true,
+    vibrancy: 'appearance-based',
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
