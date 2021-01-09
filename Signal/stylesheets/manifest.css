@@ -7487,26 +7487,22 @@ body.dark-theme {
   flex-grow: 1; }
 
 .module-composition-area__toggle-large {
-  width: 20px;
-  height: 20px;
+  width: 48px;
+  height: 24px;
   border: none;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'><title>expand-up-20</title><path d='M18,12.75a.746.746,0,0,1-.4-.114L10,7.884,2.4,12.636A.75.75,0,1,1,1.6,11.364l8-5a.748.748,0,0,1,.794,0l8,5A.75.75,0,0,1,18,12.75Z' fill='%23898A8C'/></svg>");
-  background-size: 100%;
   background-repeat: no-repeat;
   background-position: center center; }
   .dark-theme .module-composition-area__toggle-large {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'><title>expand-up-20</title><path d='M18,12.75a.746.746,0,0,1-.4-.114L10,7.884,2.4,12.636A.75.75,0,1,1,1.6,11.364l8-5a.748.748,0,0,1,.794,0l8,5A.75.75,0,0,1,18,12.75Z' fill='%23898A8C'/></svg>");
-    background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
   .module-composition-area__toggle-large--large-active {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'><title>collapse-down-20</title><path d='M10,13.75a.746.746,0,0,1-.4-.114l-8-5A.75.75,0,1,1,2.4,7.364L10,12.116l7.6-4.752A.75.75,0,1,1,18.4,8.636l-8,5A.746.746,0,0,1,10,13.75Z' fill='%23898A8C'/></svg>");
-    background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center; }
     .dark-theme .module-composition-area__toggle-large--large-active {
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'><title>collapse-down-20</title><path d='M10,13.75a.746.746,0,0,1-.4-.114l-8-5A.75.75,0,1,1,2.4,7.364L10,12.116l7.6-4.752A.75.75,0,1,1,18.4,8.636l-8,5A.746.746,0,0,1,10,13.75Z' fill='%23898A8C'/></svg>");
-      background-size: 100%;
       background-repeat: no-repeat;
       background-position: center center; }
 
@@ -7515,7 +7511,6 @@ body.dark-theme {
 
 .composition-area-placeholder {
   flex-grow: 1;
-  margin-top: 3px;
   margin-bottom: 6px; }
 
 .module-last-seen-indicator {
