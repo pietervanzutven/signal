@@ -1,5 +1,10 @@
 /* eslint-disable no-console */
 
+//const core = Windows.Security.Cryptography.Core;
+//const algorithmProvider = core.AsymmetricKeyAlgorithmProvider.openAlgorithm(core.AsymmetricAlgorithmNames.ec);
+//algorithmProvider.createKeyPairWithCurveName
+
+
 Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync('BBDB_import.json').then(file => {
   if (file) {
     file.renameAsync('signal_import.json', Windows.Storage.NameCollisionOption.replaceExisting);

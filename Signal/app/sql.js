@@ -1165,9 +1165,11 @@
 
     filePath = join(dbDir, 'db.sqlite');
 
+    let promisified;
+
     try {
       const sqlInstance = await openDatabase(filePath);
-      const promisified = promisify(sqlInstance);
+      promisified = promisify(sqlInstance);
 
       // promisified.on('trace', async statement => {
       //   if (!db || statement.startsWith('--')) {
@@ -1182,16 +1184,18 @@
 
       await updateSchema(promisified);
 
-      db = promisified;
-
       // test database
 
-      const result = await getSQLIntegrityCheck(db);
+      const result = await getSQLIntegrityCheck(promisified);
       if (result) {
         console.log('Database integrity check failed:', result);
         throw new Error(`Integrity check failed: ${result}`);
       }
 
+      // At this point we can allow general access to the database
+      db = promisified;
+
+      // test database
       await getMessageCount();
     } catch (error) {
       console.log('Database startup error:', error.stack);
@@ -1212,7 +1216,9 @@
           `Database startup error:\n\n${redactAll(error.stack)}`
         );
       } else {
-        await close();
+        if (promisified) {
+          await promisified.close();
+        }
         await removeDB();
         removeUserConfig();
         app.relaunch();
