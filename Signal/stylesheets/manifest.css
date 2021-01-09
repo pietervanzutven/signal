@@ -5422,7 +5422,7 @@ body.dark-theme {
   border-radius: 14px;
   border: solid 1px #d5d6d6;
   padding-left: 30px;
-  padding-right: 30px;
+  padding-right: 5px;
   color: #17191d;
   font-size: 14px; }
   .module-main-header__search__input:placeholder {
@@ -5430,6 +5430,9 @@ body.dark-theme {
   .module-main-header__search__input:focus {
     border: solid 1px blue;
     outline: none; }
+
+.module-main-header__search__input--with-text {
+  padding-right: 30px; }
 
 .module-main-header__search__input--in-conversation {
   padding-left: 50px; }
@@ -5456,7 +5459,9 @@ body.dark-theme {
   background-color: #eeefef;
   display: flex;
   flex-direction: row;
-  align-items: center; }
+  align-items: center;
+  border: none;
+  padding: 0; }
 
 .module-main-header__search__in-conversation-pill__avatar-container {
   margin-left: 4px;

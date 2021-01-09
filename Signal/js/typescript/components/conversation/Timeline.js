@@ -366,9 +366,7 @@
         getRowCount() {
             const { haveOldest, oldestUnreadIndex, typingContact } = this.props;
             const { items } = this.props;
-            if (!items || items.length < 1) {
-                return 0;
-            }
+            const itemsCount = items && items.length ? items.length : 0;
             let extraRows = 0;
             if (!haveOldest) {
                 extraRows += 1;
@@ -379,7 +377,7 @@
             if (typingContact) {
                 extraRows += 1;
             }
-            return items.length + extraRows;
+            return itemsCount + extraRows;
         }
         fromRowToItemIndex(row) {
             const { haveOldest, items } = this.props;
@@ -507,11 +505,11 @@
         render() {
             const { i18n, id, items } = this.props;
             const { shouldShowScrollDownButton, areUnreadBelowCurrentPosition, } = this.state;
-            if (!items || items.length < 1) {
-                return null;
-            }
             const rowCount = this.getRowCount();
             const scrollToIndex = this.getScrollTarget();
+            if (!items || rowCount === 0) {
+                return null;
+            }
             return (react_1.default.createElement("div", { className: "module-timeline" },
                 react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => {
                     if (this.mostRecentWidth && this.mostRecentWidth !== width) {

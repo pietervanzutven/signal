@@ -9,6 +9,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = window.lodash;
     const events_1 = window.ts.shims.events;
+    const Attachment_1 = window.ts.types.Attachment;
     // Action Creators
     exports.actions = {
         conversationAdded,
@@ -214,8 +215,18 @@
         };
     }
     function hasMessageHeightChanged(message, previous) {
-        return (Boolean(message.hasSignalAccount || previous.hasSignalAccount) &&
-            message.hasSignalAccount !== previous.hasSignalAccount);
+        const visualAttachmentNoLongerPending = previous.attachments &&
+            previous.attachments[0] &&
+            previous.attachments[0].pending &&
+            message.attachments &&
+            message.attachments.length === 1 &&
+            message.attachments[0] &&
+            (Attachment_1.isImageAttachment(message.attachments[0]) ||
+                Attachment_1.isVideoAttachment(message.attachments[0])) &&
+            !message.attachments[0].pending;
+        const signalAccountChanged = Boolean(message.hasSignalAccount || previous.hasSignalAccount) &&
+            message.hasSignalAccount !== previous.hasSignalAccount;
+        return visualAttachmentNoLongerPending || signalAccountChanged;
     }
     // tslint:disable-next-line cyclomatic-complexity max-func-body-length
     function reducer(state = getEmptyState(), action) {

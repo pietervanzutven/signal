@@ -104,12 +104,14 @@
             return (react_1.default.createElement("div", { className: "module-main-header" },
                 react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28 }),
                 react_1.default.createElement("div", { className: "module-main-header__search" },
-                    searchConversationId ? (react_1.default.createElement("div", { className: "module-main-header__search__in-conversation-pill" },
+                    searchConversationId ? (react_1.default.createElement("button", { className: "module-main-header__search__in-conversation-pill", onClick: this.clearSearch },
                         react_1.default.createElement("div", { className: "module-main-header__search__in-conversation-pill__avatar-container" },
                             react_1.default.createElement("div", { className: "module-main-header__search__in-conversation-pill__avatar" })),
-                        react_1.default.createElement("button", { className: "module-main-header__search__in-conversation-pill__x-button", onClick: this.clearSearch }))) : (react_1.default.createElement("button", { className: "module-main-header__search__icon", onClick: this.setFocus })),
+                        react_1.default.createElement("div", { className: "module-main-header__search__in-conversation-pill__x-button" }))) : (react_1.default.createElement("button", { className: "module-main-header__search__icon", onClick: this.setFocus })),
                     react_1.default.createElement("input", {
-                        type: "text", ref: this.inputRef, className: classnames_1.default('module-main-header__search__input', searchConversationId
+                        type: "text", ref: this.inputRef, className: classnames_1.default('module-main-header__search__input', searchTerm
+                            ? 'module-main-header__search__input--with-text'
+                            : null, searchConversationId
                             ? 'module-main-header__search__input--in-conversation'
                             : null), placeholder: placeholder, dir: "auto", onKeyUp: this.handleKeyUp, value: searchTerm, onChange: this.updateSearch
                     }),

@@ -21,8 +21,8 @@
     exports.getSearchConversationId = reselect_1.createSelector(exports.getSearch, (state) => state.searchConversationId);
     exports.getSearchConversationName = reselect_1.createSelector(exports.getSearch, (state) => state.searchConversationName);
     exports.isSearching = reselect_1.createSelector(exports.getSearch, (state) => {
-        const { query, searchConversationId } = state;
-        return (query && query.trim().length > 1) || searchConversationId;
+        const { query } = state;
+        return query && query.trim().length > 1;
     });
     exports.getMessageSearchResultLookup = reselect_1.createSelector(exports.getSearch, (state) => state.messageLookup);
     exports.getSearchResults = reselect_1.createSelector([exports.getSearch, user_1.getRegionCode, conversations_1.getConversationLookup, conversations_1.getSelectedConversation], (state, regionCode, lookup, selectedConversation) => {
