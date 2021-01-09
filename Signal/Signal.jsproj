@@ -3024,9 +3024,11 @@
     <Content Include="node_modules\jquery\dist\jquery.js" />
     <Content Include="node_modules\lodash\chunk.js" />
     <Content Include="node_modules\lodash\compact.js" />
+    <Content Include="node_modules\lodash\difference.js" />
     <Content Include="node_modules\lodash\findLast.js" />
     <Content Include="node_modules\lodash\flatMap.js" />
     <Content Include="node_modules\lodash\initial.js" />
+    <Content Include="node_modules\lodash\intersection.js" />
     <Content Include="node_modules\lodash\keyBy.js" />
     <Content Include="node_modules\lodash\debounce.js" />
     <Content Include="node_modules\lodash\flatten.js" />
@@ -3044,6 +3046,7 @@
     <Content Include="node_modules\lodash\set.js" />
     <Content Include="node_modules\lodash\take.js" />
     <Content Include="node_modules\lodash\uniq.js" />
+    <Content Include="node_modules\lodash\values.js" />
     <Content Include="node_modules\lodash\zipObject.js" />
     <Content Include="node_modules\memoizee\index.js" />
     <Content Include="node_modules\mkdirp\index.js" />
