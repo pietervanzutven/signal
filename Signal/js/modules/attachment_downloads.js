@@ -418,7 +418,14 @@
         throw new Error("_addAttachmentToMessage: sticker didn't exist");
       }
 
-      _replaceAttachment(sticker, 'data', attachment, logPrefix);
+      message.set({
+        sticker: Object.assign({},
+          sticker,
+          {
+            data: attachment,
+          }
+        ),
+      });
       return;
     }
 

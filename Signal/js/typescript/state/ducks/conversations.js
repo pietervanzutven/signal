@@ -215,18 +215,32 @@
         };
     }
     function hasMessageHeightChanged(message, previous) {
-        const visualAttachmentNoLongerPending = previous.attachments &&
-            previous.attachments[0] &&
-            previous.attachments[0].pending &&
-            message.attachments &&
-            message.attachments.length === 1 &&
-            message.attachments[0] &&
-            (Attachment_1.isImageAttachment(message.attachments[0]) ||
-                Attachment_1.isVideoAttachment(message.attachments[0])) &&
-            !message.attachments[0].pending;
+        const messageAttachments = message.attachments || [];
+        const previousAttachments = previous.attachments || [];
+        const stickerPendingChanged = message.sticker &&
+            message.sticker.data &&
+            previous.sticker &&
+            previous.sticker.data &&
+            previous.sticker.data.pending !== message.sticker.data.pending;
+        if (stickerPendingChanged) {
+            return true;
+        }
+        const singleVisualAttachmentNoLongerPending = messageAttachments.length === 1 &&
+            previousAttachments[0] &&
+            previousAttachments[0].pending &&
+            messageAttachments[0] &&
+            (Attachment_1.isImageAttachment(messageAttachments[0]) ||
+                Attachment_1.isVideoAttachment(messageAttachments[0])) &&
+            !messageAttachments[0].pending;
+        if (singleVisualAttachmentNoLongerPending) {
+            return true;
+        }
         const signalAccountChanged = Boolean(message.hasSignalAccount || previous.hasSignalAccount) &&
             message.hasSignalAccount !== previous.hasSignalAccount;
-        return visualAttachmentNoLongerPending || signalAccountChanged;
+        if (signalAccountChanged) {
+            return true;
+        }
+        return false;
     }
     // tslint:disable-next-line cyclomatic-complexity max-func-body-length
     function reducer(state = getEmptyState(), action) {
