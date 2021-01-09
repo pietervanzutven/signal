@@ -88,10 +88,6 @@
 
   window.setBadgeCount = count => ipc.send('set-badge-count', count);
 
-  window.drawAttention = () => {
-    window.log.info('draw attention');
-    ipc.send('draw-attention');
-  };
   window.showWindow = () => {
     window.log.info('show window');
     ipc.send('show-window');

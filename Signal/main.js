@@ -387,10 +387,6 @@ const debouncedCaptureStats = _.debounce(captureAndSaveWindowStats, 500);
 mainWindow.on('resize', debouncedCaptureStats);
 mainWindow.on('move', debouncedCaptureStats);
 
-mainWindow.on('focus', () => {
-  mainWindow.flashFrame(false);
-});
-
 // Ingested in preload.js via a sendSync call
 ipc.on('locale-data', event => {
   // eslint-disable-next-line no-param-reassign
@@ -874,10 +870,6 @@ ipc.on('add-setup-menu-items', () => {
   setupMenu({
     includeSetup: true,
   });
-});
-
-ipc.on('draw-attention', () => {
-  Windows.System.Launcher.launchUriAsync(new Windows.Foundation.Uri('signal://'));
 });
 
 ipc.on('restart', () => {
