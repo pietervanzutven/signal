@@ -111,22 +111,22 @@
         }, [setEditorRenderState, editorStateRef]);
         const updateExternalStateListeners = React.useCallback((newState) => {
             const plainText = newState.getCurrentContent().getPlainText();
-            const currentBlockKey = newState.getSelection().getStartKey();
-            const currentBlockIndex = editorStateRef.current
+            const cursorBlockKey = newState.getSelection().getStartKey();
+            const cursorBlockIndex = editorStateRef.current
                 .getCurrentContent()
                 .getBlockMap()
                 .keySeq()
-                .findIndex(key => key === currentBlockKey);
+                .findIndex(key => key === cursorBlockKey);
             const caretLocation = newState
                 .getCurrentContent()
                 .getBlockMap()
                 .valueSeq()
                 .toArray()
-                .reduce((sum, block, index) => {
-                    if (currentBlockIndex < index) {
+                .reduce((sum, block, currentIndex) => {
+                    if (currentIndex < cursorBlockIndex) {
                         return sum + block.getText().length + 1; // +1 for newline
                     }
-                    if (currentBlockIndex === index) {
+                    if (currentIndex === cursorBlockIndex) {
                         return sum + newState.getSelection().getStartOffset();
                     }
                     return sum;
