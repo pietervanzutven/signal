@@ -27,6 +27,7 @@
                     }
                 }, className: classnames_1.default('module-image', !noBackground ? 'module-image--with-background' : null, canClick ? 'module-image__with-click-handler' : null, curveBottomLeft ? 'module-image--curved-bottom-left' : null, curveBottomRight ? 'module-image--curved-bottom-right' : null, curveTopLeft ? 'module-image--curved-top-left' : null, curveTopRight ? 'module-image--curved-top-right' : null, smallCurveTopLeft ? 'module-image--small-curved-top-left' : null, softCorners ? 'module-image--soft-corners' : null)
             },
+                isSelected ? (react_1.default.createElement("div", { className: "module-image--selection--selected" })) : null,
                 pending ? (react_1.default.createElement("div", {
                     className: "module-image__loading-placeholder", style: {
                         height: `${height}px`,
@@ -37,7 +38,7 @@
                 },
                     react_1.default.createElement(Spinner_1.Spinner, { svgSize: "normal" }))) : (react_1.default.createElement("img", { onError: onError, className: "module-image__image", alt: alt, height: height, width: width, src: url })),
                 caption ? (react_1.default.createElement("img", { className: "module-image__caption-icon", src: "images/caption-shadow.svg", alt: i18n('imageCaptionIconAlt') })) : null,
-                !noBorder || isSelected ? (react_1.default.createElement("div", { className: classnames_1.default('module-image__border-overlay', curveTopLeft ? 'module-image--curved-top-left' : null, curveTopRight ? 'module-image--curved-top-right' : null, curveBottomLeft ? 'module-image--curved-bottom-left' : null, curveBottomRight ? 'module-image--curved-bottom-right' : null, smallCurveTopLeft ? 'module-image--small-curved-top-left' : null, softCorners ? 'module-image--soft-corners' : null, darkOverlay ? 'module-image__border-overlay--dark' : null, isSelected ? 'module-image__border-overlay--selected' : null) })) : null,
+                !noBorder ? (react_1.default.createElement("div", { className: classnames_1.default('module-image__border-overlay', curveTopLeft ? 'module-image--curved-top-left' : null, curveTopRight ? 'module-image--curved-top-right' : null, curveBottomLeft ? 'module-image--curved-bottom-left' : null, curveBottomRight ? 'module-image--curved-bottom-right' : null, smallCurveTopLeft ? 'module-image--small-curved-top-left' : null, softCorners ? 'module-image--soft-corners' : null, darkOverlay ? 'module-image__border-overlay--dark' : null) })) : null,
                 closeButton ? (react_1.default.createElement("div", {
                     role: "button", onClick: (e) => {
                         e.stopPropagation();

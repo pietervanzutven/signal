@@ -583,18 +583,10 @@
                 this.renderMetadata(),
                 this.renderSendMessageButton()));
         }
-        renderSelectionHighlight() {
-            const { isSticker } = this.props;
-            const { isSelected } = this.state;
-            if (!isSelected || isSticker) {
-                return;
-            }
-            return react_1.default.createElement("div", { className: "module-message__container__selection" });
-        }
         // tslint:disable-next-line cyclomatic-complexity
         render() {
             const { authorPhoneNumber, authorColor, attachments, conversationType, direction, displayTapToViewMessage, id, isSticker, isTapToView, isTapToViewExpired, isTapToViewError, timestamp, } = this.props;
-            const { expired, expiring, imageBroken } = this.state;
+            const { expired, expiring, imageBroken, isSelected } = this.state;
             const isAttachmentPending = this.isAttachmentPending();
             const isButton = isTapToView && !isTapToViewExpired && !isAttachmentPending;
             // This id is what connects our triple-dot click with our associated pop-up menu.
@@ -614,7 +606,9 @@
                 this.renderError(direction === 'incoming'),
                 this.renderMenu(direction === 'outgoing', triggerId),
                 react_1.default.createElement("div", {
-                    className: classnames_1.default('module-message__container', isSticker ? 'module-message__container--with-sticker' : null, !isSticker ? `module-message__container--${direction}` : null, isTapToView ? 'module-message__container--with-tap-to-view' : null, isTapToView && isTapToViewExpired
+                    className: classnames_1.default('module-message__container', isSelected && !isSticker
+                        ? 'module-message__container--selected'
+                        : null, isSticker ? 'module-message__container--with-sticker' : null, !isSticker ? `module-message__container--${direction}` : null, isTapToView ? 'module-message__container--with-tap-to-view' : null, isTapToView && isTapToViewExpired
                         ? 'module-message__container--with-tap-to-view-expired'
                         : null, !isSticker && direction === 'incoming'
                         ? `module-message__container--incoming-${authorColor}`
@@ -630,7 +624,6 @@
                 },
                     this.renderAuthor(),
                     this.renderContents(),
-                    this.renderSelectionHighlight(),
                     this.renderAvatar()),
                 this.renderError(direction === 'outgoing'),
                 this.renderMenu(direction === 'incoming', triggerId),
