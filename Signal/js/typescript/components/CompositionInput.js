@@ -28,6 +28,7 @@
     const Emoji_1 = window.ts.components.emoji.Emoji;
     const lib_1 = window.ts.components.emoji.lib;
     const colonsRegex = /(?:^|\s):[a-z0-9-_+]+:?/gi;
+    const triggerEmojiRegex = /^(?:[-+]\d|[a-z]{2})/i;
     function getTrimmedMatchAtIndex(str, index, pattern) {
         let match;
         // Reset regex state
@@ -170,7 +171,7 @@
                     resetEmojiResults();
                 }
             }
-            else if (newSearchText.length >= 2 && focusRef.current) {
+            else if (triggerEmojiRegex.test(newSearchText) && focusRef.current) {
                 setEmojiResults(lib_1.search(newSearchText, 10));
                 setSearchText(newSearchText);
                 setEmojiResultsIndex(0);
