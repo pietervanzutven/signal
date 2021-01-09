@@ -2,7 +2,7 @@
   'use strict';
 
   window.app = window.app || {};
-  
+
   const electron = window.electron;
   const Queue = window.p_queue;
   const sql = window.app.sql;
@@ -47,7 +47,9 @@
         console.log(
           `sql channel error with call ${callName}: ${errorForDisplay}`
         );
-        event.sender.send(`${SQL_CHANNEL_KEY}-done`, jobId, errorForDisplay);
+        if (!event.sender.isDestroyed()) {
+          event.sender.send(`${SQL_CHANNEL_KEY}-done`, jobId, errorForDisplay);
+        }
       }
     });
 
