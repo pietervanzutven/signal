@@ -122,6 +122,24 @@
         const stickerButtonPlacement = large ? 'top-start' : 'top-end';
         const stickerButtonFragment = withStickers ? (React.createElement("div", { className: "module-composition-area__button-cell" },
             React.createElement(StickerButton_1.StickerButton, { i18n: i18n, knownPacks: knownPacks, receivedPacks: receivedPacks, installedPacks: installedPacks, blessedPacks: blessedPacks, recentStickers: recentStickers, clearInstalledStickerPack: clearInstalledStickerPack, onClickAddPack: onClickAddPack, onPickSticker: onPickSticker, clearShowIntroduction: clearShowIntroduction, showPickerHint: showPickerHint, clearShowPickerHint: clearShowPickerHint, position: stickerButtonPlacement }))) : null;
+        // Listen for cmd/ctrl-shift-x to toggle large composition mode
+        React.useEffect(() => {
+            const handler = (e) => {
+                const { key, shiftKey, ctrlKey, metaKey } = e;
+                // When using the ctrl key, `key` is `'X'`. When using the cmd key, `key` is `'x'`
+                const xKey = key === 'x' || key === 'X';
+                const cmdOrCtrl = ctrlKey || metaKey;
+                // cmd/ctrl-shift-x
+                if (xKey && shiftKey && cmdOrCtrl) {
+                    e.preventDefault();
+                    setLarge(x => !x);
+                }
+            };
+            document.addEventListener('keydown', handler);
+            return () => {
+                document.removeEventListener('keydown', handler);
+            };
+        }, [setLarge]);
         return (React.createElement("div", { className: "module-composition-area" },
             React.createElement("div", { className: classnames_1.default('module-composition-area__row', 'module-composition-area__row--center', 'module-composition-area__row--show-on-focus') },
                 React.createElement("button", { className: classnames_1.default('module-composition-area__toggle-large', large ? 'module-composition-area__toggle-large--large-active' : null), onClick: handleToggleLarge })),
