@@ -6700,7 +6700,12 @@ body.dark-theme {
     grid-gap: 8px;
     grid-template-columns: repeat(4, 1fr);
     overflow-y: auto;
-    padding: 0 16px 80px 16px; }
+    padding: 0 16px; }
+    .module-sticker-manager__preview-modal__container__sticker-grid::after {
+      content: '';
+      display: block;
+      height: 80px;
+      grid-column: 1 / span 4; }
     .module-sticker-manager__preview-modal__container__sticker-grid__cell {
       width: 96px;
       height: 96px; }

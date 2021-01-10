@@ -872,6 +872,12 @@ ipc.on('add-setup-menu-items', () => {
   });
 });
 
+ipc.on('draw-attention', () => {
+  if (process.platform === 'win32' && mainWindow) {
+    Windows.System.Launcher.launchUriAsync(new Windows.Foundation.Uri('signal://'));
+  }
+});
+
 ipc.on('restart', () => {
   Windows.UI.WebUI.WebUIApplication.requestRestartAsync('');
 });
