@@ -1049,13 +1049,13 @@
     await instance.run('BEGIN TRANSACTION;');
 
     try {
-    try {
-      await instance.run(
-        `ALTER TABLE messages
+      try {
+        await instance.run(
+          `ALTER TABLE messages
       ADD COLUMN isViewOnce INTEGER;`
-      );
+        );
 
-      await instance.run('DROP INDEX messages_message_timer;');
+        await instance.run('DROP INDEX messages_message_timer;');
       } catch (error) {
         console.log(
           'updateToSchemaVersion17: Message table already had isViewOnce column'
@@ -1621,6 +1621,7 @@
       throw error;
     }
   }
+  saveConversations.needsSerial = true;
 
   async function updateConversation(data) {
     // eslint-disable-next-line camelcase
@@ -1956,6 +1957,7 @@
       throw error;
     }
   }
+  saveMessages.needsSerial = true;
 
   async function removeMessage(id) {
     if (!Array.isArray(id)) {
@@ -2157,6 +2159,7 @@
       totalUnread,
     };
   }
+  getMessageMetricsForConversation.needsSerial = true;
 
   async function getMessagesBySentAt(sentAt) {
     const rows = await db.all(
@@ -2317,6 +2320,7 @@
       throw error;
     }
   }
+  saveUnprocesseds.needsSerial = true;
 
   async function updateUnprocessedAttempts(id, attempts) {
     await db.run('UPDATE unprocessed SET attempts = $attempts WHERE id = $id;', {
@@ -2758,6 +2762,8 @@
       throw error;
     }
   }
+  deleteStickerPackReference.needsSerial = true;
+
   async function deleteStickerPack(packId) {
     if (!packId) {
       throw new Error(
@@ -2796,6 +2802,8 @@
       throw error;
     }
   }
+  deleteStickerPack.needsSerial = true;
+
   async function getStickerCount() {
     const row = await db.get('SELECT count(*) from stickers;');
 
@@ -2867,6 +2875,7 @@
       throw error;
     }
   }
+  updateEmojiUsage.needsSerial = true;
 
   async function getRecentEmojis(limit = 32) {
     const rows = await db.all(
@@ -2906,6 +2915,7 @@
       throw error;
     }
   }
+  removeAll.needsSerial = true;
 
   // Anything that isn't user-visible data
   async function removeAllConfiguration() {
@@ -2927,6 +2937,7 @@
       throw error;
     }
   }
+  removeAllConfiguration.needsSerial = true;
 
   async function getMessagesNeedingUpgrade(limit, { maxVersion }) {
     const rows = await db.all(
