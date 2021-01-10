@@ -156,7 +156,17 @@
         if (action.type === 'SEARCH_UPDATE') {
             const { payload } = action;
             const { query } = payload;
-            return Object.assign({}, state, { query });
+            const hasQuery = Boolean(query && query.length >= 2);
+            const isWithinConversation = Boolean(state.searchConversationId);
+            return Object.assign({}, state, { query, messagesLoading: hasQuery }, (hasQuery
+                ? {
+                    messageIds: [],
+                    messageLookup: {},
+                    discussionsLoading: !isWithinConversation,
+                    contacts: [],
+                    conversations: [],
+                }
+                : {}));
         }
         if (action.type === 'SEARCH_IN_CONVERSATION') {
             const { payload } = action;
@@ -175,12 +185,6 @@
                 searchConversationId,
                 searchConversationName
             });
-        }
-        if (action.type === 'SEARCH_MESSAGES_RESULTS_PENDING') {
-            return Object.assign({}, state, { messageIds: [], messageLookup: {}, messagesLoading: true });
-        }
-        if (action.type === 'SEARCH_DISCUSSIONS_RESULTS_PENDING') {
-            return Object.assign({}, state, { contacts: [], conversations: [], discussionsLoading: true });
         }
         if (action.type === 'SEARCH_MESSAGES_RESULTS_FULFILLED') {
             const { payload } = action;

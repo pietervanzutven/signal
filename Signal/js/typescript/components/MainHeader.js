@@ -19,7 +19,7 @@
             // tslint:disable-next-line member-ordering
             this.search = lodash_1.debounce((searchTerm) => {
                 const { i18n, ourNumber, regionCode, searchDiscussions, searchMessages, searchConversationId, } = this.props;
-                if (searchDiscussions) {
+                if (searchDiscussions && !searchConversationId) {
                     searchDiscussions(searchTerm, {
                         noteToSelf: i18n('noteToSelf').toLowerCase(),
                         ourNumber,
@@ -31,7 +31,7 @@
                         regionCode,
                     });
                 }
-            }, 50);
+            }, 200);
             this.updateSearch = (event) => {
                 const { updateSearchTerm, clearConversationSearch, clearSearch, searchConversationId, } = this.props;
                 const searchTerm = event.currentTarget.value;
