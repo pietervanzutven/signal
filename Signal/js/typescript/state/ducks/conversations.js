@@ -9,8 +9,6 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = window.lodash;
     const events_1 = window.ts.shims.events;
-    const Whisper_1 = window.ts.shims.Whisper;
-    const Attachment_1 = window.ts.types.Attachment;
     // Action Creators
     exports.actions = {
         conversationAdded,
@@ -226,15 +224,11 @@
         if (stickerPendingChanged) {
             return true;
         }
-        const singleVisualAttachmentNoLongerPending = messageAttachments.length === 1 &&
-            previousAttachments[0] &&
+        const firstAttachmentNoLongerPending = previousAttachments[0] &&
             previousAttachments[0].pending &&
             messageAttachments[0] &&
-            (Attachment_1.isImageAttachment(messageAttachments[0]) ||
-                Attachment_1.isVideoAttachment(messageAttachments[0]) ||
-                Whisper_1.isVoiceFlag(messageAttachments[0].flags)) &&
             !messageAttachments[0].pending;
-        if (singleVisualAttachmentNoLongerPending) {
+        if (firstAttachmentNoLongerPending) {
             return true;
         }
         const signalAccountChanged = Boolean(message.hasSignalAccount || previous.hasSignalAccount) &&

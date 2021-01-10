@@ -18,12 +18,4 @@
         return model.getPropsForBubble();
     }
     exports.getBubbleProps = getBubbleProps;
-    function isVoiceFlag(flags) {
-        // @ts-ignore
-        const protoFlags = window.textsecure.protobuf.AttachmentPointer.Flags;
-        const VOICE_MESSAGE_FLAG = protoFlags.VOICE_MESSAGE;
-        // tslint:disable-next-line no-bitwise
-        return Boolean(flags && flags & VOICE_MESSAGE_FLAG);
-    }
-    exports.isVoiceFlag = isVoiceFlag;
 })();
