@@ -118,7 +118,7 @@
                     ]
                 })) : (i18n('noSearchResults', [searchTerm])))) : null));
             }
-            return (react_1.default.createElement("div", { className: "module-search-results" },
+            return (react_1.default.createElement("div", { className: "module-search-results", "aria-live": "polite" },
                 react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => {
                     this.mostRecentWidth = width;
                     this.mostRecentHeight = height;
