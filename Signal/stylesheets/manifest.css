@@ -7437,7 +7437,7 @@ body.dark-theme {
 .module-composition-area {
   position: relative;
   min-height: 48px;
-  padding-top: 12px; }
+  padding-top: 6px; }
   .module-composition-area__row {
     display: flex;
     flex-direction: row; }
@@ -7486,7 +7486,7 @@ body.dark-theme {
     height: 24px;
     position: absolute;
     left: calc(50% - 24px);
-    top: -24px;
+    top: -18px;
     border-radius: 12px 12px 0 0;
     opacity: 0;
     transition: opacity 200ms ease-out;
@@ -7518,8 +7518,7 @@ body.dark-theme {
     width: 100%; }
 
 .composition-area-placeholder {
-  flex-grow: 1;
-  margin-bottom: 6px; }
+  flex-grow: 1; }
 
 .module-last-seen-indicator {
   padding-top: 25px;
