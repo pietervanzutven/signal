@@ -14,7 +14,7 @@
     const react_1 = __importDefault(window.react);
     const react_virtualized_1 = window.react_virtualized;
     const ScrollDownButton_1 = window.ts.components.conversation.ScrollDownButton;
-    const AT_BOTTOM_THRESHOLD = 1;
+    const AT_BOTTOM_THRESHOLD = 15;
     const NEAR_BOTTOM_THRESHOLD = 15;
     const AT_TOP_THRESHOLD = 10;
     const LOAD_MORE_THRESHOLD = 30;
