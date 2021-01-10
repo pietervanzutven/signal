@@ -30,7 +30,7 @@
     // tslint:disable-next-line max-func-body-length
     exports.CompositionArea = ({ i18n, attachmentListEl, micCellEl, onChooseAttachment,
         // CompositionInput
-        onSubmit, compositionApi, onEditorSizeChange, onEditorStateChange, startingText,
+        onSubmit, compositionApi, onEditorSizeChange, onEditorStateChange, onTextTooLong, startingText,
         // EmojiButton
         onPickEmoji, onSetSkinTone, recentEmojis, skinTone,
         // StickerButton
@@ -151,7 +151,7 @@
             React.createElement("div", { className: classnames_1.default('module-composition-area__row', large ? 'module-composition-area__row--padded' : null) },
                 !large ? emojiButtonFragment : null,
                 React.createElement("div", { className: "module-composition-area__input" },
-                    React.createElement(CompositionInput_1.CompositionInput, { i18n: i18n, disabled: disabled, large: large, editorRef: editorRef, inputApi: inputApiRef, onPickEmoji: onPickEmoji, onSubmit: handleSubmit, onEditorSizeChange: onEditorSizeChange, onEditorStateChange: onEditorStateChange, onDirtyChange: setDirty, skinTone: skinTone, startingText: startingText })),
+                    React.createElement(CompositionInput_1.CompositionInput, { i18n: i18n, disabled: disabled, large: large, editorRef: editorRef, inputApi: inputApiRef, onPickEmoji: onPickEmoji, onSubmit: handleSubmit, onEditorSizeChange: onEditorSizeChange, onEditorStateChange: onEditorStateChange, onTextTooLong: onTextTooLong, onDirtyChange: setDirty, skinTone: skinTone, startingText: startingText })),
                 !large ? (React.createElement(React.Fragment, null,
                     stickerButtonFragment,
                     !dirty ? micButtonFragment : null,

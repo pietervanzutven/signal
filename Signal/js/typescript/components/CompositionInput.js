@@ -27,6 +27,7 @@
     const emoji_regex_1 = __importDefault(window.emoji_regex);
     const Emoji_1 = window.ts.components.emoji.Emoji;
     const lib_1 = window.ts.components.emoji.lib;
+    const MAX_LENGTH = 64 * 1024;
     const colonsRegex = /(?:^|\s):[a-z0-9-_+]+:?/gi;
     const triggerEmojiRegex = /^(?:[-+]\d|[a-z]{2})/i;
     function getTrimmedMatchAtIndex(str, index, pattern) {
@@ -43,6 +44,39 @@
             }
         }
         return null;
+    }
+    function getLengthOfSelectedText(state) {
+        const currentSelection = state.getSelection();
+        let length = 0;
+        const currentContent = state.getCurrentContent();
+        const startKey = currentSelection.getStartKey();
+        const endKey = currentSelection.getEndKey();
+        const startBlock = currentContent.getBlockForKey(startKey);
+        const isStartAndEndBlockAreTheSame = startKey === endKey;
+        const startBlockTextLength = startBlock.getLength();
+        const startSelectedTextLength = startBlockTextLength - currentSelection.getStartOffset();
+        const endSelectedTextLength = currentSelection.getEndOffset();
+        const keyAfterEnd = currentContent.getKeyAfter(endKey);
+        if (isStartAndEndBlockAreTheSame) {
+            length +=
+                currentSelection.getEndOffset() - currentSelection.getStartOffset();
+        }
+        else {
+            let currentKey = startKey;
+            while (currentKey && currentKey !== keyAfterEnd) {
+                if (currentKey === startKey) {
+                    length += startSelectedTextLength + 1;
+                }
+                else if (currentKey === endKey) {
+                    length += endSelectedTextLength;
+                }
+                else {
+                    length += currentContent.getBlockForKey(currentKey).getLength() + 1;
+                }
+                currentKey = currentContent.getKeyAfter(currentKey);
+            }
+        }
+        return length;
     }
     function getWordAtIndex(str, index) {
         const start = str
@@ -92,7 +126,7 @@
         return draft_js_1.EditorState.forceSelection(state, selectionAtEnd);
     };
     // tslint:disable-next-line max-func-body-length
-    exports.CompositionInput = ({ i18n, disabled, large, editorRef, inputApi, onDirtyChange, onEditorStateChange, onEditorSizeChange, onPickEmoji, onSubmit, skinTone, startingText, }) => {
+    exports.CompositionInput = ({ i18n, disabled, large, editorRef, inputApi, onDirtyChange, onEditorStateChange, onEditorSizeChange, onTextTooLong, onPickEmoji, onSubmit, skinTone, startingText, }) => {
         const [editorRenderState, setEditorRenderState] = React.useState(getInitialEditorState(startingText));
         const [searchText, setSearchText] = React.useState('');
         const [emojiResults, setEmojiResults] = React.useState([]);
@@ -189,6 +223,33 @@
             setSearchText,
             setEmojiResults,
         ]);
+        const handleBeforeInput = React.useCallback(() => {
+            if (!editorStateRef.current) {
+                return 'not-handled';
+            }
+            const editorState = editorStateRef.current;
+            const plainText = editorState.getCurrentContent().getPlainText();
+            const selectedTextLength = getLengthOfSelectedText(editorState);
+            if (plainText.length - selectedTextLength > MAX_LENGTH - 1) {
+                onTextTooLong();
+                return 'handled';
+            }
+            return 'not-handled';
+        }, [onTextTooLong, editorStateRef]);
+        const handlePastedText = React.useCallback((pastedText) => {
+            if (!editorStateRef.current) {
+                return 'not-handled';
+            }
+            const editorState = editorStateRef.current;
+            const plainText = editorState.getCurrentContent().getPlainText();
+            const selectedTextLength = getLengthOfSelectedText(editorState);
+            if (plainText.length + pastedText.length - selectedTextLength >
+                MAX_LENGTH) {
+                onTextTooLong();
+                return 'handled';
+            }
+            return 'not-handled';
+        }, [onTextTooLong, editorStateRef]);
         const resetEditorState = React.useCallback(() => {
             const newEmptyState = draft_js_1.EditorState.createEmpty(compositeDecorator);
             setAndTrackEditorState(newEmptyState);
@@ -424,7 +485,7 @@
                         ? 'module-composition-input__input__scroller--large'
                         : null)
                 },
-                    React.createElement(draft_js_1.Editor, { ref: editorRef, editorState: editorRenderState, onChange: handleEditorStateChange, placeholder: i18n('sendMessage'), onUpArrow: handleEditorArrowKey, onDownArrow: handleEditorArrowKey, onEscape: handleEscapeKey, onTab: onTab, handleKeyCommand: handleEditorCommand, keyBindingFn: editorKeybindingFn, spellCheck: true, stripPastedStyles: true, readOnly: disabled, onFocus: onFocus, onBlur: onBlur }))))))),
+                    React.createElement(draft_js_1.Editor, { ref: editorRef, editorState: editorRenderState, onChange: handleEditorStateChange, placeholder: i18n('sendMessage'), onUpArrow: handleEditorArrowKey, onDownArrow: handleEditorArrowKey, onEscape: handleEscapeKey, onTab: onTab, handleKeyCommand: handleEditorCommand, handleBeforeInput: handleBeforeInput, handlePastedText: handlePastedText, keyBindingFn: editorKeybindingFn, spellCheck: true, stripPastedStyles: true, readOnly: disabled, onFocus: onFocus, onBlur: onBlur }))))))),
             emojiResults.length > 0 && popperRoot
                 ? react_dom_1.createPortal(React.createElement(react_popper_1.Popper, { placement: "top", key: searchText }, ({ ref, style }) => (React.createElement("div", { ref: ref, className: "module-composition-input__emoji-suggestions", style: Object.assign({}, style, { width: editorWidth }), role: "listbox", "aria-expanded": true, "aria-activedescendant": `emoji-result--${emojiResults[emojiResultsIndex].short_name}` }, emojiResults.map((emoji, index) => (React.createElement("button", {
                     key: emoji.short_name, id: `emoji-result--${emoji.short_name}`, role: "option button", "aria-selected": emojiResultsIndex === index, onMouseDown: () => {
