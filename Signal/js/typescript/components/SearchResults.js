@@ -51,8 +51,7 @@
             };
             this.resizeAll = () => {
                 this.cellSizeCache.clearAll();
-                const rowCount = this.getRowCount();
-                this.recomputeRowHeights(rowCount - 1);
+                this.recomputeRowHeights(0);
             };
         }
         renderRowContents(row) {

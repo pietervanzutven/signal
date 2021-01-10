@@ -194,7 +194,12 @@
         const haveNewest = !metrics.newest || !lastId || lastId === metrics.newest.id;
         const haveOldest = !metrics.oldest || !firstId || firstId === metrics.oldest.id;
         const items = messageIds;
-        const messageHeightChanges = Boolean(heightChangeMessageIds && heightChangeMessageIds.length);
+        const messageHeightChangeLookup = heightChangeMessageIds && heightChangeMessageIds.length
+            ? lodash_1.fromPairs(heightChangeMessageIds.map(id => [id, true]))
+            : null;
+        const messageHeightChangeIndex = messageHeightChangeLookup
+            ? messageIds.findIndex(id => messageHeightChangeLookup[id])
+            : undefined;
         const oldestUnreadIndex = oldestUnread
             ? messageIds.findIndex(id => id === oldestUnread.id)
             : undefined;
@@ -208,12 +213,14 @@
             isLoadingMessages,
             loadCountdownStart,
             items,
-            messageHeightChanges,
+            messageHeightChangeIndex: lodash_1.isNumber(messageHeightChangeIndex) && messageHeightChangeIndex >= 0
+                ? messageHeightChangeIndex
+                : undefined,
             oldestUnreadIndex: lodash_1.isNumber(oldestUnreadIndex) && oldestUnreadIndex >= 0
                 ? oldestUnreadIndex
                 : undefined,
             resetCounter,
-            scrollToIndex: scrollToIndex && scrollToIndex >= 0 ? scrollToIndex : undefined,
+            scrollToIndex: lodash_1.isNumber(scrollToIndex) && scrollToIndex >= 0 ? scrollToIndex : undefined,
             scrollToIndexCounter: scrollToMessageCounter,
             totalUnread,
         };

@@ -30,7 +30,7 @@
             this.mostRecentWidth = 0;
             this.mostRecentHeight = 0;
             this.offsetFromBottom = 0;
-            this.resizeAllFlag = false;
+            this.resizeFlag = false;
             this.listRef = react_1.default.createRef();
             this.getList = () => {
                 if (!this.listRef) {
@@ -81,12 +81,17 @@
                 const delta = newOffsetFromBottom - this.offsetFromBottom;
                 grid.scrollToPosition({ scrollTop: scrollContainer.scrollTop + delta });
             };
-            this.resizeAll = () => {
+            this.resize = (row) => {
                 this.offsetFromBottom = undefined;
-                this.resizeAllFlag = false;
-                this.cellSizeCache.clearAll();
-                const rowCount = this.getRowCount();
-                this.recomputeRowHeights(rowCount - 1);
+                this.resizeFlag = false;
+                if (lodash_1.isNumber(row) && row > 0) {
+                    // @ts-ignore
+                    this.cellSizeCache.clearPlus(row, 0);
+                }
+                else {
+                    this.cellSizeCache.clearAll();
+                }
+                this.recomputeRowHeights(row || 0);
             };
             this.onScroll = (data) => {
                 // Ignore scroll events generated as react-virtualized recursively scrolls and
@@ -102,7 +107,6 @@
                 //  pop the user back down to the bottom.
                 const { clientHeight, scrollHeight, scrollTop } = data;
                 if (scrollTop + clientHeight > scrollHeight) {
-                    this.resizeAll();
                     return;
                 }
                 this.updateScrollMetrics(data);
@@ -379,8 +383,8 @@
             }
             return itemsCount + extraRows;
         }
-        fromRowToItemIndex(row) {
-            const { haveOldest, items } = this.props;
+        fromRowToItemIndex(row, props) {
+            const { haveOldest, items } = props || this.props;
             let subtraction = 0;
             if (!haveOldest) {
                 subtraction += 1;
@@ -395,8 +399,8 @@
             }
             return index;
         }
-        getLastSeenIndicatorRow() {
-            const { oldestUnreadIndex } = this.props;
+        getLastSeenIndicatorRow(props) {
+            const { oldestUnreadIndex } = props || this.props;
             if (!lodash_1.isNumber(oldestUnreadIndex)) {
                 return;
             }
@@ -419,14 +423,15 @@
             // @ts-ignore
             window.unregisterForFocus(this.forceFocusVisibleRowUpdate);
         }
-        // tslint:disable-next-line cyclomatic-complexity
+        // tslint:disable-next-line cyclomatic-complexity max-func-body-length
         componentDidUpdate(prevProps) {
-            const { id, clearChangedMessages, items, messageHeightChanges, oldestUnreadIndex, resetCounter, scrollToIndex, typingContact, } = this.props;
-            // There are a number of situations which can necessitate that we drop our row height
-            //   cache and start over. It can cause the scroll position to do weird things, so we
-            //   try to minimize those situations. In some cases we could reset a smaller set
-            //   of cached row data, but we currently don't have an API for that. We'd need to
-            //   create it.
+            const { id, clearChangedMessages, items, messageHeightChangeIndex, oldestUnreadIndex, resetCounter, scrollToIndex, typingContact, } = this.props;
+            // There are a number of situations which can necessitate that we forget about row
+            //   heights previously calculated. We reset the minimum number of rows to minimize
+            //   unexpected changes to the scroll position. Those changes happen because
+            //   react-virtualized doesn't know what to expect (variable row heights) when it
+            //   renders, so it does have a fixed row it's attempting to scroll to, and you ask it
+            //   to render a given point it space, it will do pretty random things.
             if (!prevProps.items ||
                 prevProps.items.length === 0 ||
                 resetCounter !== prevProps.resetCounter) {
@@ -438,16 +443,11 @@
                     prevPropScrollToIndex: scrollToIndex,
                 });
                 if (prevProps.items && prevProps.items.length > 0) {
-                    this.resizeAll();
+                    this.resize();
                 }
+                return;
             }
-            else if (!typingContact && prevProps.typingContact) {
-                this.resizeAll();
-            }
-            else if (oldestUnreadIndex !== prevProps.oldestUnreadIndex) {
-                this.resizeAll();
-            }
-            else if (items &&
+            if (items &&
                 items.length > 0 &&
                 prevProps.items &&
                 prevProps.items.length > 0 &&
@@ -457,14 +457,14 @@
                     const oldFirstId = prevProps.items[oldFirstIndex];
                     const newFirstIndex = items.findIndex(item => item === oldFirstId);
                     if (newFirstIndex < 0) {
-                        this.resizeAll();
+                        this.resize();
                         return;
                     }
                     const newRow = this.fromItemIndexToRow(newFirstIndex);
                     const delta = newFirstIndex - oldFirstIndex;
                     if (delta > 0) {
                         // We're loading more new messages at the top; we want to stay at the top
-                        this.resizeAll();
+                        this.resize();
                         this.setState({ oneTimeScrollRow: newRow });
                         return;
                     }
@@ -476,31 +476,50 @@
                 const oldLastId = prevProps.items[oldLastIndex];
                 const newLastIndex = items.findIndex(item => item === oldLastId);
                 if (newLastIndex < 0) {
-                    this.resizeAll();
+                    this.resize();
                     return;
                 }
                 const indexDelta = newLastIndex - oldLastIndex;
                 // If we've just added to the end of the list, then the index of the last id's
                 //   index won't have changed, and we can rely on List's detection that items is
                 //   different for the necessary re-render.
-                if (indexDelta !== 0) {
-                    this.resizeAll();
+                if (indexDelta === 0) {
+                    if (typingContact || prevProps.typingContact) {
+                        // The last row will be off, because it was previously the typing indicator
+                        const rowCount = this.getRowCount();
+                        this.resize(rowCount - 2);
+                    }
+                    // no resize because we just add to the end
+                    return;
                 }
-                else if (typingContact && prevProps.typingContact) {
-                    // The last row will be off, because it was previously the typing indicator
-                    this.resizeAll();
-                }
+                this.resize();
+                return;
             }
-            else if (messageHeightChanges) {
-                this.resizeAll();
+            if (this.resizeFlag) {
+                this.resize();
+                return;
+            }
+            if (oldestUnreadIndex !== prevProps.oldestUnreadIndex) {
+                const prevRow = this.getLastSeenIndicatorRow(prevProps);
+                const newRow = this.getLastSeenIndicatorRow();
+                const rowCount = this.getRowCount();
+                const lastRow = rowCount - 1;
+                const targetRow = Math.min(lodash_1.isNumber(prevRow) ? prevRow : lastRow, lodash_1.isNumber(newRow) ? newRow : lastRow);
+                this.resize(targetRow);
+                return;
+            }
+            if (lodash_1.isNumber(messageHeightChangeIndex)) {
+                const rowIndex = this.fromItemIndexToRow(messageHeightChangeIndex);
+                this.resize(rowIndex);
                 clearChangedMessages(id);
+                return;
             }
-            else if (this.resizeAllFlag) {
-                this.resizeAll();
+            if (Boolean(typingContact) !== Boolean(prevProps.typingContact)) {
+                const rowCount = this.getRowCount();
+                this.resize(rowCount - 2);
+                return;
             }
-            else {
-                this.updateWithVisibleRows();
-            }
+            this.updateWithVisibleRows();
         }
         render() {
             const { i18n, id, items } = this.props;
@@ -513,8 +532,8 @@
             return (react_1.default.createElement("div", { className: "module-timeline" },
                 react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => {
                     if (this.mostRecentWidth && this.mostRecentWidth !== width) {
-                        this.resizeAllFlag = true;
-                        setTimeout(this.resizeAll, 0);
+                        this.resizeFlag = true;
+                        setTimeout(this.resize, 0);
                     }
                     else if (this.mostRecentHeight &&
                         this.mostRecentHeight !== height) {
