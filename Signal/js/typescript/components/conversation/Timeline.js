@@ -143,7 +143,9 @@
                 if (loadCountdownStart !== this.props.loadCountdownStart) {
                     setLoadCountdownStart(id, loadCountdownStart);
                 }
-                setIsNearBottom(id, isNearBottom);
+                if (isNearBottom !== this.props.isNearBottom) {
+                    setIsNearBottom(id, isNearBottom);
+                }
                 this.setState({
                     atBottom,
                     atTop,

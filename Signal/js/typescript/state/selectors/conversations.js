@@ -187,7 +187,7 @@
         };
     });
     function _conversationMessagesSelector(conversation) {
-        const { heightChangeMessageIds, isLoadingMessages, loadCountdownStart, messageIds, metrics, resetCounter, scrollToMessageId, scrollToMessageCounter, } = conversation;
+        const { heightChangeMessageIds, isLoadingMessages, isNearBottom, loadCountdownStart, messageIds, metrics, resetCounter, scrollToMessageId, scrollToMessageCounter, } = conversation;
         const firstId = messageIds[0];
         const lastId = messageIds.length === 0 ? undefined : messageIds[messageIds.length - 1];
         const { oldestUnread } = metrics;
@@ -213,6 +213,7 @@
             isLoadingMessages,
             loadCountdownStart,
             items,
+            isNearBottom,
             messageHeightChangeIndex: lodash_1.isNumber(messageHeightChangeIndex) && messageHeightChangeIndex >= 0
                 ? messageHeightChangeIndex
                 : undefined,
