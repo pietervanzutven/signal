@@ -25,13 +25,17 @@
         return query && query.trim().length > 1;
     });
     exports.getMessageSearchResultLookup = reselect_1.createSelector(exports.getSearch, (state) => state.messageLookup);
-    exports.getSearchResults = reselect_1.createSelector([exports.getSearch, user_1.getRegionCode, conversations_1.getConversationLookup, conversations_1.getSelectedConversation], (state, regionCode, lookup, selectedConversation) => {
-        const { contacts, conversations, messageIds, searchConversationName, } = state;
+    exports.getSearchResults = reselect_1.createSelector([exports.getSearch, user_1.getRegionCode, conversations_1.getConversationLookup, conversations_1.getSelectedConversation], (state, regionCode, lookup, selectedConversation
+        // tslint:disable-next-line max-func-body-length
+    ) => {
+        const { contacts, conversations, discussionsLoading, messageIds, messagesLoading, searchConversationName, } = state;
         const showStartNewConversation = Boolean(state.normalizedPhoneNumber && !lookup[state.normalizedPhoneNumber]);
         const haveConversations = conversations && conversations.length;
         const haveContacts = contacts && contacts.length;
         const haveMessages = messageIds && messageIds.length;
-        const noResults = !showStartNewConversation &&
+        const noResults = !discussionsLoading &&
+            !messagesLoading &&
+            !showStartNewConversation &&
             !haveConversations &&
             !haveContacts &&
             !haveMessages;
@@ -53,6 +57,16 @@
                     type: 'conversation',
                     data: Object.assign({}, data, { isSelected: Boolean(data && id === selectedConversation) }),
                 });
+            });
+        }
+        else if (discussionsLoading) {
+            items.push({
+                type: 'conversations-header',
+                data: undefined,
+            });
+            items.push({
+                type: 'spinner',
+                data: undefined,
             });
         }
         if (haveContacts) {
@@ -80,8 +94,20 @@
                 });
             });
         }
+        else if (messagesLoading) {
+            items.push({
+                type: 'messages-header',
+                data: undefined,
+            });
+            items.push({
+                type: 'spinner',
+                data: undefined,
+            });
+        }
         return {
+            discussionsLoading,
             items,
+            messagesLoading,
             noResults,
             regionCode: regionCode,
             searchConversationName,

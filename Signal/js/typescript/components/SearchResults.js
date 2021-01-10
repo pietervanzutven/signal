@@ -13,6 +13,7 @@
     const react_virtualized_1 = window.react_virtualized;
     const Intl_1 = window.ts.components.Intl;
     const Emojify_1 = window.ts.components.conversation.Emojify;
+    const Spinner_1 = window.ts.components.Spinner;
     const ConversationListItem_1 = window.ts.components.ConversationListItem;
     const StartNewConversation_1 = window.ts.components.StartNewConversation;
     class SearchResults extends react_1.default.Component {
@@ -21,7 +22,7 @@
             this.mostRecentWidth = 0;
             this.mostRecentHeight = 0;
             this.cellSizeCache = new react_virtualized_1.CellMeasurerCache({
-                defaultHeight: 36,
+                defaultHeight: 80,
                 fixedWidth: true,
             });
             this.listRef = react_1.default.createRef();
@@ -80,17 +81,26 @@
                 const { data } = row;
                 return renderMessageSearchResult(data);
             }
+            else if (row.type === 'spinner') {
+                return (react_1.default.createElement("div", { className: "module-search-results__spinner-container" },
+                    react_1.default.createElement(Spinner_1.Spinner, { size: "24px", svgSize: "small" })));
+            }
             else {
                 throw new Error('SearchResults.renderRowContents: Encountered unknown row type');
             }
         }
         componentDidUpdate(prevProps) {
-            const { items } = this.props;
-            if (items &&
-                items.length > 0 &&
+            const { items, searchTerm, discussionsLoading, messagesLoading, } = this.props;
+            if (searchTerm !== prevProps.searchTerm) {
+                this.resizeAll();
+            }
+            else if (discussionsLoading !== prevProps.discussionsLoading ||
+                messagesLoading !== prevProps.messagesLoading) {
+                this.resizeAll();
+            }
+            else if (items &&
                 prevProps.items &&
-                prevProps.items.length > 0 &&
-                items !== prevProps.items) {
+                prevProps.items.length !== items.length) {
                 this.resizeAll();
             }
         }
@@ -108,7 +118,7 @@
                     ]
                 })) : (i18n('noSearchResults', [searchTerm])))) : null));
             }
-            return (react_1.default.createElement("div", { className: "module-search-results", key: searchTerm },
+            return (react_1.default.createElement("div", { className: "module-search-results" },
                 react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => {
                     this.mostRecentWidth = width;
                     this.mostRecentHeight = height;

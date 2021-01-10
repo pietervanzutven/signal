@@ -18,12 +18,16 @@
             super(props);
             // tslint:disable-next-line member-ordering
             this.search = lodash_1.debounce((searchTerm) => {
-                const { i18n, ourNumber, regionCode, search, searchConversationId, } = this.props;
-                if (search) {
-                    search(searchTerm, {
-                        searchConversationId,
+                const { i18n, ourNumber, regionCode, searchDiscussions, searchMessages, searchConversationId, } = this.props;
+                if (searchDiscussions) {
+                    searchDiscussions(searchTerm, {
                         noteToSelf: i18n('noteToSelf').toLowerCase(),
                         ourNumber,
+                    });
+                }
+                if (searchMessages) {
+                    searchMessages(searchTerm, {
+                        searchConversationId,
                         regionCode,
                     });
                 }

@@ -15,46 +15,47 @@
     const makeLookup_1 = require_ts_util_makeLookup();
     // Action Creators
     exports.actions = {
-        search,
+        searchMessages,
+        searchDiscussions,
         clearSearch,
         clearConversationSearch,
         searchInConversation,
         updateSearchTerm,
         startNewConversation,
     };
-    function search(query, options) {
+    function searchMessages(query, options) {
         return {
-            type: 'SEARCH_RESULTS',
-            payload: doSearch(query, options),
+            type: 'SEARCH_MESSAGES_RESULTS',
+            payload: doSearchMessages(query, options),
         };
     }
-    async function doSearch(query, options) {
-        const { regionCode, ourNumber, noteToSelf, searchConversationId } = options;
+    function searchDiscussions(query, options) {
+        return {
+            type: 'SEARCH_DISCUSSIONS_RESULTS',
+            payload: doSearchDiscussions(query, options),
+        };
+    }
+    async function doSearchMessages(query, options) {
+        const { regionCode, searchConversationId } = options;
         const normalizedPhoneNumber = PhoneNumber_1.normalize(query, { regionCode });
-        if (searchConversationId) {
-            const messages = await queryMessages(query, searchConversationId);
-            return {
-                contacts: [],
-                conversations: [],
-                messages,
-                normalizedPhoneNumber,
-                query,
-            };
-        }
-        else {
-            const [discussions, messages] = await Promise.all([
-                queryConversationsAndContacts(query, { ourNumber, noteToSelf }),
-                queryMessages(query),
-            ]);
-            const { conversations, contacts } = discussions;
-            return {
-                contacts,
-                conversations,
-                messages,
-                normalizedPhoneNumber,
-                query,
-            };
-        }
+        const messages = await queryMessages(query, searchConversationId);
+        return {
+            messages,
+            normalizedPhoneNumber,
+            query,
+        };
+    }
+    async function doSearchDiscussions(query, options) {
+        const { ourNumber, noteToSelf } = options;
+        const { conversations, contacts } = await queryConversationsAndContacts(query, {
+            ourNumber,
+            noteToSelf,
+        });
+        return {
+            conversations,
+            contacts,
+            query,
+        };
     }
     function clearSearch() {
         return {
@@ -143,6 +144,8 @@
             messageLookup: {},
             conversations: [],
             contacts: [],
+            discussionsLoading: false,
+            messagesLoading: false,
         };
     }
     // tslint:disable-next-line max-func-body-length
@@ -173,20 +176,32 @@
                 searchConversationName
             });
         }
-        if (action.type === 'SEARCH_RESULTS_FULFILLED') {
+        if (action.type === 'SEARCH_MESSAGES_RESULTS_PENDING') {
+            return Object.assign({}, state, { messageIds: [], messageLookup: {}, messagesLoading: true });
+        }
+        if (action.type === 'SEARCH_DISCUSSIONS_RESULTS_PENDING') {
+            return Object.assign({}, state, { contacts: [], conversations: [], discussionsLoading: true });
+        }
+        if (action.type === 'SEARCH_MESSAGES_RESULTS_FULFILLED') {
             const { payload } = action;
-            const { contacts, conversations, messages, normalizedPhoneNumber, query, } = payload;
+            const { messages, normalizedPhoneNumber, query } = payload;
             // Reject if the associated query is not the most recent user-provided query
             if (state.query !== query) {
                 return state;
             }
             const messageIds = messages.map(message => message.id);
             return Object.assign({}, state, {
-                contacts,
-                conversations,
                 normalizedPhoneNumber,
                 query,
-                messageIds, messageLookup: makeLookup_1.makeLookup(messages, 'id')
+                messageIds, messageLookup: makeLookup_1.makeLookup(messages, 'id'), messagesLoading: false
+            });
+        }
+        if (action.type === 'SEARCH_DISCUSSIONS_RESULTS_FULFILLED') {
+            const { payload } = action;
+            const { contacts, conversations } = payload;
+            return Object.assign({}, state, {
+                contacts,
+                conversations, discussionsLoading: false
             });
         }
         if (action.type === 'CONVERSATIONS_REMOVE_ALL') {
