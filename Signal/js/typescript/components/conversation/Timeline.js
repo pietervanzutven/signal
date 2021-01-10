@@ -253,13 +253,13 @@
                 const typingBubbleRow = this.getTypingBubbleRow();
                 let rowContents;
                 if (!haveOldest && row === 0) {
-                    rowContents = (react_1.default.createElement("div", { "data-row": row, style: styleWithWidth }, renderLoadingRow(id)));
+                    rowContents = (react_1.default.createElement("div", { "data-row": row, style: styleWithWidth, role: "row" }, renderLoadingRow(id)));
                 }
                 else if (oldestUnreadRow === row) {
-                    rowContents = (react_1.default.createElement("div", { "data-row": row, style: styleWithWidth }, renderLastSeenIndicator(id)));
+                    rowContents = (react_1.default.createElement("div", { "data-row": row, style: styleWithWidth, role: "row" }, renderLastSeenIndicator(id)));
                 }
                 else if (typingBubbleRow === row) {
-                    rowContents = (react_1.default.createElement("div", { "data-row": row, className: "module-timeline__message-container", style: styleWithWidth }, renderTypingBubble(id)));
+                    rowContents = (react_1.default.createElement("div", { "data-row": row, className: "module-timeline__message-container", style: styleWithWidth, role: "row" }, renderTypingBubble(id)));
                 }
                 else {
                     const itemIndex = this.fromRowToItemIndex(row);
@@ -267,7 +267,7 @@
                         throw new Error(`Attempted to render item with undefined index - row ${row}`);
                     }
                     const messageId = items[itemIndex];
-                    rowContents = (react_1.default.createElement("div", { id: messageId, "data-row": row, className: "module-timeline__message-container", style: styleWithWidth }, renderItem(messageId, this.props)));
+                    rowContents = (react_1.default.createElement("div", { id: messageId, "data-row": row, className: "module-timeline__message-container", style: styleWithWidth, role: "row" }, renderItem(messageId, this.props)));
                 }
                 return (react_1.default.createElement(react_virtualized_1.CellMeasurer, { cache: this.cellSizeCache, columnIndex: 0, key: key, parent: parent, rowIndex: index, width: this.mostRecentWidth }, rowContents));
             };
