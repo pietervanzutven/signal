@@ -141,8 +141,12 @@
             };
         }, [setLarge]);
         return (React.createElement("div", { className: "module-composition-area" },
-            React.createElement("div", { className: classnames_1.default('module-composition-area__row', 'module-composition-area__row--center', 'module-composition-area__row--show-on-focus') },
-                React.createElement("button", { className: classnames_1.default('module-composition-area__toggle-large', large ? 'module-composition-area__toggle-large--large-active' : null), onClick: handleToggleLarge })),
+            React.createElement("div", { className: "module-composition-area__toggle-large" },
+                React.createElement("button", {
+                    className: classnames_1.default('module-composition-area__toggle-large__button', large
+                        ? 'module-composition-area__toggle-large__button--large-active'
+                        : null), onClick: handleToggleLarge
+                })),
             React.createElement("div", { className: classnames_1.default('module-composition-area__row', 'module-composition-area__row--column'), ref: attSlotRef }),
             React.createElement("div", { className: classnames_1.default('module-composition-area__row', large ? 'module-composition-area__row--padded' : null) },
                 !large ? emojiButtonFragment : null,
