@@ -4,8 +4,11 @@
   window.app = window.app || {};
   const exports = window.app.global_errors = {};
 
+  const electron = window.electron;
+
   const Errors = window.types.errors;
 
+  const { app, dialog, clipboard } = electron;
   const { redactAll } = window.privacy;
 
   // We use hard-coded strings until we're able to update these strings from the locale.
@@ -17,7 +20,7 @@
 
     if (app.isReady()) {
       // title field is not shown on macOS, so we don't use it
-      const buttonIndex = dialog.showMessageBox({
+      const buttonIndex = dialog.showMessageBoxSync({
         buttons: [quitText, copyErrorAndQuitText],
         defaultId: 0,
         detail: redactAll(error.stack),

@@ -12,6 +12,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const Message_1 = window.ts.components.conversation.Message;
+    const UnsupportedMessage_1 = window.ts.components.conversation.UnsupportedMessage;
     const TimerNotification_1 = window.ts.components.conversation.TimerNotification;
     const SafetyNumberNotification_1 = window.ts.components.conversation.SafetyNumberNotification;
     const VerificationNotification_1 = window.ts.components.conversation.VerificationNotification;
@@ -21,10 +22,15 @@
         render() {
             const { item, i18n } = this.props;
             if (!item) {
-                throw new Error('TimelineItem: Item was not provided!');
+                // tslint:disable-next-line:no-console
+                console.warn('TimelineItem: item provided was falsey');
+                return null;
             }
             if (item.type === 'message') {
                 return react_1.default.createElement(Message_1.Message, Object.assign({}, this.props, item.data, { i18n: i18n }));
+            }
+            if (item.type === 'unsupportedMessage') {
+                return react_1.default.createElement(UnsupportedMessage_1.UnsupportedMessage, Object.assign({}, this.props, item.data, { i18n: i18n }));
             }
             if (item.type === 'timerNotification') {
                 return react_1.default.createElement(TimerNotification_1.TimerNotification, Object.assign({}, this.props, item.data, { i18n: i18n }));

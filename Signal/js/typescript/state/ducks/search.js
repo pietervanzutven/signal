@@ -10,41 +10,72 @@
     const lodash_1 = window.lodash;
     const PhoneNumber_1 = window.ts.types.PhoneNumber;
     const events_1 = window.ts.shims.events;
-    // import { getMessageModel } from '../../shims/Whisper';
-    // import { cleanSearchTerm } from '../../util/cleanSearchTerm';
+    const cleanSearchTerm_1 = window.ts.util.cleanSearchTerm;
     const data_1 = window.data;
     const makeLookup_1 = require_ts_util_makeLookup();
     // Action Creators
     exports.actions = {
-        search,
+        searchMessages,
+        searchDiscussions,
         clearSearch,
+        clearConversationSearch,
+        searchInConversation,
         updateSearchTerm,
         startNewConversation,
     };
-    function search(query, options) {
+    function searchMessages(query, options) {
         return {
-            type: 'SEARCH_RESULTS',
-            payload: doSearch(query, options),
+            type: 'SEARCH_MESSAGES_RESULTS',
+            payload: doSearchMessages(query, options),
         };
     }
-    async function doSearch(query, options) {
-        const { regionCode, ourNumber, noteToSelf } = options;
-        const [discussions /*, messages */] = await Promise.all([
-            queryConversationsAndContacts(query, { ourNumber, noteToSelf }),
-        ]);
-        const { conversations, contacts } = discussions;
+    function searchDiscussions(query, options) {
         return {
+            type: 'SEARCH_DISCUSSIONS_RESULTS',
+            payload: doSearchDiscussions(query, options),
+        };
+    }
+    async function doSearchMessages(query, options) {
+        const { regionCode, searchConversationId } = options;
+        const normalizedPhoneNumber = PhoneNumber_1.normalize(query, { regionCode });
+        const messages = await queryMessages(query, searchConversationId);
+        return {
+            messages,
+            normalizedPhoneNumber,
             query,
-            normalizedPhoneNumber: PhoneNumber_1.normalize(query, { regionCode }),
+        };
+    }
+    async function doSearchDiscussions(query, options) {
+        const { ourNumber, noteToSelf } = options;
+        const { conversations, contacts } = await queryConversationsAndContacts(query, {
+            ourNumber,
+            noteToSelf,
+        });
+        return {
             conversations,
             contacts,
-            messages: [],
+            query,
         };
     }
     function clearSearch() {
         return {
             type: 'SEARCH_CLEAR',
             payload: null,
+        };
+    }
+    function clearConversationSearch() {
+        return {
+            type: 'CLEAR_CONVERSATION_SEARCH',
+            payload: null,
+        };
+    }
+    function searchInConversation(searchConversationId, searchConversationName) {
+        return {
+            type: 'SEARCH_IN_CONVERSATION',
+            payload: {
+                searchConversationId,
+                searchConversationName,
+            },
         };
     }
     function updateSearchTerm(query) {
@@ -67,24 +98,18 @@
             payload: null,
         };
     }
-    // Helper functions for search
-    // const getMessageProps = (messages: Array<MessageSearchResultType>) => {
-    //   if (!messages || !messages.length) {
-    //     return [];
-    //   }
-    //   return messages.map(message => {
-    //     const model = getMessageModel(message);
-    //     return model.propsForSearchResult;
-    //   });
-    // };
-    // async function queryMessages(query: string) {
-    //   try {
-    //     const normalized = cleanSearchTerm(query);
-    //     return searchMessages(normalized);
-    //   } catch (e) {
-    //     return [];
-    //   }
-    // }
+    async function queryMessages(query, searchConversationId) {
+        try {
+            const normalized = cleanSearchTerm_1.cleanSearchTerm(query);
+            if (searchConversationId) {
+                return data_1.searchMessagesInConversation(normalized, searchConversationId);
+            }
+            return data_1.searchMessages(normalized);
+        }
+        catch (e) {
+            return [];
+        }
+    }
     async function queryConversationsAndContacts(providedQuery, options) {
         const { ourNumber, noteToSelf } = options;
         const query = providedQuery.replace(/[+-.()]*/g, '');
@@ -115,12 +140,15 @@
     function getEmptyState() {
         return {
             query: '',
-            messages: [],
+            messageIds: [],
             messageLookup: {},
             conversations: [],
             contacts: [],
+            discussionsLoading: false,
+            messagesLoading: false,
         };
     }
+    // tslint:disable-next-line max-func-body-length
     function reducer(state = getEmptyState(), action) {
         if (action.type === 'SEARCH_CLEAR') {
             return getEmptyState();
@@ -128,36 +156,78 @@
         if (action.type === 'SEARCH_UPDATE') {
             const { payload } = action;
             const { query } = payload;
-            return Object.assign({}, state, { query });
+            const hasQuery = Boolean(query && query.length >= 2);
+            const isWithinConversation = Boolean(state.searchConversationId);
+            return Object.assign({}, state, { query, messagesLoading: hasQuery }, (hasQuery
+                ? {
+                    messageIds: [],
+                    messageLookup: {},
+                    discussionsLoading: !isWithinConversation,
+                    contacts: [],
+                    conversations: [],
+                }
+                : {}));
         }
-        if (action.type === 'SEARCH_RESULTS_FULFILLED') {
+        if (action.type === 'SEARCH_IN_CONVERSATION') {
             const { payload } = action;
-            const { query, messages } = payload;
+            const { searchConversationId, searchConversationName } = payload;
+            if (searchConversationId === state.searchConversationId) {
+                return state;
+            }
+            return Object.assign({}, getEmptyState(), {
+                searchConversationId,
+                searchConversationName
+            });
+        }
+        if (action.type === 'CLEAR_CONVERSATION_SEARCH') {
+            const { searchConversationId, searchConversationName } = state;
+            return Object.assign({}, getEmptyState(), {
+                searchConversationId,
+                searchConversationName
+            });
+        }
+        if (action.type === 'SEARCH_MESSAGES_RESULTS_FULFILLED') {
+            const { payload } = action;
+            const { messages, normalizedPhoneNumber, query } = payload;
             // Reject if the associated query is not the most recent user-provided query
             if (state.query !== query) {
                 return state;
             }
-            return Object.assign({}, state, payload, { messageLookup: makeLookup_1.makeLookup(messages, 'id') });
+            const messageIds = messages.map(message => message.id);
+            return Object.assign({}, state, {
+                normalizedPhoneNumber,
+                query,
+                messageIds, messageLookup: makeLookup_1.makeLookup(messages, 'id'), messagesLoading: false
+            });
+        }
+        if (action.type === 'SEARCH_DISCUSSIONS_RESULTS_FULFILLED') {
+            const { payload } = action;
+            const { contacts, conversations } = payload;
+            return Object.assign({}, state, {
+                contacts,
+                conversations, discussionsLoading: false
+            });
         }
         if (action.type === 'CONVERSATIONS_REMOVE_ALL') {
             return getEmptyState();
         }
         if (action.type === 'SELECTED_CONVERSATION_CHANGED') {
             const { payload } = action;
-            const { messageId } = payload;
-            if (!messageId) {
-                return state;
+            const { id, messageId } = payload;
+            const { searchConversationId } = state;
+            if (searchConversationId && searchConversationId !== id) {
+                return getEmptyState();
             }
             return Object.assign({}, state, { selectedMessage: messageId });
         }
-        if (action.type === 'MESSAGE_EXPIRED') {
-            const { messages, messageLookup } = state;
-            if (!messages.length) {
+        if (action.type === 'MESSAGE_DELETED') {
+            const { messageIds, messageLookup } = state;
+            if (!messageIds || messageIds.length < 1) {
                 return state;
             }
             const { payload } = action;
             const { id } = payload;
-            return Object.assign({}, state, { messages: lodash_1.reject(messages, message => id === message.id), messageLookup: lodash_1.omit(messageLookup, ['id']) });
+            return Object.assign({}, state, { messageIds: lodash_1.reject(messageIds, messageId => id === messageId), messageLookup: lodash_1.omit(messageLookup, ['id']) });
         }
         return state;
     }

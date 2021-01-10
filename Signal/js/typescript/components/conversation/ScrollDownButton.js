@@ -14,17 +14,13 @@
     const classnames_1 = __importDefault(window.classnames);
     class ScrollDownButton extends react_1.default.Component {
         render() {
-            const { conversationId, count, i18n, scrollDown } = this.props;
-            let altText = i18n('scrollDown');
-            if (count > 1) {
-                altText = i18n('messagesBelow');
-            }
-            else if (count === 1) {
-                altText = i18n('messageBelow');
-            }
+            const { conversationId, withNewMessages, i18n, scrollDown } = this.props;
+            const altText = withNewMessages
+                ? i18n('messagesBelow')
+                : i18n('scrollDown');
             return (react_1.default.createElement("div", { className: "module-scroll-down" },
                 react_1.default.createElement("button", {
-                    className: classnames_1.default('module-scroll-down__button', count > 0 ? 'module-scroll-down__button--new-messages' : null), onClick: () => {
+                    className: classnames_1.default('module-scroll-down__button', withNewMessages ? 'module-scroll-down__button--new-messages' : null), onClick: () => {
                         scrollDown(conversationId);
                     }, title: altText
                 },

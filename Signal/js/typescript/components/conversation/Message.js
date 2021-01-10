@@ -30,6 +30,7 @@
     // Same as MIN_WIDTH in ImageGrid.tsx
     const MINIMUM_LINK_PREVIEW_IMAGE_WIDTH = 200;
     const STICKER_SIZE = 128;
+    const SELECTED_TIMEOUT = 1000;
     const EXPIRATION_CHECK_MINIMUM = 2000;
     const EXPIRED_DELAY = 600;
     class Message extends react_1.default.PureComponent {
@@ -42,9 +43,19 @@
                 expiring: false,
                 expired: false,
                 imageBroken: false,
+                isSelected: props.isSelected,
+                prevSelectedCounter: props.isSelectedCounter,
             };
         }
+        static getDerivedStateFromProps(props, state) {
+            if (props.isSelected &&
+                props.isSelectedCounter !== state.prevSelectedCounter) {
+                return Object.assign({}, state, { isSelected: props.isSelected, prevSelectedCounter: props.isSelectedCounter });
+            }
+            return state;
+        }
         componentDidMount() {
+            this.startSelectedTimer();
             const { expirationLength } = this.props;
             if (!expirationLength) {
                 return;
@@ -57,6 +68,9 @@
             }, checkFrequency);
         }
         componentWillUnmount() {
+            if (this.selectedTimeout) {
+                clearInterval(this.selectedTimeout);
+            }
             if (this.expirationCheckInterval) {
                 clearInterval(this.expirationCheckInterval);
             }
@@ -65,7 +79,21 @@
             }
         }
         componentDidUpdate() {
+            this.startSelectedTimer();
             this.checkExpired();
+        }
+        startSelectedTimer() {
+            const { isSelected } = this.state;
+            if (!isSelected) {
+                return;
+            }
+            if (!this.selectedTimeout) {
+                this.selectedTimeout = setTimeout(() => {
+                    this.selectedTimeout = undefined;
+                    this.setState({ isSelected: false });
+                    this.props.clearSelectedMessage();
+                }, SELECTED_TIMEOUT);
+            }
         }
         checkExpired() {
             const now = Date.now();
@@ -151,7 +179,7 @@
         // tslint:disable-next-line max-func-body-length cyclomatic-complexity
         renderAttachment() {
             const { attachments, collapseMetadata, conversationType, direction, i18n, id, quote, showVisualAttachment, isSticker, text, } = this.props;
-            const { imageBroken } = this.state;
+            const { imageBroken, isSelected } = this.state;
             if (!attachments || !attachments[0]) {
                 return null;
             }
@@ -177,7 +205,7 @@
                         : null)
                 },
                     react_1.default.createElement(ImageGrid_1.ImageGrid, {
-                        attachments: attachments, withContentAbove: isSticker || withContentAbove, withContentBelow: isSticker || withContentBelow, isSticker: isSticker, stickerSize: STICKER_SIZE, bottomOverlay: bottomOverlay, i18n: i18n, onError: this.handleImageErrorBound, onClick: attachment => {
+                        attachments: attachments, withContentAbove: isSticker || withContentAbove, withContentBelow: isSticker || withContentBelow, isSticker: isSticker, isSelected: isSticker && isSelected, stickerSize: STICKER_SIZE, bottomOverlay: bottomOverlay, i18n: i18n, onError: this.handleImageErrorBound, onClick: attachment => {
                             showVisualAttachment({ attachment, messageId: id });
                         }
                     })));
@@ -258,7 +286,7 @@
                         react_1.default.createElement("div", { className: "module-message__link-preview__location" }, first.domain)))));
         }
         renderQuote() {
-            const { conversationType, authorColor, direction, disableScroll, i18n, quote, scrollToMessage, } = this.props;
+            const { conversationType, authorColor, direction, disableScroll, i18n, quote, scrollToQuotedMessage, } = this.props;
             if (!quote) {
                 return null;
             }
@@ -268,10 +296,9 @@
             const clickHandler = disableScroll
                 ? undefined
                 : () => {
-                    scrollToMessage({
+                    scrollToQuotedMessage({
                         author: quote.authorId,
                         sentAt: quote.sentAt,
-                        referencedMessageNotFound,
                     });
                 };
             return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: clickHandler, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quoteColor, referencedMessageNotFound: referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
@@ -558,8 +585,8 @@
         }
         // tslint:disable-next-line cyclomatic-complexity
         render() {
-            const { authorPhoneNumber, authorColor, attachments, direction, displayTapToViewMessage, id, isSticker, isTapToView, isTapToViewExpired, isTapToViewError, timestamp, } = this.props;
-            const { expired, expiring, imageBroken } = this.state;
+            const { authorPhoneNumber, authorColor, attachments, conversationType, direction, displayTapToViewMessage, id, isSticker, isTapToView, isTapToViewExpired, isTapToViewError, timestamp, } = this.props;
+            const { expired, expiring, imageBroken, isSelected } = this.state;
             const isAttachmentPending = this.isAttachmentPending();
             const isButton = isTapToView && !isTapToViewExpired && !isAttachmentPending;
             // This id is what connects our triple-dot click with our associated pop-up menu.
@@ -575,11 +602,13 @@
             const isShowingImage = this.isShowingImage();
             const role = isButton ? 'button' : undefined;
             const onClick = isButton ? () => displayTapToViewMessage(id) : undefined;
-            return (react_1.default.createElement("div", { className: classnames_1.default('module-message', `module-message--${direction}`, expiring ? 'module-message--expired' : null) },
+            return (react_1.default.createElement("div", { className: classnames_1.default('module-message', `module-message--${direction}`, expiring ? 'module-message--expired' : null, conversationType === 'group' ? 'module-message--group' : null) },
                 this.renderError(direction === 'incoming'),
                 this.renderMenu(direction === 'outgoing', triggerId),
                 react_1.default.createElement("div", {
-                    className: classnames_1.default('module-message__container', isSticker ? 'module-message__container--with-sticker' : null, !isSticker ? `module-message__container--${direction}` : null, isTapToView ? 'module-message__container--with-tap-to-view' : null, isTapToView && isTapToViewExpired
+                    className: classnames_1.default('module-message__container', isSelected && !isSticker
+                        ? 'module-message__container--selected'
+                        : null, isSticker ? 'module-message__container--with-sticker' : null, !isSticker ? `module-message__container--${direction}` : null, isTapToView ? 'module-message__container--with-tap-to-view' : null, isTapToView && isTapToViewExpired
                         ? 'module-message__container--with-tap-to-view-expired'
                         : null, !isSticker && direction === 'incoming'
                         ? `module-message__container--incoming-${authorColor}`

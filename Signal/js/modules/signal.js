@@ -33,51 +33,25 @@
     ContactDetail,
   } = window.ts.components.conversation.ContactDetail;
   const { ContactListItem } = window.ts.components.ContactListItem;
-  const { ContactName } = window.ts.components.conversation.ContactName;
   const {
     ConversationHeader,
   } = window.ts.components.conversation.ConversationHeader;
-  const {
-    EmbeddedContact,
-  } = window.ts.components.conversation.EmbeddedContact;
   const { Emojify } = window.ts.components.conversation.Emojify;
-  const {
-    GroupNotification,
-  } = window.ts.components.conversation.GroupNotification;
   const { Lightbox } = window.ts.components.Lightbox;
   const { LightboxGallery } = window.ts.components.LightboxGallery;
   const {
     MediaGallery,
   } = window.ts.components.conversation.media_gallery.MediaGallery;
-  const { Message } = window.ts.components.conversation.Message;
-  const { MessageBody } = window.ts.components.conversation.MessageBody;
   const {
     MessageDetail,
   } = window.ts.components.conversation.MessageDetail;
   const { Quote } = window.ts.components.conversation.Quote;
   const {
-    ResetSessionNotification,
-  } = window.ts.components.conversation.ResetSessionNotification;
-  const {
-    SafetyNumberNotification,
-  } = window.ts.components.conversation.SafetyNumberNotification;
-  const {
     StagedLinkPreview,
   } = window.ts.components.conversation.StagedLinkPreview;
-  const {
-    TimerNotification,
-  } = window.ts.components.conversation.TimerNotification;
-  const {
-    TypingBubble,
-  } = window.ts.components.conversation.TypingBubble;
-  const {
-    UnsupportedMessage,
-  } = window.ts.components.conversation.UnsupportedMessage;
-  const {
-    VerificationNotification,
-  } = window.ts.components.conversation.VerificationNotification;
 
   // State
+  const { createTimeline } = window.ts.state.roots.createTimeline;
   const {
     createCompositionArea,
   } = window.ts.state.roots.createCompositionArea;
@@ -93,6 +67,7 @@
   const conversationsDuck = window.ts.state.ducks.conversations;
   const emojisDuck = window.ts.state.ducks.emojis;
   const itemsDuck = window.ts.state.ducks.items;
+  const searchDuck = window.ts.state.ducks.search;
   const stickersDuck = window.ts.state.ducks.stickers;
   const userDuck = window.ts.state.ducks.user;
 
@@ -134,20 +109,21 @@
       return null;
     }
     const {
+      createAbsolutePathGetter,
+      createReader,
+      createWriterForExisting,
+      createWriterForNew,
+      getDraftPath,
       getPath,
       getStickersPath,
       getTempPath,
-      createReader,
-      createAbsolutePathGetter,
-      createWriterForNew,
-      createWriterForExisting,
     } = Attachments;
     const {
-      makeObjectUrl,
-      revokeObjectUrl,
       getImageDimensions,
       makeImageThumbnail,
+      makeObjectUrl,
       makeVideoScreenshot,
+      revokeObjectUrl,
     } = VisualType;
 
     const attachmentsPath = getPath(userDataPath);
@@ -178,11 +154,18 @@
       tempPath
     );
 
+    const draftPath = getDraftPath(userDataPath);
+    const getAbsoluteDraftPath = createAbsolutePathGetter(draftPath);
+    const writeNewDraftData = createWriterForNew(draftPath);
+    const deleteDraftFile = Attachments.createDeleter(draftPath);
+    const readDraftData = createReader(draftPath);
+
     return {
       attachmentsPath,
       copyIntoAttachmentsDirectory,
       copyIntoTempDirectory,
       deleteAttachmentData: deleteOnDisk,
+      deleteDraftFile,
       deleteExternalMessageFiles: MessageType.deleteAllExternalFiles({
         deleteAttachmentData: Type.deleteData(deleteOnDisk),
         deleteOnDisk,
@@ -190,6 +173,7 @@
       deleteSticker,
       deleteTempFile,
       getAbsoluteAttachmentPath,
+      getAbsoluteDraftPath,
       getAbsoluteStickerPath,
       getAbsoluteTempPath,
       getPlaceholderMigrations,
@@ -200,6 +184,7 @@
       loadQuoteData,
       loadStickerData,
       readAttachmentData,
+      readDraftData,
       readStickerData,
       readTempData,
       run,
@@ -249,6 +234,7 @@
         logger,
       }),
       writeNewAttachmentData: createWriterForNew(attachmentsPath),
+      writeNewDraftData,
     };
   }
 
@@ -269,33 +255,23 @@
       CaptionEditor,
       ContactDetail,
       ContactListItem,
-      ContactName,
       ConversationHeader,
-      EmbeddedContact,
       Emojify,
-      GroupNotification,
       Lightbox,
       LightboxGallery,
       MediaGallery,
-      Message,
-      MessageBody,
       MessageDetail,
       Quote,
-      ResetSessionNotification,
-      SafetyNumberNotification,
       StagedLinkPreview,
-      TimerNotification,
       Types: {
         Message: MediaGalleryMessage,
       },
-      TypingBubble,
-      UnsupportedMessage,
-      VerificationNotification,
     };
 
     const Roots = {
       createCompositionArea,
       createLeftPane,
+      createTimeline,
       createStickerManager,
       createStickerPreviewModal,
     };
@@ -304,6 +280,7 @@
       emojis: emojisDuck,
       items: itemsDuck,
       user: userDuck,
+      search: searchDuck,
       stickers: stickersDuck,
     };
     const State = {

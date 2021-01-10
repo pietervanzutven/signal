@@ -71,19 +71,6 @@
     <div class='lightbox-container'></div>
   </script>
 
-  <script type='text/x-tmpl-mustache' id='scroll-down-button-view'>
-    <button class='text module-scroll-down__button {{ buttonClass }}' alt='{{ moreBelow }}'>
-      <div class='module-scroll-down__icon'></div>
-    </button>
-  </script>
-
-  <script type='text/x-tmpl-mustache' id='last-seen-indicator-view'>
-    <div class='module-last-seen-indicator__bar'/>
-    <div class='module-last-seen-indicator__text'>
-      {{ unreadMessages }}
-    </div>
-  </script>
-
   <script type='text/x-tmpl-mustache' id='expired_alert'>
     <a target='_blank' href='https://signal.org/download/'>
       <button class='upgrade'>{{ upgrade }}</button>
@@ -106,26 +93,12 @@
   <script type='text/x-tmpl-mustache' id='conversation'>
     <div class='conversation-header'></div>
     <div class='main panel'>
-      <div class='discussion-container'>
-          <div class='bar-container hide'>
-            <div class='bar active progress-bar-striped progress-bar'></div>
-          </div>
-      </div>
-
+      <div class='timeline-placeholder'></div>
       <div class='bottom-bar' id='footer'>
-          <div class='attachment-list'></div>
           <div class='compose'>
             <form class='send clearfix file-input'>
-              <div class='flex'>
+            <input type="file" class="file-input" multiple="multiple">
                 <div class='composition-area-placeholder'></div>
-                <div class='capture-audio'>
-                    <button class='microphone'></button>
-                </div>
-                <div class='choose-file'>
-                    <button class='paperclip thumbnail'></button>
-                    <input type='file' class='file-input' multiple='multiple'>
-                </div>
-              </div>
           </form>
       </div>
     </div>
@@ -485,6 +458,7 @@
   <script type='text/javascript' src='node_modules/lodash/clonedeep.js'></script>
   <script type='text/javascript' src='node_modules/lodash/compact.js'></script>
   <script type='text/javascript' src='node_modules/lodash/debounce.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/difference.js'></script>
   <script type='text/javascript' src='node_modules/lodash/escapeRegExp.js'></script>
   <script type='text/javascript' src='node_modules/lodash/get.js'></script>
   <script type='text/javascript' src='node_modules/lodash/filter.js'></script>
@@ -498,6 +472,7 @@
   <script type='text/javascript' src='node_modules/lodash/head.js'></script>
   <script type='text/javascript' src='node_modules/lodash/includes.js'></script>
   <script type='text/javascript' src='node_modules/lodash/initial.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/intersection.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isArrayBuffer.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isFunction.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isNumber.js'></script>
@@ -522,6 +497,7 @@
   <script type='text/javascript' src='node_modules/lodash/sortBy.js'></script>
   <script type='text/javascript' src='node_modules/lodash/take.js'></script>
   <script type='text/javascript' src='node_modules/lodash/uniq.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/values.js'></script>
   <script type='text/javascript' src='node_modules/lodash/zipObject.js'></script>
   <script type='text/javascript' src='node_modules/blueimp-canvas-to-blob/canvas-to-blob.js'></script>
   <script type='text/javascript' src='node_modules/blueimp-load-image/load-image.js'></script>
@@ -720,9 +696,10 @@
   <script type='text/javascript' src='js/typescript/components/conversation/AttachmentList.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/LastSeenIndicator.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/ScrollDownButton.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/UnsupportedMessage.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/TimeLine.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/TimelineItem.js'></script>
-  <script type='text/javascript' src='js/typescript/components/conversation/UnsupportedMessage.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/TimelineLoadingRow.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/_contactUtil.js'></script>
   <script type='text/javascript' src='js/typescript/components/CaptionEditor.js'></script>
   <script type='text/javascript' src='js/typescript/components/ContactListItem.js'></script>
@@ -789,10 +766,13 @@
   <script type='text/javascript' src='js/typescript/state/smart/CompositionArea.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/MainHeader.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/MessageSearchResult.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/LastSeenIndicator.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/LeftPane.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/StickerManager.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/StickerPreviewModal.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/TypingBubble.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/TimelineItem.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/TimelineLoadingRow.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/Timeline.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createCompositionArea.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createLeftPane.js'></script>
@@ -853,15 +833,10 @@
 
   <script type='text/javascript' src='js/views/react_wrapper_view.js'></script>
   <script type='text/javascript' src='js/views/whisper_view.js'></script>
-  <script type='text/javascript' src='js/views/last_seen_indicator_view.js'></script>
-  <script type='text/javascript' src='js/views/scroll_down_button_view.js'></script>
   <script type='text/javascript' src='js/views/toast_view.js'></script>
-  <script type='text/javascript' src='js/views/file_input_view.js'></script>
   <script type='text/javascript' src='js/views/list_view.js'></script>
   <script type='text/javascript' src='js/views/contact_list_view.js'></script>
-  <script type='text/javascript' src='js/views/message_view.js'></script>
   <script type='text/javascript' src='js/views/key_verification_view.js'></script>
-  <script type='text/javascript' src='js/views/message_list_view.js'></script>
   <script type='text/javascript' src='js/views/group_member_list_view.js'></script>
   <script type='text/javascript' src='js/views/recorder_view.js'></script>
   <script type='text/javascript' src='js/views/conversation_view.js'></script>

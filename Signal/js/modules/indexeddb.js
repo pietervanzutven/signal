@@ -157,7 +157,7 @@
           'doesDatabaseExist: Timed out attempting to check IndexedDB status'
         );
         return resolve(false);
-      }, 5000);
+      }, 1000);
 
       req.onerror = reject;
       req.onsuccess = () => {

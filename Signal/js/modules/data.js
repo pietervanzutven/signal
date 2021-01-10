@@ -12,7 +12,6 @@
     isFunction,
     isObject,
     map,
-    merge,
     set,
   } = window.lodash;
 
@@ -32,6 +31,7 @@
   const ERASE_ATTACHMENTS_KEY = 'erase-attachments';
   const ERASE_STICKERS_KEY = 'erase-stickers';
   const ERASE_TEMP_KEY = 'erase-temp';
+  const ERASE_DRAFTS_KEY = 'erase-drafts';
   const CLEANUP_ORPHANED_ATTACHMENTS_KEY = 'cleanup-orphaned-attachments';
 
   const _jobs = Object.create(null);
@@ -124,9 +124,11 @@
     getExpiredMessages,
     getOutgoingWithoutExpiresAt,
     getNextExpiringMessage,
-    getMessagesByConversation,
     getNextTapToViewMessageToAgeOut,
     getTapToViewMessagesNeedingErase,
+    getOlderMessagesByConversation,
+    getNewerMessagesByConversation,
+    getMessageMetricsForConversation,
 
     getUnprocessedCount,
     getAllUnprocessed,
@@ -601,7 +603,10 @@
       throw new Error(`Conversation ${id} does not exist!`);
     }
 
-    const merged = merge({}, existing.attributes, data);
+    const merged = Object.assign({},
+      existing.attributes,
+      data
+    );
     await channels.updateConversation(merged);
   }
 
@@ -655,9 +660,18 @@
     return conversations;
   }
 
+  function handleSearchMessageJSON(messages) {
+    return messages.map(message => (Object.assign({},
+      JSON.parse(message.json),
+      {
+        snippet: message.snippet,
+      }
+    )));
+  }
+
   async function searchMessages(query, { limit } = {}) {
     const messages = await channels.searchMessages(query, { limit });
-    return messages;
+    return handleSearchMessageJSON(messages);
   }
 
   async function searchMessagesInConversation(
@@ -670,7 +684,7 @@
       conversationId,
       { limit }
     );
-    return messages;
+    return handleSearchMessageJSON(messages);
   }
 
   // Message
@@ -784,16 +798,43 @@
     return new MessageCollection(messages);
   }
 
-  async function getMessagesByConversation(
+  function handleMessageJSON(messages) {
+    return messages.map(message => JSON.parse(message.json));
+  }
+
+  async function getOlderMessagesByConversation(
     conversationId,
     { limit = 100, receivedAt = Number.MAX_VALUE, MessageCollection }
   ) {
-    const messages = await channels.getMessagesByConversation(conversationId, {
-      limit,
-      receivedAt,
-    });
+    const messages = await channels.getOlderMessagesByConversation(
+      conversationId,
+      {
+        limit,
+        receivedAt,
+      }
+    );
 
-    return new MessageCollection(messages);
+    return new MessageCollection(handleMessageJSON(messages));
+  }
+  async function getNewerMessagesByConversation(
+    conversationId,
+    { limit = 100, receivedAt = 0, MessageCollection }
+  ) {
+    const messages = await channels.getNewerMessagesByConversation(
+      conversationId,
+      {
+        limit,
+        receivedAt,
+      }
+    );
+
+    return new MessageCollection(handleMessageJSON(messages));
+  }
+  async function getMessageMetricsForConversation(conversationId) {
+    const result = await channels.getMessageMetricsForConversation(
+      conversationId
+    );
+    return result;
   }
 
   async function removeAllMessagesInConversation(
@@ -805,7 +846,7 @@
       // Yes, we really want the await in the loop. We're deleting 100 at a
       //   time so we don't use too much memory.
       // eslint-disable-next-line no-await-in-loop
-      messages = await getMessagesByConversation(conversationId, {
+      messages = await getOlderMessagesByConversation(conversationId, {
         limit: 100,
         MessageCollection,
       });
@@ -987,6 +1028,7 @@
       callChannel(ERASE_ATTACHMENTS_KEY),
       callChannel(ERASE_STICKERS_KEY),
       callChannel(ERASE_TEMP_KEY),
+      callChannel(ERASE_DRAFTS_KEY),
     ]);
   }
 

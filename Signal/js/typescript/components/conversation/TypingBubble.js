@@ -24,8 +24,9 @@
                 react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 36 })));
         }
         render() {
-            const { i18n, color } = this.props;
-            return (react_1.default.createElement("div", { className: classnames_1.default('module-message', 'module-message--incoming') },
+            const { i18n, color, conversationType } = this.props;
+            const isGroup = conversationType === 'group';
+            return (react_1.default.createElement("div", { className: classnames_1.default('module-message', 'module-message--incoming', isGroup ? 'module-message--group' : null) },
                 react_1.default.createElement("div", { className: classnames_1.default('module-message__container', 'module-message__container--incoming', `module-message__container--incoming-${color}`) },
                     react_1.default.createElement("div", { className: "module-message__typing-container" },
                         react_1.default.createElement(TypingAnimation_1.TypingAnimation, { color: "light", i18n: i18n })),

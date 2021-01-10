@@ -6,9 +6,16 @@
     const exports = window.ts.shims.Whisper = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    function getMessageModel(attributes) {
+    function getSearchResultsProps(attributes) {
         // @ts-ignore
-        return new window.Whisper.Message(attributes);
+        const model = new window.Whisper.Message(attributes);
+        return model.getPropsForSearchResult();
     }
-    exports.getMessageModel = getMessageModel;
+    exports.getSearchResultsProps = getSearchResultsProps;
+    function getBubbleProps(attributes) {
+        // @ts-ignore
+        const model = new window.Whisper.Message(attributes);
+        return model.getPropsForBubble();
+    }
+    exports.getBubbleProps = getBubbleProps;
 })();

@@ -21,6 +21,7 @@
     isString,
     last,
     map,
+    pick,
   } = window.lodash;
 
   // To get long stack traces
@@ -98,9 +99,11 @@
     getExpiredMessages,
     getOutgoingWithoutExpiresAt,
     getNextExpiringMessage,
-    getMessagesByConversation,
     getNextTapToViewMessageToAgeOut,
     getTapToViewMessagesNeedingErase,
+    getOlderMessagesByConversation,
+    getNewerMessagesByConversation,
+    getMessageMetricsForConversation,
 
     getUnprocessedCount,
     getAllUnprocessed,
@@ -142,6 +145,7 @@
 
     removeKnownAttachments,
     removeKnownStickers,
+    removeKnownDraftAttachments,
   };
 
   function generateUUID() {
@@ -191,6 +195,21 @@
     return row.schema_version;
   }
 
+  async function setUserVersion(instance, version) {
+    if (!isNumber(version)) {
+      throw new Error(`setUserVersion: version ${version} is not a number`);
+    }
+    await instance.get(`PRAGMA user_version = ${version};`);
+  }
+  async function keyDatabase(instance, key) {
+    // https://www.zetetic.net/sqlcipher/sqlcipher-api/#key
+    await instance.run(`PRAGMA key = "x'${key}'";`);
+  }
+  async function getUserVersion(instance) {
+    const row = await instance.get('PRAGMA user_version;');
+    return row.user_version;
+  }
+
   async function getSQLCipherVersion(instance) {
     const row = await instance.get('PRAGMA cipher_version;');
     try {
@@ -200,18 +219,83 @@
     }
   }
 
+  async function getSQLIntegrityCheck(instance) {
+    const row = await instance.get('PRAGMA cipher_integrity_check;');
+    if (row) {
+      return row.cipher_integrity_check;
+    }
+
+    return null;
+  }
+
+  async function migrateSchemaVersion(instance) {
+    const userVersion = await getUserVersion(instance);
+    if (userVersion > 0) {
+      return;
+    }
+
+    const schemaVersion = await getSchemaVersion(instance);
+    const newUserVersion = schemaVersion > 18 ? 16 : schemaVersion;
+    console.log(
+      `migrateSchemaVersion: Migrating from schema_version ${schemaVersion} to user_version ${newUserVersion}`
+    );
+
+    await setUserVersion(instance, newUserVersion);
+  }
+
+  async function openAndMigrateDatabase(filePath, key) {
+    let promisified;
+
+    // First, we try to open the database without any cipher changes
+    try {
+      const instance = await openDatabase(filePath);
+      promisified = promisify(instance);
+      keyDatabase(promisified, key);
+
+      await migrateSchemaVersion(promisified);
+
+      return promisified;
+    } catch (error) {
+      if (promisified) {
+        await promisified.close();
+      }
+      console.log('migrateDatabase: Migration without cipher change failed');
+    }
+
+    // If that fails, we try to open the database with 3.x compatibility to extract the
+    //   user_version (previously stored in schema_version, blown away by cipher_migrate).
+    const instance = await openDatabase(filePath);
+    promisified = promisify(instance);
+    keyDatabase(promisified, key);
+
+    // https://www.zetetic.net/blog/2018/11/30/sqlcipher-400-release/#compatability-sqlcipher-4-0-0
+    await promisified.run('PRAGMA cipher_compatibility = 3;');
+    await migrateSchemaVersion(promisified);
+    await promisified.close();
+
+    // After migrating user_version -> schema_version, we reopen database, because we can't
+    //   migrate to the latest ciphers after we've modified the defaults.
+    const instance2 = await openDatabase(filePath);
+    promisified = promisify(instance2);
+    keyDatabase(promisified, key);
+
+    await promisified.run('PRAGMA cipher_migrate;');
+    return promisified;
+  }
+
   const INVALID_KEY = /[^0-9A-Fa-f]/;
-  async function setupSQLCipher(instance, { key }) {
+  async function openAndSetUpSQLCipher(filePath, { key }) {
     const match = INVALID_KEY.exec(key);
     if (match) {
       throw new Error(`setupSQLCipher: key '${key}' is not valid`);
     }
 
-    // https://www.zetetic.net/sqlcipher/sqlcipher-api/#key
-    await instance.run(`PRAGMA key = "x'${key}'";`);
+    const instance = await openAndMigrateDatabase(filePath, key);
 
     // Because foreign key support is not enabled by default!
     await instance.run('PRAGMA foreign_keys = ON;');
+
+    return instance;
   }
 
   async function updateToSchemaVersion1(currentVersion, instance) {
@@ -294,7 +378,7 @@
     timestamp
   );`);
 
-      await instance.run('PRAGMA schema_version = 1;');
+      await instance.run('PRAGMA user_version = 1;');
       await instance.run('COMMIT TRANSACTION;');
 
       console.log('updateToSchemaVersion1: success!');
@@ -342,7 +426,7 @@
       type = json_extract(json, '$.type');`
       );
 
-      await instance.run('PRAGMA schema_version = 2;');
+      await instance.run('PRAGMA user_version = 2;');
       await instance.run('COMMIT TRANSACTION;');
 
       console.log('updateToSchemaVersion2: success!');
@@ -377,7 +461,7 @@
     ) WHERE unread IS NOT NULL;`);
 
       await instance.run('ANALYZE;');
-      await instance.run('PRAGMA schema_version = 3;');
+      await instance.run('PRAGMA user_version = 3;');
       await instance.run('COMMIT TRANSACTION;');
 
       console.log('updateToSchemaVersion3: success!');
@@ -418,7 +502,7 @@
       type
     ) WHERE type IS NOT NULL;`);
 
-      await instance.run('PRAGMA schema_version = 4;');
+      await instance.run('PRAGMA user_version = 4;');
       await instance.run('COMMIT TRANSACTION;');
 
       console.log('updateToSchemaVersion4: success!');
@@ -483,7 +567,7 @@
     );`
       );
 
-      await instance.run('PRAGMA schema_version = 6;');
+      await instance.run('PRAGMA user_version = 6;');
       await instance.run('COMMIT TRANSACTION;');
       console.log('updateToSchemaVersion6: success!');
     } catch (error) {
@@ -524,7 +608,7 @@
 
       await instance.run('DROP TABLE sessions_old;');
 
-      await instance.run('PRAGMA schema_version = 7;');
+      await instance.run('PRAGMA user_version = 7;');
       await instance.run('COMMIT TRANSACTION;');
       console.log('updateToSchemaVersion7: success!');
     } catch (error) {
@@ -594,7 +678,7 @@
       //   https://sqlite.org/fts5.html#the_highlight_function
       //   https://sqlite.org/fts5.html#the_snippet_function
 
-      await instance.run('PRAGMA schema_version = 8;');
+      await instance.run('PRAGMA user_version = 8;');
       await instance.run('COMMIT TRANSACTION;');
       console.log('updateToSchemaVersion8: success!');
     } catch (error) {
@@ -627,7 +711,7 @@
       pending
   ) WHERE pending != 0;`);
 
-      await instance.run('PRAGMA schema_version = 9;');
+      await instance.run('PRAGMA user_version = 9;');
       await instance.run('COMMIT TRANSACTION;');
       console.log('updateToSchemaVersion9: success!');
     } catch (error) {
@@ -692,7 +776,7 @@
 
       await instance.run('DROP TABLE unprocessed_old;');
 
-      await instance.run('PRAGMA schema_version = 10;');
+      await instance.run('PRAGMA user_version = 10;');
       await instance.run('COMMIT TRANSACTION;');
       console.log('updateToSchemaVersion10: success!');
     } catch (error) {
@@ -711,7 +795,7 @@
     try {
       await instance.run('DROP TABLE groups;');
 
-      await instance.run('PRAGMA schema_version = 11;');
+      await instance.run('PRAGMA user_version = 11;');
       await instance.run('COMMIT TRANSACTION;');
       console.log('updateToSchemaVersion11: success!');
     } catch (error) {
@@ -776,7 +860,7 @@
       ON DELETE CASCADE
   );`);
 
-      await instance.run('PRAGMA schema_version = 12;');
+      await instance.run('PRAGMA user_version = 12;');
       await instance.run('COMMIT TRANSACTION;');
       console.log('updateToSchemaVersion12: success!');
     } catch (error) {
@@ -798,7 +882,7 @@
         'ALTER TABLE sticker_packs ADD COLUMN attemptedStatus STRING;'
       );
 
-      await instance.run('PRAGMA schema_version = 13;');
+      await instance.run('PRAGMA user_version = 13;');
       await instance.run('COMMIT TRANSACTION;');
       console.log('updateToSchemaVersion13: success!');
     } catch (error) {
@@ -826,7 +910,7 @@
       lastUsage
   );`);
 
-      await instance.run('PRAGMA schema_version = 14;');
+      await instance.run('PRAGMA user_version = 14;');
       await instance.run('COMMIT TRANSACTION;');
       console.log('updateToSchemaVersion14: success!');
     } catch (error) {
@@ -866,7 +950,7 @@
 
       await instance.run('DROP TABLE emojis_old;');
 
-      await instance.run('PRAGMA schema_version = 15;');
+      await instance.run('PRAGMA user_version = 15;');
       await instance.run('COMMIT TRANSACTION;');
       console.log('updateToSchemaVersion15: success!');
     } catch (error) {
@@ -947,7 +1031,7 @@
       END;
     `);
 
-      await instance.run('PRAGMA schema_version = 16;');
+      await instance.run('PRAGMA user_version = 16;');
       await instance.run('COMMIT TRANSACTION;');
       console.log('updateToSchemaVersion16: success!');
     } catch (error) {
@@ -965,13 +1049,26 @@
     await instance.run('BEGIN TRANSACTION;');
 
     try {
-      await instance.run(
-        `ALTER TABLE messages
+      try {
+        await instance.run(
+          `ALTER TABLE messages
       ADD COLUMN isViewOnce INTEGER;`
-      );
+        );
 
-      await instance.run('DROP INDEX messages_message_timer;');
+        await instance.run('DROP INDEX messages_message_timer;');
+      } catch (error) {
+        console.log(
+          'updateToSchemaVersion17: Message table already had isViewOnce column'
+        );
+      }
 
+      try {
+        await instance.run('DROP INDEX messages_view_once;');
+      } catch (error) {
+        console.log(
+          'updateToSchemaVersion17: Index messages_view_once did not already exist'
+        );
+      }
       await instance.run(`CREATE INDEX messages_view_once ON messages (
       isErased
     ) WHERE isViewOnce = 1;`);
@@ -1009,9 +1106,72 @@
       END;
     `);
 
-      await instance.run('PRAGMA schema_version = 17;');
+      await instance.run('PRAGMA user_version = 17;');
       await instance.run('COMMIT TRANSACTION;');
       console.log('updateToSchemaVersion17: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
+  }
+
+  async function updateToSchemaVersion18(currentVersion, instance) {
+    if (currentVersion >= 18) {
+      return;
+    }
+
+    console.log('updateToSchemaVersion18: starting...');
+    await instance.run('BEGIN TRANSACTION;');
+
+    try {
+      // Delete and rebuild full-text search index to capture everything
+
+      await instance.run('DELETE FROM messages_fts;');
+      await instance.run(
+        "INSERT INTO messages_fts(messages_fts) VALUES('rebuild');"
+      );
+
+      await instance.run(`
+      INSERT INTO messages_fts(id, body)
+      SELECT id, body FROM messages WHERE isViewOnce IS NULL OR isViewOnce != 1;
+    `);
+
+      // Fixing full-text triggers
+
+      await instance.run('DROP TRIGGER messages_on_insert;');
+      await instance.run('DROP TRIGGER messages_on_update;');
+
+      await instance.run(`
+      CREATE TRIGGER messages_on_insert AFTER INSERT ON messages
+      WHEN new.isViewOnce IS NULL OR new.isViewOnce != 1
+      BEGIN
+        INSERT INTO messages_fts (
+          id,
+          body
+        ) VALUES (
+          new.id,
+          new.body
+        );
+      END;
+    `);
+      await instance.run(`
+      CREATE TRIGGER messages_on_update AFTER UPDATE ON messages
+      WHEN new.isViewOnce IS NULL OR new.isViewOnce != 1
+      BEGIN
+        DELETE FROM messages_fts WHERE id = old.id;
+        INSERT INTO messages_fts(
+          id,
+          body
+        ) VALUES (
+          new.id,
+          new.body
+        );
+      END;
+    `);
+
+      await instance.run('PRAGMA user_version = 18;');
+      await instance.run('COMMIT TRANSACTION;');
+      console.log('updateToSchemaVersion18: success!');
     } catch (error) {
       await instance.run('ROLLBACK;');
       throw error;
@@ -1036,18 +1196,22 @@
     updateToSchemaVersion15,
     updateToSchemaVersion16,
     updateToSchemaVersion17,
+    updateToSchemaVersion18,
   ];
 
   async function updateSchema(instance) {
     const sqliteVersion = await getSQLiteVersion(instance);
+    const sqlcipherVersion = await getSQLCipherVersion(instance);
+    const userVersion = await getUserVersion(instance);
     const schemaVersion = await getSchemaVersion(instance);
-    const cipherVersion = await getSQLCipherVersion(instance);
+
     console.log(
-      'updateSchema:',
-      `Current schema version: ${schemaVersion};`,
-      `Most recent schema version: ${SCHEMA_VERSIONS.length};`,
-      `SQLite version: ${sqliteVersion};`,
-      `SQLCipher version: ${cipherVersion};`
+      'updateSchema:\n',
+      ` Current user_version: ${userVersion};\n`,
+      ` Most recent db schema: ${SCHEMA_VERSIONS.length};\n`,
+      ` SQLite version: ${sqliteVersion};\n`,
+      ` SQLCipher version: ${sqlcipherVersion};\n`,
+      ` (deprecated) schema_version: ${schemaVersion};\n`
     );
 
     for (let index = 0, max = SCHEMA_VERSIONS.length; index < max; index += 1) {
@@ -1055,7 +1219,7 @@
 
       // Yes, we really want to do this asynchronously, in order
       // eslint-disable-next-line no-await-in-loop
-      await runSchemaUpdate(schemaVersion, instance);
+      await runSchemaUpdate(userVersion, instance);
     }
   }
 
@@ -1085,9 +1249,10 @@
 
     filePath = join(dbDir, 'db.sqlite');
 
+    let promisified;
+
     try {
-      const sqlInstance = await openDatabase(filePath);
-      const promisified = promisify(sqlInstance);
+      promisified = await openAndSetUpSQLCipher(filePath, { key });
 
       // promisified.on('trace', async statement => {
       //   if (!db || statement.startsWith('--')) {
@@ -1098,16 +1263,24 @@
       //   console._log(`EXPLAIN QUERY PLAN ${statement}\n`, data && data.detail);
       // });
 
-      await setupSQLCipher(promisified, { key });
       await updateSchema(promisified);
 
+      // test database
+
+      const result = await getSQLIntegrityCheck(promisified);
+      if (result) {
+        console.log('Database integrity check failed:', result);
+        throw new Error(`Integrity check failed: ${result}`);
+      }
+
+      // At this point we can allow general access to the database
       db = promisified;
 
       // test database
       await getMessageCount();
     } catch (error) {
       console.log('Database startup error:', error.stack);
-      const buttonIndex = dialog.showMessageBox({
+      const buttonIndex = dialog.showMessageBoxSync({
         buttons: [
           messages.copyErrorAndQuit.message,
           messages.deleteAndRestart.message,
@@ -1124,7 +1297,9 @@
           `Database startup error:\n\n${redactAll(error.stack)}`
         );
       } else {
-        await close();
+        if (promisified) {
+          await promisified.close();
+        }
         await removeDB();
         removeUserConfig();
         app.relaunch();
@@ -1446,6 +1621,7 @@
       throw error;
     }
   }
+  saveConversations.needsSerial = true;
 
   async function updateConversation(data) {
     // eslint-disable-next-line camelcase
@@ -1547,13 +1723,13 @@
       name LIKE $name OR
       profileName LIKE $profileName
       )
-     ORDER BY id ASC
+     ORDER BY active_at DESC
      LIMIT $limit`,
       {
         $id: `%${query}%`,
         $name: `%${query}%`,
         $profileName: `%${query}%`,
-        $limit: limit || 50,
+        $limit: limit || 100,
       }
     );
 
@@ -1573,7 +1749,7 @@
     LIMIT $limit;`,
       {
         $query: query,
-        $limit: limit || 100,
+        $limit: limit || 500,
       }
     );
 
@@ -1781,6 +1957,7 @@
       throw error;
     }
   }
+  saveMessages.needsSerial = true;
 
   async function removeMessage(id) {
     if (!Array.isArray(id)) {
@@ -1853,7 +2030,7 @@
     return map(rows, row => jsonToObject(row.json));
   }
 
-  async function getMessagesByConversation(
+  async function getOlderMessagesByConversation(
     conversationId,
     { limit = 100, receivedAt = Number.MAX_VALUE } = {}
   ) {
@@ -1870,8 +2047,119 @@
       }
     );
 
-    return map(rows, row => jsonToObject(row.json));
+    return rows.reverse();
   }
+
+  async function getNewerMessagesByConversation(
+    conversationId,
+    { limit = 100, receivedAt = 0 } = {}
+  ) {
+    const rows = await db.all(
+      `SELECT json FROM messages WHERE
+       conversationId = $conversationId AND
+       received_at > $received_at
+     ORDER BY received_at ASC
+     LIMIT $limit;`,
+      {
+        $conversationId: conversationId,
+        $received_at: receivedAt,
+        $limit: limit,
+      }
+    );
+
+    return rows;
+  }
+  async function getOldestMessageForConversation(conversationId) {
+    const row = await db.get(
+      `SELECT * FROM messages WHERE
+       conversationId = $conversationId
+     ORDER BY received_at ASC
+     LIMIT 1;`,
+      {
+        $conversationId: conversationId,
+      }
+    );
+
+    if (!row) {
+      return null;
+    }
+
+    return row;
+  }
+  async function getNewestMessageForConversation(conversationId) {
+    const row = await db.get(
+      `SELECT * FROM messages WHERE
+       conversationId = $conversationId
+     ORDER BY received_at DESC
+     LIMIT 1;`,
+      {
+        $conversationId: conversationId,
+      }
+    );
+
+    if (!row) {
+      return null;
+    }
+
+    return row;
+  }
+  async function getOldestUnreadMessageForConversation(conversationId) {
+    const row = await db.get(
+      `SELECT * FROM messages WHERE
+       conversationId = $conversationId AND
+       unread = 1
+     ORDER BY received_at ASC
+     LIMIT 1;`,
+      {
+        $conversationId: conversationId,
+      }
+    );
+
+    if (!row) {
+      return null;
+    }
+
+    return row;
+  }
+
+  async function getTotalUnreadForConversation(conversationId) {
+    const row = await db.get(
+      `SELECT count(id) from messages WHERE
+       conversationId = $conversationId AND
+       unread = 1;
+    `,
+      {
+        $conversationId: conversationId,
+      }
+    );
+
+    if (!row) {
+      throw new Error('getTotalUnreadForConversation: Unable to get count');
+    }
+
+    return row['count(id)'];
+  }
+
+  async function getMessageMetricsForConversation(conversationId) {
+    const results = await Promise.all([
+      getOldestMessageForConversation(conversationId),
+      getNewestMessageForConversation(conversationId),
+      getOldestUnreadMessageForConversation(conversationId),
+      getTotalUnreadForConversation(conversationId),
+    ]);
+
+    const [oldest, newest, oldestUnread, totalUnread] = results;
+
+    return {
+      oldest: oldest ? pick(oldest, ['received_at', 'id']) : null,
+      newest: newest ? pick(newest, ['received_at', 'id']) : null,
+      oldestUnread: oldestUnread
+        ? pick(oldestUnread, ['received_at', 'id'])
+        : null,
+      totalUnread,
+    };
+  }
+  getMessageMetricsForConversation.needsSerial = true;
 
   async function getMessagesBySentAt(sentAt) {
     const rows = await db.all(
@@ -2032,6 +2320,7 @@
       throw error;
     }
   }
+  saveUnprocesseds.needsSerial = true;
 
   async function updateUnprocessedAttempts(id, attempts) {
     await db.run('UPDATE unprocessed SET attempts = $attempts WHERE id = $id;', {
@@ -2473,6 +2762,8 @@
       throw error;
     }
   }
+  deleteStickerPackReference.needsSerial = true;
+
   async function deleteStickerPack(packId) {
     if (!packId) {
       throw new Error(
@@ -2511,6 +2802,8 @@
       throw error;
     }
   }
+  deleteStickerPack.needsSerial = true;
+
   async function getStickerCount() {
     const row = await db.get('SELECT count(*) from stickers;');
 
@@ -2582,6 +2875,7 @@
       throw error;
     }
   }
+  updateEmojiUsage.needsSerial = true;
 
   async function getRecentEmojis(limit = 32) {
     const rows = await db.all(
@@ -2621,6 +2915,7 @@
       throw error;
     }
   }
+  removeAll.needsSerial = true;
 
   // Anything that isn't user-visible data
   async function removeAllConfiguration() {
@@ -2642,6 +2937,7 @@
       throw error;
     }
   }
+  removeAllConfiguration.needsSerial = true;
 
   async function getMessagesNeedingUpgrade(limit, { maxVersion }) {
     const rows = await db.all(
@@ -2763,6 +3059,24 @@
     if (profileAvatar && profileAvatar.path) {
       files.push(profileAvatar.path);
     }
+
+    return files;
+  }
+
+  function getExternalDraftFilesForConversation(conversation) {
+    const draftAttachments = conversation.draftAttachments || [];
+    const files = [];
+
+    forEach(draftAttachments, attachment => {
+      const { path: file, screenshotPath } = attachment;
+      if (file) {
+        files.push(file);
+      }
+
+      if (screenshotPath) {
+        files.push(screenshotPath);
+      }
+    });
 
     return files;
   }
@@ -2896,6 +3210,57 @@
     }
 
     console.log(`removeKnownStickers: Done processing ${count} stickers`);
+
+    return Object.keys(lookup);
+  }
+
+  async function removeKnownDraftAttachments(allStickers) {
+    const lookup = fromPairs(map(allStickers, file => [file, true]));
+    const chunkSize = 50;
+
+    const total = await getConversationCount();
+    console.log(
+      `removeKnownDraftAttachments: About to iterate through ${total} conversations`
+    );
+
+    let complete = false;
+    let count = 0;
+    // Though conversations.id is a string, this ensures that, when coerced, this
+    //   value is still a string but it's smaller than every other string.
+    let id = 0;
+
+    while (!complete) {
+      // eslint-disable-next-line no-await-in-loop
+      const rows = await db.all(
+        `SELECT json FROM conversations
+       WHERE id > $id
+       ORDER BY id ASC
+       LIMIT $chunkSize;`,
+        {
+          $id: id,
+          $chunkSize: chunkSize,
+        }
+      );
+
+      const conversations = map(rows, row => jsonToObject(row.json));
+      forEach(conversations, conversation => {
+        const externalFiles = getExternalDraftFilesForConversation(conversation);
+        forEach(externalFiles, file => {
+          delete lookup[file];
+        });
+      });
+
+      const lastMessage = last(conversations);
+      if (lastMessage) {
+        ({ id } = lastMessage);
+      }
+      complete = conversations.length < chunkSize;
+      count += conversations.length;
+    }
+
+    console.log(
+      `removeKnownDraftAttachments: Done processing ${count} conversations`
+    );
 
     return Object.keys(lookup);
   }

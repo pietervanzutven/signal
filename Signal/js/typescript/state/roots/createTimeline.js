@@ -16,6 +16,6 @@
     // Workaround: A react component's required properties are filtering up through connect()
     //   https://github.com/DefinitelyTyped/DefinitelyTyped/issues/31363
     const FilteredTimeline = Timeline_1.SmartTimeline;
-    exports.createTimeline = (store) => (react_1.default.createElement(react_redux_1.Provider, { store: store },
-        react_1.default.createElement(FilteredTimeline, null)));
+    exports.createTimeline = (store, props) => (react_1.default.createElement(react_redux_1.Provider, { store: store },
+        react_1.default.createElement(FilteredTimeline, Object.assign({}, props))));
 })();

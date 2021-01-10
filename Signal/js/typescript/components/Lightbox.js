@@ -54,6 +54,8 @@
             paddingLeft: 40,
             paddingRight: 40,
             paddingBottom: 0,
+            // To ensure that a large image doesn't overflow the flex layout
+            minHeight: '50px',
         },
         objectContainer: {
             position: 'relative',

@@ -55,22 +55,34 @@
                 react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: conversationType, i18n: i18n, noteToSelf: isMe, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28 })));
         }
         renderExpirationLength() {
-            const { expirationSettingName } = this.props;
+            const { expirationSettingName, showBackButton } = this.props;
             if (!expirationSettingName) {
                 return null;
             }
-            return (react_1.default.createElement("div", { className: "module-conversation-header__expiration" },
+            return (react_1.default.createElement("div", {
+                className: classnames_1.default('module-conversation-header__expiration', showBackButton
+                    ? 'module-conversation-header__expiration--hidden'
+                    : null)
+            },
                 react_1.default.createElement("div", { className: "module-conversation-header__expiration__clock-icon" }),
                 react_1.default.createElement("div", { className: "module-conversation-header__expiration__setting" }, expirationSettingName)));
         }
-        renderGear(triggerId) {
+        renderMoreButton(triggerId) {
             const { showBackButton } = this.props;
             return (react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, { id: triggerId, ref: this.menuTriggerRef },
                 react_1.default.createElement("button", {
-                    onClick: this.showMenuBound, className: classnames_1.default('module-conversation-header__gear-icon', showBackButton
+                    onClick: this.showMenuBound, className: classnames_1.default('module-conversation-header__more-button', showBackButton
                         ? null
-                        : 'module-conversation-header__gear-icon--show'), disabled: showBackButton
+                        : 'module-conversation-header__more-button--show'), disabled: showBackButton
                 })));
+        }
+        renderSearchButton() {
+            const { onSearchInConversation, showBackButton } = this.props;
+            return (react_1.default.createElement("button", {
+                onClick: onSearchInConversation, className: classnames_1.default('module-conversation-header__search-button', showBackButton
+                    ? null
+                    : 'module-conversation-header__search-button--show'), disabled: showBackButton
+            }));
         }
         renderMenu(triggerId) {
             const { i18n, isMe, isGroup, isArchived, onDeleteMessages, onResetSession, onSetDisappearingMessages, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onMoveToInbox, timerOptions, } = this.props;
@@ -98,7 +110,8 @@
                         this.renderAvatar(),
                         this.renderTitle())),
                 this.renderExpirationLength(),
-                this.renderGear(triggerId),
+                this.renderSearchButton(),
+                this.renderMoreButton(triggerId),
                 this.renderMenu(triggerId)));
         }
     }

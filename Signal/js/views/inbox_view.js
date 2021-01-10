@@ -22,30 +22,10 @@
   Whisper.ConversationStack = Whisper.View.extend({
     className: 'conversation-stack',
     lastConversation: null,
-    open(conversation) {
-      const id = `conversation-${conversation.cid}`;
-      if (id !== this.el.firstChild.id) {
-        this.$el
-          .first()
-          .find('video, audio')
-          .each(function pauseMedia() {
-            this.pause();
-          });
-        let $el = this.$(`#${id}`);
-        if ($el === null || $el.length === 0) {
-          const view = new Whisper.ConversationView({
-            model: conversation,
-            window: this.model.window,
-          });
-          // eslint-disable-next-line prefer-destructuring
-          $el = view.$el;
-        }
-        $el.prependTo(this.el);
-      }
-      conversation.trigger('opened');
-
-      var gutter = $('.gutter');
-      var stack = $('.conversation-stack');
+    open(conversation, messageId) {
+      const gutter = $('.gutter');
+      const stack = $('.conversation-stack');
+      const placeholder = $('.conversation.placeholder');
       while (window.onbackrequested) {
         Windows.UI.Core.SystemNavigationManager.getForCurrentView().onbackrequested.call();
       }
@@ -53,11 +33,12 @@
         gutter.hide();
         stack.show();
       }
-      var currentView = Windows.UI.Core.SystemNavigationManager.getForCurrentView();
+      placeholder.hide();
+      const currentView = Windows.UI.Core.SystemNavigationManager.getForCurrentView();
       currentView.appViewBackButtonVisibility = Windows.UI.Core.AppViewBackButtonVisibility.visible;
       currentView.onbackrequested = function (event) {
         if (currentView.appViewBackButtonVisibility === Windows.UI.Core.AppViewBackButtonVisibility.visible) {
-          $('.conversation.placeholder').prependTo(stack);
+          placeholder.show();
           $('.module-emoji-picker').hide();
           if (window.innerWidth < 600) {
             gutter.show();
@@ -68,12 +49,34 @@
         }
       };
       
-      if (this.lastConversation) {
-        this.lastConversation.trigger('backgrounded');
+      const id = `conversation-${conversation.cid}`;
+      if (id !== this.el.lastChild.id) {
+        const view = new Whisper.ConversationView({
+          model: conversation,
+          window: this.model.window,
+        });
+        view.$el.appendTo(this.el);
+
+        if (this.lastConversation) {
+          this.lastConversation.trigger(
+            'unload',
+            'opened another conversation'
+          );
+        }
+
+        this.lastConversation = conversation;
+        conversation.trigger('opened', messageId);
+      } else if (messageId) {
+        conversation.trigger('scroll-to-message', messageId);
       }
-      this.lastConversation = conversation;
+      
       // Make sure poppers are positioned properly
       window.dispatchEvent(new Event('resize'));
+    },
+    onUnload(conversationId) {
+      if (this.lastConversation.id === conversationId) {
+        this.lastConversation = null;
+      }
     },
   });
 
@@ -103,12 +106,17 @@
         el: this.$('.conversation-stack'),
         model: { window: options.window },
       });
+      Whisper.events.on('unloadConversation', conversationId => {
+        this.conversation_stack.onUnload(conversationId);
+      });
 
       if (!options.initialLoadComplete) {
         this.appLoadingScreen = new Whisper.AppLoadingScreen();
         this.appLoadingScreen.render();
         this.appLoadingScreen.$el.prependTo(this.el);
         this.startConnectionListener();
+      } else {
+        this.setupLeftPane();
       }
 
       const inboxCollection = getInboxCollection();
@@ -135,8 +143,6 @@
         toast.$el.appendTo(this.$el);
         toast.render();
       });
-
-      this.setupLeftPane();
     },
     render_attributes: {
       welcomeToSignal: i18n('welcomeToSignal'),
@@ -146,12 +152,14 @@
       click: 'onClick',
     },
     setupLeftPane() {
+      if (this.leftPaneView) {
+        return;
+      }
       this.leftPaneView = new Whisper.ReactWrapperView({
-        JSX: Signal.State.Roots.createLeftPane(window.reduxStore),
         className: 'left-pane-wrapper',
+        JSX: Signal.State.Roots.createLeftPane(window.reduxStore),
       });
 
-      // Finally, add it to the DOM
       this.$('.left-pane-placeholder').append(this.leftPaneView.el);
     },
     startConnectionListener() {
@@ -180,6 +188,8 @@
       }, 1000);
     },
     onEmpty() {
+      this.setupLeftPane();
+
       const view = this.appLoadingScreen;
       if (view) {
         this.appLoadingScreen = null;
@@ -219,7 +229,7 @@
         openConversationExternal(id, messageId);
       }
 
-      this.conversation_stack.open(conversation);
+      this.conversation_stack.open(conversation, messageId);
       this.focusConversation();
     },
     closeRecording(e) {

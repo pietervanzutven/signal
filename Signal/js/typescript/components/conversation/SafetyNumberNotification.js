@@ -11,7 +11,6 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
-    // import classNames from 'classnames';
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const Intl_1 = window.ts.components.Intl;
     class SafetyNumberNotification extends react_1.default.Component {

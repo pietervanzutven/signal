@@ -16,7 +16,7 @@
     class Image extends react_1.default.Component {
         // tslint:disable-next-line max-func-body-length cyclomatic-complexity
         render() {
-            const { alt, attachment, bottomOverlay, closeButton, curveBottomLeft, curveBottomRight, curveTopLeft, curveTopRight, darkOverlay, height, i18n, noBackground, noBorder, onClick, onClickClose, onError, overlayText, playIconOverlay, smallCurveTopLeft, softCorners, url, width, } = this.props;
+            const { alt, attachment, bottomOverlay, closeButton, curveBottomLeft, curveBottomRight, curveTopLeft, curveTopRight, darkOverlay, height, i18n, isSelected, noBackground, noBorder, onClick, onClickClose, onError, overlayText, playIconOverlay, smallCurveTopLeft, softCorners, url, width, } = this.props;
             const { caption, pending } = attachment || { caption: null, pending: true };
             const canClick = onClick && !pending;
             const role = canClick ? 'button' : undefined;
@@ -27,6 +27,7 @@
                     }
                 }, className: classnames_1.default('module-image', !noBackground ? 'module-image--with-background' : null, canClick ? 'module-image__with-click-handler' : null, curveBottomLeft ? 'module-image--curved-bottom-left' : null, curveBottomRight ? 'module-image--curved-bottom-right' : null, curveTopLeft ? 'module-image--curved-top-left' : null, curveTopRight ? 'module-image--curved-top-right' : null, smallCurveTopLeft ? 'module-image--small-curved-top-left' : null, softCorners ? 'module-image--soft-corners' : null)
             },
+                isSelected ? (react_1.default.createElement("div", { className: "module-image--selection--selected" })) : null,
                 pending ? (react_1.default.createElement("div", {
                     className: "module-image__loading-placeholder", style: {
                         height: `${height}px`,

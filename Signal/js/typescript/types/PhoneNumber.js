@@ -29,6 +29,7 @@
         primitive: true,
         // Convert the arguments to a unique string, required for primitive mode.
         normalizer: (...args) => JSON.stringify(args),
+        max: 5000,
     });
     function parse(phoneNumber, options) {
         const { regionCode } = options;
