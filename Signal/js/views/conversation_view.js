@@ -323,6 +323,7 @@
         onSubmit: message => this.sendMessage(message),
         onEditorStateChange: (msg, caretLocation) =>
           this.onEditorStateChange(msg, caretLocation),
+        onTextTooLong: () => this.showToast(Whisper.MessageBodyTooLongToast),
         onChooseAttachment: this.onChooseAttachment.bind(this),
         micCellEl,
         attachmentListEl,
@@ -441,7 +442,7 @@
             id,
             models.map(model => model.getReduxData()),
             isNewMessage,
-            document.hasFocus()
+            window.isActive()
           );
         } catch (error) {
           setMessagesLoading(conversationId, true);
@@ -492,7 +493,7 @@
             id,
             models.map(model => model.getReduxData()),
             isNewMessage,
-            document.hasFocus()
+            window.isActive()
           );
         } catch (error) {
           setMessagesLoading(conversationId, false);
@@ -501,10 +502,8 @@
           finish();
         }
       };
-      const markMessageRead = async (messageId, forceFocus) => {
-        // We need a forceFocus parameter because the BrowserWindow focus event fires
-        //   before the document realizes that it has focus.
-        if (!document.hasFocus() && !forceFocus) {
+      const markMessageRead = async messageId => {
+        if (!window.isActive()) {
           return;
         }
 
@@ -763,17 +762,23 @@
         conversationUnloaded(this.model.id);
       }
 
-      if (this.model.hasDraft()) {
-        this.model.set({
-          draftTimestamp: Date.now(),
-          timestamp: Date.now(),
-        });
-
-        this.model.updateLastMessage();
+      if (this.model.get('draftChanged')) {
+        if (this.model.hasDraft()) {
+          this.model.set({
+            draftChanged: false,
+            draftTimestamp: Date.now(),
+            timestamp: Date.now(),
+          });
+        } else {
+          this.model.set({
+            draftChanged: false,
+            draftTimestamp: null,
+          });
+        }
 
         // We don't wait here; we need to take down the view
         this.saveModel();
-      } else {
+
         this.model.updateLastMessage();
       }
 
@@ -956,6 +961,7 @@
       const draftAttachments = this.model.get('draftAttachments') || [];
       this.model.set({
         draftAttachments: [...draftAttachments, onDisk],
+        draftChanged: true,
       });
       await this.saveModel();
 
@@ -970,6 +976,7 @@
           draftAttachments,
           item => item.path === attachment.path
         ),
+        draftChanged: true,
       });
 
       this.updateAttachmentsView();
@@ -984,6 +991,7 @@
       const draftAttachments = this.model.get('draftAttachments') || [];
       this.model.set({
         draftAttachments: [],
+        draftChanged: true,
       });
 
       this.updateAttachmentsView();
@@ -1177,7 +1185,7 @@
         return;
       }
 
-      this.addAttachment(attachment);
+      await this.addAttachment(attachment);
     },
 
     isSizeOkay(attachment) {
@@ -1254,29 +1262,37 @@
       if (MIME.isJPEG(file.type)) {
         const rotatedDataUrl = await window.autoOrientImage(file);
         const rotatedBlob = VisualAttachment.dataURLToBlobSync(rotatedDataUrl);
-        const { contentType, file: resizedBlob } = await this.autoScale({
+        const {
+          contentType,
+          file: resizedBlob,
+          fileName,
+        } = await this.autoScale({
           contentType: file.type,
-          rotatedBlob,
+          fileName: file.name,
+          file: rotatedBlob,
         });
         const data = await await VisualAttachment.blobToArrayBuffer(
           resizedBlob
         );
 
         return {
-          fileName: file.name,
+          fileName: fileName || file.name,
           contentType,
           data,
           size: data.byteLength,
         };
       }
 
-      const { contentType, file: resizedBlob } = await this.autoScale({
-        contentType: file.type,
-        file,
-      });
+      const { contentType, file: resizedBlob, fileName } = await this.autoScale(
+        {
+          contentType: file.type,
+          fileName: file.name,
+          file,
+        }
+      );
       const data = await await VisualAttachment.blobToArrayBuffer(resizedBlob);
       return {
-        fileName: file.name,
+        fileName: fileName || file.name,
         contentType,
         data,
         size: data.byteLength,
@@ -1284,7 +1300,7 @@
     },
 
     autoScale(attachment) {
-      const { contentType, file } = attachment;
+      const { contentType, file, fileName } = attachment;
       if (
         contentType.split('/')[0] !== 'image' ||
         contentType === 'image/tiff'
@@ -1350,7 +1366,7 @@
           resolve(Object.assign({},
             attachment,
             {
-              fileName: this.fixExtension(attachment.fileName, targetContentType),
+              fileName: this.fixExtension(fileName, targetContentType),
               contentType: targetContentType,
               file: blob,
             }
@@ -2294,6 +2310,7 @@
       if (existing !== messageId) {
         this.model.set({
           quotedMessageId: messageId,
+          draftChanged: true,
         });
 
         await this.saveModel();
@@ -2459,16 +2476,20 @@
       if (this.model.get('draft') && (!messageText || trimmed.length === 0)) {
         this.model.set({
           draft: null,
+          draftChanged: true,
         });
         await this.saveModel();
 
         return;
       }
 
-      this.model.set({
-        draft: messageText,
-      });
-      await this.saveModel();
+      if (messageText !== this.model.get('draft')) {
+        this.model.set({
+          draft: messageText,
+          draftChanged: true,
+        });
+        await this.saveModel();
+      }
     },
 
     maybeGrabLinkPreview(message, caretLocation) {

@@ -877,7 +877,8 @@ img.emoji.jumbo {
 .inbox,
 .gutter {
   height: 100%;
-  overflow: hidden; }
+  overflow: hidden;
+  position: relative; }
 
 .expired .conversation-stack,
 .expired .gutter {
@@ -1096,8 +1097,11 @@ input.search {
 
 .conversation {
   background-color: #ffffff;
-  height: 100%;
-  position: relative; }
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0; }
   .conversation .panel {
     height: calc(100% - 48px);
     overflow-y: scroll;

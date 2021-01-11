@@ -14,7 +14,7 @@
     const react_1 = __importDefault(window.react);
     const react_virtualized_1 = window.react_virtualized;
     const ScrollDownButton_1 = window.ts.components.conversation.ScrollDownButton;
-    const AT_BOTTOM_THRESHOLD = 1;
+    const AT_BOTTOM_THRESHOLD = 15;
     const NEAR_BOTTOM_THRESHOLD = 15;
     const AT_TOP_THRESHOLD = 10;
     const LOAD_MORE_THRESHOLD = 30;
@@ -199,7 +199,7 @@
                 this.visibleRows = { newest, oldest };
             };
             // tslint:disable-next-line member-ordering cyclomatic-complexity
-            this.updateWithVisibleRows = lodash_1.debounce((forceFocus) => {
+            this.updateWithVisibleRows = lodash_1.debounce(() => {
                 const { unreadCount, haveNewest, isLoadingMessages, items, loadNewerMessages, markMessageRead, } = this.props;
                 if (!items || items.length < 1) {
                     return;
@@ -212,7 +212,7 @@
                 if (!newest || !newest.id) {
                     return;
                 }
-                markMessageRead(newest.id, forceFocus);
+                markMessageRead(newest.id);
                 const rowCount = this.getRowCount();
                 const lastId = items[items.length - 1];
                 if (!isLoadingMessages &&
@@ -253,13 +253,13 @@
                 const typingBubbleRow = this.getTypingBubbleRow();
                 let rowContents;
                 if (!haveOldest && row === 0) {
-                    rowContents = (react_1.default.createElement("div", { "data-row": row, style: styleWithWidth }, renderLoadingRow(id)));
+                    rowContents = (react_1.default.createElement("div", { "data-row": row, style: styleWithWidth, role: "row" }, renderLoadingRow(id)));
                 }
                 else if (oldestUnreadRow === row) {
-                    rowContents = (react_1.default.createElement("div", { "data-row": row, style: styleWithWidth }, renderLastSeenIndicator(id)));
+                    rowContents = (react_1.default.createElement("div", { "data-row": row, style: styleWithWidth, role: "row" }, renderLastSeenIndicator(id)));
                 }
                 else if (typingBubbleRow === row) {
-                    rowContents = (react_1.default.createElement("div", { "data-row": row, className: "module-timeline__message-container", style: styleWithWidth }, renderTypingBubble(id)));
+                    rowContents = (react_1.default.createElement("div", { "data-row": row, className: "module-timeline__message-container", style: styleWithWidth, role: "row" }, renderTypingBubble(id)));
                 }
                 else {
                     const itemIndex = this.fromRowToItemIndex(row);
@@ -267,7 +267,7 @@
                         throw new Error(`Attempted to render item with undefined index - row ${row}`);
                     }
                     const messageId = items[itemIndex];
-                    rowContents = (react_1.default.createElement("div", { id: messageId, "data-row": row, className: "module-timeline__message-container", style: styleWithWidth }, renderItem(messageId, this.props)));
+                    rowContents = (react_1.default.createElement("div", { id: messageId, "data-row": row, className: "module-timeline__message-container", style: styleWithWidth, role: "row" }, renderItem(messageId, this.props)));
                 }
                 return (react_1.default.createElement(react_virtualized_1.CellMeasurer, { cache: this.cellSizeCache, columnIndex: 0, key: key, parent: parent, rowIndex: index, width: this.mostRecentWidth }, rowContents));
             };
@@ -318,10 +318,6 @@
                 else if (!isLoadingMessages) {
                     loadNewestMessages(lastId);
                 }
-            };
-            this.forceFocusVisibleRowUpdate = () => {
-                const forceFocus = true;
-                this.updateWithVisibleRows(forceFocus);
             };
             this.getScrollTarget = () => {
                 const { oneTimeScrollRow, atBottom, propScrollToIndex } = this.state;
@@ -419,11 +415,11 @@
         componentDidMount() {
             this.updateWithVisibleRows();
             // @ts-ignore
-            window.registerForFocus(this.forceFocusVisibleRowUpdate);
+            window.registerForActive(this.updateWithVisibleRows);
         }
         componentWillUnmount() {
             // @ts-ignore
-            window.unregisterForFocus(this.forceFocusVisibleRowUpdate);
+            window.unregisterForActive(this.updateWithVisibleRows);
         }
         // tslint:disable-next-line cyclomatic-complexity max-func-body-length
         componentDidUpdate(prevProps) {

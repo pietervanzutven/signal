@@ -91,14 +91,14 @@
             },
         };
     }
-    function messagesAdded(conversationId, messages, isNewMessage, isFocused) {
+    function messagesAdded(conversationId, messages, isNewMessage, isActive) {
         return {
             type: 'MESSAGES_ADDED',
             payload: {
                 conversationId,
                 messages,
                 isNewMessage,
-                isFocused,
+                isActive,
             },
         };
     }
@@ -427,7 +427,7 @@
             });
         }
         if (action.type === 'MESSAGES_ADDED') {
-            const { conversationId, isFocused, isNewMessage, messages, } = action.payload;
+            const { conversationId, isActive, isNewMessage, messages } = action.payload;
             const { messagesByConversation, messagesLookup } = state;
             const existingConversation = messagesByConversation[conversationId];
             if (!existingConversation) {
@@ -470,7 +470,7 @@
             const newIds = messages.map(message => message.id);
             const newMessageIds = lodash_1.difference(newIds, existingConversation.messageIds);
             const { isNearBottom } = existingConversation;
-            if ((!isNearBottom || !isFocused) && !oldestUnread) {
+            if ((!isNearBottom || !isActive) && !oldestUnread) {
                 const oldestId = newMessageIds.find(messageId => {
                     const message = lookup[messageId];
                     return Boolean(message.unread);

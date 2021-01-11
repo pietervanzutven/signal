@@ -78,12 +78,14 @@
             makeNewMultipleQueue();
             multipleQueue.pause();
 
+            const multipleQueueRef = multipleQueue;
             const singleQueueRef = singleQueue;
+
             singleQueue = null;
-            const promise = multipleQueue.add(() => fn(...args));
+            const promise = multipleQueueRef.add(() => fn(...args));
             await singleQueueRef.onIdle();
 
-            multipleQueue.start();
+            multipleQueueRef.start();
             result = await promise;
           } else {
             makeNewMultipleQueue();

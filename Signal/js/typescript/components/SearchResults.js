@@ -33,7 +33,7 @@
             this.renderRow = ({ index, key, parent, style, }) => {
                 const { items } = this.props;
                 const row = items[index];
-                return (react_1.default.createElement("div", { key: key, style: style },
+                return (react_1.default.createElement("div", { role: "row", key: key, style: style },
                     react_1.default.createElement(react_virtualized_1.CellMeasurer, { cache: this.cellSizeCache, columnIndex: 0, key: key, parent: parent, rowIndex: index, width: this.mostRecentWidth }, this.renderRowContents(row))));
             };
             this.getList = () => {
@@ -61,21 +61,21 @@
                 return (react_1.default.createElement(StartNewConversation_1.StartNewConversation, { phoneNumber: searchTerm, i18n: i18n, onClick: this.handleStartNewConversation }));
             }
             else if (row.type === 'conversations-header') {
-                return (react_1.default.createElement("div", { className: "module-search-results__conversations-header" }, i18n('conversationsHeader')));
+                return (react_1.default.createElement("div", { className: "module-search-results__conversations-header", role: "heading", "aria-level": 1 }, i18n('conversationsHeader')));
             }
             else if (row.type === 'conversation') {
                 const { data } = row;
                 return (react_1.default.createElement(ConversationListItem_1.ConversationListItem, Object.assign({ key: data.phoneNumber }, data, { onClick: openConversationInternal, i18n: i18n })));
             }
             else if (row.type === 'contacts-header') {
-                return (react_1.default.createElement("div", { className: "module-search-results__contacts-header" }, i18n('contactsHeader')));
+                return (react_1.default.createElement("div", { className: "module-search-results__contacts-header", role: "heading", "aria-level": 1 }, i18n('contactsHeader')));
             }
             else if (row.type === 'contact') {
                 const { data } = row;
                 return (react_1.default.createElement(ConversationListItem_1.ConversationListItem, Object.assign({ key: data.phoneNumber }, data, { onClick: openConversationInternal, i18n: i18n })));
             }
             else if (row.type === 'messages-header') {
-                return (react_1.default.createElement("div", { className: "module-search-results__messages-header" }, i18n('messagesHeader')));
+                return (react_1.default.createElement("div", { className: "module-search-results__messages-header", role: "heading", "aria-level": 1 }, i18n('messagesHeader')));
             }
             else if (row.type === 'message') {
                 const { data } = row;
@@ -118,7 +118,7 @@
                     ]
                 })) : (i18n('noSearchResults', [searchTerm])))) : null));
             }
-            return (react_1.default.createElement("div", { className: "module-search-results" },
+            return (react_1.default.createElement("div", { className: "module-search-results", "aria-live": "polite" },
                 react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => {
                     this.mostRecentWidth = width;
                     this.mostRecentHeight = height;

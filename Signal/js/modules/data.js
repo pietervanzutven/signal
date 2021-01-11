@@ -285,6 +285,14 @@
           window.log.info(
             `SQL channel job ${id} (${fnName}) failed in ${end - start}ms`
           );
+
+          if (error && error.message && error.message.includes('SQLITE_CORRUPT')) {
+            window.log.error(
+              'Detected SQLITE_CORRUPT error; restarting the application immediately'
+            );
+            window.restart();
+          }
+
           return reject(error);
         },
       }
