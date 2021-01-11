@@ -69,6 +69,7 @@
             maxWidth: '100%',
             maxHeight: '100%',
             objectFit: 'contain',
+            outline: 'none',
         },
         caption: {
             position: 'absolute',
@@ -136,7 +137,7 @@
                 }
                 const isVideoTypeSupported = GoogleChrome.isVideoTypeSupported(contentType);
                 if (isVideoTypeSupported) {
-                    return (react_1.default.createElement("video", { role: "button", ref: this.videoRef, onClick: this.playVideoBound, controls: true, style: styles.object, key: objectURL },
+                    return (react_1.default.createElement("video", { role: "button", ref: this.videoRef, controls: true, style: styles.object, key: objectURL },
                         react_1.default.createElement("source", { src: objectURL })));
                 }
                 const isUnsupportedImageType = !isImageTypeSupported && MIME.isImage(contentType);
@@ -187,7 +188,6 @@
                 event.stopPropagation();
                 this.onClose();
             };
-            this.playVideoBound = this.playVideo.bind(this);
             this.videoRef = react_1.default.createRef();
             this.containerRef = react_1.default.createRef();
         }
