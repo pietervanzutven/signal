@@ -1,85 +1,5 @@
 /* eslint-disable no-console */
 
-//const core = Windows.Security.Cryptography.Core;
-//const algorithmProvider = core.AsymmetricKeyAlgorithmProvider.openAlgorithm(core.AsymmetricAlgorithmNames.ec);
-//algorithmProvider.createKeyPairWithCurveName
-
-
-Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync('BBDB_import.json').then(file => {
-  if (file) {
-    file.renameAsync('signal_import.json', Windows.Storage.NameCollisionOption.replaceExisting);
-  }
-});
-Windows.Storage.ApplicationData.current.localFolder.tryGetItemAsync('BBDB.json').then(file => {
-  if (file) {
-    file.renameAsync('signal.json', Windows.Storage.NameCollisionOption.replaceExisting);
-  }
-});
-
-var background = Windows.ApplicationModel.Background;
-background.BackgroundExecutionManager.removeAccess();
-for (var iter = background.BackgroundTaskRegistration.allTasks.first(); iter.hasCurrent; iter.moveNext()) {
-  var task = iter.current.value;
-  task.unregister(true);
-}
-var group = background.BackgroundTaskRegistration.getTaskGroup('Signal');
-if (group) {
-  for (var iter = group.allTasks.first(); iter.hasCurrent; iter.moveNext()) {
-    var task = iter.current.value;
-    task.unregister(true);
-  }
-}
-background.BackgroundExecutionManager.requestAccessAsync().then(result => {
-  var timeTrigger = background.TimeTrigger(15, false);
-  var backGroundTask = background.BackgroundTaskBuilder();
-  backGroundTask.name = 'SignalTimeTrigger';
-  backGroundTask.taskEntryPoint = 'js\\background_task.js';
-  backGroundTask.isNetworkRequested = true;
-  backGroundTask.setTrigger(timeTrigger);
-  backGroundTask.addCondition(background.SystemCondition(background.SystemConditionType.internetAvailable));
-  backGroundTask.register();
-});
-
-Windows.UI.WebUI.WebUIApplication.addEventListener('activated', event => {
-  if (event.detail[0].kind === Windows.ApplicationModel.Activation.ActivationKind.protocol) {
-    window.fileToken = event.detail[0].uri.query !== '' ? Windows.Foundation.WwwFormUrlDecoder(event.detail[0].uri.query).getFirstValueByName("file") : null;
-  } else if (event.detail[0].kind === Windows.ApplicationModel.Activation.ActivationKind.launch) {
-    if (event.detail[0].arguments !== '' && window.notifications[event.detail[0].arguments]) {
-      window.notifications[event.detail[0].arguments].click();
-    }
-  }
-});
-
-window.matchMedia && window.matchMedia('(max-width: 600px)').addListener(() => {
-  var gutter = $('.gutter');
-  var conversation = $('.conversation-stack');
-  if (window.innerWidth > 600) {
-    gutter.show();
-    conversation.show();
-  } else {
-    if (Windows.UI.Core.SystemNavigationManager.getForCurrentView().appViewBackButtonVisibility === Windows.UI.Core.AppViewBackButtonVisibility.visible) {
-      gutter.hide();
-      conversation.show();
-    } else {
-      gutter.show();
-      conversation.hide();
-    }
-  }
-});
-
-window.onload = () => {
-  storage.onready(() => {
-    const color = Windows.UI.ViewManagement.UISettings().getColorValue(Windows.UI.ViewManagement.UIColorType.background);
-    if (color.b === 255) {
-      storage.put('theme-setting', 'light');
-    } else {
-      storage.put('theme-setting', 'dark');
-    }
-  });
-}
-
-window.requestIdleCallback = () => { };
-
 const path = window.path;
 const url = window.url;
 const os = window.os;
@@ -88,6 +8,7 @@ const crypto = window.crypto;
 const qs = window.qs;
 
 const pify = window.pify;
+const electron = window.electron;
 
 const packageJson = {
   name: 'signal-desktop',
@@ -246,7 +167,10 @@ function handleUrl(event, target) {
   }
 }
 
-function captureClicks(window) { }
+function captureClicks(window) {
+  window.webContents.on('will-navigate', handleUrl);
+  window.webContents.on('new-window', handleUrl);
+}
 
 const DEFAULT_WIDTH = 800;
 const DEFAULT_HEIGHT = 610;
@@ -347,113 +271,123 @@ function createWindow() {
     'Initializing BrowserWindow config: %s',
     JSON.stringify(windowOptions)
   );
-}
 
-// Create the browser window.
-mainWindow = new BrowserWindow();
+  // Create the browser window.
+  mainWindow = new BrowserWindow(windowOptions);
 
-function captureAndSaveWindowStats() {
-  if (!mainWindow) {
-    return;
+  function captureAndSaveWindowStats() {
+    if (!mainWindow) {
+      return;
+    }
+
+    const size = mainWindow.getSize();
+    const position = mainWindow.getPosition();
+
+    // so if we need to recreate the window, we have the most recent settings
+    windowConfig = {
+      maximized: mainWindow.isMaximized(),
+      autoHideMenuBar: mainWindow.isMenuBarAutoHide(),
+      width: size[0],
+      height: size[1],
+      x: position[0],
+      y: position[1],
+    };
+
+    if (mainWindow.isFullScreen()) {
+      // Only include this property if true, because when explicitly set to
+      // false the fullscreen button will be disabled on osx
+      windowConfig.fullscreen = true;
+    }
+
+    logger.info(
+      'Updating BrowserWindow config: %s',
+      JSON.stringify(windowConfig)
+    );
+    ephemeralConfig.set('window', windowConfig);
   }
 
-  const size = mainWindow.getSize();
-  const position = mainWindow.getPosition();
+  const debouncedCaptureStats = _.debounce(captureAndSaveWindowStats, 500);
+  mainWindow.on('resize', debouncedCaptureStats);
+  mainWindow.on('move', debouncedCaptureStats);
 
-  // so if we need to recreate the window, we have the most recent settings
-  windowConfig = {
-    maximized: mainWindow.isMaximized(),
-    autoHideMenuBar: mainWindow.isMenuBarAutoHide(),
-    width: size[0],
-    height: size[1],
-    x: position[0],
-    y: position[1],
-  };
-
-  if (mainWindow.isFullScreen()) {
-    // Only include this property if true, because when explicitly set to
-    // false the fullscreen button will be disabled on osx
-    windowConfig.fullscreen = true;
-  }
-
-  logger.info(
-    'Updating BrowserWindow config: %s',
-    JSON.stringify(windowConfig)
-  );
-  ephemeralConfig.set('window', windowConfig);
-}
-
-const debouncedCaptureStats = _.debounce(captureAndSaveWindowStats, 500);
-mainWindow.on('resize', debouncedCaptureStats);
-mainWindow.on('move', debouncedCaptureStats);
-
-// Ingested in preload.js via a sendSync call
-ipc.on('locale-data', event => {
-  // eslint-disable-next-line no-param-reassign
-  event.returnValue = locale.messages;
-});
-
-if (config.get('openDevTools')) {
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
-}
-
-captureClicks(mainWindow);
-
-// Emitted when the window is about to be closed.
-// Note: We do most of our shutdown logic here because all windows are closed by
-//   Electron before the app quits.
-mainWindow.on('close', async e => {
-  console.log('close event', {
-    readyForShutdown: mainWindow ? mainWindow.readyForShutdown : null,
-    shouldQuit: windowState.shouldQuit(),
+  // Ingested in preload.js via a sendSync call
+  ipc.on('locale-data', event => {
+    // eslint-disable-next-line no-param-reassign
+    event.returnValue = locale.messages;
   });
-  // If the application is terminating, just do the default
-  if (
-    config.environment === 'test' ||
-    config.environment === 'test-lib' ||
-    (mainWindow.readyForShutdown && windowState.shouldQuit())
-  ) {
-    return;
+
+  if (config.environment === 'test') {
+    mainWindow.loadURL(prepareURL([__dirname, 'test', 'index.html']));
+  } else if (config.environment === 'test-lib') {
+    mainWindow.loadURL(
+      prepareURL([__dirname, 'libtextsecure', 'test', 'index.html'])
+    );
+  } else {
+    mainWindow.loadURL(prepareURL([__dirname, 'background.html']));
   }
 
-  // Prevent the shutdown
-  e.preventDefault();
-  mainWindow.hide();
+  if (config.get('openDevTools')) {
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools();
+  }
 
-  // On Mac, or on other platforms when the tray icon is in use, the window
-  // should be only hidden, not closed, when the user clicks the close button
-  if (
-    !windowState.shouldQuit() &&
-    (usingTrayIcon || process.platform === 'darwin')
-  ) {
-    // toggle the visibility of the show/hide tray icon menu entries
-    if (tray) {
-      tray.updateContextMenu();
+  captureClicks(mainWindow);
+
+  // Emitted when the window is about to be closed.
+  // Note: We do most of our shutdown logic here because all windows are closed by
+  //   Electron before the app quits.
+  mainWindow.on('close', async e => {
+    console.log('close event', {
+      readyForShutdown: mainWindow ? mainWindow.readyForShutdown : null,
+      shouldQuit: windowState.shouldQuit(),
+    });
+    // If the application is terminating, just do the default
+    if (
+      config.environment === 'test' ||
+      config.environment === 'test-lib' ||
+      (mainWindow.readyForShutdown && windowState.shouldQuit())
+    ) {
+      return;
     }
 
-    // hide the app from the Dock on macOS if the tray icon is enabled
-    if (usingTrayIcon) {
-      dockIcon.hide();
+    // Prevent the shutdown
+    e.preventDefault();
+    mainWindow.hide();
+
+    // On Mac, or on other platforms when the tray icon is in use, the window
+    // should be only hidden, not closed, when the user clicks the close button
+    if (
+      !windowState.shouldQuit() &&
+      (usingTrayIcon || process.platform === 'darwin')
+    ) {
+      // toggle the visibility of the show/hide tray icon menu entries
+      if (tray) {
+        tray.updateContextMenu();
+      }
+
+      // hide the app from the Dock on macOS if the tray icon is enabled
+      if (usingTrayIcon) {
+        dockIcon.hide();
+      }
+
+      return;
     }
 
-    return;
-  }
+    await requestShutdown();
+    if (mainWindow) {
+      mainWindow.readyForShutdown = true;
+    }
+    app.quit();
+  });
 
-  await requestShutdown();
-  if (mainWindow) {
-    mainWindow.readyForShutdown = true;
-  }
-  app.quit();
-});
-
-// Emitted when the window is closed.
-mainWindow.on('closed', () => {
-  // Dereference the window object, usually you would store windows
-  // in an array if your app supports multi windows, this is the time
-  // when you should delete the corresponding element.
-  mainWindow = null;
-});
+  // Emitted when the window is closed.
+  mainWindow.on('closed', () => {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    mainWindow = null;
+  });
+}
 
 ipc.on('show-window', () => {
   showWindow();
@@ -480,31 +414,41 @@ ipc.once('ready-for-updates', async () => {
 });
 
 function openReleaseNotes() {
-  Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/releases/tag/v' + app.getVersion()));
+  shell.openExternal(
+    `https://github.com/signalapp/Signal-Desktop/releases/tag/v${app.getVersion()}`
+  );
 }
 
 function openNewBugForm() {
-  Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://github.com/signalapp/Signal-Desktop/issues/new'));
+  shell.openExternal('https://github.com/signalapp/Signal-Desktop/issues/new');
 }
 
 function openSupportPage() {
-  Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://support.signal.org/'));
+  shell.openExternal(
+    'https://support.signal.org/hc/en-us/categories/202319038-Desktop'
+  );
 }
 
 function openForums() {
-  Windows.System.Launcher.launchUriAsync(Windows.Foundation.Uri('https://community.signalusers.org/'));
+  shell.openExternal('https://community.signalusers.org/');
 }
 
 function setupWithImport() {
-  ipc.send('set-up-with-import');
+  if (mainWindow) {
+    mainWindow.webContents.send('set-up-with-import');
+  }
 }
 
 function setupAsNewDevice() {
-  ipc.send('set-up-as-new-device');
+  if (mainWindow) {
+    mainWindow.webContents.send('set-up-as-new-device');
+  }
 }
 
 function setupAsStandalone() {
-  ipc.send('set-up-as-standalone');
+  if (mainWindow) {
+    mainWindow.webContents.send('set-up-as-standalone');
+  }
 }
 
 let aboutWindow;
@@ -699,6 +643,7 @@ async function showPermissionsPopupWindow() {
 let ready = false;
 (async () => {
   const userDataPath = app.getPath('userData');
+  const installPath = app.getAppPath();
 
   await logging.initialize();
   logger = logging.getLogger();
@@ -789,6 +734,12 @@ let ready = false;
   });
 
   ready = true;
+
+  createWindow();
+
+  if (usingTrayIcon) {
+    tray = createTrayIcon(getMainWindow, locale.messages);
+  }
 })();
 
 function setupMenu(options) {
@@ -874,12 +825,13 @@ ipc.on('add-setup-menu-items', () => {
 
 ipc.on('draw-attention', () => {
   if (process.platform === 'win32' && mainWindow) {
-    Windows.System.Launcher.launchUriAsync(new Windows.Foundation.Uri('signal://'));
+    mainWindow.flashFrame(true);
   }
 });
 
 ipc.on('restart', () => {
-  Windows.UI.WebUI.WebUIApplication.requestRestartAsync('');
+  app.relaunch();
+  app.quit();
 });
 
 ipc.on('set-auto-hide-menu-bar', (event, autoHide) => {
