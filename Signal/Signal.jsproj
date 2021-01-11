@@ -181,7 +181,6 @@
     <Content Include="js\expire.js" />
     <Content Include="js\expiring_messages.js" />
     <Content Include="js\expiring_tap_to_view_messages.js" />
-    <Content Include="js\focus_listener.js" />
     <Content Include="js\keychange_listener.js" />
     <Content Include="js\legacy_storage.js" />
     <Content Include="js\libphonenumber-util.js" />

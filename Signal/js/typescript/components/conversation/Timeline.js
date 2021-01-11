@@ -199,7 +199,7 @@
                 this.visibleRows = { newest, oldest };
             };
             // tslint:disable-next-line member-ordering cyclomatic-complexity
-            this.updateWithVisibleRows = lodash_1.debounce((forceFocus) => {
+            this.updateWithVisibleRows = lodash_1.debounce(() => {
                 const { unreadCount, haveNewest, isLoadingMessages, items, loadNewerMessages, markMessageRead, } = this.props;
                 if (!items || items.length < 1) {
                     return;
@@ -212,7 +212,7 @@
                 if (!newest || !newest.id) {
                     return;
                 }
-                markMessageRead(newest.id, forceFocus);
+                markMessageRead(newest.id);
                 const rowCount = this.getRowCount();
                 const lastId = items[items.length - 1];
                 if (!isLoadingMessages &&
@@ -319,10 +319,6 @@
                     loadNewestMessages(lastId);
                 }
             };
-            this.forceFocusVisibleRowUpdate = () => {
-                const forceFocus = true;
-                this.updateWithVisibleRows(forceFocus);
-            };
             this.getScrollTarget = () => {
                 const { oneTimeScrollRow, atBottom, propScrollToIndex } = this.state;
                 const rowCount = this.getRowCount();
@@ -419,11 +415,11 @@
         componentDidMount() {
             this.updateWithVisibleRows();
             // @ts-ignore
-            window.registerForFocus(this.forceFocusVisibleRowUpdate);
+            window.registerForActive(this.updateWithVisibleRows);
         }
         componentWillUnmount() {
             // @ts-ignore
-            window.unregisterForFocus(this.forceFocusVisibleRowUpdate);
+            window.unregisterForActive(this.updateWithVisibleRows);
         }
         // tslint:disable-next-line cyclomatic-complexity max-func-body-length
         componentDidUpdate(prevProps) {
