@@ -36,6 +36,8 @@
     savePackMetadata,
     getStickerPackStatus,
   } = window.Signal.Stickers;
+  const { GoogleChrome } = window.Signal.Util;
+
   const { addStickerPackReference } = window.Signal.Data;
   const { bytesFromString } = window.Signal.Crypto;
 
@@ -748,7 +750,23 @@
         return i18n('message--getDescription--unsupported-message');
       }
       if (this.isTapToView()) {
-        return i18n('message--getDescription--disappearing-photo');
+        if (this.isErased()) {
+          return i18n('mediaMessage');
+        }
+
+        const attachments = this.get('attachments');
+        if (!attachments || !attachments[0]) {
+          return i18n('mediaMessage');
+        }
+
+        const { contentType } = attachments[0];
+        if (GoogleChrome.isImageTypeSupported(contentType)) {
+          return i18n('message--getDescription--disappearing-photo');
+        } else if (GoogleChrome.isVideoTypeSupported(contentType)) {
+          return i18n('message--getDescription--disappearing-video');
+        }
+
+        return i18n('mediaMessage');
       }
       if (this.isGroupUpdate()) {
         const groupUpdate = this.get('group_update');
@@ -896,11 +914,7 @@
       }
 
       const firstAttachment = attachments[0];
-      if (
-        !window.Signal.Util.GoogleChrome.isImageTypeSupported(
-          firstAttachment.contentType
-        )
-      ) {
+      if (!GoogleChrome.isImageTypeSupported(firstAttachment.contentType)) {
         return false;
       }
 
@@ -1760,12 +1774,8 @@
 
       if (
         !firstAttachment ||
-        (!window.Signal.Util.GoogleChrome.isImageTypeSupported(
-          firstAttachment.contentType
-        ) &&
-          !window.Signal.Util.GoogleChrome.isVideoTypeSupported(
-            firstAttachment.contentType
-          ))
+        (!GoogleChrome.isImageTypeSupported(firstAttachment.contentType) &&
+          !GoogleChrome.isVideoTypeSupported(firstAttachment.contentType))
       ) {
         return message;
       }

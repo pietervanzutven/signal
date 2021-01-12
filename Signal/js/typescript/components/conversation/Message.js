@@ -530,10 +530,10 @@
                 }));
         }
         renderTapToViewText() {
-            const { direction, i18n, isTapToViewExpired, isTapToViewError, } = this.props;
+            const { attachments, direction, i18n, isTapToViewExpired, isTapToViewError, } = this.props;
             const incomingString = isTapToViewExpired
                 ? i18n('Message--tap-to-view-expired')
-                : i18n('Message--tap-to-view--incoming');
+                : i18n(`Message--tap-to-view--incoming${Attachment_1.isVideo(attachments) ? '-video' : ''}`);
             const outgoingString = i18n('Message--tap-to-view--outgoing');
             const isDownloadPending = this.isAttachmentPending();
             if (isDownloadPending) {
