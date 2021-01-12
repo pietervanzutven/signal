@@ -120,11 +120,11 @@
 
               if (item.envelope) {
                 // eslint-disable-next-line no-param-reassign
-                item.envelope = await arrayBufferToString(item.envelope);
+                item.envelope = arrayBufferToString(item.envelope);
               }
               if (item.decrypted) {
                 // eslint-disable-next-line no-param-reassign
-                item.decrypted = await arrayBufferToString(item.decrypted);
+                item.decrypted = arrayBufferToString(item.decrypted);
               }
             })
           );

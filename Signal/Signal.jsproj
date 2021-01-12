@@ -366,6 +366,7 @@
     <Content Include="js\typescript\types\Settings.js" />
     <Content Include="js\typescript\types\Util.js" />
     <Content Include="js\typescript\util\arrayBufferToObjectURL.js" />
+    <Content Include="js\typescript\util\batcher.js" />
     <Content Include="js\typescript\util\cleanSearchTerm.js" />
     <Content Include="js\typescript\util\formatRelativeTime.js" />
     <Content Include="js\typescript\util\getInitials.js" />
@@ -378,6 +379,7 @@
     <Content Include="js\typescript\util\missingCaseError.js" />
     <Content Include="js\typescript\util\saveURLAsFile.js" />
     <Content Include="js\typescript\util\timer.js" />
+    <Content Include="js\typescript\util\waitBatcher.js" />
     <Content Include="js\util_worker.js" />
     <Content Include="js\views\about_view.js" />
     <Content Include="js\views\app_view.js" />

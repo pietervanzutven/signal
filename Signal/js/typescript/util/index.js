@@ -16,6 +16,10 @@
     exports.GoogleChrome = GoogleChrome;
     const arrayBufferToObjectURL_1 = require_ts_util_arrayBufferToObjectURL();
     exports.arrayBufferToObjectURL = arrayBufferToObjectURL_1.arrayBufferToObjectURL;
+    const batcher_1 = require_ts_util_batcher();
+    exports.createBatcher = batcher_1.createBatcher;
+    const waitBatcher_1 = require_ts_util_waitBatcher();
+    exports.createWaitBatcher = waitBatcher_1.createWaitBatcher;
     const isFileDangerous_1 = require_ts_util_isFileDangerous();
     exports.isFileDangerous = isFileDangerous_1.isFileDangerous;
     const missingCaseError_1 = require_ts_util_missingCaseError();
