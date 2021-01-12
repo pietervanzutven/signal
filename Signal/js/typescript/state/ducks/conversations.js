@@ -224,6 +224,10 @@
         if (stickerPendingChanged) {
             return true;
         }
+        const longMessageAttachmentLoaded = previous.bodyPending && !message.bodyPending;
+        if (longMessageAttachmentLoaded) {
+            return true;
+        }
         const firstAttachmentNoLongerPending = previousAttachments[0] &&
             previousAttachments[0].pending &&
             messageAttachments[0] &&
