@@ -55,6 +55,9 @@
           model: conversation,
           window: this.model.window,
         });
+        this.listenTo(conversation, 'unload', () =>
+          this.onUnload(conversation)
+        );
         view.$el.appendTo(this.el);
 
         if (this.lastConversation) {
@@ -62,6 +65,8 @@
             'unload',
             'opened another conversation'
           );
+          this.stopListening(this.lastConversation);
+          this.lastConversation = null;
         }
 
         this.lastConversation = conversation;
@@ -73,8 +78,9 @@
       // Make sure poppers are positioned properly
       window.dispatchEvent(new Event('resize'));
     },
-    onUnload(conversationId) {
-      if (this.lastConversation.id === conversationId) {
+    onUnload(conversation) {
+      if (this.lastConversation === conversation) {
+        this.stopListening(this.lastConversation);
         this.lastConversation = null;
       }
     },
@@ -105,9 +111,6 @@
       this.conversation_stack = new Whisper.ConversationStack({
         el: this.$('.conversation-stack'),
         model: { window: options.window },
-      });
-      Whisper.events.on('unloadConversation', conversationId => {
-        this.conversation_stack.onUnload(conversationId);
       });
 
       if (!options.initialLoadComplete) {
