@@ -14,14 +14,14 @@
     const classnames_1 = __importDefault(window.classnames);
     const TypingAnimation_1 = window.ts.components.conversation.TypingAnimation;
     const Avatar_1 = window.ts.components.Avatar;
-    class TypingBubble extends react_1.default.Component {
+    class TypingBubble extends react_1.default.PureComponent {
         renderAvatar() {
             const { avatarPath, color, name, phoneNumber, profileName, conversationType, i18n, } = this.props;
             if (conversationType !== 'group') {
                 return;
             }
             return (react_1.default.createElement("div", { className: "module-message__author-avatar" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 36 })));
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28 })));
         }
         render() {
             const { i18n, color, conversationType } = this.props;

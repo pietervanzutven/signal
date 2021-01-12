@@ -20,7 +20,7 @@
         renderAvatar() {
             const { avatarPath, color, type, i18n, isMe, name, phoneNumber, profileName, } = this.props;
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__avatar-container" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, noteToSelf: isMe, conversationType: type, i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 48 }),
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, noteToSelf: isMe, conversationType: type, i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 52 }),
                 this.renderUnread()));
         }
         renderUnread() {
@@ -43,7 +43,7 @@
                         ? 'module-conversation-list-item__header__date--has-unread'
                         : null)
                 },
-                    react_1.default.createElement(Timestamp_1.Timestamp, { timestamp: lastUpdated, extended: false, module: "module-conversation-list-item__header__timestamp", i18n: i18n }))));
+                    react_1.default.createElement(Timestamp_1.Timestamp, { timestamp: lastUpdated, extended: false, module: "module-conversation-list-item__header__timestamp", withUnread: unreadCount > 0, i18n: i18n }))));
         }
         renderMessage() {
             const { draftPreview, i18n, lastMessage, shouldShowDraft, typingContact, unreadCount, } = this.props;

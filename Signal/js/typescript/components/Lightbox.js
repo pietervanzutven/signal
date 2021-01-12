@@ -24,8 +24,7 @@
     const MIME = __importStar(window.ts.types.MIME);
     const formatDuration_1 = window.ts.util.formatDuration;
     const Colors = {
-        TEXT_SECONDARY: '#bbb',
-        ICON_SECONDARY: '#ccc',
+        ICON_SECONDARY: '#b9b9b9',
     };
     const colorSVG = (url, color) => {
         return {
@@ -158,7 +157,7 @@
                 const isUnsupportedVideoType = !isVideoTypeSupported && MIME.isVideo(contentType);
                 if (isUnsupportedImageType || isUnsupportedVideoType) {
                     const iconUrl = isUnsupportedVideoType
-                        ? 'images/video.svg'
+                        ? 'images/movie.svg'
                         : 'images/image.svg';
                     return react_1.default.createElement(Icon, { url: iconUrl, onClick: this.onObjectClick });
                 }

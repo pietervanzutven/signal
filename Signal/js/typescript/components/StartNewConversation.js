@@ -15,7 +15,7 @@
         render() {
             const { phoneNumber, i18n, onClick } = this.props;
             return (react_1.default.createElement("div", { role: "button", className: "module-start-new-conversation", onClick: onClick },
-                react_1.default.createElement(Avatar_1.Avatar, { color: "grey", conversationType: "direct", i18n: i18n, phoneNumber: phoneNumber, size: 48 }),
+                react_1.default.createElement(Avatar_1.Avatar, { color: "grey", conversationType: "direct", i18n: i18n, phoneNumber: phoneNumber, size: 52 }),
                 react_1.default.createElement("div", { className: "module-start-new-conversation__content" },
                     react_1.default.createElement("div", { className: "module-start-new-conversation__number" }, phoneNumber),
                     react_1.default.createElement("div", { className: "module-start-new-conversation__text" }, i18n('startConversation')))));

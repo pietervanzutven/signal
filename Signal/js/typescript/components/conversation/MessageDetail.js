@@ -20,7 +20,7 @@
         renderAvatar(contact) {
             const { i18n } = this.props;
             const { avatarPath, color, phoneNumber, name, profileName } = contact;
-            return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 48 }));
+            return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 52 }));
         }
         renderDeleteButton() {
             const { i18n, message } = this.props;

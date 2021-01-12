@@ -52,7 +52,7 @@
             const { avatarPath, color, size, noteToSelf } = this.props;
             const { imageBroken } = this.state;
             const hasImage = !noteToSelf && avatarPath && !imageBroken;
-            if (size !== 28 && size !== 36 && size !== 48 && size !== 80) {
+            if (size !== 28 && size !== 52 && size !== 80) {
                 throw new Error(`Size ${size} is not supported!`);
             }
             return (react_1.default.createElement("div", { className: classnames_1.default('module-avatar', `module-avatar--${size}`, hasImage ? 'module-avatar--with-image' : 'module-avatar--no-image', !hasImage ? `module-avatar--${color}` : null) }, hasImage ? this.renderImage() : this.renderNoImage()));
