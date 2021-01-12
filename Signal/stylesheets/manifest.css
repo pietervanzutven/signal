@@ -6610,8 +6610,7 @@ img.emoji.jumbo {
     height: 100%;
     flex-shrink: 0; }
     .module-composition-area__button-cell--mic-active {
-      width: 141px;
-      margin-right: 12px; }
+      width: 150px; }
     .module-composition-area__button-cell--large-right {
       margin-left: auto; }
   .module-composition-area__send-button {
