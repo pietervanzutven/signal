@@ -1385,6 +1385,7 @@
     }
 
     window.Signal.Data.updateConversation(id, conversation.attributes);
+
     const { expireTimer } = details;
     const isValidExpireTimer = typeof expireTimer === 'number';
     if (!isValidExpireTimer) {
@@ -1396,8 +1397,6 @@
     await conversation.updateExpirationTimer(expireTimer, source, receivedAt, {
       fromSync: true,
     });
-
-    ev.confirm();
   }
 
   // Descriptors
