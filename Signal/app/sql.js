@@ -2287,7 +2287,6 @@
 
   async function getTapToViewMessagesNeedingErase() {
     const THIRTY_DAYS_AGO = Date.now() - 30 * 24 * 60 * 60 * 1000;
-    const NOW = Date.now();
 
     const rows = await db.all(
       `SELECT json FROM messages
@@ -2297,7 +2296,6 @@
       AND received_at <= $THIRTY_DAYS_AGO
     ORDER BY received_at ASC;`,
       {
-        $NOW: NOW,
         $THIRTY_DAYS_AGO: THIRTY_DAYS_AGO,
       }
     );
