@@ -13,7 +13,7 @@ function require_ts_util_batcher() {
     // @ts-ignore
     window.waitForAllBatchers = async () => {
         // @ts-ignore
-        await Promise.all(window.batchers.map(item => item.onIdle()));
+        await Promise.all(window.batchers.map(item => item.flushAndWait()));
     };
     async function sleep(ms) {
         // tslint:disable-next-line:no-string-based-set-timeout
@@ -65,10 +65,21 @@ function require_ts_util_batcher() {
             // @ts-ignore
             window.batchers = window.batchers.filter((item) => item !== batcher);
         }
+        async function flushAndWait() {
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = null;
+            }
+            if (items.length) {
+                _kickBatchOff();
+            }
+            return onIdle();
+        }
         batcher = {
             add,
             anyPending,
             onIdle,
+            flushAndWait,
             unregister,
         };
         // @ts-ignore
