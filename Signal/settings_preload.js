@@ -14,7 +14,7 @@
 
   const { systemPreferences } = remote.require('electron');
 
-  window.platform = process.platform;
+  window.platform = window.top.process.platform;
   window.theme = config.theme;
   window.i18n = i18n.setup(locale, localeMessages);
 

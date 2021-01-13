@@ -234,6 +234,7 @@
     <Content Include="js\typescript\backbone\views\index.js" />
     <Content Include="js\typescript\backbone\views\Lightbox.js" />
     <Content Include="js\typescript\components\Avatar.js" />
+    <Content Include="js\typescript\components\AvatarPopup.js" />
     <Content Include="js\typescript\components\CaptionEditor.js" />
     <Content Include="js\typescript\components\CompositionArea.js" />
     <Content Include="js\typescript\components\CompositionInput.js" />
@@ -3019,6 +3020,7 @@
     <Content Include="node_modules\lodash\flatMap.js" />
     <Content Include="node_modules\lodash\initial.js" />
     <Content Include="node_modules\lodash\intersection.js" />
+    <Content Include="node_modules\lodash\isEmpty.js" />
     <Content Include="node_modules\lodash\keyBy.js" />
     <Content Include="node_modules\lodash\debounce.js" />
     <Content Include="node_modules\lodash\flatten.js" />

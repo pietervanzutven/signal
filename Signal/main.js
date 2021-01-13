@@ -521,6 +521,8 @@ async function showSettingsWindow() {
     return;
   }
 
+  addDarkOverlay();
+
   const size = mainWindow.getSize();
   const options = {
     width: Math.min(500, size[0]),
@@ -554,7 +556,6 @@ async function showSettingsWindow() {
   });
 
   settingsWindow.once('ready-to-show', () => {
-    addDarkOverlay();
     settingsWindow.show();
   });
 }
@@ -947,9 +948,6 @@ ipc.on('get-media-permissions', event => {
 });
 ipc.on('set-media-permissions', (event, value) => {
   userConfig.set('mediaPermissions', value);
-
-  // We reinstall permissions handler to ensure that a revoked permission takes effect
-  installPermissionsHandler({ session, userConfig });
 
   event.sender.send('set-success-media-permissions', null);
 });
