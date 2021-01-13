@@ -914,7 +914,10 @@
       }
 
       const firstAttachment = attachments[0];
-      if (!GoogleChrome.isImageTypeSupported(firstAttachment.contentType)) {
+      if (
+        !GoogleChrome.isImageTypeSupported(firstAttachment.contentType) &&
+        !GoogleChrome.isVideoTypeSupported(firstAttachment.contentType)
+      ) {
         return false;
       }
 
@@ -998,6 +1001,7 @@
         sticker: null,
         preview: [],
       });
+      this.trigger('content-changed');
 
       await window.Signal.Data.saveMessage(this.attributes, {
         Message: Whisper.Message,
