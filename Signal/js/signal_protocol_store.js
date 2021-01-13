@@ -155,16 +155,7 @@
         // We only care about the most recent update for each session
         const byId = _.groupBy(items, item => item.id);
         const ids = Object.keys(byId);
-        const mostRecent = ids.map(id => {
-          const item = _.last(byId[id]);
-
-          return Object.assign({},
-            item,
-            {
-              record: item.record.serialize(),
-            }
-          );
-        });
+        const mostRecent = ids.map(id => _.last(byId[id]));
 
         await window.Signal.Data.createOrUpdateSessions(mostRecent);
       },
@@ -208,16 +199,7 @@
         _hydrateCache(
           this,
           'sessions',
-          (async () => {
-            const sessions = await window.Signal.Data.getAllSessions();
-
-            return sessions.map(item => (Object.assign({},
-              item,
-              {
-                record: libsignal.SessionRecord.deserialize(item.record),
-              }
-            )));
-          })(),
+          await window.Signal.Data.getAllSessions(),
           'id'
         ),
         _hydrateCache(
@@ -347,7 +329,7 @@
 
       const session = this.sessions[encodedNumber];
       if (session) {
-        return session.record;
+        return libsignal.SessionRecord.deserialize(session.record);
       }
 
       return undefined;
@@ -364,7 +346,7 @@
         id: encodedNumber,
         number,
         deviceId,
-        record,
+        record: record.serialize(),
       };
 
       this.sessions[encodedNumber] = data;
