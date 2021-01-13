@@ -6363,6 +6363,7 @@ img.emoji.jumbo {
 .module-emoji {
   display: block;
   color: transparent;
+  font-family: auto;
   caret-color: #1b1b1b; }
   .dark-theme .module-emoji {
     caret-color: #e9e9e9; }
