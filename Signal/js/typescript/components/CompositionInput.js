@@ -145,7 +145,10 @@
             editorStateRef.current = newState;
         }, [setEditorRenderState, editorStateRef]);
         const updateExternalStateListeners = React.useCallback((newState) => {
-            const plainText = newState.getCurrentContent().getPlainText();
+            const plainText = newState
+                .getCurrentContent()
+                .getPlainText()
+                .trim();
             const cursorBlockKey = newState.getSelection().getStartKey();
             const cursorBlockIndex = editorStateRef.current
                 .getCurrentContent()
@@ -259,7 +262,8 @@
             const { current: state } = editorStateRef;
             const text = state.getCurrentContent().getPlainText();
             const emojidText = lib_1.replaceColons(text);
-            onSubmit(emojidText);
+            const trimmedText = emojidText.trim();
+            onSubmit(trimmedText);
         }, [editorStateRef, onSubmit]);
         const handleEditorSizeChange = React.useCallback((rect) => {
             if (rect.bounds) {
