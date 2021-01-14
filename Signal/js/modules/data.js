@@ -9,14 +9,17 @@
     cloneDeep,
     forEach,
     get,
+    groupBy,
     isFunction,
     isObject,
+    last,
     map,
     set,
   } = window.lodash;
 
   const { base64ToArrayBuffer, arrayBufferToBase64 } = window.crypto;
   const MessageType = window.types.message;
+  const { createBatcher } = require_ts_util_batcher();
 
   const { ipcRenderer } = electron;
 
@@ -81,6 +84,7 @@
     removeAllItems,
 
     createOrUpdateSession,
+    createOrUpdateSessions,
     getSessionById,
     getSessionsByNumber,
     bulkAddSessions,
@@ -94,6 +98,7 @@
     saveConversations,
     getConversationById,
     updateConversation,
+    updateConversations,
     removeConversation,
     _removeConversations,
 
@@ -137,6 +142,7 @@
     saveUnprocesseds,
     updateUnprocessedAttempts,
     updateUnprocessedWithData,
+    updateUnprocessedsWithData,
     removeUnprocessed,
     removeAllUnprocessed,
 
@@ -208,20 +214,21 @@
   }
 
   async function _shutdown() {
+    const jobKeys = Object.keys(_jobs);
+    window.log.info(
+      `data.shutdown: shutdown requested. ${jobKeys.length} jobs outstanding`
+    );
+
     if (_shutdownPromise) {
-      return _shutdownPromise;
+      await _shutdownPromise;
+      return;
     }
 
     _shuttingDown = true;
 
-    const jobKeys = Object.keys(_jobs);
-    window.log.info(
-      `data.shutdown: starting process. ${jobKeys.length} jobs outstanding`
-    );
-
     // No outstanding jobs, return immediately
-    if (jobKeys.length === 0) {
-      return null;
+    if (jobKeys.length === 0 || _DEBUG) {
+      return;
     }
 
     // Outstanding jobs; we need to wait until the last one is done
@@ -236,7 +243,7 @@
       };
     });
 
-    return _shutdownPromise;
+    await _shutdownPromise;
   }
 
   function _makeJob(fnName) {
@@ -272,7 +279,7 @@
           _removeJob(id);
           const end = Date.now();
           const delta = end - start;
-          if (delta > 10) {
+          if (delta > 10 || _DEBUG) {
             window.log.info(
               `SQL channel job ${id} (${fnName}) succeeded in ${end - start}ms`
             );
@@ -561,6 +568,9 @@
   async function createOrUpdateSession(data) {
     await channels.createOrUpdateSession(data);
   }
+  async function createOrUpdateSessions(items) {
+    await channels.createOrUpdateSessions(items);
+  }
   async function getSessionById(id) {
     const session = await channels.getSessionById(id);
     return session;
@@ -605,17 +615,25 @@
     return new Conversation(data);
   }
 
-  async function updateConversation(id, data, { Conversation }) {
-    const existing = await getConversationById(id, { Conversation });
-    if (!existing) {
-      throw new Error(`Conversation ${id} does not exist!`);
-    }
+  const updateConversationBatcher = createBatcher({
+    wait: 500,
+    maxSize: 20,
+    processBatch: async items => {
+      // We only care about the most recent update for each conversation
+      const byId = groupBy(items, item => item.id);
+      const ids = Object.keys(byId);
+      const mostRecent = ids.map(id => last(byId[id]));
 
-    const merged = Object.assign({},
-      existing.attributes,
-      data
-    );
-    await channels.updateConversation(merged);
+      await updateConversations(mostRecent);
+    },
+  });
+
+  function updateConversation(id, data) {
+    updateConversationBatcher.add(data);
+  }
+
+  async function updateConversations(data) {
+    await channels.updateConversations(data);
   }
 
   async function removeConversation(id, { Conversation }) {
@@ -938,6 +956,9 @@
   }
   async function updateUnprocessedWithData(id, data) {
     await channels.updateUnprocessedWithData(id, data);
+  }
+  async function updateUnprocessedsWithData(items) {
+    await channels.updateUnprocessedsWithData(items);
   }
 
   async function removeUnprocessed(id) {

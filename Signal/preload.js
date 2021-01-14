@@ -13,6 +13,9 @@
   const { app } = remote;
   const { systemPreferences } = remote.require('electron');
 
+  const browserWindow = remote.getCurrentWindow();
+  window.isFocused = () => browserWindow.isFocused();
+
   // Waiting for clients to implement changes on receive side
   window.ENABLE_STICKER_SEND = true;
   window.TIMESTAMP_VALIDATION = false;
@@ -155,12 +158,24 @@
     new Promise((resolve, reject) => {
       ipc.once('get-success-media-permissions', (_event, error, value) => {
         if (error) {
-          return reject(error);
+          return reject(new Error(error));
         }
 
         return resolve(value);
       });
       ipc.send('get-media-permissions');
+    });
+
+  window.getBuiltInImages = () =>
+    new Promise((resolve, reject) => {
+      ipc.once('get-success-built-in-images', (_event, error, value) => {
+        if (error) {
+          return reject(new Error(error));
+        }
+
+        return resolve(value);
+      });
+      ipc.send('get-built-in-images');
     });
 
   installGetter('is-primary', 'isPrimary');

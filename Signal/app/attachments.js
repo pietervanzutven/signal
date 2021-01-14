@@ -42,6 +42,14 @@
     return map(files, file => path.relative(dir, file));
   };
 
+  exports.getBuiltInImages = async () => {
+    const dir = path.join(__dirname, '../images');
+    const pattern = path.join(dir, '**', '*.svg');
+
+    const files = await pify(glob)(pattern, { nodir: true });
+    return map(files, file => path.relative(dir, file));
+  };
+
   //      getPath :: AbsolutePath -> AbsolutePath
   exports.getPath = userDataPath => {
     if (!isString(userDataPath)) {

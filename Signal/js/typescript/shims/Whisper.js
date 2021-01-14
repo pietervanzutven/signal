@@ -18,4 +18,9 @@
         return model.getPropsForBubble();
     }
     exports.getBubbleProps = getBubbleProps;
+    function showSettings() {
+        // @ts-ignore
+        window.showSettings();
+    }
+    exports.showSettings = showSettings;
 })();

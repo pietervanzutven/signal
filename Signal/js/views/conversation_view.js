@@ -286,7 +286,7 @@
           },
 
           onArchive: () => {
-            this.unload('archive');
+            this.model.trigger('unload', 'archive');
             this.model.setArchived(true);
           },
           onMoveToInbox: () => {
@@ -784,6 +784,7 @@
 
       this.titleView.remove();
       this.timelineView.remove();
+      this.compositionAreaView.remove();
 
       if (this.attachmentListView) {
         this.attachmentListView.remove();
@@ -920,11 +921,31 @@
       });
 
       const onSave = caption => {
-        // eslint-disable-next-line no-param-reassign
-        attachment.caption = caption;
+        this.model.set({
+          draftAttachments: this.model.get('draftAttachments').map(item => {
+            if (
+              (item.path && item.path === attachment.path) ||
+              (item.screenshotPath &&
+                item.screenshotPath === attachment.screenshotPath)
+            ) {
+              return Object.assign({},
+                attachment,
+                {
+                  caption,
+                }
+              );
+            }
+
+            return item;
+          }),
+          draftChanged: true,
+        });
+
         this.captionEditorView.remove();
         Signal.Backbone.Views.Lightbox.hide();
-        this.attachmentListView.update(this.getPropsForAttachmentList());
+
+        this.updateAttachmentsView();
+        this.saveModel();
       };
 
       this.captionEditorView = new Whisper.ReactWrapperView({
@@ -946,7 +967,7 @@
     },
 
     async saveModel() {
-      await window.Signal.Data.updateConversation(
+      window.Signal.Data.updateConversation(
         this.model.id,
         this.model.attributes,
         {
@@ -1043,7 +1064,7 @@
       }
 
       return Object.assign({},
-        _.pick(attachment, ['contentType', 'fileName', 'size']),
+        _.pick(attachment, ['contentType', 'fileName', 'size', 'caption']),
         {
           data,
         }
@@ -1261,7 +1282,7 @@
     async handleImageAttachment(file) {
       if (MIME.isJPEG(file.type)) {
         const rotatedDataUrl = await window.autoOrientImage(file);
-        const rotatedBlob = VisualAttachment.dataURLToBlobSync(rotatedDataUrl);
+        const rotatedBlob = window.dataURLToBlobSync(rotatedDataUrl);
         const {
           contentType,
           file: resizedBlob,
@@ -1912,6 +1933,8 @@
         return {
           objectURL: getAbsoluteTempPath(path),
           contentType,
+          onSave: null, // important so download button is omitted
+          isViewOnce: true,
         };
       };
       this.lightboxView = new Whisper.ReactWrapperView({
@@ -2124,7 +2147,7 @@
         className: 'contact-detail-pane panel',
         props: {
           contact,
-          signalAccount,
+          hasSignalAccount: Boolean(signalAccount),
           onSendMessage: () => {
             if (signalAccount) {
               this.openConversation(signalAccount);
@@ -2202,9 +2225,8 @@
       try {
         await this.confirm(i18n('deleteConversationConfirmation'));
         try {
-          this.unload('delete messages');
+          this.model.trigger('unload', 'delete messages');
           await this.model.destroyMessages();
-          Whisper.events.trigger('unloadConversation', this.model.id);
           this.model.updateLastMessage();
         } catch (error) {
           window.log.error(

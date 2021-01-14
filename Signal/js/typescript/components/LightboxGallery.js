@@ -53,7 +53,7 @@
             const { attachment } = selectedMedia;
             const saveCallback = onSave ? this.handleSave : undefined;
             const captionCallback = attachment ? attachment.caption : undefined;
-            return (react_1.default.createElement(Lightbox_1.Lightbox, { close: close, onPrevious: onPrevious, onNext: onNext, onSave: saveCallback, objectURL: objectURL, caption: captionCallback, contentType: selectedMedia.contentType, i18n: i18n }));
+            return (react_1.default.createElement(Lightbox_1.Lightbox, { caption: captionCallback, close: close, contentType: selectedMedia.contentType, i18n: i18n, isViewOnce: false, objectURL: objectURL, onNext: onNext, onPrevious: onPrevious, onSave: saveCallback }));
         }
     }
     LightboxGallery.defaultProps = {

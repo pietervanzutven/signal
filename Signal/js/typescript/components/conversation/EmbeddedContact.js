@@ -25,7 +25,7 @@
                     ? 'module-embedded-contact--with-content-below'
                     : null), role: "button", onClick: onClick
             },
-                _contactUtil_1.renderAvatar({ contact, i18n, size: 48, direction }),
+                _contactUtil_1.renderAvatar({ contact, i18n, size: 52, direction }),
                 react_1.default.createElement("div", { className: "module-embedded-contact__text-container" },
                     _contactUtil_1.renderName({ contact, isIncoming, module }),
                     _contactUtil_1.renderContactShorthand({ contact, isIncoming, module }))));

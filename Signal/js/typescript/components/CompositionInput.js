@@ -83,11 +83,22 @@
             .slice(0, index + 1)
             .replace(/\s+$/, '')
             .search(/\S+$/);
-        const end = str.slice(index).search(/(?:[^a-z0-9-_+]|$)/) + index;
+        let end = str
+            .slice(index)
+            .split('')
+            .findIndex(c => /[^a-z0-9-_]/i.test(c) || c === ':') + index;
+        const endChar = str[end];
+        if (/\w|:/.test(endChar)) {
+            end += 1;
+        }
+        const word = str.slice(start, end);
+        if (word === ':') {
+            return getWordAtIndex(str, index + 1);
+        }
         return {
             start,
             end,
-            word: str.slice(start, end),
+            word,
         };
     }
     const compositeDecorator = new draft_js_1.CompositeDecorator([
@@ -145,7 +156,10 @@
             editorStateRef.current = newState;
         }, [setEditorRenderState, editorStateRef]);
         const updateExternalStateListeners = React.useCallback((newState) => {
-            const plainText = newState.getCurrentContent().getPlainText();
+            const plainText = newState
+                .getCurrentContent()
+                .getPlainText()
+                .trim();
             const cursorBlockKey = newState.getSelection().getStartKey();
             const cursorBlockIndex = editorStateRef.current
                 .getCurrentContent()
@@ -259,7 +273,8 @@
             const { current: state } = editorStateRef;
             const text = state.getCurrentContent().getPlainText();
             const emojidText = lib_1.replaceColons(text);
-            onSubmit(emojidText);
+            const trimmedText = emojidText.trim();
+            onSubmit(trimmedText);
         }, [editorStateRef, onSubmit]);
         const handleEditorSizeChange = React.useCallback((rect) => {
             if (rect.bounds) {
@@ -296,11 +311,11 @@
         }, [emojiResultsIndex, emojiResults]);
         const handleEditorArrowKey = React.useCallback((e) => {
             if (e.key === 'ArrowUp') {
-                selectEmojiResult('prev', e);
-            }
+                    selectEmojiResult('prev', e);
+                }
             if (e.key === 'ArrowDown') {
-                selectEmojiResult('next', e);
-            }
+                    selectEmojiResult('next', e);
+                }
         }, [selectEmojiResult]);
         const handleEscapeKey = React.useCallback((e) => {
             if (emojiResults.length > 0) {
@@ -328,12 +343,12 @@
                 })
                 .getLastCreatedEntityKey();
             const word = getWordAtCaret();
-            let newContent = replaceWord
-                ? draft_js_1.Modifier.replaceText(oldContent, selection.merge({
+            let newContent = draft_js_1.Modifier.replaceText(oldContent, replaceWord
+                ? selection.merge({
                     anchorOffset: word.start,
                     focusOffset: word.end,
-                }), emojiContent, undefined, emojiEntityKey)
-                : draft_js_1.Modifier.insertText(oldContent, selection, emojiContent, undefined, emojiEntityKey);
+                })
+                : selection, emojiContent, undefined, emojiEntityKey);
             const afterSelection = newContent.getSelectionAfter();
             if (afterSelection.getAnchorOffset() ===
                 newContent.getBlockForKey(afterSelection.getAnchorKey()).getLength()) {
@@ -400,36 +415,36 @@
             handleEditorCommand('enter-emoji', editorStateRef.current);
         }, [emojiResults, editorStateRef, handleEditorCommand, resetEmojiResults]);
         const editorKeybindingFn = React.useCallback((e) => {
-            if (e.key === 'Enter' && emojiResults.length > 0) {
-                e.preventDefault();
-                return 'enter-emoji';
-            }
-            if (e.key === 'Enter' && !e.shiftKey) {
-                if (large && !(e.ctrlKey || e.metaKey)) {
-                    return draft_js_1.getDefaultKeyBinding(e);
+                if (e.key === 'Enter' && emojiResults.length > 0) {
+                    e.preventDefault();
+                    return 'enter-emoji';
                 }
-                e.preventDefault();
-                return 'submit';
-            }
-            if (e.key === 'n' && e.ctrlKey) {
-                e.preventDefault();
-                return 'next-emoji';
-            }
-            if (e.key === 'p' && e.ctrlKey) {
-                e.preventDefault();
-                return 'prev-emoji';
-            }
-            // Get rid of default draft.js ctrl-m binding which interferes with Windows minimize
-            if (e.key === 'm' && e.ctrlKey) {
-                return null;
-            }
-            if (lodash_1.get(window, 'platform') === 'linux') {
-                // Get rid of default draft.js shift-del binding which interferes with Linux cut
-                if (e.key === 'Delete' && e.shiftKey) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    if (large && !(e.ctrlKey || e.metaKey)) {
+                        return draft_js_1.getDefaultKeyBinding(e);
+                    }
+                    e.preventDefault();
+                    return 'submit';
+                }
+                if (e.key === 'n' && e.ctrlKey) {
+                    e.preventDefault();
+                    return 'next-emoji';
+                }
+                if (e.key === 'p' && e.ctrlKey) {
+                    e.preventDefault();
+                    return 'prev-emoji';
+                }
+                // Get rid of default draft.js ctrl-m binding which interferes with Windows minimize
+                if (e.key === 'm' && e.ctrlKey) {
                     return null;
                 }
-            }
-            return draft_js_1.getDefaultKeyBinding(e);
+                if (lodash_1.get(window, 'platform') === 'linux') {
+                    // Get rid of default draft.js shift-del binding which interferes with Linux cut
+                    if (e.key === 'Delete' && e.shiftKey) {
+                        return null;
+                    }
+                }
+                return draft_js_1.getDefaultKeyBinding(e);
         }, [emojiResults, large]);
         // Create popper root
         React.useEffect(() => {

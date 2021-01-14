@@ -1,0 +1,40 @@
+(function () {
+    "use strict";
+
+    window.ts = window.ts || {};
+    window.ts.components = window.ts.components || {};
+    const exports = window.ts.components.AvatarPopup = {};
+
+    var __importStar = (this && this.__importStar) || function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+        result["default"] = mod;
+        return result;
+    };
+    var __importDefault = (this && this.__importDefault) || function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports, "__esModule", { value: true });
+    const React = __importStar(window.react);
+    const classnames_1 = __importDefault(window.classnames);
+    const Avatar_1 = window.ts.components.Avatar;
+    const lodash_1 = window.lodash;
+    exports.AvatarPopup = (props) => {
+        const { i18n, profileName, phoneNumber, onViewPreferences, onViewArchive, style, } = props;
+        const hasProfileName = !lodash_1.isEmpty(profileName);
+        return (React.createElement("div", { style: style, className: "module-avatar-popup" },
+            React.createElement("div", { className: "module-avatar-popup__profile" },
+                React.createElement(Avatar_1.Avatar, Object.assign({}, props, { size: 52 })),
+                React.createElement("div", { className: "module-avatar-popup__profile__text" },
+                    React.createElement("div", { className: "module-avatar-popup__profile__name" }, hasProfileName ? profileName : phoneNumber),
+                    hasProfileName ? (React.createElement("div", { className: "module-avatar-popup__profile__number" }, phoneNumber)) : null)),
+            React.createElement("hr", { className: "module-avatar-popup__divider" }),
+            React.createElement("button", { className: "module-avatar-popup__item", onClick: onViewPreferences },
+                React.createElement("div", { className: classnames_1.default('module-avatar-popup__item__icon', 'module-avatar-popup__item__icon-settings') }),
+                React.createElement("div", { className: "module-avatar-popup__item__text" }, i18n('mainMenuSettings'))),
+            React.createElement("button", { className: "module-avatar-popup__item", onClick: onViewArchive },
+                React.createElement("div", { className: classnames_1.default('module-avatar-popup__item__icon', 'module-avatar-popup__item__icon-archive') }),
+                React.createElement("div", { className: "module-avatar-popup__item__text" }, i18n('avatarMenuViewArchive')))));
+    };
+})();

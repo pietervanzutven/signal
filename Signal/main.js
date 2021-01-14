@@ -49,6 +49,10 @@ const startInTray = process.argv.some(arg => arg === '--start-in-tray');
 const usingTrayIcon =
   startInTray || process.argv.some(arg => arg === '--use-tray-icon');
 
+const disableFlashFrame = process.argv.some(
+  arg => arg === '--disable-flash-frame'
+);
+
 const config = window.app.config;
 
 // Very important to put before the single instance check, since it is based on the
@@ -396,7 +400,14 @@ ipc.on('show-window', () => {
   showWindow();
 });
 
-ipc.once('ready-for-updates', async () => {
+let isReadyForUpdates = false;
+async function readyForUpdates() {
+  if (isReadyForUpdates) {
+    return;
+  }
+
+  isReadyForUpdates = true;
+
   // First, install requested sticker pack
   if (process.argv.length > 1) {
     const [incomingUrl] = process.argv;
@@ -414,7 +425,12 @@ ipc.once('ready-for-updates', async () => {
       error && error.stack ? error.stack : error
     );
   }
-});
+}
+
+ipc.once('ready-for-updates', readyForUpdates);
+
+const TEN_MINUTES = 10 * 60 * 1000;
+setTimeout(readyForUpdates, TEN_MINUTES);
 
 function openReleaseNotes() {
   shell.openExternal(
@@ -505,6 +521,8 @@ async function showSettingsWindow() {
     return;
   }
 
+  addDarkOverlay();
+
   const size = mainWindow.getSize();
   const options = {
     width: Math.min(500, size[0]),
@@ -512,7 +530,7 @@ async function showSettingsWindow() {
     resizable: false,
     title: locale.messages.signalDesktopPreferences.message,
     autoHideMenuBar: true,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#2090EA',
     show: false,
     modal: true,
     vibrancy: 'appearance-based',
@@ -538,7 +556,6 @@ async function showSettingsWindow() {
   });
 
   settingsWindow.once('ready-to-show', () => {
-    addDarkOverlay();
     settingsWindow.show();
   });
 }
@@ -556,9 +573,9 @@ async function showDebugLogWindow() {
     width: Math.max(size[0] - 100, MIN_WIDTH),
     height: Math.max(size[1] - 100, MIN_HEIGHT),
     resizable: false,
-    title: locale.messages.signalDesktopPreferences.message,
+    title: locale.messages.debugLog.message,
     autoHideMenuBar: true,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#2090EA',
     show: false,
     modal: true,
     vibrancy: 'appearance-based',
@@ -605,9 +622,9 @@ async function showPermissionsPopupWindow() {
     width: Math.min(400, size[0]),
     height: Math.min(150, size[1]),
     resizable: false,
-    title: locale.messages.signalDesktopPreferences.message,
+    title: locale.messages.allowAccess.message,
     autoHideMenuBar: true,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#2090EA',
     show: false,
     modal: true,
     vibrancy: 'appearance-based',
@@ -827,7 +844,14 @@ ipc.on('add-setup-menu-items', () => {
 });
 
 ipc.on('draw-attention', () => {
-  if (process.platform === 'win32' && mainWindow) {
+  if (!mainWindow) {
+    return;
+  }
+  if (disableFlashFrame) {
+    return;
+  }
+
+  if (process.platform === 'win32' || process.platform === 'linux') {
     mainWindow.flashFrame(true);
   }
 });
@@ -925,9 +949,6 @@ ipc.on('get-media-permissions', event => {
 ipc.on('set-media-permissions', (event, value) => {
   userConfig.set('mediaPermissions', value);
 
-  // We reinstall permissions handler to ensure that a revoked permission takes effect
-  installPermissionsHandler({ session, userConfig });
-
   event.sender.send('set-success-media-permissions', null);
 });
 
@@ -939,6 +960,19 @@ installSettingsSetter('sync-time');
 ipc.on('delete-all-data', () => {
   if (mainWindow && mainWindow.webContents) {
     mainWindow.webContents.send('delete-all-data');
+  }
+});
+
+ipc.on('get-built-in-images', async () => {
+  try {
+    const images = await attachments.getBuiltInImages();
+    mainWindow.webContents.send('get-success-built-in-images', null, images);
+  } catch (error) {
+    if (mainWindow && mainWindow.webContents) {
+      mainWindow.webContents.send('get-success-built-in-images', error.message);
+    } else {
+      console.error('Error handling get-built-in-images:', error.stack);
+    }
   }
 });
 

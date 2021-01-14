@@ -33,7 +33,7 @@
                 return (react_1.default.createElement("div", { className: "module-message-search-result__header__from" },
                     fromName,
                     " ",
-                    i18n('to'),
+                    i18n('toJoiner'),
                     ' ',
                     react_1.default.createElement("span", { className: "module-mesages-search-result__header__group" },
                         react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: to.phoneNumber, name: to.name, profileName: to.profileName }))));
@@ -43,7 +43,7 @@
         renderAvatar() {
             const { from, i18n, to } = this.props;
             const isNoteToSelf = from.isMe && to.isMe;
-            return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, color: from.color, conversationType: "direct", i18n: i18n, name: name, noteToSelf: isNoteToSelf, phoneNumber: from.phoneNumber, profileName: from.profileName, size: 48 }));
+            return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, color: from.color, conversationType: "direct", i18n: i18n, name: name, noteToSelf: isNoteToSelf, phoneNumber: from.phoneNumber, profileName: from.profileName, size: 52 }));
         }
         render() {
             const { from, i18n, id, isSelected, conversationId, openConversationInternal, receivedAt, snippet, to, } = this.props;

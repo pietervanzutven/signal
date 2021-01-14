@@ -63,7 +63,7 @@
             //   it re-renders when our conversation data changes. Otherwise it would just render
             //   on startup and scroll.
             const list = (react_1.default.createElement("div", { className: "module-left-pane__list", key: listKey, "aria-live": "polite" },
-                react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => (react_1.default.createElement(react_virtualized_1.List, { className: "module-left-pane__virtual-list", conversations: conversations, height: height, rowCount: length, rowHeight: 64, rowRenderer: this.renderRow, width: width })))));
+                react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => (react_1.default.createElement(react_virtualized_1.List, { className: "module-left-pane__virtual-list", conversations: conversations, height: height, rowCount: length, rowHeight: 68, rowRenderer: this.renderRow, width: width })))));
             return [archived, list];
         }
         renderArchivedHeader() {

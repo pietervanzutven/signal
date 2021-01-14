@@ -37,8 +37,8 @@
             return (react_1.default.createElement("img", { onError: this.handleImageErrorBound, alt: i18n('contactAvatarAlt', [title]), src: avatarPath }));
         }
         renderNoImage() {
-            const { conversationType, name, noteToSelf, size } = this.props;
-            const initials = getInitials_1.getInitials(name);
+            const { conversationType, name, noteToSelf, profileName, size, } = this.props;
+            const initials = getInitials_1.getInitials(name || profileName);
             const isGroup = conversationType === 'group';
             if (noteToSelf) {
                 return (react_1.default.createElement("div", { className: classnames_1.default('module-avatar__icon', 'module-avatar__icon--note-to-self', `module-avatar__icon--${size}`) }));
@@ -49,13 +49,14 @@
             return (react_1.default.createElement("div", { className: classnames_1.default('module-avatar__icon', `module-avatar__icon--${conversationType}`, `module-avatar__icon--${size}`) }));
         }
         render() {
-            const { avatarPath, color, size, noteToSelf } = this.props;
+            const { avatarPath, color, innerRef, noteToSelf, onClick, size, } = this.props;
             const { imageBroken } = this.state;
             const hasImage = !noteToSelf && avatarPath && !imageBroken;
-            if (size !== 28 && size !== 36 && size !== 48 && size !== 80) {
+            if (size !== 28 && size !== 52 && size !== 80) {
                 throw new Error(`Size ${size} is not supported!`);
             }
-            return (react_1.default.createElement("div", { className: classnames_1.default('module-avatar', `module-avatar--${size}`, hasImage ? 'module-avatar--with-image' : 'module-avatar--no-image', !hasImage ? `module-avatar--${color}` : null) }, hasImage ? this.renderImage() : this.renderNoImage()));
+            const role = onClick ? 'button' : undefined;
+            return (react_1.default.createElement("div", { className: classnames_1.default('module-avatar', `module-avatar--${size}`, hasImage ? 'module-avatar--with-image' : 'module-avatar--no-image', !hasImage ? `module-avatar--${color}` : null, onClick ? 'module-avatar--with-click' : null), ref: innerRef, role: role, onClick: onClick }, hasImage ? this.renderImage() : this.renderNoImage()));
         }
     }
     exports.Avatar = Avatar;

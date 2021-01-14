@@ -12,10 +12,41 @@
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
     const lodash_1 = window.lodash;
+    const react_popper_1 = window.react_popper;
+    const react_dom_1 = window.react_dom;
+    const Whisper_1 = window.ts.shims.Whisper;
     const Avatar_1 = window.ts.components.Avatar;
+    const AvatarPopup_1 = window.ts.components.AvatarPopup;
     class MainHeader extends react_1.default.Component {
         constructor(props) {
             super(props);
+            this.handleOutsideClick = ({ target }) => {
+                const { popperRoot, showingAvatarPopup } = this.state;
+                if (showingAvatarPopup &&
+                    popperRoot &&
+                    !popperRoot.contains(target)) {
+                    this.hideAvatarPopup();
+                }
+            };
+            this.handleOutsideKeyUp = (event) => {
+                if (event.key === 'Escape') {
+                    this.hideAvatarPopup();
+                }
+            };
+            this.showAvatarPopup = () => {
+                this.setState({
+                    showingAvatarPopup: true,
+                });
+                document.addEventListener('click', this.handleOutsideClick);
+                document.addEventListener('keydown', this.handleOutsideKeyUp);
+            };
+            this.hideAvatarPopup = () => {
+                document.removeEventListener('click', this.handleOutsideClick);
+                document.removeEventListener('keydown', this.handleOutsideKeyUp);
+                this.setState({
+                    showingAvatarPopup: false,
+                });
+            };
             // tslint:disable-next-line member-ordering
             this.search = lodash_1.debounce((searchTerm) => {
                 const { i18n, ourNumber, regionCode, searchDiscussions, searchMessages, searchConversationId, } = this.props;
@@ -91,6 +122,17 @@
                 }
             };
             this.inputRef = react_1.default.createRef();
+            this.state = {
+                showingAvatarPopup: false,
+                popperRoot: null,
+            };
+        }
+        componentDidMount() {
+            const popperRoot = document.createElement('div');
+            document.body.appendChild(popperRoot);
+            this.setState({
+                popperRoot,
+            });
         }
         componentDidUpdate(prevProps) {
             const { searchConversationId } = this.props;
@@ -100,13 +142,35 @@
                 this.setFocus();
             }
         }
+        componentWillUnmount() {
+            const { popperRoot } = this.state;
+            if (popperRoot) {
+                document.body.removeChild(popperRoot);
+                document.removeEventListener('click', this.handleOutsideClick);
+                document.removeEventListener('keydown', this.handleOutsideKeyUp);
+            }
+        }
+        // tslint:disable-next-line:max-func-body-length
         render() {
-            const { avatarPath, color, i18n, name, phoneNumber, profileName, searchConversationId, searchConversationName, searchTerm, } = this.props;
+            const { avatarPath, color, i18n, name, phoneNumber, profileName, searchConversationId, searchConversationName, searchTerm, showArchivedConversations, } = this.props;
+            const { showingAvatarPopup, popperRoot } = this.state;
             const placeholder = searchConversationName
                 ? i18n('searchIn', [searchConversationName])
                 : i18n('search');
             return (react_1.default.createElement("div", { className: "module-main-header" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28 }),
+                react_1.default.createElement(react_popper_1.Manager, null,
+                    react_1.default.createElement(react_popper_1.Reference, null, ({ ref }) => (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28, innerRef: ref, onClick: this.showAvatarPopup }))),
+                    showingAvatarPopup && popperRoot
+                        ? react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: "bottom-end" }, ({ ref, style }) => (react_1.default.createElement(AvatarPopup_1.AvatarPopup, {
+                            innerRef: ref, i18n: i18n, style: style, color: color, conversationType: "direct", name: name, phoneNumber: phoneNumber, profileName: profileName, avatarPath: avatarPath, size: 28, onViewPreferences: () => {
+                                Whisper_1.showSettings();
+                                this.hideAvatarPopup();
+                            }, onViewArchive: () => {
+                                showArchivedConversations();
+                                this.hideAvatarPopup();
+                            }
+                        }))), popperRoot)
+                        : null),
                 react_1.default.createElement("div", { className: "module-main-header__search" },
                     searchConversationId ? (react_1.default.createElement("button", { className: "module-main-header__search__in-conversation-pill", onClick: this.clearSearch },
                         react_1.default.createElement("div", { className: "module-main-header__search__in-conversation-pill__avatar-container" },

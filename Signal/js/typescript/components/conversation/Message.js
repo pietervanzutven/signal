@@ -137,6 +137,7 @@
                     ? 'module-message__metadata--with-image-no-caption'
                     : null)
             },
+                react_1.default.createElement("span", { className: "module-message__metadata__spacer" }),
                 showError ? (react_1.default.createElement("span", {
                     className: classnames_1.default('module-message__metadata__date', isSticker ? 'module-message__metadata__date--with-sticker' : null, !isSticker
                         ? `module-message__metadata__date--${direction}`
@@ -145,7 +146,6 @@
                         : null)
                 }, i18n('sendFailed'))) : (react_1.default.createElement(Timestamp_1.Timestamp, { i18n: i18n, timestamp: timestamp, extended: true, direction: metadataDirection, withImageNoCaption: withImageNoCaption, withSticker: isSticker, withTapToViewExpired: isTapToViewExpired, module: "module-message__metadata__date" })),
                 expirationLength && expirationTimestamp ? (react_1.default.createElement(ExpireTimer_1.ExpireTimer, { direction: metadataDirection, expirationLength: expirationLength, expirationTimestamp: expirationTimestamp, withImageNoCaption: withImageNoCaption, withSticker: isSticker, withTapToViewExpired: isTapToViewExpired })) : null,
-                react_1.default.createElement("span", { className: "module-message__metadata__spacer" }),
                 textPending ? (react_1.default.createElement("div", { className: "module-message__metadata__spinner-container" },
                     react_1.default.createElement(Spinner_1.Spinner, { svgSize: "small", size: "14px", direction: direction }))) : null,
                 !textPending && direction === 'outgoing' && status !== 'error' ? (react_1.default.createElement("div", {
@@ -338,7 +338,7 @@
                 return;
             }
             return (react_1.default.createElement("div", { className: "module-message__author-avatar" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: authorAvatarPath, color: authorColor, conversationType: "direct", i18n: i18n, name: authorName, phoneNumber: authorPhoneNumber, profileName: authorProfileName, size: 36 })));
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: authorAvatarPath, color: authorColor, conversationType: "direct", i18n: i18n, name: authorName, phoneNumber: authorPhoneNumber, profileName: authorProfileName, size: 28 })));
         }
         renderText() {
             const { text, textPending, i18n, direction, status } = this.props;
@@ -530,10 +530,10 @@
                 }));
         }
         renderTapToViewText() {
-            const { direction, i18n, isTapToViewExpired, isTapToViewError, } = this.props;
+            const { attachments, direction, i18n, isTapToViewExpired, isTapToViewError, } = this.props;
             const incomingString = isTapToViewExpired
                 ? i18n('Message--tap-to-view-expired')
-                : i18n('Message--tap-to-view--incoming');
+                : i18n(`Message--tap-to-view--incoming${Attachment_1.isVideo(attachments) ? '-video' : ''}`);
             const outgoingString = i18n('Message--tap-to-view--outgoing');
             const isDownloadPending = this.isAttachmentPending();
             if (isDownloadPending) {

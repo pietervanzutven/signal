@@ -22,9 +22,9 @@
     const is_1 = __importDefault(window.sindresorhus.is);
     const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
     const MIME = __importStar(window.ts.types.MIME);
+    const formatDuration_1 = window.ts.util.formatDuration;
     const Colors = {
-        TEXT_SECONDARY: '#bbb',
-        ICON_SECONDARY: '#ccc',
+        ICON_SECONDARY: '#b9b9b9',
     };
     const colorSVG = (url, color) => {
         return {
@@ -114,6 +114,19 @@
             width: 50,
             height: 50,
         },
+        timestampPill: {
+            borderRadius: '15px',
+            backgroundColor: '#000000',
+            color: '#eeefef',
+            fontSize: '16px',
+            letterSpacing: '0px',
+            lineHeight: '18px',
+            // This cast is necessary or typescript chokes
+            textAlign: 'center',
+            padding: '6px',
+            paddingLeft: '18px',
+            paddingRight: '18px',
+        },
     };
     const IconButton = ({ onClick, style, type }) => {
         const clickHandler = (event) => {
@@ -130,21 +143,21 @@
     class Lightbox extends react_1.default.Component {
         constructor(props) {
             super(props);
-            this.renderObject = ({ objectURL, contentType, i18n, }) => {
+            this.renderObject = ({ objectURL, contentType, i18n, isViewOnce, }) => {
                 const isImageTypeSupported = GoogleChrome.isImageTypeSupported(contentType);
                 if (isImageTypeSupported) {
                     return (react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), style: styles.object, src: objectURL, onClick: this.onObjectClick }));
                 }
                 const isVideoTypeSupported = GoogleChrome.isVideoTypeSupported(contentType);
                 if (isVideoTypeSupported) {
-                    return (react_1.default.createElement("video", { role: "button", ref: this.videoRef, controls: true, style: styles.object, key: objectURL },
+                    return (react_1.default.createElement("video", { role: "button", ref: this.videoRef, loop: isViewOnce, controls: !isViewOnce, style: styles.object, key: objectURL },
                         react_1.default.createElement("source", { src: objectURL })));
                 }
                 const isUnsupportedImageType = !isImageTypeSupported && MIME.isImage(contentType);
                 const isUnsupportedVideoType = !isVideoTypeSupported && MIME.isVideo(contentType);
                 if (isUnsupportedImageType || isUnsupportedVideoType) {
                     const iconUrl = isUnsupportedVideoType
-                        ? 'images/video.svg'
+                        ? 'images/movie.svg'
                         : 'images/image.svg';
                     return react_1.default.createElement(Icon, { url: iconUrl, onClick: this.onObjectClick });
                 }
@@ -158,6 +171,15 @@
                     return;
                 }
                 close();
+            };
+            this.onTimeUpdate = () => {
+                const video = this.getVideo();
+                if (!video) {
+                    return;
+                }
+                this.setState({
+                    videoTime: video.currentTime,
+                });
             };
             this.onKeyUp = (event) => {
                 const { onNext, onPrevious } = this.props;
@@ -190,17 +212,30 @@
             };
             this.videoRef = react_1.default.createRef();
             this.containerRef = react_1.default.createRef();
+            this.state = {
+                videoTime: undefined,
+            };
         }
         componentDidMount() {
+            const { isViewOnce } = this.props;
             const useCapture = true;
             document.addEventListener('keyup', this.onKeyUp, useCapture);
+            const video = this.getVideo();
+            if (video && isViewOnce) {
+                video.addEventListener('timeupdate', this.onTimeUpdate);
+            }
             this.playVideo();
         }
         componentWillUnmount() {
+            const { isViewOnce } = this.props;
             const useCapture = true;
             document.removeEventListener('keyup', this.onKeyUp, useCapture);
+            const video = this.getVideo();
+            if (video && isViewOnce) {
+                video.removeEventListener('timeupdate', this.onTimeUpdate);
+            }
         }
-        playVideo() {
+        getVideo() {
             if (!this.videoRef) {
                 return;
             }
@@ -208,30 +243,39 @@
             if (!current) {
                 return;
             }
-            if (current.paused) {
+            return current;
+        }
+        playVideo() {
+            const video = this.getVideo();
+            if (!video) {
+                return;
+            }
+            if (video.paused) {
                 // tslint:disable-next-line no-floating-promises
-                current.play();
+                video.play();
             }
             else {
-                current.pause();
+                video.pause();
             }
         }
         render() {
-            const { caption, contentType, i18n, objectURL, onNext, onPrevious, onSave, } = this.props;
+            const { caption, contentType, i18n, isViewOnce, objectURL, onNext, onPrevious, onSave, } = this.props;
+            const { videoTime } = this.state;
             return (react_1.default.createElement("div", { style: styles.container, onClick: this.onContainerClick, ref: this.containerRef, role: "dialog" },
                 react_1.default.createElement("div", { style: styles.mainContainer },
                     react_1.default.createElement("div", { style: styles.controlsOffsetPlaceholder }),
                     react_1.default.createElement("div", { style: styles.objectContainer },
                         !is_1.default.undefined(contentType)
-                            ? this.renderObject({ objectURL, contentType, i18n })
+                            ? this.renderObject({ objectURL, contentType, i18n, isViewOnce })
                             : null,
                         caption ? react_1.default.createElement("div", { style: styles.caption }, caption) : null),
                     react_1.default.createElement("div", { style: styles.controls },
                         react_1.default.createElement(IconButton, { type: "close", onClick: this.onClose }),
                         onSave ? (react_1.default.createElement(IconButton, { type: "save", onClick: onSave, style: styles.saveButton })) : null)),
-                react_1.default.createElement("div", { style: styles.navigationContainer },
-                    onPrevious ? (react_1.default.createElement(IconButton, { type: "previous", onClick: onPrevious })) : (react_1.default.createElement(IconButtonPlaceholder, null)),
-                    onNext ? (react_1.default.createElement(IconButton, { type: "next", onClick: onNext })) : (react_1.default.createElement(IconButtonPlaceholder, null)))));
+                isViewOnce && is_1.default.number(videoTime) ? (react_1.default.createElement("div", { style: styles.navigationContainer },
+                    react_1.default.createElement("div", { style: styles.timestampPill }, formatDuration_1.formatDuration(videoTime)))) : (react_1.default.createElement("div", { style: styles.navigationContainer },
+                        onPrevious ? (react_1.default.createElement(IconButton, { type: "previous", onClick: onPrevious })) : (react_1.default.createElement(IconButtonPlaceholder, null)),
+                        onNext ? (react_1.default.createElement(IconButton, { type: "next", onClick: onNext })) : (react_1.default.createElement(IconButtonPlaceholder, null))))));
         }
     }
     exports.Lightbox = Lightbox;

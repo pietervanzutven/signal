@@ -682,7 +682,7 @@ MessageSender.prototype = {
     );
   },
 
-  sendDeliveryReceipt(recipientId, timestamp, options) {
+  sendDeliveryReceipt(recipientId, timestamps, options) {
     const myNumber = textsecure.storage.user.getNumber();
     const myDevice = textsecure.storage.user.getDeviceId();
     if (myNumber === recipientId && (myDevice === 1 || myDevice === '1')) {
@@ -691,7 +691,7 @@ MessageSender.prototype = {
 
     const receiptMessage = new textsecure.protobuf.ReceiptMessage();
     receiptMessage.type = textsecure.protobuf.ReceiptMessage.Type.DELIVERY;
-    receiptMessage.timestamp = [timestamp];
+    receiptMessage.timestamp = timestamps;
 
     const contentMessage = new textsecure.protobuf.Content();
     contentMessage.receiptMessage = receiptMessage;
