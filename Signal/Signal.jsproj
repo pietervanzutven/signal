@@ -3039,6 +3039,7 @@
     <Content Include="node_modules\lodash\take.js" />
     <Content Include="node_modules\lodash\uniq.js" />
     <Content Include="node_modules\lodash\values.js" />
+    <Content Include="node_modules\lodash\without.js" />
     <Content Include="node_modules\lodash\zipObject.js" />
     <Content Include="node_modules\memoizee\index.js" />
     <Content Include="node_modules\mkdirp\index.js" />
