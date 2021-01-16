@@ -21,8 +21,22 @@
     const Avatar_1 = window.ts.components.Avatar;
     const lodash_1 = window.lodash;
     exports.AvatarPopup = (props) => {
+        const focusRef = React.useRef(null);
         const { i18n, profileName, phoneNumber, onViewPreferences, onViewArchive, style, } = props;
         const hasProfileName = !lodash_1.isEmpty(profileName);
+        // Note: mechanisms to dismiss this view are all in its host, MainHeader
+        // Focus first button after initial render, restore focus on teardown
+        React.useEffect(() => {
+            const lastFocused = document.activeElement;
+            if (focusRef.current) {
+                focusRef.current.focus();
+            }
+            return () => {
+                if (lastFocused && lastFocused.focus) {
+                    lastFocused.focus();
+                }
+            };
+        }, []);
         return (React.createElement("div", { style: style, className: "module-avatar-popup" },
             React.createElement("div", { className: "module-avatar-popup__profile" },
                 React.createElement(Avatar_1.Avatar, Object.assign({}, props, { size: 52 })),
@@ -30,7 +44,7 @@
                     React.createElement("div", { className: "module-avatar-popup__profile__name" }, hasProfileName ? profileName : phoneNumber),
                     hasProfileName ? (React.createElement("div", { className: "module-avatar-popup__profile__number" }, phoneNumber)) : null)),
             React.createElement("hr", { className: "module-avatar-popup__divider" }),
-            React.createElement("button", { className: "module-avatar-popup__item", onClick: onViewPreferences },
+            React.createElement("button", { ref: focusRef, className: "module-avatar-popup__item", onClick: onViewPreferences },
                 React.createElement("div", { className: classnames_1.default('module-avatar-popup__item__icon', 'module-avatar-popup__item__icon-settings') }),
                 React.createElement("div", { className: "module-avatar-popup__item__text" }, i18n('mainMenuSettings'))),
             React.createElement("button", { className: "module-avatar-popup__item", onClick: onViewArchive },

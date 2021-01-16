@@ -67,6 +67,7 @@
         const attSlotRef = React.useRef(null);
         if (compositionApi) {
             compositionApi.current = {
+                isDirty: () => dirty,
                 focusInput,
                 setDisabled,
                 setShowMic,
@@ -112,8 +113,12 @@
             return lodash_1.noop;
         }, [attSlotRef, attachmentListEl]);
         const emojiButtonFragment = (React.createElement("div", { className: "module-composition-area__button-cell" },
-            React.createElement(EmojiButton_1.EmojiButton, { i18n: i18n, doSend: handleForceSend, onPickEmoji: insertEmoji, recentEmojis: recentEmojis, skinTone: skinTone, onSetSkinTone: onSetSkinTone, onClose: focusInput })));
-        const micButtonFragment = showMic ? (React.createElement("div", { className: classnames_1.default('module-composition-area__button-cell', micActive ? 'module-composition-area__button-cell--mic-active' : null, large ? 'module-composition-area__button-cell--large-right' : null), ref: micCellRef })) : null;
+            React.createElement(EmojiButton_1.EmojiButton, { i18n: i18n, doSend: handleForceSend, onPickEmoji: insertEmoji, recentEmojis: recentEmojis, skinTone: skinTone, onSetSkinTone: onSetSkinTone })));
+        const micButtonFragment = showMic ? (React.createElement("div", {
+            className: classnames_1.default('module-composition-area__button-cell', micActive ? 'module-composition-area__button-cell--mic-active' : null, large ? 'module-composition-area__button-cell--large-right' : null, micActive && large
+                ? 'module-composition-area__button-cell--large-right-mic-active'
+                : null), ref: micCellRef
+        })) : null;
         const attButton = (React.createElement("div", { className: "module-composition-area__button-cell" },
             React.createElement("div", { className: "choose-file" },
                 React.createElement("button", { className: "paperclip thumbnail", onClick: onChooseAttachment }))));
@@ -145,7 +150,9 @@
                 React.createElement("button", {
                     className: classnames_1.default('module-composition-area__toggle-large__button', large
                         ? 'module-composition-area__toggle-large__button--large-active'
-                        : null), onClick: handleToggleLarge
+                        : null),
+                    // This prevents the user from tabbing here
+                    tabIndex: -1, onClick: handleToggleLarge
                 })),
             React.createElement("div", { className: classnames_1.default('module-composition-area__row', 'module-composition-area__row--column'), ref: attSlotRef }),
             React.createElement("div", { className: classnames_1.default('module-composition-area__row', large ? 'module-composition-area__row--padded' : null) },

@@ -62,6 +62,9 @@
   const {
     createStickerPreviewModal,
   } = window.ts.state.roots.createStickerPreviewModal;
+  const {
+    createShortcutGuideModal,
+  } = window.ts.state.roots.createShortcutGuideModal;
 
   const { createStore } = window.ts.state.createStore;
   const conversationsDuck = window.ts.state.ducks.conversations;
@@ -70,6 +73,8 @@
   const searchDuck = window.ts.state.ducks.search;
   const stickersDuck = window.ts.state.ducks.stickers;
   const userDuck = window.ts.state.ducks.user;
+
+  const conversationsSelectors = window.ts.state.selectors.conversations;
 
   // Migrations
   const {
@@ -271,9 +276,10 @@
     const Roots = {
       createCompositionArea,
       createLeftPane,
-      createTimeline,
+      createShortcutGuideModal,
       createStickerManager,
       createStickerPreviewModal,
+      createTimeline,
     };
     const Ducks = {
       conversations: conversationsDuck,
@@ -283,11 +289,16 @@
       search: searchDuck,
       stickers: stickersDuck,
     };
+    const Selectors = {
+      conversations: conversationsSelectors,
+    };
+
     const State = {
       bindActionCreators,
       createStore,
       Roots,
       Ducks,
+      Selectors,
     };
 
     const Types = {

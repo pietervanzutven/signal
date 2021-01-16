@@ -267,7 +267,7 @@
                         throw new Error(`Attempted to render item with undefined index - row ${row}`);
                     }
                     const messageId = items[itemIndex];
-                    rowContents = (react_1.default.createElement("div", { id: messageId, "data-row": row, className: "module-timeline__message-container", style: styleWithWidth, role: "row" }, renderItem(messageId, this.props)));
+                    rowContents = (react_1.default.createElement("div", { id: messageId, "data-row": row, className: "module-timeline__message-container", style: styleWithWidth, role: "row" }, renderItem(messageId, id, this.props)));
                 }
                 return (react_1.default.createElement(react_virtualized_1.CellMeasurer, { cache: this.cellSizeCache, columnIndex: 0, key: key, parent: parent, rowIndex: index, width: this.mostRecentWidth }, rowContents));
             };
@@ -284,7 +284,13 @@
                     loadAndScroll(messageId);
                 }
             };
-            this.scrollToBottom = () => {
+            this.scrollToBottom = (setFocus) => {
+                const { selectMessage, id, items } = this.props;
+                if (setFocus && items && items.length > 0) {
+                    const lastIndex = items.length - 1;
+                    const lastMessageId = items[lastIndex];
+                    selectMessage(lastMessageId, id);
+                }
                 this.setState({
                     propScrollToIndex: undefined,
                     oneTimeScrollRow: undefined,
@@ -292,15 +298,21 @@
                 });
             };
             this.onClickScrollDownButton = () => {
-                const { haveNewest, isLoadingMessages, items, loadNewestMessages, } = this.props;
+                this.scrollDown(false);
+            };
+            this.scrollDown = (setFocus) => {
+                const { haveNewest, id, isLoadingMessages, items, loadNewestMessages, oldestUnreadIndex, selectMessage, } = this.props;
+                if (!items || items.length < 1) {
+                    return;
+                }
                 const lastId = items[items.length - 1];
                 const lastSeenIndicatorRow = this.getLastSeenIndicatorRow();
                 if (!this.visibleRows) {
                     if (haveNewest) {
-                        this.scrollToBottom();
+                        this.scrollToBottom(setFocus);
                     }
                     else if (!isLoadingMessages) {
-                        loadNewestMessages(lastId);
+                        loadNewestMessages(lastId, setFocus);
                     }
                     return;
                 }
@@ -308,15 +320,19 @@
                 if (newest &&
                     lodash_1.isNumber(lastSeenIndicatorRow) &&
                     newest.row < lastSeenIndicatorRow) {
+                    if (setFocus && lodash_1.isNumber(oldestUnreadIndex)) {
+                        const messageId = items[oldestUnreadIndex];
+                        selectMessage(messageId, id);
+                    }
                     this.setState({
                         oneTimeScrollRow: lastSeenIndicatorRow,
                     });
                 }
                 else if (haveNewest) {
-                    this.scrollToBottom();
+                    this.scrollToBottom(setFocus);
                 }
                 else if (!isLoadingMessages) {
-                    loadNewestMessages(lastId);
+                    loadNewestMessages(lastId, setFocus);
                 }
             };
             this.getScrollTarget = () => {
@@ -333,6 +349,67 @@
                     return oneTimeScrollRow;
                 }
                 return scrollToBottom;
+            };
+            this.handleBlur = (event) => {
+                const { clearSelectedMessage } = this.props;
+                const { currentTarget } = event;
+                // Thanks to https://gist.github.com/pstoica/4323d3e6e37e8a23dd59
+                setTimeout(() => {
+                    if (!currentTarget.contains(document.activeElement)) {
+                        clearSelectedMessage();
+                    }
+                }, 0);
+            };
+            this.handleKeyDown = (event) => {
+                const { selectMessage, selectedMessageId, items, id } = this.props;
+                const commandOrCtrl = event.metaKey || event.ctrlKey;
+                if (!items || items.length < 1) {
+                    return;
+                }
+                if (selectedMessageId && !commandOrCtrl && event.key === 'ArrowUp') {
+                    const selectedMessageIndex = items.findIndex(item => item === selectedMessageId);
+                    if (selectedMessageIndex < 0) {
+                        return;
+                    }
+                    const targetIndex = selectedMessageIndex - 1;
+                    if (targetIndex < 0) {
+                        return;
+                    }
+                    const messageId = items[targetIndex];
+                    selectMessage(messageId, id);
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return;
+                }
+                if (selectedMessageId && !commandOrCtrl && event.key === 'ArrowDown') {
+                    const selectedMessageIndex = items.findIndex(item => item === selectedMessageId);
+                    if (selectedMessageIndex < 0) {
+                        return;
+                    }
+                    const targetIndex = selectedMessageIndex + 1;
+                    if (targetIndex >= items.length) {
+                        return;
+                    }
+                    const messageId = items[targetIndex];
+                    selectMessage(messageId, id);
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return;
+                }
+                if (commandOrCtrl && event.key === 'ArrowUp') {
+                    this.setState({ oneTimeScrollRow: 0 });
+                    const firstMessageId = items[0];
+                    selectMessage(firstMessageId, id);
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return;
+                }
+                if (commandOrCtrl && event.key === 'ArrowDown') {
+                    this.scrollDown(true);
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return;
+                }
             };
             const { scrollToIndex } = this.props;
             const oneTimeScrollRow = this.getLastSeenIndicatorRow();
@@ -433,6 +510,9 @@
             if (!prevProps.items ||
                 prevProps.items.length === 0 ||
                 resetCounter !== prevProps.resetCounter) {
+                if (prevProps.items && prevProps.items.length > 0) {
+                    this.resize();
+                }
                 const oneTimeScrollRow = this.getLastSeenIndicatorRow();
                 this.setState({
                     oneTimeScrollRow,
@@ -440,9 +520,6 @@
                     propScrollToIndex: scrollToIndex,
                     prevPropScrollToIndex: scrollToIndex,
                 });
-                if (prevProps.items && prevProps.items.length > 0) {
-                    this.resize();
-                }
                 return;
             }
             if (items &&
@@ -527,7 +604,7 @@
             if (!items || rowCount === 0) {
                 return null;
             }
-            return (react_1.default.createElement("div", { className: "module-timeline" },
+            return (react_1.default.createElement("div", { className: "module-timeline", role: "group", tabIndex: -1, onBlur: this.handleBlur, onKeyDown: this.handleKeyDown },
                 react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => {
                     if (this.mostRecentWidth && this.mostRecentWidth !== width) {
                         this.resizeFlag = true;
@@ -539,7 +616,7 @@
                     }
                     this.mostRecentWidth = width;
                     this.mostRecentHeight = height;
-                    return (react_1.default.createElement(react_virtualized_1.List, { deferredMeasurementCache: this.cellSizeCache, height: height, onScroll: this.onScroll, overscanRowCount: 10, ref: this.listRef, rowCount: rowCount, rowHeight: this.cellSizeCache.rowHeight, rowRenderer: this.rowRenderer, scrollToAlignment: "start", scrollToIndex: scrollToIndex, width: width }));
+                    return (react_1.default.createElement(react_virtualized_1.List, { deferredMeasurementCache: this.cellSizeCache, height: height, onScroll: this.onScroll, overscanRowCount: 10, ref: this.listRef, rowCount: rowCount, rowHeight: this.cellSizeCache.rowHeight, rowRenderer: this.rowRenderer, scrollToAlignment: "start", scrollToIndex: scrollToIndex, tabIndex: -1, width: width }));
                 }),
                 shouldShowScrollDownButton ? (react_1.default.createElement(ScrollDownButton_1.ScrollDownButton, { conversationId: id, withNewMessages: areUnreadBelowCurrentPosition, scrollDown: this.onClickScrollDownButton, i18n: i18n })) : null));
         }

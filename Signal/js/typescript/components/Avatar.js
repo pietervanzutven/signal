@@ -55,8 +55,14 @@
             if (size !== 28 && size !== 52 && size !== 80) {
                 throw new Error(`Size ${size} is not supported!`);
             }
-            const role = onClick ? 'button' : undefined;
-            return (react_1.default.createElement("div", { className: classnames_1.default('module-avatar', `module-avatar--${size}`, hasImage ? 'module-avatar--with-image' : 'module-avatar--no-image', !hasImage ? `module-avatar--${color}` : null, onClick ? 'module-avatar--with-click' : null), ref: innerRef, role: role, onClick: onClick }, hasImage ? this.renderImage() : this.renderNoImage()));
+            let contents;
+            if (onClick) {
+                contents = (react_1.default.createElement("button", { className: "module-avatar-button", onClick: onClick }, hasImage ? this.renderImage() : this.renderNoImage()));
+            }
+            else {
+                contents = hasImage ? this.renderImage() : this.renderNoImage();
+            }
+            return (react_1.default.createElement("div", { className: classnames_1.default('module-avatar', `module-avatar--${size}`, hasImage ? 'module-avatar--with-image' : 'module-avatar--no-image', !hasImage ? `module-avatar--${color}` : null), ref: innerRef }, contents));
         }
     }
     exports.Avatar = Avatar;

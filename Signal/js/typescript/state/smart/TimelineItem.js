@@ -13,11 +13,16 @@
     const user_1 = window.ts.state.selectors.user;
     const conversations_1 = window.ts.state.selectors.conversations;
     const mapStateToProps = (state, props) => {
-        const { id } = props;
+        const { id, conversationId } = props;
         const messageSelector = conversations_1.getMessageSelector(state);
         const item = messageSelector(id);
+        const selectedMessage = conversations_1.getSelectedMessage(state);
+        const isSelected = Boolean(selectedMessage && id === selectedMessage.id);
         return {
             item,
+            id,
+            conversationId,
+            isSelected,
             i18n: user_1.getIntl(state),
         };
     };

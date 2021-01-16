@@ -50,12 +50,12 @@
             if (!from || !to) {
                 return null;
             }
-            return (react_1.default.createElement("div", {
-                role: "button", onClick: () => {
+            return (react_1.default.createElement("button", {
+                onClick: () => {
                     if (openConversationInternal) {
                         openConversationInternal(conversationId, id);
                     }
-                }, className: classnames_1.default('module-message-search-result', isSelected ? 'module-message-search-result--is-selected' : null)
+                }, className: classnames_1.default('module-message-search-result', isSelected ? 'module-message-search-result--is-selected' : null), "data-id": id
             },
                 this.renderAvatar(),
                 react_1.default.createElement("div", { className: "module-message-search-result__text" },

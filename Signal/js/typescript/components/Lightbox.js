@@ -56,6 +56,7 @@
             paddingBottom: 0,
             // To ensure that a large image doesn't overflow the flex layout
             minHeight: '50px',
+            outline: 'none',
         },
         objectContainer: {
             position: 'relative',
@@ -136,13 +137,19 @@
             }
             onClick();
         };
-        return (react_1.default.createElement("a", { href: "#", onClick: clickHandler, className: classnames_1.default('iconButton', type), role: "button", style: style }));
+        return (react_1.default.createElement("button", { onClick: clickHandler, className: classnames_1.default('iconButton', type), style: style }));
     };
     const IconButtonPlaceholder = () => (react_1.default.createElement("div", { style: styles.iconButtonPlaceholder }));
-    const Icon = ({ onClick, url, }) => (react_1.default.createElement("div", { style: Object.assign({}, styles.object, colorSVG(url, Colors.ICON_SECONDARY), { maxWidth: 200 }), onClick: onClick, role: "button" }));
+    const Icon = ({ onClick, url, }) => (react_1.default.createElement("button", { style: Object.assign({}, styles.object, colorSVG(url, Colors.ICON_SECONDARY), { maxWidth: 200 }), onClick: onClick }));
     class Lightbox extends react_1.default.Component {
-        constructor(props) {
-            super(props);
+        constructor() {
+            super(...arguments);
+            this.containerRef = react_1.default.createRef();
+            this.videoRef = react_1.default.createRef();
+            this.focusRef = react_1.default.createRef();
+            this.state = {
+                videoTime: undefined,
+            };
             this.renderObject = ({ objectURL, contentType, i18n, isViewOnce, }) => {
                 const isImageTypeSupported = GoogleChrome.isImageTypeSupported(contentType);
                 if (isImageTypeSupported) {
@@ -150,14 +157,14 @@
                 }
                 const isVideoTypeSupported = GoogleChrome.isVideoTypeSupported(contentType);
                 if (isVideoTypeSupported) {
-                    return (react_1.default.createElement("video", { role: "button", ref: this.videoRef, loop: isViewOnce, controls: !isViewOnce, style: styles.object, key: objectURL },
+                    return (react_1.default.createElement("video", { ref: this.videoRef, loop: isViewOnce, controls: !isViewOnce, style: styles.object, key: objectURL },
                         react_1.default.createElement("source", { src: objectURL })));
                 }
                 const isUnsupportedImageType = !isImageTypeSupported && MIME.isImage(contentType);
                 const isUnsupportedVideoType = !isVideoTypeSupported && MIME.isVideo(contentType);
                 if (isUnsupportedImageType || isUnsupportedVideoType) {
                     const iconUrl = isUnsupportedVideoType
-                        ? 'images/movie.svg'
+                        ? 'images/video.svg'
                         : 'images/image.svg';
                     return react_1.default.createElement(Icon, { url: iconUrl, onClick: this.onObjectClick });
                 }
@@ -181,20 +188,26 @@
                     videoTime: video.currentTime,
                 });
             };
-            this.onKeyUp = (event) => {
+            this.onKeyDown = (event) => {
                 const { onNext, onPrevious } = this.props;
                 switch (event.key) {
                     case 'Escape':
                         this.onClose();
+                        event.preventDefault();
+                        event.stopPropagation();
                         break;
                     case 'ArrowLeft':
                         if (onPrevious) {
                             onPrevious();
+                            event.preventDefault();
+                            event.stopPropagation();
                         }
                         break;
                     case 'ArrowRight':
                         if (onNext) {
                             onNext();
+                            event.preventDefault();
+                            event.stopPropagation();
                         }
                         break;
                     default:
@@ -210,26 +223,32 @@
                 event.stopPropagation();
                 this.onClose();
             };
-            this.videoRef = react_1.default.createRef();
-            this.containerRef = react_1.default.createRef();
-            this.state = {
-                videoTime: undefined,
-            };
         }
         componentDidMount() {
+            this.previousFocus = document.activeElement;
             const { isViewOnce } = this.props;
             const useCapture = true;
-            document.addEventListener('keyup', this.onKeyUp, useCapture);
+            document.addEventListener('keydown', this.onKeyDown, useCapture);
             const video = this.getVideo();
             if (video && isViewOnce) {
                 video.addEventListener('timeupdate', this.onTimeUpdate);
             }
-            this.playVideo();
+            // Wait until we're added to the DOM. ConversationView first creates this view, then
+            //   appends its elements into the DOM.
+            setTimeout(() => {
+                this.playVideo();
+                if (this.focusRef && this.focusRef.current) {
+                    this.focusRef.current.focus();
+                }
+            });
         }
         componentWillUnmount() {
+            if (this.previousFocus && this.previousFocus.focus) {
+                this.previousFocus.focus();
+            }
             const { isViewOnce } = this.props;
             const useCapture = true;
-            document.removeEventListener('keyup', this.onKeyUp, useCapture);
+            document.removeEventListener('keydown', this.onKeyDown, useCapture);
             const video = this.getVideo();
             if (video && isViewOnce) {
                 video.removeEventListener('timeupdate', this.onTimeUpdate);
@@ -261,8 +280,8 @@
         render() {
             const { caption, contentType, i18n, isViewOnce, objectURL, onNext, onPrevious, onSave, } = this.props;
             const { videoTime } = this.state;
-            return (react_1.default.createElement("div", { style: styles.container, onClick: this.onContainerClick, ref: this.containerRef, role: "dialog" },
-                react_1.default.createElement("div", { style: styles.mainContainer },
+            return (react_1.default.createElement("div", { className: "module-lightbox", style: styles.container, onClick: this.onContainerClick, ref: this.containerRef, role: "dialog" },
+                react_1.default.createElement("div", { style: styles.mainContainer, tabIndex: -1, ref: this.focusRef },
                     react_1.default.createElement("div", { style: styles.controlsOffsetPlaceholder }),
                     react_1.default.createElement("div", { style: styles.objectContainer },
                         !is_1.default.undefined(contentType)

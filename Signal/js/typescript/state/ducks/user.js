@@ -25,6 +25,7 @@
             tempPath: 'missing',
             ourNumber: 'missing',
             regionCode: 'missing',
+            platform: 'missing',
             i18n: () => 'missing',
         };
     }

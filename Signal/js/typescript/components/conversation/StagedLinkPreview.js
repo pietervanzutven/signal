@@ -25,7 +25,7 @@
                 isLoaded ? (react_1.default.createElement("div", { className: "module-staged-link-preview__content" },
                     react_1.default.createElement("div", { className: "module-staged-link-preview__title" }, title),
                     react_1.default.createElement("div", { className: "module-staged-link-preview__location" }, domain))) : null,
-                react_1.default.createElement("div", { role: "button", className: "module-staged-link-preview__close-button", onClick: onClose })));
+                react_1.default.createElement("button", { className: "module-staged-link-preview__close-button", onClick: onClose })));
         }
     }
     exports.StagedLinkPreview = StagedLinkPreview;

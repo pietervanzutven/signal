@@ -21,50 +21,57 @@
     const classnames_1 = __importDefault(window.classnames);
     const StickerManagerPackRow_1 = window.ts.components.stickers.StickerManagerPackRow;
     const StickerPreviewModal_1 = window.ts.components.stickers.StickerPreviewModal;
-    exports.StickerManager = React.memo(({ installedPacks, receivedPacks, knownPacks, blessedPacks, downloadStickerPack, installStickerPack, uninstallStickerPack, i18n, }) => {
-        const [packToPreview, setPackToPreview,] = React.useState(null);
-        React.useEffect(() => {
-            if (!knownPacks) {
-                return;
-            }
-            knownPacks.forEach(pack => {
-                downloadStickerPack(pack.id, pack.key);
-            });
-        }, []);
-        const clearPackToPreview = React.useCallback(() => {
-            setPackToPreview(null);
-        }, [setPackToPreview]);
-        const previewPack = React.useCallback((pack) => {
-            setPackToPreview(pack);
-        }, [clearPackToPreview]);
-        return (React.createElement(React.Fragment, null,
-            packToPreview ? (React.createElement(StickerPreviewModal_1.StickerPreviewModal, { i18n: i18n, pack: packToPreview, onClose: clearPackToPreview, downloadStickerPack: downloadStickerPack, installStickerPack: installStickerPack, uninstallStickerPack: uninstallStickerPack })) : null,
-            React.createElement("div", { className: "module-sticker-manager" }, [
-                {
-                    i18nKey: 'stickers--StickerManager--InstalledPacks',
-                    i18nEmptyKey: 'stickers--StickerManager--InstalledPacks--Empty',
-                    packs: installedPacks,
-                    hideIfEmpty: false,
-                },
-                {
-                    i18nKey: 'stickers--StickerManager--BlessedPacks',
-                    i18nEmptyKey: 'stickers--StickerManager--BlessedPacks--Empty',
-                    packs: blessedPacks,
-                    hideIfEmpty: true,
-                },
-                {
-                    i18nKey: 'stickers--StickerManager--ReceivedPacks',
-                    i18nEmptyKey: 'stickers--StickerManager--ReceivedPacks--Empty',
-                    packs: receivedPacks,
-                    hideIfEmpty: false,
-                },
-            ].map(section => {
-                if (section.hideIfEmpty && section.packs.length === 0) {
+    function focusOnRender(el) {
+        if (el) {
+            el.focus();
+        }
+    }
+    exports.StickerManager = React.memo(
+        // tslint:disable-next-line max-func-body-length
+        ({ installedPacks, receivedPacks, knownPacks, blessedPacks, downloadStickerPack, installStickerPack, uninstallStickerPack, i18n, }) => {
+            const [packToPreview, setPackToPreview,] = React.useState(null);
+            React.useEffect(() => {
+                if (!knownPacks) {
                     return;
                 }
-                return (React.createElement(React.Fragment, { key: section.i18nKey },
-                    React.createElement("h2", { className: classnames_1.default('module-sticker-manager__text', 'module-sticker-manager__text--heading') }, i18n(section.i18nKey)),
-                    section.packs.length > 0 ? (section.packs.map(pack => (React.createElement(StickerManagerPackRow_1.StickerManagerPackRow, { key: pack.id, pack: pack, i18n: i18n, onClickPreview: previewPack, installStickerPack: installStickerPack, uninstallStickerPack: uninstallStickerPack })))) : (React.createElement("div", { className: "module-sticker-manager__empty" }, i18n(section.i18nEmptyKey)))));
-            }))));
-    });
+                knownPacks.forEach(pack => {
+                    downloadStickerPack(pack.id, pack.key);
+                });
+            }, []);
+            const clearPackToPreview = React.useCallback(() => {
+                setPackToPreview(null);
+            }, [setPackToPreview]);
+            const previewPack = React.useCallback((pack) => {
+                setPackToPreview(pack);
+            }, [clearPackToPreview]);
+            return (React.createElement(React.Fragment, null,
+                packToPreview ? (React.createElement(StickerPreviewModal_1.StickerPreviewModal, { i18n: i18n, pack: packToPreview, onClose: clearPackToPreview, downloadStickerPack: downloadStickerPack, installStickerPack: installStickerPack, uninstallStickerPack: uninstallStickerPack })) : null,
+                React.createElement("div", { className: "module-sticker-manager", tabIndex: -1, ref: focusOnRender }, [
+                    {
+                        i18nKey: 'stickers--StickerManager--InstalledPacks',
+                        i18nEmptyKey: 'stickers--StickerManager--InstalledPacks--Empty',
+                        packs: installedPacks,
+                        hideIfEmpty: false,
+                    },
+                    {
+                        i18nKey: 'stickers--StickerManager--BlessedPacks',
+                        i18nEmptyKey: 'stickers--StickerManager--BlessedPacks--Empty',
+                        packs: blessedPacks,
+                        hideIfEmpty: true,
+                    },
+                    {
+                        i18nKey: 'stickers--StickerManager--ReceivedPacks',
+                        i18nEmptyKey: 'stickers--StickerManager--ReceivedPacks--Empty',
+                        packs: receivedPacks,
+                        hideIfEmpty: false,
+                    },
+                ].map(section => {
+                    if (section.hideIfEmpty && section.packs.length === 0) {
+                        return;
+                    }
+                    return (React.createElement(React.Fragment, { key: section.i18nKey },
+                        React.createElement("h2", { className: classnames_1.default('module-sticker-manager__text', 'module-sticker-manager__text--heading') }, i18n(section.i18nKey)),
+                        section.packs.length > 0 ? (section.packs.map(pack => (React.createElement(StickerManagerPackRow_1.StickerManagerPackRow, { key: pack.id, pack: pack, i18n: i18n, onClickPreview: previewPack, installStickerPack: installStickerPack, uninstallStickerPack: uninstallStickerPack })))) : (React.createElement("div", { className: "module-sticker-manager__empty" }, i18n(section.i18nEmptyKey)))));
+                }))));
+        });
 })();

@@ -23,51 +23,67 @@
     const react_popper_1 = window.react_popper;
     const react_dom_1 = window.react_dom;
     const EmojiPicker_1 = window.ts.components.emoji.EmojiPicker;
-    exports.EmojiButton = React.memo(({ i18n, doSend, onPickEmoji, skinTone, onSetSkinTone, recentEmojis, onClose, }) => {
-        const [open, setOpen] = React.useState(false);
-        const [popperRoot, setPopperRoot] = React.useState(null);
-        const handleClickButton = React.useCallback(() => {
-            if (popperRoot) {
+    exports.EmojiButton = React.memo(
+        // tslint:disable-next-line:max-func-body-length
+        ({ i18n, doSend, onPickEmoji, skinTone, onSetSkinTone, recentEmojis, }) => {
+            const [open, setOpen] = React.useState(false);
+            const [popperRoot, setPopperRoot] = React.useState(null);
+            const handleClickButton = React.useCallback(() => {
+                if (popperRoot) {
+                    setOpen(false);
+                }
+                else {
+                    setOpen(true);
+                }
+            }, [popperRoot, setOpen]);
+            const handleClose = React.useCallback(() => {
                 setOpen(false);
-            }
-            else {
-                setOpen(true);
-            }
-        }, [popperRoot, setOpen]);
-        const handleClose = React.useCallback(() => {
-            setOpen(false);
-            onClose();
-        }, [setOpen, onClose]);
-        // Create popper root and handle outside clicks
-        React.useEffect(() => {
-            if (open) {
-                const root = document.createElement('div');
-                setPopperRoot(root);
-                document.body.appendChild(root);
-                const handleOutsideClick = ({ target }) => {
-                    if (!root.contains(target)) {
-                        setOpen(false);
-                        onClose();
+            }, [setOpen]);
+            // Create popper root and handle outside clicks
+            React.useEffect(() => {
+                if (open) {
+                    const root = document.createElement('div');
+                    setPopperRoot(root);
+                    document.body.appendChild(root);
+                    const handleOutsideClick = ({ target }) => {
+                        if (!root.contains(target)) {
+                            setOpen(false);
+                        }
+                    };
+                    document.addEventListener('click', handleOutsideClick);
+                    return () => {
+                        document.body.removeChild(root);
+                        document.removeEventListener('click', handleOutsideClick);
+                        setPopperRoot(null);
+                    };
+                }
+                return lodash_1.noop;
+            }, [open, setOpen, setPopperRoot]);
+            // Install keyboard shortcut to open emoji picker
+            React.useEffect(() => {
+                const handleKeydown = (event) => {
+                    const { ctrlKey, key, metaKey, shiftKey } = event;
+                    const ctrlOrCommand = metaKey || ctrlKey;
+                    if (ctrlOrCommand && shiftKey && key === 'e') {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        setOpen(!open);
                     }
                 };
-                document.addEventListener('click', handleOutsideClick);
+                document.addEventListener('keydown', handleKeydown);
                 return () => {
-                    document.body.removeChild(root);
-                    document.removeEventListener('click', handleOutsideClick);
-                    setPopperRoot(null);
+                    document.removeEventListener('keydown', handleKeydown);
                 };
-            }
-            return lodash_1.noop;
-        }, [open, setOpen, setPopperRoot]);
-        return (React.createElement(react_popper_1.Manager, null,
-            React.createElement(react_popper_1.Reference, null, ({ ref }) => (React.createElement("button", {
-                ref: ref, onClick: handleClickButton, className: classnames_1.default({
-                    'module-emoji-button__button': true,
-                    'module-emoji-button__button--active': open,
-                })
-            }))),
-            open && popperRoot
-                ? react_dom_1.createPortal(React.createElement(react_popper_1.Popper, { placement: "top-start" }, ({ ref, style }) => (React.createElement(EmojiPicker_1.EmojiPicker, { ref: ref, i18n: i18n, style: style, onPickEmoji: onPickEmoji, doSend: doSend, onClose: handleClose, skinTone: skinTone, onSetSkinTone: onSetSkinTone, recentEmojis: recentEmojis }))), popperRoot)
-                : null));
-    });
+            }, [open, setOpen]);
+            return (React.createElement(react_popper_1.Manager, null,
+                React.createElement(react_popper_1.Reference, null, ({ ref }) => (React.createElement("button", {
+                    ref: ref, onClick: handleClickButton, className: classnames_1.default({
+                        'module-emoji-button__button': true,
+                        'module-emoji-button__button--active': open,
+                    })
+                }))),
+                open && popperRoot
+                    ? react_dom_1.createPortal(React.createElement(react_popper_1.Popper, { placement: "top-start" }, ({ ref, style }) => (React.createElement(EmojiPicker_1.EmojiPicker, { ref: ref, i18n: i18n, style: style, onPickEmoji: onPickEmoji, doSend: doSend, onClose: handleClose, skinTone: skinTone, onSetSkinTone: onSetSkinTone, recentEmojis: recentEmojis }))), popperRoot)
+                    : null));
+        });
 })();

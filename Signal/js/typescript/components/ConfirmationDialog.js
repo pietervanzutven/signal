@@ -30,9 +30,9 @@
                     onClose();
                 }
             };
-            document.addEventListener('keyup', handler);
+            document.addEventListener('keydown', handler);
             return () => {
-                document.removeEventListener('keyup', handler);
+                document.removeEventListener('keydown', handler);
             };
         }, [onClose]);
         const handleCancel = React.useCallback((e) => {

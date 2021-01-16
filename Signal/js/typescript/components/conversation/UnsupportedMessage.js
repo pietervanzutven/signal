@@ -38,8 +38,8 @@
                                 react_1.default.createElement(ContactName_1.ContactName, { name: contact.name, profileName: contact.profileName, phoneNumber: contact.phoneNumber, module: "module-unsupported-message__contact" })),
                         ], i18n: i18n
                     })),
-                canProcessNow ? null : (react_1.default.createElement("div", {
-                    role: "button", onClick: () => {
+                canProcessNow ? null : (react_1.default.createElement("button", {
+                    onClick: () => {
                         downloadNewVersion();
                     }, className: "module-unsupported-message__button"
                 }, i18n('Message--update-signal')))));

@@ -23,7 +23,7 @@
     const lodash_1 = window.lodash;
     const Emoji_1 = window.ts.components.emoji.Emoji;
     const lib_1 = window.ts.components.emoji.lib;
-    function focusRef(el) {
+    function focusOnRender(el) {
         if (el) {
             el.focus();
         }
@@ -43,6 +43,7 @@
     exports.EmojiPicker = React.memo(React.forwardRef(
         // tslint:disable-next-line max-func-body-length
         ({ i18n, doSend, onPickEmoji, skinTone = 0, onSetSkinTone, recentEmojis, style, onClose, }, ref) => {
+            const focusRef = React.useRef(null);
             // Per design: memoize the initial recent emojis so the grid only updates after re-opening the picker.
             const firstRecent = React.useMemo(() => {
                 return recentEmojis;
@@ -86,11 +87,13 @@
             }, [doSend, onPickEmoji, selectedTone]);
             // Handle escape key
             React.useEffect(() => {
-                const handler = (e) => {
-                    if (searchMode && e.key === 'Escape') {
+                const handler = (event) => {
+                    if (searchMode && event.key === 'Escape') {
                         setSearchText('');
                         setSearchMode(false);
                         setScrollToRow(0);
+                        event.preventDefault();
+                        event.stopPropagation();
                     }
                     else if (!searchMode &&
                         ![
@@ -101,15 +104,29 @@
                             'Shift',
                             'Tab',
                             ' ',
-                        ].includes(e.key)) {
+                        ].includes(event.key)) {
                         onClose();
+                        event.preventDefault();
+                        event.stopPropagation();
                     }
                 };
-                document.addEventListener('keyup', handler);
+                document.addEventListener('keydown', handler);
                 return () => {
-                    document.removeEventListener('keyup', handler);
+                    document.removeEventListener('keydown', handler);
                 };
             }, [onClose, searchMode]);
+            // Restore focus on teardown
+            React.useEffect(() => {
+                const lastFocused = document.activeElement;
+                if (focusRef.current) {
+                    focusRef.current.focus();
+                }
+                return () => {
+                    if (lastFocused && lastFocused.focus) {
+                        lastFocused.focus();
+                    }
+                };
+            }, []);
             const emojiGrid = React.useMemo(() => {
                 if (searchText) {
                     return lodash_1.chunk(lib_1.search(searchText).map(e => e.short_name), COL_COUNT);
@@ -164,12 +181,12 @@
             return (React.createElement("div", { className: "module-emoji-picker", ref: ref, style: style },
                 React.createElement("header", { className: "module-emoji-picker__header" },
                     React.createElement("button", {
-                        onClick: handleToggleSearch, title: i18n('EmojiPicker--search-placeholder'), className: classnames_1.default('module-emoji-picker__button', 'module-emoji-picker__button--icon', searchMode
+                        ref: focusRef, onClick: handleToggleSearch, title: i18n('EmojiPicker--search-placeholder'), className: classnames_1.default('module-emoji-picker__button', 'module-emoji-picker__button--icon', searchMode
                             ? 'module-emoji-picker__button--icon--close'
                             : 'module-emoji-picker__button--icon--search')
                     }),
                     searchMode ? (React.createElement("div", { className: "module-emoji-picker__header__search-field" },
-                        React.createElement("input", { ref: focusRef, className: "module-emoji-picker__header__search-field__input", placeholder: i18n('EmojiPicker--search-placeholder'), onChange: handleSearchChange }))) : (categories.map(cat => cat === 'recents' && firstRecent.length === 0 ? null : (React.createElement("button", {
+                        React.createElement("input", { ref: focusOnRender, className: "module-emoji-picker__header__search-field__input", placeholder: i18n('EmojiPicker--search-placeholder'), onChange: handleSearchChange }))) : (categories.map(cat => cat === 'recents' && firstRecent.length === 0 ? null : (React.createElement("button", {
                             key: cat, "data-category": cat, title: cat, onClick: handleSelectCategory, className: classnames_1.default('module-emoji-picker__button', 'module-emoji-picker__button--icon', `module-emoji-picker__button--icon--${cat}`, selectedCategory === cat
                                 ? 'module-emoji-picker__button--selected'
                                 : null)

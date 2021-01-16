@@ -60,7 +60,7 @@
         );
         view.$el.appendTo(this.el);
 
-        if (this.lastConversation) {
+        if (this.lastConversation && this.lastConversation !== conversation) {
           this.lastConversation.trigger(
             'unload',
             'opened another conversation'
@@ -197,6 +197,13 @@
       if (view) {
         this.appLoadingScreen = null;
         view.remove();
+
+        const searchInput = document.querySelector(
+          '.module-main-header__search__input'
+        );
+        if (searchInput && searchInput.focus) {
+          searchInput.focus();
+        }
       }
     },
     onProgress(count) {

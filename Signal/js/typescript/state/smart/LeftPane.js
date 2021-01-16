@@ -33,8 +33,10 @@
         const showSearch = search_1.isSearching(state);
         const lists = showSearch ? undefined : conversations_1.getLeftPaneLists(state);
         const searchResults = showSearch ? search_1.getSearchResults(state) : undefined;
+        const selectedConversationId = conversations_1.getSelectedConversation(state);
         return Object.assign({}, lists, {
-            searchResults, showArchived: conversations_1.getShowArchived(state), i18n: user_1.getIntl(state), renderMainHeader,
+            searchResults,
+            selectedConversationId, showArchived: conversations_1.getShowArchived(state), i18n: user_1.getIntl(state), renderMainHeader,
             renderMessageSearchResult
         });
     };

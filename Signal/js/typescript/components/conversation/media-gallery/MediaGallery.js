@@ -30,6 +30,7 @@
     class MediaGallery extends react_1.default.Component {
         constructor() {
             super(...arguments);
+            this.focusRef = react_1.default.createRef();
             this.state = {
                 selectedTab: 'media',
             };
@@ -37,9 +38,18 @@
                 this.setState({ selectedTab: event.type });
             };
         }
+        componentDidMount() {
+            // When this component is created, it's initially not part of the DOM, and then it's
+            //   added off-screen and animated in. This ensures that the focus takes.
+            setTimeout(() => {
+                if (this.focusRef.current) {
+                    this.focusRef.current.focus();
+                }
+            });
+        }
         render() {
             const { selectedTab } = this.state;
-            return (react_1.default.createElement("div", { className: "module-media-gallery" },
+            return (react_1.default.createElement("div", { className: "module-media-gallery", tabIndex: 0, ref: this.focusRef },
                 react_1.default.createElement("div", { className: "module-media-gallery__tab-container" },
                     react_1.default.createElement(Tab, { label: "Media", type: "media", isSelected: selectedTab === 'media', onSelect: this.handleTabSelect }),
                     react_1.default.createElement(Tab, { label: "Documents", type: "documents", isSelected: selectedTab === 'documents', onSelect: this.handleTabSelect })),

@@ -28,7 +28,7 @@
             const allVisualAttachments = Attachment_1.areAllAttachmentsVisual(attachments);
             return (react_1.default.createElement("div", { className: "module-attachments" },
                 attachments.length > 1 ? (react_1.default.createElement("div", { className: "module-attachments__header" },
-                    react_1.default.createElement("div", { role: "button", onClick: onClose, className: "module-attachments__close-button" }))) : null,
+                    react_1.default.createElement("button", { onClick: onClose, className: "module-attachments__close-button" }))) : null,
                 react_1.default.createElement("div", { className: "module-attachments__rail" },
                     (attachments || []).map((attachment, index) => {
                         const { contentType } = attachment;
@@ -47,7 +47,7 @@
                         const genericKey = Attachment_1.getUrl(attachment) || attachment.fileName || index;
                         return (react_1.default.createElement(StagedGenericAttachment_1.StagedGenericAttachment, { key: genericKey, attachment: attachment, i18n: i18n, onClose: onCloseAttachment }));
                     }),
-                    allVisualAttachments ? (react_1.default.createElement(StagedPlaceholderAttachment_1.StagedPlaceholderAttachment, { onClick: onAddAttachment })) : null)));
+                    allVisualAttachments ? (react_1.default.createElement(StagedPlaceholderAttachment_1.StagedPlaceholderAttachment, { onClick: onAddAttachment, i18n: i18n })) : null)));
         }
     }
     exports.AttachmentList = AttachmentList;

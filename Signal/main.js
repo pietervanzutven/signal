@@ -452,6 +452,12 @@ function openForums() {
   shell.openExternal('https://community.signalusers.org/');
 }
 
+function showKeyboardShortcuts() {
+  if (mainWindow) {
+    mainWindow.webContents.send('show-keyboard-shortcuts');
+  }
+}
+
 function setupWithImport() {
   if (mainWindow) {
     mainWindow.webContents.send('set-up-with-import');
@@ -767,6 +773,7 @@ function setupMenu(options) {
   const menuOptions = Object.assign({}, options, {
     development,
     showDebugLog: showDebugLogWindow,
+    showKeyboardShortcuts,
     showWindow,
     showAbout,
     showSettings: showSettingsWindow,

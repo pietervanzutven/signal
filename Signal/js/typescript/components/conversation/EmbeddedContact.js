@@ -18,12 +18,18 @@
             const { contact, i18n, isIncoming, onClick, withContentAbove, withContentBelow, } = this.props;
             const module = 'embedded-contact';
             const direction = isIncoming ? 'incoming' : 'outgoing';
-            return (react_1.default.createElement("div", {
+            return (react_1.default.createElement("button", {
                 className: classnames_1.default('module-embedded-contact', withContentAbove
                     ? 'module-embedded-contact--with-content-above'
                     : null, withContentBelow
                     ? 'module-embedded-contact--with-content-below'
-                    : null), role: "button", onClick: onClick
+                    : null), onClick: (event) => {
+                        if (onClick) {
+                            event.stopPropagation();
+                            event.preventDefault();
+                            onClick();
+                        }
+                    }
             },
                 _contactUtil_1.renderAvatar({ contact, i18n, size: 52, direction }),
                 react_1.default.createElement("div", { className: "module-embedded-contact__text-container" },

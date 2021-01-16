@@ -17,6 +17,19 @@
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const Message_1 = window.ts.components.conversation.Message;
     class MessageDetail extends react_1.default.Component {
+        constructor(props) {
+            super(props);
+            this.focusRef = react_1.default.createRef();
+        }
+        componentDidMount() {
+            // When this component is created, it's initially not part of the DOM, and then it's
+            //   added off-screen and animated in. This ensures that the focus takes.
+            setTimeout(() => {
+                if (this.focusRef.current) {
+                    this.focusRef.current.focus();
+                }
+            });
+        }
         renderAvatar(contact) {
             const { i18n } = this.props;
             const { avatarPath, color, phoneNumber, name, profileName } = contact;
@@ -58,7 +71,7 @@
         }
         render() {
             const { errors, message, receivedAt, sentAt, i18n } = this.props;
-            return (react_1.default.createElement("div", { className: "module-message-detail" },
+            return (react_1.default.createElement("div", { className: "module-message-detail", tabIndex: 0, ref: this.focusRef },
                 react_1.default.createElement("div", { className: "module-message-detail__message-container" },
                     react_1.default.createElement(Message_1.Message, Object.assign({ i18n: i18n }, message))),
                 react_1.default.createElement("table", { className: "module-message-detail__info" },

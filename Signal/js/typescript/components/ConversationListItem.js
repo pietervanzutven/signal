@@ -16,6 +16,10 @@
     const Timestamp_1 = window.ts.components.conversation.Timestamp;
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const TypingAnimation_1 = window.ts.components.conversation.TypingAnimation;
+    function cleanId(id) {
+        return id.replace(/[^\u0020-\u007e\u00a0-\u00ff]/g, '_');
+    }
+    exports.cleanId = cleanId;
     class ConversationListItem extends react_1.default.PureComponent {
         renderAvatar() {
             const { avatarPath, color, type, i18n, isMe, name, phoneNumber, profileName, } = this.props;
@@ -70,12 +74,12 @@
         }
         render() {
             const { unreadCount, onClick, id, isSelected, style } = this.props;
-            return (react_1.default.createElement("div", {
-                role: "button", onClick: () => {
+            return (react_1.default.createElement("button", {
+                onClick: () => {
                     if (onClick) {
                         onClick(id);
                     }
-                }, style: style, className: classnames_1.default('module-conversation-list-item', unreadCount > 0 ? 'module-conversation-list-item--has-unread' : null, isSelected ? 'module-conversation-list-item--is-selected' : null)
+                }, style: style, className: classnames_1.default('module-conversation-list-item', unreadCount > 0 ? 'module-conversation-list-item--has-unread' : null, isSelected ? 'module-conversation-list-item--is-selected' : null), "data-id": cleanId(id)
             },
                 this.renderAvatar(),
                 react_1.default.createElement("div", { className: "module-conversation-list-item__content" },

@@ -28,7 +28,7 @@
                     this.hideAvatarPopup();
                 }
             };
-            this.handleOutsideKeyUp = (event) => {
+            this.handleOutsideKeyDown = (event) => {
                 if (event.key === 'Escape') {
                     this.hideAvatarPopup();
                 }
@@ -38,11 +38,11 @@
                     showingAvatarPopup: true,
                 });
                 document.addEventListener('click', this.handleOutsideClick);
-                document.addEventListener('keydown', this.handleOutsideKeyUp);
+                document.addEventListener('keydown', this.handleOutsideKeyDown);
             };
             this.hideAvatarPopup = () => {
                 document.removeEventListener('click', this.handleOutsideClick);
-                document.removeEventListener('keydown', this.handleOutsideKeyUp);
+                document.removeEventListener('keydown', this.handleOutsideKeyDown);
                 this.setState({
                     showingAvatarPopup: false,
                 });
@@ -93,7 +93,7 @@
                 clearConversationSearch();
                 this.setFocus();
             };
-            this.handleKeyUp = (event) => {
+            this.handleKeyDown = (event) => {
                 const { clearConversationSearch, clearSearch, searchConversationId, searchTerm, } = this.props;
                 if (event.key !== 'Escape') {
                     return;
@@ -104,6 +104,8 @@
                 else {
                     clearSearch();
                 }
+                event.preventDefault();
+                event.stopPropagation();
             };
             this.handleXButton = () => {
                 const { searchConversationId, clearConversationSearch, clearSearch, } = this.props;
@@ -121,6 +123,12 @@
                     this.inputRef.current.focus();
                 }
             };
+            this.setSelected = () => {
+                if (this.inputRef.current) {
+                    // @ts-ignore
+                    this.inputRef.current.select();
+                }
+            };
             this.inputRef = react_1.default.createRef();
             this.state = {
                 showingAvatarPopup: false,
@@ -135,11 +143,15 @@
             });
         }
         componentDidUpdate(prevProps) {
-            const { searchConversationId } = this.props;
+            const { searchConversationId, startSearchCounter } = this.props;
             // When user chooses to search in a given conversation we focus the field for them
             if (searchConversationId &&
                 searchConversationId !== prevProps.searchConversationId) {
                 this.setFocus();
+            }
+            // When user chooses to start a new search, we focus the field
+            if (startSearchCounter !== prevProps.startSearchCounter) {
+                this.setSelected();
             }
         }
         componentWillUnmount() {
@@ -147,7 +159,7 @@
             if (popperRoot) {
                 document.body.removeChild(popperRoot);
                 document.removeEventListener('click', this.handleOutsideClick);
-                document.removeEventListener('keydown', this.handleOutsideKeyUp);
+                document.removeEventListener('keydown', this.handleOutsideKeyDown);
             }
         }
         // tslint:disable-next-line:max-func-body-length
@@ -172,18 +184,18 @@
                         }))), popperRoot)
                         : null),
                 react_1.default.createElement("div", { className: "module-main-header__search" },
-                    searchConversationId ? (react_1.default.createElement("button", { className: "module-main-header__search__in-conversation-pill", onClick: this.clearSearch },
+                    searchConversationId ? (react_1.default.createElement("button", { className: "module-main-header__search__in-conversation-pill", onClick: this.clearSearch, tabIndex: -1 },
                         react_1.default.createElement("div", { className: "module-main-header__search__in-conversation-pill__avatar-container" },
                             react_1.default.createElement("div", { className: "module-main-header__search__in-conversation-pill__avatar" })),
-                        react_1.default.createElement("div", { className: "module-main-header__search__in-conversation-pill__x-button" }))) : (react_1.default.createElement("button", { className: "module-main-header__search__icon", onClick: this.setFocus })),
+                        react_1.default.createElement("div", { className: "module-main-header__search__in-conversation-pill__x-button" }))) : (react_1.default.createElement("button", { className: "module-main-header__search__icon", onClick: this.setFocus, tabIndex: -1 })),
                     react_1.default.createElement("input", {
                         type: "text", ref: this.inputRef, className: classnames_1.default('module-main-header__search__input', searchTerm
                             ? 'module-main-header__search__input--with-text'
                             : null, searchConversationId
                             ? 'module-main-header__search__input--in-conversation'
-                            : null), placeholder: placeholder, dir: "auto", onKeyUp: this.handleKeyUp, value: searchTerm, onChange: this.updateSearch
+                            : null), placeholder: placeholder, dir: "auto", onKeyDown: this.handleKeyDown, value: searchTerm, onChange: this.updateSearch
                     }),
-                    searchTerm ? (react_1.default.createElement("div", { role: "button", className: "module-main-header__search__cancel-icon", onClick: this.handleXButton })) : null)));
+                    searchTerm ? (react_1.default.createElement("button", { tabIndex: -1, className: "module-main-header__search__cancel-icon", onClick: this.handleXButton })) : null)));
         }
     }
     exports.MainHeader = MainHeader;
