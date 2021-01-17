@@ -133,9 +133,11 @@
                 const { key, shiftKey, ctrlKey, metaKey } = e;
                 // When using the ctrl key, `key` is `'X'`. When using the cmd key, `key` is `'x'`
                 const xKey = key === 'x' || key === 'X';
-                const cmdOrCtrl = ctrlKey || metaKey;
+                const commandKey = lodash_1.get(window, 'platform') === 'darwin' && metaKey;
+                const controlKey = lodash_1.get(window, 'platform') !== 'darwin' && ctrlKey;
+                const commandOrCtrl = commandKey || controlKey;
                 // cmd/ctrl-shift-x
-                if (xKey && shiftKey && cmdOrCtrl) {
+                if (xKey && shiftKey && commandOrCtrl) {
                     e.preventDefault();
                     setLarge(x => !x);
                 }

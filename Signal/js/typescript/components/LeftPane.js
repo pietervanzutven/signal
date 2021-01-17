@@ -47,7 +47,9 @@
                     react_1.default.createElement("span", { className: "module-left-pane__archived-button__archived-count" }, archivedConversations.length)));
             };
             this.handleKeyDown = (event) => {
-                const commandOrCtrl = event.metaKey || event.ctrlKey;
+                const commandKey = lodash_1.get(window, 'platform') === 'darwin' && event.metaKey;
+                const controlKey = lodash_1.get(window, 'platform') !== 'darwin' && event.ctrlKey;
+                const commandOrCtrl = commandKey || controlKey;
                 if (commandOrCtrl && !event.shiftKey && event.key === 'ArrowUp') {
                     this.scrollToRow(0);
                     this.setFocusToFirstNeeded = true;

@@ -104,9 +104,11 @@
             this.handleKeyDown = (event) => {
                 const { clearConversationSearch, clearSearch, searchConversationId, searchTerm, } = this.props;
                 const { ctrlKey, metaKey, key } = event;
-                const ctrlOrCommand = ctrlKey || metaKey;
+                const commandKey = lodash_1.get(window, 'platform') === 'darwin' && metaKey;
+                const controlKey = lodash_1.get(window, 'platform') !== 'darwin' && ctrlKey;
+                const commandOrCtrl = commandKey || controlKey;
                 // On linux, this keyboard combination selects all text
-                if (ctrlOrCommand && key === '/') {
+                if (commandOrCtrl && key === '/') {
                     event.preventDefault();
                     event.stopPropagation();
                     return;

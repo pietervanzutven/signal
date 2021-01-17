@@ -40,7 +40,9 @@
             };
             this.handleKeyDown = (event) => {
                 const { items } = this.props;
-                const commandOrCtrl = event.metaKey || event.ctrlKey;
+                const commandKey = lodash_1.get(window, 'platform') === 'darwin' && event.metaKey;
+                const controlKey = lodash_1.get(window, 'platform') !== 'darwin' && event.ctrlKey;
+                const commandOrCtrl = commandKey || controlKey;
                 if (!items || items.length < 1) {
                     return;
                 }

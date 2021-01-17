@@ -417,12 +417,14 @@
         const editorKeybindingFn = React.useCallback(
             // tslint:disable-next-line cyclomatic-complexity
             (e) => {
+                const commandKey = lodash_1.get(window, 'platform') === 'darwin' && e.metaKey;
+                const controlKey = lodash_1.get(window, 'platform') !== 'darwin' && e.ctrlKey;
                 if (e.key === 'Enter' && emojiResults.length > 0) {
                     e.preventDefault();
                     return 'enter-emoji';
                 }
                 if (e.key === 'Enter' && !e.shiftKey) {
-                    if (large && !(e.ctrlKey || e.metaKey)) {
+                    if (large && !(controlKey || commandKey)) {
                         return draft_js_1.getDefaultKeyBinding(e);
                     }
                     e.preventDefault();
@@ -506,7 +508,7 @@
             };
         }
         return (React.createElement(react_popper_1.Manager, null,
-            React.createElement(react_popper_1.Reference, null, (popperRef) => (React.createElement(react_measure_1.default, { bounds: true, onResize: handleEditorSizeChange }, ({ measureRef }) => (React.createElement("div", { className: "module-composition-input__input", ref: combineRefs(popperRef.ref, measureRef, rootElRef) },
+            React.createElement(react_popper_1.Reference, null, ({ ref: popperRef }) => (React.createElement(react_measure_1.default, { bounds: true, onResize: handleEditorSizeChange }, ({ measureRef }) => (React.createElement("div", { className: "module-composition-input__input", ref: combineRefs(popperRef, measureRef, rootElRef) },
                 React.createElement("div", {
                     className: classnames_1.default('module-composition-input__input__scroller', large
                         ? 'module-composition-input__input__scroller--large'

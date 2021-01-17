@@ -100,13 +100,15 @@
             React.useEffect(() => {
                 const handleKeydown = (event) => {
                     const { ctrlKey, key, metaKey, shiftKey } = event;
-                    const ctrlOrCommand = metaKey || ctrlKey;
+                    const commandKey = lodash_1.get(window, 'platform') === 'darwin' && metaKey;
+                    const controlKey = lodash_1.get(window, 'platform') !== 'darwin' && ctrlKey;
+                    const commandOrCtrl = commandKey || controlKey;
                     // We don't want to open up if the conversation has any panels open
                     const panels = document.querySelectorAll('.conversation .panel');
                     if (panels && panels.length > 1) {
                         return;
                     }
-                    if (ctrlOrCommand && shiftKey && (key === 's' || key === 'S')) {
+                    if (commandOrCtrl && shiftKey && (key === 's' || key === 'S')) {
                         event.stopPropagation();
                         event.preventDefault();
                         setOpen(!open);
