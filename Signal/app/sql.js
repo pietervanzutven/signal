@@ -1806,12 +1806,10 @@
       }
     );
 
-    return map(rows, row => (Object.assign({},
-      jsonToObject(row.json),
-      {
-        snippet: row.snippet,
-      }
-    )));
+    return map(rows, row => ({
+      json: row.json,
+      snippet: row.snippet,
+    }));
   }
 
   async function searchMessagesInConversation(
@@ -1837,12 +1835,10 @@
       }
     );
 
-    return map(rows, row => (Object.assign({},
-      jsonToObject(row.json),
-      {
-        snippet: row.snippet,
-      }
-    )));
+    return map(rows, row => ({
+      json: row.json,
+      snippet: row.snippet,
+    }));
   }
 
   async function getMessageCount() {

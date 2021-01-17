@@ -45,12 +45,14 @@
         return page === Math.floor(packs / PACKS_PAGE_SIZE);
     }
     exports.StickerPicker = React.memo(React.forwardRef(({ i18n, packs, recentStickers, onClose, onClickAddPack, onPickSticker, showPickerHint, style, }, ref) => {
+        const focusRef = React.useRef(null);
         const tabIds = React.useMemo(() => ['recents', ...packs.map(({ id }) => id)], packs);
         const [currentTab, [recentsHandler, ...packsHandlers]] = useTabs(tabIds,
             // If there are no recent stickers, default to the first sticker pack, unless there are no sticker packs.
             tabIds[recentStickers.length > 0 ? 0 : Math.min(1, tabIds.length)]);
         const selectedPack = packs.find(({ id }) => id === currentTab);
         const { stickers = recentStickers, title: packTitle = 'Recent Stickers', } = selectedPack || {};
+        const [isUsingKeyboard, setIsUsingKeyboard] = React.useState(false);
         const [packsPage, setPacksPage] = React.useState(0);
         const onClickPrevPackPage = React.useCallback(() => {
             setPacksPage(i => i - 1);
@@ -60,17 +62,38 @@
         }, [setPacksPage]);
         // Handle escape key
         React.useEffect(() => {
-            const handler = (e) => {
-                if (e.key === 'Escape') {
+            const handler = (event) => {
+                if (event.key === 'Tab') {
+                    // We do NOT prevent default here to allow Tab to be used normally
+                    setIsUsingKeyboard(true);
+                    return;
+                }
+                if (event.key === 'Escape') {
+                    event.stopPropagation();
+                    event.preventDefault();
                     onClose();
+                    return;
                 }
             };
-            document.addEventListener('keyup', handler);
+            document.addEventListener('keydown', handler);
             return () => {
-                document.removeEventListener('keyup', handler);
+                document.removeEventListener('keydown', handler);
             };
         }, [onClose]);
+        // Focus popup on after initial render, restore focus on teardown
+        React.useEffect(() => {
+            const lastFocused = document.activeElement;
+            if (focusRef.current) {
+                focusRef.current.focus();
+            }
+            return () => {
+                if (lastFocused && lastFocused.focus) {
+                    lastFocused.focus();
+                }
+            };
+        }, []);
         const isEmpty = stickers.length === 0;
+        const addPackRef = isEmpty ? focusRef : undefined;
         const downloadError = selectedPack &&
             selectedPack.status === 'error' &&
             selectedPack.stickerCount !== selectedPack.stickers.length;
@@ -105,10 +128,10 @@
                                 'module-sticker-picker__header__button--error': pack.status === 'error',
                             })
                         }, pack.cover ? (React.createElement("img", { className: "module-sticker-picker__header__button__image", src: pack.cover.url, alt: pack.title, title: pack.title })) : (React.createElement("div", { className: "module-sticker-picker__header__button__image-placeholder" })))))),
-                    packsPage > 0 ? (React.createElement("button", { className: classnames_1.default('module-sticker-picker__header__button', 'module-sticker-picker__header__button--prev-page'), onClick: onClickPrevPackPage })) : null,
-                    !isLastPacksPage(packsPage, packs.length) ? (React.createElement("button", { className: classnames_1.default('module-sticker-picker__header__button', 'module-sticker-picker__header__button--next-page'), onClick: onClickNextPackPage })) : null),
+                    !isUsingKeyboard && packsPage > 0 ? (React.createElement("button", { className: classnames_1.default('module-sticker-picker__header__button', 'module-sticker-picker__header__button--prev-page'), onClick: onClickPrevPackPage })) : null,
+                    !isUsingKeyboard && !isLastPacksPage(packsPage, packs.length) ? (React.createElement("button", { className: classnames_1.default('module-sticker-picker__header__button', 'module-sticker-picker__header__button--next-page'), onClick: onClickNextPackPage })) : null),
                 React.createElement("button", {
-                    className: classnames_1.default('module-sticker-picker__header__button', 'module-sticker-picker__header__button--add-pack', {
+                    ref: addPackRef, className: classnames_1.default('module-sticker-picker__header__button', 'module-sticker-picker__header__button--add-pack', {
                         'module-sticker-picker__header__button--hint': showPickerHint,
                     }), onClick: onClickAddPack
                 })),
@@ -140,8 +163,11 @@
                         'module-sticker-picker__body__content--under-long-text': showLongText,
                     })
                 },
-                    stickers.map(({ packId, id, url }) => (React.createElement("button", { key: `${packId}-${id}`, className: "module-sticker-picker__body__cell", onClick: () => onPickSticker(packId, id) },
-                        React.createElement("img", { className: "module-sticker-picker__body__cell__image", src: url, alt: packTitle })))),
+                    stickers.map(({ packId, id, url }, index) => {
+                        const maybeFocusRef = index === 0 ? focusRef : undefined;
+                        return (React.createElement("button", { ref: maybeFocusRef, key: `${packId}-${id}`, className: "module-sticker-picker__body__cell", onClick: () => onPickSticker(packId, id) },
+                            React.createElement("img", { className: "module-sticker-picker__body__cell__image", src: url, alt: packTitle })));
+                    }),
                     Array(pendingCount)
                         .fill(0)
                         .map((_, i) => (React.createElement("div", { key: i, className: "module-sticker-picker__body__cell__placeholder", role: "presentation" }))))) : null)));

@@ -24,11 +24,6 @@
     const StickerPackInstallButton_1 = window.ts.components.stickers.StickerPackInstallButton;
     const ConfirmationDialog_1 = window.ts.components.ConfirmationDialog;
     const Spinner_1 = window.ts.components.Spinner;
-    function focusRef(el) {
-        if (el) {
-            el.focus();
-        }
-    }
     function renderBody({ pack, i18n }) {
         if (pack && pack.status === 'error') {
             return (React.createElement("div", { className: "module-sticker-manager__preview-modal__container__error" }, i18n('stickers--StickerPreview--Error')));
@@ -45,8 +40,24 @@
         // tslint:disable-next-line max-func-body-length
         (props) => {
             const { onClose, pack, i18n, downloadStickerPack, installStickerPack, uninstallStickerPack, } = props;
+            const focusRef = React.useRef(null);
             const [root, setRoot] = React.useState(null);
             const [confirmingUninstall, setConfirmingUninstall] = React.useState(false);
+            // Restore focus on teardown
+            React.useEffect(() => {
+                if (!root) {
+                    return;
+                }
+                const lastFocused = document.activeElement;
+                if (focusRef.current) {
+                    focusRef.current.focus();
+                }
+                return () => {
+                    if (lastFocused && lastFocused.focus) {
+                        lastFocused.focus();
+                    }
+                };
+            }, [root]);
             React.useEffect(() => {
                 const div = document.createElement('div');
                 document.body.appendChild(div);
@@ -99,9 +110,9 @@
                         onClose();
                     }
                 };
-                document.addEventListener('keyup', handler);
+                document.addEventListener('keydown', handler);
                 return () => {
-                    document.removeEventListener('keyup', handler);
+                    document.removeEventListener('keydown', handler);
                 };
             }, [onClose]);
             const handleClickToClose = React.useCallback((e) => {
@@ -110,7 +121,10 @@
                 }
             }, [onClose]);
             return root
-                ? react_dom_1.createPortal(React.createElement("div", { role: "button", className: "module-sticker-manager__preview-modal__overlay", onClick: handleClickToClose }, confirmingUninstall ? (React.createElement(ConfirmationDialog_1.ConfirmationDialog, { i18n: i18n, onClose: onClose, negativeText: i18n('stickers--StickerManager--Uninstall'), onNegative: handleUninstall }, i18n('stickers--StickerManager--UninstallWarning'))) : (React.createElement("div", { className: "module-sticker-manager__preview-modal__container" },
+                ? react_dom_1.createPortal(React.createElement("div", {
+                    // Not really a button. Just a background which can be clicked to close modal
+                    role: "button", className: "module-sticker-manager__preview-modal__overlay", onClick: handleClickToClose
+                }, confirmingUninstall ? (React.createElement(ConfirmationDialog_1.ConfirmationDialog, { i18n: i18n, onClose: onClose, negativeText: i18n('stickers--StickerManager--Uninstall'), onNegative: handleUninstall }, i18n('stickers--StickerManager--UninstallWarning'))) : (React.createElement("div", { className: "module-sticker-manager__preview-modal__container" },
                     React.createElement("header", { className: "module-sticker-manager__preview-modal__container__header" },
                         React.createElement("h2", { className: "module-sticker-manager__preview-modal__container__header__text" }, i18n('stickers--StickerPreview--Title')),
                         React.createElement("button", { onClick: onClose, className: "module-sticker-manager__preview-modal__container__header__close-button" })),

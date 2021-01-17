@@ -60,7 +60,7 @@
         );
         view.$el.appendTo(this.el);
 
-        if (this.lastConversation) {
+        if (this.lastConversation && this.lastConversation !== conversation) {
           this.lastConversation.trigger(
             'unload',
             'opened another conversation'
@@ -106,7 +106,6 @@
     initialize(options = {}) {
       this.ready = false;
       this.render();
-      this.$el.attr('tabindex', '1');
 
       this.conversation_stack = new Whisper.ConversationStack({
         el: this.$('.conversation-stack'),
@@ -197,6 +196,13 @@
       if (view) {
         this.appLoadingScreen = null;
         view.remove();
+
+        const searchInput = document.querySelector(
+          '.module-main-header__search__input'
+        );
+        if (searchInput && searchInput.focus) {
+          searchInput.focus();
+        }
       }
     },
     onProgress(count) {

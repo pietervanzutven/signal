@@ -25,6 +25,8 @@
             tempPath: 'missing',
             ourNumber: 'missing',
             regionCode: 'missing',
+            platform: 'missing',
+            interactionMode: 'mouse',
             i18n: () => 'missing',
         };
     }

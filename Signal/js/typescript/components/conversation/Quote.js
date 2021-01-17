@@ -55,26 +55,35 @@
         return;
     }
     class Quote extends react_1.default.Component {
-        constructor(props) {
-            super(props);
-            this.handleImageErrorBound = this.handleImageError.bind(this);
+        constructor() {
+            super(...arguments);
             this.state = {
                 imageBroken: false,
             };
-        }
-        handleImageError() {
-            // tslint:disable-next-line no-console
-            console.log('Message: Image failed to load; failing over to placeholder');
-            this.setState({
-                imageBroken: true,
-            });
+            this.handleKeyDown = (event) => {
+                const { onClick } = this.props;
+                // This is important to ensure that using this quote to navigate to the referenced
+                //   message doesn't also trigger its parent message's keydown.
+                if (onClick && (event.key === 'Enter' || event.key === ' ')) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    onClick();
+                }
+            };
+            this.handleImageError = () => {
+                // tslint:disable-next-line no-console
+                console.log('Message: Image failed to load; failing over to placeholder');
+                this.setState({
+                    imageBroken: true,
+                });
+            };
         }
         renderImage(url, i18n, icon) {
             const iconElement = icon ? (react_1.default.createElement("div", { className: "module-quote__icon-container__inner" },
                 react_1.default.createElement("div", { className: "module-quote__icon-container__circle-background" },
                     react_1.default.createElement("div", { className: classnames_1.default('module-quote__icon-container__icon', `module-quote__icon-container__icon--${icon}`) })))) : null;
             return (react_1.default.createElement("div", { className: "module-quote__icon-container" },
-                react_1.default.createElement("img", { src: url, alt: i18n('quoteThumbnailAlt'), onError: this.handleImageErrorBound }),
+                react_1.default.createElement("img", { src: url, alt: i18n('quoteThumbnailAlt'), onError: this.handleImageError }),
                 iconElement));
         }
         renderIcon(icon) {
@@ -143,15 +152,25 @@
             if (!onClose) {
                 return null;
             }
-            // We don't want the overall click handler for the quote to fire, so we stop
-            //   propagation before handing control to the caller's callback.
-            const onClick = (e) => {
+            const clickHandler = (e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 onClose();
+            };
+            const keyDownHandler = (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    onClose();
+                }
             };
             // We need the container to give us the flexibility to implement the iOS design.
             return (react_1.default.createElement("div", { className: "module-quote__close-container" },
-                react_1.default.createElement("div", { className: "module-quote__close-button", role: "button", onClick: onClick })));
+                react_1.default.createElement("div", {
+                    tabIndex: 0,
+                    // We can't be a button because the overall quote is a button; can't nest them
+                    role: "button", className: "module-quote__close-button", onKeyDown: keyDownHandler, onClick: clickHandler
+                })));
         }
         renderAuthor() {
             const { authorProfileName, authorPhoneNumber, authorName, i18n, isFromMe, isIncoming, } = this.props;
@@ -180,8 +199,8 @@
                 return null;
             }
             return (react_1.default.createElement("div", { className: classnames_1.default('module-quote-container', withContentAbove ? 'module-quote-container--with-content-above' : null) },
-                react_1.default.createElement("div", {
-                    onClick: onClick, role: "button", className: classnames_1.default('module-quote', isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing', isIncoming
+                react_1.default.createElement("button", {
+                    onClick: onClick, onKeyDown: this.handleKeyDown, className: classnames_1.default('module-quote', isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing', isIncoming
                         ? `module-quote--incoming-${authorColor}`
                         : `module-quote--outgoing-${authorColor}`, !onClick ? 'module-quote--no-click' : null, withContentAbove ? 'module-quote--with-content-above' : null, referencedMessageNotFound
                         ? 'module-quote--with-reference-warning'

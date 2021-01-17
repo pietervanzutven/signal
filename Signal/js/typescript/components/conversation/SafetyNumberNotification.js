@@ -28,8 +28,8 @@
                                 react_1.default.createElement(ContactName_1.ContactName, { name: contact.name, profileName: contact.profileName, phoneNumber: contact.phoneNumber, module: "module-safety-number-notification__contact" })),
                         ], i18n: i18n
                     })),
-                react_1.default.createElement("div", {
-                    role: "button", onClick: () => {
+                react_1.default.createElement("button", {
+                    onClick: () => {
                         showIdentity(contact.id);
                     }, className: "module-safety-number-notification__button"
                 }, i18n('verifyNewNumber'))));

@@ -253,6 +253,7 @@
     <Content Include="js\typescript\components\conversation\GroupNotification.js" />
     <Content Include="js\typescript\components\conversation\Image.js" />
     <Content Include="js\typescript\components\conversation\ImageGrid.js" />
+    <Content Include="js\typescript\components\conversation\InlineNotificationWrapper.js" />
     <Content Include="js\typescript\components\conversation\LastSeenIndicator.js" />
     <Content Include="js\typescript\components\conversation\Linkify.js" />
     <Content Include="js\typescript\components\conversation\media-gallery\AttachmentSection.js" />
@@ -297,6 +298,8 @@
     <Content Include="js\typescript\components\MessageBodyHighlight.js" />
     <Content Include="js\typescript\components\MessageSearchResult.js" />
     <Content Include="js\typescript\components\SearchResults.js" />
+    <Content Include="js\typescript\components\ShortcutGuide.js" />
+    <Content Include="js\typescript\components\ShortcutGuideModal.js" />
     <Content Include="js\typescript\components\Spinner.js" />
     <Content Include="js\typescript\components\StartNewConversation.js" />
     <Content Include="js\typescript\components\stickers\lib.js" />
@@ -307,6 +310,7 @@
     <Content Include="js\typescript\components\stickers\StickerPicker.js" />
     <Content Include="js\typescript\components\stickers\StickerPreviewModal.js" />
     <Content Include="js\typescript\components\styles\Colors.js" />
+    <Content Include="js\typescript\components\_util.js" />
     <Content Include="js\typescript\notifications\getStatus.js" />
     <Content Include="js\typescript\OS.js" />
     <Content Include="js\typescript\protobuf\protobuf.js" />
@@ -326,6 +330,7 @@
     <Content Include="js\typescript\state\reducer.js" />
     <Content Include="js\typescript\state\roots\createCompositionArea.js" />
     <Content Include="js\typescript\state\roots\createLeftPane.js" />
+    <Content Include="js\typescript\state\roots\createShortcutGuideModal.js" />
     <Content Include="js\typescript\state\roots\createStickerManager.js" />
     <Content Include="js\typescript\state\roots\createStickerPreviewModal.js" />
     <Content Include="js\typescript\state\roots\createTimeline.js" />
@@ -338,6 +343,7 @@
     <Content Include="js\typescript\state\smart\LeftPane.js" />
     <Content Include="js\typescript\state\smart\MainHeader.js" />
     <Content Include="js\typescript\state\smart\MessageSearchResult.js" />
+    <Content Include="js\typescript\state\smart\ShortcutGuideModal.js" />
     <Content Include="js\typescript\state\smart\StickerManager.js" />
     <Content Include="js\typescript\state\smart\StickerPreviewModal.js" />
     <Content Include="js\typescript\state\smart\Timeline.js" />

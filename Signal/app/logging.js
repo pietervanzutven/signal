@@ -35,7 +35,7 @@
     fetch,
   };
 
-  function initialize() {
+  async function initialize() {
     if (logger) {
       throw new Error('Already called initialize!');
     }
@@ -44,75 +44,89 @@
     const logPath = path.join(basePath, 'logs');
     mkdirp.sync(logPath);
 
-    return cleanupLogs(logPath).then(() => {
-      const logFile = path.join(logPath, 'log.log');
-      const loggerOptions = {
-        name: 'log',
-        streams: [
+    try {
+      await cleanupLogs(logPath);
+    } catch (error) {
+      const errorString = `Failed to clean logs; deleting all. Error: ${error.stack
+        }`;
+      console.error(errorString);
+      await deleteAllLogs(logPath);
+      mkdirp.sync(logPath);
+
+      // If we want this log entry to persist on disk, we need to wait until we've
+      //   set up our logging infrastructure.
+      setTimeout(() => {
+        console.error(errorString);
+      }, 500);
+    }
+
+    const logFile = path.join(logPath, 'log.log');
+    const loggerOptions = {
+      name: 'log',
+      streams: [
+        {
+          type: 'rotating-file',
+          path: logFile,
+          period: '1d',
+          count: 3,
+        },
+      ],
+    };
+
+    if (isRunningFromConsole) {
+      loggerOptions.streams.push({
+        level: 'debug',
+        stream: process.stdout,
+      });
+    }
+
+    fs.createFileSync(logFile);
+    logger = {
+      add: (level, msg) => fs.appendFileSync(logFile, JSON.stringify({ level: level, time: new Date().toJSON(), msg: msg })),
+      fatal: msg => logger.add(60, msg),
+      error: msg => logger.add(50, msg),
+      warn: msg => logger.add(40, msg),
+      info: msg => logger.add(30, msg),
+      debug: msg => logger.add(20, msg),
+      trace: msg => logger.add(10, msg),
+    };
+
+    LEVELS.forEach(level => {
+      ipc.on(`log-${level}`, (first, ...rest) => {
+        logger[level](...rest);
+      });
+    });
+
+    ipc.on('batch-log', (first, batch) => {
+      batch.forEach(item => {
+        logger[item.level](
           {
-            type: 'rotating-file',
-            path: logFile,
-            period: '1d',
-            count: 3,
+            time: new Date(item.timestamp),
           },
-        ],
-      };
-
-      if (isRunningFromConsole) {
-        loggerOptions.streams.push({
-          level: 'debug',
-          stream: process.stdout,
-        });
-      }
-
-      fs.createFileSync(logFile);
-      logger = {
-        add: (level, msg) => fs.appendFileSync(logFile, JSON.stringify({ level: level, time: new Date().toJSON(), msg: msg })),
-        fatal: msg => logger.add(60, msg),
-        error: msg => logger.add(50, msg),
-        warn: msg => logger.add(40, msg),
-        info: msg => logger.add(30, msg),
-        debug: msg => logger.add(20, msg),
-        trace: msg => logger.add(10, msg),
-      };
-
-      LEVELS.forEach(level => {
-        ipc.on(`log-${level}`, (first, ...rest) => {
-          logger[level](...rest);
-        });
-      });
-
-      ipc.on('batch-log', (first, batch) => {
-        batch.forEach(item => {
-          logger[item.level](
-            {
-              time: new Date(item.timestamp),
-            },
-            item.logText
-          );
-        });
-      });
-
-      ipc.on('fetch-log', event => {
-        fetch(logPath).then(
-          data => {
-            event.sender.send('fetched-log', data);
-          },
-          error => {
-            logger.error(`Problem loading log from disk: ${error.stack}`);
-          }
+          item.logText
         );
       });
+    });
 
-      ipc.on('delete-all-logs', async event => {
-        try {
-          await deleteAllLogs(logPath);
-        } catch (error) {
-          logger.error(`Problem deleting all logs: ${error.stack}`);
+    ipc.on('fetch-log', event => {
+      fetch(logPath).then(
+        data => {
+          event.sender.send('fetched-log', data);
+        },
+        error => {
+          logger.error(`Problem loading log from disk: ${error.stack}`);
         }
+      );
+    });
 
-        event.sender.send('delete-all-logs-complete');
-      });
+    ipc.on('delete-all-logs', async event => {
+      try {
+        await deleteAllLogs(logPath);
+      } catch (error) {
+        logger.error(`Problem deleting all logs: ${error.stack}`);
+      }
+
+      event.sender.send('delete-all-logs-complete');
     });
   }
 

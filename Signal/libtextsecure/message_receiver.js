@@ -1178,7 +1178,7 @@ MessageReceiver.prototype.extend({
     return Object.assign({},
       _.omit(attachment, 'thumbnail'),
       {
-        id: attachment.id.toString(),
+        id: attachment.id ? attachment.id.toString() : null,
         key: attachment.key ? attachment.key.toString('base64') : null,
         digest: attachment.digest ? attachment.digest.toString('base64') : null,
       }

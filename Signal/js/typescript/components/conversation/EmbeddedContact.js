@@ -15,15 +15,30 @@
     const _contactUtil_1 = window.ts.components.conversation._contactUtil;
     class EmbeddedContact extends react_1.default.Component {
         render() {
-            const { contact, i18n, isIncoming, onClick, withContentAbove, withContentBelow, } = this.props;
+            const { contact, i18n, isIncoming, onClick, tabIndex, withContentAbove, withContentBelow, } = this.props;
             const module = 'embedded-contact';
             const direction = isIncoming ? 'incoming' : 'outgoing';
-            return (react_1.default.createElement("div", {
-                className: classnames_1.default('module-embedded-contact', withContentAbove
+            return (react_1.default.createElement("button", {
+                className: classnames_1.default('module-embedded-contact', `module-embedded-contact--${direction}`, withContentAbove
                     ? 'module-embedded-contact--with-content-above'
                     : null, withContentBelow
                     ? 'module-embedded-contact--with-content-below'
-                    : null), role: "button", onClick: onClick
+                    : null), onKeyDown: (event) => {
+                        if (event.key !== 'Enter' && event.key !== 'Space') {
+                            return;
+                        }
+                        if (onClick) {
+                            event.stopPropagation();
+                            event.preventDefault();
+                            onClick();
+                        }
+                    }, onClick: (event) => {
+                        if (onClick) {
+                            event.stopPropagation();
+                            event.preventDefault();
+                            onClick();
+                        }
+                    }, tabIndex: tabIndex
             },
                 _contactUtil_1.renderAvatar({ contact, i18n, size: 52, direction }),
                 react_1.default.createElement("div", { className: "module-embedded-contact__text-container" },

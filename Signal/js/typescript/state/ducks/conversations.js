@@ -16,6 +16,7 @@
         conversationRemoved,
         conversationUnloaded,
         removeAllConversations,
+        selectMessage,
         messageDeleted,
         messageChanged,
         messagesAdded,
@@ -70,6 +71,15 @@
         return {
             type: 'CONVERSATIONS_REMOVE_ALL',
             payload: null,
+        };
+    }
+    function selectMessage(messageId, conversationId) {
+        return {
+            type: 'MESSAGE_SELECTED',
+            payload: {
+                messageId,
+                conversationId,
+            },
         };
     }
     function messageChanged(id, conversationId, data) {
@@ -293,10 +303,20 @@
                 return state;
             }
             const { messageIds } = existingConversation;
-            return Object.assign({}, state, { messagesLookup: lodash_1.omit(state.messagesLookup, messageIds), messagesByConversation: lodash_1.omit(state.messagesByConversation, [id]) });
+            const selectedConversation = state.selectedConversation !== id
+                ? state.selectedConversation
+                : undefined;
+            return Object.assign({}, state, { selectedConversation, messagesLookup: lodash_1.omit(state.messagesLookup, messageIds), messagesByConversation: lodash_1.omit(state.messagesByConversation, [id]) });
         }
         if (action.type === 'CONVERSATIONS_REMOVE_ALL') {
             return getEmptyState();
+        }
+        if (action.type === 'MESSAGE_SELECTED') {
+            const { messageId, conversationId } = action.payload;
+            if (state.selectedConversation !== conversationId) {
+                return state;
+            }
+            return Object.assign({}, state, { selectedMessage: messageId, selectedMessageCounter: state.selectedMessageCounter + 1 });
         }
         if (action.type === 'MESSAGE_CHANGED') {
             const { id, conversationId, data } = action.payload;
@@ -334,7 +354,9 @@
                     [conversationId]: {
                         isLoadingMessages: false,
                         scrollToMessageId,
-                        scrollToMessageCounter: 0,
+                        scrollToMessageCounter: existingConversation
+                            ? existingConversation.scrollToMessageCounter + 1
+                            : 0,
                         messageIds,
                         metrics,
                         resetCounter,

@@ -27,7 +27,7 @@
         }
         renderContent() {
             const { fileName, fileSize, timestamp } = this.props;
-            return (react_1.default.createElement("div", { className: "module-document-list-item__content", role: "button", onClick: this.props.onClick },
+            return (react_1.default.createElement("button", { className: "module-document-list-item__content", onClick: this.props.onClick },
                 react_1.default.createElement("div", { className: "module-document-list-item__icon" }),
                 react_1.default.createElement("div", { className: "module-document-list-item__metadata" },
                     react_1.default.createElement("span", { className: "module-document-list-item__file-name" }, fileName),

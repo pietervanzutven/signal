@@ -12,6 +12,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const Message_1 = window.ts.components.conversation.Message;
+    const InlineNotificationWrapper_1 = window.ts.components.conversation.InlineNotificationWrapper;
     const UnsupportedMessage_1 = window.ts.components.conversation.UnsupportedMessage;
     const TimerNotification_1 = window.ts.components.conversation.TimerNotification;
     const SafetyNumberNotification_1 = window.ts.components.conversation.SafetyNumberNotification;
@@ -20,34 +21,38 @@
     const ResetSessionNotification_1 = window.ts.components.conversation.ResetSessionNotification;
     class TimelineItem extends react_1.default.PureComponent {
         render() {
-            const { item, i18n } = this.props;
+            const { conversationId, id, isSelected, item, i18n, selectMessage, } = this.props;
             if (!item) {
                 // tslint:disable-next-line:no-console
-                console.warn('TimelineItem: item provided was falsey');
+                console.warn(`TimelineItem: item ${id} provided was falsey`);
                 return null;
             }
             if (item.type === 'message') {
                 return react_1.default.createElement(Message_1.Message, Object.assign({}, this.props, item.data, { i18n: i18n }));
             }
+            let notification;
             if (item.type === 'unsupportedMessage') {
-                return react_1.default.createElement(UnsupportedMessage_1.UnsupportedMessage, Object.assign({}, this.props, item.data, { i18n: i18n }));
+                notification = (react_1.default.createElement(UnsupportedMessage_1.UnsupportedMessage, Object.assign({}, this.props, item.data, { i18n: i18n })));
             }
-            if (item.type === 'timerNotification') {
-                return react_1.default.createElement(TimerNotification_1.TimerNotification, Object.assign({}, this.props, item.data, { i18n: i18n }));
+            else if (item.type === 'timerNotification') {
+                notification = (react_1.default.createElement(TimerNotification_1.TimerNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));
             }
-            if (item.type === 'safetyNumberNotification') {
-                return (react_1.default.createElement(SafetyNumberNotification_1.SafetyNumberNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));
+            else if (item.type === 'safetyNumberNotification') {
+                notification = (react_1.default.createElement(SafetyNumberNotification_1.SafetyNumberNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));
             }
-            if (item.type === 'verificationNotification') {
-                return (react_1.default.createElement(VerificationNotification_1.VerificationNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));
+            else if (item.type === 'verificationNotification') {
+                notification = (react_1.default.createElement(VerificationNotification_1.VerificationNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));
             }
-            if (item.type === 'groupNotification') {
-                return react_1.default.createElement(GroupNotification_1.GroupNotification, Object.assign({}, this.props, item.data, { i18n: i18n }));
+            else if (item.type === 'groupNotification') {
+                notification = (react_1.default.createElement(GroupNotification_1.GroupNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));
             }
-            if (item.type === 'resetSessionNotification') {
-                return (react_1.default.createElement(ResetSessionNotification_1.ResetSessionNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));
+            else if (item.type === 'resetSessionNotification') {
+                notification = (react_1.default.createElement(ResetSessionNotification_1.ResetSessionNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));
             }
-            throw new Error('TimelineItem: Unknown type!');
+            else {
+                throw new Error('TimelineItem: Unknown type!');
+            }
+            return (react_1.default.createElement(InlineNotificationWrapper_1.InlineNotificationWrapper, { id: id, conversationId: conversationId, isSelected: isSelected, selectMessage: selectMessage }, notification));
         }
     }
     exports.TimelineItem = TimelineItem;

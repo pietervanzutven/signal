@@ -111,19 +111,19 @@
   </script>
 
   <script type='text/x-tmpl-mustache' id='recorder'>
-      <button class='finish'><span class='icon'></span></button>
+      <button class='close' tabIndex='2'><span class='icon'></span></button>
       <span class='time'>0:00</span>
-      <button class='close'><span class='icon'></span></button>
+      <button class='finish' tabIndex='1'><span class='icon'></span></button>
   </script>
 
   <script type='text/x-tmpl-mustache' id='confirmation-dialog'>
     <div class="content">
       <div class='message'>{{ message }}</div>
       <div class='buttons'>
+        <button class='ok' tabindex='2'>{{ ok }}</button>
         {{ #showCancel }}
-          <button class='cancel' tabindex='2'>{{ cancel }}</button>
+          <button class='cancel' tabindex='1'>{{ cancel }}</button>
         {{ /showCancel }}
-        <button class='ok' tabindex='1'>{{ ok }}</button>
       </div>
     </div>
   </script>
@@ -155,13 +155,13 @@
   </script>
 
   <script type='text/x-tmpl-mustache' id='group-member-list'>
-    <div class='container'>
+    <div class='container' tabindex='0'>
       {{ #summary }} <div class='summary'>{{ summary }}</div>{{ /summary }}
     </div>
   </script>
 
   <script type='text/x-tmpl-mustache' id='key-verification'>
-    <div class='container'>
+    <div class='container' tabindex='0'>
       {{ ^hasTheirKey }}
         <div class='placeholder'>{{ theirKeyUnknown }}</div>
       {{ /hasTheirKey }}
@@ -649,6 +649,7 @@
   <script type='text/javascript' src='js/modules/migrations/get_placeholder_migrations.js'></script>
   <script type='text/javascript' src='js/modules/metadata/CiphertextMessage.js'></script>
   <script type='text/javascript' src='js/modules/metadata/SecretSessionCipher.js'></script>
+  <script type='text/javascript' src='js/typescript/components/_util.js'></script>
   <script type='text/javascript' src='js/typescript/components/Avatar.js'></script>
   <script type='text/javascript' src='js/typescript/components/AvatarPopup.js'></script>
   <script type='text/javascript' src='js/typescript/components/Lightbox.js'></script>
@@ -660,6 +661,8 @@
   <script type='text/javascript' src='js/typescript/components/ConfirmationDialog.js'></script>
   <script type='text/javascript' src='js/typescript/components/ConfirmationModal.js'></script>
   <script type='text/javascript' src='js/typescript/components/Countdown.js'></script>
+  <script type='text/javascript' src='js/typescript/components/ShortcutGuide.js'></script>
+  <script type='text/javascript' src='js/typescript/components/ShortcutGuideModal.js'></script>
   <script type='text/javascript' src='js/typescript/components/emoji/lib.js'></script>
   <script type='text/javascript' src='js/typescript/components/emoji/Emoji.js'></script>
   <script type='text/javascript' src='js/typescript/components/emoji/EmojiPicker.js'></script>
@@ -707,6 +710,7 @@
   <script type='text/javascript' src='js/typescript/components/conversation/LastSeenIndicator.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/ScrollDownButton.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/UnsupportedMessage.js'></script>
+  <script type='text/javascript' src='js/typescript/components/conversation/InlineNotificationWrapper.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/TimeLine.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/TimelineItem.js'></script>
   <script type='text/javascript' src='js/typescript/components/conversation/TimelineLoadingRow.js'></script>
@@ -774,6 +778,7 @@
   <script type='text/javascript' src='js/typescript/state/smart/MessageSearchResult.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/LastSeenIndicator.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/LeftPane.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/ShortcutGuideModal.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/StickerManager.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/StickerPreviewModal.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/TypingBubble.js'></script>
@@ -782,6 +787,7 @@
   <script type='text/javascript' src='js/typescript/state/smart/Timeline.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createCompositionArea.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createLeftPane.js'></script>
+  <script type='text/javascript' src='js/typescript/state/roots/createShortcutGuideModal.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createStickerManager.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createStickerPreviewModal.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createTimeline.js'></script>

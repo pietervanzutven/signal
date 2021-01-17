@@ -36,9 +36,135 @@
     class Message extends react_1.default.PureComponent {
         constructor(props) {
             super(props);
-            this.captureMenuTriggerBound = this.captureMenuTrigger.bind(this);
-            this.showMenuBound = this.showMenu.bind(this);
-            this.handleImageErrorBound = this.handleImageError.bind(this);
+            this.focusRef = react_1.default.createRef();
+            this.audioRef = react_1.default.createRef();
+            this.captureMenuTrigger = (triggerRef) => {
+                this.menuTriggerRef = triggerRef;
+            };
+            this.showMenu = (event) => {
+                if (this.menuTriggerRef) {
+                    this.menuTriggerRef.handleContextClick(event);
+                }
+            };
+            this.handleImageError = () => {
+                const { id } = this.props;
+                // tslint:disable-next-line no-console
+                console.log(`Message ${id}: Image failed to load; failing over to placeholder`);
+                this.setState({
+                    imageBroken: true,
+                });
+            };
+            this.handleFocus = () => {
+                const { interactionMode } = this.props;
+                if (interactionMode === 'keyboard') {
+                    this.setSelected();
+                }
+            };
+            this.setSelected = () => {
+                const { id, conversationId, selectMessage } = this.props;
+                if (selectMessage) {
+                    selectMessage(id, conversationId);
+                }
+            };
+            this.setFocus = () => {
+                const container = this.focusRef.current;
+                if (container && !container.contains(document.activeElement)) {
+                    container.focus();
+                }
+            };
+            // tslint:disable-next-line cyclomatic-complexity
+            this.handleOpen = (event) => {
+                const { attachments, contact, displayTapToViewMessage, id, isTapToView, isTapToViewExpired, openConversation, showContactDetail, showVisualAttachment, } = this.props;
+                const { imageBroken } = this.state;
+                const isAttachmentPending = this.isAttachmentPending();
+                if (isTapToView) {
+                    if (!isTapToViewExpired && !isAttachmentPending) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        displayTapToViewMessage(id);
+                    }
+                    return;
+                }
+                if (!imageBroken &&
+                    attachments &&
+                    attachments.length > 0 &&
+                    !isAttachmentPending &&
+                    Attachment_1.canDisplayImage(attachments) &&
+                    ((Attachment_1.isImage(attachments) && Attachment_1.hasImage(attachments)) ||
+                        (Attachment_1.isVideo(attachments) && Attachment_1.hasVideoScreenshot(attachments)))) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const attachment = attachments[0];
+                    showVisualAttachment({ attachment, messageId: id });
+                    return;
+                }
+                if (attachments &&
+                    attachments.length === 1 &&
+                    !isAttachmentPending &&
+                    !Attachment_1.isAudio(attachments)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this.openGenericAttachment();
+                    return;
+                }
+                if (!isAttachmentPending &&
+                    Attachment_1.isAudio(attachments) &&
+                    this.audioRef &&
+                    this.audioRef.current) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (this.audioRef.current.paused) {
+                        // tslint:disable-next-line no-floating-promises
+                        this.audioRef.current.play();
+                    }
+                    else {
+                        // tslint:disable-next-line no-floating-promises
+                        this.audioRef.current.pause();
+                    }
+                }
+                if (contact && contact.signalAccount) {
+                    openConversation(contact.signalAccount);
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                if (contact) {
+                    showContactDetail({ contact, signalAccount: contact.signalAccount });
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            };
+            this.openGenericAttachment = (event) => {
+                const { attachments, downloadAttachment, timestamp } = this.props;
+                if (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                if (!attachments || attachments.length !== 1) {
+                    return;
+                }
+                const attachment = attachments[0];
+                const { fileName } = attachment;
+                const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
+                downloadAttachment({
+                    isDangerous,
+                    attachment,
+                    timestamp,
+                });
+            };
+            this.handleKeyDown = (event) => {
+                if (event.key !== 'Enter' && event.key !== 'Space') {
+                    return;
+                }
+                this.handleOpen(event);
+            };
+            this.handleClick = (event) => {
+                // We don't want clicks on body text to result in the 'default action' for the message
+                const { text } = this.props;
+                if (text && text.length > 0) {
+                    return;
+                }
+                this.handleOpen(event);
+            };
             this.state = {
                 expiring: false,
                 expired: false,
@@ -48,6 +174,9 @@
             };
         }
         static getDerivedStateFromProps(props, state) {
+            if (!props.isSelected) {
+                return Object.assign({}, state, { isSelected: false, prevSelectedCounter: 0 });
+            }
             if (props.isSelected &&
                 props.isSelectedCounter !== state.prevSelectedCounter) {
                 return Object.assign({}, state, { isSelected: props.isSelected, prevSelectedCounter: props.isSelectedCounter });
@@ -56,6 +185,10 @@
         }
         componentDidMount() {
             this.startSelectedTimer();
+            const { isSelected } = this.props;
+            if (isSelected) {
+                this.setFocus();
+            }
             const { expirationLength } = this.props;
             if (!expirationLength) {
                 return;
@@ -78,13 +211,17 @@
                 clearTimeout(this.expiredTimeout);
             }
         }
-        componentDidUpdate() {
+        componentDidUpdate(prevProps) {
             this.startSelectedTimer();
+            if (!prevProps.isSelected && this.props.isSelected) {
+                this.setFocus();
+            }
             this.checkExpired();
         }
         startSelectedTimer() {
+            const { interactionMode } = this.props;
             const { isSelected } = this.state;
-            if (!isSelected) {
+            if (interactionMode === 'keyboard' || !isSelected) {
                 return;
             }
             if (!this.selectedTimeout) {
@@ -115,13 +252,6 @@
                 };
                 this.expiredTimeout = setTimeout(setExpired, EXPIRED_DELAY);
             }
-        }
-        handleImageError() {
-            // tslint:disable-next-line no-console
-            console.log('Message: Image failed to load; failing over to placeholder');
-            this.setState({
-                imageBroken: true,
-            });
         }
         renderMetadata() {
             const { collapseMetadata, direction, expirationLength, expirationTimestamp, i18n, isSticker, isTapToViewExpired, status, text, textPending, timestamp, } = this.props;
@@ -179,7 +309,7 @@
         // tslint:disable-next-line max-func-body-length cyclomatic-complexity
         renderAttachment() {
             const { attachments, collapseMetadata, conversationType, direction, i18n, id, quote, showVisualAttachment, isSticker, text, } = this.props;
-            const { imageBroken, isSelected } = this.state;
+            const { imageBroken } = this.state;
             if (!attachments || !attachments[0]) {
                 return null;
             }
@@ -195,6 +325,8 @@
                     (Attachment_1.isVideo(attachments) && Attachment_1.hasVideoScreenshot(attachments)))) {
                 const prefix = isSticker ? 'sticker' : 'attachment';
                 const bottomOverlay = !isSticker && !collapseMetadata;
+                // We only want users to tab into this if there's more than one
+                const tabIndex = attachments.length > 1 ? 0 : -1;
                 return (react_1.default.createElement("div", {
                     className: classnames_1.default(`module-message__${prefix}-container`, withContentAbove
                         ? `module-message__${prefix}-container--with-content-above`
@@ -205,14 +337,14 @@
                         : null)
                 },
                     react_1.default.createElement(ImageGrid_1.ImageGrid, {
-                        attachments: attachments, withContentAbove: isSticker || withContentAbove, withContentBelow: isSticker || withContentBelow, isSticker: isSticker, isSelected: isSticker && isSelected, stickerSize: STICKER_SIZE, bottomOverlay: bottomOverlay, i18n: i18n, onError: this.handleImageErrorBound, onClick: attachment => {
+                        attachments: attachments, withContentAbove: isSticker || withContentAbove, withContentBelow: isSticker || withContentBelow, isSticker: isSticker, stickerSize: STICKER_SIZE, bottomOverlay: bottomOverlay, i18n: i18n, onError: this.handleImageError, tabIndex: tabIndex, onClick: attachment => {
                             showVisualAttachment({ attachment, messageId: id });
                         }
                     })));
             }
             else if (!firstAttachment.pending && Attachment_1.isAudio(attachments)) {
                 return (react_1.default.createElement("audio", {
-                    controls: true, className: classnames_1.default('module-message__audio-attachment', withContentBelow
+                    ref: this.audioRef, controls: true, className: classnames_1.default('module-message__audio-attachment', withContentBelow
                         ? 'module-message__audio-attachment--with-content-below'
                         : null, withContentAbove
                         ? 'module-message__audio-attachment--with-content-above'
@@ -224,12 +356,18 @@
                 const { pending, fileName, fileSize, contentType } = firstAttachment;
                 const extension = Attachment_1.getExtensionForDisplay({ contentType, fileName });
                 const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
-                return (react_1.default.createElement("div", {
+                return (react_1.default.createElement("button", {
                     className: classnames_1.default('module-message__generic-attachment', withContentBelow
                         ? 'module-message__generic-attachment--with-content-below'
                         : null, withContentAbove
                         ? 'module-message__generic-attachment--with-content-above'
-                        : null)
+                        : null),
+                    // There's only ever one of these, so we don't want users to tab into it
+                    tabIndex: -1, onClick: (event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        this.openGenericAttachment();
+                    }
                 },
                     pending ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__spinner-container" },
                         react_1.default.createElement(Spinner_1.Spinner, { svgSize: "small", size: "24px", direction: direction }))) : (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-container" },
@@ -262,21 +400,29 @@
             const isFullSizeImage = !first.isStickerPack &&
                 width &&
                 width >= MINIMUM_LINK_PREVIEW_IMAGE_WIDTH;
-            return (react_1.default.createElement("div", {
-                role: "button", className: classnames_1.default('module-message__link-preview', withContentAbove
+            return (react_1.default.createElement("button", {
+                className: classnames_1.default('module-message__link-preview', `module-message__link-preview--${direction}`, withContentAbove
                     ? 'module-message__link-preview--with-content-above'
-                    : null), onClick: () => {
+                    : null), onKeyDown: (event) => {
+                        if (event.key === 'Enter' || event.key === 'Space') {
+                            event.stopPropagation();
+                            event.preventDefault();
+                            openLink(first.url);
+                        }
+                    }, onClick: (event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
                         openLink(first.url);
                     }
             },
-                first.image && previewHasImage && isFullSizeImage ? (react_1.default.createElement(ImageGrid_1.ImageGrid, { attachments: [first.image], withContentAbove: withContentAbove, withContentBelow: true, onError: this.handleImageErrorBound, i18n: i18n })) : null,
+                first.image && previewHasImage && isFullSizeImage ? (react_1.default.createElement(ImageGrid_1.ImageGrid, { attachments: [first.image], withContentAbove: withContentAbove, withContentBelow: true, onError: this.handleImageError, i18n: i18n })) : null,
                 react_1.default.createElement("div", {
                     className: classnames_1.default('module-message__link-preview__content', withContentAbove || isFullSizeImage
                         ? 'module-message__link-preview__content--with-content-above'
                         : null)
                 },
                     first.image && previewHasImage && !isFullSizeImage ? (react_1.default.createElement("div", { className: "module-message__link-preview__icon_container" },
-                        react_1.default.createElement(Image_1.Image, { smallCurveTopLeft: !withContentAbove, noBorder: true, noBackground: true, softCorners: true, alt: i18n('previewThumbnail', [first.domain]), height: 72, width: 72, url: first.image.url, attachment: first.image, onError: this.handleImageErrorBound, i18n: i18n }))) : null,
+                        react_1.default.createElement(Image_1.Image, { smallCurveTopLeft: !withContentAbove, noBorder: true, noBackground: true, softCorners: true, alt: i18n('previewThumbnail', [first.domain]), height: 72, width: 72, url: first.image.url, attachment: first.image, onError: this.handleImageError, i18n: i18n }))) : null,
                     react_1.default.createElement("div", {
                         className: classnames_1.default('module-message__link-preview__text', previewHasImage && !isFullSizeImage
                             ? 'module-message__link-preview__text--with-icon'
@@ -311,10 +457,12 @@
             const withCaption = Boolean(text);
             const withContentAbove = conversationType === 'group' && direction === 'incoming';
             const withContentBelow = withCaption || !collapseMetadata;
+            const otherContent = (contact && contact.signalAccount) || withCaption;
+            const tabIndex = otherContent ? 0 : -1;
             return (react_1.default.createElement(EmbeddedContact_1.EmbeddedContact, {
                 contact: contact, isIncoming: direction === 'incoming', i18n: i18n, onClick: () => {
                     showContactDetail({ contact, signalAccount: contact.signalAccount });
-                }, withContentAbove: withContentAbove, withContentBelow: withContentBelow
+                }, withContentAbove: withContentAbove, withContentBelow: withContentBelow, tabIndex: tabIndex
             }));
         }
         renderSendMessageButton() {
@@ -322,8 +470,8 @@
             if (!contact || !contact.signalAccount) {
                 return null;
             }
-            return (react_1.default.createElement("div", {
-                role: "button", onClick: () => {
+            return (react_1.default.createElement("button", {
+                onClick: () => {
                     if (contact.signalAccount) {
                         openConversation(contact.signalAccount);
                     }
@@ -363,21 +511,11 @@
             return (react_1.default.createElement("div", { className: "module-message__error-container" },
                 react_1.default.createElement("div", { className: classnames_1.default('module-message__error', `module-message__error--${direction}`) })));
         }
-        captureMenuTrigger(triggerRef) {
-            this.menuTriggerRef = triggerRef;
-        }
-        showMenu(event) {
-            if (this.menuTriggerRef) {
-                this.menuTriggerRef.handleContextClick(event);
-            }
-        }
         renderMenu(isCorrectSide, triggerId) {
-            const { attachments, direction, disableMenu, downloadAttachment, id, isSticker, isTapToView, replyToMessage, timestamp, } = this.props;
+            const { attachments, direction, disableMenu, id, isSticker, isTapToView, replyToMessage, } = this.props;
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
-            const fileName = attachments && attachments[0] ? attachments[0].fileName : null;
-            const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
             const multipleAttachments = attachments && attachments.length > 1;
             const firstAttachment = attachments && attachments[0];
             const downloadButton = !isSticker &&
@@ -385,21 +523,24 @@
                 !isTapToView &&
                 firstAttachment &&
                 !firstAttachment.pending ? (react_1.default.createElement("div", {
-                    onClick: () => {
-                        downloadAttachment({
-                            isDangerous,
-                            attachment: firstAttachment,
-                            timestamp,
-                        });
-                    }, role: "button", className: classnames_1.default('module-message__buttons__download', `module-message__buttons__download--${direction}`)
+                    onClick: this.openGenericAttachment,
+                    // This a menu meant for mouse use only
+                    role: "button", className: classnames_1.default('module-message__buttons__download', `module-message__buttons__download--${direction}`)
                 })) : null;
             const replyButton = (react_1.default.createElement("div", {
-                onClick: () => {
+                onClick: (event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
                     replyToMessage(id);
-                }, role: "button", className: classnames_1.default('module-message__buttons__reply', `module-message__buttons__download--${direction}`)
+                },
+                // This a menu meant for mouse use only
+                role: "button", className: classnames_1.default('module-message__buttons__reply', `module-message__buttons__download--${direction}`)
             }));
-            const menuButton = (react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, { id: triggerId, ref: this.captureMenuTriggerBound },
-                react_1.default.createElement("div", { role: "button", onClick: this.showMenuBound, className: classnames_1.default('module-message__buttons__menu', `module-message__buttons__download--${direction}`) })));
+            const menuButton = (react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, { id: triggerId, ref: this.captureMenuTrigger },
+                react_1.default.createElement("div", {
+                    // This a menu meant for mouse use only
+                    role: "button", onClick: this.showMenu, className: classnames_1.default('module-message__buttons__menu', `module-message__buttons__download--${direction}`)
+                })));
             const first = direction === 'incoming' ? downloadButton : menuButton;
             const last = direction === 'incoming' ? menuButton : downloadButton;
             return (react_1.default.createElement("div", { className: classnames_1.default('module-message__buttons', `module-message__buttons--${direction}`) },
@@ -408,10 +549,8 @@
                 last));
         }
         renderContextMenu(triggerId) {
-            const { attachments, deleteMessage, direction, downloadAttachment, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, timestamp, } = this.props;
+            const { attachments, deleteMessage, direction, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, } = this.props;
             const showRetry = status === 'error' && direction === 'outgoing';
-            const fileName = attachments && attachments[0] ? attachments[0].fileName : null;
-            const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
             const multipleAttachments = attachments && attachments.length > 1;
             const menu = (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
                 !isSticker &&
@@ -421,39 +560,41 @@
                     attachments[0] ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                         attributes: {
                             className: 'module-message__context__download',
-                        }, onClick: () => {
-                            downloadAttachment({
-                                attachment: attachments[0],
-                                timestamp,
-                                isDangerous,
-                            });
-                        }
+                        }, onClick: this.openGenericAttachment
                     }, i18n('downloadAttachment'))) : null,
                 react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__reply',
-                    }, onClick: () => {
+                    }, onClick: (event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
                         replyToMessage(id);
                     }
                 }, i18n('replyToMessage')),
                 react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__more-info',
-                    }, onClick: () => {
+                    }, onClick: (event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
                         showMessageDetail(id);
                     }
                 }, i18n('moreInfo')),
                 showRetry ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__retry-send',
-                    }, onClick: () => {
+                    }, onClick: (event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
                         retrySend(id);
                     }
                 }, i18n('retrySend'))) : null,
                 react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__delete-message',
-                    }, onClick: () => {
+                    }, onClick: (event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
                         deleteMessage(id);
                     }
                 }, i18n('deleteMessage'))));
@@ -463,12 +604,13 @@
             const { attachments, isSticker, previews } = this.props;
             if (attachments && attachments.length) {
                 if (isSticker) {
-                    // Padding is 8px, on both sides
-                    return STICKER_SIZE + 8 * 2;
+                    // Padding is 8px, on both sides, plus two for 1px border
+                    return STICKER_SIZE + 8 * 2 + 2;
                 }
                 const dimensions = Attachment_1.getGridDimensions(attachments);
                 if (dimensions) {
-                    return dimensions.width;
+                    // Add two for 1px border
+                    return dimensions.width + 2;
                 }
             }
             if (previews && previews.length) {
@@ -483,7 +625,8 @@
                     width >= MINIMUM_LINK_PREVIEW_IMAGE_WIDTH) {
                     const dimensions = Attachment_1.getImageDimensions(first.image);
                     if (dimensions) {
-                        return dimensions.width;
+                        // Add two for 1px border
+                        return dimensions.width + 2;
                     }
                 }
             }
@@ -583,12 +726,35 @@
                 this.renderMetadata(),
                 this.renderSendMessageButton()));
         }
+        renderContainer() {
+            const { authorColor, direction, isSticker, isTapToView, isTapToViewExpired, isTapToViewError, } = this.props;
+            const { isSelected } = this.state;
+            const isAttachmentPending = this.isAttachmentPending();
+            const width = this.getWidth();
+            const isShowingImage = this.isShowingImage();
+            const containerClassnames = classnames_1.default('module-message__container', isSelected && !isSticker ? 'module-message__container--selected' : null, isSticker ? 'module-message__container--with-sticker' : null, !isSticker ? `module-message__container--${direction}` : null, isTapToView ? 'module-message__container--with-tap-to-view' : null, isTapToView && isTapToViewExpired
+                ? 'module-message__container--with-tap-to-view-expired'
+                : null, !isSticker && direction === 'incoming'
+                ? `module-message__container--incoming-${authorColor}`
+                : null, isTapToView && isAttachmentPending && !isTapToViewExpired
+                ? 'module-message__container--with-tap-to-view-pending'
+                : null, isTapToView && isAttachmentPending && !isTapToViewExpired
+                ? `module-message__container--${direction}-${authorColor}-tap-to-view-pending`
+                : null, isTapToViewError
+                ? 'module-message__container--with-tap-to-view-error'
+                : null);
+            const containerStyles = {
+                width: isShowingImage ? width : undefined,
+            };
+            return (react_1.default.createElement("div", { className: containerClassnames, style: containerStyles },
+                this.renderAuthor(),
+                this.renderContents(),
+                this.renderAvatar()));
+        }
         // tslint:disable-next-line cyclomatic-complexity
         render() {
-            const { authorPhoneNumber, authorColor, attachments, conversationType, direction, displayTapToViewMessage, id, isSticker, isTapToView, isTapToViewExpired, isTapToViewError, timestamp, } = this.props;
+            const { authorPhoneNumber, attachments, conversationType, direction, id, isSticker, timestamp, } = this.props;
             const { expired, expiring, imageBroken, isSelected } = this.state;
-            const isAttachmentPending = this.isAttachmentPending();
-            const isButton = isTapToView && !isTapToViewExpired && !isAttachmentPending;
             // This id is what connects our triple-dot click with our associated pop-up menu.
             //   It needs to be unique.
             const triggerId = String(id || `${authorPhoneNumber}-${timestamp}`);
@@ -598,33 +764,15 @@
             if (isSticker && (imageBroken || !attachments || !attachments.length)) {
                 return null;
             }
-            const width = this.getWidth();
-            const isShowingImage = this.isShowingImage();
-            const role = isButton ? 'button' : undefined;
-            const onClick = isButton ? () => displayTapToViewMessage(id) : undefined;
-            return (react_1.default.createElement("div", { className: classnames_1.default('module-message', `module-message--${direction}`, expiring ? 'module-message--expired' : null, conversationType === 'group' ? 'module-message--group' : null) },
+            return (react_1.default.createElement("div", {
+                className: classnames_1.default('module-message', `module-message--${direction}`, isSelected ? 'module-message--selected' : null, expiring ? 'module-message--expired' : null, conversationType === 'group' ? 'module-message--group' : null), tabIndex: 0,
+                // We pretend to be a button because we sometimes contain buttons and a button
+                //   cannot be within another button
+                role: "button", onKeyDown: this.handleKeyDown, onClick: this.handleClick, onFocus: this.handleFocus, ref: this.focusRef
+            },
                 this.renderError(direction === 'incoming'),
                 this.renderMenu(direction === 'outgoing', triggerId),
-                react_1.default.createElement("div", {
-                    className: classnames_1.default('module-message__container', isSelected && !isSticker
-                        ? 'module-message__container--selected'
-                        : null, isSticker ? 'module-message__container--with-sticker' : null, !isSticker ? `module-message__container--${direction}` : null, isTapToView ? 'module-message__container--with-tap-to-view' : null, isTapToView && isTapToViewExpired
-                        ? 'module-message__container--with-tap-to-view-expired'
-                        : null, !isSticker && direction === 'incoming'
-                        ? `module-message__container--incoming-${authorColor}`
-                        : null, isTapToView && isAttachmentPending && !isTapToViewExpired
-                        ? 'module-message__container--with-tap-to-view-pending'
-                        : null, isTapToView && isAttachmentPending && !isTapToViewExpired
-                        ? `module-message__container--${direction}-${authorColor}-tap-to-view-pending`
-                        : null, isTapToViewError
-                        ? 'module-message__container--with-tap-to-view-error'
-                        : null), style: {
-                            width: isShowingImage ? width : undefined,
-                        }, role: role, onClick: onClick
-                },
-                    this.renderAuthor(),
-                    this.renderContents(),
-                    this.renderAvatar()),
+                this.renderContainer(),
                 this.renderError(direction === 'outgoing'),
                 this.renderMenu(direction === 'incoming', triggerId),
                 this.renderContextMenu(triggerId)));

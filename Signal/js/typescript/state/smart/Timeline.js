@@ -36,8 +36,8 @@
     const FilteredSmartTypingBubble = TypingBubble_1.SmartTypingBubble;
     const FilteredSmartLastSeenIndicator = LastSeenIndicator_1.SmartLastSeenIndicator;
     const FilteredSmartTimelineLoadingRow = TimelineLoadingRow_1.SmartTimelineLoadingRow;
-    function renderItem(messageId, actionProps) {
-        return react_1.default.createElement(FilteredSmartTimelineItem, Object.assign({}, actionProps, { id: messageId }));
+    function renderItem(messageId, conversationId, actionProps) {
+        return (react_1.default.createElement(FilteredSmartTimelineItem, Object.assign({}, actionProps, { conversationId: conversationId, id: messageId })));
     }
     function renderLastSeenIndicator(id) {
         return react_1.default.createElement(FilteredSmartLastSeenIndicator, { id: id });
@@ -52,8 +52,9 @@
         const { id } = props, actions = __rest(props, ["id"]);
         const conversation = conversations_1.getConversationSelector(state)(id);
         const conversationMessages = conversations_1.getConversationMessagesSelector(state)(id);
+        const selectedMessage = conversations_1.getSelectedMessage(state);
         return Object.assign({ id }, lodash_1.pick(conversation, ['unreadCount', 'typingContact']), conversationMessages, {
-            i18n: user_1.getIntl(state), renderItem,
+            selectedMessageId: selectedMessage ? selectedMessage.id : undefined, i18n: user_1.getIntl(state), renderItem,
             renderLastSeenIndicator,
             renderLoadingRow,
             renderTypingBubble

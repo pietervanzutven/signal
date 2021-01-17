@@ -13,8 +13,8 @@
     const react_1 = __importDefault(window.react);
     class StagedPlaceholderAttachment extends react_1.default.Component {
         render() {
-            const { onClick } = this.props;
-            return (react_1.default.createElement("div", { className: "module-staged-placeholder-attachment", role: "button", onClick: onClick },
+            const { i18n, onClick } = this.props;
+            return (react_1.default.createElement("button", { className: "module-staged-placeholder-attachment", onClick: onClick, title: i18n('add-image-attachment') },
                 react_1.default.createElement("div", { className: "module-staged-placeholder-attachment__plus-icon" })));
         }
     }

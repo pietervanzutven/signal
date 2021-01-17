@@ -46,14 +46,28 @@
                     uninstallStickerPack(id, key);
                 }
             }, [id, key, clearUninstalling]);
-            const handleClickPreview = React.useCallback(() => {
+            const handleKeyDown = React.useCallback((event) => {
+                if (onClickPreview &&
+                    (event.key === 'Enter' || event.key === 'Space')) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    onClickPreview(pack);
+                }
+            }, [onClickPreview, pack]);
+            const handleClickPreview = React.useCallback((event) => {
                 if (onClickPreview) {
+                    event.stopPropagation();
+                    event.preventDefault();
                     onClickPreview(pack);
                 }
             }, [onClickPreview, pack]);
             return (React.createElement(React.Fragment, null,
                 uninstalling ? (React.createElement(ConfirmationModal_1.ConfirmationModal, { i18n: i18n, onClose: clearUninstalling, negativeText: i18n('stickers--StickerManager--Uninstall'), onNegative: handleConfirmUninstall }, i18n('stickers--StickerManager--UninstallWarning'))) : null,
-                React.createElement("div", { role: "button", onClick: handleClickPreview, className: "module-sticker-manager__pack-row" },
+                React.createElement("div", {
+                    tabIndex: 0,
+                    // This can't be a button because we have buttons as descendants
+                    role: "button", onKeyDown: handleKeyDown, onClick: handleClickPreview, className: "module-sticker-manager__pack-row"
+                },
                     pack.cover ? (React.createElement("img", { src: pack.cover.url, alt: pack.title, className: "module-sticker-manager__pack-row__cover" })) : (React.createElement("div", { className: "module-sticker-manager__pack-row__cover-placeholder" })),
                     React.createElement("div", { className: "module-sticker-manager__pack-row__meta" },
                         React.createElement("div", { className: "module-sticker-manager__pack-row__meta__title" },

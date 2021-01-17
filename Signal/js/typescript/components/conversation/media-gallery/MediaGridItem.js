@@ -54,7 +54,7 @@
             return (react_1.default.createElement("div", { className: classnames_1.default('module-media-grid-item__icon', 'module-media-grid-item__icon-generic') }));
         }
         render() {
-            return (react_1.default.createElement("div", { className: "module-media-grid-item", role: "button", onClick: this.props.onClick }, this.renderContent()));
+            return (react_1.default.createElement("button", { className: "module-media-grid-item", onClick: this.props.onClick }, this.renderContent()));
         }
     }
     exports.MediaGridItem = MediaGridItem;

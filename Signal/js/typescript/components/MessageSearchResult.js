@@ -46,23 +46,23 @@
             return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, color: from.color, conversationType: "direct", i18n: i18n, name: name, noteToSelf: isNoteToSelf, phoneNumber: from.phoneNumber, profileName: from.profileName, size: 52 }));
         }
         render() {
-            const { from, i18n, id, isSelected, conversationId, openConversationInternal, receivedAt, snippet, to, } = this.props;
+            const { from, i18n, id, isSelected, conversationId, openConversationInternal, sentAt, snippet, to, } = this.props;
             if (!from || !to) {
                 return null;
             }
-            return (react_1.default.createElement("div", {
-                role: "button", onClick: () => {
+            return (react_1.default.createElement("button", {
+                onClick: () => {
                     if (openConversationInternal) {
                         openConversationInternal(conversationId, id);
                     }
-                }, className: classnames_1.default('module-message-search-result', isSelected ? 'module-message-search-result--is-selected' : null)
+                }, className: classnames_1.default('module-message-search-result', isSelected ? 'module-message-search-result--is-selected' : null), "data-id": id
             },
                 this.renderAvatar(),
                 react_1.default.createElement("div", { className: "module-message-search-result__text" },
                     react_1.default.createElement("div", { className: "module-message-search-result__header" },
                         this.renderFrom(),
                         react_1.default.createElement("div", { className: "module-message-search-result__header__timestamp" },
-                            react_1.default.createElement(Timestamp_1.Timestamp, { timestamp: receivedAt, i18n: i18n }))),
+                            react_1.default.createElement(Timestamp_1.Timestamp, { timestamp: sentAt, i18n: i18n }))),
                     react_1.default.createElement("div", { className: "module-message-search-result__body" },
                         react_1.default.createElement(MessageBodyHighlight_1.MessageBodyHighlight, { text: snippet, i18n: i18n })))));
         }

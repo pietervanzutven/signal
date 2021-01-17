@@ -1,11 +1,10 @@
-/* global crypto */
+/* global crypto, window */
 
 (function () {
   'use strict';
 
   window.types = window.types || {};
 
-  const fse = window.fs_extra;
   const { isFunction, isNumber } = window.lodash;
   const { createLastMessageUpdate } = window.ts.types.Conversation;
   const { arrayBufferToBase64, base64ToArrayBuffer } = window.crypto;
@@ -22,15 +21,24 @@
       }
 
       const avatar = conversation[field];
-      const { writeNewAttachmentData, deleteAttachmentData } = options;
-      if (!isFunction(writeNewAttachmentData)) {
-        throw new Error(
-          'Conversation.buildAvatarUpdater: writeNewAttachmentData must be a function'
-        );
-      }
+      const {
+        deleteAttachmentData,
+        doesAttachmentExist,
+        writeNewAttachmentData,
+      } = options;
       if (!isFunction(deleteAttachmentData)) {
         throw new Error(
           'Conversation.buildAvatarUpdater: deleteAttachmentData must be a function'
+        );
+      }
+      if (!isFunction(doesAttachmentExist)) {
+        throw new Error(
+          'Conversation.buildAvatarUpdater: deleteAttachmentData must be a function'
+        );
+      }
+      if (!isFunction(writeNewAttachmentData)) {
+        throw new Error(
+          'Conversation.buildAvatarUpdater: writeNewAttachmentData must be a function'
         );
       }
 
@@ -49,8 +57,14 @@
       }
 
       const { hash, path } = avatar;
+      const exists = await doesAttachmentExist(path);
+      if (!exists) {
+        window.log.warn(
+          `Conversation.buildAvatarUpdater: attachment ${path} did not exist`
+        );
+      }
 
-      if (hash === newHash) {
+      if (exists && hash === newHash) {
         return conversation;
       }
 
@@ -88,9 +102,6 @@
     let { avatar, profileAvatar, profileKey } = conversation;
 
     if (avatar && avatar.data) {
-      if (typeof avatar.data === 'string') {
-        avatar.data = (await fse.readFile(avatar.data)).buffer;
-      }
       avatar = {
         hash: await computeHash(avatar.data),
         path: await writeNewAttachmentData(avatar.data),
@@ -98,9 +109,6 @@
     }
 
     if (profileAvatar && profileAvatar.data) {
-      if (typeof profileAvatar.data === 'string') {
-        profileAvatar.data = (await fse.readFile(profileAvatar.data)).buffer;
-      }
       profileAvatar = {
         hash: await computeHash(profileAvatar.data),
         path: await writeNewAttachmentData(profileAvatar.data),

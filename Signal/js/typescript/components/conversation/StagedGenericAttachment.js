@@ -11,15 +11,15 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
-    const Message_1 = window.ts.components.conversation.Message;
+    const Attachment_1 = window.ts.types.Attachment;
     class StagedGenericAttachment extends react_1.default.Component {
         render() {
             const { attachment, onClose } = this.props;
             const { fileName, contentType } = attachment;
             const extension = Attachment_1.getExtensionForDisplay({ contentType, fileName });
             return (react_1.default.createElement("div", { className: "module-staged-generic-attachment" },
-                react_1.default.createElement("div", {
-                    className: "module-staged-generic-attachment__close-button", role: "button", onClick: () => {
+                react_1.default.createElement("button", {
+                    className: "module-staged-generic-attachment__close-button", onClick: () => {
                         if (onClose) {
                             onClose(attachment);
                         }

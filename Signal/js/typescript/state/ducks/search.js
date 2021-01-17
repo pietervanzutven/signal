@@ -17,6 +17,7 @@
     exports.actions = {
         searchMessages,
         searchDiscussions,
+        startSearch,
         clearSearch,
         clearConversationSearch,
         searchInConversation,
@@ -55,6 +56,12 @@
             conversations,
             contacts,
             query,
+        };
+    }
+    function startSearch() {
+        return {
+            type: 'SEARCH_START',
+            payload: null,
         };
     }
     function clearSearch() {
@@ -139,6 +146,7 @@
     // Reducer
     function getEmptyState() {
         return {
+            startSearchCounter: 0,
             query: '',
             messageIds: [],
             messageLookup: {},
@@ -148,8 +156,14 @@
             messagesLoading: false,
         };
     }
-    // tslint:disable-next-line max-func-body-length
+    // tslint:disable-next-line cyclomatic-complexity max-func-body-length
     function reducer(state = getEmptyState(), action) {
+        if (action.type === 'SHOW_ARCHIVED_CONVERSATIONS') {
+            return getEmptyState();
+        }
+        if (action.type === 'SEARCH_START') {
+            return Object.assign({}, state, { searchConversationId: undefined, searchConversationName: undefined, startSearchCounter: state.startSearchCounter + 1 });
+        }
         if (action.type === 'SEARCH_CLEAR') {
             return getEmptyState();
         }
@@ -172,11 +186,11 @@
             const { payload } = action;
             const { searchConversationId, searchConversationName } = payload;
             if (searchConversationId === state.searchConversationId) {
-                return state;
+                return Object.assign({}, state, { startSearchCounter: state.startSearchCounter + 1 });
             }
             return Object.assign({}, getEmptyState(), {
                 searchConversationId,
-                searchConversationName
+                searchConversationName, startSearchCounter: state.startSearchCounter + 1
             });
         }
         if (action.type === 'CLEAR_CONVERSATION_SEARCH') {
@@ -219,6 +233,15 @@
                 return getEmptyState();
             }
             return Object.assign({}, state, { selectedMessage: messageId });
+        }
+        if (action.type === 'CONVERSATION_UNLOADED') {
+            const { payload } = action;
+            const { id } = payload;
+            const { searchConversationId } = state;
+            if (searchConversationId && searchConversationId === id) {
+                return getEmptyState();
+            }
+            return state;
         }
         if (action.type === 'MESSAGE_DELETED') {
             const { messageIds, messageLookup } = state;

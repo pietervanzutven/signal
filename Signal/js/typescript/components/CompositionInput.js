@@ -311,11 +311,11 @@
         }, [emojiResultsIndex, emojiResults]);
         const handleEditorArrowKey = React.useCallback((e) => {
             if (e.key === 'ArrowUp') {
-                    selectEmojiResult('prev', e);
-                }
+                selectEmojiResult('prev', e);
+            }
             if (e.key === 'ArrowDown') {
-                    selectEmojiResult('next', e);
-                }
+                selectEmojiResult('next', e);
+            }
         }, [selectEmojiResult]);
         const handleEscapeKey = React.useCallback((e) => {
             if (emojiResults.length > 0) {
@@ -414,7 +414,9 @@
             e.preventDefault();
             handleEditorCommand('enter-emoji', editorStateRef.current);
         }, [emojiResults, editorStateRef, handleEditorCommand, resetEmojiResults]);
-        const editorKeybindingFn = React.useCallback((e) => {
+        const editorKeybindingFn = React.useCallback(
+            // tslint:disable-next-line cyclomatic-complexity
+            (e) => {
                 if (e.key === 'Enter' && emojiResults.length > 0) {
                     e.preventDefault();
                     return 'enter-emoji';
@@ -444,8 +446,18 @@
                         return null;
                     }
                 }
+                // Get rid of Ctrl-Shift-M, which by default adds a newline
+                if ((e.key === 'm' || e.key === 'M') && e.shiftKey && e.ctrlKey) {
+                    e.preventDefault();
+                    return null;
+                }
+                // Get rid of Ctrl-/, which on GNOME is bound to 'select all'
+                if (e.key === '/' && !e.shiftKey && e.ctrlKey) {
+                    e.preventDefault();
+                    return null;
+                }
                 return draft_js_1.getDefaultKeyBinding(e);
-        }, [emojiResults, large]);
+            }, [emojiResults, large]);
         // Create popper root
         React.useEffect(() => {
             if (emojiResults.length > 0) {

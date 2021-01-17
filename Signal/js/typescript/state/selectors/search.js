@@ -20,12 +20,19 @@
     exports.getSelectedMessage = reselect_1.createSelector(exports.getSearch, (state) => state.selectedMessage);
     exports.getSearchConversationId = reselect_1.createSelector(exports.getSearch, (state) => state.searchConversationId);
     exports.getSearchConversationName = reselect_1.createSelector(exports.getSearch, (state) => state.searchConversationName);
+    exports.getStartSearchCounter = reselect_1.createSelector(exports.getSearch, (state) => state.startSearchCounter);
     exports.isSearching = reselect_1.createSelector(exports.getSearch, (state) => {
         const { query } = state;
         return query && query.trim().length > 1;
     });
     exports.getMessageSearchResultLookup = reselect_1.createSelector(exports.getSearch, (state) => state.messageLookup);
-    exports.getSearchResults = reselect_1.createSelector([exports.getSearch, user_1.getRegionCode, conversations_1.getConversationLookup, conversations_1.getSelectedConversation], (state, regionCode, lookup, selectedConversation
+    exports.getSearchResults = reselect_1.createSelector([
+        exports.getSearch,
+        user_1.getRegionCode,
+        conversations_1.getConversationLookup,
+        conversations_1.getSelectedConversation,
+        exports.getSelectedMessage,
+    ], (state, regionCode, lookup, selectedConversationId, selectedMessageId
         // tslint:disable-next-line max-func-body-length
     ) => {
         const { contacts, conversations, discussionsLoading, messageIds, messagesLoading, searchConversationName, } = state;
@@ -55,7 +62,7 @@
                 const data = lookup[id];
                 items.push({
                     type: 'conversation',
-                    data: Object.assign({}, data, { isSelected: Boolean(data && id === selectedConversation) }),
+                    data: Object.assign({}, data, { isSelected: Boolean(data && id === selectedConversationId) }),
                 });
             });
         }
@@ -78,7 +85,7 @@
                 const data = lookup[id];
                 items.push({
                     type: 'contact',
-                    data: Object.assign({}, data, { isSelected: Boolean(data && id === selectedConversation) }),
+                    data: Object.assign({}, data, { isSelected: Boolean(data && id === selectedConversationId) }),
                 });
             });
         }
@@ -112,6 +119,8 @@
             regionCode: regionCode,
             searchConversationName,
             searchTerm: state.query,
+            selectedConversationId,
+            selectedMessageId,
         };
     });
     function _messageSearchResultSelector(message,

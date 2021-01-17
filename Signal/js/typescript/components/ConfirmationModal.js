@@ -30,14 +30,16 @@
                 };
             }, []);
             React.useEffect(() => {
-                const handler = ({ key }) => {
-                    if (key === 'Escape') {
+                const handler = (event) => {
+                    if (event.key === 'Escape') {
                         onClose();
+                        event.preventDefault();
+                        event.stopPropagation();
                     }
                 };
-                document.addEventListener('keyup', handler);
+                document.addEventListener('keydown', handler);
                 return () => {
-                    document.removeEventListener('keyup', handler);
+                    document.removeEventListener('keydown', handler);
                 };
             }, [onClose]);
             const handleCancel = React.useCallback((e) => {
@@ -46,7 +48,10 @@
                 }
             }, [onClose]);
             return root
-                ? react_dom_1.createPortal(React.createElement("div", { role: "button", className: "module-confirmation-dialog__overlay", onClick: handleCancel },
+                ? react_dom_1.createPortal(React.createElement("div", {
+                    // Not really a button. Just a background which can be clicked to close modal
+                    role: "button", className: "module-confirmation-dialog__overlay", onClick: handleCancel
+                },
                     React.createElement(ConfirmationDialog_1.ConfirmationDialog, { i18n: i18n, onClose: onClose, onAffirmative: onAffirmative, onNegative: onNegative, affirmativeText: affirmativeText, negativeText: negativeText }, children)), root)
                 : null;
         });

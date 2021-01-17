@@ -143,7 +143,7 @@
         // @ts-ignore
         ourNumber,
         // @ts-ignore
-        regionCode,
+        regionCode, interactionMode,
         // @ts-ignore
         conversation,
         // @ts-ignore
@@ -154,9 +154,9 @@
         //   We want to call this function again if any of those parameters change.
         const props = Whisper_1.getBubbleProps(message);
         if (selectedMessageId === message.id) {
-            return Object.assign({}, props, { data: Object.assign({}, props.data, { isSelected: true, isSelectedCounter: selectedMessageCounter }) });
+            return Object.assign({}, props, { data: Object.assign({}, props.data, { interactionMode, isSelected: true, isSelectedCounter: selectedMessageCounter }) });
         }
-        return props;
+        return Object.assign({}, props, { data: Object.assign({}, props.data, { interactionMode }) });
     }
     exports._messageSelector = _messageSelector;
     exports.getCachedSelectorForMessage = reselect_1.createSelector(user_1.getRegionCode, user_1.getUserNumber, () => {
@@ -164,7 +164,7 @@
         //   if any of them have changed.
         return memoizee_1.default(_messageSelector, { max: 2000 });
     });
-    exports.getMessageSelector = reselect_1.createSelector(exports.getCachedSelectorForMessage, exports.getMessages, exports.getSelectedMessage, exports.getConversationSelector, user_1.getRegionCode, user_1.getUserNumber, (messageSelector, messageLookup, selectedMessage, conversationSelector, regionCode, ourNumber) => {
+    exports.getMessageSelector = reselect_1.createSelector(exports.getCachedSelectorForMessage, exports.getMessages, exports.getSelectedMessage, exports.getConversationSelector, user_1.getRegionCode, user_1.getUserNumber, user_1.getInteractionMode, (messageSelector, messageLookup, selectedMessage, conversationSelector, regionCode, ourNumber, interactionMode) => {
         return (id) => {
             const message = messageLookup[id];
             if (!message) {
@@ -183,7 +183,7 @@
             if (quote) {
                 quoted = conversationSelector(quote.author);
             }
-            return messageSelector(message, ourNumber, regionCode, conversation, author, quoted, selectedMessage ? selectedMessage.id : undefined, selectedMessage ? selectedMessage.counter : undefined);
+            return messageSelector(message, ourNumber, regionCode, interactionMode, conversation, author, quoted, selectedMessage ? selectedMessage.id : undefined, selectedMessage ? selectedMessage.counter : undefined);
         };
     });
     function _conversationMessagesSelector(conversation) {
