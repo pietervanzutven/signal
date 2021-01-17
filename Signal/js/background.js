@@ -657,6 +657,7 @@
       const state = store.getState();
       const selectedId = state.conversations.selectedConversation;
       const conversation = ConversationController.get(selectedId);
+      const isSearching = Signal.State.Selectors.search.isSearching(state);
 
       // NAVIGATION
 
@@ -804,7 +805,7 @@
       }
 
       // Change currently selected conversation - up/down, to next/previous unread
-      if (optionOrAlt && !shiftKey && key === 'ArrowUp') {
+      if (!isSearching && optionOrAlt && !shiftKey && key === 'ArrowUp') {
         const unreadOnly = false;
         const targetId = findConversation(
           conversation ? conversation.id : null,
@@ -819,7 +820,7 @@
           return;
         }
       }
-      if (optionOrAlt && !shiftKey && key === 'ArrowDown') {
+      if (!isSearching && optionOrAlt && !shiftKey && key === 'ArrowDown') {
         const unreadOnly = false;
         const targetId = findConversation(
           conversation ? conversation.id : null,
@@ -834,7 +835,7 @@
           return;
         }
       }
-      if (optionOrAlt && shiftKey && key === 'ArrowUp') {
+      if (!isSearching && optionOrAlt && shiftKey && key === 'ArrowUp') {
         const unreadOnly = true;
         const targetId = findConversation(
           conversation ? conversation.id : null,
@@ -849,7 +850,7 @@
           return;
         }
       }
-      if (optionOrAlt && shiftKey && key === 'ArrowDown') {
+      if (!isSearching && optionOrAlt && shiftKey && key === 'ArrowDown') {
         const unreadOnly = true;
         const targetId = findConversation(
           conversation ? conversation.id : null,
