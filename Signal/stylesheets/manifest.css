@@ -2358,7 +2358,7 @@ img.emoji.jumbo {
   cursor: pointer;
   outline: inherit;
   text-align: inherit;
-  width: 100%;
+  width: calc(100% + 24px);
   font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
   font-size: 13px;
   line-height: 18px;
@@ -2379,6 +2379,8 @@ img.emoji.jumbo {
     color: #2090ea;
     background-color: #3b3b3b;
     border: 1px solid #848484; }
+  .module-message__send-message-button:focus, .module-message__send-message-button:hover {
+    box-shadow: 0px 0px 0px 2px #2090ea; }
 
 .module-message__author-avatar {
   position: absolute;
@@ -3141,9 +3143,12 @@ img.emoji.jumbo {
   outline: inherit;
   text-align: inherit;
   width: 100%;
+  padding: 5px;
   display: flex;
   flex-direction: row;
   align-items: center; }
+  .module-embedded-contact:focus, .module-embedded-contact:hover {
+    box-shadow: 0px 0px 0px 2px #2090ea; }
 
 .module-embedded-contact--with-content-above {
   padding-top: 4px; }

@@ -70,7 +70,7 @@
             };
             // tslint:disable-next-line cyclomatic-complexity
             this.handleOpen = (event) => {
-                const { attachments, displayTapToViewMessage, id, isTapToView, isTapToViewExpired, showVisualAttachment, } = this.props;
+                const { attachments, contact, displayTapToViewMessage, id, isTapToView, isTapToViewExpired, openConversation, showContactDetail, showVisualAttachment, } = this.props;
                 const { imageBroken } = this.state;
                 const isAttachmentPending = this.isAttachmentPending();
                 if (isTapToView) {
@@ -117,6 +117,16 @@
                         // tslint:disable-next-line no-floating-promises
                         this.audioRef.current.pause();
                     }
+                }
+                if (contact && contact.signalAccount) {
+                    openConversation(contact.signalAccount);
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                if (contact) {
+                    showContactDetail({ contact, signalAccount: contact.signalAccount });
+                    event.preventDefault();
+                    event.stopPropagation();
                 }
             };
             this.openGenericAttachment = (event) => {
@@ -410,10 +420,12 @@
             const withCaption = Boolean(text);
             const withContentAbove = conversationType === 'group' && direction === 'incoming';
             const withContentBelow = withCaption || !collapseMetadata;
+            const otherContent = (contact && contact.signalAccount) || withCaption;
+            const tabIndex = otherContent ? 0 : -1;
             return (react_1.default.createElement(EmbeddedContact_1.EmbeddedContact, {
                 contact: contact, isIncoming: direction === 'incoming', i18n: i18n, onClick: () => {
                     showContactDetail({ contact, signalAccount: contact.signalAccount });
-                }, withContentAbove: withContentAbove, withContentBelow: withContentBelow
+                }, withContentAbove: withContentAbove, withContentBelow: withContentBelow, tabIndex: tabIndex
             }));
         }
         renderSendMessageButton() {
