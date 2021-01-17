@@ -65,7 +65,7 @@
         },
         {
             description: 'Keyboard--open-emoji-chooser',
-            keys: ['commandOrCtrl', 'shift', 'E'],
+            keys: ['commandOrCtrl', 'shift', 'J'],
         },
         {
             description: 'Keyboard--open-sticker-chooser',

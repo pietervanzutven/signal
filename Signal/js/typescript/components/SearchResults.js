@@ -17,6 +17,7 @@
     const Spinner_1 = window.ts.components.Spinner;
     const ConversationListItem_1 = window.ts.components.ConversationListItem;
     const StartNewConversation_1 = window.ts.components.StartNewConversation;
+    const _util_1 = window.ts.components._util;
     class SearchResults extends react_1.default.Component {
         constructor() {
             super(...arguments);
@@ -78,7 +79,7 @@
                     }
                     // Then we try for the selected conversation
                     if (selectedConversationId && scrollingContainer) {
-                        const escapedId = ConversationListItem_1.cleanId(selectedConversationId).replace(/["\\]/g, '\\$&');
+                        const escapedId = _util_1.cleanId(selectedConversationId).replace(/["\\]/g, '\\$&');
                         // tslint:disable-next-line no-unnecessary-type-assertion
                         const target = scrollingContainer.querySelector(`.module-conversation-list-item[data-id="${escapedId}"]`);
                         if (target && target.focus) {

@@ -69,7 +69,7 @@
                     if (panels && panels.length > 1) {
                         return;
                     }
-                    if (ctrlOrCommand && shiftKey && (key === 'e' || key === 'E')) {
+                    if (ctrlOrCommand && shiftKey && (key === 'j' || key === 'J')) {
                         event.stopPropagation();
                         event.preventDefault();
                         setOpen(!open);

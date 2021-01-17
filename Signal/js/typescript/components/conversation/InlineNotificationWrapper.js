@@ -10,7 +10,7 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(require("react"));
+    const react_1 = __importDefault(window.react);
     class InlineNotificationWrapper extends react_1.default.Component {
         constructor() {
             super(...arguments);

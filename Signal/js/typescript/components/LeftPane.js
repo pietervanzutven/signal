@@ -14,6 +14,7 @@
     const lodash_1 = window.lodash;
     const ConversationListItem_1 = window.ts.components.ConversationListItem;
     const SearchResults_1 = window.ts.components.SearchResults;
+    const _util_1 = window.ts.components._util;
     class LeftPane extends react_1.default.Component {
         constructor() {
             super(...arguments);
@@ -72,7 +73,7 @@
                 if (document.activeElement === container) {
                     const scrollingContainer = this.getScrollContainer();
                     if (selectedConversationId && scrollingContainer) {
-                        const escapedId = ConversationListItem_1.cleanId(selectedConversationId).replace(/["\\]/g, '\\$&');
+                        const escapedId = _util_1.cleanId(selectedConversationId).replace(/["\\]/g, '\\$&');
                         // tslint:disable-next-line no-unnecessary-type-assertion
                         const target = scrollingContainer.querySelector(`.module-conversation-list-item[data-id="${escapedId}"]`);
                         if (target && target.focus) {
