@@ -710,7 +710,9 @@
       const { altKey, ctrlKey, key, metaKey, shiftKey } = event;
 
       const optionOrAlt = altKey;
-      const ctrlOrCommand = metaKey || ctrlKey;
+      const commandKey = window.platform === 'darwin' && metaKey;
+      const controlKey = window.platform !== 'darwin' && ctrlKey;
+      const commandOrCtrl = commandKey || controlKey;
 
       const state = store.getState();
       const selectedId = state.conversations.selectedConversation;
@@ -721,7 +723,7 @@
 
       // Show keyboard shortcuts - handled by Electron-managed keyboard shortcuts
       // However, on linux Ctrl+/ selects all text, so we prevent that
-      if (ctrlOrCommand && key === '/') {
+      if (commandOrCtrl && key === '/') {
         window.showKeyboardShortcuts();
 
         event.stopPropagation();
@@ -731,7 +733,7 @@
       }
 
       // Navigate by section
-      if (ctrlOrCommand && !shiftKey && (key === 't' || key === 'T')) {
+      if (commandOrCtrl && !shiftKey && (key === 't' || key === 'T')) {
         window.enterKeyboardMode();
         const focusedElement = document.activeElement;
 
@@ -930,7 +932,7 @@
       // Open the top-right menu for current conversation
       if (
         conversation &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         shiftKey &&
         (key === 'l' || key === 'L')
       ) {
@@ -971,7 +973,7 @@
       }
 
       // Search
-      if (ctrlOrCommand && !shiftKey && (key === 'f' || key === 'F')) {
+      if (commandOrCtrl && !shiftKey && (key === 'f' || key === 'F')) {
         const { startSearch } = actions.search;
         startSearch();
 
@@ -983,7 +985,7 @@
       // Search in conversation
       if (
         conversation &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         shiftKey &&
         (key === 'f' || key === 'F')
       ) {
@@ -1001,7 +1003,7 @@
       // Focus composer field
       if (
         conversation &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         shiftKey &&
         (key === 't' || key === 'T')
       ) {
@@ -1014,7 +1016,7 @@
       // Open all media
       if (
         conversation &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         shiftKey &&
         (key === 'm' || key === 'M')
       ) {
@@ -1031,7 +1033,7 @@
       // Begin recording voice note
       if (
         conversation &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         shiftKey &&
         (key === 'v' || key === 'V')
       ) {
@@ -1045,7 +1047,7 @@
       if (
         conversation &&
         !conversation.get('isArchived') &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         shiftKey &&
         (key === 'a' || key === 'A')
       ) {
@@ -1080,7 +1082,7 @@
       if (
         conversation &&
         conversation.get('isArchived') &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         shiftKey &&
         (key === 'u' || key === 'U')
       ) {
@@ -1102,7 +1104,7 @@
       // Close conversation
       if (
         conversation &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         shiftKey &&
         (key === 'c' || key === 'C')
       ) {
@@ -1117,7 +1119,7 @@
       // Show message details
       if (
         conversation &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         !shiftKey &&
         (key === 'd' || key === 'D')
       ) {
@@ -1135,7 +1137,7 @@
       // Toggle reply to message
       if (
         conversation &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         shiftKey &&
         (key === 'r' || key === 'R')
       ) {
@@ -1150,7 +1152,7 @@
       // Save attachment
       if (
         conversation &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         !shiftKey &&
         (key === 's' || key === 'S')
       ) {
@@ -1167,7 +1169,7 @@
 
       if (
         conversation &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         shiftKey &&
         (key === 'd' || key === 'D')
       ) {
@@ -1193,7 +1195,7 @@
       // Attach file
       if (
         conversation &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         !shiftKey &&
         (key === 'u' || key === 'U')
       ) {
@@ -1207,7 +1209,7 @@
       // Remove draft link preview
       if (
         conversation &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         !shiftKey &&
         (key === 'p' || key === 'P')
       ) {
@@ -1221,7 +1223,7 @@
       // Attach file
       if (
         conversation &&
-        ctrlOrCommand &&
+        commandOrCtrl &&
         shiftKey &&
         (key === 'p' || key === 'P')
       ) {
