@@ -21,9 +21,17 @@
                     container.focus();
                 }
             };
+            this.handleFocus = () => {
+                // @ts-ignore
+                if (window.getInteractionMode() === 'keyboard') {
+                    this.setSelected();
+                }
+            };
             this.setSelected = () => {
                 const { id, conversationId, selectMessage } = this.props;
-                selectMessage(id, conversationId);
+                if (selectMessage) {
+                    selectMessage(id, conversationId);
+                }
             };
         }
         componentDidMount() {
@@ -39,7 +47,7 @@
         }
         render() {
             const { children } = this.props;
-            return (react_1.default.createElement("div", { className: "module-inline-notification-wrapper", tabIndex: 0, ref: this.focusRef, onFocus: this.setSelected }, children));
+            return (react_1.default.createElement("div", { className: "module-inline-notification-wrapper", tabIndex: 0, ref: this.focusRef, onFocus: this.handleFocus }, children));
         }
     }
     exports.InlineNotificationWrapper = InlineNotificationWrapper;

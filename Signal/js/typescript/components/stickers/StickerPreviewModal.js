@@ -45,6 +45,9 @@
             const [confirmingUninstall, setConfirmingUninstall] = React.useState(false);
             // Restore focus on teardown
             React.useEffect(() => {
+                if (!root) {
+                    return;
+                }
                 const lastFocused = document.activeElement;
                 if (focusRef.current) {
                     focusRef.current.focus();

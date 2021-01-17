@@ -30,18 +30,14 @@
     // Same as MIN_WIDTH in ImageGrid.tsx
     const MINIMUM_LINK_PREVIEW_IMAGE_WIDTH = 200;
     const STICKER_SIZE = 128;
+    const SELECTED_TIMEOUT = 1000;
     const EXPIRATION_CHECK_MINIMUM = 2000;
     const EXPIRED_DELAY = 600;
     class Message extends react_1.default.PureComponent {
-        constructor() {
-            super(...arguments);
+        constructor(props) {
+            super(props);
             this.focusRef = react_1.default.createRef();
             this.audioRef = react_1.default.createRef();
-            this.state = {
-                expiring: false,
-                expired: false,
-                imageBroken: false,
-            };
             this.captureMenuTrigger = (triggerRef) => {
                 this.menuTriggerRef = triggerRef;
             };
@@ -58,9 +54,17 @@
                     imageBroken: true,
                 });
             };
+            this.handleFocus = () => {
+                const { interactionMode } = this.props;
+                if (interactionMode === 'keyboard') {
+                    this.setSelected();
+                }
+            };
             this.setSelected = () => {
                 const { id, conversationId, selectMessage } = this.props;
-                selectMessage(id, conversationId);
+                if (selectMessage) {
+                    selectMessage(id, conversationId);
+                }
             };
             this.setFocus = () => {
                 const container = this.focusRef.current;
@@ -161,8 +165,26 @@
                 }
                 this.handleOpen(event);
             };
+            this.state = {
+                expiring: false,
+                expired: false,
+                imageBroken: false,
+                isSelected: props.isSelected,
+                prevSelectedCounter: props.isSelectedCounter,
+            };
+        }
+        static getDerivedStateFromProps(props, state) {
+            if (!props.isSelected) {
+                return Object.assign({}, state, { isSelected: false, prevSelectedCounter: 0 });
+            }
+            if (props.isSelected &&
+                props.isSelectedCounter !== state.prevSelectedCounter) {
+                return Object.assign({}, state, { isSelected: props.isSelected, prevSelectedCounter: props.isSelectedCounter });
+            }
+            return state;
         }
         componentDidMount() {
+            this.startSelectedTimer();
             const { isSelected } = this.props;
             if (isSelected) {
                 this.setFocus();
@@ -190,10 +212,25 @@
             }
         }
         componentDidUpdate(prevProps) {
+            this.startSelectedTimer();
             if (!prevProps.isSelected && this.props.isSelected) {
                 this.setFocus();
             }
             this.checkExpired();
+        }
+        startSelectedTimer() {
+            const { interactionMode } = this.props;
+            const { isSelected } = this.state;
+            if (interactionMode === 'keyboard' || !isSelected) {
+                return;
+            }
+            if (!this.selectedTimeout) {
+                this.selectedTimeout = setTimeout(() => {
+                    this.selectedTimeout = undefined;
+                    this.setState({ isSelected: false });
+                    this.props.clearSelectedMessage();
+                }, SELECTED_TIMEOUT);
+            }
         }
         checkExpired() {
             const now = Date.now();
@@ -364,7 +401,7 @@
                 width &&
                 width >= MINIMUM_LINK_PREVIEW_IMAGE_WIDTH;
             return (react_1.default.createElement("button", {
-                className: classnames_1.default('module-message__link-preview', withContentAbove
+                className: classnames_1.default('module-message__link-preview', `module-message__link-preview--${direction}`, withContentAbove
                     ? 'module-message__link-preview--with-content-above'
                     : null), onKeyDown: (event) => {
                         if (event.key === 'Enter' || event.key === 'Space') {
@@ -690,7 +727,8 @@
                 this.renderSendMessageButton()));
         }
         renderContainer() {
-            const { authorColor, direction, isSelected, isSticker, isTapToView, isTapToViewExpired, isTapToViewError, } = this.props;
+            const { authorColor, direction, isSticker, isTapToView, isTapToViewExpired, isTapToViewError, } = this.props;
+            const { isSelected } = this.state;
             const isAttachmentPending = this.isAttachmentPending();
             const width = this.getWidth();
             const isShowingImage = this.isShowingImage();
@@ -716,7 +754,7 @@
         // tslint:disable-next-line cyclomatic-complexity
         render() {
             const { authorPhoneNumber, attachments, conversationType, direction, id, isSticker, timestamp, } = this.props;
-            const { expired, expiring, imageBroken } = this.state;
+            const { expired, expiring, imageBroken, isSelected } = this.state;
             // This id is what connects our triple-dot click with our associated pop-up menu.
             //   It needs to be unique.
             const triggerId = String(id || `${authorPhoneNumber}-${timestamp}`);
@@ -727,10 +765,10 @@
                 return null;
             }
             return (react_1.default.createElement("div", {
-                className: classnames_1.default('module-message', `module-message--${direction}`, expiring ? 'module-message--expired' : null, conversationType === 'group' ? 'module-message--group' : null), tabIndex: 0,
+                className: classnames_1.default('module-message', `module-message--${direction}`, isSelected ? 'module-message--selected' : null, expiring ? 'module-message--expired' : null, conversationType === 'group' ? 'module-message--group' : null), tabIndex: 0,
                 // We pretend to be a button because we sometimes contain buttons and a button
                 //   cannot be within another button
-                role: "button", onKeyDown: this.handleKeyDown, onClick: this.handleClick, onFocus: this.setSelected, ref: this.focusRef
+                role: "button", onKeyDown: this.handleKeyDown, onClick: this.handleClick, onFocus: this.handleFocus, ref: this.focusRef
             },
                 this.renderError(direction === 'incoming'),
                 this.renderMenu(direction === 'outgoing', triggerId),

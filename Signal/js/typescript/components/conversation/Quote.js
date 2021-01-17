@@ -64,17 +64,11 @@
                 const { onClick } = this.props;
                 // This is important to ensure that using this quote to navigate to the referenced
                 //   message doesn't also trigger its parent message's keydown.
-                if (onClick && (event.key === 'Enter' || event.key === 'Space')) {
+                if (onClick && (event.key === 'Enter' || event.key === ' ')) {
                     event.preventDefault();
                     event.stopPropagation();
                     onClick();
                 }
-            };
-            // We prevent this from bubbling to prevent the focus flash around a message when
-            //   you click a quote.
-            this.handleMouseDown = (event) => {
-                event.preventDefault();
-                event.stopPropagation();
             };
             this.handleImageError = () => {
                 // tslint:disable-next-line no-console
@@ -158,19 +152,24 @@
             if (!onClose) {
                 return null;
             }
-            // We don't want the overall click handler for the quote to fire, so we stop
-            //   propagation before handing control to the caller's callback.
-            const onClick = (e) => {
+            const clickHandler = (e) => {
                 e.stopPropagation();
                 e.preventDefault();
                 onClose();
+            };
+            const keyDownHandler = (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    onClose();
+                }
             };
             // We need the container to give us the flexibility to implement the iOS design.
             return (react_1.default.createElement("div", { className: "module-quote__close-container" },
                 react_1.default.createElement("div", {
                     tabIndex: 0,
                     // We can't be a button because the overall quote is a button; can't nest them
-                    role: "button", className: "module-quote__close-button", onClick: onClick
+                    role: "button", className: "module-quote__close-button", onKeyDown: keyDownHandler, onClick: clickHandler
                 })));
         }
         renderAuthor() {
@@ -201,7 +200,7 @@
             }
             return (react_1.default.createElement("div", { className: classnames_1.default('module-quote-container', withContentAbove ? 'module-quote-container--with-content-above' : null) },
                 react_1.default.createElement("button", {
-                    onClick: onClick, onKeyDown: this.handleKeyDown, onMouseDown: this.handleMouseDown, className: classnames_1.default('module-quote', isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing', isIncoming
+                    onClick: onClick, onKeyDown: this.handleKeyDown, className: classnames_1.default('module-quote', isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing', isIncoming
                         ? `module-quote--incoming-${authorColor}`
                         : `module-quote--outgoing-${authorColor}`, !onClick ? 'module-quote--no-click' : null, withContentAbove ? 'module-quote--with-content-above' : null, referencedMessageNotFound
                         ? 'module-quote--with-reference-warning'

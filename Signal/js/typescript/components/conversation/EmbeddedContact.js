@@ -19,7 +19,7 @@
             const module = 'embedded-contact';
             const direction = isIncoming ? 'incoming' : 'outgoing';
             return (react_1.default.createElement("button", {
-                className: classnames_1.default('module-embedded-contact', withContentAbove
+                className: classnames_1.default('module-embedded-contact', `module-embedded-contact--${direction}`, withContentAbove
                     ? 'module-embedded-contact--with-content-above'
                     : null, withContentBelow
                     ? 'module-embedded-contact--with-content-below'

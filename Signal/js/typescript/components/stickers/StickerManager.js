@@ -21,14 +21,10 @@
     const classnames_1 = __importDefault(window.classnames);
     const StickerManagerPackRow_1 = window.ts.components.stickers.StickerManagerPackRow;
     const StickerPreviewModal_1 = window.ts.components.stickers.StickerPreviewModal;
-    function focusOnRender(el) {
-        if (el) {
-            el.focus();
-        }
-    }
     exports.StickerManager = React.memo(
         // tslint:disable-next-line max-func-body-length
         ({ installedPacks, receivedPacks, knownPacks, blessedPacks, downloadStickerPack, installStickerPack, uninstallStickerPack, i18n, }) => {
+            const focusRef = React.createRef();
             const [packToPreview, setPackToPreview,] = React.useState(null);
             React.useEffect(() => {
                 if (!knownPacks) {
@@ -36,6 +32,13 @@
                 }
                 knownPacks.forEach(pack => {
                     downloadStickerPack(pack.id, pack.key);
+                });
+                // When this component is created, it's initially not part of the DOM, and then it's
+                //   added off-screen and animated in. This ensures that the focus takes.
+                setTimeout(() => {
+                    if (focusRef.current) {
+                        focusRef.current.focus();
+                    }
                 });
             }, []);
             const clearPackToPreview = React.useCallback(() => {
@@ -46,7 +49,7 @@
             }, [clearPackToPreview]);
             return (React.createElement(React.Fragment, null,
                 packToPreview ? (React.createElement(StickerPreviewModal_1.StickerPreviewModal, { i18n: i18n, pack: packToPreview, onClose: clearPackToPreview, downloadStickerPack: downloadStickerPack, installStickerPack: installStickerPack, uninstallStickerPack: uninstallStickerPack })) : null,
-                React.createElement("div", { className: "module-sticker-manager", tabIndex: -1, ref: focusOnRender }, [
+                React.createElement("div", { className: "module-sticker-manager", tabIndex: -1, ref: focusRef }, [
                     {
                         i18nKey: 'stickers--StickerManager--InstalledPacks',
                         i18nEmptyKey: 'stickers--StickerManager--InstalledPacks--Empty',

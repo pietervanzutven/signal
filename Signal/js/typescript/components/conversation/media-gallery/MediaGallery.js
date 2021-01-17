@@ -25,7 +25,7 @@
                 onSelect({ type });
             }
             : undefined;
-        return (react_1.default.createElement("div", { className: classnames_1.default('module-media-gallery__tab', isSelected ? 'module-media-gallery__tab--active' : null), onClick: handleClick, role: "tab" }, label));
+        return (react_1.default.createElement("div", { className: classnames_1.default('module-media-gallery__tab', isSelected ? 'module-media-gallery__tab--active' : null), onClick: handleClick, role: "tab", tabIndex: 0 }, label));
     };
     class MediaGallery extends react_1.default.Component {
         constructor() {
@@ -49,7 +49,7 @@
         }
         render() {
             const { selectedTab } = this.state;
-            return (react_1.default.createElement("div", { className: "module-media-gallery", tabIndex: 0, ref: this.focusRef },
+            return (react_1.default.createElement("div", { className: "module-media-gallery", tabIndex: -1, ref: this.focusRef },
                 react_1.default.createElement("div", { className: "module-media-gallery__tab-container" },
                     react_1.default.createElement(Tab, { label: "Media", type: "media", isSelected: selectedTab === 'media', onSelect: this.handleTabSelect }),
                     react_1.default.createElement(Tab, { label: "Documents", type: "documents", isSelected: selectedTab === 'documents', onSelect: this.handleTabSelect })),

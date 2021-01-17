@@ -17,8 +17,8 @@
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const Message_1 = window.ts.components.conversation.Message;
     class MessageDetail extends react_1.default.Component {
-        constructor(props) {
-            super(props);
+        constructor() {
+            super(...arguments);
             this.focusRef = react_1.default.createRef();
         }
         componentDidMount() {

@@ -92,6 +92,15 @@
                 }
             };
             this.setFocusToFirst = () => {
+                const { current: container } = this.containerRef;
+                if (container) {
+                    // tslint:disable-next-line no-unnecessary-type-assertion
+                    const noResultsItem = container.querySelector('.module-search-results__no-results');
+                    if (noResultsItem && noResultsItem.focus) {
+                        noResultsItem.focus();
+                        return;
+                    }
+                }
                 const scrollContainer = this.getScrollContainer();
                 if (!scrollContainer) {
                     return;
@@ -255,7 +264,10 @@
             const { i18n, items, noResults, searchConversationName, searchTerm, } = this.props;
             const { scrollToIndex } = this.state;
             if (noResults) {
-                return (react_1.default.createElement("div", { className: "module-search-results" }, !searchConversationName || searchTerm ? (react_1.default.createElement("div", { className: "module-search-results__no-results", key: searchTerm }, searchConversationName ? (react_1.default.createElement(Intl_1.Intl, {
+                return (react_1.default.createElement("div", { className: "module-search-results", tabIndex: -1, ref: this.containerRef, onFocus: this.handleFocus }, !searchConversationName || searchTerm ? (react_1.default.createElement("div", {
+                    // We need this for Ctrl-T shortcut cycling through parts of app
+                    tabIndex: -1, className: "module-search-results__no-results", key: searchTerm
+                }, searchConversationName ? (react_1.default.createElement(Intl_1.Intl, {
                     id: "noSearchResultsInConversation", i18n: i18n, components: [
                         searchTerm,
                         react_1.default.createElement(Emojify_1.Emojify, { key: "item-1", text: searchConversationName }),
