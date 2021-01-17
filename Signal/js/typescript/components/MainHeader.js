@@ -51,7 +51,7 @@
                     showingAvatarPopup: false,
                     popperRoot: null,
                 });
-                if (popperRoot) {
+                if (popperRoot && document.body.contains(popperRoot)) {
                     document.body.removeChild(popperRoot);
                 }
             };
@@ -167,7 +167,7 @@
             const { popperRoot } = this.state;
             document.removeEventListener('click', this.handleOutsideClick);
             document.removeEventListener('keydown', this.handleOutsideKeyDown);
-            if (popperRoot) {
+            if (popperRoot && document.body.contains(popperRoot)) {
                 document.body.removeChild(popperRoot);
             }
         }
