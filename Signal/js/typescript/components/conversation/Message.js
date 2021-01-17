@@ -63,8 +63,9 @@
                 selectMessage(id, conversationId);
             };
             this.setFocus = () => {
-                if (this.focusRef.current) {
-                    this.focusRef.current.focus();
+                const container = this.focusRef.current;
+                if (container && !container.contains(document.activeElement)) {
+                    container.focus();
                 }
             };
             // tslint:disable-next-line cyclomatic-complexity

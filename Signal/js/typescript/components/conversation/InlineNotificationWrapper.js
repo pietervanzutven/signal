@@ -10,14 +10,15 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
+    const react_1 = __importDefault(require("react"));
     class InlineNotificationWrapper extends react_1.default.Component {
         constructor() {
             super(...arguments);
             this.focusRef = react_1.default.createRef();
             this.setFocus = () => {
-                if (this.focusRef.current) {
-                    this.focusRef.current.focus();
+                const container = this.focusRef.current;
+                if (container && !container.contains(document.activeElement)) {
+                    container.focus();
                 }
             };
             this.setSelected = () => {
