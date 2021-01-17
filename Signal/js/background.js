@@ -873,7 +873,7 @@
         conversation &&
         ctrlOrCommand &&
         shiftKey &&
-        (key === 'i' || key === 'I')
+        (key === 'l' || key === 'L')
       ) {
         const button = document.querySelector(
           '.module-conversation-header__more-button'

@@ -45,7 +45,7 @@
         },
         {
             description: 'Keyboard--open-conversation-menu',
-            keys: ['commandOrCtrl', 'shift', 'I'],
+            keys: ['commandOrCtrl', 'shift', 'L'],
         },
         {
             description: 'Keyboard--search',
