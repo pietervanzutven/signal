@@ -59,6 +59,11 @@
                 },
                     react_1.default.createElement(Spinner_1.Spinner, { svgSize: "normal" }))) : (react_1.default.createElement("img", { onError: onError, className: "module-image__image", alt: alt, height: height, width: width, src: url })),
                 caption ? (react_1.default.createElement("img", { className: "module-image__caption-icon", src: "images/caption-shadow.svg", alt: i18n('imageCaptionIconAlt') })) : null,
+                bottomOverlay ? (react_1.default.createElement("div", { className: classnames_1.default('module-image__bottom-overlay', curveBottomLeft ? 'module-image--curved-bottom-left' : null, curveBottomRight ? 'module-image--curved-bottom-right' : null) })) : null,
+                !pending && playIconOverlay ? (react_1.default.createElement("div", { className: "module-image__play-overlay__circle" },
+                    react_1.default.createElement("div", { className: "module-image__play-overlay__icon" }))) : null,
+                overlayText ? (react_1.default.createElement("div", { className: "module-image__text-container", style: { lineHeight: `${height}px` } }, overlayText)) : null,
+                overlay,
                 closeButton ? (react_1.default.createElement("button", {
                     onClick: (e) => {
                         e.preventDefault();
@@ -67,12 +72,7 @@
                             onClickClose(attachment);
                         }
                     }, className: "module-image__close-button", title: i18n('remove-attachment')
-                })) : null,
-                bottomOverlay ? (react_1.default.createElement("div", { className: classnames_1.default('module-image__bottom-overlay', curveBottomLeft ? 'module-image--curved-bottom-left' : null, curveBottomRight ? 'module-image--curved-bottom-right' : null) })) : null,
-                !pending && playIconOverlay ? (react_1.default.createElement("div", { className: "module-image__play-overlay__circle" },
-                    react_1.default.createElement("div", { className: "module-image__play-overlay__icon" }))) : null,
-                overlayText ? (react_1.default.createElement("div", { className: "module-image__text-container", style: { lineHeight: `${height}px` } }, overlayText)) : null,
-                overlay));
+                })) : null));
         }
     }
     exports.Image = Image;

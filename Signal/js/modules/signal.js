@@ -119,6 +119,7 @@
       createReader,
       createWriterForExisting,
       createWriterForNew,
+      createDoesExist,
       getDraftPath,
       getPath,
       getStickersPath,
@@ -144,6 +145,7 @@
     const copyIntoAttachmentsDirectory = Attachments.copyIntoAttachmentsDirectory(
       attachmentsPath
     );
+    const doesAttachmentExist = createDoesExist(attachmentsPath);
 
     const stickersPath = getStickersPath(userDataPath);
     const writeNewStickerData = createWriterForNew(stickersPath);
@@ -178,6 +180,7 @@
       }),
       deleteSticker,
       deleteTempFile,
+      doesAttachmentExist,
       getAbsoluteAttachmentPath,
       getAbsoluteDraftPath,
       getAbsoluteStickerPath,

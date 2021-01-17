@@ -17,8 +17,15 @@
             super(props);
             this.handleImageErrorBound = this.handleImageError.bind(this);
             this.state = {
+                lastAvatarPath: props.avatarPath,
                 imageBroken: false,
             };
+        }
+        static getDerivedStateFromProps(props, state) {
+            if (props.avatarPath !== state.lastAvatarPath) {
+                return Object.assign({}, state, { lastAvatarPath: props.avatarPath, imageBroken: false });
+            }
+            return state;
         }
         handleImageError() {
             // tslint:disable-next-line no-console

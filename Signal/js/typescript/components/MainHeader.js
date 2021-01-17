@@ -34,18 +34,26 @@
                 }
             };
             this.showAvatarPopup = () => {
+                const popperRoot = document.createElement('div');
+                document.body.appendChild(popperRoot);
                 this.setState({
                     showingAvatarPopup: true,
+                    popperRoot,
                 });
                 document.addEventListener('click', this.handleOutsideClick);
                 document.addEventListener('keydown', this.handleOutsideKeyDown);
             };
             this.hideAvatarPopup = () => {
+                const { popperRoot } = this.state;
                 document.removeEventListener('click', this.handleOutsideClick);
                 document.removeEventListener('keydown', this.handleOutsideKeyDown);
                 this.setState({
                     showingAvatarPopup: false,
+                    popperRoot: null,
                 });
+                if (popperRoot) {
+                    document.body.removeChild(popperRoot);
+                }
             };
             // tslint:disable-next-line member-ordering
             this.search = lodash_1.debounce((searchTerm) => {
@@ -143,13 +151,6 @@
                 popperRoot: null,
             };
         }
-        componentDidMount() {
-            const popperRoot = document.createElement('div');
-            document.body.appendChild(popperRoot);
-            this.setState({
-                popperRoot,
-            });
-        }
         componentDidUpdate(prevProps) {
             const { searchConversationId, startSearchCounter } = this.props;
             // When user chooses to search in a given conversation we focus the field for them
@@ -164,10 +165,10 @@
         }
         componentWillUnmount() {
             const { popperRoot } = this.state;
+            document.removeEventListener('click', this.handleOutsideClick);
+            document.removeEventListener('keydown', this.handleOutsideKeyDown);
             if (popperRoot) {
                 document.body.removeChild(popperRoot);
-                document.removeEventListener('click', this.handleOutsideClick);
-                document.removeEventListener('keydown', this.handleOutsideKeyDown);
             }
         }
         // tslint:disable-next-line:max-func-body-length

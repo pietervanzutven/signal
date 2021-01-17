@@ -5554,7 +5554,6 @@ img.emoji.jumbo {
   padding-left: 16px;
   padding-right: 16px;
   min-height: 64px;
-  max-width: 320px;
   display: flex;
   flex-direction: row;
   align-items: flex-start; }
@@ -7244,9 +7243,17 @@ img.emoji.jumbo {
   width: 100%;
   height: 32px;
   padding: 6px; }
-  .module-avatar-popup__item:hover, .module-avatar-popup__item:focus {
+  .module-avatar-popup__item:hover {
     background-color: #e9e9e9; }
-  .dark-theme .module-avatar-popup__item:hover, .dark-theme .module-avatar-popup__item:focus {
+  .keyboard-mode .module-avatar-popup__item:hover {
+    background-color: inherit; }
+  .keyboard-mode .module-avatar-popup__item:focus {
+    background-color: #e9e9e9; }
+  .dark-theme .module-avatar-popup__item:hover {
+    background-color: #5e5e5e; }
+  .dark-theme.keyboard-mode .module-avatar-popup__item:hover {
+    background-color: inherit; }
+  .dark-theme.keyboard-mode .module-avatar-popup__item:focus {
     background-color: #5e5e5e; }
 
 .module-avatar-popup__item__icon {
@@ -7387,6 +7394,7 @@ img.emoji.jumbo {
   flex-direction: row;
   align-items: center;
   break-inside: avoid;
+  padding-left: 4px;
   min-height: 40px;
   outline: none;
   border-bottom: 1px solid #e9e9e9; }
