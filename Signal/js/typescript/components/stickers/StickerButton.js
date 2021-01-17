@@ -151,6 +151,7 @@
                         "installed"),
                     React.createElement("div", { ref: arrowProps.ref, style: arrowProps.style, className: classnames_1.default('module-sticker-button__tooltip__triangle', `module-sticker-button__tooltip__triangle--${placement}`) }))))) : null,
                 !open && showIntroduction ? (React.createElement(react_popper_1.Popper, { placement: position }, ({ ref, style, placement, arrowProps }) => (React.createElement("button", { ref: ref, style: style, className: classnames_1.default('module-sticker-button__tooltip', 'module-sticker-button__tooltip--introduction'), onClick: handleClearIntroduction },
+                    React.createElement("img", { className: "module-sticker-button__tooltip--introduction__image", srcSet: "images/sticker_splash@1x.png 1x, images/sticker_splash@2x.png 2x", alt: i18n('stickers--StickerManager--Introduction--Image') }),
                     React.createElement("div", { className: "module-sticker-button__tooltip--introduction__meta" },
                         React.createElement("div", { className: "module-sticker-button__tooltip--introduction__meta__title" }, i18n('stickers--StickerManager--Introduction--Title')),
                         React.createElement("div", { className: "module-sticker-button__tooltip--introduction__meta__subtitle" }, i18n('stickers--StickerManager--Introduction--Body'))),
