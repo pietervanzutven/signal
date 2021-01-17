@@ -414,7 +414,9 @@
             e.preventDefault();
             handleEditorCommand('enter-emoji', editorStateRef.current);
         }, [emojiResults, editorStateRef, handleEditorCommand, resetEmojiResults]);
-        const editorKeybindingFn = React.useCallback((e) => {
+        const editorKeybindingFn = React.useCallback(
+            // tslint:disable-next-line cyclomatic-complexity
+            (e) => {
                 if (e.key === 'Enter' && emojiResults.length > 0) {
                     e.preventDefault();
                     return 'enter-emoji';
@@ -443,6 +445,11 @@
                     if (e.key === 'Delete' && e.shiftKey) {
                         return null;
                     }
+                }
+                // Get rid of Ctrl-Shift-M, which by default adds a newline
+                if ((e.key === 'm' || e.key === 'M') && e.shiftKey && e.ctrlKey) {
+                    e.preventDefault();
+                    return null;
                 }
                 return draft_js_1.getDefaultKeyBinding(e);
         }, [emojiResults, large]);
