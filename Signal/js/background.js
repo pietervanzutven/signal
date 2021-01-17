@@ -663,7 +663,7 @@
       // Show keyboard shortcuts - handled by Electron-managed keyboard shortcuts
 
       // Navigate by section
-      if (ctrlOrCommand && !shiftKey && key === 't') {
+      if (ctrlOrCommand && !shiftKey && (key === 't' || key === 'T')) {
         const focusedElement = document.activeElement;
 
         const targets = [
@@ -859,7 +859,12 @@
       // Preferences - handled by Electron-managed keyboard shortcuts
 
       // Open the top-right menu for current conversation
-      if (conversation && ctrlOrCommand && shiftKey && key === 'i') {
+      if (
+        conversation &&
+        ctrlOrCommand &&
+        shiftKey &&
+        (key === 'i' || key === 'I')
+      ) {
         const button = document.querySelector(
           '.module-conversation-header__more-button'
         );
@@ -897,7 +902,7 @@
       }
 
       // Search
-      if (ctrlOrCommand && !shiftKey && key === 'f') {
+      if (ctrlOrCommand && !shiftKey && (key === 'f' || key === 'F')) {
         const { startSearch } = actions.search;
         startSearch();
 
@@ -907,7 +912,12 @@
       }
 
       // Search in conversation
-      if (conversation && ctrlOrCommand && shiftKey && key === 'f') {
+      if (
+        conversation &&
+        ctrlOrCommand &&
+        shiftKey &&
+        (key === 'f' || key === 'F')
+      ) {
         const { searchInConversation } = actions.search;
         const name = conversation.isMe()
           ? window.i18n('noteToSelf')
@@ -920,7 +930,12 @@
       }
 
       // Focus composer field
-      if (conversation && ctrlOrCommand && shiftKey && key === 't') {
+      if (
+        conversation &&
+        ctrlOrCommand &&
+        shiftKey &&
+        (key === 't' || key === 'T')
+      ) {
         conversation.trigger('focus-composer');
         event.preventDefault();
         event.stopPropagation();
@@ -928,7 +943,12 @@
       }
 
       // Open all media
-      if (conversation && ctrlOrCommand && shiftKey && key === 'm') {
+      if (
+        conversation &&
+        ctrlOrCommand &&
+        shiftKey &&
+        (key === 'm' || key === 'M')
+      ) {
         conversation.trigger('open-all-media');
         event.preventDefault();
         event.stopPropagation();
@@ -940,7 +960,12 @@
       // Open sticker picker - handled by component
 
       // Begin recording voice note
-      if (conversation && ctrlOrCommand && shiftKey && key === 'v') {
+      if (
+        conversation &&
+        ctrlOrCommand &&
+        shiftKey &&
+        (key === 'v' || key === 'V')
+      ) {
         conversation.trigger('begin-recording');
         event.preventDefault();
         event.stopPropagation();
@@ -953,7 +978,7 @@
         !conversation.get('isArchived') &&
         ctrlOrCommand &&
         shiftKey &&
-        key === 'a'
+        (key === 'a' || key === 'A')
       ) {
         conversation.setArchived(true);
         conversation.trigger('unload', 'keyboard shortcut archive');
@@ -971,7 +996,7 @@
         conversation.get('isArchived') &&
         ctrlOrCommand &&
         shiftKey &&
-        key === 'u'
+        (key === 'u' || key === 'U')
       ) {
         conversation.setArchived(false);
         Whisper.ToastView.show(
@@ -989,7 +1014,12 @@
       // Scroll to top of list - handled by component
 
       // Close conversation
-      if (conversation && ctrlOrCommand && shiftKey && key === 'c') {
+      if (
+        conversation &&
+        ctrlOrCommand &&
+        shiftKey &&
+        (key === 'c' || key === 'C')
+      ) {
         conversation.trigger('unload', 'keyboard shortcut close');
         event.preventDefault();
         event.stopPropagation();
@@ -999,7 +1029,12 @@
       // MESSAGES
 
       // Show message details
-      if (conversation && ctrlOrCommand && !shiftKey && key === 'd') {
+      if (
+        conversation &&
+        ctrlOrCommand &&
+        !shiftKey &&
+        (key === 'd' || key === 'D')
+      ) {
         const { selectedMessage } = state.conversations;
         if (!selectedMessage) {
           return;
@@ -1012,7 +1047,12 @@
       }
 
       // Toggle reply to message
-      if (conversation && ctrlOrCommand && shiftKey && key === 'r') {
+      if (
+        conversation &&
+        ctrlOrCommand &&
+        shiftKey &&
+        (key === 'r' || key === 'R')
+      ) {
         const { selectedMessage } = state.conversations;
 
         conversation.trigger('toggle-reply', selectedMessage);
@@ -1022,7 +1062,12 @@
       }
 
       // Save attachment
-      if (conversation && ctrlOrCommand && !shiftKey && key === 's') {
+      if (
+        conversation &&
+        ctrlOrCommand &&
+        !shiftKey &&
+        (key === 's' || key === 'S')
+      ) {
         const { selectedMessage } = state.conversations;
 
         if (selectedMessage) {
@@ -1034,7 +1079,12 @@
         }
       }
 
-      if (conversation && ctrlOrCommand && shiftKey && key === 'd') {
+      if (
+        conversation &&
+        ctrlOrCommand &&
+        shiftKey &&
+        (key === 'd' || key === 'D')
+      ) {
         const { selectedMessage } = state.conversations;
 
         if (selectedMessage) {
@@ -1055,7 +1105,12 @@
       // Send in expanded composer - handled by component
 
       // Attach file
-      if (conversation && ctrlOrCommand && !shiftKey && key === 'u') {
+      if (
+        conversation &&
+        ctrlOrCommand &&
+        !shiftKey &&
+        (key === 'u' || key === 'U')
+      ) {
         conversation.trigger('attach-file');
 
         event.preventDefault();
@@ -1064,7 +1119,12 @@
       }
 
       // Remove draft link preview
-      if (conversation && ctrlOrCommand && !shiftKey && key === 'p') {
+      if (
+        conversation &&
+        ctrlOrCommand &&
+        !shiftKey &&
+        (key === 'p' || key === 'P')
+      ) {
         conversation.trigger('remove-link-review');
 
         event.preventDefault();
@@ -1073,7 +1133,12 @@
       }
 
       // Attach file
-      if (conversation && ctrlOrCommand && shiftKey && key === 'p') {
+      if (
+        conversation &&
+        ctrlOrCommand &&
+        shiftKey &&
+        (key === 'p' || key === 'P')
+      ) {
         conversation.trigger('remove-all-draft-attachments');
 
         event.preventDefault();

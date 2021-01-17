@@ -101,7 +101,7 @@
                 const handleKeydown = (event) => {
                     const { ctrlKey, key, metaKey, shiftKey } = event;
                     const ctrlOrCommand = metaKey || ctrlKey;
-                    if (ctrlOrCommand && shiftKey && key === 's') {
+                    if (ctrlOrCommand && shiftKey && (key === 's' || key === 'S')) {
                         event.stopPropagation();
                         event.preventDefault();
                         setOpen(!open);
