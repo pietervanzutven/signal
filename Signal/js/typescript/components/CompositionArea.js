@@ -34,7 +34,7 @@
         // EmojiButton
         onPickEmoji, onSetSkinTone, recentEmojis, skinTone,
         // StickerButton
-        knownPacks, receivedPacks, installedPacks, blessedPacks, recentStickers, clearInstalledStickerPack, onClickAddPack, onPickSticker, clearShowIntroduction, showPickerHint, clearShowPickerHint, }) => {
+        knownPacks, receivedPacks, installedPack, installedPacks, blessedPacks, recentStickers, clearInstalledStickerPack, onClickAddPack, onPickSticker, clearShowIntroduction, showPickerHint, clearShowPickerHint, }) => {
         const [disabled, setDisabled] = React.useState(false);
         const [showMic, setShowMic] = React.useState(!startingText);
         const [micActive, setMicActive] = React.useState(false);
@@ -126,16 +126,18 @@
             React.createElement("button", { className: "module-composition-area__send-button", onClick: handleForceSend })));
         const stickerButtonPlacement = large ? 'top-start' : 'top-end';
         const stickerButtonFragment = withStickers ? (React.createElement("div", { className: "module-composition-area__button-cell" },
-            React.createElement(StickerButton_1.StickerButton, { i18n: i18n, knownPacks: knownPacks, receivedPacks: receivedPacks, installedPacks: installedPacks, blessedPacks: blessedPacks, recentStickers: recentStickers, clearInstalledStickerPack: clearInstalledStickerPack, onClickAddPack: onClickAddPack, onPickSticker: onPickSticker, clearShowIntroduction: clearShowIntroduction, showPickerHint: showPickerHint, clearShowPickerHint: clearShowPickerHint, position: stickerButtonPlacement }))) : null;
+            React.createElement(StickerButton_1.StickerButton, { i18n: i18n, knownPacks: knownPacks, receivedPacks: receivedPacks, installedPack: installedPack, installedPacks: installedPacks, blessedPacks: blessedPacks, recentStickers: recentStickers, clearInstalledStickerPack: clearInstalledStickerPack, onClickAddPack: onClickAddPack, onPickSticker: onPickSticker, clearShowIntroduction: clearShowIntroduction, showPickerHint: showPickerHint, clearShowPickerHint: clearShowPickerHint, position: stickerButtonPlacement }))) : null;
         // Listen for cmd/ctrl-shift-x to toggle large composition mode
         React.useEffect(() => {
             const handler = (e) => {
                 const { key, shiftKey, ctrlKey, metaKey } = e;
                 // When using the ctrl key, `key` is `'X'`. When using the cmd key, `key` is `'x'`
                 const xKey = key === 'x' || key === 'X';
-                const cmdOrCtrl = ctrlKey || metaKey;
+                const commandKey = lodash_1.get(window, 'platform') === 'darwin' && metaKey;
+                const controlKey = lodash_1.get(window, 'platform') !== 'darwin' && ctrlKey;
+                const commandOrCtrl = commandKey || controlKey;
                 // cmd/ctrl-shift-x
-                if (xKey && shiftKey && cmdOrCtrl) {
+                if (xKey && shiftKey && commandOrCtrl) {
                     e.preventDefault();
                     setLarge(x => !x);
                 }

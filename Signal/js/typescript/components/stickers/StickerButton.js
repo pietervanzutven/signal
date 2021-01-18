@@ -100,13 +100,15 @@
             React.useEffect(() => {
                 const handleKeydown = (event) => {
                     const { ctrlKey, key, metaKey, shiftKey } = event;
-                    const ctrlOrCommand = metaKey || ctrlKey;
+                    const commandKey = lodash_1.get(window, 'platform') === 'darwin' && metaKey;
+                    const controlKey = lodash_1.get(window, 'platform') !== 'darwin' && ctrlKey;
+                    const commandOrCtrl = commandKey || controlKey;
                     // We don't want to open up if the conversation has any panels open
                     const panels = document.querySelectorAll('.conversation .panel');
                     if (panels && panels.length > 1) {
                         return;
                     }
-                    if (ctrlOrCommand && shiftKey && (key === 's' || key === 'S')) {
+                    if (commandOrCtrl && shiftKey && (key === 's' || key === 'S')) {
                         event.stopPropagation();
                         event.preventDefault();
                         setOpen(!open);
@@ -151,6 +153,7 @@
                         "installed"),
                     React.createElement("div", { ref: arrowProps.ref, style: arrowProps.style, className: classnames_1.default('module-sticker-button__tooltip__triangle', `module-sticker-button__tooltip__triangle--${placement}`) }))))) : null,
                 !open && showIntroduction ? (React.createElement(react_popper_1.Popper, { placement: position }, ({ ref, style, placement, arrowProps }) => (React.createElement("button", { ref: ref, style: style, className: classnames_1.default('module-sticker-button__tooltip', 'module-sticker-button__tooltip--introduction'), onClick: handleClearIntroduction },
+                    React.createElement("img", { className: "module-sticker-button__tooltip--introduction__image", srcSet: "images/sticker_splash@1x.png 1x, images/sticker_splash@2x.png 2x", alt: i18n('stickers--StickerManager--Introduction--Image') }),
                     React.createElement("div", { className: "module-sticker-button__tooltip--introduction__meta" },
                         React.createElement("div", { className: "module-sticker-button__tooltip--introduction__meta__title" }, i18n('stickers--StickerManager--Introduction--Title')),
                         React.createElement("div", { className: "module-sticker-button__tooltip--introduction__meta__subtitle" }, i18n('stickers--StickerManager--Introduction--Body'))),
