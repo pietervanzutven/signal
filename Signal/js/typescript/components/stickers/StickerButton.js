@@ -123,7 +123,7 @@
             React.useEffect(() => {
                 if (installedPack) {
                     // tslint:disable-next-line:no-string-based-set-timeout
-                    const timerId = setTimeout(clearInstalledStickerPack, 60 * 1000);
+                    const timerId = setTimeout(clearInstalledStickerPack, 10 * 1000);
                     return () => {
                         clearTimeout(timerId);
                     };
