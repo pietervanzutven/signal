@@ -29,7 +29,6 @@
         const blessedPacks = stickers_1.getBlessedStickerPacks(state);
         const knownPacks = stickers_1.getKnownStickerPacks(state);
         const recentStickers = stickers_1.getRecentStickers(state);
-        const installedPack = stickers_1.getRecentlyInstalledStickerPack(state);
         const showIntroduction = lodash_1.get(state.items, ['showStickersIntroduction'], false);
         const showPickerHint = lodash_1.get(state.items, ['showStickerPickerHint'], false) &&
             receivedPacks.length > 0;
@@ -43,7 +42,8 @@
             skinTone: lodash_1.get(state, ['items', 'skinTone'], 0),
             // Stickers
             receivedPacks,
-            installedPack,
+            // 'Installed Pack' tooltip disabled for now
+            installedPack: null,
             blessedPacks,
             knownPacks,
             installedPacks,
