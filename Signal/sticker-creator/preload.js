@@ -24,6 +24,9 @@
   window.localeMessages = ipc.sendSync('locale-data');
 
   require_logging();
+
+  window.log.info('sticker-creator starting up...');
+
   const Signal = window.signal;
 
   window.Signal = Signal.setup({});
@@ -157,8 +160,12 @@
 
   window.addEventListener('DOMContentLoaded', applyTheme);
 
-  systemPreferences.subscribeNotification(
-    'AppleInterfaceThemeChangedNotification',
-    applyTheme
-  );
+  if (systemPreferences && systemPreferences.subscribeNotification) {
+    systemPreferences.subscribeNotification(
+      'AppleInterfaceThemeChangedNotification',
+      applyTheme
+    );
+  }
+
+  window.log.info('sticker-creator preload complete...');
 })();
