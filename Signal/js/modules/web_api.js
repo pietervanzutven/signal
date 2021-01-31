@@ -390,6 +390,7 @@
     messages: 'v1/messages',
     profile: 'v1/profile',
     signed: 'v2/keys/signed',
+    getStickerPackUpload: 'v1/sticker/pack/form',
   };
 
   window.web_api = {
@@ -449,6 +450,7 @@
         getStickerPackManifest,
         makeProxiedRequest,
         putAttachment,
+        putStickers,
         registerKeys,
         registerSupportForUnauthenticatedDelivery,
         removeSignalingKey,
@@ -857,35 +859,10 @@
         });
       }
 
-      async function getAttachment(id) {
-        // This is going to the CDN, not the service, so we use _outerAjax
-        return _outerAjax(`${cdnUrl}/attachments/${id}`, {
-          certificateAuthority,
-          proxyUrl,
-          responseType: 'arraybuffer',
-          timeout: 0,
-          type: 'GET',
-        });
-      }
-
-      async function putAttachment(encryptedBin) {
-        const response = await _ajax({
-          call: 'attachmentId',
-          httpType: 'GET',
-          responseType: 'json',
-        });
-
-        const {
-          key,
-          credential,
-          acl,
-          algorithm,
-          date,
-          policy,
-          signature,
-          attachmentIdString,
-        } = response;
-
+      function makePutParams(
+        { key, credential, acl, algorithm, date, policy, signature },
+        encryptedBin
+      ) {
         // Note: when using the boundary string in the POST body, it needs to be prefixed by
         //   an extra --, and the final boundary string at the end gets a -- prefix and a --
         //   suffix.
@@ -924,19 +901,100 @@
           contentLength
         );
 
-        // This is going to the CDN, not the service, so we use _outerAjax
-        await _outerAjax(`${cdnUrl}/attachments/`, {
-          certificateAuthority,
-          contentType: `multipart/form-data; boundary=${boundaryString}`,
+        return {
           data,
-          proxyUrl,
-          timeout: 0,
-          type: 'POST',
+          contentType: `multipart/form-data; boundary=${boundaryString}`,
           headers: {
             'Content-Length': contentLength,
           },
-          processData: false,
+        };
+      }
+
+      async function putStickers(
+        encryptedManifest,
+        encryptedStickers,
+        onProgress
+      ) {
+        // Get manifest and sticker upload parameters
+        const { packId, manifest, stickers } = await _ajax({
+          call: 'getStickerPackUpload',
+          responseType: 'json',
+          type: 'GET',
+          urlParameters: `/${encryptedStickers.length}`,
         });
+
+        // Upload manifest
+        const manifestParams = makePutParams(manifest, encryptedManifest);
+        // This is going to the CDN, not the service, so we use _outerAjax
+        await _outerAjax(`${cdnUrl}/`, Object.assign({},
+          manifestParams,
+          {
+            key: 'stickers/asdfasdf/manifest.proto',
+            certificateAuthority,
+            proxyUrl,
+            timeout: 0,
+            type: 'POST',
+            processData: false,
+          }
+        ));
+
+        // Upload stickers
+        await Promise.all(
+          stickers.map(async (s, id) => {
+            const stickerParams = makePutParams(s, encryptedStickers[id]);
+            await _outerAjax(`${cdnUrl}/`, Object.assign({},
+              stickerParams,
+              {
+                certificateAuthority,
+                proxyUrl,
+                timeout: 0,
+                type: 'POST',
+                processData: false,
+              }
+            ));
+            if (onProgress) {
+              onProgress();
+            }
+          })
+        );
+
+        // Done!
+        return packId;
+      }
+
+      async function getAttachment(id) {
+        // This is going to the CDN, not the service, so we use _outerAjax
+        return _outerAjax(`${cdnUrl}/attachments/${id}`, {
+          certificateAuthority,
+          proxyUrl,
+          responseType: 'arraybuffer',
+          timeout: 0,
+          type: 'GET',
+        });
+      }
+
+      async function putAttachment(encryptedBin) {
+        const response = await _ajax({
+          call: 'attachmentId',
+          httpType: 'GET',
+          responseType: 'json',
+        });
+
+        const { attachmentIdString } = response;
+
+        const params = makePutParams(response, encryptedBin);
+
+        // This is going to the CDN, not the service, so we use _outerAjax
+        await _outerAjax(`${cdnUrl}/attachments/`, Object.assign({},
+          params,
+          {
+            certificateAuthority,
+            proxyUrl,
+            timeout: 0,
+            type: 'POST',
+            processData: false,
+          }
+        ));
 
         return attachmentIdString;
       }
