@@ -24,7 +24,7 @@
             blessedPacks,
             installedPacks,
             receivedPacks,
-        }) === 0;
+        }) > 0;
         const platform = user_1.getPlatform(state);
         return {
             close,
