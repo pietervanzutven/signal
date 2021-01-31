@@ -108,7 +108,7 @@ if (!process.mas) {
     console.log('quitting; we are the second instance');
     app.exit();
   } else {
-    app.on('second-instance', () => {
+    app.on('second-instance', (e, argv) => {
       // Someone tried to run a second instance, we should focus our window
       if (mainWindow) {
         if (mainWindow.isMinimized()) {
@@ -117,6 +117,12 @@ if (!process.mas) {
 
         showWindow();
       }
+      // Are they trying to open a sgnl link?
+      const incomingUrl = getIncomingUrl(argv);
+      if (incomingUrl) {
+        handleSgnlLink(incomingUrl);
+      }
+      // Handled
       return true;
     });
   }
@@ -404,11 +410,9 @@ async function readyForUpdates() {
   isReadyForUpdates = true;
 
   // First, install requested sticker pack
-  if (process.argv.length > 1) {
-    const [incomingUrl] = process.argv;
-    if (incomingUrl.startsWith('sgnl://')) {
-      handleSgnlLink(incomingUrl);
-    }
+  const incomingUrl = getIncomingUrl(process.argv);
+  if (incomingUrl) {
+    handleSgnlLink(incomingUrl);
   }
 
   // Second, start checking for app updates
@@ -1095,10 +1099,15 @@ function installSettingsSetter(name) {
   });
 }
 
+function getIncomingUrl(argv) {
+  return argv.find(arg => arg.startsWith('sgnl://'));
+}
+
 function handleSgnlLink(incomingUrl) {
   const { host: command, query } = url.parse(incomingUrl);
   const args = qs.parse(query);
   if (command === 'addstickers' && mainWindow && mainWindow.webContents) {
+    console.log('Opening sticker pack from sgnl protocol link');
     const { pack_id: packId, pack_key: packKeyHex } = args;
     const packKey = Buffer.from(packKeyHex, 'hex').toString('base64');
     mainWindow.webContents.send('show-sticker-pack', { packId, packKey });
