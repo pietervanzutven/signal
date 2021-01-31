@@ -9,6 +9,7 @@
   const { readFile } = window.fs;
   const config = window.url.parse(window.location.toString(), true).query;
   const { noop, uniqBy } = window.lodash;
+  const pMap = window.p_map;
   const { deriveStickerPackKey } = window.crypto;
   const { makeGetter } = window.preload_utils;
 
@@ -20,6 +21,7 @@
   window.getEnvironment = () => config.environment;
   window.getVersion = () => config.version;
   window.getGuid = window.uuid.v4;
+  window.PQueue = window.p_queue;
 
   window.localeMessages = ipc.sendSync('locale-data');
 
@@ -31,7 +33,7 @@
 
   window.Signal = Signal.setup({});
 
-  const { initialize: initializeWebAPI } = window.web_api;
+  const { initialize: initializeWebAPI } = require('../js/modules/web_api');
 
   const WebAPI = initializeWebAPI({
     url: config.serverUrl,
@@ -42,8 +44,11 @@
   });
 
   window.convertToWebp = async (path, width = 512, height = 512) => {
-    const pngBuffer = await pify(readFile)(path);
-    const buffer = await sharp(pngBuffer)
+    const imgBuffer = await pify(readFile)(path);
+    const sharpImg = sharp(imgBuffer);
+    const meta = await sharpImg.metadata();
+
+    const buffer = await sharpImg
       .resize({
         width,
         height,
@@ -57,6 +62,7 @@
       path,
       buffer,
       src: `data:image/webp;base64,${buffer.toString('base64')}`,
+      meta,
     };
   };
 
@@ -114,8 +120,10 @@
       encryptionKey,
       iv
     );
-    const encryptedStickers = await Promise.all(
-      uniqueStickers.map(({ webp }) => encrypt(webp.buffer, encryptionKey, iv))
+    const encryptedStickers = await pMap(
+      uniqueStickers,
+      ({ webp }) => encrypt(webp.buffer, encryptionKey, iv),
+      { concurrency: 3 }
     );
 
     const packId = await server.putStickers(

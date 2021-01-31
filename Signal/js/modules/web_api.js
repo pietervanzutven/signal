@@ -4,7 +4,7 @@
   const is = window.sindresorhus.is;
   const { redactPackId } = window.stickers;
 
-  /* global Signal, Buffer, setTimeout, log, _, getGuid */
+  /* global Signal, Buffer, setTimeout, log, _, getGuid, PQueue */
 
   /* eslint-disable more/no-then, no-bitwise, no-nested-ternary */
 
@@ -929,7 +929,6 @@
         await _outerAjax(`${cdnUrl}/`, Object.assign({},
           manifestParams,
           {
-            key: 'stickers/asdfasdf/manifest.proto',
             certificateAuthority,
             proxyUrl,
             timeout: 0,
@@ -939,19 +938,22 @@
         ));
 
         // Upload stickers
+        const queue = new PQueue({ concurrency: 3 });
         await Promise.all(
           stickers.map(async (s, id) => {
             const stickerParams = makePutParams(s, encryptedStickers[id]);
-            await _outerAjax(`${cdnUrl}/`, Object.assign({},
-              stickerParams,
-              {
-                certificateAuthority,
-                proxyUrl,
-                timeout: 0,
-                type: 'POST',
-                processData: false,
-              }
-            ));
+            await queue.add(async () =>
+              _outerAjax(`${cdnUrl}/`, Object.assign({},
+                stickerParams,
+                {
+                  certificateAuthority,
+                  proxyUrl,
+                  timeout: 0,
+                  type: 'POST',
+                  processData: false,
+                }
+              ))
+            );
             if (onProgress) {
               onProgress();
             }
