@@ -4304,6 +4304,7 @@ img.emoji.jumbo {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  text-align: left;
   color: #5e5e5e; }
   .dark-theme .module-conversation-list-item__message__text {
     color: #b9b9b9; }
