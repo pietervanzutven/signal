@@ -37,7 +37,7 @@
         }
         if (isLastPacksPage(page, packs)) {
             return (PACK_PAGE_WIDTH * (Math.floor(packs / PACKS_PAGE_SIZE) - 1) +
-                (packs % PACKS_PAGE_SIZE - 1) * PACK_ICON_WIDTH);
+                ((packs % PACKS_PAGE_SIZE) - 1) * PACK_ICON_WIDTH);
         }
         return page * PACK_ICON_WIDTH * PACKS_PAGE_SIZE;
     }

@@ -577,7 +577,7 @@ async function getIsLinked() {
 
 let stickerCreatorWindow;
 async function showStickerCreator() {
-  if (!await getIsLinked()) {
+  if (!(await getIsLinked())) {
     const { message } = locale.messages[
       'StickerCreator--Authentication--error'
     ];

@@ -76,9 +76,7 @@
                     document.body.appendChild(root);
                     const handleOutsideClick = ({ target }) => {
                         const targetElement = target;
-                        const className = targetElement
-                            ? targetElement.className || ''
-                            : '';
+                        const className = targetElement ? targetElement.className || '' : '';
                         // We need to special-case sticker picker header buttons, because they can
                         //   disappear after being clicked, which breaks the .contains() check below.
                         const isMissingButtonClass = !className ||

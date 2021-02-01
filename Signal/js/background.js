@@ -498,9 +498,7 @@
     idleDetector = new IdleDetector();
     let isMigrationWithIndexComplete = false;
     window.log.info(
-      `Starting background data migration. Target version: ${
-        Message.CURRENT_SCHEMA_VERSION
-      }`
+      `Starting background data migration. Target version: ${Message.CURRENT_SCHEMA_VERSION}`
     );
     idleDetector.on('idle', async () => {
       const NUM_MESSAGES_PER_BATCH = 1;
@@ -1617,7 +1615,9 @@
       const ourNumber = textsecure.storage.user.getNumber();
       const { wrap, sendOptions } = ConversationController.prepareForSend(
         ourNumber,
-        { syncMessage: true }
+        {
+          syncMessage: true,
+        }
       );
 
       const installedStickerPacks = window.Signal.Stickers.getInstalledStickerPacks();

@@ -95,7 +95,13 @@
                     installStickerPack(pack.id, pack.key);
                     onClose();
                 }
-            }, [isInstalled, pack, setConfirmingUninstall, installStickerPack, onClose]);
+            }, [
+                isInstalled,
+                pack,
+                setConfirmingUninstall,
+                installStickerPack,
+                onClose,
+            ]);
             const handleUninstall = React.useCallback(() => {
                 if (!pack) {
                     return;

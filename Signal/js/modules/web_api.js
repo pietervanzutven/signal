@@ -35,6 +35,7 @@
     return thing;
   }
 
+  // prettier-ignore
   function _b64ToUint6(nChr) {
     return nChr > 64 && nChr < 91
       ? nChr - 65
