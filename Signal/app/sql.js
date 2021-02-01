@@ -2242,6 +2242,7 @@
   async function getOutgoingWithoutExpiresAt() {
     const rows = await db.all(`
     SELECT json FROM messages
+    INDEXED BY messages_without_timer
     WHERE
       expireTimer > 0 AND
       expires_at IS NULL AND
