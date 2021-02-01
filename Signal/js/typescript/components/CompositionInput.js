@@ -119,8 +119,10 @@
     ]);
     // A selector which combines multiple react refs into a single, referentially-equal functional ref.
     const combineRefs = reselect_1.createSelector((r1) => r1, (_r1, r2) => r2, (_r1, _r2, r3) => r3, (r1, r2, r3) => (el) => {
-        r1(el);
-        r2(el);
+        if (lodash_1.isFunction(r1) && lodash_1.isFunction(r2)) {
+            r1(el);
+            r2(el);
+        }
         r3.current = el;
     });
     const getInitialEditorState = (startingText) => {
