@@ -6054,7 +6054,7 @@ img.emoji.jumbo {
       outline: none; }
     .module-sticker-picker__body__cell__image, .module-sticker-picker__body__cell__placeholder {
       width: 100%;
-      height: 100%; }
+      height: auto; }
     .module-sticker-picker__body__cell__placeholder {
       border-radius: 4px;
       background-color: #e9e9e9; }

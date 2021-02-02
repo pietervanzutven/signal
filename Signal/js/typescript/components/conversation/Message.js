@@ -29,7 +29,7 @@
     const react_contextmenu_1 = window.react_contextmenu;
     // Same as MIN_WIDTH in ImageGrid.tsx
     const MINIMUM_LINK_PREVIEW_IMAGE_WIDTH = 200;
-    const STICKER_SIZE = 128;
+    const STICKER_SIZE = 200;
     const SELECTED_TIMEOUT = 1000;
     const EXPIRATION_CHECK_MINIMUM = 2000;
     const EXPIRED_DELAY = 600;

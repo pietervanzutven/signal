@@ -114,7 +114,7 @@
             firstAttachment.screenshot.url);
     }
     exports.hasVideoScreenshot = hasVideoScreenshot;
-    function getImageDimensions(attachment) {
+    function getImageDimensions(attachment, forcedWidth) {
         const { height, width } = attachment;
         if (!height || !width) {
             return {
@@ -123,7 +123,7 @@
             };
         }
         const aspectRatio = height / width;
-        const targetWidth = Math.max(Math.min(MAX_WIDTH, width), MIN_WIDTH);
+        const targetWidth = forcedWidth || Math.max(Math.min(MAX_WIDTH, width), MIN_WIDTH);
         const candidateHeight = Math.round(targetWidth * aspectRatio);
         return {
             width: targetWidth,

@@ -28,11 +28,9 @@
                 return null;
             }
             if (attachments.length === 1 || !Attachment_1.areAllAttachmentsVisual(attachments)) {
-                const { height, width } = Attachment_1.getImageDimensions(attachments[0]);
-                const finalHeight = isSticker ? stickerSize : height;
-                const finalWidth = isSticker ? stickerSize : width;
+                const { height, width } = Attachment_1.getImageDimensions(attachments[0], isSticker ? stickerSize : undefined);
                 return (react_1.default.createElement("div", { className: classnames_1.default('module-image-grid', 'module-image-grid--one-image', isSticker ? 'module-image-grid--with-sticker' : null) },
-                    react_1.default.createElement(Image_1.Image, { alt: Attachment_1.getAlt(attachments[0], i18n), i18n: i18n, bottomOverlay: withBottomOverlay, noBorder: isSticker, noBackground: isSticker, curveTopLeft: curveTopLeft, curveTopRight: curveTopRight, curveBottomLeft: curveBottomLeft, curveBottomRight: curveBottomRight, attachment: attachments[0], playIconOverlay: Attachment_1.isVideoAttachment(attachments[0]), height: finalHeight, width: finalWidth, url: Attachment_1.getUrl(attachments[0]), tabIndex: tabIndex, onClick: onClick, onError: onError })));
+                    react_1.default.createElement(Image_1.Image, { alt: Attachment_1.getAlt(attachments[0], i18n), i18n: i18n, bottomOverlay: withBottomOverlay, noBorder: isSticker, noBackground: isSticker, curveTopLeft: curveTopLeft, curveTopRight: curveTopRight, curveBottomLeft: curveBottomLeft, curveBottomRight: curveBottomRight, attachment: attachments[0], playIconOverlay: Attachment_1.isVideoAttachment(attachments[0]), height: height, width: width, url: Attachment_1.getUrl(attachments[0]), tabIndex: tabIndex, onClick: onClick, onError: onError })));
             }
             if (attachments.length === 2) {
                 return (react_1.default.createElement("div", { className: "module-image-grid" },
