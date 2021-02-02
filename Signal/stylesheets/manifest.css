@@ -6330,12 +6330,14 @@ img.emoji.jumbo {
     .dark-theme .module-sticker-manager__preview-modal__container__meta-overlay {
       background: #5e5e5e; }
     .module-sticker-manager__preview-modal__container__meta-overlay__info {
-      flex-grow: 1;
+      width: 317px;
       display: flex;
       flex-direction: column;
       justify-content: center; }
       .module-sticker-manager__preview-modal__container__meta-overlay__info__title {
         margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
         font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
         font-size: 15px;
         line-height: 21px;
@@ -6346,7 +6348,9 @@ img.emoji.jumbo {
           color: #e9e9e9; }
       .module-sticker-manager__preview-modal__container__meta-overlay__info__author {
         margin: 0;
-        height: 18px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         color: #848484; }
         .dark-theme .module-sticker-manager__preview-modal__container__meta-overlay__info__author {
           color: #b9b9b9; }
