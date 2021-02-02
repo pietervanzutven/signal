@@ -1689,13 +1689,13 @@ img.emoji.jumbo {
   background-color: #ffffff; }
   .dark-theme .module-message__container--with-tap-to-view-expired {
     border: 1px solid #5e5e5e;
-    background-color: #000000; }
+    background-color: #121212; }
   .ios-theme .module-message__container--with-tap-to-view-expired {
     border: 1px solid #dedede;
     background-color: #ffffff; }
   .dark-theme.ios-theme .module-message__container--with-tap-to-view-expired {
     border: 1px solid #5e5e5e;
-    background-color: #000000; }
+    background-color: #121212; }
 
 .module-message__container--with-tap-to-view-error {
   width: auto;
