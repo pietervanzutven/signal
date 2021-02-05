@@ -72,13 +72,22 @@
                     container.focus();
                 }
             };
-            // tslint:disable-next-line cyclomatic-complexity
+            // tslint:disable-next-line cyclomatic-complexity max-func-body-length
             this.handleOpen = (event) => {
-                const { attachments, contact, displayTapToViewMessage, id, isTapToView, isTapToViewExpired, openConversation, showContactDetail, showVisualAttachment, } = this.props;
+                const { attachments, contact, displayTapToViewMessage, direction, id, isTapToView, isTapToViewExpired, openConversation, showContactDetail, showVisualAttachment, showExpiredIncomingTapToViewToast, showExpiredOutgoingTapToViewToast, } = this.props;
                 const { imageBroken } = this.state;
                 const isAttachmentPending = this.isAttachmentPending();
                 if (isTapToView) {
-                    if (!isTapToViewExpired && !isAttachmentPending) {
+                    if (isAttachmentPending) {
+                        return;
+                    }
+                    if (isTapToViewExpired) {
+                        const action = direction === 'outgoing'
+                            ? showExpiredOutgoingTapToViewToast
+                            : showExpiredIncomingTapToViewToast;
+                        action();
+                    }
+                    else {
                         event.preventDefault();
                         event.stopPropagation();
                         displayTapToViewMessage(id);
