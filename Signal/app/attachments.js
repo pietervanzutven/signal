@@ -6,12 +6,23 @@
 
   const crypto = window.crypto;
   const path = window.path;
+  const { app, shell, remote } = window.electron;
 
   const pify = window.pify;
   const glob = window.glob;
   const fse = window.fs_extra;
   const toArrayBuffer = window.to_arraybuffer;
   const { map, isArrayBuffer, isString } = window.lodash;
+  const sanitizeFilename = window.sanitize_filename;
+  const getGuid = window.uuid.v4;
+
+  let xattr;
+  try {
+    // eslint-disable-next-line global-require, import/no-extraneous-dependencies
+    xattr = window.fs_xattr;
+  } catch (e) {
+    console.log('x-attr dependncy did not load successfully');
+  }
 
   const PATH = 'attachments.noindex';
   const STICKER_PATH = 'stickers.noindex';
@@ -157,6 +168,70 @@
       await fse.copy(sourcePath, normalized);
       return relativePath;
     };
+  };
+
+  exports.writeToDownloads = async ({ data, name }) => {
+    const appToUse = app || remote.app;
+    const downloadsPath =
+      appToUse.getPath('downloads') || appToUse.getPath('home');
+    const sanitized = sanitizeFilename(name);
+
+    const extension = path.extname(sanitized);
+    const basename = path.basename(sanitized, extension);
+    const getCandidateName = count => `${basename} (${count})${extension}`;
+
+    const existingFiles = await fse.readdir(downloadsPath);
+    let candidateName = sanitized;
+    let count = 0;
+    while (existingFiles.includes(candidateName)) {
+      count += 1;
+      candidateName = getCandidateName(count);
+    }
+
+    const target = path.join(downloadsPath, candidateName);
+    const normalized = path.normalize(target);
+    if (!normalized.startsWith(downloadsPath)) {
+      throw new Error('Invalid filename!');
+    }
+
+    await fse.writeFile(normalized, Buffer.from(data));
+
+    if (process.platform === 'darwin' && xattr) {
+      // kLSQuarantineTypeInstantMessageAttachment
+      const type = '0003';
+
+      // Hexadecimal seconds since epoch
+      const timestamp = Math.trunc(Date.now() / 1000).toString(16);
+
+      const appName = 'Signal';
+      const guid = getGuid();
+
+      // https://ilostmynotes.blogspot.com/2012/06/gatekeeper-xprotect-and-quarantine.html
+      const attrValue = `${type};${timestamp};${appName};${guid}`;
+
+      await xattr.set(normalized, 'com.apple.quarantine', attrValue);
+    }
+
+    return {
+      fullPath: normalized,
+      name: candidateName,
+    };
+  };
+
+  exports.openFileInDownloads = async name => {
+    const shellToUse = shell || remote.shell;
+    const appToUse = app || remote.app;
+
+    const downloadsPath =
+      appToUse.getPath('downloads') || appToUse.getPath('home');
+    const target = path.join(downloadsPath, name);
+
+    const normalized = path.normalize(target);
+    if (!normalized.startsWith(downloadsPath)) {
+      throw new Error('Invalid filename!');
+    }
+
+    shellToUse.showItemInFolder(normalized);
   };
 
   //      createWriterForNew :: AttachmentsPath ->

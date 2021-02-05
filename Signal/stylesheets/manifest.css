@@ -1303,6 +1303,9 @@ img.emoji.jumbo {
     color: #ffffff;
     box-shadow: 0 4px 16px 0 rgba(255, 255, 255, 0.2); }
 
+.toast-clickable {
+  cursor: pointer; }
+
 .confirmation-dialog .content {
   max-width: 350px;
   margin: 100px auto;

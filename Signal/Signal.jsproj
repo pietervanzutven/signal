@@ -3086,6 +3086,7 @@
     <Content Include="node_modules\redux\redux.js" />
     <Content Include="node_modules\reselect\reselect.js" />
     <Content Include="node_modules\rimraf\index.js" />
+    <Content Include="node_modules\sanitize-filename\index.js" />
     <Content Include="node_modules\semver\functions\lt.js" />
     <Content Include="node_modules\sjcl\sjcl.js" />
     <Content Include="node_modules\sql\sql-asm.js" />
