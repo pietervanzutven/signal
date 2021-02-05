@@ -10,6 +10,7 @@
   const { app, dialog, clipboard } = window.electron;
   const { redactAll } = window.privacy;
   const { remove: removeUserConfig } = window.app.user_config;
+  const { combineNames } = require_ts_util_combineNames();
 
   const pify = window.pify;
   const uuidv4 = window.uuid.v4;
@@ -1185,7 +1186,35 @@
       throw error;
     }
   }
+  async function updateToSchemaVersion19(currentVersion, instance) {
+    if (currentVersion >= 19) {
+      return;
+    }
 
+    console.log('updateToSchemaVersion19: starting...');
+    await instance.run('BEGIN TRANSACTION;');
+
+    await instance.run(
+      `ALTER TABLE conversations
+     ADD COLUMN profileFamilyName TEXT;`
+    );
+    await instance.run(
+      `ALTER TABLE conversations
+     ADD COLUMN profileFullName TEXT;`
+    );
+
+    // Preload new field with the profileName we already have
+    await instance.run('UPDATE conversations SET profileFullName = profileName');
+
+    try {
+      await instance.run('PRAGMA user_version = 19;');
+      await instance.run('COMMIT TRANSACTION;');
+      console.log('updateToSchemaVersion19: success!');
+    } catch (error) {
+      await instance.run('ROLLBACK;');
+      throw error;
+    }
+  }
   const SCHEMA_VERSIONS = [
     updateToSchemaVersion1,
     updateToSchemaVersion2,
@@ -1205,6 +1234,7 @@
     updateToSchemaVersion16,
     updateToSchemaVersion17,
     updateToSchemaVersion18,
+    updateToSchemaVersion19,
   ];
 
   async function updateSchema(instance) {
@@ -1610,8 +1640,16 @@
   }
 
   async function saveConversation(data) {
-    // eslint-disable-next-line camelcase
-    const { id, active_at, type, members, name, profileName } = data;
+    const {
+      id,
+      // eslint-disable-next-line camelcase
+      active_at,
+      type,
+      members,
+      name,
+      profileName,
+      profileFamilyName,
+    } = data;
 
     await db.run(
       `INSERT INTO conversations (
@@ -1622,7 +1660,9 @@
     type,
     members,
     name,
-    profileName
+    profileName,
+    profileFamilyName,
+    profileFullName
   ) values (
     $id,
     $json,
@@ -1631,7 +1671,9 @@
     $type,
     $members,
     $name,
-    $profileName
+    $profileName,
+    $profileFamilyName,
+    $profileFullName
   );`,
       {
         $id: id,
@@ -1642,6 +1684,8 @@
         $members: members ? members.join(' ') : null,
         $name: name,
         $profileName: profileName,
+        $profileFamilyName: profileFamilyName,
+        $profileFullName: combineNames(profileName, profileFamilyName),
       }
     );
   }
@@ -1665,8 +1709,16 @@
   saveConversations.needsSerial = true;
 
   async function updateConversation(data) {
-    // eslint-disable-next-line camelcase
-    const { id, active_at, type, members, name, profileName } = data;
+    const {
+      id,
+      // eslint-disable-next-line camelcase
+      active_at,
+      type,
+      members,
+      name,
+      profileName,
+      profileFamilyName,
+    } = data;
 
     await db.run(
       `UPDATE conversations SET
@@ -1676,7 +1728,9 @@
     type = $type,
     members = $members,
     name = $name,
-    profileName = $profileName
+      profileName = $profileName,
+      profileFamilyName = $profileFamilyName,
+      profileFullName = $profileFullName
   WHERE id = $id;`,
       {
         $id: id,
@@ -1687,6 +1741,8 @@
         $members: members ? members.join(' ') : null,
         $name: name,
         $profileName: profileName,
+        $profileFamilyName: profileFamilyName,
+        $profileFullName: combineNames(profileName, profileFamilyName),
       }
     );
   }
@@ -1774,14 +1830,14 @@
       (
       id LIKE $id OR
       name LIKE $name OR
-      profileName LIKE $profileName
+        profileFullName LIKE $profileFullName
       )
      ORDER BY active_at DESC
      LIMIT $limit`,
       {
         $id: `%${query}%`,
         $name: `%${query}%`,
-        $profileName: `%${query}%`,
+        $profileFullName: `%${query}%`,
         $limit: limit || 100,
       }
     );

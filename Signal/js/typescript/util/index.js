@@ -16,6 +16,8 @@
     exports.GoogleChrome = GoogleChrome;
     const arrayBufferToObjectURL_1 = require_ts_util_arrayBufferToObjectURL();
     exports.arrayBufferToObjectURL = arrayBufferToObjectURL_1.arrayBufferToObjectURL;
+    const combineNames_1 = require_ts_util_combineNames();
+    exports.combineNames = combineNames_1.combineNames;
     const batcher_1 = require_ts_util_batcher();
     exports.createBatcher = batcher_1.createBatcher;
     const waitBatcher_1 = require_ts_util_waitBatcher();

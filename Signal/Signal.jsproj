@@ -365,6 +365,7 @@
     <Content Include="js\typescript\util\arrayBufferToObjectURL.js" />
     <Content Include="js\typescript\util\batcher.js" />
     <Content Include="js\typescript\util\cleanSearchTerm.js" />
+    <Content Include="js\typescript\util\combineNames.js" />
     <Content Include="js\typescript\util\formatDuration.js" />
     <Content Include="js\typescript\util\formatRelativeTime.js" />
     <Content Include="js\typescript\util\getInitials.js" />
