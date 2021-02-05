@@ -2252,8 +2252,15 @@ img.emoji.jumbo {
   .ios-theme .module-message__metadata__date--with-image-no-caption {
     color: #ffffff; }
 
-.module-message__metadata__date--incoming-with-tap-to-view-expired {
+.module-message__metadata__date.module-message__metadata__date--incoming-with-tap-to-view-expired {
   color: #3b3b3b; }
+  .dark-theme .module-message__metadata__date.module-message__metadata__date--incoming-with-tap-to-view-expired {
+    color: rgba(255, 255, 255, 0.8); }
+
+.module-message__metadata__date.module-message__metadata__date--outgoing-with-tap-to-view-expired {
+  color: #3b3b3b; }
+  .dark-theme .module-message__metadata__date.module-message__metadata__date--outgoing-with-tap-to-view-expired {
+    color: rgba(255, 255, 255, 0.8); }
 
 .ios-theme .module-message__metadata__date--with-sticker {
   color: #5e5e5e; }
@@ -2641,8 +2648,27 @@ img.emoji.jumbo {
   .dark-theme.ios-theme .module-expire-timer--incoming {
     background-color: #b9b9b9; }
 
-.module-expire-timer--incoming-with-tap-to-view-expired {
-  background-color: #3b3b3b; }
+.module-expire-timer.module-expire-timer--incoming-with-tap-to-view-expired {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><title>timer-60-12</title><path d='M6,1A5,5,0,1,1,1,6,5.006,5.006,0,0,1,6,1M6,0a6,6,0,1,0,6,6A6,6,0,0,0,6,0Zm.25,2h-.5l-.5,4a.75.75,0,0,0,1.5,0Z' fill='%233B3B3B'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+  .dark-theme .module-expire-timer.module-expire-timer--incoming-with-tap-to-view-expired {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><title>timer-60-12</title><path d='M6,1A5,5,0,1,1,1,6,5.006,5.006,0,0,1,6,1M6,0a6,6,0,1,0,6,6A6,6,0,0,0,6,0Zm.25,2h-.5l-.5,4a.75.75,0,0,0,1.5,0Z' fill='%23FFFFFF'/></svg>");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center; }
+
+.module-expire-timer.module-expire-timer--outgoing-with-tap-to-view-expired {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><title>timer-60-12</title><path d='M6,1A5,5,0,1,1,1,6,5.006,5.006,0,0,1,6,1M6,0a6,6,0,1,0,6,6A6,6,0,0,0,6,0Zm.25,2h-.5l-.5,4a.75.75,0,0,0,1.5,0Z' fill='%233B3B3B'/></svg>");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center; }
+  .dark-theme .module-expire-timer.module-expire-timer--outgoing-with-tap-to-view-expired {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><title>timer-60-12</title><path d='M6,1A5,5,0,1,1,1,6,5.006,5.006,0,0,1,6,1M6,0a6,6,0,1,0,6,6A6,6,0,0,0,6,0Zm.25,2h-.5l-.5,4a.75.75,0,0,0,1.5,0Z' fill='%23FFFFFF'/></svg>");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center; }
 
 .ios-theme .module-expire-timer--with-sticker {
   background-color: #5e5e5e; }
