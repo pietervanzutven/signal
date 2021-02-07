@@ -6016,10 +6016,9 @@ img.emoji.jumbo {
       background: #2090ea; }
 
 .module-sticker-picker__header__button__image {
-  min-width: 20px;
-  min-height: 20px;
-  max-width: 20px;
-  max-height: 20px; }
+  width: 20px;
+  height: 20px;
+  object-fit: contain; }
 
 .module-sticker-picker__header__button__image--placeholder {
   min-width: 20px;
@@ -6056,7 +6055,8 @@ img.emoji.jumbo {
       outline: none; }
     .module-sticker-picker__body__cell__image, .module-sticker-picker__body__cell__placeholder {
       width: 100%;
-      height: auto; }
+      height: 100%;
+      object-fit: contain; }
     .module-sticker-picker__body__cell__placeholder {
       border-radius: 4px;
       background-color: #e9e9e9; }
@@ -6147,7 +6147,8 @@ img.emoji.jumbo {
     box-shadow: 0px 0px 0px 2px #2090ea; }
   .module-sticker-manager__pack-row__cover {
     width: 48px;
-    height: 48px; }
+    height: 48px;
+    object-fit: contain; }
   .module-sticker-manager__pack-row__cover-placeholder {
     width: 48px;
     height: 48px;
@@ -6311,7 +6312,8 @@ img.emoji.jumbo {
       align-items: center; }
       .module-sticker-manager__preview-modal__container__sticker-grid__cell__image {
         width: 100%;
-        height: auto; }
+        height: 100%;
+        object-fit: contain; }
       .module-sticker-manager__preview-modal__container__sticker-grid__cell--placeholder {
         border-radius: 4px;
         background: #e9e9e9; }
@@ -6446,7 +6448,8 @@ img.emoji.jumbo {
       top: 72px; }
   .module-sticker-button__tooltip__image {
     width: 20px;
-    height: 20px; }
+    height: 20px;
+    object-fit: contain; }
   .module-sticker-button__tooltip__image-placeholder {
     width: 20px;
     height: 20px;
