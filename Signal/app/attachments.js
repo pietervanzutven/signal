@@ -6,7 +6,7 @@
 
   const crypto = window.crypto;
   const path = window.path;
-  const { app, shell, remote } = window.electron;
+  const { app, dialog, shell, remote } = window.electron;
 
   const pify = window.pify;
   const glob = window.glob;
@@ -195,7 +195,16 @@
       throw new Error('Invalid filename!');
     }
 
-    await fse.writeFile(normalized, Buffer.from(data));
+    writeWithAttributes(normalized, Buffer.from(data));
+
+    return {
+      fullPath: normalized,
+      name: candidateName,
+    };
+  };
+
+  async function writeWithAttributes(target, data) {
+    await fse.writeFile(target, Buffer.from(data));
 
     if (process.platform === 'darwin' && xattr) {
       // kLSQuarantineTypeInstantMessageAttachment
@@ -210,14 +219,9 @@
       // https://ilostmynotes.blogspot.com/2012/06/gatekeeper-xprotect-and-quarantine.html
       const attrValue = `${type};${timestamp};${appName};${guid}`;
 
-      await xattr.set(normalized, 'com.apple.quarantine', attrValue);
+      await xattr.set(target, 'com.apple.quarantine', attrValue);
     }
-
-    return {
-      fullPath: normalized,
-      name: candidateName,
-    };
-  };
+  }
 
   exports.openFileInDownloads = async name => {
     const shellToUse = shell || remote.shell;
@@ -233,6 +237,37 @@
     }
 
     shellToUse.showItemInFolder(normalized);
+  };
+
+  exports.saveAttachmentToDisk = async ({ data, name }) => {
+    const dialogToUse = dialog || remote.dialog;
+    const browserWindow = remote.getCurrentWindow();
+
+    const { canceled, filePath } = await dialogToUse.showSaveDialog(
+      browserWindow,
+      {
+        defaultPath: name,
+      }
+    );
+
+    if (canceled) {
+      return null;
+    }
+
+    await writeWithAttributes(filePath, Buffer.from(data));
+
+    const basename = path.basename(filePath);
+
+    return {
+      fullPath: filePath,
+      name: basename,
+    };
+  };
+
+  exports.openFileInFolder = async target => {
+    const shellToUse = shell || remote.shell;
+
+    shellToUse.showItemInFolder(target);
   };
 
   //      createWriterForNew :: AttachmentsPath ->

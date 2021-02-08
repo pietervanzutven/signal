@@ -124,8 +124,8 @@
       getPath,
       getStickersPath,
       getTempPath,
-      openFileInDownloads,
-      writeToDownloads,
+      openFileInFolder,
+      saveAttachmentToDisk,
     } = Attachments;
     const {
       getImageDimensions,
@@ -194,13 +194,13 @@
       loadPreviewData,
       loadQuoteData,
       loadStickerData,
-      openFileInDownloads,
+      openFileInFolder,
       readAttachmentData,
       readDraftData,
       readStickerData,
       readTempData,
       run,
-      writeToDownloads,
+      saveAttachmentToDisk,
       processNewAttachment: attachment =>
         MessageType.processNewAttachment(attachment, {
           writeNewAttachmentData,

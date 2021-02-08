@@ -216,7 +216,7 @@
         }
         return false;
     };
-    exports.save = async ({ attachment, index, readAttachmentData, writeToDownloads, timestamp, }) => {
+    exports.save = async ({ attachment, index, readAttachmentData, saveAttachmentToDisk, timestamp, }) => {
         if (!attachment.path && !attachment.data) {
             throw new Error('Attachment had neither path nor data');
         }
@@ -224,11 +224,11 @@
             ? await readAttachmentData(attachment.path)
             : attachment.data;
         const name = exports.getSuggestedFilename({ attachment, timestamp, index });
-        const { name: savedFilename } = await writeToDownloads({
+        const { fullPath } = await saveAttachmentToDisk({
             data,
             name,
         });
-        return savedFilename;
+        return fullPath;
     };
     exports.getSuggestedFilename = ({ attachment, timestamp, index, }) => {
         if (!lodash_1.isNumber(index) && attachment.fileName) {
