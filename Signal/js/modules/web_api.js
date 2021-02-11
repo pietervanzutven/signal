@@ -405,6 +405,7 @@
     certificateAuthority,
     contentProxyUrl,
     proxyUrl,
+    version,
   }) {
     if (!is.string(url)) {
       throw new Error('WebAPI.initialize: Invalid server url');
@@ -417,6 +418,9 @@
     }
     if (!is.string(contentProxyUrl)) {
       throw new Error('WebAPI.initialize: Invalid contentProxyUrl');
+    }
+    if (!is.string(version)) {
+      throw new Error('WebAPI.initialize: Invalid version');
     }
 
     // Thanks to function-hoisting, we can put this return statement before all of the
@@ -481,6 +485,7 @@
           type: param.httpType,
           user: username,
           validateResponse: param.validateResponse,
+          version,
           unauthenticated: param.unauthenticated,
           accessKey: param.accessKey,
         }).catch(e => {
@@ -568,6 +573,7 @@
           responseType: 'arraybuffer',
           timeout: 0,
           type: 'GET',
+          version,
         });
       }
 
@@ -847,6 +853,7 @@
           responseType: 'arraybuffer',
           type: 'GET',
           redactUrl: redactStickerUrl,
+          version,
         });
       }
 
@@ -857,6 +864,7 @@
           responseType: 'arraybuffer',
           type: 'GET',
           redactUrl: redactStickerUrl,
+          version,
         });
       }
 
@@ -935,6 +943,7 @@
             timeout: 0,
             type: 'POST',
             processData: false,
+            version,
           }
         ));
 
@@ -952,6 +961,7 @@
                   timeout: 0,
                   type: 'POST',
                   processData: false,
+                  version,
                 }
               ))
             );
@@ -973,6 +983,7 @@
           responseType: 'arraybuffer',
           timeout: 0,
           type: 'GET',
+          version,
         });
       }
 
@@ -996,6 +1007,7 @@
             timeout: 0,
             type: 'POST',
             processData: false,
+            version,
           }
         ));
 
@@ -1034,6 +1046,7 @@
           redirect: 'follow',
           redactUrl: () => '[REDACTED_URL]',
           headers,
+          version,
         });
 
         if (!returnArrayBuffer) {
@@ -1069,9 +1082,10 @@
           .replace('http://', 'ws://');
         const login = encodeURIComponent(username);
         const pass = encodeURIComponent(password);
+        const clientVersion = encodeURIComponent(version);
 
         return _createSocket(
-          `${fixedScheme}/v1/websocket/?login=${login}&password=${pass}&agent=OWD`,
+          `${fixedScheme}/v1/websocket/?login=${login}&password=${pass}&agent=OWD&version=${clientVersion}`,
           { certificateAuthority, proxyUrl }
         );
       }
@@ -1081,9 +1095,10 @@
         const fixedScheme = url
           .replace('https://', 'wss://')
           .replace('http://', 'ws://');
+        const clientVersion = encodeURIComponent(version);
 
         return _createSocket(
-          `${fixedScheme}/v1/websocket/provisioning/?agent=OWD`,
+          `${fixedScheme}/v1/websocket/provisioning/?agent=OWD&version=${clientVersion}`,
           { certificateAuthority, proxyUrl }
         );
       }
