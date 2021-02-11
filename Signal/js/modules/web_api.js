@@ -403,6 +403,7 @@
     certificateAuthority,
     contentProxyUrl,
     proxyUrl,
+    version,
   }) {
     if (!is.string(url)) {
       throw new Error('WebAPI.initialize: Invalid server url');
@@ -415,6 +416,9 @@
     }
     if (!is.string(contentProxyUrl)) {
       throw new Error('WebAPI.initialize: Invalid contentProxyUrl');
+    }
+    if (!is.string(version)) {
+      throw new Error('WebAPI.initialize: Invalid version');
     }
 
     // Thanks to function-hoisting, we can put this return statement before all of the
@@ -478,6 +482,7 @@
           type: param.httpType,
           user: username,
           validateResponse: param.validateResponse,
+          version,
           unauthenticated: param.unauthenticated,
           accessKey: param.accessKey,
         }).catch(e => {
@@ -565,6 +570,7 @@
           responseType: 'arraybuffer',
           timeout: 0,
           type: 'GET',
+          version,
         });
       }
 
@@ -844,6 +850,7 @@
           responseType: 'arraybuffer',
           type: 'GET',
           redactUrl: redactStickerUrl,
+          version,
         });
       }
 
@@ -854,6 +861,7 @@
           responseType: 'arraybuffer',
           type: 'GET',
           redactUrl: redactStickerUrl,
+          version,
         });
       }
 
@@ -924,6 +932,72 @@
           contentLength
         );
 
+        return {
+          data,
+          contentType: `multipart/form-data; boundary=${boundaryString}`,
+          headers: {
+            'Content-Length': contentLength,
+          },
+        };
+      }
+
+      async function putStickers(
+        encryptedManifest,
+        encryptedStickers,
+        onProgress
+      ) {
+        // Get manifest and sticker upload parameters
+        const { packId, manifest, stickers } = await _ajax({
+          call: 'getStickerPackUpload',
+          responseType: 'json',
+          type: 'GET',
+          urlParameters: `/${encryptedStickers.length}`,
+        });
+
+        // Upload manifest
+        const manifestParams = makePutParams(manifest, encryptedManifest);
+        // This is going to the CDN, not the service, so we use _outerAjax
+        await _outerAjax(`${cdnUrl}/`, Object.assign({},
+          manifestParams,
+          {
+            certificateAuthority,
+            proxyUrl,
+            timeout: 0,
+            type: 'POST',
+            processData: false,
+            version,
+          }
+        ));
+
+        // Upload stickers
+        const queue = new PQueue({ concurrency: 3 });
+        await Promise.all(
+          stickers.map(async (s, id) => {
+            const stickerParams = makePutParams(s, encryptedStickers[id]);
+            await queue.add(async () =>
+              _outerAjax(`${cdnUrl}/`, Object.assign({},
+                stickerParams,
+                {
+                  certificateAuthority,
+                  proxyUrl,
+                  timeout: 0,
+                  type: 'POST',
+                  processData: false,
+                  version,
+                }
+              ))
+            );
+            if (onProgress) {
+              onProgress();
+            }
+          })
+        );
+
+        // Done!
+        return packId;
+      }
+
+      async function getAttachment(id) {
         // This is going to the CDN, not the service, so we use _outerAjax
         await _outerAjax(`${cdnUrl}/attachments/`, {
           certificateAuthority,
@@ -931,12 +1005,34 @@
           data,
           proxyUrl,
           timeout: 0,
-          type: 'POST',
-          headers: {
-            'Content-Length': contentLength,
-          },
-          processData: false,
+          type: 'GET',
+          version,
         });
+      }
+
+      async function putAttachment(encryptedBin) {
+        const response = await _ajax({
+          call: 'attachmentId',
+          httpType: 'GET',
+          responseType: 'json',
+        });
+
+        const { attachmentIdString } = response;
+
+        const params = makePutParams(response, encryptedBin);
+
+        // This is going to the CDN, not the service, so we use _outerAjax
+        await _outerAjax(`${cdnUrl}/attachments/`, Object.assign({},
+          params,
+          {
+            certificateAuthority,
+            proxyUrl,
+            timeout: 0,
+            type: 'POST',
+            processData: false,
+            version,
+          }
+        ));
 
         return attachmentIdString;
       }
@@ -973,6 +1069,7 @@
           redirect: 'follow',
           redactUrl: () => '[REDACTED_URL]',
           headers,
+          version,
         });
 
         if (!returnArrayBuffer) {
@@ -1008,9 +1105,10 @@
           .replace('http://', 'ws://');
         const login = encodeURIComponent(username);
         const pass = encodeURIComponent(password);
+        const clientVersion = encodeURIComponent(version);
 
         return _createSocket(
-          `${fixedScheme}/v1/websocket/?login=${login}&password=${pass}&agent=OWD`,
+          `${fixedScheme}/v1/websocket/?login=${login}&password=${pass}&agent=OWD&version=${clientVersion}`,
           { certificateAuthority, proxyUrl }
         );
       }
@@ -1020,9 +1118,10 @@
         const fixedScheme = url
           .replace('https://', 'wss://')
           .replace('http://', 'ws://');
+        const clientVersion = encodeURIComponent(version);
 
         return _createSocket(
-          `${fixedScheme}/v1/websocket/provisioning/?agent=OWD`,
+          `${fixedScheme}/v1/websocket/provisioning/?agent=OWD&version=${clientVersion}`,
           { certificateAuthority, proxyUrl }
         );
       }

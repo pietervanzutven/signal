@@ -276,6 +276,7 @@
     certificateAuthority: config.certificateAuthority,
     contentProxyUrl: config.contentProxyUrl,
     proxyUrl: config.proxyUrl,
+    version: config.version,
   });
 
   const { autoOrientImage } = window.auto_orient_image;
