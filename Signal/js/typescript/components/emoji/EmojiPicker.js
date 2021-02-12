@@ -23,6 +23,7 @@
     const lodash_1 = window.lodash;
     const Emoji_1 = window.ts.components.emoji.Emoji;
     const lib_1 = window.ts.components.emoji.lib;
+    const hooks_1 = window.ts.components.hooks;
     function focusOnRender(el) {
         if (el) {
             el.focus();
@@ -117,18 +118,8 @@
                     document.removeEventListener('keydown', handler);
                 };
             }, [onClose, searchMode]);
-            // Restore focus on teardown
-            React.useEffect(() => {
-                const lastFocused = document.activeElement;
-                if (focusRef.current) {
-                    focusRef.current.focus();
-                }
-                return () => {
-                    if (lastFocused && lastFocused.focus) {
-                        lastFocused.focus();
-                    }
-                };
-            }, []);
+            // Focus after initial render, restore focus on teardown
+            hooks_1.useRestoreFocus(focusRef);
             const emojiGrid = React.useMemo(() => {
                 if (searchText) {
                     return lodash_1.chunk(lib_1.search(searchText).map(e => e.short_name), COL_COUNT);

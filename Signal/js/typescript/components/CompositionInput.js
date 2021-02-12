@@ -18,7 +18,6 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const React = __importStar(window.react);
     const react_dom_1 = window.react_dom;
-    const reselect_1 = window.reselect;
     const draft_js_1 = window.draft_js;
     const react_measure_1 = __importDefault(window.react_measure);
     const react_popper_1 = window.react_popper;
@@ -27,6 +26,7 @@
     const emoji_regex_1 = __importDefault(window.emoji_regex);
     const Emoji_1 = window.ts.components.emoji.Emoji;
     const lib_1 = window.ts.components.emoji.lib;
+    const _util_1 = window.ts.components._util;
     const MAX_LENGTH = 64 * 1024;
     const colonsRegex = /(?:^|\s):[a-z0-9-_+]+:?/gi;
     const triggerEmojiRegex = /^(?:[-+]\d|[a-z]{2})/i;
@@ -117,14 +117,6 @@
             component: ({ children, contentState, entityKey, }) => entityKey ? (React.createElement(Emoji_1.Emoji, { shortName: contentState.getEntity(entityKey).getData().shortName, skinTone: contentState.getEntity(entityKey).getData().skinTone, inline: true, size: 20 }, children)) : (children),
         },
     ]);
-    // A selector which combines multiple react refs into a single, referentially-equal functional ref.
-    const combineRefs = reselect_1.createSelector((r1) => r1, (_r1, r2) => r2, (_r1, _r2, r3) => r3, (r1, r2, r3) => (el) => {
-        if (lodash_1.isFunction(r1) && lodash_1.isFunction(r2)) {
-            r1(el);
-            r2(el);
-        }
-        r3.current = el;
-    });
     const getInitialEditorState = (startingText) => {
         if (!startingText) {
             return draft_js_1.EditorState.createEmpty(compositeDecorator);
@@ -510,7 +502,7 @@
             };
         }
         return (React.createElement(react_popper_1.Manager, null,
-            React.createElement(react_popper_1.Reference, null, (popperRef) => (React.createElement(react_measure_1.default, { bounds: true, onResize: handleEditorSizeChange }, ({ measureRef }) => (React.createElement("div", { className: "module-composition-input__input", ref: combineRefs(popperRef.ref, measureRef, rootElRef) },
+            React.createElement(react_popper_1.Reference, null, ({ ref: popperRef }) => (React.createElement(react_measure_1.default, { bounds: true, onResize: handleEditorSizeChange }, ({ measureRef }) => (React.createElement("div", { className: "module-composition-input__input", ref: _util_1.mergeRefs(popperRef, measureRef, rootElRef) },
                 React.createElement("div", {
                     className: classnames_1.default('module-composition-input__input__scroller', large
                         ? 'module-composition-input__input__scroller--large'

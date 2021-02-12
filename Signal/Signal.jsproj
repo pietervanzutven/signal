@@ -222,6 +222,7 @@
     <Content Include="js\Mp3LameEncoder.min.js" />
     <Content Include="js\notifications.js" />
     <Content Include="js\permissions_popup_start.js" />
+    <Content Include="js\reactions.js" />
     <Content Include="js\read_receipts.js" />
     <Content Include="js\read_syncs.js" />
     <Content Include="js\registration.js" />
@@ -270,6 +271,7 @@
     <Content Include="js\typescript\components\conversation\MessageBody.js" />
     <Content Include="js\typescript\components\conversation\MessageDetail.js" />
     <Content Include="js\typescript\components\conversation\Quote.js" />
+    <Content Include="js\typescript\components\conversation\ReactionViewer.js" />
     <Content Include="js\typescript\components\conversation\ResetSessionNotification.js" />
     <Content Include="js\typescript\components\conversation\SafetyNumberNotification.js" />
     <Content Include="js\typescript\components\conversation\ScrollDownButton.js" />
@@ -292,6 +294,7 @@
     <Content Include="js\typescript\components\emoji\EmojiButton.js" />
     <Content Include="js\typescript\components\emoji\EmojiPicker.js" />
     <Content Include="js\typescript\components\emoji\lib.js" />
+    <Content Include="js\typescript\components\hooks.js" />
     <Content Include="js\typescript\components\Intl.js" />
     <Content Include="js\typescript\components\LeftPane.js" />
     <Content Include="js\typescript\components\Lightbox.js" />
@@ -3023,6 +3026,7 @@
     <Content Include="node_modules\journeyapps\sqlcipher.js" />
     <Content Include="node_modules\jquery\dist\jquery.js" />
     <Content Include="node_modules\lodash\chunk.js" />
+    <Content Include="node_modules\lodash\clamp.js" />
     <Content Include="node_modules\lodash\compact.js" />
     <Content Include="node_modules\lodash\difference.js" />
     <Content Include="node_modules\lodash\findLast.js" />

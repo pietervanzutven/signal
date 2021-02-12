@@ -59,6 +59,7 @@
     };
     const dataByShortName = lodash_1.keyBy(data, 'short_name');
     const imageByEmoji = {};
+    const dataByEmoji = {};
     exports.dataByCategory = lodash_1.mapValues(lodash_1.groupBy(data, ({ category }) => {
         if (category === 'Activities') {
             return 'activity';
@@ -208,9 +209,11 @@
             });
         }
         imageByEmoji[convertShortName(short_name)] = makeImagePath(image);
+        dataByEmoji[convertShortName(short_name)] = emoji;
         if (skin_variations) {
             Object.entries(skin_variations).forEach(([tone, variation]) => {
                 imageByEmoji[convertShortName(short_name, tone)] = makeImagePath(variation.image);
+                dataByEmoji[convertShortName(short_name, tone)] = emoji;
             });
         }
     });

@@ -9,10 +9,20 @@
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
+    var __importStar = (this && this.__importStar) || function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+        result["default"] = mod;
+        return result;
+    };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
-    const react_dom_1 = __importDefault(window.react_dom);
+    const react_dom_1 = __importStar(window.react_dom);
     const classnames_1 = __importDefault(window.classnames);
+    const react_measure_1 = __importDefault(window.react_measure);
+    const lodash_1 = window.lodash;
+    const react_popper_1 = window.react_popper;
     const Avatar_1 = window.ts.components.Avatar;
     const Spinner_1 = window.ts.components.Spinner;
     const MessageBody_1 = window.ts.components.conversation.MessageBody;
@@ -23,9 +33,12 @@
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const Quote_1 = window.ts.components.conversation.Quote;
     const EmbeddedContact_1 = window.ts.components.conversation.EmbeddedContact;
+    const ReactionViewer_1 = window.ts.components.conversation.ReactionViewer;
+    const Emoji_1 = window.ts.components.emoji.Emoji;
     const Attachment_1 = window.ts.types.Attachment;
     const timer_1 = window.ts.util.timer;
     const isFileDangerous_1 = require_ts_util_isFileDangerous();
+    const _util_1 = window.ts.components._util;
     const react_contextmenu_1 = window.react_contextmenu;
     // Same as MIN_WIDTH in ImageGrid.tsx
     const MINIMUM_LINK_PREVIEW_IMAGE_WIDTH = 200;
@@ -36,8 +49,9 @@
     class Message extends react_1.default.PureComponent {
         constructor(props) {
             super(props);
-            this.focusRef = react_1.default.createRef();
             this.audioRef = react_1.default.createRef();
+            this.focusRef = react_1.default.createRef();
+            this.reactionsContainerRef = react_1.default.createRef();
             this.captureMenuTrigger = (triggerRef) => {
                 this.menuTriggerRef = triggerRef;
             };
@@ -70,6 +84,34 @@
                 const container = this.focusRef.current;
                 if (container && !container.contains(document.activeElement)) {
                     container.focus();
+                }
+            };
+            this.toggleReactionViewer = (onlyRemove = false) => {
+                this.setState(({ reactionViewerRoot }) => {
+                    if (reactionViewerRoot) {
+                        document.body.removeChild(reactionViewerRoot);
+                        document.body.removeEventListener('click', this.handleClickOutside, true);
+                        return { reactionViewerRoot: null };
+                    }
+                    if (!onlyRemove) {
+                        const root = document.createElement('div');
+                        document.body.appendChild(root);
+                        document.body.addEventListener('click', this.handleClickOutside, true);
+                        return {
+                            reactionViewerRoot: root,
+                        };
+                    }
+                    return { reactionViewerRoot: null };
+                });
+            };
+            this.handleClickOutside = (e) => {
+                const { reactionViewerRoot } = this.state;
+                const { current: reactionsContainer } = this.reactionsContainerRef;
+                if (reactionViewerRoot && reactionsContainer) {
+                    if (!reactionViewerRoot.contains(e.target) &&
+                        !reactionsContainer.contains(e.target)) {
+                        this.toggleReactionViewer(true);
+                    }
                 }
             };
             // tslint:disable-next-line cyclomatic-complexity max-func-body-length
@@ -180,6 +222,8 @@
                 imageBroken: false,
                 isSelected: props.isSelected,
                 prevSelectedCounter: props.isSelectedCounter,
+                reactionsHeight: 0,
+                reactionViewerRoot: null,
             };
         }
         static getDerivedStateFromProps(props, state) {
@@ -219,6 +263,7 @@
             if (this.expiredTimeout) {
                 clearTimeout(this.expiredTimeout);
             }
+            this.toggleReactionViewer(true);
         }
         componentDidUpdate(prevProps) {
             this.startSelectedTimer();
@@ -525,6 +570,8 @@
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
+            const { reactions } = this.props;
+            const hasReactions = reactions && reactions.length > 0;
             const multipleAttachments = attachments && attachments.length > 1;
             const firstAttachment = attachments && attachments[0];
             const downloadButton = !isSticker &&
@@ -552,7 +599,7 @@
                 })));
             const first = direction === 'incoming' ? downloadButton : menuButton;
             const last = direction === 'incoming' ? menuButton : downloadButton;
-            return (react_1.default.createElement("div", { className: classnames_1.default('module-message__buttons', `module-message__buttons--${direction}`) },
+            return (react_1.default.createElement("div", { className: classnames_1.default('module-message__buttons', `module-message__buttons--${direction}`, hasReactions ? 'module-message__buttons--has-reactions' : null) },
                 first,
                 replyButton,
                 last));
@@ -719,6 +766,63 @@
                         : null)
                 }, this.renderTapToViewText())));
         }
+        // tslint:disable-next-line max-func-body-length
+        renderReactions(outgoing) {
+            const { reactions, i18n } = this.props;
+            if (!reactions || (reactions && reactions.length === 0)) {
+                return null;
+            }
+            // Group by emoji and order each group by timestamp descending
+            const grouped = Object.values(lodash_1.groupBy(reactions, 'emoji')).map(res => lodash_1.orderBy(res, ['timestamp'], ['desc']));
+            // Order groups by length and subsequently by most recent reaction
+            const ordered = lodash_1.orderBy(grouped, ['length', ([{ timestamp }]) => timestamp], ['desc', 'desc']);
+            // Take the first two groups for rendering
+            const toRender = lodash_1.take(ordered, 2).map(res => ({
+                emoji: res[0].emoji,
+                isMe: res.some(re => Boolean(re.from.isMe)),
+            }));
+            const reactionHeight = 32;
+            const { reactionsHeight: height, reactionViewerRoot } = this.state;
+            const offset = lodash_1.clamp((height - reactionHeight) / toRender.length, 4, 28);
+            const popperPlacement = outgoing ? 'bottom-end' : 'bottom-start';
+            return (react_1.default.createElement(react_popper_1.Manager, null,
+                react_1.default.createElement(react_popper_1.Reference, null, ({ ref: popperRef }) => (react_1.default.createElement(react_measure_1.default, {
+                    bounds: true, onResize: ({ bounds = { height: 0 } }) => {
+                        this.setState({ reactionsHeight: bounds.height });
+                    }
+                }, ({ measureRef }) => (react_1.default.createElement("div", {
+                    ref: _util_1.mergeRefs(this.reactionsContainerRef, measureRef, popperRef), className: classnames_1.default('module-message__reactions', outgoing
+                        ? 'module-message__reactions--outgoing'
+                        : 'module-message__reactions--incoming')
+                }, toRender.map((re, i) => (react_1.default.createElement("button", {
+                    key: `${re.emoji}-${i}`, className: classnames_1.default('module-message__reactions__reaction', outgoing
+                        ? 'module-message__reactions__reaction--outgoing'
+                        : 'module-message__reactions__reaction--incoming', re.isMe
+                        ? 'module-message__reactions__reaction--is-me'
+                        : null), style: {
+                            top: `${i * offset}px`,
+                        }, onClick: e => {
+                            e.stopPropagation();
+                            this.toggleReactionViewer();
+                        }, onKeyDown: e => {
+                            // Prevent enter key from opening stickers/attachments
+                            if (e.key === 'Enter') {
+                                e.stopPropagation();
+                            }
+                        }
+                },
+                    react_1.default.createElement(Emoji_1.Emoji, { size: 18, emoji: re.emoji }))))))))),
+                reactionViewerRoot &&
+                react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: popperPlacement }, ({ ref, style }) => (react_1.default.createElement(ReactionViewer_1.ReactionViewer, {
+                    ref: ref, style: Object.assign({}, style, { zIndex: 2, marginTop: -(height - reactionHeight * 0.75) }, (outgoing
+                        ? {
+                            marginRight: reactionHeight * -0.375,
+                        }
+                        : {
+                            marginLeft: reactionHeight * -0.375,
+                        })), reactions: reactions, i18n: i18n, onClose: this.toggleReactionViewer
+                }))), reactionViewerRoot)));
+        }
         renderContents() {
             const { isTapToView } = this.props;
             if (isTapToView) {
@@ -784,7 +888,8 @@
                 this.renderContainer(),
                 this.renderError(direction === 'outgoing'),
                 this.renderMenu(direction === 'incoming', triggerId),
-                this.renderContextMenu(triggerId)));
+                this.renderContextMenu(triggerId),
+                this.renderReactions(direction === 'outgoing')));
         }
     }
     exports.Message = Message;
