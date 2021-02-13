@@ -56,17 +56,18 @@
         return (React.createElement("div", Object.assign({}, rest, { ref: ref, className: "module-reaction-viewer" }),
             React.createElement("header", { className: "module-reaction-viewer__header" }, emojis
                 .filter(e => Boolean(grouped[e]))
-                .map((e, index) => {
-                    const re = grouped[e];
+                .map((emoji, index) => {
+                    const re = grouped[emoji];
                     const maybeFocusRef = index === 0 ? focusRef : undefined;
                     return (React.createElement("button", {
-                        key: e, ref: maybeFocusRef, className: classnames_1.default('module-reaction-viewer__header__button', selected === e
+                        key: emoji, ref: maybeFocusRef, className: classnames_1.default('module-reaction-viewer__header__button', selected === emoji
                             ? 'module-reaction-viewer__header__button--selected'
-                            : null), onClick: () => {
-                                setSelected(e);
+                            : null), onClick: event => {
+                                event.stopPropagation();
+                                setSelected(emoji);
                             }
                     },
-                        React.createElement(Emoji_1.Emoji, { size: 18, emoji: e }),
+                        React.createElement(Emoji_1.Emoji, { size: 18, emoji: emoji }),
                         React.createElement("span", { className: "module-reaction-viewer__header__button__count" }, re.length)));
                 })),
             React.createElement("main", { className: "module-reaction-viewer__body" }, grouped[selected].map(re => (React.createElement("div", { key: `${re.from.id}-${re.emoji}`, className: "module-reaction-viewer__body__row" },
