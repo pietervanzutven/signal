@@ -188,9 +188,12 @@ async function handleUrl(event, target) {
   }
 }
 
-function captureClicks(window) {
+function handleCommonWindowEvents(window) {
   window.webContents.on('will-navigate', handleUrl);
   window.webContents.on('new-window', handleUrl);
+  window.webContents.on('preload-error', (event, preloadPath, error) => {
+    console.error(`Preload error in ${preloadPath}: `, error.message);
+  });
 }
 
 const DEFAULT_WIDTH = 800;
@@ -339,7 +342,7 @@ function createWindow() {
     mainWindow.webContents.openDevTools();
   }
 
-  captureClicks(mainWindow);
+  handleCommonWindowEvents(mainWindow);
 
   // Emitted when the window is about to be closed.
   // Note: We do most of our shutdown logic here because all windows are closed by
@@ -503,7 +506,7 @@ function showAbout() {
 
   aboutWindow = new BrowserWindow(options);
 
-  captureClicks(aboutWindow);
+  handleCommonWindowEvents(aboutWindow);
 
   aboutWindow.loadURL(prepareURL([__dirname, 'about.html']));
 
@@ -552,7 +555,7 @@ async function showSettingsWindow() {
 
   settingsWindow = new BrowserWindow(options);
 
-  captureClicks(settingsWindow);
+  handleCommonWindowEvents(settingsWindow);
 
   settingsWindow.loadURL(prepareURL([__dirname, 'settings.html']));
 
@@ -619,7 +622,7 @@ async function showStickerCreator() {
 
   stickerCreatorWindow = new BrowserWindow(options);
 
-  captureClicks(stickerCreatorWindow);
+  handleCommonWindowEvents(stickerCreatorWindow);
 
   const appUrl = config.enableHttp
     ? prepareURL(['http://localhost:6380/sticker-creator/dist/index.html'])
@@ -672,7 +675,7 @@ async function showDebugLogWindow() {
 
   debugLogWindow = new BrowserWindow(options);
 
-  captureClicks(debugLogWindow);
+  handleCommonWindowEvents(debugLogWindow);
 
   debugLogWindow.loadURL(prepareURL([__dirname, 'debug_log.html'], { theme }));
 
@@ -721,7 +724,7 @@ async function showPermissionsPopupWindow() {
 
   permissionsPopupWindow = new BrowserWindow(options);
 
-  captureClicks(permissionsPopupWindow);
+  handleCommonWindowEvents(permissionsPopupWindow);
 
   permissionsPopupWindow.loadURL(
     prepareURL([__dirname, 'permissions_popup.html'], { theme })
