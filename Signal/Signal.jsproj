@@ -222,6 +222,7 @@
     <Content Include="js\Mp3LameEncoder.min.js" />
     <Content Include="js\notifications.js" />
     <Content Include="js\permissions_popup_start.js" />
+    <Content Include="js\reactions.js" />
     <Content Include="js\read_receipts.js" />
     <Content Include="js\read_syncs.js" />
     <Content Include="js\registration.js" />
@@ -270,6 +271,7 @@
     <Content Include="js\typescript\components\conversation\MessageBody.js" />
     <Content Include="js\typescript\components\conversation\MessageDetail.js" />
     <Content Include="js\typescript\components\conversation\Quote.js" />
+    <Content Include="js\typescript\components\conversation\ReactionViewer.js" />
     <Content Include="js\typescript\components\conversation\ResetSessionNotification.js" />
     <Content Include="js\typescript\components\conversation\SafetyNumberNotification.js" />
     <Content Include="js\typescript\components\conversation\ScrollDownButton.js" />
@@ -292,6 +294,7 @@
     <Content Include="js\typescript\components\emoji\EmojiButton.js" />
     <Content Include="js\typescript\components\emoji\EmojiPicker.js" />
     <Content Include="js\typescript\components\emoji\lib.js" />
+    <Content Include="js\typescript\components\hooks.js" />
     <Content Include="js\typescript\components\Intl.js" />
     <Content Include="js\typescript\components\LeftPane.js" />
     <Content Include="js\typescript\components\Lightbox.js" />
@@ -365,6 +368,7 @@
     <Content Include="js\typescript\util\arrayBufferToObjectURL.js" />
     <Content Include="js\typescript\util\batcher.js" />
     <Content Include="js\typescript\util\cleanSearchTerm.js" />
+    <Content Include="js\typescript\util\combineNames.js" />
     <Content Include="js\typescript\util\formatDuration.js" />
     <Content Include="js\typescript\util\formatRelativeTime.js" />
     <Content Include="js\typescript\util\getInitials.js" />
@@ -3022,6 +3026,7 @@
     <Content Include="node_modules\journeyapps\sqlcipher.js" />
     <Content Include="node_modules\jquery\dist\jquery.js" />
     <Content Include="node_modules\lodash\chunk.js" />
+    <Content Include="node_modules\lodash\clamp.js" />
     <Content Include="node_modules\lodash\compact.js" />
     <Content Include="node_modules\lodash\difference.js" />
     <Content Include="node_modules\lodash\findLast.js" />
@@ -3041,12 +3046,14 @@
     <Content Include="node_modules\lodash\map.js" />
     <Content Include="node_modules\lodash\clonedeep.js" />
     <Content Include="node_modules\lodash\mapValues.js" />
+    <Content Include="node_modules\lodash\noop.js" />
     <Content Include="node_modules\lodash\orderBy.js" />
     <Content Include="node_modules\lodash\pick.js" />
     <Content Include="node_modules\lodash\reject.js" />
     <Content Include="node_modules\lodash\set.js" />
     <Content Include="node_modules\lodash\take.js" />
     <Content Include="node_modules\lodash\uniq.js" />
+    <Content Include="node_modules\lodash\uniqBy.js" />
     <Content Include="node_modules\lodash\values.js" />
     <Content Include="node_modules\lodash\without.js" />
     <Content Include="node_modules\lodash\zipObject.js" />
@@ -3084,6 +3091,7 @@
     <Content Include="node_modules\redux\redux.js" />
     <Content Include="node_modules\reselect\reselect.js" />
     <Content Include="node_modules\rimraf\index.js" />
+    <Content Include="node_modules\sanitize-filename\index.js" />
     <Content Include="node_modules\semver\functions\lt.js" />
     <Content Include="node_modules\sjcl\sjcl.js" />
     <Content Include="node_modules\sql\sql-asm.js" />
@@ -3159,12 +3167,16 @@
     <Content Include="libtextsecure\components.js" />
     <Content Include="libtextsecure\protobufs.js" />
     <Content Include="libtextsecure\websocket-resources.js" />
+    <Content Include="preload_utils.js" />
     <Content Include="protos\DeviceMessages.proto" />
     <Content Include="protos\DeviceName.proto" />
     <Content Include="protos\SignalService.proto" />
     <Content Include="protos\Stickers.proto" />
     <Content Include="protos\SubProtocol.proto" />
     <Content Include="protos\UnidentifiedDelivery.proto" />
+    <Content Include="sticker-creator\dist\bundle.js" />
+    <Content Include="sticker-creator\dist\index.html" />
+    <Content Include="sticker-creator\preload.js" />
     <Content Include="_locales\ar\messages.json" />
     <Content Include="_locales\bg\messages.json" />
     <Content Include="_locales\ca\messages.json" />

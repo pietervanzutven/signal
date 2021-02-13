@@ -23,6 +23,7 @@
     const lodash_1 = window.lodash;
     const Emoji_1 = window.ts.components.emoji.Emoji;
     const lib_1 = window.ts.components.emoji.lib;
+    const hooks_1 = window.ts.components.hooks;
     function focusOnRender(el) {
         if (el) {
             el.focus();
@@ -42,7 +43,7 @@
     ];
     exports.EmojiPicker = React.memo(React.forwardRef(
         // tslint:disable-next-line max-func-body-length
-        ({ i18n, doSend, onPickEmoji, skinTone = 0, onSetSkinTone, recentEmojis, style, onClose, }, ref) => {
+        ({ i18n, doSend, onPickEmoji, skinTone = 0, onSetSkinTone, recentEmojis = [], style, onClose, }, ref) => {
             const focusRef = React.useRef(null);
             // Per design: memoize the initial recent emojis so the grid only updates after re-opening the picker.
             const firstRecent = React.useMemo(() => {
@@ -75,7 +76,9 @@
                 if ('key' in e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
-                        doSend();
+                        if (doSend) {
+                            doSend();
+                        }
                     }
                 }
                 else {
@@ -115,18 +118,8 @@
                     document.removeEventListener('keydown', handler);
                 };
             }, [onClose, searchMode]);
-            // Restore focus on teardown
-            React.useEffect(() => {
-                const lastFocused = document.activeElement;
-                if (focusRef.current) {
-                    focusRef.current.focus();
-                }
-                return () => {
-                    if (lastFocused && lastFocused.focus) {
-                        lastFocused.focus();
-                    }
-                };
-            }, []);
+            // Focus after initial render, restore focus on teardown
+            hooks_1.useRestoreFocus(focusRef);
             const emojiGrid = React.useMemo(() => {
                 if (searchText) {
                     return lodash_1.chunk(lib_1.search(searchText).map(e => e.short_name), COL_COUNT);

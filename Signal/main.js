@@ -22,6 +22,7 @@ const getRealPath = pify(fs.realpath);
 const {
   app,
   BrowserWindow,
+  dialog,
   ipcMain: ipc,
   Menu,
   protocol: electronProtocol,
@@ -142,37 +143,43 @@ let logger;
 let locale;
 
 function prepareURL(pathSegments, moreKeys) {
-  return url.format({
-    pathname: path.join.apply(null, pathSegments),
-    protocol: 'file:',
-    slashes: true,
-    query: Object.assign({},
-      {
-        name: packageJson.productName,
-        locale: locale.name,
-        version: app.getVersion(),
-        buildExpiration: config.get('buildExpiration'),
-        serverUrl: config.get('serverUrl'),
-        cdnUrl: config.get('cdnUrl'),
-        certificateAuthority: config.get('certificateAuthority'),
-        environment: config.environment,
-        uwp_version: process.versions.uwp,
-        hostname: os.hostname(),
-        appInstance: process.env.NODE_APP_INSTANCE,
-        proxyUrl: process.env.HTTPS_PROXY || process.env.https_proxy,
-        contentProxyUrl: config.contentProxyUrl,
-        importMode: importMode ? true : undefined, // for stringify()
-        serverTrustRoot: config.get('serverTrustRoot'),
-      },
-      moreKeys,
-    ),
-  });
+  const parsed = url.parse(path.join(...pathSegments));
+
+  return url.format(Object.assign({},
+    parsed,
+    {
+      protocol: parsed.protocol || 'file:',
+      slashes: true,
+      query: Object.assign({},
+        {
+          name: packageJson.productName,
+          locale: locale.name,
+          version: app.getVersion(),
+          buildExpiration: config.get('buildExpiration'),
+          serverUrl: config.get('serverUrl'),
+          cdnUrl: config.get('cdnUrl'),
+          certificateAuthority: config.get('certificateAuthority'),
+          environment: config.environment,
+          uwp_version: process.versions.uwp,
+          hostname: os.hostname(),
+          appInstance: process.env.NODE_APP_INSTANCE,
+          proxyUrl: process.env.HTTPS_PROXY || process.env.https_proxy,
+          contentProxyUrl: config.contentProxyUrl,
+          importMode: importMode ? true : undefined, // for stringify()
+          serverTrustRoot: config.get('serverTrustRoot'),
+        },
+        moreKeys,
+      ),
+    }
+  ));
 }
 
 async function handleUrl(event, target) {
   event.preventDefault();
-  const { protocol } = url.parse(target);
-  if (protocol === 'http:' || protocol === 'https:') {
+  const { protocol, hostname } = url.parse(target);
+  const isDevServer = config.enableHttp && hostname === 'localhost';
+  // We only want to specially handle urls that aren't requesting the dev server
+  if ((protocol === 'http:' || protocol === 'https:') && !isDevServer) {
     try {
       await shell.openExternal(target);
     } catch (error) {
@@ -181,14 +188,17 @@ async function handleUrl(event, target) {
   }
 }
 
-function captureClicks(window) {
+function handleCommonWindowEvents(window) {
   window.webContents.on('will-navigate', handleUrl);
   window.webContents.on('new-window', handleUrl);
+  window.webContents.on('preload-error', (event, preloadPath, error) => {
+    console.error(`Preload error in ${preloadPath}: `, error.message);
+  });
 }
 
 const DEFAULT_WIDTH = 800;
 const DEFAULT_HEIGHT = 610;
-const MIN_WIDTH = 640;
+const MIN_WIDTH = 680;
 const MIN_HEIGHT = 550;
 const BOUNDS_BUFFER = 100;
 
@@ -332,7 +342,7 @@ function createWindow() {
     mainWindow.webContents.openDevTools();
   }
 
-  captureClicks(mainWindow);
+  handleCommonWindowEvents(mainWindow);
 
   // Emitted when the window is about to be closed.
   // Note: We do most of our shutdown logic here because all windows are closed by
@@ -496,7 +506,7 @@ function showAbout() {
 
   aboutWindow = new BrowserWindow(options);
 
-  captureClicks(aboutWindow);
+  handleCommonWindowEvents(aboutWindow);
 
   aboutWindow.loadURL(prepareURL([__dirname, 'about.html']));
 
@@ -525,6 +535,7 @@ async function showSettingsWindow() {
   const options = {
     width: Math.min(500, size[0]),
     height: Math.max(size[1] - 100, MIN_HEIGHT),
+    frame: false,
     resizable: false,
     title: locale.messages.signalDesktopPreferences.message,
     autoHideMenuBar: true,
@@ -544,7 +555,7 @@ async function showSettingsWindow() {
 
   settingsWindow = new BrowserWindow(options);
 
-  captureClicks(settingsWindow);
+  handleCommonWindowEvents(settingsWindow);
 
   settingsWindow.loadURL(prepareURL([__dirname, 'settings.html']));
 
@@ -555,6 +566,81 @@ async function showSettingsWindow() {
 
   settingsWindow.once('ready-to-show', () => {
     settingsWindow.show();
+  });
+}
+
+async function getIsLinked() {
+  try {
+    const number = await sql.getItemById('number_id');
+    const password = await sql.getItemById('password');
+    return Boolean(number && password);
+  } catch (e) {
+    return false;
+  }
+}
+
+let stickerCreatorWindow;
+async function showStickerCreator() {
+  if (!(await getIsLinked())) {
+    const { message } = locale.messages[
+      'StickerCreator--Authentication--error'
+    ];
+
+    dialog.showMessageBox({
+      type: 'warning',
+      message,
+    });
+
+    return;
+  }
+
+  if (stickerCreatorWindow) {
+    stickerCreatorWindow.show();
+    return;
+  }
+
+  const { x = 0, y = 0 } = windowConfig || {};
+
+  const options = {
+    x: x + 100,
+    y: y + 100,
+    width: 800,
+    minWidth: 800,
+    height: 650,
+    title: locale.messages.signalDesktopStickerCreator,
+    autoHideMenuBar: true,
+    backgroundColor: '#2090EA',
+    show: false,
+    webPreferences: {
+      nodeIntegration: false,
+      nodeIntegrationInWorker: false,
+      contextIsolation: false,
+      preload: path.join(__dirname, 'sticker-creator/preload.js'),
+      nativeWindowOpen: true,
+    },
+  };
+
+  stickerCreatorWindow = new BrowserWindow(options);
+
+  handleCommonWindowEvents(stickerCreatorWindow);
+
+  const appUrl = config.enableHttp
+    ? prepareURL(['http://localhost:6380/sticker-creator/dist/index.html'])
+    : prepareURL([__dirname, 'sticker-creator/dist/index.html']);
+
+  stickerCreatorWindow.loadURL(appUrl);
+
+  stickerCreatorWindow.on('closed', () => {
+    stickerCreatorWindow = null;
+  });
+
+  stickerCreatorWindow.once('ready-to-show', () => {
+    stickerCreatorWindow.show();
+
+    if (config.get('openDevTools')) {
+      // Open the DevTools.
+      stickerCreatorWindow.webContents.openDevTools();
+    }
   });
 }
 
@@ -589,7 +675,7 @@ async function showDebugLogWindow() {
 
   debugLogWindow = new BrowserWindow(options);
 
-  captureClicks(debugLogWindow);
+  handleCommonWindowEvents(debugLogWindow);
 
   debugLogWindow.loadURL(prepareURL([__dirname, 'debug_log.html'], { theme }));
 
@@ -638,7 +724,7 @@ async function showPermissionsPopupWindow() {
 
   permissionsPopupWindow = new BrowserWindow(options);
 
-  captureClicks(permissionsPopupWindow);
+  handleCommonWindowEvents(permissionsPopupWindow);
 
   permissionsPopupWindow.loadURL(
     prepareURL([__dirname, 'permissions_popup.html'], { theme })
@@ -762,22 +848,26 @@ let ready = false;
 
 function setupMenu(options) {
   const { platform } = process;
-  const menuOptions = Object.assign({}, options, {
-    development,
-    showDebugLog: showDebugLogWindow,
-    showKeyboardShortcuts,
-    showWindow,
-    showAbout,
-    showSettings: showSettingsWindow,
-    openReleaseNotes,
-    openNewBugForm,
-    openSupportPage,
-    openForums,
-    platform,
-    setupWithImport,
-    setupAsNewDevice,
-    setupAsStandalone,
-  });
+  const menuOptions = Object.assign({},
+    options,
+    {
+      development,
+      showDebugLog: showDebugLogWindow,
+      showKeyboardShortcuts,
+      showWindow,
+      showAbout,
+      showSettings: showSettingsWindow,
+      showStickerCreator,
+      openReleaseNotes,
+      openNewBugForm,
+      openSupportPage,
+      openForums,
+      platform,
+      setupWithImport,
+      setupAsNewDevice,
+      setupAsStandalone,
+    }
+  );
   const template = createTemplate(menuOptions, locale.messages);
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
@@ -1029,3 +1119,8 @@ function handleSgnlLink(incomingUrl) {
     console.error('Unhandled sgnl link');
   }
 }
+
+ipc.on('install-sticker-pack', (_event, packId, packKeyHex) => {
+  const packKey = Buffer.from(packKeyHex, 'hex').toString('base64');
+  mainWindow.webContents.send('install-sticker-pack', { packId, packKey });
+});

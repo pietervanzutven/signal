@@ -4,7 +4,6 @@
     window.ts = window.ts || {};
     window.ts.components = window.ts.components || {};
     const exports = window.ts.components.ConversationListItem = {};
-
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -61,7 +60,7 @@
                     : '';
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__message" },
                 react_1.default.createElement("div", {
-                    className: classnames_1.default('module-conversation-list-item__message__text', unreadCount > 0
+                    dir: "auto", className: classnames_1.default('module-conversation-list-item__message__text', unreadCount > 0
                         ? 'module-conversation-list-item__message__text--has-unread'
                         : null)
                 }, typingContact ? (react_1.default.createElement(TypingAnimation_1.TypingAnimation, { i18n: i18n })) : (react_1.default.createElement(react_1.default.Fragment, null,

@@ -24,6 +24,7 @@
     const StickerPackInstallButton_1 = window.ts.components.stickers.StickerPackInstallButton;
     const ConfirmationDialog_1 = window.ts.components.ConfirmationDialog;
     const Spinner_1 = window.ts.components.Spinner;
+    const hooks_1 = window.ts.components.hooks;
     function renderBody({ pack, i18n }) {
         if (pack && pack.status === 'error') {
             return (React.createElement("div", { className: "module-sticker-manager__preview-modal__container__error" }, i18n('stickers--StickerPreview--Error')));
@@ -44,20 +45,7 @@
             const [root, setRoot] = React.useState(null);
             const [confirmingUninstall, setConfirmingUninstall] = React.useState(false);
             // Restore focus on teardown
-            React.useEffect(() => {
-                if (!root) {
-                    return;
-                }
-                const lastFocused = document.activeElement;
-                if (focusRef.current) {
-                    focusRef.current.focus();
-                }
-                return () => {
-                    if (lastFocused && lastFocused.focus) {
-                        lastFocused.focus();
-                    }
-                };
-            }, [root]);
+            hooks_1.useRestoreFocus(focusRef, root);
             React.useEffect(() => {
                 const div = document.createElement('div');
                 document.body.appendChild(div);
@@ -95,7 +83,13 @@
                     installStickerPack(pack.id, pack.key);
                     onClose();
                 }
-            }, [isInstalled, pack, setConfirmingUninstall, installStickerPack, onClose]);
+            }, [
+                isInstalled,
+                pack,
+                setConfirmingUninstall,
+                installStickerPack,
+                onClose,
+            ]);
             const handleUninstall = React.useCallback(() => {
                 if (!pack) {
                     return;

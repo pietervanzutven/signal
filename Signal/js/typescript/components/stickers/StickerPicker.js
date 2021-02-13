@@ -21,6 +21,7 @@
     /* tslint:disable:cyclomatic-complexity */
     const React = __importStar(window.react);
     const classnames_1 = __importDefault(window.classnames);
+    const hooks_1 = window.ts.components.hooks;
     function useTabs(tabs, initialTab = tabs[0]) {
         const [tab, setTab] = React.useState(initialTab);
         const handlers = React.useMemo(() => tabs.map(t => () => {
@@ -37,7 +38,7 @@
         }
         if (isLastPacksPage(page, packs)) {
             return (PACK_PAGE_WIDTH * (Math.floor(packs / PACKS_PAGE_SIZE) - 1) +
-                (packs % PACKS_PAGE_SIZE - 1) * PACK_ICON_WIDTH);
+                ((packs % PACKS_PAGE_SIZE) - 1) * PACK_ICON_WIDTH);
         }
         return page * PACK_ICON_WIDTH * PACKS_PAGE_SIZE;
     }
@@ -81,17 +82,7 @@
             };
         }, [onClose]);
         // Focus popup on after initial render, restore focus on teardown
-        React.useEffect(() => {
-            const lastFocused = document.activeElement;
-            if (focusRef.current) {
-                focusRef.current.focus();
-            }
-            return () => {
-                if (lastFocused && lastFocused.focus) {
-                    lastFocused.focus();
-                }
-            };
-        }, []);
+        hooks_1.useRestoreFocus(focusRef);
         const isEmpty = stickers.length === 0;
         const addPackRef = isEmpty ? focusRef : undefined;
         const downloadError = selectedPack &&

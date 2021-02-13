@@ -18,25 +18,16 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const React = __importStar(window.react);
     const classnames_1 = __importDefault(window.classnames);
-    const Avatar_1 = window.ts.components.Avatar;
     const lodash_1 = window.lodash;
+    const Avatar_1 = window.ts.components.Avatar;
+    const hooks_1 = window.ts.components.hooks;
     exports.AvatarPopup = (props) => {
         const focusRef = React.useRef(null);
         const { i18n, profileName, phoneNumber, onViewPreferences, onViewArchive, style, } = props;
         const hasProfileName = !lodash_1.isEmpty(profileName);
         // Note: mechanisms to dismiss this view are all in its host, MainHeader
         // Focus first button after initial render, restore focus on teardown
-        React.useEffect(() => {
-            const lastFocused = document.activeElement;
-            if (focusRef.current) {
-                focusRef.current.focus();
-            }
-            return () => {
-                if (lastFocused && lastFocused.focus) {
-                    lastFocused.focus();
-                }
-            };
-        }, []);
+        hooks_1.useRestoreFocus(focusRef);
         return (React.createElement("div", { style: style, className: "module-avatar-popup" },
             React.createElement("div", { className: "module-avatar-popup__profile" },
                 React.createElement(Avatar_1.Avatar, Object.assign({}, props, { size: 52 })),

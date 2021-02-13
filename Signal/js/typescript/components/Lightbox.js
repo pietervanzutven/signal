@@ -61,7 +61,6 @@
         objectContainer: {
             position: 'relative',
             flexGrow: 1,
-            display: 'inline-flex',
             justifyContent: 'center',
         },
         object: {

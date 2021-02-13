@@ -18,6 +18,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const React = __importStar(window.react);
     const classnames_1 = __importDefault(window.classnames);
+    const hooks_1 = window.ts.components.hooks;
     const NAVIGATION_SHORTCUTS = [
         {
             description: 'Keyboard--navigate-by-section',
@@ -149,17 +150,7 @@
         const { i18n, close, hasInstalledStickers, platform } = props;
         const isMacOS = platform === 'darwin';
         // Restore focus on teardown
-        React.useEffect(() => {
-            const lastFocused = document.activeElement;
-            if (focusRef.current) {
-                focusRef.current.focus();
-            }
-            return () => {
-                if (lastFocused && lastFocused.focus) {
-                    lastFocused.focus();
-                }
-            };
-        }, []);
+        hooks_1.useRestoreFocus(focusRef);
         return (React.createElement("div", { className: "module-shortcut-guide" },
             React.createElement("div", { className: "module-shortcut-guide__header" },
                 React.createElement("div", { className: "module-shortcut-guide__header-text" }, i18n('Keyboard--header')),

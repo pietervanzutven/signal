@@ -6,6 +6,7 @@
   const electron = window.electron;
   const semver = window.semver;
   const curve = window.curve25519_n;
+  const { installGetter, installSetter } = window.preload_utils;
 
   const { deferredToPromise } = window.deferred_to_promise;
 
@@ -195,6 +196,14 @@
     }
   });
 
+  ipc.on('install-sticker-pack', (_event, info) => {
+    const { packId, packKey } = info;
+    const { installStickerPack } = window.Events;
+    if (installStickerPack) {
+      installStickerPack(packId, packKey);
+    }
+  });
+
   ipc.on('get-ready-for-shutdown', async () => {
     const { shutdown } = window.Events || {};
     if (!shutdown) {
@@ -213,49 +222,6 @@
       );
     }
   });
-
-  function installGetter(name, functionName) {
-    ipc.on(`get-${name}`, async () => {
-      const getFn = window.Events[functionName];
-      if (!getFn) {
-        ipc.send(
-          `get-success-${name}`,
-          `installGetter: ${functionName} not found for event ${name}`
-        );
-        return;
-      }
-      try {
-        ipc.send(`get-success-${name}`, null, await getFn());
-      } catch (error) {
-        ipc.send(
-          `get-success-${name}`,
-          error && error.stack ? error.stack : error
-        );
-      }
-    });
-  }
-
-  function installSetter(name, functionName) {
-    ipc.on(`set-${name}`, async (_event, value) => {
-      const setFn = window.Events[functionName];
-      if (!setFn) {
-        ipc.send(
-          `set-success-${name}`,
-          `installSetter: ${functionName} not found for event ${name}`
-        );
-        return;
-      }
-      try {
-        await setFn(value);
-        ipc.send(`set-success-${name}`);
-      } catch (error) {
-        ipc.send(
-          `set-success-${name}`,
-          error && error.stack ? error.stack : error
-        );
-      }
-    });
-  }
 
   window.addSetupMenuItems = () => ipc.send('add-setup-menu-items');
   window.removeSetupMenuItems = () => ipc.send('remove-setup-menu-items');

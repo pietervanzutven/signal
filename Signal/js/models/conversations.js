@@ -1799,16 +1799,19 @@
       const data = window.Signal.Crypto.base64ToArrayBuffer(encryptedName);
 
       // decrypt
-      const decrypted = await textsecure.crypto.decryptProfileName(
+      const { given, family } = await textsecure.crypto.decryptProfileName(
         data,
         keyBuffer
       );
 
       // encode
-      const profileName = window.Signal.Crypto.stringFromBytes(decrypted);
+      const profileName = window.Signal.Crypto.stringFromBytes(given);
+      const profileFamilyName = family
+        ? window.Signal.Crypto.stringFromBytes(family)
+        : null;
 
       // set
-      this.set({ profileName });
+      this.set({ profileName, profileFamilyName });
     },
     async setProfileAvatar(avatarPath) {
       if (!avatarPath) {
@@ -1852,6 +1855,7 @@
           profileKey,
           accessKey: null,
           profileName: null,
+          profileFamilyName: null,
           profileAvatar: null,
           sealedSender: SEALED_SENDER.UNKNOWN,
         });
@@ -1877,6 +1881,7 @@
           profileAvatar: null,
           profileKey: null,
           profileName: null,
+          profileFamilyName: null,
           accessKey: null,
           sealedSender: SEALED_SENDER.UNKNOWN,
         });
@@ -1963,7 +1968,10 @@
 
     getProfileName() {
       if (this.isPrivate()) {
-        return this.get('profileName');
+        return Util.combineNames(
+          this.get('profileName'),
+          this.get('profileFamilyName')
+        );
       }
       return null;
     },
@@ -2074,33 +2082,35 @@
       });
     },
 
-    notify(message) {
-      if (!message.isIncoming()) {
-        return Promise.resolve();
+    async notify(message, reaction) {
+      if (!message.isIncoming() && !reaction) {
+        return;
       }
+
       const conversationId = this.id;
 
-      return ConversationController.getOrCreateAndWait(
-        message.get('source'),
+      const sender = await ConversationController.getOrCreateAndWait(
+        reaction ? reaction.get('fromId') : message.get('source'),
         'private'
-      ).then(sender =>
-        sender.getNotificationIcon().then(iconUrl => {
-          const messageJSON = message.toJSON();
-          const messageSentAt = messageJSON.sent_at;
-          const messageId = message.id;
-          const isExpiringMessage = Message.hasExpiration(messageJSON);
-
-          Whisper.Notifications.add({
-            conversationId,
-            iconUrl,
-            isExpiringMessage,
-            message: message.getNotificationText(),
-            messageId,
-            messageSentAt,
-            title: sender.getTitle(),
-          });
-        })
       );
+
+      const iconUrl = await sender.getNotificationIcon();
+
+      const messageJSON = message.toJSON();
+      const messageSentAt = messageJSON.sent_at;
+      const messageId = message.id;
+      const isExpiringMessage = Message.hasExpiration(messageJSON);
+
+      Whisper.Notifications.add({
+        conversationId,
+        iconUrl,
+        isExpiringMessage,
+        message: message.getNotificationText(),
+        messageId,
+        messageSentAt,
+        title: sender.getTitle(),
+        reaction: reaction ? reaction.toJSON() : null,
+      });
     },
 
     notifyTyping(options = {}) {

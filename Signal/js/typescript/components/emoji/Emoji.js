@@ -20,8 +20,12 @@
     const React = __importStar(window.react);
     const classnames_1 = __importDefault(window.classnames);
     const lib_1 = window.ts.components.emoji.lib;
-    exports.Emoji = React.memo(React.forwardRef(({ style = {}, size = 28, shortName, skinTone, inline, className, children, }, ref) => {
-        const image = lib_1.getImagePath(shortName, skinTone);
+    exports.Emoji = React.memo(React.forwardRef(({ style = {}, size = 28, shortName, skinTone, emoji, inline, className, children, }, ref) => {
+        const image = shortName
+            ? lib_1.getImagePath(shortName, skinTone)
+            : emoji
+                ? lib_1.emojiToImage(emoji)
+                : '';
         const backgroundStyle = inline
             ? { backgroundImage: `url('${image}')` }
             : {};

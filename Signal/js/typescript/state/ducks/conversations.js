@@ -349,6 +349,18 @@
             const sorted = lodash_1.orderBy(messages, ['received_at'], ['ASC']);
             const messageIds = sorted.map(message => message.id);
             const lookup = lodash_1.fromPairs(messages.map(message => [message.id, message]));
+            let { newest, oldest } = metrics;
+            // If our metrics are a little out of date, we'll fix them up
+            if (messages.length > 0) {
+                const first = messages[0];
+                if (first && (!oldest || first.received_at < oldest.received_at)) {
+                    oldest = lodash_1.pick(first, ['id', 'received_at']);
+                }
+                const last = messages[messages.length - 1];
+                if (last && (!newest || last.received_at > newest.received_at)) {
+                    newest = lodash_1.pick(last, ['id', 'received_at']);
+                }
+            }
             return Object.assign({}, state, {
                 selectedMessage: scrollToMessageId, selectedMessageCounter: state.selectedMessageCounter + 1, messagesLookup: Object.assign({}, messagesLookup, lookup), messagesByConversation: Object.assign({}, messagesByConversation, {
                     [conversationId]: {
@@ -358,7 +370,10 @@
                             ? existingConversation.scrollToMessageCounter + 1
                             : 0,
                         messageIds,
-                        metrics,
+                        metrics: Object.assign({}, metrics, {
+                            newest,
+                            oldest
+                        }),
                         resetCounter,
                         heightChangeMessageIds: [],
                     }

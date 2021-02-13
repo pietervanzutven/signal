@@ -19,8 +19,12 @@
     const is_1 = __importDefault(window.sindresorhus.is);
     exports.skinTones = ['1F3FB', '1F3FC', '1F3FD', '1F3FE', '1F3FF'];
     const data = emoji_datasource_1.default.filter(emoji => emoji.has_img_apple);
+    // @ts-ignore
+    const ROOT_PATH = lodash_1.get(
+        // tslint:disable-next-line no-typeof-undefined
+        typeof window !== 'undefined' ? window : null, 'ROOT_PATH', '');
     const makeImagePath = (src) => {
-        return `node_modules/emoji-datasource-apple/img/apple/64/${src}`;
+        return `${ROOT_PATH}node_modules/emoji-datasource-apple/img/apple/64/${src}`;
     };
     const imageQueue = new p_queue_1.default({ concurrency: 10 });
     const images = new Set();
@@ -55,6 +59,7 @@
     };
     const dataByShortName = lodash_1.keyBy(data, 'short_name');
     const imageByEmoji = {};
+    const dataByEmoji = {};
     exports.dataByCategory = lodash_1.mapValues(lodash_1.groupBy(data, ({ category }) => {
         if (category === 'Activities') {
             return 'activity';
@@ -204,9 +209,11 @@
             });
         }
         imageByEmoji[convertShortName(short_name)] = makeImagePath(image);
+        dataByEmoji[convertShortName(short_name)] = emoji;
         if (skin_variations) {
             Object.entries(skin_variations).forEach(([tone, variation]) => {
                 imageByEmoji[convertShortName(short_name, tone)] = makeImagePath(variation.image);
+                dataByEmoji[convertShortName(short_name, tone)] = emoji;
             });
         }
     });

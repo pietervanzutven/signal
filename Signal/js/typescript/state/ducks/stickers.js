@@ -75,8 +75,9 @@
         const recentStickers = await data_1.getRecentStickers();
         return {
             packId,
-            installedAt: timestamp,
+            fromSync,
             status,
+            installedAt: timestamp,
             recentStickers: recentStickers.map(item => ({
                 packId: item.packId,
                 stickerId: item.id,
@@ -102,6 +103,7 @@
         const recentStickers = await data_1.getRecentStickers();
         return {
             packId,
+            fromSync,
             status,
             installedAt: null,
             recentStickers: recentStickers.map(item => ({
@@ -170,15 +172,17 @@
         if (action.type === 'stickers/INSTALL_STICKER_PACK_FULFILLED' ||
             action.type === 'stickers/UNINSTALL_STICKER_PACK_FULFILLED') {
             const { payload } = action;
-            const { installedAt, packId, status, recentStickers } = payload;
+            const { fromSync, installedAt, packId, status, recentStickers } = payload;
             const { packs } = state;
             const existingPack = packs[packId];
             // A pack might be deleted as part of the uninstall process
             if (!existingPack) {
                 return Object.assign({}, state, { installedPack: state.installedPack === packId ? null : state.installedPack, recentStickers });
             }
+            const isBlessed = state.blessedPacks[packId];
+            const installedPack = !fromSync && !isBlessed ? packId : null;
             return Object.assign({}, state, {
-                installedPack: packId, packs: Object.assign({}, packs, {
+                installedPack, packs: Object.assign({}, packs, {
                     [packId]: Object.assign({}, packs[packId], {
                         status,
                         installedAt

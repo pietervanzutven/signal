@@ -20,8 +20,6 @@
     const moment_1 = __importDefault(window.moment);
     const lodash_1 = window.lodash;
     const MIME = __importStar(window.ts.types.MIME);
-    const arrayBufferToObjectURL_1 = require_ts_util_arrayBufferToObjectURL();
-    const saveURLAsFile_1 = window.ts.util.saveURLAsFile;
     const protobuf_1 = window.ts.protobuf;
     const GoogleChrome_1 = window.ts.util.GoogleChrome;
     const MAX_WIDTH = 300;
@@ -114,7 +112,7 @@
             firstAttachment.screenshot.url);
     }
     exports.hasVideoScreenshot = hasVideoScreenshot;
-    function getImageDimensions(attachment) {
+    function getImageDimensions(attachment, forcedWidth) {
         const { height, width } = attachment;
         if (!height || !width) {
             return {
@@ -123,7 +121,7 @@
             };
         }
         const aspectRatio = height / width;
-        const targetWidth = Math.max(Math.min(MAX_WIDTH, width), MIN_WIDTH);
+        const targetWidth = forcedWidth || Math.max(Math.min(MAX_WIDTH, width), MIN_WIDTH);
         const candidateHeight = Math.round(targetWidth * aspectRatio);
         return {
             width: targetWidth,
@@ -218,19 +216,19 @@
         }
         return false;
     };
-    exports.save = ({ attachment, document, index, getAbsolutePath, timestamp, }) => {
-        const isObjectURLRequired = is_1.default.undefined(attachment.path);
-        const url = !is_1.default.undefined(attachment.path)
-            ? getAbsolutePath(attachment.path)
-            : arrayBufferToObjectURL_1.arrayBufferToObjectURL({
-                data: attachment.data,
-                type: MIME.APPLICATION_OCTET_STREAM,
-            });
-        const filename = exports.getSuggestedFilename({ attachment, timestamp, index });
-        saveURLAsFile_1.saveURLAsFile({ url, filename, document });
-        if (isObjectURLRequired) {
-            URL.revokeObjectURL(url);
+    exports.save = async ({ attachment, index, readAttachmentData, saveAttachmentToDisk, timestamp, }) => {
+        if (!attachment.path && !attachment.data) {
+            throw new Error('Attachment had neither path nor data');
         }
+        const data = attachment.path
+            ? await readAttachmentData(attachment.path)
+            : attachment.data;
+        const name = exports.getSuggestedFilename({ attachment, timestamp, index });
+        const { fullPath } = await saveAttachmentToDisk({
+            data,
+            name,
+        });
+        return fullPath;
     };
     exports.getSuggestedFilename = ({ attachment, timestamp, index, }) => {
         if (!lodash_1.isNumber(index) && attachment.fileName) {

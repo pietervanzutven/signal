@@ -4,7 +4,7 @@
   const is = window.sindresorhus.is;
   const { redactPackId } = window.stickers;
 
-  /* global Signal, Buffer, setTimeout, log, _, getGuid */
+  /* global Signal, Buffer, setTimeout, log, _, getGuid, PQueue */
 
   /* eslint-disable more/no-then, no-bitwise, no-nested-ternary */
 
@@ -35,6 +35,7 @@
     return thing;
   }
 
+  // prettier-ignore
   function _b64ToUint6(nChr) {
     return nChr > 64 && nChr < 91
       ? nChr - 65
@@ -390,6 +391,7 @@
     messages: 'v1/messages',
     profile: 'v1/profile',
     signed: 'v2/keys/signed',
+    getStickerPackUpload: 'v1/sticker/pack/form',
   };
 
   window.web_api = {
@@ -453,6 +455,7 @@
         getStickerPackManifest,
         makeProxiedRequest,
         putAttachment,
+        putStickers,
         registerKeys,
         registerSupportForUnauthenticatedDelivery,
         removeSignalingKey,
@@ -865,35 +868,10 @@
         });
       }
 
-      async function getAttachment(id) {
-        // This is going to the CDN, not the service, so we use _outerAjax
-        return _outerAjax(`${cdnUrl}/attachments/${id}`, {
-          certificateAuthority,
-          proxyUrl,
-          responseType: 'arraybuffer',
-          timeout: 0,
-          type: 'GET',
-        });
-      }
-
-      async function putAttachment(encryptedBin) {
-        const response = await _ajax({
-          call: 'attachmentId',
-          httpType: 'GET',
-          responseType: 'json',
-        });
-
-        const {
-          key,
-          credential,
-          acl,
-          algorithm,
-          date,
-          policy,
-          signature,
-          attachmentIdString,
-        } = response;
-
+      function makePutParams(
+        { key, credential, acl, algorithm, date, policy, signature },
+        encryptedBin
+      ) {
         // Note: when using the boundary string in the POST body, it needs to be prefixed by
         //   an extra --, and the final boundary string at the end gets a -- prefix and a --
         //   suffix.
@@ -999,11 +977,10 @@
 
       async function getAttachment(id) {
         // This is going to the CDN, not the service, so we use _outerAjax
-        await _outerAjax(`${cdnUrl}/attachments/`, {
+        return _outerAjax(`${cdnUrl}/attachments/${id}`, {
           certificateAuthority,
-          contentType: `multipart/form-data; boundary=${boundaryString}`,
-          data,
           proxyUrl,
+          responseType: 'arraybuffer',
           timeout: 0,
           type: 'GET',
           version,
