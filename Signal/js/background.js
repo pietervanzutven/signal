@@ -2092,7 +2092,7 @@
         targetAuthorUuid: reaction.targetAuthorUuid,
         targetTimestamp: reaction.targetTimestamp.toNumber(),
         timestamp: Date.now(),
-        fromId: messageDescriptor.id,
+        fromId: data.source,
       });
       // Note: We do not wait for completion here
       Whisper.Reactions.onReaction(reactionModel);
@@ -2220,6 +2220,7 @@
       event.confirm();
     } else if (data.message.reaction) {
       const { reaction } = data.message;
+      const ourNumber = textsecure.storage.user.getNumber();
       const reactionModel = Whisper.Reactions.add({
         emoji: reaction.emoji,
         remove: reaction.remove,
@@ -2227,7 +2228,7 @@
         targetAuthorUuid: reaction.targetAuthorUuid,
         targetTimestamp: reaction.targetTimestamp.toNumber(),
         timestamp: Date.now(),
-        fromId: messageDescriptor.id,
+        fromId: ourNumber,
       });
       // Note: We do not wait for completion here
       Whisper.Reactions.onReaction(reactionModel);
