@@ -11,14 +11,14 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     class Intl extends react_1.default.Component {
-        getComponent(index) {
+        getComponent(index, key) {
             const { id, components } = this.props;
             if (!components || !components.length || components.length <= index) {
                 // tslint:disable-next-line no-console
                 console.log(`Error: Intl missing provided components for id ${id}, index ${index}`);
                 return;
             }
-            return components[index];
+            return react_1.default.createElement(react_1.default.Fragment, { key: key }, components[index]);
         }
         render() {
             const { id, i18n, renderText } = this.props;
@@ -43,8 +43,9 @@
                     results.push(renderText({ text: textWithNoReplacements, key: key }));
                     key += 1;
                 }
-                results.push(this.getComponent(componentIndex));
+                results.push(this.getComponent(componentIndex, key));
                 componentIndex += 1;
+                key += 1;
                 // @ts-ignore
                 lastTextIndex = FIND_REPLACEMENTS.lastIndex;
                 match = FIND_REPLACEMENTS.exec(text);
@@ -57,7 +58,7 @@
         }
     }
     Intl.defaultProps = {
-        renderText: ({ text }) => text,
+        renderText: ({ text, key }) => (react_1.default.createElement(react_1.default.Fragment, { key: key }, text)),
     };
     exports.Intl = Intl;
 })();

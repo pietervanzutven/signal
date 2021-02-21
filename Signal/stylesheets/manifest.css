@@ -5430,7 +5430,7 @@ img.emoji.jumbo {
       align-items: center; }
       .module-reaction-viewer__body__row_avatar {
         min-width: 32px; }
-      .module-reaction-viewer__body__row__name {
+      .module-reaction-viewer__body__row__name, .module-reaction-viewer__body__row__name_profile-name {
         font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
         font-size: 15px;
         line-height: 21px;
@@ -5441,7 +5441,7 @@ img.emoji.jumbo {
         overflow: hidden;
         text-overflow: ellipsis;
         color: #1b1b1b; }
-        .dark-theme .module-reaction-viewer__body__row__name {
+        .dark-theme .module-reaction-viewer__body__row__name, .dark-theme .module-reaction-viewer__body__row__name_profile-name {
           color: #e9e9e9; }
 
 @keyframes module-reaction-picker__background-fade {

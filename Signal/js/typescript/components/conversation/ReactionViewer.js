@@ -29,6 +29,7 @@
     const React = __importStar(window.react);
     const lodash_1 = window.lodash;
     const classnames_1 = __importDefault(window.classnames);
+    const ContactName_1 = window.ts.components.conversation.ContactName;
     const Avatar_1 = window.ts.components.Avatar;
     const Emoji_1 = window.ts.components.emoji.Emoji;
     const hooks_1 = window.ts.components.hooks;
@@ -60,7 +61,13 @@
             const renderedEmojis = React.useMemo(() => {
                 const emojiSet = new Set();
                 reactions.forEach(re => emojiSet.add(re.emoji));
-                return lodash_1.sortBy(Array.from(emojiSet), emoji => emojisOrder.indexOf(emoji) || Infinity);
+                return lodash_1.sortBy(Array.from(emojiSet), emoji => {
+                    const idx = emojisOrder.indexOf(emoji);
+                    if (idx > -1) {
+                        return idx;
+                    }
+                    return Infinity;
+                });
             }, [reactions]);
             // If we have previously selected a reaction type that is no longer present
             // (removed on another device, for instance) we should select another
@@ -95,9 +102,9 @@
                             React.createElement(Emoji_1.Emoji, { size: 18, emoji: emoji }),
                             React.createElement("span", { className: "module-reaction-viewer__header__button__count" }, re.length)));
                     })),
-                React.createElement("main", { className: "module-reaction-viewer__body" }, selectedReactions.map(re => (React.createElement("div", { key: `${re.from.id}-${re.emoji}`, className: "module-reaction-viewer__body__row" },
+                React.createElement("main", { className: "module-reaction-viewer__body" }, selectedReactions.map(({ from, emoji }) => (React.createElement("div", { key: `${from.id}-${emoji}`, className: "module-reaction-viewer__body__row" },
                     React.createElement("div", { className: "module-reaction-viewer__body__row__avatar" },
-                        React.createElement(Avatar_1.Avatar, { avatarPath: re.from.avatarPath, conversationType: "direct", size: 32, i18n: i18n })),
-                    React.createElement("span", { className: "module-reaction-viewer__body__row__name" }, re.from.name || re.from.profileName)))))));
+                        React.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, conversationType: "direct", size: 32, name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber, i18n: i18n })),
+                    React.createElement(ContactName_1.ContactName, { module: "module-reaction-viewer__body__row__name", i18n: i18n, name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber, isMe: from.isMe })))))));
         });
 })();
