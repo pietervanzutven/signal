@@ -111,6 +111,10 @@
             keys: ['commandOrCtrl', 'shift', 'R'],
         },
         {
+            description: 'Keyboard--toggle-reaction-picker',
+            keys: ['commandOrCtrl', 'shift', 'E'],
+        },
+        {
             description: 'Keyboard--save-attachment',
             keys: ['commandOrCtrl', 'S'],
         },

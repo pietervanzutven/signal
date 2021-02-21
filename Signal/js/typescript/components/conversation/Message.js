@@ -34,6 +34,7 @@
     const Quote_1 = window.ts.components.conversation.Quote;
     const EmbeddedContact_1 = window.ts.components.conversation.EmbeddedContact;
     const ReactionViewer_1 = window.ts.components.conversation.ReactionViewer;
+    const ReactionPicker_1 = window.ts.components.conversation.ReactionPicker;
     const Emoji_1 = window.ts.components.emoji.Emoji;
     const Attachment_1 = window.ts.types.Attachment;
     const timer_1 = window.ts.util.timer;
@@ -52,6 +53,9 @@
             this.audioRef = react_1.default.createRef();
             this.focusRef = react_1.default.createRef();
             this.reactionsContainerRef = react_1.default.createRef();
+            this.handleWideMlChange = (event) => {
+                this.setState({ isWide: event.matches });
+            };
             this.captureMenuTrigger = (triggerRef) => {
                 this.menuTriggerRef = triggerRef;
             };
@@ -90,13 +94,13 @@
                 this.setState(({ reactionViewerRoot }) => {
                     if (reactionViewerRoot) {
                         document.body.removeChild(reactionViewerRoot);
-                        document.body.removeEventListener('click', this.handleClickOutside, true);
+                        document.body.removeEventListener('click', this.handleClickOutsideReactionViewer, true);
                         return { reactionViewerRoot: null };
                     }
                     if (!onlyRemove) {
                         const root = document.createElement('div');
                         document.body.appendChild(root);
-                        document.body.addEventListener('click', this.handleClickOutside, true);
+                        document.body.addEventListener('click', this.handleClickOutsideReactionViewer, true);
                         return {
                             reactionViewerRoot: root,
                         };
@@ -104,13 +108,39 @@
                     return { reactionViewerRoot: null };
                 });
             };
-            this.handleClickOutside = (e) => {
+            this.toggleReactionPicker = (onlyRemove = false) => {
+                this.setState(({ reactionPickerRoot }) => {
+                    if (reactionPickerRoot) {
+                        document.body.removeChild(reactionPickerRoot);
+                        document.body.removeEventListener('click', this.handleClickOutsideReactionPicker, true);
+                        return { reactionPickerRoot: null };
+                    }
+                    if (!onlyRemove) {
+                        const root = document.createElement('div');
+                        document.body.appendChild(root);
+                        document.body.addEventListener('click', this.handleClickOutsideReactionPicker, true);
+                        return {
+                            reactionPickerRoot: root,
+                        };
+                    }
+                    return { reactionPickerRoot: null };
+                });
+            };
+            this.handleClickOutsideReactionViewer = (e) => {
                 const { reactionViewerRoot } = this.state;
                 const { current: reactionsContainer } = this.reactionsContainerRef;
                 if (reactionViewerRoot && reactionsContainer) {
                     if (!reactionViewerRoot.contains(e.target) &&
                         !reactionsContainer.contains(e.target)) {
                         this.toggleReactionViewer(true);
+                    }
+                }
+            };
+            this.handleClickOutsideReactionPicker = (e) => {
+                const { reactionPickerRoot } = this.state;
+                if (reactionPickerRoot) {
+                    if (!reactionPickerRoot.contains(e.target)) {
+                        this.toggleReactionPicker(true);
                     }
                 }
             };
@@ -203,6 +233,11 @@
                 });
             };
             this.handleKeyDown = (event) => {
+                if ((event.key === 'E' || event.key === 'e') &&
+                    (event.metaKey || event.ctrlKey) &&
+                    event.shiftKey) {
+                    this.toggleReactionPicker();
+                }
                 if (event.key !== 'Enter' && event.key !== 'Space') {
                     return;
                 }
@@ -216,6 +251,8 @@
                 }
                 this.handleOpen(event);
             };
+            this.wideMl = window.matchMedia('(min-width: 926px)');
+            this.wideMl.addListener('change', this.handleWideMlChange);
             this.state = {
                 expiring: false,
                 expired: false,
@@ -224,6 +261,8 @@
                 prevSelectedCounter: props.isSelectedCounter,
                 reactionsHeight: 0,
                 reactionViewerRoot: null,
+                reactionPickerRoot: null,
+                isWide: this.wideMl.matches,
             };
         }
         static getDerivedStateFromProps(props, state) {
@@ -264,6 +303,8 @@
                 clearTimeout(this.expiredTimeout);
             }
             this.toggleReactionViewer(true);
+            this.toggleReactionPicker(true);
+            this.wideMl.removeListener('change', this.handleWideMlChange);
         }
         componentDidUpdate(prevProps) {
             this.startSelectedTimer();
@@ -566,11 +607,14 @@
                 react_1.default.createElement("div", { className: classnames_1.default('module-message__error', `module-message__error--${direction}`) })));
         }
         renderMenu(isCorrectSide, triggerId) {
-            const { attachments, direction, disableMenu, id, isSticker, isTapToView, replyToMessage, } = this.props;
+            const { attachments,
+                // tslint:disable-next-line max-func-body-length
+                direction, disableMenu, id, isSticker, isTapToView, replyToMessage, } = this.props;
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
             const { reactions } = this.props;
+            const { reactionPickerRoot, isWide } = this.state;
             const hasReactions = reactions && reactions.length > 0;
             const multipleAttachments = attachments && attachments.length > 1;
             const firstAttachment = attachments && attachments[0];
@@ -583,6 +627,18 @@
                     // This a menu meant for mouse use only
                     role: "button", className: classnames_1.default('module-message__buttons__download', `module-message__buttons__download--${direction}`)
                 })) : null;
+            const reactButton = (react_1.default.createElement(react_popper_1.Reference, null, ({ ref: popperRef }) => {
+                // Only attach the popper reference to the reaction button if it is
+                // visible in the page (it is hidden when the page is narrow)
+                const maybePopperRef = isWide ? popperRef : undefined;
+                return (react_1.default.createElement("div", {
+                    ref: maybePopperRef, onClick: (event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        this.toggleReactionPicker();
+                    }, role: "button", className: "module-message__buttons__react"
+                }));
+            }));
             const replyButton = (react_1.default.createElement("div", {
                 onClick: (event) => {
                     event.stopPropagation();
@@ -592,22 +648,43 @@
                 // This a menu meant for mouse use only
                 role: "button", className: classnames_1.default('module-message__buttons__reply', `module-message__buttons__download--${direction}`)
             }));
-            const menuButton = (react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, { id: triggerId, ref: this.captureMenuTrigger },
-                react_1.default.createElement("div", {
-                    // This a menu meant for mouse use only
-                    role: "button", onClick: this.showMenu, className: classnames_1.default('module-message__buttons__menu', `module-message__buttons__download--${direction}`)
-                })));
-            const first = direction === 'incoming' ? downloadButton : menuButton;
-            const last = direction === 'incoming' ? menuButton : downloadButton;
-            return (react_1.default.createElement("div", { className: classnames_1.default('module-message__buttons', `module-message__buttons--${direction}`, hasReactions ? 'module-message__buttons--has-reactions' : null) },
-                first,
-                replyButton,
-                last));
+            const menuButton = (react_1.default.createElement(react_popper_1.Reference, null, ({ ref: popperRef }) => {
+                // Only attach the popper reference to the collapsed menu button if
+                // the reaction button is not visible in the page (it is hidden when
+                // the page is narrow)
+                const maybePopperRef = !isWide ? popperRef : undefined;
+                return (react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, { id: triggerId, ref: this.captureMenuTrigger },
+                    react_1.default.createElement("div", {
+                        // This a menu meant for mouse use only
+                        ref: maybePopperRef, role: "button", onClick: this.showMenu, className: classnames_1.default('module-message__buttons__menu', `module-message__buttons__download--${direction}`)
+                    })));
+            }));
+            // @ts-ignore
+            const ENABLE_REACTION_SEND = window.ENABLE_REACTION_SEND;
+            return (react_1.default.createElement(react_popper_1.Manager, null,
+                react_1.default.createElement("div", { className: classnames_1.default('module-message__buttons', `module-message__buttons--${direction}`, hasReactions ? 'module-message__buttons--has-reactions' : null) },
+                    ENABLE_REACTION_SEND ? reactButton : null,
+                    downloadButton,
+                    replyButton,
+                    menuButton),
+                reactionPickerRoot &&
+                react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: "top" }, ({ ref, style }) => (react_1.default.createElement(ReactionPicker_1.ReactionPicker, {
+                    ref: ref, style: style, selected: this.props.selectedReaction, onClose: this.toggleReactionPicker, onPick: emoji => {
+                        this.toggleReactionPicker(true);
+                        this.props.reactToMessage(id, {
+                            emoji,
+                            remove: emoji === this.props.selectedReaction,
+                        });
+                    }
+                }))), reactionPickerRoot)));
         }
+        // tslint:disable-next-line max-func-body-length
         renderContextMenu(triggerId) {
             const { attachments, deleteMessage, direction, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, } = this.props;
             const showRetry = status === 'error' && direction === 'outgoing';
             const multipleAttachments = attachments && attachments.length > 1;
+            // @ts-ignore
+            const ENABLE_REACTION_SEND = window.ENABLE_REACTION_SEND;
             const menu = (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
                 !isSticker &&
                     !multipleAttachments &&
@@ -618,6 +695,15 @@
                             className: 'module-message__context__download',
                         }, onClick: this.openGenericAttachment
                     }, i18n('downloadAttachment'))) : null,
+                ENABLE_REACTION_SEND ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                    attributes: {
+                        className: 'module-message__context__react',
+                    }, onClick: (event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        this.toggleReactionPicker();
+                    }
+                }, i18n('reactToMessage'))) : null,
                 react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__reply',

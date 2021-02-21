@@ -271,6 +271,7 @@
     <Content Include="js\typescript\components\conversation\MessageBody.js" />
     <Content Include="js\typescript\components\conversation\MessageDetail.js" />
     <Content Include="js\typescript\components\conversation\Quote.js" />
+    <Content Include="js\typescript\components\conversation\ReactionPicker.js" />
     <Content Include="js\typescript\components\conversation\ReactionViewer.js" />
     <Content Include="js\typescript\components\conversation\ResetSessionNotification.js" />
     <Content Include="js\typescript\components\conversation\SafetyNumberNotification.js" />
