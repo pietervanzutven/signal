@@ -1366,14 +1366,10 @@ img.emoji.jumbo {
 
 .module-message__buttons--incoming {
   left: calc(100% + 8px); }
-  .module-message__buttons--incoming.module-message__buttons--has-reactions {
-    padding-left: 28px; }
 
 .module-message__buttons--outgoing {
   right: calc(100% + 8px);
   flex-direction: row-reverse; }
-  .module-message__buttons--outgoing.module-message__buttons--has-reactions {
-    padding-right: 28px; }
 
 .module-message__buttons__download {
   height: 24px;
@@ -2128,6 +2124,10 @@ img.emoji.jumbo {
   align-items: center;
   margin-top: 3px;
   margin-bottom: -3px; }
+  .module-message__metadata--outgoing {
+    justify-content: flex-end; }
+  .module-message__metadata--with-reactions {
+    margin-bottom: -2px; }
 
 .module-message__metadata--with-image-no-caption {
   position: absolute;
@@ -2176,9 +2176,6 @@ img.emoji.jumbo {
 
 .ios-theme .module-message__metadata__date--with-sticker {
   color: #5e5e5e; }
-
-.module-message__metadata__spacer {
-  flex-grow: 1; }
 
 .module-message__metadata__status-icon {
   width: 12px;
@@ -2369,13 +2366,10 @@ img.emoji.jumbo {
 
 .module-message__reactions {
   position: absolute;
-  top: 0;
+  bottom: 0px;
   z-index: 2;
-  height: 100%; }
-  .module-message__reactions--incoming {
-    right: -28px; }
-  .module-message__reactions--outgoing {
-    left: -28px; }
+  height: 22px;
+  display: flex; }
 
 .module-message__reactions__reaction {
   background: none;
@@ -2387,23 +2381,35 @@ img.emoji.jumbo {
   cursor: pointer;
   outline: inherit;
   text-align: inherit;
-  width: 33px;
-  height: 33px;
+  min-width: 28px;
+  height: 22px;
   border: 1px solid;
   border-radius: 33px;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  top: 0;
   border-color: #ffffff;
   background: #e9e9e9; }
-  .module-message__reactions__reaction:first-of-type {
-    z-index: 2; }
-  .module-message__reactions__reaction--incoming {
-    right: 0; }
-  .module-message__reactions__reaction--outgoing {
-    left: 0; }
+  .module-message__reactions__reaction--with-count {
+    min-width: 40px; }
+  .module-message__reactions__reaction__count {
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    line-height: 16px;
+    letter-spacing: 0.06px;
+    font-weight: bold;
+    margin-left: 4px;
+    color: #5e5e5e; }
+    .module-message__reactions__reaction__count--no-emoji {
+      margin-left: 0px; }
+    .dark-theme .module-message__reactions__reaction__count {
+      color: #b9b9b9; }
+    .module-message__reactions__reaction__count--is-me {
+      color: #3b3b3b; }
+      .dark-theme .module-message__reactions__reaction__count--is-me {
+        color: #dedede; }
+      .ios-theme .module-message__reactions__reaction__count--is-me {
+        color: rgba(255, 255, 255, 0.9); }
   .module-message__reactions__reaction:focus {
     outline: none; }
   .keyboard-mode .module-message__reactions__reaction:focus {
@@ -7372,6 +7378,8 @@ img.emoji.jumbo {
 
 .module-message__container {
   max-width: 302px; }
+  .module-message__container--with-reactions {
+    margin-bottom: 12px; }
 
 /* Spec: container > 438px and container < 593px */
 @media (min-width: 800px) and (max-width: 925px) {

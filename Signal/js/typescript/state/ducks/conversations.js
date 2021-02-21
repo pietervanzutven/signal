@@ -250,6 +250,12 @@
         if (signalAccountChanged) {
             return true;
         }
+        const currentReactions = message.reactions || [];
+        const lastReactions = previous.reactions || [];
+        const reactionsChanged = (currentReactions.length === 0) !== (lastReactions.length === 0);
+        if (reactionsChanged) {
+            return true;
+        }
         return false;
     }
     // tslint:disable-next-line cyclomatic-complexity max-func-body-length

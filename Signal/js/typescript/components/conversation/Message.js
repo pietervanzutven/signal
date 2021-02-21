@@ -252,17 +252,17 @@
                 this.handleOpen(event);
             };
             this.wideMl = window.matchMedia('(min-width: 926px)');
-            this.wideMl.addListener('change', this.handleWideMlChange);
+            this.wideMl.addEventListener('change', this.handleWideMlChange);
             this.state = {
                 expiring: false,
                 expired: false,
                 imageBroken: false,
                 isSelected: props.isSelected,
                 prevSelectedCounter: props.isSelectedCounter,
-                reactionsHeight: 0,
                 reactionViewerRoot: null,
                 reactionPickerRoot: null,
                 isWide: this.wideMl.matches,
+                containerWidth: 0,
             };
         }
         static getDerivedStateFromProps(props, state) {
@@ -304,7 +304,7 @@
             }
             this.toggleReactionViewer(true);
             this.toggleReactionPicker(true);
-            this.wideMl.removeListener('change', this.handleWideMlChange);
+            this.wideMl.removeEventListener('change', this.handleWideMlChange);
         }
         componentDidUpdate(prevProps) {
             this.startSelectedTimer();
@@ -348,21 +348,22 @@
                 this.expiredTimeout = setTimeout(setExpired, EXPIRED_DELAY);
             }
         }
+        // tslint:disable-next-line cyclomatic-complexity
         renderMetadata() {
-            const { collapseMetadata, direction, expirationLength, expirationTimestamp, i18n, isSticker, isTapToViewExpired, status, text, textPending, timestamp, } = this.props;
+            const { collapseMetadata, direction, expirationLength, expirationTimestamp, i18n, isSticker, isTapToViewExpired, reactions, status, text, textPending, timestamp, } = this.props;
             if (collapseMetadata) {
                 return null;
             }
             const isShowingImage = this.isShowingImage();
             const withImageNoCaption = Boolean(!isSticker && !text && isShowingImage);
+            const withReactions = reactions && reactions.length > 0;
             const showError = status === 'error' && direction === 'outgoing';
             const metadataDirection = isSticker ? undefined : direction;
             return (react_1.default.createElement("div", {
-                className: classnames_1.default('module-message__metadata', withImageNoCaption
+                className: classnames_1.default('module-message__metadata', `module-message__metadata--${direction}`, withReactions ? 'module-message__metadata--with-reactions' : null, withImageNoCaption
                     ? 'module-message__metadata--with-image-no-caption'
                     : null)
             },
-                react_1.default.createElement("span", { className: "module-message__metadata__spacer" }),
                 showError ? (react_1.default.createElement("span", {
                     className: classnames_1.default('module-message__metadata__date', isSticker ? 'module-message__metadata__date--with-sticker' : null, !isSticker
                         ? `module-message__metadata__date--${direction}`
@@ -613,9 +614,7 @@
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
-            const { reactions } = this.props;
             const { reactionPickerRoot, isWide } = this.state;
-            const hasReactions = reactions && reactions.length > 0;
             const multipleAttachments = attachments && attachments.length > 1;
             const firstAttachment = attachments && attachments[0];
             const downloadButton = !isSticker &&
@@ -662,7 +661,7 @@
             // @ts-ignore
             const ENABLE_REACTION_SEND = window.ENABLE_REACTION_SEND;
             return (react_1.default.createElement(react_popper_1.Manager, null,
-                react_1.default.createElement("div", { className: classnames_1.default('module-message__buttons', `module-message__buttons--${direction}`, hasReactions ? 'module-message__buttons--has-reactions' : null) },
+                react_1.default.createElement("div", { className: classnames_1.default('module-message__buttons', `module-message__buttons--${direction}`) },
                     ENABLE_REACTION_SEND ? reactButton : null,
                     downloadButton,
                     replyButton,
@@ -862,52 +861,76 @@
             const grouped = Object.values(lodash_1.groupBy(reactions, 'emoji')).map(res => lodash_1.orderBy(res, ['timestamp'], ['desc']));
             // Order groups by length and subsequently by most recent reaction
             const ordered = lodash_1.orderBy(grouped, ['length', ([{ timestamp }]) => timestamp], ['desc', 'desc']);
-            // Take the first two groups for rendering
-            const toRender = lodash_1.take(ordered, 2).map(res => ({
+            // Take the first three groups for rendering
+            const toRender = lodash_1.take(ordered, 3).map(res => ({
                 emoji: res[0].emoji,
+                count: res.length,
                 isMe: res.some(re => Boolean(re.from.isMe)),
             }));
-            const reactionHeight = 32;
-            const { reactionsHeight: height, reactionViewerRoot } = this.state;
-            const offset = lodash_1.clamp((height - reactionHeight) / toRender.length, 4, 28);
+            const someNotRendered = ordered.length > 3;
+            // We only drop two here because the third emoji would be replaced by the
+            // more button
+            const maybeNotRendered = lodash_1.drop(ordered, 2);
+            const maybeNotRenderedTotal = maybeNotRendered.reduce((sum, res) => sum + res.length, 0);
+            const notRenderedIsMe = someNotRendered &&
+                maybeNotRendered.some(res => res.some(re => Boolean(re.from.isMe)));
+            const { reactionViewerRoot, containerWidth } = this.state;
+            // Calculate the width of the reactions container
+            const reactionsWidth = toRender.reduce((sum, res, i, arr) => {
+                if (someNotRendered && i === arr.length - 1) {
+                    return sum + 28;
+                }
+                if (res.count > 1) {
+                    return sum + 40;
+                }
+                return sum + 28;
+            }, 0);
+            const reactionsXAxisOffset = Math.max(containerWidth - reactionsWidth - 6, 6);
             const popperPlacement = outgoing ? 'bottom-end' : 'bottom-start';
             return (react_1.default.createElement(react_popper_1.Manager, null,
-                react_1.default.createElement(react_popper_1.Reference, null, ({ ref: popperRef }) => (react_1.default.createElement(react_measure_1.default, {
-                    bounds: true, onResize: ({ bounds = { height: 0 } }) => {
-                        this.setState({ reactionsHeight: bounds.height });
-                    }
-                }, ({ measureRef }) => (react_1.default.createElement("div", {
-                    ref: _util_1.mergeRefs(this.reactionsContainerRef, measureRef, popperRef), className: classnames_1.default('module-message__reactions', outgoing
+                react_1.default.createElement(react_popper_1.Reference, null, ({ ref: popperRef }) => (react_1.default.createElement("div", {
+                    ref: _util_1.mergeRefs(this.reactionsContainerRef, popperRef), className: classnames_1.default('module-message__reactions', outgoing
                         ? 'module-message__reactions--outgoing'
-                        : 'module-message__reactions--incoming')
-                }, toRender.map((re, i) => (react_1.default.createElement("button", {
-                    key: `${re.emoji}-${i}`, className: classnames_1.default('module-message__reactions__reaction', outgoing
-                        ? 'module-message__reactions__reaction--outgoing'
-                        : 'module-message__reactions__reaction--incoming', re.isMe
-                        ? 'module-message__reactions__reaction--is-me'
-                        : null), style: {
-                            top: `${i * offset}px`,
-                        }, onClick: e => {
-                            e.stopPropagation();
-                            this.toggleReactionViewer();
-                        }, onKeyDown: e => {
-                            // Prevent enter key from opening stickers/attachments
-                            if (e.key === 'Enter') {
+                        : 'module-message__reactions--incoming'), style: {
+                            [outgoing ? 'right' : 'left']: `${reactionsXAxisOffset}px`,
+                        }
+                }, toRender.map((re, i) => {
+                    const isLast = i === toRender.length - 1;
+                    const isMore = isLast && someNotRendered;
+                    const isMoreWithMe = isMore && notRenderedIsMe;
+                    return (react_1.default.createElement("button", {
+                        key: `${re.emoji}-${i}`, className: classnames_1.default('module-message__reactions__reaction', re.count > 1
+                            ? 'module-message__reactions__reaction--with-count'
+                            : null, outgoing
+                            ? 'module-message__reactions__reaction--outgoing'
+                            : 'module-message__reactions__reaction--incoming', isMoreWithMe || (re.isMe && !isMoreWithMe)
+                            ? 'module-message__reactions__reaction--is-me'
+                            : null), onClick: e => {
                                 e.stopPropagation();
+                                e.preventDefault();
+                                this.toggleReactionViewer();
+                            }, onKeyDown: e => {
+                                // Prevent enter key from opening stickers/attachments
+                                if (e.key === 'Enter') {
+                                    e.stopPropagation();
+                                }
                             }
-                        }
-                },
-                    react_1.default.createElement(Emoji_1.Emoji, { size: 18, emoji: re.emoji }))))))))),
+                    }, isMore ? (react_1.default.createElement("span", {
+                        className: classnames_1.default('module-message__reactions__reaction__count', 'module-message__reactions__reaction__count--no-emoji', isMoreWithMe
+                            ? 'module-message__reactions__reaction__count--is-me'
+                            : null)
+                    },
+                        "+",
+                        maybeNotRenderedTotal)) : (react_1.default.createElement(react_1.default.Fragment, null,
+                            react_1.default.createElement(Emoji_1.Emoji, { size: 16, emoji: re.emoji }),
+                            re.count > 1 ? (react_1.default.createElement("span", {
+                                className: classnames_1.default('module-message__reactions__reaction__count', re.isMe
+                                    ? 'module-message__reactions__reaction__count--is-me'
+                                    : null)
+                            }, re.count)) : null))));
+                })))),
                 reactionViewerRoot &&
-                react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: popperPlacement }, ({ ref, style }) => (react_1.default.createElement(ReactionViewer_1.ReactionViewer, {
-                    ref: ref, style: Object.assign({}, style, { zIndex: 2, marginTop: -(height - reactionHeight * 0.75) }, (outgoing
-                        ? {
-                            marginRight: reactionHeight * -0.375,
-                        }
-                        : {
-                            marginLeft: reactionHeight * -0.375,
-                        })), reactions: reactions, i18n: i18n, onClose: this.toggleReactionViewer
-                }))), reactionViewerRoot)));
+                react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: popperPlacement }, ({ ref, style }) => (react_1.default.createElement(ReactionViewer_1.ReactionViewer, { ref: ref, style: Object.assign({}, style, { zIndex: 2 }), reactions: reactions, i18n: i18n, onClose: this.toggleReactionViewer }))), reactionViewerRoot)));
         }
         renderContents() {
             const { isTapToView } = this.props;
@@ -926,7 +949,7 @@
                 this.renderSendMessageButton()));
         }
         renderContainer() {
-            const { authorColor, direction, isSticker, isTapToView, isTapToViewExpired, isTapToViewError, } = this.props;
+            const { authorColor, direction, isSticker, isTapToView, isTapToViewExpired, isTapToViewError, reactions, } = this.props;
             const { isSelected } = this.state;
             const isAttachmentPending = this.isAttachmentPending();
             const width = this.getWidth();
@@ -941,14 +964,20 @@
                 ? `module-message__container--${direction}-${authorColor}-tap-to-view-pending`
                 : null, isTapToViewError
                 ? 'module-message__container--with-tap-to-view-error'
+                : null, reactions && reactions.length > 0
+                ? 'module-message__container--with-reactions'
                 : null);
             const containerStyles = {
                 width: isShowingImage ? width : undefined,
             };
-            return (react_1.default.createElement("div", { className: containerClassnames, style: containerStyles },
+            return (react_1.default.createElement(react_measure_1.default, {
+                bounds: true, onResize: ({ bounds = { width: 0 } }) => {
+                    this.setState({ containerWidth: bounds.width });
+                }
+            }, ({ measureRef }) => (react_1.default.createElement("div", { ref: measureRef, className: containerClassnames, style: containerStyles },
                 this.renderAuthor(),
                 this.renderContents(),
-                this.renderAvatar()));
+                this.renderAvatar()))));
         }
         // tslint:disable-next-line cyclomatic-complexity
         render() {
