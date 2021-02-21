@@ -1906,6 +1906,12 @@
           }
         );
         conversation.set(newAttributes);
+      } else {
+        const { attributes } = conversation;
+        if (attributes.avatar && attributes.avatar.path) {
+          await deleteAttachmentData(attributes.avatar.path);
+        }
+        conversation.set({ avatar: null });
       }
 
       window.Signal.Data.updateConversation(id, conversation.attributes);
