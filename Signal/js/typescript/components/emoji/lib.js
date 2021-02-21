@@ -18,7 +18,17 @@
     const p_queue_1 = __importDefault(window.p_queue);
     const is_1 = __importDefault(window.sindresorhus.is);
     exports.skinTones = ['1F3FB', '1F3FC', '1F3FD', '1F3FE', '1F3FF'];
-    const data = emoji_datasource_1.default.filter(emoji => emoji.has_img_apple);
+    const data = emoji_datasource_1.default
+        .filter(emoji => emoji.has_img_apple)
+        .map(emoji =>
+            // Why this weird map?
+            // the emoji dataset has two separate categories for Emotions and People
+            // yet in our UI we display these as a single merged category. In order
+            // for the emojis to be sorted properly we're manually incrementing the
+            // sort_order for the People & Body emojis so that they fall below the
+            // Smiley & Emotions category.
+            emoji.category === 'People & Body'
+                ? Object.assign({}, emoji, { sort_order: emoji.sort_order + 1000 }) : emoji);
     // @ts-ignore
     const ROOT_PATH = lodash_1.get(
         // tslint:disable-next-line no-typeof-undefined
@@ -79,7 +89,10 @@
         if (category === 'Travel & Places') {
             return 'travel';
         }
-        if (category === 'Smileys & People') {
+        if (category === 'Smileys & Emotion') {
+            return 'emoji';
+        }
+        if (category === 'People & Body') {
             return 'emoji';
         }
         if (category === 'Symbols') {
@@ -91,14 +104,21 @@
         const base = dataByShortName[shortName];
         if (skinTone && base.skin_variations) {
             const variation = lodash_1.isNumber(skinTone) ? exports.skinTones[skinTone - 1] : skinTone;
-            return base.skin_variations[variation];
+            if (base.skin_variations[variation]) {
+                return base.skin_variations[variation];
+            }
+            // For emojis that have two people in them which can have diff skin tones
+            // the Map is of SkinTone-SkinTone. If we don't find the correct skin tone
+            // in the list of variations then we assume it is one of those double skin
+            // emojis and we default to both people having same skin.
+            return base.skin_variations[`${variation}-${variation}`];
         }
         return base;
     }
     exports.getEmojiData = getEmojiData;
     function getImagePath(shortName, skinTone) {
-        const { image } = getEmojiData(shortName, skinTone);
-        return makeImagePath(image);
+        const emojiData = getEmojiData(shortName, skinTone);
+        return makeImagePath(emojiData.image);
     }
     exports.getImagePath = getImagePath;
     const fuse = new fuse_js_1.default(data, {

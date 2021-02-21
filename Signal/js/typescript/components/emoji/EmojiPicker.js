@@ -120,20 +120,19 @@
             }, [onClose, searchMode]);
             // Focus after initial render, restore focus on teardown
             hooks_1.useRestoreFocus(focusRef);
+            const [, ...renderableCategories] = categories;
             const emojiGrid = React.useMemo(() => {
                 if (searchText) {
                     return lodash_1.chunk(lib_1.search(searchText).map(e => e.short_name), COL_COUNT);
                 }
-                const [, ...cats] = categories;
-                const chunks = lodash_1.flatMap(cats, cat => lodash_1.chunk(lib_1.dataByCategory[cat].map(e => e.short_name), COL_COUNT));
+                const chunks = lodash_1.flatMap(renderableCategories, cat => lodash_1.chunk(lib_1.dataByCategory[cat].map(e => e.short_name), COL_COUNT));
                 return [...lodash_1.chunk(firstRecent, COL_COUNT), ...chunks];
             }, [lib_1.dataByCategory, categories, firstRecent, searchText]);
             const catRowEnds = React.useMemo(() => {
                 const rowEnds = [
                     Math.ceil(firstRecent.length / COL_COUNT) - 1,
                 ];
-                const [, ...cats] = categories;
-                cats.forEach(cat => {
+                renderableCategories.forEach(cat => {
                     rowEnds.push(Math.ceil(lib_1.dataByCategory[cat].length / COL_COUNT) +
                         lodash_1.last(rowEnds));
                 });

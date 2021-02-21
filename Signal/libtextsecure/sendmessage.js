@@ -32,6 +32,7 @@ function Message(options) {
   this.quote = options.quote;
   this.recipients = options.recipients;
   this.sticker = options.sticker;
+  this.reaction = options.reaction;
   this.timestamp = options.timestamp;
 
   if (!(this.recipients instanceof Array)) {
@@ -122,6 +123,9 @@ Message.prototype = {
       if (this.sticker.attachmentPointer) {
         proto.sticker.data = this.sticker.attachmentPointer;
       }
+    }
+    if (this.reaction) {
+      proto.reaction = this.reaction;
     }
     if (Array.isArray(this.preview)) {
       proto.preview = this.preview.map(preview => {
@@ -933,6 +937,7 @@ MessageSender.prototype = {
     quote,
     preview,
     sticker,
+    reaction,
     timestamp,
     expireTimer,
     profileKey,
@@ -946,6 +951,7 @@ MessageSender.prototype = {
       quote,
       preview,
       sticker,
+      reaction,
       expireTimer,
       profileKey,
       flags,
@@ -973,6 +979,7 @@ MessageSender.prototype = {
     quote,
     preview,
     sticker,
+    reaction,
     timestamp,
     expireTimer,
     profileKey,
@@ -987,6 +994,7 @@ MessageSender.prototype = {
         quote,
         preview,
         sticker,
+        reaction,
         expireTimer,
         profileKey,
       },
@@ -1071,6 +1079,7 @@ MessageSender.prototype = {
     quote,
     preview,
     sticker,
+    reaction,
     timestamp,
     expireTimer,
     profileKey,
@@ -1086,6 +1095,7 @@ MessageSender.prototype = {
       quote,
       preview,
       sticker,
+      reaction,
       expireTimer,
       profileKey,
       group: {
