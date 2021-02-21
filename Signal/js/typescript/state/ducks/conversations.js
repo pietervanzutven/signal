@@ -502,10 +502,11 @@
                     return state;
                 }
             }
-            if (first && oldest && first.received_at < oldest.received_at) {
+            // Update oldest and newest if we receive older/newer messages (or duplicated timestamps!)
+            if (first && oldest && first.received_at <= oldest.received_at) {
                 oldest = lodash_1.pick(first, ['id', 'received_at']);
             }
-            if (last && newest && last.received_at > newest.received_at) {
+            if (last && newest && last.received_at >= newest.received_at) {
                 newest = lodash_1.pick(last, ['id', 'received_at']);
             }
             const newIds = messages.map(message => message.id);
