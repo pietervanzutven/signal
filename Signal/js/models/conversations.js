@@ -975,10 +975,6 @@
      *   target message
      */
     async sendReactionMessage(reaction, target) {
-      if (!window.ENABLE_REACTION_SEND) {
-        return null;
-      }
-
       const timestamp = Date.now();
       const outgoingReaction = Object.assign({}, reaction, target);
       const reactionModel = Whisper.Reactions.add(Object.assign({},

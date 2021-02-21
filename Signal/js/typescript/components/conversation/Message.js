@@ -658,11 +658,9 @@
                         ref: maybePopperRef, role: "button", onClick: this.showMenu, className: classnames_1.default('module-message__buttons__menu', `module-message__buttons__download--${direction}`)
                     })));
             }));
-            // @ts-ignore
-            const ENABLE_REACTION_SEND = window.ENABLE_REACTION_SEND;
             return (react_1.default.createElement(react_popper_1.Manager, null,
                 react_1.default.createElement("div", { className: classnames_1.default('module-message__buttons', `module-message__buttons--${direction}`) },
-                    ENABLE_REACTION_SEND ? reactButton : null,
+                    reactButton,
                     downloadButton,
                     replyButton,
                     menuButton),
@@ -682,8 +680,6 @@
             const { attachments, deleteMessage, direction, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, } = this.props;
             const showRetry = status === 'error' && direction === 'outgoing';
             const multipleAttachments = attachments && attachments.length > 1;
-            // @ts-ignore
-            const ENABLE_REACTION_SEND = window.ENABLE_REACTION_SEND;
             const menu = (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
                 !isSticker &&
                     !multipleAttachments &&
@@ -694,7 +690,7 @@
                             className: 'module-message__context__download',
                         }, onClick: this.openGenericAttachment
                     }, i18n('downloadAttachment'))) : null,
-                ENABLE_REACTION_SEND ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__react',
                     }, onClick: (event) => {
@@ -702,7 +698,7 @@
                         event.preventDefault();
                         this.toggleReactionPicker();
                     }
-                }, i18n('reactToMessage'))) : null,
+                }, i18n('reactToMessage')),
                 react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__reply',
