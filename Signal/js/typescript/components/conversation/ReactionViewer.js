@@ -39,8 +39,7 @@
         (_a, ref) => {
             var { i18n, reactions, onClose } = _a, rest = __rest(_a, ["i18n", "reactions", "onClose"]);
             const grouped = lodash_1.mapValues(lodash_1.groupBy(reactions, 'emoji'), res => lodash_1.orderBy(res, ['timestamp'], ['desc']));
-            const filtered = emojisOrder.filter(e => Boolean(grouped[e]));
-            const [selected, setSelected] = React.useState(filtered[0]);
+            const [selected, setSelected] = React.useState('all');
             const focusRef = React.useRef(null);
             // Handle escape key
             React.useEffect(() => {
@@ -61,13 +60,17 @@
             const renderedEmojis = React.useMemo(() => {
                 const emojiSet = new Set();
                 reactions.forEach(re => emojiSet.add(re.emoji));
-                return lodash_1.sortBy(Array.from(emojiSet), emoji => {
+                const arr = lodash_1.sortBy(Array.from(emojiSet), emoji => {
                     const idx = emojisOrder.indexOf(emoji);
                     if (idx > -1) {
                         return idx;
                     }
                     return Infinity;
                 });
+                return ['all', ...arr];
+            }, [reactions]);
+            const allSorted = React.useMemo(() => {
+                return lodash_1.sortBy(reactions, 'timestamp');
             }, [reactions]);
             // If we have previously selected a reaction type that is no longer present
             // (removed on another device, for instance) we should select another
@@ -84,27 +87,34 @@
                     }
                 }
             }, [grouped, onClose, renderedEmojis, selected, setSelected]);
-            const selectedReactions = grouped[selected] || [];
+            const selectedReactions = grouped[selected] || allSorted;
             return (React.createElement("div", Object.assign({}, rest, { ref: ref, className: "module-reaction-viewer" }),
                 React.createElement("header", { className: "module-reaction-viewer__header" }, renderedEmojis
-                    .filter(e => Boolean(grouped[e]))
-                    .map((emoji, index) => {
-                        const re = grouped[emoji];
+                    .filter(e => e === 'all' || Boolean(grouped[e]))
+                    .map((cat, index) => {
+                        const re = grouped[cat] || reactions;
                         const maybeFocusRef = index === 0 ? focusRef : undefined;
+                        const isAll = cat === 'all';
                         return (React.createElement("button", {
-                            key: emoji, ref: maybeFocusRef, className: classnames_1.default('module-reaction-viewer__header__button', selected === emoji
+                            key: cat, ref: maybeFocusRef, className: classnames_1.default('module-reaction-viewer__header__button', selected === cat
                                 ? 'module-reaction-viewer__header__button--selected'
                                 : null), onClick: event => {
                                     event.stopPropagation();
-                                    setSelected(emoji);
+                                    setSelected(cat);
                                 }
-                        },
-                            React.createElement(Emoji_1.Emoji, { size: 18, emoji: emoji }),
-                            React.createElement("span", { className: "module-reaction-viewer__header__button__count" }, re.length)));
+                        }, isAll ? (React.createElement("span", { className: "module-reaction-viewer__header__button__all" },
+                            i18n('ReactionsViewer--all'),
+                            "\u2009\u00B7\u2009",
+                            re.length)) : (React.createElement(React.Fragment, null,
+                                React.createElement(Emoji_1.Emoji, { size: 18, emoji: cat }),
+                                React.createElement("span", { className: "module-reaction-viewer__header__button__count" }, re.length)))));
                     })),
                 React.createElement("main", { className: "module-reaction-viewer__body" }, selectedReactions.map(({ from, emoji }) => (React.createElement("div", { key: `${from.id}-${emoji}`, className: "module-reaction-viewer__body__row" },
                     React.createElement("div", { className: "module-reaction-viewer__body__row__avatar" },
                         React.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, conversationType: "direct", size: 32, name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber, i18n: i18n })),
-                    React.createElement(ContactName_1.ContactName, { module: "module-reaction-viewer__body__row__name", name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber })))))));
+                    React.createElement("div", { className: "module-reaction-viewer__body__row__name" },
+                        React.createElement(ContactName_1.ContactName, { module: "module-reaction-viewer__body__row__name__contact-name", name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber })),
+                    React.createElement("div", { className: "module-reaction-viewer__body__row__emoji" },
+                        React.createElement(Emoji_1.Emoji, { size: 18, emoji: emoji }))))))));
         });
 })();
