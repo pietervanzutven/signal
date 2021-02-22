@@ -2270,8 +2270,11 @@
 
     async handleReaction(reaction) {
       const reactions = this.get('reactions') || [];
+      const messageId = this.idForLogging();
+      const count = reactions.length;
 
       if (reaction.get('remove')) {
+        window.log.info('Removing reaction for message', messageId);
         const newReactions = reactions.filter(
           re =>
             re.emoji !== reaction.get('emoji') ||
@@ -2279,6 +2282,7 @@
         );
         this.set({ reactions: newReactions });
       } else {
+        window.log.info('Adding reaction for message', messageId);
         const newReactions = reactions.filter(
           re => re.fromId !== reaction.get('fromId')
         );
@@ -2294,6 +2298,11 @@
           conversation.notify(this, reaction);
         }
       }
+
+      const newCount = this.get('reactions').length;
+      window.log.info(
+        `Done processing reaction for message ${messageId}. Went from ${count} to ${newCount} reactions.`
+      );
 
       await window.Signal.Data.saveMessage(this.attributes, {
         Message: Whisper.Message,
