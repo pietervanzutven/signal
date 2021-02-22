@@ -234,9 +234,12 @@
                 });
             };
             this.handleKeyDown = (event) => {
+                // Do not allow reactions to error messages
+                const { canReply } = this.props;
                 if ((event.key === 'E' || event.key === 'e') &&
                     (event.metaKey || event.ctrlKey) &&
-                    event.shiftKey) {
+                    event.shiftKey &&
+                    canReply) {
                     this.toggleReactionPicker();
                 }
                 if (event.key !== 'Enter' && event.key !== 'Space') {
@@ -268,11 +271,11 @@
         }
         static getDerivedStateFromProps(props, state) {
             if (!props.isSelected) {
-                return Object.assign({}, state, { isSelected: false, prevSelectedCounter: 0 });
+                return Object.assign(Object.assign({}, state), { isSelected: false, prevSelectedCounter: 0 });
             }
             if (props.isSelected &&
                 props.isSelectedCounter !== state.prevSelectedCounter) {
-                return Object.assign({}, state, { isSelected: props.isSelected, prevSelectedCounter: props.isSelectedCounter });
+                return Object.assign(Object.assign({}, state), { isSelected: props.isSelected, prevSelectedCounter: props.isSelectedCounter });
             }
             return state;
         }
@@ -611,7 +614,7 @@
         renderMenu(isCorrectSide, triggerId) {
             const { attachments,
                 // tslint:disable-next-line max-func-body-length
-                direction, disableMenu, id, isSticker, isTapToView, replyToMessage, } = this.props;
+                canReply, direction, disableMenu, id, isSticker, isTapToView, replyToMessage, } = this.props;
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
@@ -661,9 +664,9 @@
             }));
             return (react_1.default.createElement(react_popper_1.Manager, null,
                 react_1.default.createElement("div", { className: classnames_1.default('module-message__buttons', `module-message__buttons--${direction}`) },
-                    reactButton,
+                    canReply ? reactButton : null,
                     downloadButton,
-                    replyButton,
+                    canReply ? replyButton : null,
                     menuButton),
                 reactionPickerRoot &&
                 react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: "top" }, ({ ref, style }) => (react_1.default.createElement(ReactionPicker_1.ReactionPicker, {
@@ -678,7 +681,7 @@
         }
         // tslint:disable-next-line max-func-body-length
         renderContextMenu(triggerId) {
-            const { attachments, deleteMessage, direction, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, } = this.props;
+            const { attachments, canReply, deleteMessage, direction, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, } = this.props;
             const showRetry = status === 'error' && direction === 'outgoing';
             const multipleAttachments = attachments && attachments.length > 1;
             const menu = (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
@@ -691,24 +694,25 @@
                             className: 'module-message__context__download',
                         }, onClick: this.openGenericAttachment
                     }, i18n('downloadAttachment'))) : null,
-                react_1.default.createElement(react_contextmenu_1.MenuItem, {
-                    attributes: {
-                        className: 'module-message__context__react',
-                    }, onClick: (event) => {
-                        event.stopPropagation();
-                        event.preventDefault();
-                        this.toggleReactionPicker();
-                    }
-                }, i18n('reactToMessage')),
-                react_1.default.createElement(react_contextmenu_1.MenuItem, {
-                    attributes: {
-                        className: 'module-message__context__reply',
-                    }, onClick: (event) => {
-                        event.stopPropagation();
-                        event.preventDefault();
-                        replyToMessage(id);
-                    }
-                }, i18n('replyToMessage')),
+                canReply ? (react_1.default.createElement(react_1.default.Fragment, null,
+                    react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                        attributes: {
+                            className: 'module-message__context__react',
+                        }, onClick: (event) => {
+                            event.stopPropagation();
+                            event.preventDefault();
+                            this.toggleReactionPicker();
+                        }
+                    }, i18n('reactToMessage')),
+                    react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                        attributes: {
+                            className: 'module-message__context__reply',
+                        }, onClick: (event) => {
+                            event.stopPropagation();
+                            event.preventDefault();
+                            replyToMessage(id);
+                        }
+                    }, i18n('replyToMessage')))) : null,
                 react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
                         className: 'module-message__context__more-info',
@@ -927,7 +931,7 @@
                             }, re.count)) : null))));
                 })))),
                 reactionViewerRoot &&
-                react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: popperPlacement }, ({ ref, style }) => (react_1.default.createElement(ReactionViewer_1.ReactionViewer, { ref: ref, style: Object.assign({}, style, { zIndex: 2 }), reactions: reactions, pickedReaction: pickedReaction, i18n: i18n, onClose: this.toggleReactionViewer }))), reactionViewerRoot)));
+                react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: popperPlacement }, ({ ref, style }) => (react_1.default.createElement(ReactionViewer_1.ReactionViewer, { ref: ref, style: Object.assign(Object.assign({}, style), { zIndex: 2 }), reactions: reactions, pickedReaction: pickedReaction, i18n: i18n, onClose: this.toggleReactionViewer }))), reactionViewerRoot)));
         }
         renderContents() {
             const { isTapToView } = this.props;
