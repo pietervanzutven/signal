@@ -3661,6 +3661,7 @@
     <Content Include="node_modules\lodash\compact.js" />
     <Content Include="node_modules\lodash\debounce.js" />
     <Content Include="node_modules\lodash\difference.js" />
+    <Content Include="node_modules\lodash\drop.js" />
     <Content Include="node_modules\lodash\escapeRegExp.js" />
     <Content Include="node_modules\lodash\filter.js" />
     <Content Include="node_modules\lodash\findLast.js" />
