@@ -90,12 +90,12 @@
                     container.focus();
                 }
             };
-            this.toggleReactionViewer = (onlyRemove = false) => {
+            this.toggleReactionViewer = (onlyRemove = false, pickedReaction) => {
                 this.setState(({ reactionViewerRoot }) => {
                     if (reactionViewerRoot) {
                         document.body.removeChild(reactionViewerRoot);
                         document.body.removeEventListener('click', this.handleClickOutsideReactionViewer, true);
-                        return { reactionViewerRoot: null };
+                        return { reactionViewerRoot: null, pickedReaction };
                     }
                     if (!onlyRemove) {
                         const root = document.createElement('div');
@@ -103,9 +103,10 @@
                         document.body.addEventListener('click', this.handleClickOutsideReactionViewer, true);
                         return {
                             reactionViewerRoot: root,
+                            pickedReaction,
                         };
                     }
-                    return { reactionViewerRoot: null };
+                    return { reactionViewerRoot: null, pickedReaction };
                 });
             };
             this.toggleReactionPicker = (onlyRemove = false) => {
@@ -870,7 +871,7 @@
             const maybeNotRenderedTotal = maybeNotRendered.reduce((sum, res) => sum + res.length, 0);
             const notRenderedIsMe = someNotRendered &&
                 maybeNotRendered.some(res => res.some(re => Boolean(re.from.isMe)));
-            const { reactionViewerRoot, containerWidth } = this.state;
+            const { reactionViewerRoot, containerWidth, pickedReaction } = this.state;
             // Calculate the width of the reactions container
             const reactionsWidth = toRender.reduce((sum, res, i, arr) => {
                 if (someNotRendered && i === arr.length - 1) {
@@ -904,7 +905,7 @@
                             : null), onClick: e => {
                                 e.stopPropagation();
                                 e.preventDefault();
-                                this.toggleReactionViewer();
+                                this.toggleReactionViewer(false, isMore ? 'all' : re.emoji);
                             }, onKeyDown: e => {
                                 // Prevent enter key from opening stickers/attachments
                                 if (e.key === 'Enter') {
@@ -926,7 +927,7 @@
                             }, re.count)) : null))));
                 })))),
                 reactionViewerRoot &&
-                react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: popperPlacement }, ({ ref, style }) => (react_1.default.createElement(ReactionViewer_1.ReactionViewer, { ref: ref, style: Object.assign({}, style, { zIndex: 2 }), reactions: reactions, i18n: i18n, onClose: this.toggleReactionViewer }))), reactionViewerRoot)));
+                react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: popperPlacement }, ({ ref, style }) => (react_1.default.createElement(ReactionViewer_1.ReactionViewer, { ref: ref, style: Object.assign({}, style, { zIndex: 2 }), reactions: reactions, pickedReaction: pickedReaction, i18n: i18n, onClose: this.toggleReactionViewer }))), reactionViewerRoot)));
         }
         renderContents() {
             const { isTapToView } = this.props;
