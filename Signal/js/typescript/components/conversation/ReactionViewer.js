@@ -37,9 +37,9 @@
     exports.ReactionViewer = React.forwardRef(
         // tslint:disable-next-line max-func-body-length
         (_a, ref) => {
-            var { i18n, reactions, onClose } = _a, rest = __rest(_a, ["i18n", "reactions", "onClose"]);
+            var { i18n, reactions, onClose, pickedReaction } = _a, rest = __rest(_a, ["i18n", "reactions", "onClose", "pickedReaction"]);
             const grouped = lodash_1.mapValues(lodash_1.groupBy(reactions, 'emoji'), res => lodash_1.orderBy(res, ['timestamp'], ['desc']));
-            const [selected, setSelected] = React.useState('all');
+            const [selected, setSelected] = React.useState(pickedReaction || 'all');
             const focusRef = React.useRef(null);
             // Handle escape key
             React.useEffect(() => {
@@ -70,7 +70,7 @@
                 return ['all', ...arr];
             }, [reactions]);
             const allSorted = React.useMemo(() => {
-                return lodash_1.sortBy(reactions, 'timestamp');
+                return lodash_1.orderBy(reactions, ['timestamp'], ['desc']);
             }, [reactions]);
             // If we have previously selected a reaction type that is no longer present
             // (removed on another device, for instance) we should select another
