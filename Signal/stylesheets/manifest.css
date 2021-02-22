@@ -6660,7 +6660,9 @@ img.emoji.jumbo {
       background: #3b3b3b; }
 
 .module-emoji {
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: transparent;
   font-family: auto;
   caret-color: #1b1b1b; }
