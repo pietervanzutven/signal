@@ -21,7 +21,7 @@
   window.getEnvironment = () => config.environment;
   window.getVersion = () => config.version;
   window.getGuid = window.uuid.v4;
-  window.PQueue = window.p_queue;
+  window.PQueue = window.p_queue.default;
 
   window.localeMessages = ipc.sendSync('locale-data');
 

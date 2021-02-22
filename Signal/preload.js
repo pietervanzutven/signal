@@ -14,9 +14,6 @@
   const { app } = remote;
   const { systemPreferences } = remote.require('electron');
 
-  const browserWindow = remote.getCurrentWindow();
-  window.isFocused = () => browserWindow.isFocused();
-
   // Waiting for clients to implement changes on receive side
   window.TIMESTAMP_VALIDATION = false;
   window.PAD_ALL_ATTACHMENTS = false;
@@ -258,7 +255,7 @@
   window.React = window.react;
   window.ReactDOM = window.react_dom;
   window.moment = window.moment;
-  window.PQueue = window.p_queue;
+  window.PQueue = window.p_queue.default;
 
   const Signal = window.signal;
   const i18n = window.modules.i18n;

@@ -3710,8 +3710,12 @@
     <Content Include="node_modules\memoizee\index.js" />
     <Content Include="node_modules\mkdirp\index.js" />
     <Content Include="node_modules\moment\moment.js" />
+    <Content Include="node_modules\p-finally\index.js" />
     <Content Include="node_modules\p-map\index.js" />
     <Content Include="node_modules\p-queue\index.js" />
+    <Content Include="node_modules\p-queue\lower-bound.js" />
+    <Content Include="node_modules\p-queue\priority-queue.js" />
+    <Content Include="node_modules\p-timeout\index.js" />
     <Content Include="node_modules\pify\index.js" />
     <Content Include="node_modules\popper.js\popper-utils.js" />
     <Content Include="node_modules\popper.js\popper.js" />

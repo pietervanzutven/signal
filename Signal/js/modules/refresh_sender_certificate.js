@@ -38,7 +38,7 @@
       const now = Date.now();
       const certificate = storage.get('senderCertificate');
       if (!certificate) {
-        setTimeoutForNextRun(now);
+        setTimeoutForNextRun(scheduledTime || now);
 
         return;
       }
@@ -86,7 +86,7 @@
         scheduleNextRotation();
       } catch (error) {
         logger.error(
-          'refreshSenderCertificate: Get failed. Trying again in two minutes...',
+          'refreshSenderCertificate: Get failed. Trying again in five minutes...',
           error && error.stack ? error.stack : error
         );
 

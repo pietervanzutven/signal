@@ -195,7 +195,7 @@
       throw new Error('Invalid filename!');
     }
 
-    writeWithAttributes(normalized, Buffer.from(data));
+    await writeWithAttributes(normalized, Buffer.from(data));
 
     return {
       fullPath: normalized,

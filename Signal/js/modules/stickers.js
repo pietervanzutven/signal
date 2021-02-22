@@ -24,7 +24,7 @@
 
   const { isNumber, pick, reject, groupBy, values } = window.lodash;
   const pMap = window.p_map;
-  const Queue = window.p_queue;
+  const Queue = window.p_queue.default;
   const qs = window.qs;
 
   const { makeLookup } = require_ts_util_makeLookup();

@@ -6,8 +6,10 @@
     const exports = window.ts.shims.textsecure = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
+    const unknownWindow = window;
+    const shimmedWindow = unknownWindow;
     function sendStickerPackSync(packId, packKey, installed) {
-        const { ConversationController, textsecure, log } = window;
+        const { ConversationController, textsecure, log } = shimmedWindow;
         const ourNumber = textsecure.storage.user.getNumber();
         const { wrap, sendOptions } = ConversationController.prepareForSend(ourNumber, { syncMessage: true });
         if (!textsecure.messaging) {

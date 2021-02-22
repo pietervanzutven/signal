@@ -61,6 +61,7 @@
         objectContainer: {
             position: 'relative',
             flexGrow: 1,
+            display: 'inline-flex',
             justifyContent: 'center',
         },
         object: {
@@ -146,9 +147,6 @@
             this.containerRef = react_1.default.createRef();
             this.videoRef = react_1.default.createRef();
             this.focusRef = react_1.default.createRef();
-            this.state = {
-                videoTime: undefined,
-            };
             this.renderObject = ({ objectURL, contentType, i18n, isViewOnce, }) => {
                 const isImageTypeSupported = GoogleChrome.isImageTypeSupported(contentType);
                 if (isImageTypeSupported) {
@@ -290,7 +288,7 @@
                     react_1.default.createElement("div", { style: styles.controls },
                         react_1.default.createElement(IconButton, { type: "close", onClick: this.onClose }),
                         onSave ? (react_1.default.createElement(IconButton, { type: "save", onClick: onSave, style: styles.saveButton })) : null)),
-                isViewOnce && is_1.default.number(videoTime) ? (react_1.default.createElement("div", { style: styles.navigationContainer },
+                isViewOnce && videoTime && is_1.default.number(videoTime) ? (react_1.default.createElement("div", { style: styles.navigationContainer },
                     react_1.default.createElement("div", { style: styles.timestampPill }, formatDuration_1.formatDuration(videoTime)))) : (react_1.default.createElement("div", { style: styles.navigationContainer },
                         onPrevious ? (react_1.default.createElement(IconButton, { type: "previous", onClick: onPrevious })) : (react_1.default.createElement(IconButtonPlaceholder, null)),
                         onNext ? (react_1.default.createElement(IconButton, { type: "next", onClick: onNext })) : (react_1.default.createElement(IconButtonPlaceholder, null))))));
