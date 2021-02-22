@@ -5387,21 +5387,22 @@ img.emoji.jumbo {
   .module-reaction-viewer__header {
     width: 100%;
     min-height: 44px;
-    padding: 0px 16px;
+    padding: 0px 8px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
     overflow-x: auto; }
     .module-reaction-viewer__header__button {
-      min-width: 45px;
       min-height: 28px;
       border: none;
       border-radius: 18px;
-      padding: 0px;
+      padding: 0px 8px;
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-basis: 45px;
+      flex-shrink: 0;
       background: none; }
       .module-reaction-viewer__header__button:not(:first-of-type) {
         margin-left: 4px; }
@@ -5413,35 +5414,41 @@ img.emoji.jumbo {
         background: #e9e9e9; }
         .dark-theme .module-reaction-viewer__header__button--selected {
           background: #5e5e5e; }
-      .module-reaction-viewer__header__button__count {
+      .module-reaction-viewer__header__button__count, .module-reaction-viewer__header__button__all {
         font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
         font-size: 13px;
         line-height: 18px;
         letter-spacing: -0.03px;
         font-weight: bold;
-        margin-left: 2px;
+        white-space: nowrap;
         color: #1b1b1b; }
-        .dark-theme .module-reaction-viewer__header__button__count {
+        .dark-theme .module-reaction-viewer__header__button__count, .dark-theme .module-reaction-viewer__header__button__all {
           color: #e9e9e9; }
+      .module-reaction-viewer__header__button__count {
+        margin-left: 4px; }
   .module-reaction-viewer__body {
     flex-grow: 1;
     padding: 0 16px;
     overflow: auto; }
     .module-reaction-viewer__body__row {
-      margin-top: 8px;
+      margin-top: 12px;
       min-height: 32px;
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
       align-items: center; }
+      .module-reaction-viewer__body__row:last-of-type {
+        margin-bottom: 12px; }
       .module-reaction-viewer__body__row__avatar {
-        min-width: 32px; }
-      .module-reaction-viewer__body__row__name, .module-reaction-viewer__body__row__name_profile-name {
+        min-width: 32px;
+        flex-shrink: 1; }
+      .module-reaction-viewer__body__row__name {
         font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
         font-size: 15px;
         line-height: 21px;
         letter-spacing: -0.14px;
         font-weight: bold;
+        flex-grow: 1;
         margin-left: 8px;
         white-space: nowrap;
         overflow: hidden;
@@ -5449,6 +5456,9 @@ img.emoji.jumbo {
         color: #1b1b1b; }
         .dark-theme .module-reaction-viewer__body__row__name, .dark-theme .module-reaction-viewer__body__row__name_profile-name {
           color: #e9e9e9; }
+      .module-reaction-viewer__body__row__emoji {
+        width: 18px;
+        flex-shrink: 1; }
 
 @keyframes module-reaction-picker__background-fade {
   from {
