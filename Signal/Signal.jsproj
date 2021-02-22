@@ -3750,6 +3750,7 @@
     <Content Include="node_modules\reselect\reselect.js" />
     <Content Include="node_modules\rimraf\index.js" />
     <Content Include="node_modules\sanitize-filename\index.js" />
+    <Content Include="node_modules\sanitize.css\sanitize.css" />
     <Content Include="node_modules\semver\classes\semver.js" />
     <Content Include="node_modules\semver\functions\compare.js" />
     <Content Include="node_modules\semver\functions\gte.js" />

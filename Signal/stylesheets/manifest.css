@@ -30,9 +30,6 @@
   font-family: 'Inter';
   src: url("../fonts/inter-v3.10/Inter-Regular.woff2"); }
 
-* {
-  box-sizing: border-box; }
-
 html {
   height: 100%; }
 
@@ -815,7 +812,8 @@ span.emoji-inner {
 img.emoji {
   width: 1.4em;
   height: 1.4em;
-  margin-bottom: -4px; }
+  margin-bottom: -4px;
+  vertical-align: baseline; }
 
 img.emoji.small {
   width: 1.8em;
@@ -6678,7 +6676,8 @@ img.emoji.jumbo {
   .module-emoji__image--16px {
     width: 16px;
     height: 16px;
-    transform: translate3d(0, 0, 0); }
+    transform: translate3d(0, 0, 0);
+    vertical-align: baseline; }
   .module-emoji--18px {
     width: 18px;
     height: 18px; }
@@ -6689,7 +6688,8 @@ img.emoji.jumbo {
   .module-emoji__image--18px {
     width: 18px;
     height: 18px;
-    transform: translate3d(0, 0, 0); }
+    transform: translate3d(0, 0, 0);
+    vertical-align: baseline; }
   .module-emoji--20px {
     width: 20px;
     height: 20px; }
@@ -6700,7 +6700,8 @@ img.emoji.jumbo {
   .module-emoji__image--20px {
     width: 20px;
     height: 20px;
-    transform: translate3d(0, 0, 0); }
+    transform: translate3d(0, 0, 0);
+    vertical-align: baseline; }
   .module-emoji--24px {
     width: 24px;
     height: 24px; }
@@ -6711,7 +6712,8 @@ img.emoji.jumbo {
   .module-emoji__image--24px {
     width: 24px;
     height: 24px;
-    transform: translate3d(0, 0, 0); }
+    transform: translate3d(0, 0, 0);
+    vertical-align: baseline; }
   .module-emoji--28px {
     width: 28px;
     height: 28px; }
@@ -6722,7 +6724,8 @@ img.emoji.jumbo {
   .module-emoji__image--28px {
     width: 28px;
     height: 28px;
-    transform: translate3d(0, 0, 0); }
+    transform: translate3d(0, 0, 0);
+    vertical-align: baseline; }
   .module-emoji--32px {
     width: 32px;
     height: 32px; }
@@ -6733,7 +6736,8 @@ img.emoji.jumbo {
   .module-emoji__image--32px {
     width: 32px;
     height: 32px;
-    transform: translate3d(0, 0, 0); }
+    transform: translate3d(0, 0, 0);
+    vertical-align: baseline; }
   .module-emoji--48px {
     width: 48px;
     height: 48px; }
@@ -6744,7 +6748,8 @@ img.emoji.jumbo {
   .module-emoji__image--48px {
     width: 48px;
     height: 48px;
-    transform: translate3d(0, 0, 0); }
+    transform: translate3d(0, 0, 0);
+    vertical-align: baseline; }
   .module-emoji--64px {
     width: 64px;
     height: 64px; }
@@ -6755,7 +6760,8 @@ img.emoji.jumbo {
   .module-emoji__image--64px {
     width: 64px;
     height: 64px;
-    transform: translate3d(0, 0, 0); }
+    transform: translate3d(0, 0, 0);
+    vertical-align: baseline; }
   .module-emoji--66px {
     width: 66px;
     height: 66px; }
@@ -6766,7 +6772,8 @@ img.emoji.jumbo {
   .module-emoji__image--66px {
     width: 66px;
     height: 66px;
-    transform: translate3d(0, 0, 0); }
+    transform: translate3d(0, 0, 0);
+    vertical-align: baseline; }
 
 .module-unsupported-message {
   text-align: center; }
