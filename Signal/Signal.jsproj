@@ -3669,8 +3669,8 @@
     <Content Include="node_modules\int-tel-input\build\img\flags.png" />
     <Content Include="node_modules\journeyapps\sqlcipher.js" />
     <Content Include="node_modules\jquery\dist\jquery.js" />
-    <Content Include="node_modules\linkify-it\linkify-it.js" />
-    <Content Include="node_modules\linkify-it\re.js" />
+    <Content Include="node_modules\linkify-it\index.js" />
+    <Content Include="node_modules\linkify-it\lib\re.js" />
     <Content Include="node_modules\lodash\chunk.js" />
     <Content Include="node_modules\lodash\clamp.js" />
     <Content Include="node_modules\lodash\clonedeep.js" />

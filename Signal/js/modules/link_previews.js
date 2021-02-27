@@ -6,7 +6,7 @@
   const { isNumber, compact } = window.lodash;
   const he = window.he;
   const nodeUrl = window.url;
-  const LinkifyIt = window.linkify_it.linkify_it;
+  const LinkifyIt = window.linkify_it;
 
   const linkify = LinkifyIt();
   const { concatenateBytes, getViewOfArrayBuffer } = window.crypto;
