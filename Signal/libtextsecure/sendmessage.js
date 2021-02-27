@@ -188,11 +188,7 @@ MessageSender.prototype = {
     );
   },
 
-  getPaddedAttachment(data, shouldPad) {
-    if (!window.PAD_ALL_ATTACHMENTS && !shouldPad) {
-      return data;
-    }
-
+  getPaddedAttachment(data) {
     const size = data.byteLength;
     const paddedSize = this._getAttachmentSizeBucket(size);
     const padding = window.Signal.Crypto.getZeroes(paddedSize - size);
@@ -200,7 +196,7 @@ MessageSender.prototype = {
     return window.Signal.Crypto.concatenateBytes(data, padding);
   },
 
-  async makeAttachmentPointer(attachment, shouldPad = false) {
+  async makeAttachmentPointer(attachment) {
     if (typeof attachment !== 'object' || attachment == null) {
       return Promise.resolve(undefined);
     }
@@ -217,7 +213,7 @@ MessageSender.prototype = {
       );
     }
 
-    const padded = this.getPaddedAttachment(data, shouldPad);
+    const padded = this.getPaddedAttachment(data);
     const key = libsignal.crypto.getRandomBytes(64);
     const iv = libsignal.crypto.getRandomBytes(16);
 
@@ -310,15 +306,11 @@ MessageSender.prototype = {
         return;
       }
 
-      const shouldPad = true;
       // eslint-disable-next-line no-param-reassign
       message.sticker = Object.assign({},
         sticker,
         {
-          attachmentPointer: await this.makeAttachmentPointer(
-            sticker.data,
-            shouldPad
-          ),
+          attachmentPointer: await this.makeAttachmentPointer(sticker.data),
         }
       );
     } catch (error) {
