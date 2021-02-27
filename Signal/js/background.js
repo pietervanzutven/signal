@@ -1498,7 +1498,7 @@
 
   let connectCount = 0;
   async function connect(firstRun) {
-    window.log.info('connect');
+    window.log.info('connect', firstRun);
 
     // Bootstrap our online/offline detection, only the first time we connect
     if (connectCount === 0 && navigator.onLine) {
@@ -1543,6 +1543,7 @@
     Whisper.Notifications.disable(); // avoid notification flood until empty
 
     // initialize the socket and start listening for messages
+    window.log.info('Initializing socket and listening for messages');
     messageReceiver = new textsecure.MessageReceiver(
       USERNAME,
       PASSWORD,
@@ -1606,6 +1607,7 @@
       // eslint-disable-next-line eqeqeq
       textsecure.storage.user.getDeviceId() != '1'
     ) {
+      window.log.info('Boot after upgrading. Requesting contact sync');
       window.getSyncRequest();
 
       try {
