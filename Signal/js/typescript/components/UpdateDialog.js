@@ -10,34 +10,16 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
-    const moment_1 = __importDefault(window.moment);
     const Dialogs_1 = window.ts.types.Dialogs;
     const Intl_1 = window.ts.components.Intl;
-    const SNOOZE_TIMER = 60 * 1000 * 30;
-    function handleSnooze(setSnoozeForLater) {
-        setSnoozeForLater(moment_1.default().add(SNOOZE_TIMER));
-        setTimeout(() => {
-            setSnoozeForLater(moment_1.default());
-        }, SNOOZE_TIMER);
-    }
-    function canSnooze(snoozeUntil) {
-        return snoozeUntil === null;
-    }
-    function isSnoozed(snoozeUntil) {
-        if (snoozeUntil === null) {
-            return false;
-        }
-        return moment_1.default().isBefore(snoozeUntil);
-    }
-    exports.UpdateDialog = ({ ackRender, dialogType, dismissDialog, hasNetworkDialog, i18n, startUpdate, }) => {
-        const [snoozeUntil, setSnoozeForLater] = react_1.default.useState(null);
+    exports.UpdateDialog = ({ ackRender, dialogType, didSnooze, dismissDialog, hasNetworkDialog, i18n, snoozeUpdate, startUpdate, }) => {
         react_1.default.useEffect(() => {
             ackRender();
         });
         if (hasNetworkDialog) {
             return null;
         }
-        if (dialogType === Dialogs_1.Dialogs.None || isSnoozed(snoozeUntil)) {
+        if (dialogType === Dialogs_1.Dialogs.None) {
             return null;
         }
         if (dialogType === Dialogs_1.Dialogs.Cannot_Update) {
@@ -70,11 +52,7 @@
                 react_1.default.createElement("h3", null, i18n('autoUpdateNewVersionTitle')),
                 react_1.default.createElement("span", null, i18n('autoUpdateNewVersionMessage'))),
             react_1.default.createElement("div", { className: "module-left-pane-dialog__actions" },
-                canSnooze(snoozeUntil) && (react_1.default.createElement("button", {
-                    className: "module-left-pane-dialog__button--no-border", onClick: () => {
-                        handleSnooze(setSnoozeForLater);
-                    }
-                }, i18n('autoUpdateLaterButtonLabel'))),
+                !didSnooze && (react_1.default.createElement("button", { className: "module-left-pane-dialog__button--no-border", onClick: snoozeUpdate }, i18n('autoUpdateLaterButtonLabel'))),
                 react_1.default.createElement("button", { onClick: startUpdate }, i18n('autoUpdateRestartButtonLabel')))));
     };
 })();
