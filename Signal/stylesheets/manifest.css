@@ -4587,8 +4587,7 @@ img.emoji.jumbo {
 
 .module-image__image {
   object-fit: cover;
-  cursor: pointer;
-  margin-bottom: -5px; }
+  cursor: pointer; }
 
 .module-image__bottom-overlay {
   height: 48px;
