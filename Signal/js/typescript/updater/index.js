@@ -10,14 +10,14 @@
     const macos_1 = window.ts.updater.macos;
     const windows_1 = window.ts.updater.windows;
     let initialized = false;
-    async function start(getMainWindow, messages, logger) {
+    async function start(getMainWindow, locale, logger) {
         const { platform } = process;
         if (initialized) {
             throw new Error('updater/start: Updates have already been initialized!');
         }
         initialized = true;
-        if (!messages) {
-            throw new Error('updater/start: Must provide messages!');
+        if (!locale) {
+            throw new Error('updater/start: Must provide locale!');
         }
         if (!logger) {
             throw new Error('updater/start: Must provide logger!');
@@ -27,10 +27,10 @@
             return;
         }
         if (platform === 'win32') {
-            await windows_1.start(getMainWindow, messages, logger);
+            await windows_1.start(getMainWindow, locale, logger);
         }
         else if (platform === 'darwin') {
-            await macos_1.start(getMainWindow, messages, logger);
+            await macos_1.start(getMainWindow, locale, logger);
         }
         else {
             throw new Error('updater/start: Unsupported platform');
