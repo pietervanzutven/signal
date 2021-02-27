@@ -183,9 +183,12 @@
             };
         }
         render() {
-            const { renderMainHeader, showArchived } = this.props;
+            const { renderExpiredBuildDialog, renderMainHeader, renderNetworkStatus, renderUpdateDialog, showArchived, } = this.props;
             return (react_1.default.createElement("div", { className: "module-left-pane" },
                 react_1.default.createElement("div", { className: "module-left-pane__header" }, showArchived ? this.renderArchivedHeader() : renderMainHeader()),
+                renderExpiredBuildDialog(),
+                renderNetworkStatus(),
+                renderUpdateDialog(),
                 this.renderList()));
         }
     }

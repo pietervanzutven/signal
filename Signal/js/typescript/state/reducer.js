@@ -9,16 +9,22 @@
     const redux_1 = window.redux;
     const conversations_1 = window.ts.state.ducks.conversations;
     const emojis_1 = window.ts.state.ducks.emojis;
+    const expiration_1 = window.ts.state.ducks.expiration;
     const items_1 = window.ts.state.ducks.items;
+    const network_1 = window.ts.state.ducks.network;
     const search_1 = window.ts.state.ducks.search;
     const stickers_1 = window.ts.state.ducks.stickers;
+    const updates_1 = window.ts.state.ducks.updates;
     const user_1 = window.ts.state.ducks.user;
     exports.reducers = {
         conversations: conversations_1.reducer,
         emojis: emojis_1.reducer,
+        expiration: expiration_1.reducer,
         items: items_1.reducer,
+        network: network_1.reducer,
         search: search_1.reducer,
         stickers: stickers_1.reducer,
+        updates: updates_1.reducer,
         user: user_1.reducer,
     };
     // @ts-ignore: AnyAction breaks strong type checking inside reducers

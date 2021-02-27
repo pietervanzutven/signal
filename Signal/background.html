@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
   <meta charset='utf-8'>
@@ -54,7 +54,6 @@
 
   <script type='text/x-tmpl-mustache' id='two-column'>
     <div class='gutter'>
-      <div class='network-status-container' aria-live='assertive'></div>
       <div class='left-pane-placeholder'></div>
         </div>
     <div class='conversation-stack'>
@@ -70,13 +69,6 @@
     </div>
     </div>
     <div class='lightbox-container'></div>
-  </script>
-
-  <script type='text/x-tmpl-mustache' id='expired_alert'>
-    <a target='_blank' href='https://signal.org/download/'>
-      <button class='upgrade'>{{ upgrade }}</button>
-    </a>
-      {{ expiredWarning }}
   </script>
 
   <script type='text/x-tmpl-mustache' id='banner'>
@@ -225,23 +217,6 @@
       </div>
     </div>
     {{/isStep2}}
-  </script>
-
-  <script type='text/x-tmpl-mustache' id='networkStatus'>
-    <div class='network-status-message'>
-      <h3>{{ message }}</h3>
-      <span>{{ instructions }}</span>
-    </div>
-    {{ #reconnectDurationAsSeconds }}
-    <div class="network-status-message">
-      {{ attemptingReconnectionMessage }}
-    </div>
-    {{/reconnectDurationAsSeconds }}
-    {{ #action }}
-      <div class="action">
-        <button class='small blue {{ buttonClass }}'>{{ action }}</button>
-      </div>
-    {{/action }}
   </script>
 
   <script type='text/x-tmpl-mustache' id='import-flow-template'>
@@ -600,6 +575,7 @@
   <script type='text/javascript' src='node_modules/draft-js/Draft.js'></script>
   <script type='text/javascript' src='node_modules/sanitize-filename/index.js'></script>
 
+  <script type='text/javascript' src='js/typescript/state/selectors/registration.js'></script>
   <script type='text/javascript' src='js/modules/auto_orient_image.js'></script>
   <script type='text/javascript' src='js/modules/types/schema_version.js'></script>
   <script type='text/javascript' src='js/typescript/protobuf/protobuf.js'></script>
@@ -611,12 +587,14 @@
   <script type='text/javascript' src='js/typescript/util/formatDuration.js'></script>
   <script type='text/javascript' src='js/typescript/util/formatRelativeTime.js'></script>
   <script type='text/javascript' src='js/typescript/util/getInitials.js'></script>
+  <script type='text/javascript' src='js/typescript/util/hasExpired.js'></script>
   <script type='text/javascript' src='js/typescript/util/GoogleChrome.js'></script>
   <script type='text/javascript' src='js/typescript/util/isFileDangerous.js'></script>
   <script type='text/javascript' src='js/typescript/util/libphonenumberInstance.js'></script>
   <script type='text/javascript' src='js/typescript/util/makeLookup.js'></script>
   <script type='text/javascript' src='js/typescript/util/migrateColor.js'></script>
   <script type='text/javascript' src='js/typescript/util/missingCaseError.js'></script>
+  <script type='text/javascript' src='js/typescript/util/registration.js'></script>
   <script type='text/javascript' src='js/typescript/util/saveURLAsFile.js'></script>
   <script type='text/javascript' src='js/typescript/util/timer.js'></script>
   <script type='text/javascript' src='js/typescript/util/waitBatcher.js'></script>
@@ -625,15 +603,19 @@
   <script type='text/javascript' src='js/typescript/shims/storage.js'></script>
   <script type='text/javascript' src='js/typescript/shims/textsecure.js'></script>
   <script type='text/javascript' src='js/typescript/shims/Whisper.js'></script>
+  <script type='text/javascript' src='js/typescript/shims/socketStatus.js'></script>
+  <script type='text/javascript' src='js/typescript/shims/updateIpc.js'></script>
   <script type='text/javascript' src='js/typescript/types/MIME.js'></script>
   <script type='text/javascript' src='js/typescript/types/Attachment.js'></script>
   <script type='text/javascript' src='js/typescript/types/Contact.js'></script>
   <script type='text/javascript' src='js/typescript/types/Conversation.js'></script>
+  <script type='text/javascript' src='js/typescript/types/Dialogs.js'></script>
   <script type='text/javascript' src='js/typescript/types/IndexedDB.js'></script>
   <script type='text/javascript' src='js/typescript/types/Message.js'></script>
   <script type='text/javascript' src='js/typescript/types/PhoneNumber.js'></script>
   <script type='text/javascript' src='js/typescript/types/message/initializeAttachmentMetadata.js'></script>
   <script type='text/javascript' src='js/typescript/types/Settings.js'></script>
+  <script type='text/javascript' src='js/typescript/types/SocketStatus.js'></script>
   <script type='text/javascript' src='js/typescript/types/Util.js'></script>
   <script type='text/javascript' src='js/modules/crypto.js'></script>
   <script type='text/javascript' src='js/modules/types/errors.js'></script>
@@ -661,16 +643,21 @@
   <script type='text/javascript' src='js/modules/migrations/get_placeholder_migrations.js'></script>
   <script type='text/javascript' src='js/modules/metadata/CiphertextMessage.js'></script>
   <script type='text/javascript' src='js/modules/metadata/SecretSessionCipher.js'></script>
+  <script type='text/javascript' src='js/typescript/services/networkObserver.js'></script>
+  <script type='text/javascript' src='js/typescript/services/updateListener.js'></script>
   <script type='text/javascript' src='js/typescript/components/hooks.js'></script>
   <script type='text/javascript' src='js/typescript/components/_util.js'></script>
   <script type='text/javascript' src='js/typescript/components/Avatar.js'></script>
   <script type='text/javascript' src='js/typescript/components/AvatarPopup.js'></script>
+  <script type='text/javascript' src='js/typescript/components/ExpiredBuildDialog.js'></script>
   <script type='text/javascript' src='js/typescript/components/Lightbox.js'></script>
   <script type='text/javascript' src='js/typescript/components/LightboxGallery.js'></script>
   <script type='text/javascript' src='js/typescript/components/MainHeader.js'></script>
+  <script type='text/javascript' src='js/typescript/components/NetworkStatus.js'></script>
   <script type='text/javascript' src='js/typescript/components/styles/Colors.js'></script>
   <script type='text/javascript' src='js/typescript/components/Intl.js'></script>
   <script type='text/javascript' src='js/typescript/components/Spinner.js'></script>
+  <script type='text/javascript' src='js/typescript/components/UpdateDialog.js'></script>
   <script type='text/javascript' src='js/typescript/components/ConfirmationDialog.js'></script>
   <script type='text/javascript' src='js/typescript/components/ConfirmationModal.js'></script>
   <script type='text/javascript' src='js/typescript/components/Countdown.js'></script>
@@ -758,6 +745,8 @@
   <script type='text/javascript' src='app/sql_channel.js'></script>
   <script type='text/javascript' src='app/attachment_channel.js'></script>
 
+  <script type='text/javascript' src='js/typescript/updater/index.js'></script>
+  
   <script type='text/javascript' src='js/modules/debug.js'></script>
   
   <script type='text/javascript' src='main.js'></script>
@@ -776,21 +765,28 @@
 
   <script type='text/javascript' src='js/typescript/state/ducks/conversations.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/emojis.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/expiration.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/items.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/network.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/noop.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/search.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/stickers.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/updates.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/user.js'></script>
   <script type='text/javascript' src='js/typescript/state/actions.js'></script>
   <script type='text/javascript' src='js/typescript/state/reducer.js'></script>
   <script type='text/javascript' src='js/typescript/state/createStore.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/user.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/conversations.js'></script>
+  <script type='text/javascript' src='js/typescript/state/selectors/network.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/search.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/stickers.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/CompositionArea.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/ExpiredBuildDialog.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/MainHeader.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/MessageSearchResult.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/NetworkStatus.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/UpdateDialog.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/LastSeenIndicator.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/LeftPane.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/ShortcutGuideModal.js'></script>
@@ -853,8 +849,6 @@
   <script type='text/javascript' src='js/expiring_tap_to_view_messages.js'></script>
 
   <script type='text/javascript' src='js/chromium.js'></script>
-  <script type='text/javascript' src='js/registration.js'></script>
-  <script type='text/javascript' src='js/expire.js'></script>
   <script type='text/javascript' src='js/conversation_controller.js'></script>
   <script type='text/javascript' src='js/message_controller.js'></script>
 
@@ -868,7 +862,6 @@
   <script type='text/javascript' src='js/views/recorder_view.js'></script>
   <script type='text/javascript' src='js/views/conversation_view.js'></script>
   <script type='text/javascript' src='js/views/inbox_view.js'></script>
-  <script type='text/javascript' src='js/views/network_status_view.js'></script>
   <script type='text/javascript' src='js/views/confirmation_dialog_view.js'></script>
   <script type='text/javascript' src='js/views/identicon_svg_view.js'></script>
   <script type='text/javascript' src='js/views/install_view.js'></script>

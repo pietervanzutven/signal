@@ -69,6 +69,7 @@ const development = config.environment === 'development';
 //   data directory has been set.
 const attachments = window.app.attachments
 const attachmentChannel = window.app.attachment_channel;
+const updater = window.ts.updater.index;
 const createTrayIcon = window.app.tray_icon;
 const dockIcon = window.app.dock_icon;
 const ephemeralConfig = window.app.ephemeral_config;

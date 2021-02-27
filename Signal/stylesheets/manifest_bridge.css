@@ -3954,8 +3954,10 @@
   line-height: 21px;
   letter-spacing: -0.14px;
   font-weight: bold;
-  height: 36px;
-  margin-left: 16px; }
+  height: 52px;
+  margin-left: 16px;
+  padding-bottom: 8px;
+  padding-top: 8px; }
   .dark-theme .module-search-results__conversations-header {
     color: #e9e9e9; }
 
@@ -3984,8 +3986,10 @@
   line-height: 21px;
   letter-spacing: -0.14px;
   font-weight: bold;
-  height: 36px;
-  margin-left: 16px; }
+  height: 52px;
+  margin-left: 16px;
+  padding-bottom: 8px;
+  padding-top: 8px; }
   .dark-theme .module-search-results__messages-header {
     color: #e9e9e9; }
 
@@ -5144,6 +5148,56 @@
           border: none;
           background: #4caf50;
           color: #ffffff; }
+
+.module-left-pane-dialog {
+  background: #4caf50;
+  color: #ffffff;
+  padding: 16px; }
+  .module-left-pane-dialog .module-left-pane-dialog__message h3 {
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 21px;
+    letter-spacing: -0.14px;
+    font-weight: bold;
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 8px; }
+  .module-left-pane-dialog .module-left-pane-dialog__message span {
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 21px;
+    letter-spacing: -0.14px;
+    display: inline-block; }
+  .module-left-pane-dialog .module-left-pane-dialog__actions {
+    margin-top: 8px;
+    text-align: right; }
+    .keyboard-mode .module-left-pane-dialog .module-left-pane-dialog__actions .module-left-pane-dialog__link {
+      display: inline-block;
+      outline: 0; }
+    .module-left-pane-dialog .module-left-pane-dialog__actions button {
+      background: inherit;
+      border-radius: 20px;
+      border: solid 1px #ffffff;
+      color: #ffffff;
+      cursor: pointer;
+      font-family: inherit;
+      margin: 0 4px;
+      padding: 8px 16px;
+      outline: 0; }
+      .keyboard-mode .module-left-pane-dialog .module-left-pane-dialog__actions button:focus {
+        box-shadow: 0 0 0 3px #2090ea; }
+      .mouse-mode .module-left-pane-dialog .module-left-pane-dialog__actions button:hover {
+        box-shadow: 0 0 0 3px #2090ea; }
+    .module-left-pane-dialog .module-left-pane-dialog__actions .module-left-pane-dialog__button--no-border {
+      border: none; }
+  .module-left-pane-dialog.module-left-pane-dialog--error {
+    background-color: #f44336; }
+  .module-left-pane-dialog.module-left-pane-dialog--warning {
+    background-color: #ffd624;
+    color: #000000; }
+    .module-left-pane-dialog.module-left-pane-dialog--warning button {
+      border-color: #000000;
+      color: #000000; }
 
 .module-emoji-picker__header, .module-emoji-picker__footer {
   height: 44px;
