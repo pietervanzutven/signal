@@ -16,6 +16,9 @@
   let copyErrorAndQuitText = 'Copy error and quit';
 
   function handleError(prefix, error) {
+    if (console._error) {
+      console._error(`${prefix}:`, Errors.toLogFormat(error));
+    }
     console.error(`${prefix}:`, Errors.toLogFormat(error));
 
     if (app.isReady()) {
