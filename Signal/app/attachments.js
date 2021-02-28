@@ -9,9 +9,12 @@
   const { app, dialog, shell, remote } = window.electron;
 
   const fastGlob = window.fast_glob;
+  const glob = window.glob;
+  const pify = window.pify;
   const fse = window.fs_extra;
   const toArrayBuffer = window.to_arraybuffer;
   const { map, isArrayBuffer, isString } = window.lodash;
+  const normalizePath = window.normalize_path;
   const sanitizeFilename = window.sanitize_filename;
   const getGuid = window.uuid.v4;
 
@@ -31,7 +34,7 @@
 
   exports.getAllAttachments = async userDataPath => {
     const dir = exports.getPath(userDataPath);
-    const pattern = path.join(dir, '**', '*');
+    const pattern = normalizePath(path.join(dir, '**', '*'));
 
     const files = await fastGlob(pattern, { onlyFiles: true });
     return map(files, file => path.relative(dir, file));
@@ -39,7 +42,7 @@
 
   exports.getAllStickers = async userDataPath => {
     const dir = exports.getStickersPath(userDataPath);
-    const pattern = path.join(dir, '**', '*');
+    const pattern = normalizePath(path.join(dir, '**', '*'));
 
     const files = await fastGlob(pattern, { onlyFiles: true });
     return map(files, file => path.relative(dir, file));
@@ -47,7 +50,7 @@
 
   exports.getAllDraftAttachments = async userDataPath => {
     const dir = exports.getDraftPath(userDataPath);
-    const pattern = path.join(dir, '**', '*');
+    const pattern = normalizePath(path.join(dir, '**', '*'));
 
     const files = await fastGlob(pattern, { onlyFiles: true });
     return map(files, file => path.relative(dir, file));
@@ -57,7 +60,9 @@
     const dir = path.join(__dirname, '../images');
     const pattern = path.join(dir, '**', '*.svg');
 
-    const files = await fastGlob(pattern, { onlyFiles: true });
+    // Note: we cannot use fast-glob here because, inside of .asar files, readdir will not
+    //   honor the withFileTypes flag: https://github.com/electron/electron/issues/19074
+    const files = await pify(glob)(pattern, { nodir: true });
     return map(files, file => path.relative(dir, file));
   };
 
