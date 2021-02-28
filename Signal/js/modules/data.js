@@ -36,6 +36,7 @@
   const ERASE_TEMP_KEY = 'erase-temp';
   const ERASE_DRAFTS_KEY = 'erase-drafts';
   const CLEANUP_ORPHANED_ATTACHMENTS_KEY = 'cleanup-orphaned-attachments';
+  const ENSURE_FILE_PERMISSIONS = 'ensure-file-permissions';
 
   const _jobs = Object.create(null);
   const _DEBUG = false;
@@ -172,6 +173,7 @@
 
     removeOtherData,
     cleanupOrphanedAttachments,
+    ensureFilePermissions,
 
     // Returning plain JSON
     getMessagesNeedingUpgrade,
@@ -1048,6 +1050,10 @@
 
   async function cleanupOrphanedAttachments() {
     await callChannel(CLEANUP_ORPHANED_ATTACHMENTS_KEY);
+  }
+
+  async function ensureFilePermissions() {
+    await callChannel(ENSURE_FILE_PERMISSIONS);
   }
 
   // Note: will need to restart the app after calling this, to set up afresh

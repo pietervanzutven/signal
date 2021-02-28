@@ -8,8 +8,7 @@
   const path = window.path;
   const { app, dialog, shell, remote } = window.electron;
 
-  const pify = window.pify;
-  const glob = window.glob;
+  const fastGlob = window.fast_glob;
   const fse = window.fs_extra;
   const toArrayBuffer = window.to_arraybuffer;
   const { map, isArrayBuffer, isString } = window.lodash;
@@ -34,7 +33,7 @@
     const dir = exports.getPath(userDataPath);
     const pattern = path.join(dir, '**', '*');
 
-    const files = await pify(glob)(pattern, { nodir: true });
+    const files = await fastGlob(pattern, { onlyFiles: true });
     return map(files, file => path.relative(dir, file));
   };
 
@@ -42,7 +41,7 @@
     const dir = exports.getStickersPath(userDataPath);
     const pattern = path.join(dir, '**', '*');
 
-    const files = await pify(glob)(pattern, { nodir: true });
+    const files = await fastGlob(pattern, { onlyFiles: true });
     return map(files, file => path.relative(dir, file));
   };
 
@@ -50,7 +49,7 @@
     const dir = exports.getDraftPath(userDataPath);
     const pattern = path.join(dir, '**', '*');
 
-    const files = await pify(glob)(pattern, { nodir: true });
+    const files = await fastGlob(pattern, { onlyFiles: true });
     return map(files, file => path.relative(dir, file));
   };
 
@@ -58,7 +57,7 @@
     const dir = path.join(__dirname, '../images');
     const pattern = path.join(dir, '**', '*.svg');
 
-    const files = await pify(glob)(pattern, { nodir: true });
+    const files = await fastGlob(pattern, { onlyFiles: true });
     return map(files, file => path.relative(dir, file));
   };
 

@@ -371,7 +371,7 @@
   if (config.environment === 'test') {
     /* eslint-disable global-require, import/no-extraneous-dependencies */
     window.test = {
-      glob: require('glob'),
+      fastGlob: require('fast-glob'),
       fse: require('fs-extra'),
       tmp: require('tmp'),
       path: require('path'),
