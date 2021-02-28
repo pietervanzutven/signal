@@ -31,7 +31,8 @@
   src: url("../fonts/inter-v3.10/Inter-Regular.woff2"); }
 
 html {
-  height: 100%; }
+  height: 100%;
+  cursor: inherit; }
 
 body {
   position: relative;
