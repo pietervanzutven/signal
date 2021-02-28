@@ -728,6 +728,247 @@
             return ProvisionMessage;
         })();
 
+        signalservice.DeviceName = (function () {
+
+            /**
+             * Properties of a DeviceName.
+             * @memberof signalservice
+             * @interface IDeviceName
+             * @property {Uint8Array|null} [ephemeralPublic] DeviceName ephemeralPublic
+             * @property {Uint8Array|null} [syntheticIv] DeviceName syntheticIv
+             * @property {Uint8Array|null} [ciphertext] DeviceName ciphertext
+             */
+
+            /**
+             * Constructs a new DeviceName.
+             * @memberof signalservice
+             * @classdesc Represents a DeviceName.
+             * @implements IDeviceName
+             * @constructor
+             * @param {signalservice.IDeviceName=} [properties] Properties to set
+             */
+            function DeviceName(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * DeviceName ephemeralPublic.
+             * @member {Uint8Array} ephemeralPublic
+             * @memberof signalservice.DeviceName
+             * @instance
+             */
+            DeviceName.prototype.ephemeralPublic = $util.newBuffer([]);
+
+            /**
+             * DeviceName syntheticIv.
+             * @member {Uint8Array} syntheticIv
+             * @memberof signalservice.DeviceName
+             * @instance
+             */
+            DeviceName.prototype.syntheticIv = $util.newBuffer([]);
+
+            /**
+             * DeviceName ciphertext.
+             * @member {Uint8Array} ciphertext
+             * @memberof signalservice.DeviceName
+             * @instance
+             */
+            DeviceName.prototype.ciphertext = $util.newBuffer([]);
+
+            /**
+             * Creates a new DeviceName instance using the specified properties.
+             * @function create
+             * @memberof signalservice.DeviceName
+             * @static
+             * @param {signalservice.IDeviceName=} [properties] Properties to set
+             * @returns {signalservice.DeviceName} DeviceName instance
+             */
+            DeviceName.create = function create(properties) {
+                return new DeviceName(properties);
+            };
+
+            /**
+             * Encodes the specified DeviceName message. Does not implicitly {@link signalservice.DeviceName.verify|verify} messages.
+             * @function encode
+             * @memberof signalservice.DeviceName
+             * @static
+             * @param {signalservice.IDeviceName} message DeviceName message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DeviceName.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.ephemeralPublic != null && message.hasOwnProperty("ephemeralPublic"))
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.ephemeralPublic);
+                if (message.syntheticIv != null && message.hasOwnProperty("syntheticIv"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.syntheticIv);
+                if (message.ciphertext != null && message.hasOwnProperty("ciphertext"))
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.ciphertext);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified DeviceName message, length delimited. Does not implicitly {@link signalservice.DeviceName.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof signalservice.DeviceName
+             * @static
+             * @param {signalservice.IDeviceName} message DeviceName message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DeviceName.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a DeviceName message from the specified reader or buffer.
+             * @function decode
+             * @memberof signalservice.DeviceName
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {signalservice.DeviceName} DeviceName
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DeviceName.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.DeviceName();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                        case 1:
+                            message.ephemeralPublic = reader.bytes();
+                            break;
+                        case 2:
+                            message.syntheticIv = reader.bytes();
+                            break;
+                        case 3:
+                            message.ciphertext = reader.bytes();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a DeviceName message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof signalservice.DeviceName
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {signalservice.DeviceName} DeviceName
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DeviceName.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a DeviceName message.
+             * @function verify
+             * @memberof signalservice.DeviceName
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            DeviceName.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.ephemeralPublic != null && message.hasOwnProperty("ephemeralPublic"))
+                    if (!(message.ephemeralPublic && typeof message.ephemeralPublic.length === "number" || $util.isString(message.ephemeralPublic)))
+                        return "ephemeralPublic: buffer expected";
+                if (message.syntheticIv != null && message.hasOwnProperty("syntheticIv"))
+                    if (!(message.syntheticIv && typeof message.syntheticIv.length === "number" || $util.isString(message.syntheticIv)))
+                        return "syntheticIv: buffer expected";
+                if (message.ciphertext != null && message.hasOwnProperty("ciphertext"))
+                    if (!(message.ciphertext && typeof message.ciphertext.length === "number" || $util.isString(message.ciphertext)))
+                        return "ciphertext: buffer expected";
+                return null;
+            };
+
+            /**
+             * Creates a DeviceName message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof signalservice.DeviceName
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {signalservice.DeviceName} DeviceName
+             */
+            DeviceName.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.DeviceName)
+                    return object;
+                var message = new $root.signalservice.DeviceName();
+                if (object.ephemeralPublic != null)
+                    if (typeof object.ephemeralPublic === "string")
+                        $util.base64.decode(object.ephemeralPublic, message.ephemeralPublic = $util.newBuffer($util.base64.length(object.ephemeralPublic)), 0);
+                    else if (object.ephemeralPublic.length)
+                        message.ephemeralPublic = object.ephemeralPublic;
+                if (object.syntheticIv != null)
+                    if (typeof object.syntheticIv === "string")
+                        $util.base64.decode(object.syntheticIv, message.syntheticIv = $util.newBuffer($util.base64.length(object.syntheticIv)), 0);
+                    else if (object.syntheticIv.length)
+                        message.syntheticIv = object.syntheticIv;
+                if (object.ciphertext != null)
+                    if (typeof object.ciphertext === "string")
+                        $util.base64.decode(object.ciphertext, message.ciphertext = $util.newBuffer($util.base64.length(object.ciphertext)), 0);
+                    else if (object.ciphertext.length)
+                        message.ciphertext = object.ciphertext;
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a DeviceName message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof signalservice.DeviceName
+             * @static
+             * @param {signalservice.DeviceName} message DeviceName
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            DeviceName.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.ephemeralPublic = options.bytes === String ? "" : [];
+                    object.syntheticIv = options.bytes === String ? "" : [];
+                    object.ciphertext = options.bytes === String ? "" : [];
+                }
+                if (message.ephemeralPublic != null && message.hasOwnProperty("ephemeralPublic"))
+                    object.ephemeralPublic = options.bytes === String ? $util.base64.encode(message.ephemeralPublic, 0, message.ephemeralPublic.length) : options.bytes === Array ? Array.prototype.slice.call(message.ephemeralPublic) : message.ephemeralPublic;
+                if (message.syntheticIv != null && message.hasOwnProperty("syntheticIv"))
+                    object.syntheticIv = options.bytes === String ? $util.base64.encode(message.syntheticIv, 0, message.syntheticIv.length) : options.bytes === Array ? Array.prototype.slice.call(message.syntheticIv) : message.syntheticIv;
+                if (message.ciphertext != null && message.hasOwnProperty("ciphertext"))
+                    object.ciphertext = options.bytes === String ? $util.base64.encode(message.ciphertext, 0, message.ciphertext.length) : options.bytes === Array ? Array.prototype.slice.call(message.ciphertext) : message.ciphertext;
+                return object;
+            };
+
+            /**
+             * Converts this DeviceName to JSON.
+             * @function toJSON
+             * @memberof signalservice.DeviceName
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            DeviceName.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return DeviceName;
+        })();
+
         signalservice.Envelope = (function () {
 
             /**
@@ -741,6 +982,8 @@
              * @property {number|Long|null} [timestamp] Envelope timestamp
              * @property {Uint8Array|null} [legacyMessage] Envelope legacyMessage
              * @property {Uint8Array|null} [content] Envelope content
+             * @property {string|null} [serverGuid] Envelope serverGuid
+             * @property {number|Long|null} [serverTimestamp] Envelope serverTimestamp
              */
 
             /**
@@ -815,6 +1058,22 @@
             Envelope.prototype.content = $util.newBuffer([]);
 
             /**
+             * Envelope serverGuid.
+             * @member {string} serverGuid
+             * @memberof signalservice.Envelope
+             * @instance
+             */
+            Envelope.prototype.serverGuid = "";
+
+            /**
+             * Envelope serverTimestamp.
+             * @member {number|Long} serverTimestamp
+             * @memberof signalservice.Envelope
+             * @instance
+             */
+            Envelope.prototype.serverTimestamp = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+
+            /**
              * Creates a new Envelope instance using the specified properties.
              * @function create
              * @memberof signalservice.Envelope
@@ -852,6 +1111,10 @@
                     writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.sourceDevice);
                 if (message.content != null && message.hasOwnProperty("content"))
                     writer.uint32(/* id 8, wireType 2 =*/66).bytes(message.content);
+                if (message.serverGuid != null && message.hasOwnProperty("serverGuid"))
+                    writer.uint32(/* id 9, wireType 2 =*/74).string(message.serverGuid);
+                if (message.serverTimestamp != null && message.hasOwnProperty("serverTimestamp"))
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint64(message.serverTimestamp);
                 return writer;
             };
 
@@ -907,6 +1170,12 @@
                         case 8:
                             message.content = reader.bytes();
                             break;
+                        case 9:
+                            message.serverGuid = reader.string();
+                            break;
+                        case 10:
+                            message.serverTimestamp = reader.uint64();
+                            break;
                         default:
                             reader.skipType(tag & 7);
                             break;
@@ -951,6 +1220,7 @@
                         case 2:
                         case 3:
                         case 5:
+                        case 6:
                             break;
                     }
                 if (message.source != null && message.hasOwnProperty("source"))
@@ -971,6 +1241,12 @@
                 if (message.content != null && message.hasOwnProperty("content"))
                     if (!(message.content && typeof message.content.length === "number" || $util.isString(message.content)))
                         return "content: buffer expected";
+                if (message.serverGuid != null && message.hasOwnProperty("serverGuid"))
+                    if (!$util.isString(message.serverGuid))
+                        return "serverGuid: string expected";
+                if (message.serverTimestamp != null && message.hasOwnProperty("serverTimestamp"))
+                    if (!$util.isInteger(message.serverTimestamp) && !(message.serverTimestamp && $util.isInteger(message.serverTimestamp.low) && $util.isInteger(message.serverTimestamp.high)))
+                        return "serverTimestamp: integer|Long expected";
                 return null;
             };
 
@@ -1007,6 +1283,10 @@
                     case 5:
                         message.type = 5;
                         break;
+                    case "UNIDENTIFIED_SENDER":
+                    case 6:
+                        message.type = 6;
+                        break;
                 }
                 if (object.source != null)
                     message.source = String(object.source);
@@ -1033,6 +1313,17 @@
                         $util.base64.decode(object.content, message.content = $util.newBuffer($util.base64.length(object.content)), 0);
                     else if (object.content.length)
                         message.content = object.content;
+                if (object.serverGuid != null)
+                    message.serverGuid = String(object.serverGuid);
+                if (object.serverTimestamp != null)
+                    if ($util.Long)
+                        (message.serverTimestamp = $util.Long.fromValue(object.serverTimestamp)).unsigned = true;
+                    else if (typeof object.serverTimestamp === "string")
+                        message.serverTimestamp = parseInt(object.serverTimestamp, 10);
+                    else if (typeof object.serverTimestamp === "number")
+                        message.serverTimestamp = object.serverTimestamp;
+                    else if (typeof object.serverTimestamp === "object")
+                        message.serverTimestamp = new $util.LongBits(object.serverTimestamp.low >>> 0, object.serverTimestamp.high >>> 0).toNumber(true);
                 return message;
             };
 
@@ -1061,6 +1352,12 @@
                     object.legacyMessage = options.bytes === String ? "" : [];
                     object.sourceDevice = 0;
                     object.content = options.bytes === String ? "" : [];
+                    object.serverGuid = "";
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, true);
+                        object.serverTimestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.serverTimestamp = options.longs === String ? "0" : 0;
                 }
                 if (message.type != null && message.hasOwnProperty("type"))
                     object.type = options.enums === String ? $root.signalservice.Envelope.Type[message.type] : message.type;
@@ -1079,6 +1376,13 @@
                     object.sourceDevice = message.sourceDevice;
                 if (message.content != null && message.hasOwnProperty("content"))
                     object.content = options.bytes === String ? $util.base64.encode(message.content, 0, message.content.length) : options.bytes === Array ? Array.prototype.slice.call(message.content) : message.content;
+                if (message.serverGuid != null && message.hasOwnProperty("serverGuid"))
+                    object.serverGuid = message.serverGuid;
+                if (message.serverTimestamp != null && message.hasOwnProperty("serverTimestamp"))
+                    if (typeof message.serverTimestamp === "number")
+                        object.serverTimestamp = options.longs === String ? String(message.serverTimestamp) : message.serverTimestamp;
+                    else
+                        object.serverTimestamp = options.longs === String ? $util.Long.prototype.toString.call(message.serverTimestamp) : options.longs === Number ? new $util.LongBits(message.serverTimestamp.low >>> 0, message.serverTimestamp.high >>> 0).toNumber(true) : message.serverTimestamp;
                 return object;
             };
 
@@ -1102,6 +1406,7 @@
              * @property {number} KEY_EXCHANGE=2 KEY_EXCHANGE value
              * @property {number} PREKEY_BUNDLE=3 PREKEY_BUNDLE value
              * @property {number} RECEIPT=5 RECEIPT value
+             * @property {number} UNIDENTIFIED_SENDER=6 UNIDENTIFIED_SENDER value
              */
             Envelope.Type = (function () {
                 var valuesById = {}, values = Object.create(valuesById);
@@ -1110,6 +1415,7 @@
                 values[valuesById[2] = "KEY_EXCHANGE"] = 2;
                 values[valuesById[3] = "PREKEY_BUNDLE"] = 3;
                 values[valuesById[5] = "RECEIPT"] = 5;
+                values[valuesById[6] = "UNIDENTIFIED_SENDER"] = 6;
                 return values;
             })();
 
@@ -1127,6 +1433,7 @@
              * @property {signalservice.ICallMessage|null} [callMessage] Content callMessage
              * @property {signalservice.INullMessage|null} [nullMessage] Content nullMessage
              * @property {signalservice.IReceiptMessage|null} [receiptMessage] Content receiptMessage
+             * @property {signalservice.ITypingMessage|null} [typingMessage] Content typingMessage
              */
 
             /**
@@ -1185,6 +1492,14 @@
             Content.prototype.receiptMessage = null;
 
             /**
+             * Content typingMessage.
+             * @member {signalservice.ITypingMessage|null|undefined} typingMessage
+             * @memberof signalservice.Content
+             * @instance
+             */
+            Content.prototype.typingMessage = null;
+
+            /**
              * Creates a new Content instance using the specified properties.
              * @function create
              * @memberof signalservice.Content
@@ -1218,6 +1533,8 @@
                     $root.signalservice.NullMessage.encode(message.nullMessage, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                 if (message.receiptMessage != null && message.hasOwnProperty("receiptMessage"))
                     $root.signalservice.ReceiptMessage.encode(message.receiptMessage, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                if (message.typingMessage != null && message.hasOwnProperty("typingMessage"))
+                    $root.signalservice.TypingMessage.encode(message.typingMessage, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                 return writer;
             };
 
@@ -1266,6 +1583,9 @@
                             break;
                         case 5:
                             message.receiptMessage = $root.signalservice.ReceiptMessage.decode(reader, reader.uint32());
+                            break;
+                        case 6:
+                            message.typingMessage = $root.signalservice.TypingMessage.decode(reader, reader.uint32());
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -1327,6 +1647,11 @@
                     if (error)
                         return "receiptMessage." + error;
                 }
+                if (message.typingMessage != null && message.hasOwnProperty("typingMessage")) {
+                    var error = $root.signalservice.TypingMessage.verify(message.typingMessage);
+                    if (error)
+                        return "typingMessage." + error;
+                }
                 return null;
             };
 
@@ -1367,6 +1692,11 @@
                         throw TypeError(".signalservice.Content.receiptMessage: object expected");
                     message.receiptMessage = $root.signalservice.ReceiptMessage.fromObject(object.receiptMessage);
                 }
+                if (object.typingMessage != null) {
+                    if (typeof object.typingMessage !== "object")
+                        throw TypeError(".signalservice.Content.typingMessage: object expected");
+                    message.typingMessage = $root.signalservice.TypingMessage.fromObject(object.typingMessage);
+                }
                 return message;
             };
 
@@ -1389,6 +1719,7 @@
                     object.callMessage = null;
                     object.nullMessage = null;
                     object.receiptMessage = null;
+                    object.typingMessage = null;
                 }
                 if (message.dataMessage != null && message.hasOwnProperty("dataMessage"))
                     object.dataMessage = $root.signalservice.DataMessage.toObject(message.dataMessage, options);
@@ -1400,6 +1731,8 @@
                     object.nullMessage = $root.signalservice.NullMessage.toObject(message.nullMessage, options);
                 if (message.receiptMessage != null && message.hasOwnProperty("receiptMessage"))
                     object.receiptMessage = $root.signalservice.ReceiptMessage.toObject(message.receiptMessage, options);
+                if (message.typingMessage != null && message.hasOwnProperty("typingMessage"))
+                    object.typingMessage = $root.signalservice.TypingMessage.toObject(message.typingMessage, options);
                 return object;
             };
 
@@ -2867,7 +3200,12 @@
              * @property {Uint8Array|null} [profileKey] DataMessage profileKey
              * @property {number|Long|null} [timestamp] DataMessage timestamp
              * @property {signalservice.DataMessage.IQuote|null} [quote] DataMessage quote
-         * @property {Array.<signalservice.DataMessage.IContact>|null} [contact] DataMessage contact
+             * @property {Array.<signalservice.DataMessage.IContact>|null} [contact] DataMessage contact
+             * @property {Array.<signalservice.DataMessage.IPreview>|null} [preview] DataMessage preview
+             * @property {signalservice.DataMessage.ISticker|null} [sticker] DataMessage sticker
+             * @property {number|null} [requiredProtocolVersion] DataMessage requiredProtocolVersion
+             * @property {boolean|null} [isViewOnce] DataMessage isViewOnce
+             * @property {signalservice.DataMessage.IReaction|null} [reaction] DataMessage reaction
              */
 
             /**
@@ -2881,6 +3219,7 @@
             function DataMessage(properties) {
                 this.attachments = [];
                 this.contact = [];
+                this.preview = [];
                 if (properties)
                     for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -2960,6 +3299,46 @@
             DataMessage.prototype.contact = $util.emptyArray;
 
             /**
+             * DataMessage preview.
+             * @member {Array.<signalservice.DataMessage.IPreview>} preview
+             * @memberof signalservice.DataMessage
+             * @instance
+             */
+            DataMessage.prototype.preview = $util.emptyArray;
+
+            /**
+             * DataMessage sticker.
+             * @member {signalservice.DataMessage.ISticker|null|undefined} sticker
+             * @memberof signalservice.DataMessage
+             * @instance
+             */
+            DataMessage.prototype.sticker = null;
+
+            /**
+             * DataMessage requiredProtocolVersion.
+             * @member {number} requiredProtocolVersion
+             * @memberof signalservice.DataMessage
+             * @instance
+             */
+            DataMessage.prototype.requiredProtocolVersion = 0;
+
+            /**
+             * DataMessage isViewOnce.
+             * @member {boolean} isViewOnce
+             * @memberof signalservice.DataMessage
+             * @instance
+             */
+            DataMessage.prototype.isViewOnce = false;
+
+            /**
+             * DataMessage reaction.
+             * @member {signalservice.DataMessage.IReaction|null|undefined} reaction
+             * @memberof signalservice.DataMessage
+             * @instance
+             */
+            DataMessage.prototype.reaction = null;
+
+            /**
              * Creates a new DataMessage instance using the specified properties.
              * @function create
              * @memberof signalservice.DataMessage
@@ -3003,6 +3382,17 @@
                 if (message.contact != null && message.contact.length)
                     for (var i = 0; i < message.contact.length; ++i)
                         $root.signalservice.DataMessage.Contact.encode(message.contact[i], writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
+                if (message.preview != null && message.preview.length)
+                    for (var i = 0; i < message.preview.length; ++i)
+                        $root.signalservice.DataMessage.Preview.encode(message.preview[i], writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
+                if (message.sticker != null && message.hasOwnProperty("sticker"))
+                    $root.signalservice.DataMessage.Sticker.encode(message.sticker, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
+                if (message.requiredProtocolVersion != null && message.hasOwnProperty("requiredProtocolVersion"))
+                    writer.uint32(/* id 12, wireType 0 =*/96).uint32(message.requiredProtocolVersion);
+                if (message.isViewOnce != null && message.hasOwnProperty("isViewOnce"))
+                    writer.uint32(/* id 14, wireType 0 =*/112).bool(message.isViewOnce);
+                if (message.reaction != null && message.hasOwnProperty("reaction"))
+                    $root.signalservice.DataMessage.Reaction.encode(message.reaction, writer.uint32(/* id 16, wireType 2 =*/130).fork()).ldelim();
                 return writer;
             };
 
@@ -3067,6 +3457,23 @@
                             if (!(message.contact && message.contact.length))
                                 message.contact = [];
                             message.contact.push($root.signalservice.DataMessage.Contact.decode(reader, reader.uint32()));
+                            break;
+                        case 10:
+                            if (!(message.preview && message.preview.length))
+                                message.preview = [];
+                            message.preview.push($root.signalservice.DataMessage.Preview.decode(reader, reader.uint32()));
+                            break;
+                        case 11:
+                            message.sticker = $root.signalservice.DataMessage.Sticker.decode(reader, reader.uint32());
+                            break;
+                        case 12:
+                            message.requiredProtocolVersion = reader.uint32();
+                            break;
+                        case 14:
+                            message.isViewOnce = reader.bool();
+                            break;
+                        case 16:
+                            message.reaction = $root.signalservice.DataMessage.Reaction.decode(reader, reader.uint32());
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -3146,6 +3553,31 @@
                             return "contact." + error;
                     }
                 }
+                if (message.preview != null && message.hasOwnProperty("preview")) {
+                    if (!Array.isArray(message.preview))
+                        return "preview: array expected";
+                    for (var i = 0; i < message.preview.length; ++i) {
+                        var error = $root.signalservice.DataMessage.Preview.verify(message.preview[i]);
+                        if (error)
+                            return "preview." + error;
+                    }
+                }
+                if (message.sticker != null && message.hasOwnProperty("sticker")) {
+                    var error = $root.signalservice.DataMessage.Sticker.verify(message.sticker);
+                    if (error)
+                        return "sticker." + error;
+                }
+                if (message.requiredProtocolVersion != null && message.hasOwnProperty("requiredProtocolVersion"))
+                    if (!$util.isInteger(message.requiredProtocolVersion))
+                        return "requiredProtocolVersion: integer expected";
+                if (message.isViewOnce != null && message.hasOwnProperty("isViewOnce"))
+                    if (typeof message.isViewOnce !== "boolean")
+                        return "isViewOnce: boolean expected";
+                if (message.reaction != null && message.hasOwnProperty("reaction")) {
+                    var error = $root.signalservice.DataMessage.Reaction.verify(message.reaction);
+                    if (error)
+                        return "reaction." + error;
+                }
                 return null;
             };
 
@@ -3211,6 +3643,30 @@
                         message.contact[i] = $root.signalservice.DataMessage.Contact.fromObject(object.contact[i]);
                     }
                 }
+                if (object.preview) {
+                    if (!Array.isArray(object.preview))
+                        throw TypeError(".signalservice.DataMessage.preview: array expected");
+                    message.preview = [];
+                    for (var i = 0; i < object.preview.length; ++i) {
+                        if (typeof object.preview[i] !== "object")
+                            throw TypeError(".signalservice.DataMessage.preview: object expected");
+                        message.preview[i] = $root.signalservice.DataMessage.Preview.fromObject(object.preview[i]);
+                    }
+                }
+                if (object.sticker != null) {
+                    if (typeof object.sticker !== "object")
+                        throw TypeError(".signalservice.DataMessage.sticker: object expected");
+                    message.sticker = $root.signalservice.DataMessage.Sticker.fromObject(object.sticker);
+                }
+                if (object.requiredProtocolVersion != null)
+                    message.requiredProtocolVersion = object.requiredProtocolVersion >>> 0;
+                if (object.isViewOnce != null)
+                    message.isViewOnce = Boolean(object.isViewOnce);
+                if (object.reaction != null) {
+                    if (typeof object.reaction !== "object")
+                        throw TypeError(".signalservice.DataMessage.reaction: object expected");
+                    message.reaction = $root.signalservice.DataMessage.Reaction.fromObject(object.reaction);
+                }
                 return message;
             };
 
@@ -3230,6 +3686,7 @@
                 if (options.arrays || options.defaults) {
                     object.attachments = [];
                     object.contact = [];
+                    object.preview = [];
                 }
                 if (options.defaults) {
                     object.body = "";
@@ -3243,6 +3700,10 @@
                     } else
                         object.timestamp = options.longs === String ? "0" : 0;
                     object.quote = null;
+                    object.sticker = null;
+                    object.requiredProtocolVersion = 0;
+                    object.isViewOnce = false;
+                    object.reaction = null;
                 }
                 if (message.body != null && message.hasOwnProperty("body"))
                     object.body = message.body;
@@ -3271,6 +3732,19 @@
                     for (var j = 0; j < message.contact.length; ++j)
                         object.contact[j] = $root.signalservice.DataMessage.Contact.toObject(message.contact[j], options);
                 }
+                if (message.preview && message.preview.length) {
+                    object.preview = [];
+                    for (var j = 0; j < message.preview.length; ++j)
+                        object.preview[j] = $root.signalservice.DataMessage.Preview.toObject(message.preview[j], options);
+                }
+                if (message.sticker != null && message.hasOwnProperty("sticker"))
+                    object.sticker = $root.signalservice.DataMessage.Sticker.toObject(message.sticker, options);
+                if (message.requiredProtocolVersion != null && message.hasOwnProperty("requiredProtocolVersion"))
+                    object.requiredProtocolVersion = message.requiredProtocolVersion;
+                if (message.isViewOnce != null && message.hasOwnProperty("isViewOnce"))
+                    object.isViewOnce = message.isViewOnce;
+                if (message.reaction != null && message.hasOwnProperty("reaction"))
+                    object.reaction = $root.signalservice.DataMessage.Reaction.toObject(message.reaction, options);
                 return object;
             };
 
@@ -5658,6 +6132,820 @@
                 return Contact;
             })();
 
+            DataMessage.Preview = (function () {
+
+                /**
+                 * Properties of a Preview.
+                 * @memberof signalservice.DataMessage
+                 * @interface IPreview
+                 * @property {string|null} [url] Preview url
+                 * @property {string|null} [title] Preview title
+                 * @property {signalservice.IAttachmentPointer|null} [image] Preview image
+                 */
+
+                /**
+                 * Constructs a new Preview.
+                 * @memberof signalservice.DataMessage
+                 * @classdesc Represents a Preview.
+                 * @implements IPreview
+                 * @constructor
+                 * @param {signalservice.DataMessage.IPreview=} [properties] Properties to set
+                 */
+                function Preview(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Preview url.
+                 * @member {string} url
+                 * @memberof signalservice.DataMessage.Preview
+                 * @instance
+                 */
+                Preview.prototype.url = "";
+
+                /**
+                 * Preview title.
+                 * @member {string} title
+                 * @memberof signalservice.DataMessage.Preview
+                 * @instance
+                 */
+                Preview.prototype.title = "";
+
+                /**
+                 * Preview image.
+                 * @member {signalservice.IAttachmentPointer|null|undefined} image
+                 * @memberof signalservice.DataMessage.Preview
+                 * @instance
+                 */
+                Preview.prototype.image = null;
+
+                /**
+                 * Creates a new Preview instance using the specified properties.
+                 * @function create
+                 * @memberof signalservice.DataMessage.Preview
+                 * @static
+                 * @param {signalservice.DataMessage.IPreview=} [properties] Properties to set
+                 * @returns {signalservice.DataMessage.Preview} Preview instance
+                 */
+                Preview.create = function create(properties) {
+                    return new Preview(properties);
+                };
+
+                /**
+                 * Encodes the specified Preview message. Does not implicitly {@link signalservice.DataMessage.Preview.verify|verify} messages.
+                 * @function encode
+                 * @memberof signalservice.DataMessage.Preview
+                 * @static
+                 * @param {signalservice.DataMessage.IPreview} message Preview message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Preview.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.url != null && message.hasOwnProperty("url"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.url);
+                    if (message.title != null && message.hasOwnProperty("title"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.title);
+                    if (message.image != null && message.hasOwnProperty("image"))
+                        $root.signalservice.AttachmentPointer.encode(message.image, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                    return writer;
+                };
+
+                /**
+                 * Encodes the specified Preview message, length delimited. Does not implicitly {@link signalservice.DataMessage.Preview.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof signalservice.DataMessage.Preview
+                 * @static
+                 * @param {signalservice.DataMessage.IPreview} message Preview message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Preview.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+
+                /**
+                 * Decodes a Preview message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof signalservice.DataMessage.Preview
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {signalservice.DataMessage.Preview} Preview
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Preview.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.DataMessage.Preview();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                            case 1:
+                                message.url = reader.string();
+                                break;
+                            case 2:
+                                message.title = reader.string();
+                                break;
+                            case 3:
+                                message.image = $root.signalservice.AttachmentPointer.decode(reader, reader.uint32());
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                        }
+                    }
+                    return message;
+                };
+
+                /**
+                 * Decodes a Preview message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof signalservice.DataMessage.Preview
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {signalservice.DataMessage.Preview} Preview
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Preview.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+
+                /**
+                 * Verifies a Preview message.
+                 * @function verify
+                 * @memberof signalservice.DataMessage.Preview
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                Preview.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.url != null && message.hasOwnProperty("url"))
+                        if (!$util.isString(message.url))
+                            return "url: string expected";
+                    if (message.title != null && message.hasOwnProperty("title"))
+                        if (!$util.isString(message.title))
+                            return "title: string expected";
+                    if (message.image != null && message.hasOwnProperty("image")) {
+                        var error = $root.signalservice.AttachmentPointer.verify(message.image);
+                        if (error)
+                            return "image." + error;
+                    }
+                    return null;
+                };
+
+                /**
+                 * Creates a Preview message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof signalservice.DataMessage.Preview
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {signalservice.DataMessage.Preview} Preview
+                 */
+                Preview.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.DataMessage.Preview)
+                        return object;
+                    var message = new $root.signalservice.DataMessage.Preview();
+                    if (object.url != null)
+                        message.url = String(object.url);
+                    if (object.title != null)
+                        message.title = String(object.title);
+                    if (object.image != null) {
+                        if (typeof object.image !== "object")
+                            throw TypeError(".signalservice.DataMessage.Preview.image: object expected");
+                        message.image = $root.signalservice.AttachmentPointer.fromObject(object.image);
+                    }
+                    return message;
+                };
+
+                /**
+                 * Creates a plain object from a Preview message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof signalservice.DataMessage.Preview
+                 * @static
+                 * @param {signalservice.DataMessage.Preview} message Preview
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Preview.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.url = "";
+                        object.title = "";
+                        object.image = null;
+                    }
+                    if (message.url != null && message.hasOwnProperty("url"))
+                        object.url = message.url;
+                    if (message.title != null && message.hasOwnProperty("title"))
+                        object.title = message.title;
+                    if (message.image != null && message.hasOwnProperty("image"))
+                        object.image = $root.signalservice.AttachmentPointer.toObject(message.image, options);
+                    return object;
+                };
+
+                /**
+                 * Converts this Preview to JSON.
+                 * @function toJSON
+                 * @memberof signalservice.DataMessage.Preview
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Preview.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+
+                return Preview;
+            })();
+
+            DataMessage.Sticker = (function () {
+
+                /**
+                 * Properties of a Sticker.
+                 * @memberof signalservice.DataMessage
+                 * @interface ISticker
+                 * @property {Uint8Array|null} [packId] Sticker packId
+                 * @property {Uint8Array|null} [packKey] Sticker packKey
+                 * @property {number|null} [stickerId] Sticker stickerId
+                 * @property {signalservice.IAttachmentPointer|null} [data] Sticker data
+                 */
+
+                /**
+                 * Constructs a new Sticker.
+                 * @memberof signalservice.DataMessage
+                 * @classdesc Represents a Sticker.
+                 * @implements ISticker
+                 * @constructor
+                 * @param {signalservice.DataMessage.ISticker=} [properties] Properties to set
+                 */
+                function Sticker(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Sticker packId.
+                 * @member {Uint8Array} packId
+                 * @memberof signalservice.DataMessage.Sticker
+                 * @instance
+                 */
+                Sticker.prototype.packId = $util.newBuffer([]);
+
+                /**
+                 * Sticker packKey.
+                 * @member {Uint8Array} packKey
+                 * @memberof signalservice.DataMessage.Sticker
+                 * @instance
+                 */
+                Sticker.prototype.packKey = $util.newBuffer([]);
+
+                /**
+                 * Sticker stickerId.
+                 * @member {number} stickerId
+                 * @memberof signalservice.DataMessage.Sticker
+                 * @instance
+                 */
+                Sticker.prototype.stickerId = 0;
+
+                /**
+                 * Sticker data.
+                 * @member {signalservice.IAttachmentPointer|null|undefined} data
+                 * @memberof signalservice.DataMessage.Sticker
+                 * @instance
+                 */
+                Sticker.prototype.data = null;
+
+                /**
+                 * Creates a new Sticker instance using the specified properties.
+                 * @function create
+                 * @memberof signalservice.DataMessage.Sticker
+                 * @static
+                 * @param {signalservice.DataMessage.ISticker=} [properties] Properties to set
+                 * @returns {signalservice.DataMessage.Sticker} Sticker instance
+                 */
+                Sticker.create = function create(properties) {
+                    return new Sticker(properties);
+                };
+
+                /**
+                 * Encodes the specified Sticker message. Does not implicitly {@link signalservice.DataMessage.Sticker.verify|verify} messages.
+                 * @function encode
+                 * @memberof signalservice.DataMessage.Sticker
+                 * @static
+                 * @param {signalservice.DataMessage.ISticker} message Sticker message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Sticker.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.packId != null && message.hasOwnProperty("packId"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.packId);
+                    if (message.packKey != null && message.hasOwnProperty("packKey"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.packKey);
+                    if (message.stickerId != null && message.hasOwnProperty("stickerId"))
+                        writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.stickerId);
+                    if (message.data != null && message.hasOwnProperty("data"))
+                        $root.signalservice.AttachmentPointer.encode(message.data, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                    return writer;
+                };
+
+                /**
+                 * Encodes the specified Sticker message, length delimited. Does not implicitly {@link signalservice.DataMessage.Sticker.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof signalservice.DataMessage.Sticker
+                 * @static
+                 * @param {signalservice.DataMessage.ISticker} message Sticker message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Sticker.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+
+                /**
+                 * Decodes a Sticker message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof signalservice.DataMessage.Sticker
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {signalservice.DataMessage.Sticker} Sticker
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Sticker.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.DataMessage.Sticker();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                            case 1:
+                                message.packId = reader.bytes();
+                                break;
+                            case 2:
+                                message.packKey = reader.bytes();
+                                break;
+                            case 3:
+                                message.stickerId = reader.uint32();
+                                break;
+                            case 4:
+                                message.data = $root.signalservice.AttachmentPointer.decode(reader, reader.uint32());
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                        }
+                    }
+                    return message;
+                };
+
+                /**
+                 * Decodes a Sticker message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof signalservice.DataMessage.Sticker
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {signalservice.DataMessage.Sticker} Sticker
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Sticker.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+
+                /**
+                 * Verifies a Sticker message.
+                 * @function verify
+                 * @memberof signalservice.DataMessage.Sticker
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                Sticker.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.packId != null && message.hasOwnProperty("packId"))
+                        if (!(message.packId && typeof message.packId.length === "number" || $util.isString(message.packId)))
+                            return "packId: buffer expected";
+                    if (message.packKey != null && message.hasOwnProperty("packKey"))
+                        if (!(message.packKey && typeof message.packKey.length === "number" || $util.isString(message.packKey)))
+                            return "packKey: buffer expected";
+                    if (message.stickerId != null && message.hasOwnProperty("stickerId"))
+                        if (!$util.isInteger(message.stickerId))
+                            return "stickerId: integer expected";
+                    if (message.data != null && message.hasOwnProperty("data")) {
+                        var error = $root.signalservice.AttachmentPointer.verify(message.data);
+                        if (error)
+                            return "data." + error;
+                    }
+                    return null;
+                };
+
+                /**
+                 * Creates a Sticker message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof signalservice.DataMessage.Sticker
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {signalservice.DataMessage.Sticker} Sticker
+                 */
+                Sticker.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.DataMessage.Sticker)
+                        return object;
+                    var message = new $root.signalservice.DataMessage.Sticker();
+                    if (object.packId != null)
+                        if (typeof object.packId === "string")
+                            $util.base64.decode(object.packId, message.packId = $util.newBuffer($util.base64.length(object.packId)), 0);
+                        else if (object.packId.length)
+                            message.packId = object.packId;
+                    if (object.packKey != null)
+                        if (typeof object.packKey === "string")
+                            $util.base64.decode(object.packKey, message.packKey = $util.newBuffer($util.base64.length(object.packKey)), 0);
+                        else if (object.packKey.length)
+                            message.packKey = object.packKey;
+                    if (object.stickerId != null)
+                        message.stickerId = object.stickerId >>> 0;
+                    if (object.data != null) {
+                        if (typeof object.data !== "object")
+                            throw TypeError(".signalservice.DataMessage.Sticker.data: object expected");
+                        message.data = $root.signalservice.AttachmentPointer.fromObject(object.data);
+                    }
+                    return message;
+                };
+
+                /**
+                 * Creates a plain object from a Sticker message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof signalservice.DataMessage.Sticker
+                 * @static
+                 * @param {signalservice.DataMessage.Sticker} message Sticker
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Sticker.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.packId = options.bytes === String ? "" : [];
+                        object.packKey = options.bytes === String ? "" : [];
+                        object.stickerId = 0;
+                        object.data = null;
+                    }
+                    if (message.packId != null && message.hasOwnProperty("packId"))
+                        object.packId = options.bytes === String ? $util.base64.encode(message.packId, 0, message.packId.length) : options.bytes === Array ? Array.prototype.slice.call(message.packId) : message.packId;
+                    if (message.packKey != null && message.hasOwnProperty("packKey"))
+                        object.packKey = options.bytes === String ? $util.base64.encode(message.packKey, 0, message.packKey.length) : options.bytes === Array ? Array.prototype.slice.call(message.packKey) : message.packKey;
+                    if (message.stickerId != null && message.hasOwnProperty("stickerId"))
+                        object.stickerId = message.stickerId;
+                    if (message.data != null && message.hasOwnProperty("data"))
+                        object.data = $root.signalservice.AttachmentPointer.toObject(message.data, options);
+                    return object;
+                };
+
+                /**
+                 * Converts this Sticker to JSON.
+                 * @function toJSON
+                 * @memberof signalservice.DataMessage.Sticker
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Sticker.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+
+                return Sticker;
+            })();
+
+            DataMessage.Reaction = (function () {
+
+                /**
+                 * Properties of a Reaction.
+                 * @memberof signalservice.DataMessage
+                 * @interface IReaction
+                 * @property {string|null} [emoji] Reaction emoji
+                 * @property {boolean|null} [remove] Reaction remove
+                 * @property {string|null} [targetAuthorE164] Reaction targetAuthorE164
+                 * @property {string|null} [targetAuthorUuid] Reaction targetAuthorUuid
+                 * @property {number|Long|null} [targetTimestamp] Reaction targetTimestamp
+                 */
+
+                /**
+                 * Constructs a new Reaction.
+                 * @memberof signalservice.DataMessage
+                 * @classdesc Represents a Reaction.
+                 * @implements IReaction
+                 * @constructor
+                 * @param {signalservice.DataMessage.IReaction=} [properties] Properties to set
+                 */
+                function Reaction(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Reaction emoji.
+                 * @member {string} emoji
+                 * @memberof signalservice.DataMessage.Reaction
+                 * @instance
+                 */
+                Reaction.prototype.emoji = "";
+
+                /**
+                 * Reaction remove.
+                 * @member {boolean} remove
+                 * @memberof signalservice.DataMessage.Reaction
+                 * @instance
+                 */
+                Reaction.prototype.remove = false;
+
+                /**
+                 * Reaction targetAuthorE164.
+                 * @member {string} targetAuthorE164
+                 * @memberof signalservice.DataMessage.Reaction
+                 * @instance
+                 */
+                Reaction.prototype.targetAuthorE164 = "";
+
+                /**
+                 * Reaction targetAuthorUuid.
+                 * @member {string} targetAuthorUuid
+                 * @memberof signalservice.DataMessage.Reaction
+                 * @instance
+                 */
+                Reaction.prototype.targetAuthorUuid = "";
+
+                /**
+                 * Reaction targetTimestamp.
+                 * @member {number|Long} targetTimestamp
+                 * @memberof signalservice.DataMessage.Reaction
+                 * @instance
+                 */
+                Reaction.prototype.targetTimestamp = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+
+                /**
+                 * Creates a new Reaction instance using the specified properties.
+                 * @function create
+                 * @memberof signalservice.DataMessage.Reaction
+                 * @static
+                 * @param {signalservice.DataMessage.IReaction=} [properties] Properties to set
+                 * @returns {signalservice.DataMessage.Reaction} Reaction instance
+                 */
+                Reaction.create = function create(properties) {
+                    return new Reaction(properties);
+                };
+
+                /**
+                 * Encodes the specified Reaction message. Does not implicitly {@link signalservice.DataMessage.Reaction.verify|verify} messages.
+                 * @function encode
+                 * @memberof signalservice.DataMessage.Reaction
+                 * @static
+                 * @param {signalservice.DataMessage.IReaction} message Reaction message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Reaction.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.emoji != null && message.hasOwnProperty("emoji"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.emoji);
+                    if (message.remove != null && message.hasOwnProperty("remove"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).bool(message.remove);
+                    if (message.targetAuthorE164 != null && message.hasOwnProperty("targetAuthorE164"))
+                        writer.uint32(/* id 3, wireType 2 =*/26).string(message.targetAuthorE164);
+                    if (message.targetAuthorUuid != null && message.hasOwnProperty("targetAuthorUuid"))
+                        writer.uint32(/* id 4, wireType 2 =*/34).string(message.targetAuthorUuid);
+                    if (message.targetTimestamp != null && message.hasOwnProperty("targetTimestamp"))
+                        writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.targetTimestamp);
+                    return writer;
+                };
+
+                /**
+                 * Encodes the specified Reaction message, length delimited. Does not implicitly {@link signalservice.DataMessage.Reaction.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof signalservice.DataMessage.Reaction
+                 * @static
+                 * @param {signalservice.DataMessage.IReaction} message Reaction message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Reaction.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+
+                /**
+                 * Decodes a Reaction message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof signalservice.DataMessage.Reaction
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {signalservice.DataMessage.Reaction} Reaction
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Reaction.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.DataMessage.Reaction();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                            case 1:
+                                message.emoji = reader.string();
+                                break;
+                            case 2:
+                                message.remove = reader.bool();
+                                break;
+                            case 3:
+                                message.targetAuthorE164 = reader.string();
+                                break;
+                            case 4:
+                                message.targetAuthorUuid = reader.string();
+                                break;
+                            case 5:
+                                message.targetTimestamp = reader.uint64();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                        }
+                    }
+                    return message;
+                };
+
+                /**
+                 * Decodes a Reaction message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof signalservice.DataMessage.Reaction
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {signalservice.DataMessage.Reaction} Reaction
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Reaction.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+
+                /**
+                 * Verifies a Reaction message.
+                 * @function verify
+                 * @memberof signalservice.DataMessage.Reaction
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                Reaction.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.emoji != null && message.hasOwnProperty("emoji"))
+                        if (!$util.isString(message.emoji))
+                            return "emoji: string expected";
+                    if (message.remove != null && message.hasOwnProperty("remove"))
+                        if (typeof message.remove !== "boolean")
+                            return "remove: boolean expected";
+                    if (message.targetAuthorE164 != null && message.hasOwnProperty("targetAuthorE164"))
+                        if (!$util.isString(message.targetAuthorE164))
+                            return "targetAuthorE164: string expected";
+                    if (message.targetAuthorUuid != null && message.hasOwnProperty("targetAuthorUuid"))
+                        if (!$util.isString(message.targetAuthorUuid))
+                            return "targetAuthorUuid: string expected";
+                    if (message.targetTimestamp != null && message.hasOwnProperty("targetTimestamp"))
+                        if (!$util.isInteger(message.targetTimestamp) && !(message.targetTimestamp && $util.isInteger(message.targetTimestamp.low) && $util.isInteger(message.targetTimestamp.high)))
+                            return "targetTimestamp: integer|Long expected";
+                    return null;
+                };
+
+                /**
+                 * Creates a Reaction message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof signalservice.DataMessage.Reaction
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {signalservice.DataMessage.Reaction} Reaction
+                 */
+                Reaction.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.DataMessage.Reaction)
+                        return object;
+                    var message = new $root.signalservice.DataMessage.Reaction();
+                    if (object.emoji != null)
+                        message.emoji = String(object.emoji);
+                    if (object.remove != null)
+                        message.remove = Boolean(object.remove);
+                    if (object.targetAuthorE164 != null)
+                        message.targetAuthorE164 = String(object.targetAuthorE164);
+                    if (object.targetAuthorUuid != null)
+                        message.targetAuthorUuid = String(object.targetAuthorUuid);
+                    if (object.targetTimestamp != null)
+                        if ($util.Long)
+                            (message.targetTimestamp = $util.Long.fromValue(object.targetTimestamp)).unsigned = true;
+                        else if (typeof object.targetTimestamp === "string")
+                            message.targetTimestamp = parseInt(object.targetTimestamp, 10);
+                        else if (typeof object.targetTimestamp === "number")
+                            message.targetTimestamp = object.targetTimestamp;
+                        else if (typeof object.targetTimestamp === "object")
+                            message.targetTimestamp = new $util.LongBits(object.targetTimestamp.low >>> 0, object.targetTimestamp.high >>> 0).toNumber(true);
+                    return message;
+                };
+
+                /**
+                 * Creates a plain object from a Reaction message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof signalservice.DataMessage.Reaction
+                 * @static
+                 * @param {signalservice.DataMessage.Reaction} message Reaction
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Reaction.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.emoji = "";
+                        object.remove = false;
+                        object.targetAuthorE164 = "";
+                        object.targetAuthorUuid = "";
+                        if ($util.Long) {
+                            var long = new $util.Long(0, 0, true);
+                            object.targetTimestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                        } else
+                            object.targetTimestamp = options.longs === String ? "0" : 0;
+                    }
+                    if (message.emoji != null && message.hasOwnProperty("emoji"))
+                        object.emoji = message.emoji;
+                    if (message.remove != null && message.hasOwnProperty("remove"))
+                        object.remove = message.remove;
+                    if (message.targetAuthorE164 != null && message.hasOwnProperty("targetAuthorE164"))
+                        object.targetAuthorE164 = message.targetAuthorE164;
+                    if (message.targetAuthorUuid != null && message.hasOwnProperty("targetAuthorUuid"))
+                        object.targetAuthorUuid = message.targetAuthorUuid;
+                    if (message.targetTimestamp != null && message.hasOwnProperty("targetTimestamp"))
+                        if (typeof message.targetTimestamp === "number")
+                            object.targetTimestamp = options.longs === String ? String(message.targetTimestamp) : message.targetTimestamp;
+                        else
+                            object.targetTimestamp = options.longs === String ? $util.Long.prototype.toString.call(message.targetTimestamp) : options.longs === Number ? new $util.LongBits(message.targetTimestamp.low >>> 0, message.targetTimestamp.high >>> 0).toNumber(true) : message.targetTimestamp;
+                    return object;
+                };
+
+                /**
+                 * Converts this Reaction to JSON.
+                 * @function toJSON
+                 * @memberof signalservice.DataMessage.Reaction
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Reaction.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+
+                return Reaction;
+            })();
+
+            /**
+             * ProtocolVersion enum.
+             * @name signalservice.DataMessage.ProtocolVersion
+             * @enum {string}
+             * @property {number} INITIAL=0 INITIAL value
+             * @property {number} MESSAGE_TIMERS=1 MESSAGE_TIMERS value
+             * @property {number} VIEW_ONCE=2 VIEW_ONCE value
+             * @property {number} VIEW_ONCE_VIDEO=3 VIEW_ONCE_VIDEO value
+             * @property {number} REACTIONS=4 REACTIONS value
+             * @property {number} CURRENT=4 CURRENT value
+             */
+            DataMessage.ProtocolVersion = (function () {
+                var valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[0] = "INITIAL"] = 0;
+                values[valuesById[1] = "MESSAGE_TIMERS"] = 1;
+                values[valuesById[2] = "VIEW_ONCE"] = 2;
+                values[valuesById[3] = "VIEW_ONCE_VIDEO"] = 3;
+                values[valuesById[4] = "REACTIONS"] = 4;
+                values["CURRENT"] = 4;
+                return values;
+            })();
+
             return DataMessage;
         })();
 
@@ -6119,6 +7407,282 @@
             return ReceiptMessage;
         })();
 
+        signalservice.TypingMessage = (function () {
+
+            /**
+             * Properties of a TypingMessage.
+             * @memberof signalservice
+             * @interface ITypingMessage
+             * @property {number|Long|null} [timestamp] TypingMessage timestamp
+             * @property {signalservice.TypingMessage.Action|null} [action] TypingMessage action
+             * @property {Uint8Array|null} [groupId] TypingMessage groupId
+             */
+
+            /**
+             * Constructs a new TypingMessage.
+             * @memberof signalservice
+             * @classdesc Represents a TypingMessage.
+             * @implements ITypingMessage
+             * @constructor
+             * @param {signalservice.ITypingMessage=} [properties] Properties to set
+             */
+            function TypingMessage(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * TypingMessage timestamp.
+             * @member {number|Long} timestamp
+             * @memberof signalservice.TypingMessage
+             * @instance
+             */
+            TypingMessage.prototype.timestamp = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+
+            /**
+             * TypingMessage action.
+             * @member {signalservice.TypingMessage.Action} action
+             * @memberof signalservice.TypingMessage
+             * @instance
+             */
+            TypingMessage.prototype.action = 0;
+
+            /**
+             * TypingMessage groupId.
+             * @member {Uint8Array} groupId
+             * @memberof signalservice.TypingMessage
+             * @instance
+             */
+            TypingMessage.prototype.groupId = $util.newBuffer([]);
+
+            /**
+             * Creates a new TypingMessage instance using the specified properties.
+             * @function create
+             * @memberof signalservice.TypingMessage
+             * @static
+             * @param {signalservice.ITypingMessage=} [properties] Properties to set
+             * @returns {signalservice.TypingMessage} TypingMessage instance
+             */
+            TypingMessage.create = function create(properties) {
+                return new TypingMessage(properties);
+            };
+
+            /**
+             * Encodes the specified TypingMessage message. Does not implicitly {@link signalservice.TypingMessage.verify|verify} messages.
+             * @function encode
+             * @memberof signalservice.TypingMessage
+             * @static
+             * @param {signalservice.ITypingMessage} message TypingMessage message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TypingMessage.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.timestamp);
+                if (message.action != null && message.hasOwnProperty("action"))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int32(message.action);
+                if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.groupId);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified TypingMessage message, length delimited. Does not implicitly {@link signalservice.TypingMessage.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof signalservice.TypingMessage
+             * @static
+             * @param {signalservice.ITypingMessage} message TypingMessage message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TypingMessage.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a TypingMessage message from the specified reader or buffer.
+             * @function decode
+             * @memberof signalservice.TypingMessage
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {signalservice.TypingMessage} TypingMessage
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TypingMessage.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.TypingMessage();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                        case 1:
+                            message.timestamp = reader.uint64();
+                            break;
+                        case 2:
+                            message.action = reader.int32();
+                            break;
+                        case 3:
+                            message.groupId = reader.bytes();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a TypingMessage message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof signalservice.TypingMessage
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {signalservice.TypingMessage} TypingMessage
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TypingMessage.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a TypingMessage message.
+             * @function verify
+             * @memberof signalservice.TypingMessage
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            TypingMessage.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                    if (!$util.isInteger(message.timestamp) && !(message.timestamp && $util.isInteger(message.timestamp.low) && $util.isInteger(message.timestamp.high)))
+                        return "timestamp: integer|Long expected";
+                if (message.action != null && message.hasOwnProperty("action"))
+                    switch (message.action) {
+                        default:
+                            return "action: enum value expected";
+                        case 0:
+                        case 1:
+                            break;
+                    }
+                if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (!(message.groupId && typeof message.groupId.length === "number" || $util.isString(message.groupId)))
+                        return "groupId: buffer expected";
+                return null;
+            };
+
+            /**
+             * Creates a TypingMessage message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof signalservice.TypingMessage
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {signalservice.TypingMessage} TypingMessage
+             */
+            TypingMessage.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.TypingMessage)
+                    return object;
+                var message = new $root.signalservice.TypingMessage();
+                if (object.timestamp != null)
+                    if ($util.Long)
+                        (message.timestamp = $util.Long.fromValue(object.timestamp)).unsigned = true;
+                    else if (typeof object.timestamp === "string")
+                        message.timestamp = parseInt(object.timestamp, 10);
+                    else if (typeof object.timestamp === "number")
+                        message.timestamp = object.timestamp;
+                    else if (typeof object.timestamp === "object")
+                        message.timestamp = new $util.LongBits(object.timestamp.low >>> 0, object.timestamp.high >>> 0).toNumber(true);
+                switch (object.action) {
+                    case "STARTED":
+                    case 0:
+                        message.action = 0;
+                        break;
+                    case "STOPPED":
+                    case 1:
+                        message.action = 1;
+                        break;
+                }
+                if (object.groupId != null)
+                    if (typeof object.groupId === "string")
+                        $util.base64.decode(object.groupId, message.groupId = $util.newBuffer($util.base64.length(object.groupId)), 0);
+                    else if (object.groupId.length)
+                        message.groupId = object.groupId;
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a TypingMessage message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof signalservice.TypingMessage
+             * @static
+             * @param {signalservice.TypingMessage} message TypingMessage
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            TypingMessage.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, true);
+                        object.timestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.timestamp = options.longs === String ? "0" : 0;
+                    object.action = options.enums === String ? "STARTED" : 0;
+                    object.groupId = options.bytes === String ? "" : [];
+                }
+                if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                    if (typeof message.timestamp === "number")
+                        object.timestamp = options.longs === String ? String(message.timestamp) : message.timestamp;
+                    else
+                        object.timestamp = options.longs === String ? $util.Long.prototype.toString.call(message.timestamp) : options.longs === Number ? new $util.LongBits(message.timestamp.low >>> 0, message.timestamp.high >>> 0).toNumber(true) : message.timestamp;
+                if (message.action != null && message.hasOwnProperty("action"))
+                    object.action = options.enums === String ? $root.signalservice.TypingMessage.Action[message.action] : message.action;
+                if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    object.groupId = options.bytes === String ? $util.base64.encode(message.groupId, 0, message.groupId.length) : options.bytes === Array ? Array.prototype.slice.call(message.groupId) : message.groupId;
+                return object;
+            };
+
+            /**
+             * Converts this TypingMessage to JSON.
+             * @function toJSON
+             * @memberof signalservice.TypingMessage
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            TypingMessage.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Action enum.
+             * @name signalservice.TypingMessage.Action
+             * @enum {string}
+             * @property {number} STARTED=0 STARTED value
+             * @property {number} STOPPED=1 STOPPED value
+             */
+            TypingMessage.Action = (function () {
+                var valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[0] = "STARTED"] = 0;
+                values[valuesById[1] = "STOPPED"] = 1;
+                return values;
+            })();
+
+            return TypingMessage;
+        })();
+
         signalservice.Verified = (function () {
 
             /**
@@ -6428,6 +7992,8 @@
              * @property {signalservice.IVerified|null} [verified] SyncMessage verified
              * @property {signalservice.SyncMessage.IConfiguration|null} [configuration] SyncMessage configuration
              * @property {Uint8Array|null} [padding] SyncMessage padding
+             * @property {Array.<signalservice.SyncMessage.IStickerPackOperation>|null} [stickerPackOperation] SyncMessage stickerPackOperation
+             * @property {signalservice.SyncMessage.IViewOnceOpen|null} [viewOnceOpen] SyncMessage viewOnceOpen
              */
 
             /**
@@ -6440,6 +8006,7 @@
              */
             function SyncMessage(properties) {
                 this.read = [];
+                this.stickerPackOperation = [];
                 if (properties)
                     for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -6519,6 +8086,22 @@
             SyncMessage.prototype.padding = $util.newBuffer([]);
 
             /**
+             * SyncMessage stickerPackOperation.
+             * @member {Array.<signalservice.SyncMessage.IStickerPackOperation>} stickerPackOperation
+             * @memberof signalservice.SyncMessage
+             * @instance
+             */
+            SyncMessage.prototype.stickerPackOperation = $util.emptyArray;
+
+            /**
+             * SyncMessage viewOnceOpen.
+             * @member {signalservice.SyncMessage.IViewOnceOpen|null|undefined} viewOnceOpen
+             * @memberof signalservice.SyncMessage
+             * @instance
+             */
+            SyncMessage.prototype.viewOnceOpen = null;
+
+            /**
              * Creates a new SyncMessage instance using the specified properties.
              * @function create
              * @memberof signalservice.SyncMessage
@@ -6561,6 +8144,11 @@
                     writer.uint32(/* id 8, wireType 2 =*/66).bytes(message.padding);
                 if (message.configuration != null && message.hasOwnProperty("configuration"))
                     $root.signalservice.SyncMessage.Configuration.encode(message.configuration, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
+                if (message.stickerPackOperation != null && message.stickerPackOperation.length)
+                    for (var i = 0; i < message.stickerPackOperation.length; ++i)
+                        $root.signalservice.SyncMessage.StickerPackOperation.encode(message.stickerPackOperation[i], writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
+                if (message.viewOnceOpen != null && message.hasOwnProperty("viewOnceOpen"))
+                    $root.signalservice.SyncMessage.ViewOnceOpen.encode(message.viewOnceOpen, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
                 return writer;
             };
 
@@ -6623,6 +8211,14 @@
                             break;
                         case 8:
                             message.padding = reader.bytes();
+                            break;
+                        case 10:
+                            if (!(message.stickerPackOperation && message.stickerPackOperation.length))
+                                message.stickerPackOperation = [];
+                            message.stickerPackOperation.push($root.signalservice.SyncMessage.StickerPackOperation.decode(reader, reader.uint32()));
+                            break;
+                        case 11:
+                            message.viewOnceOpen = $root.signalservice.SyncMessage.ViewOnceOpen.decode(reader, reader.uint32());
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -6706,6 +8302,20 @@
                 if (message.padding != null && message.hasOwnProperty("padding"))
                     if (!(message.padding && typeof message.padding.length === "number" || $util.isString(message.padding)))
                         return "padding: buffer expected";
+                if (message.stickerPackOperation != null && message.hasOwnProperty("stickerPackOperation")) {
+                    if (!Array.isArray(message.stickerPackOperation))
+                        return "stickerPackOperation: array expected";
+                    for (var i = 0; i < message.stickerPackOperation.length; ++i) {
+                        var error = $root.signalservice.SyncMessage.StickerPackOperation.verify(message.stickerPackOperation[i]);
+                        if (error)
+                            return "stickerPackOperation." + error;
+                    }
+                }
+                if (message.viewOnceOpen != null && message.hasOwnProperty("viewOnceOpen")) {
+                    var error = $root.signalservice.SyncMessage.ViewOnceOpen.verify(message.viewOnceOpen);
+                    if (error)
+                        return "viewOnceOpen." + error;
+                }
                 return null;
             };
 
@@ -6771,6 +8381,21 @@
                         $util.base64.decode(object.padding, message.padding = $util.newBuffer($util.base64.length(object.padding)), 0);
                     else if (object.padding.length)
                         message.padding = object.padding;
+                if (object.stickerPackOperation) {
+                    if (!Array.isArray(object.stickerPackOperation))
+                        throw TypeError(".signalservice.SyncMessage.stickerPackOperation: array expected");
+                    message.stickerPackOperation = [];
+                    for (var i = 0; i < object.stickerPackOperation.length; ++i) {
+                        if (typeof object.stickerPackOperation[i] !== "object")
+                            throw TypeError(".signalservice.SyncMessage.stickerPackOperation: object expected");
+                        message.stickerPackOperation[i] = $root.signalservice.SyncMessage.StickerPackOperation.fromObject(object.stickerPackOperation[i]);
+                    }
+                }
+                if (object.viewOnceOpen != null) {
+                    if (typeof object.viewOnceOpen !== "object")
+                        throw TypeError(".signalservice.SyncMessage.viewOnceOpen: object expected");
+                    message.viewOnceOpen = $root.signalservice.SyncMessage.ViewOnceOpen.fromObject(object.viewOnceOpen);
+                }
                 return message;
             };
 
@@ -6787,8 +8412,10 @@
                 if (!options)
                     options = {};
                 var object = {};
-                if (options.arrays || options.defaults)
+                if (options.arrays || options.defaults) {
                     object.read = [];
+                    object.stickerPackOperation = [];
+                }
                 if (options.defaults) {
                     object.sent = null;
                     object.contacts = null;
@@ -6798,6 +8425,7 @@
                     object.verified = null;
                     object.padding = options.bytes === String ? "" : [];
                     object.configuration = null;
+                    object.viewOnceOpen = null;
                 }
                 if (message.sent != null && message.hasOwnProperty("sent"))
                     object.sent = $root.signalservice.SyncMessage.Sent.toObject(message.sent, options);
@@ -6820,6 +8448,13 @@
                     object.padding = options.bytes === String ? $util.base64.encode(message.padding, 0, message.padding.length) : options.bytes === Array ? Array.prototype.slice.call(message.padding) : message.padding;
                 if (message.configuration != null && message.hasOwnProperty("configuration"))
                     object.configuration = $root.signalservice.SyncMessage.Configuration.toObject(message.configuration, options);
+                if (message.stickerPackOperation && message.stickerPackOperation.length) {
+                    object.stickerPackOperation = [];
+                    for (var j = 0; j < message.stickerPackOperation.length; ++j)
+                        object.stickerPackOperation[j] = $root.signalservice.SyncMessage.StickerPackOperation.toObject(message.stickerPackOperation[j], options);
+                }
+                if (message.viewOnceOpen != null && message.hasOwnProperty("viewOnceOpen"))
+                    object.viewOnceOpen = $root.signalservice.SyncMessage.ViewOnceOpen.toObject(message.viewOnceOpen, options);
                 return object;
             };
 
@@ -6844,6 +8479,8 @@
                  * @property {number|Long|null} [timestamp] Sent timestamp
                  * @property {signalservice.IDataMessage|null} [message] Sent message
                  * @property {number|Long|null} [expirationStartTimestamp] Sent expirationStartTimestamp
+                 * @property {Array.<signalservice.SyncMessage.Sent.IUnidentifiedDeliveryStatus>|null} [unidentifiedStatus] Sent unidentifiedStatus
+                 * @property {boolean|null} [isRecipientUpdate] Sent isRecipientUpdate
                  */
 
                 /**
@@ -6855,6 +8492,7 @@
                  * @param {signalservice.SyncMessage.ISent=} [properties] Properties to set
                  */
                 function Sent(properties) {
+                    this.unidentifiedStatus = [];
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -6894,6 +8532,22 @@
                 Sent.prototype.expirationStartTimestamp = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 
                 /**
+                 * Sent unidentifiedStatus.
+                 * @member {Array.<signalservice.SyncMessage.Sent.IUnidentifiedDeliveryStatus>} unidentifiedStatus
+                 * @memberof signalservice.SyncMessage.Sent
+                 * @instance
+                 */
+                Sent.prototype.unidentifiedStatus = $util.emptyArray;
+
+                /**
+                 * Sent isRecipientUpdate.
+                 * @member {boolean} isRecipientUpdate
+                 * @memberof signalservice.SyncMessage.Sent
+                 * @instance
+                 */
+                Sent.prototype.isRecipientUpdate = false;
+
+                /**
                  * Creates a new Sent instance using the specified properties.
                  * @function create
                  * @memberof signalservice.SyncMessage.Sent
@@ -6925,6 +8579,11 @@
                         $root.signalservice.DataMessage.encode(message.message, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     if (message.expirationStartTimestamp != null && message.hasOwnProperty("expirationStartTimestamp"))
                         writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.expirationStartTimestamp);
+                    if (message.unidentifiedStatus != null && message.unidentifiedStatus.length)
+                        for (var i = 0; i < message.unidentifiedStatus.length; ++i)
+                            $root.signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus.encode(message.unidentifiedStatus[i], writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                    if (message.isRecipientUpdate != null && message.hasOwnProperty("isRecipientUpdate"))
+                        writer.uint32(/* id 6, wireType 0 =*/48).bool(message.isRecipientUpdate);
                     return writer;
                 };
 
@@ -6970,6 +8629,14 @@
                                 break;
                             case 4:
                                 message.expirationStartTimestamp = reader.uint64();
+                                break;
+                            case 5:
+                                if (!(message.unidentifiedStatus && message.unidentifiedStatus.length))
+                                    message.unidentifiedStatus = [];
+                                message.unidentifiedStatus.push($root.signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus.decode(reader, reader.uint32()));
+                                break;
+                            case 6:
+                                message.isRecipientUpdate = reader.bool();
                                 break;
                             default:
                                 reader.skipType(tag & 7);
@@ -7020,6 +8687,18 @@
                     if (message.expirationStartTimestamp != null && message.hasOwnProperty("expirationStartTimestamp"))
                         if (!$util.isInteger(message.expirationStartTimestamp) && !(message.expirationStartTimestamp && $util.isInteger(message.expirationStartTimestamp.low) && $util.isInteger(message.expirationStartTimestamp.high)))
                             return "expirationStartTimestamp: integer|Long expected";
+                    if (message.unidentifiedStatus != null && message.hasOwnProperty("unidentifiedStatus")) {
+                        if (!Array.isArray(message.unidentifiedStatus))
+                            return "unidentifiedStatus: array expected";
+                        for (var i = 0; i < message.unidentifiedStatus.length; ++i) {
+                            var error = $root.signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus.verify(message.unidentifiedStatus[i]);
+                            if (error)
+                                return "unidentifiedStatus." + error;
+                        }
+                    }
+                    if (message.isRecipientUpdate != null && message.hasOwnProperty("isRecipientUpdate"))
+                        if (typeof message.isRecipientUpdate !== "boolean")
+                            return "isRecipientUpdate: boolean expected";
                     return null;
                 };
 
@@ -7060,6 +8739,18 @@
                             message.expirationStartTimestamp = object.expirationStartTimestamp;
                         else if (typeof object.expirationStartTimestamp === "object")
                             message.expirationStartTimestamp = new $util.LongBits(object.expirationStartTimestamp.low >>> 0, object.expirationStartTimestamp.high >>> 0).toNumber(true);
+                    if (object.unidentifiedStatus) {
+                        if (!Array.isArray(object.unidentifiedStatus))
+                            throw TypeError(".signalservice.SyncMessage.Sent.unidentifiedStatus: array expected");
+                        message.unidentifiedStatus = [];
+                        for (var i = 0; i < object.unidentifiedStatus.length; ++i) {
+                            if (typeof object.unidentifiedStatus[i] !== "object")
+                                throw TypeError(".signalservice.SyncMessage.Sent.unidentifiedStatus: object expected");
+                            message.unidentifiedStatus[i] = $root.signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus.fromObject(object.unidentifiedStatus[i]);
+                        }
+                    }
+                    if (object.isRecipientUpdate != null)
+                        message.isRecipientUpdate = Boolean(object.isRecipientUpdate);
                     return message;
                 };
 
@@ -7076,6 +8767,8 @@
                     if (!options)
                         options = {};
                     var object = {};
+                    if (options.arrays || options.defaults)
+                        object.unidentifiedStatus = [];
                     if (options.defaults) {
                         object.destination = "";
                         if ($util.Long) {
@@ -7089,6 +8782,7 @@
                             object.expirationStartTimestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                         } else
                             object.expirationStartTimestamp = options.longs === String ? "0" : 0;
+                        object.isRecipientUpdate = false;
                     }
                     if (message.destination != null && message.hasOwnProperty("destination"))
                         object.destination = message.destination;
@@ -7104,6 +8798,13 @@
                             object.expirationStartTimestamp = options.longs === String ? String(message.expirationStartTimestamp) : message.expirationStartTimestamp;
                         else
                             object.expirationStartTimestamp = options.longs === String ? $util.Long.prototype.toString.call(message.expirationStartTimestamp) : options.longs === Number ? new $util.LongBits(message.expirationStartTimestamp.low >>> 0, message.expirationStartTimestamp.high >>> 0).toNumber(true) : message.expirationStartTimestamp;
+                    if (message.unidentifiedStatus && message.unidentifiedStatus.length) {
+                        object.unidentifiedStatus = [];
+                        for (var j = 0; j < message.unidentifiedStatus.length; ++j)
+                            object.unidentifiedStatus[j] = $root.signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus.toObject(message.unidentifiedStatus[j], options);
+                    }
+                    if (message.isRecipientUpdate != null && message.hasOwnProperty("isRecipientUpdate"))
+                        object.isRecipientUpdate = message.isRecipientUpdate;
                     return object;
                 };
 
@@ -7117,6 +8818,216 @@
                 Sent.prototype.toJSON = function toJSON() {
                     return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                 };
+
+                Sent.UnidentifiedDeliveryStatus = (function () {
+
+                    /**
+                     * Properties of an UnidentifiedDeliveryStatus.
+                     * @memberof signalservice.SyncMessage.Sent
+                     * @interface IUnidentifiedDeliveryStatus
+                     * @property {string|null} [destination] UnidentifiedDeliveryStatus destination
+                     * @property {boolean|null} [unidentified] UnidentifiedDeliveryStatus unidentified
+                     */
+
+                    /**
+                     * Constructs a new UnidentifiedDeliveryStatus.
+                     * @memberof signalservice.SyncMessage.Sent
+                     * @classdesc Represents an UnidentifiedDeliveryStatus.
+                     * @implements IUnidentifiedDeliveryStatus
+                     * @constructor
+                     * @param {signalservice.SyncMessage.Sent.IUnidentifiedDeliveryStatus=} [properties] Properties to set
+                     */
+                    function UnidentifiedDeliveryStatus(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * UnidentifiedDeliveryStatus destination.
+                     * @member {string} destination
+                     * @memberof signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus
+                     * @instance
+                     */
+                    UnidentifiedDeliveryStatus.prototype.destination = "";
+
+                    /**
+                     * UnidentifiedDeliveryStatus unidentified.
+                     * @member {boolean} unidentified
+                     * @memberof signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus
+                     * @instance
+                     */
+                    UnidentifiedDeliveryStatus.prototype.unidentified = false;
+
+                    /**
+                     * Creates a new UnidentifiedDeliveryStatus instance using the specified properties.
+                     * @function create
+                     * @memberof signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus
+                     * @static
+                     * @param {signalservice.SyncMessage.Sent.IUnidentifiedDeliveryStatus=} [properties] Properties to set
+                     * @returns {signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus} UnidentifiedDeliveryStatus instance
+                     */
+                    UnidentifiedDeliveryStatus.create = function create(properties) {
+                        return new UnidentifiedDeliveryStatus(properties);
+                    };
+
+                    /**
+                     * Encodes the specified UnidentifiedDeliveryStatus message. Does not implicitly {@link signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus.verify|verify} messages.
+                     * @function encode
+                     * @memberof signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus
+                     * @static
+                     * @param {signalservice.SyncMessage.Sent.IUnidentifiedDeliveryStatus} message UnidentifiedDeliveryStatus message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    UnidentifiedDeliveryStatus.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.destination != null && message.hasOwnProperty("destination"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.destination);
+                        if (message.unidentified != null && message.hasOwnProperty("unidentified"))
+                            writer.uint32(/* id 2, wireType 0 =*/16).bool(message.unidentified);
+                        return writer;
+                    };
+
+                    /**
+                     * Encodes the specified UnidentifiedDeliveryStatus message, length delimited. Does not implicitly {@link signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus
+                     * @static
+                     * @param {signalservice.SyncMessage.Sent.IUnidentifiedDeliveryStatus} message UnidentifiedDeliveryStatus message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    UnidentifiedDeliveryStatus.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+
+                    /**
+                     * Decodes an UnidentifiedDeliveryStatus message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus} UnidentifiedDeliveryStatus
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    UnidentifiedDeliveryStatus.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                                case 1:
+                                    message.destination = reader.string();
+                                    break;
+                                case 2:
+                                    message.unidentified = reader.bool();
+                                    break;
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                            }
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Decodes an UnidentifiedDeliveryStatus message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus} UnidentifiedDeliveryStatus
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    UnidentifiedDeliveryStatus.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+
+                    /**
+                     * Verifies an UnidentifiedDeliveryStatus message.
+                     * @function verify
+                     * @memberof signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    UnidentifiedDeliveryStatus.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.destination != null && message.hasOwnProperty("destination"))
+                            if (!$util.isString(message.destination))
+                                return "destination: string expected";
+                        if (message.unidentified != null && message.hasOwnProperty("unidentified"))
+                            if (typeof message.unidentified !== "boolean")
+                                return "unidentified: boolean expected";
+                        return null;
+                    };
+
+                    /**
+                     * Creates an UnidentifiedDeliveryStatus message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus} UnidentifiedDeliveryStatus
+                     */
+                    UnidentifiedDeliveryStatus.fromObject = function fromObject(object) {
+                        if (object instanceof $root.signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus)
+                            return object;
+                        var message = new $root.signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus();
+                        if (object.destination != null)
+                            message.destination = String(object.destination);
+                        if (object.unidentified != null)
+                            message.unidentified = Boolean(object.unidentified);
+                        return message;
+                    };
+
+                    /**
+                     * Creates a plain object from an UnidentifiedDeliveryStatus message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus
+                     * @static
+                     * @param {signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus} message UnidentifiedDeliveryStatus
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    UnidentifiedDeliveryStatus.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.destination = "";
+                            object.unidentified = false;
+                        }
+                        if (message.destination != null && message.hasOwnProperty("destination"))
+                            object.destination = message.destination;
+                        if (message.unidentified != null && message.hasOwnProperty("unidentified"))
+                            object.unidentified = message.unidentified;
+                        return object;
+                    };
+
+                    /**
+                     * Converts this UnidentifiedDeliveryStatus to JSON.
+                     * @function toJSON
+                     * @memberof signalservice.SyncMessage.Sent.UnidentifiedDeliveryStatus
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    UnidentifiedDeliveryStatus.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    return UnidentifiedDeliveryStatus;
+                })();
 
                 return Sent;
             })();
@@ -7535,6 +9446,7 @@
                  * @memberof signalservice.SyncMessage
                  * @interface IBlocked
                  * @property {Array.<string>|null} [numbers] Blocked numbers
+                 * @property {Array.<Uint8Array>|null} [groupIds] Blocked groupIds
                  */
 
                 /**
@@ -7547,6 +9459,7 @@
                  */
                 function Blocked(properties) {
                     this.numbers = [];
+                    this.groupIds = [];
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -7560,6 +9473,14 @@
                  * @instance
                  */
                 Blocked.prototype.numbers = $util.emptyArray;
+
+                /**
+                 * Blocked groupIds.
+                 * @member {Array.<Uint8Array>} groupIds
+                 * @memberof signalservice.SyncMessage.Blocked
+                 * @instance
+                 */
+                Blocked.prototype.groupIds = $util.emptyArray;
 
                 /**
                  * Creates a new Blocked instance using the specified properties.
@@ -7588,6 +9509,9 @@
                     if (message.numbers != null && message.numbers.length)
                         for (var i = 0; i < message.numbers.length; ++i)
                             writer.uint32(/* id 1, wireType 2 =*/10).string(message.numbers[i]);
+                    if (message.groupIds != null && message.groupIds.length)
+                        for (var i = 0; i < message.groupIds.length; ++i)
+                            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.groupIds[i]);
                     return writer;
                 };
 
@@ -7626,6 +9550,11 @@
                                 if (!(message.numbers && message.numbers.length))
                                     message.numbers = [];
                                 message.numbers.push(reader.string());
+                                break;
+                            case 2:
+                                if (!(message.groupIds && message.groupIds.length))
+                                    message.groupIds = [];
+                                message.groupIds.push(reader.bytes());
                                 break;
                             default:
                                 reader.skipType(tag & 7);
@@ -7669,6 +9598,13 @@
                             if (!$util.isString(message.numbers[i]))
                                 return "numbers: string[] expected";
                     }
+                    if (message.groupIds != null && message.hasOwnProperty("groupIds")) {
+                        if (!Array.isArray(message.groupIds))
+                            return "groupIds: array expected";
+                        for (var i = 0; i < message.groupIds.length; ++i)
+                            if (!(message.groupIds[i] && typeof message.groupIds[i].length === "number" || $util.isString(message.groupIds[i])))
+                                return "groupIds: buffer[] expected";
+                    }
                     return null;
                 };
 
@@ -7691,6 +9627,16 @@
                         for (var i = 0; i < object.numbers.length; ++i)
                             message.numbers[i] = String(object.numbers[i]);
                     }
+                    if (object.groupIds) {
+                        if (!Array.isArray(object.groupIds))
+                            throw TypeError(".signalservice.SyncMessage.Blocked.groupIds: array expected");
+                        message.groupIds = [];
+                        for (var i = 0; i < object.groupIds.length; ++i)
+                            if (typeof object.groupIds[i] === "string")
+                                $util.base64.decode(object.groupIds[i], message.groupIds[i] = $util.newBuffer($util.base64.length(object.groupIds[i])), 0);
+                            else if (object.groupIds[i].length)
+                                message.groupIds[i] = object.groupIds[i];
+                    }
                     return message;
                 };
 
@@ -7707,12 +9653,19 @@
                     if (!options)
                         options = {};
                     var object = {};
-                    if (options.arrays || options.defaults)
+                    if (options.arrays || options.defaults) {
                         object.numbers = [];
+                        object.groupIds = [];
+                    }
                     if (message.numbers && message.numbers.length) {
                         object.numbers = [];
                         for (var j = 0; j < message.numbers.length; ++j)
                             object.numbers[j] = message.numbers[j];
+                    }
+                    if (message.groupIds && message.groupIds.length) {
+                        object.groupIds = [];
+                        for (var j = 0; j < message.groupIds.length; ++j)
+                            object.groupIds[j] = options.bytes === String ? $util.base64.encode(message.groupIds[j], 0, message.groupIds[j].length) : options.bytes === Array ? Array.prototype.slice.call(message.groupIds[j]) : message.groupIds[j];
                     }
                     return object;
                 };
@@ -8197,6 +10150,9 @@
                  * @memberof signalservice.SyncMessage
                  * @interface IConfiguration
                  * @property {boolean|null} [readReceipts] Configuration readReceipts
+                 * @property {boolean|null} [unidentifiedDeliveryIndicators] Configuration unidentifiedDeliveryIndicators
+                 * @property {boolean|null} [typingIndicators] Configuration typingIndicators
+                 * @property {boolean|null} [linkPreviews] Configuration linkPreviews
                  */
 
                 /**
@@ -8221,6 +10177,30 @@
                  * @instance
                  */
                 Configuration.prototype.readReceipts = false;
+
+                /**
+                 * Configuration unidentifiedDeliveryIndicators.
+                 * @member {boolean} unidentifiedDeliveryIndicators
+                 * @memberof signalservice.SyncMessage.Configuration
+                 * @instance
+                 */
+                Configuration.prototype.unidentifiedDeliveryIndicators = false;
+
+                /**
+                 * Configuration typingIndicators.
+                 * @member {boolean} typingIndicators
+                 * @memberof signalservice.SyncMessage.Configuration
+                 * @instance
+                 */
+                Configuration.prototype.typingIndicators = false;
+
+                /**
+                 * Configuration linkPreviews.
+                 * @member {boolean} linkPreviews
+                 * @memberof signalservice.SyncMessage.Configuration
+                 * @instance
+                 */
+                Configuration.prototype.linkPreviews = false;
 
                 /**
                  * Creates a new Configuration instance using the specified properties.
@@ -8248,6 +10228,12 @@
                         writer = $Writer.create();
                     if (message.readReceipts != null && message.hasOwnProperty("readReceipts"))
                         writer.uint32(/* id 1, wireType 0 =*/8).bool(message.readReceipts);
+                    if (message.unidentifiedDeliveryIndicators != null && message.hasOwnProperty("unidentifiedDeliveryIndicators"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).bool(message.unidentifiedDeliveryIndicators);
+                    if (message.typingIndicators != null && message.hasOwnProperty("typingIndicators"))
+                        writer.uint32(/* id 3, wireType 0 =*/24).bool(message.typingIndicators);
+                    if (message.linkPreviews != null && message.hasOwnProperty("linkPreviews"))
+                        writer.uint32(/* id 4, wireType 0 =*/32).bool(message.linkPreviews);
                     return writer;
                 };
 
@@ -8284,6 +10270,15 @@
                         switch (tag >>> 3) {
                             case 1:
                                 message.readReceipts = reader.bool();
+                                break;
+                            case 2:
+                                message.unidentifiedDeliveryIndicators = reader.bool();
+                                break;
+                            case 3:
+                                message.typingIndicators = reader.bool();
+                                break;
+                            case 4:
+                                message.linkPreviews = reader.bool();
                                 break;
                             default:
                                 reader.skipType(tag & 7);
@@ -8323,6 +10318,15 @@
                     if (message.readReceipts != null && message.hasOwnProperty("readReceipts"))
                         if (typeof message.readReceipts !== "boolean")
                             return "readReceipts: boolean expected";
+                    if (message.unidentifiedDeliveryIndicators != null && message.hasOwnProperty("unidentifiedDeliveryIndicators"))
+                        if (typeof message.unidentifiedDeliveryIndicators !== "boolean")
+                            return "unidentifiedDeliveryIndicators: boolean expected";
+                    if (message.typingIndicators != null && message.hasOwnProperty("typingIndicators"))
+                        if (typeof message.typingIndicators !== "boolean")
+                            return "typingIndicators: boolean expected";
+                    if (message.linkPreviews != null && message.hasOwnProperty("linkPreviews"))
+                        if (typeof message.linkPreviews !== "boolean")
+                            return "linkPreviews: boolean expected";
                     return null;
                 };
 
@@ -8340,6 +10344,12 @@
                     var message = new $root.signalservice.SyncMessage.Configuration();
                     if (object.readReceipts != null)
                         message.readReceipts = Boolean(object.readReceipts);
+                    if (object.unidentifiedDeliveryIndicators != null)
+                        message.unidentifiedDeliveryIndicators = Boolean(object.unidentifiedDeliveryIndicators);
+                    if (object.typingIndicators != null)
+                        message.typingIndicators = Boolean(object.typingIndicators);
+                    if (object.linkPreviews != null)
+                        message.linkPreviews = Boolean(object.linkPreviews);
                     return message;
                 };
 
@@ -8356,10 +10366,20 @@
                     if (!options)
                         options = {};
                     var object = {};
-                    if (options.defaults)
+                    if (options.defaults) {
                         object.readReceipts = false;
+                        object.unidentifiedDeliveryIndicators = false;
+                        object.typingIndicators = false;
+                        object.linkPreviews = false;
+                    }
                     if (message.readReceipts != null && message.hasOwnProperty("readReceipts"))
                         object.readReceipts = message.readReceipts;
+                    if (message.unidentifiedDeliveryIndicators != null && message.hasOwnProperty("unidentifiedDeliveryIndicators"))
+                        object.unidentifiedDeliveryIndicators = message.unidentifiedDeliveryIndicators;
+                    if (message.typingIndicators != null && message.hasOwnProperty("typingIndicators"))
+                        object.typingIndicators = message.typingIndicators;
+                    if (message.linkPreviews != null && message.hasOwnProperty("linkPreviews"))
+                        object.linkPreviews = message.linkPreviews;
                     return object;
                 };
 
@@ -8375,6 +10395,495 @@
                 };
 
                 return Configuration;
+            })();
+
+            SyncMessage.StickerPackOperation = (function () {
+
+                /**
+                 * Properties of a StickerPackOperation.
+                 * @memberof signalservice.SyncMessage
+                 * @interface IStickerPackOperation
+                 * @property {Uint8Array|null} [packId] StickerPackOperation packId
+                 * @property {Uint8Array|null} [packKey] StickerPackOperation packKey
+                 * @property {signalservice.SyncMessage.StickerPackOperation.Type|null} [type] StickerPackOperation type
+                 */
+
+                /**
+                 * Constructs a new StickerPackOperation.
+                 * @memberof signalservice.SyncMessage
+                 * @classdesc Represents a StickerPackOperation.
+                 * @implements IStickerPackOperation
+                 * @constructor
+                 * @param {signalservice.SyncMessage.IStickerPackOperation=} [properties] Properties to set
+                 */
+                function StickerPackOperation(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * StickerPackOperation packId.
+                 * @member {Uint8Array} packId
+                 * @memberof signalservice.SyncMessage.StickerPackOperation
+                 * @instance
+                 */
+                StickerPackOperation.prototype.packId = $util.newBuffer([]);
+
+                /**
+                 * StickerPackOperation packKey.
+                 * @member {Uint8Array} packKey
+                 * @memberof signalservice.SyncMessage.StickerPackOperation
+                 * @instance
+                 */
+                StickerPackOperation.prototype.packKey = $util.newBuffer([]);
+
+                /**
+                 * StickerPackOperation type.
+                 * @member {signalservice.SyncMessage.StickerPackOperation.Type} type
+                 * @memberof signalservice.SyncMessage.StickerPackOperation
+                 * @instance
+                 */
+                StickerPackOperation.prototype.type = 0;
+
+                /**
+                 * Creates a new StickerPackOperation instance using the specified properties.
+                 * @function create
+                 * @memberof signalservice.SyncMessage.StickerPackOperation
+                 * @static
+                 * @param {signalservice.SyncMessage.IStickerPackOperation=} [properties] Properties to set
+                 * @returns {signalservice.SyncMessage.StickerPackOperation} StickerPackOperation instance
+                 */
+                StickerPackOperation.create = function create(properties) {
+                    return new StickerPackOperation(properties);
+                };
+
+                /**
+                 * Encodes the specified StickerPackOperation message. Does not implicitly {@link signalservice.SyncMessage.StickerPackOperation.verify|verify} messages.
+                 * @function encode
+                 * @memberof signalservice.SyncMessage.StickerPackOperation
+                 * @static
+                 * @param {signalservice.SyncMessage.IStickerPackOperation} message StickerPackOperation message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                StickerPackOperation.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.packId != null && message.hasOwnProperty("packId"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.packId);
+                    if (message.packKey != null && message.hasOwnProperty("packKey"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.packKey);
+                    if (message.type != null && message.hasOwnProperty("type"))
+                        writer.uint32(/* id 3, wireType 0 =*/24).int32(message.type);
+                    return writer;
+                };
+
+                /**
+                 * Encodes the specified StickerPackOperation message, length delimited. Does not implicitly {@link signalservice.SyncMessage.StickerPackOperation.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof signalservice.SyncMessage.StickerPackOperation
+                 * @static
+                 * @param {signalservice.SyncMessage.IStickerPackOperation} message StickerPackOperation message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                StickerPackOperation.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+
+                /**
+                 * Decodes a StickerPackOperation message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof signalservice.SyncMessage.StickerPackOperation
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {signalservice.SyncMessage.StickerPackOperation} StickerPackOperation
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                StickerPackOperation.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.SyncMessage.StickerPackOperation();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                            case 1:
+                                message.packId = reader.bytes();
+                                break;
+                            case 2:
+                                message.packKey = reader.bytes();
+                                break;
+                            case 3:
+                                message.type = reader.int32();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                        }
+                    }
+                    return message;
+                };
+
+                /**
+                 * Decodes a StickerPackOperation message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof signalservice.SyncMessage.StickerPackOperation
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {signalservice.SyncMessage.StickerPackOperation} StickerPackOperation
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                StickerPackOperation.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+
+                /**
+                 * Verifies a StickerPackOperation message.
+                 * @function verify
+                 * @memberof signalservice.SyncMessage.StickerPackOperation
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                StickerPackOperation.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.packId != null && message.hasOwnProperty("packId"))
+                        if (!(message.packId && typeof message.packId.length === "number" || $util.isString(message.packId)))
+                            return "packId: buffer expected";
+                    if (message.packKey != null && message.hasOwnProperty("packKey"))
+                        if (!(message.packKey && typeof message.packKey.length === "number" || $util.isString(message.packKey)))
+                            return "packKey: buffer expected";
+                    if (message.type != null && message.hasOwnProperty("type"))
+                        switch (message.type) {
+                            default:
+                                return "type: enum value expected";
+                            case 0:
+                            case 1:
+                                break;
+                        }
+                    return null;
+                };
+
+                /**
+                 * Creates a StickerPackOperation message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof signalservice.SyncMessage.StickerPackOperation
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {signalservice.SyncMessage.StickerPackOperation} StickerPackOperation
+                 */
+                StickerPackOperation.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.SyncMessage.StickerPackOperation)
+                        return object;
+                    var message = new $root.signalservice.SyncMessage.StickerPackOperation();
+                    if (object.packId != null)
+                        if (typeof object.packId === "string")
+                            $util.base64.decode(object.packId, message.packId = $util.newBuffer($util.base64.length(object.packId)), 0);
+                        else if (object.packId.length)
+                            message.packId = object.packId;
+                    if (object.packKey != null)
+                        if (typeof object.packKey === "string")
+                            $util.base64.decode(object.packKey, message.packKey = $util.newBuffer($util.base64.length(object.packKey)), 0);
+                        else if (object.packKey.length)
+                            message.packKey = object.packKey;
+                    switch (object.type) {
+                        case "INSTALL":
+                        case 0:
+                            message.type = 0;
+                            break;
+                        case "REMOVE":
+                        case 1:
+                            message.type = 1;
+                            break;
+                    }
+                    return message;
+                };
+
+                /**
+                 * Creates a plain object from a StickerPackOperation message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof signalservice.SyncMessage.StickerPackOperation
+                 * @static
+                 * @param {signalservice.SyncMessage.StickerPackOperation} message StickerPackOperation
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                StickerPackOperation.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.packId = options.bytes === String ? "" : [];
+                        object.packKey = options.bytes === String ? "" : [];
+                        object.type = options.enums === String ? "INSTALL" : 0;
+                    }
+                    if (message.packId != null && message.hasOwnProperty("packId"))
+                        object.packId = options.bytes === String ? $util.base64.encode(message.packId, 0, message.packId.length) : options.bytes === Array ? Array.prototype.slice.call(message.packId) : message.packId;
+                    if (message.packKey != null && message.hasOwnProperty("packKey"))
+                        object.packKey = options.bytes === String ? $util.base64.encode(message.packKey, 0, message.packKey.length) : options.bytes === Array ? Array.prototype.slice.call(message.packKey) : message.packKey;
+                    if (message.type != null && message.hasOwnProperty("type"))
+                        object.type = options.enums === String ? $root.signalservice.SyncMessage.StickerPackOperation.Type[message.type] : message.type;
+                    return object;
+                };
+
+                /**
+                 * Converts this StickerPackOperation to JSON.
+                 * @function toJSON
+                 * @memberof signalservice.SyncMessage.StickerPackOperation
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                StickerPackOperation.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+
+                /**
+                 * Type enum.
+                 * @name signalservice.SyncMessage.StickerPackOperation.Type
+                 * @enum {string}
+                 * @property {number} INSTALL=0 INSTALL value
+                 * @property {number} REMOVE=1 REMOVE value
+                 */
+                StickerPackOperation.Type = (function () {
+                    var valuesById = {}, values = Object.create(valuesById);
+                    values[valuesById[0] = "INSTALL"] = 0;
+                    values[valuesById[1] = "REMOVE"] = 1;
+                    return values;
+                })();
+
+                return StickerPackOperation;
+            })();
+
+            SyncMessage.ViewOnceOpen = (function () {
+
+                /**
+                 * Properties of a ViewOnceOpen.
+                 * @memberof signalservice.SyncMessage
+                 * @interface IViewOnceOpen
+                 * @property {string|null} [sender] ViewOnceOpen sender
+                 * @property {number|Long|null} [timestamp] ViewOnceOpen timestamp
+                 */
+
+                /**
+                 * Constructs a new ViewOnceOpen.
+                 * @memberof signalservice.SyncMessage
+                 * @classdesc Represents a ViewOnceOpen.
+                 * @implements IViewOnceOpen
+                 * @constructor
+                 * @param {signalservice.SyncMessage.IViewOnceOpen=} [properties] Properties to set
+                 */
+                function ViewOnceOpen(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * ViewOnceOpen sender.
+                 * @member {string} sender
+                 * @memberof signalservice.SyncMessage.ViewOnceOpen
+                 * @instance
+                 */
+                ViewOnceOpen.prototype.sender = "";
+
+                /**
+                 * ViewOnceOpen timestamp.
+                 * @member {number|Long} timestamp
+                 * @memberof signalservice.SyncMessage.ViewOnceOpen
+                 * @instance
+                 */
+                ViewOnceOpen.prototype.timestamp = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+
+                /**
+                 * Creates a new ViewOnceOpen instance using the specified properties.
+                 * @function create
+                 * @memberof signalservice.SyncMessage.ViewOnceOpen
+                 * @static
+                 * @param {signalservice.SyncMessage.IViewOnceOpen=} [properties] Properties to set
+                 * @returns {signalservice.SyncMessage.ViewOnceOpen} ViewOnceOpen instance
+                 */
+                ViewOnceOpen.create = function create(properties) {
+                    return new ViewOnceOpen(properties);
+                };
+
+                /**
+                 * Encodes the specified ViewOnceOpen message. Does not implicitly {@link signalservice.SyncMessage.ViewOnceOpen.verify|verify} messages.
+                 * @function encode
+                 * @memberof signalservice.SyncMessage.ViewOnceOpen
+                 * @static
+                 * @param {signalservice.SyncMessage.IViewOnceOpen} message ViewOnceOpen message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                ViewOnceOpen.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.sender != null && message.hasOwnProperty("sender"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.sender);
+                    if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.timestamp);
+                    return writer;
+                };
+
+                /**
+                 * Encodes the specified ViewOnceOpen message, length delimited. Does not implicitly {@link signalservice.SyncMessage.ViewOnceOpen.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof signalservice.SyncMessage.ViewOnceOpen
+                 * @static
+                 * @param {signalservice.SyncMessage.IViewOnceOpen} message ViewOnceOpen message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                ViewOnceOpen.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+
+                /**
+                 * Decodes a ViewOnceOpen message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof signalservice.SyncMessage.ViewOnceOpen
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {signalservice.SyncMessage.ViewOnceOpen} ViewOnceOpen
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                ViewOnceOpen.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.SyncMessage.ViewOnceOpen();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                            case 1:
+                                message.sender = reader.string();
+                                break;
+                            case 2:
+                                message.timestamp = reader.uint64();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                        }
+                    }
+                    return message;
+                };
+
+                /**
+                 * Decodes a ViewOnceOpen message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof signalservice.SyncMessage.ViewOnceOpen
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {signalservice.SyncMessage.ViewOnceOpen} ViewOnceOpen
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                ViewOnceOpen.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+
+                /**
+                 * Verifies a ViewOnceOpen message.
+                 * @function verify
+                 * @memberof signalservice.SyncMessage.ViewOnceOpen
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                ViewOnceOpen.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.sender != null && message.hasOwnProperty("sender"))
+                        if (!$util.isString(message.sender))
+                            return "sender: string expected";
+                    if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                        if (!$util.isInteger(message.timestamp) && !(message.timestamp && $util.isInteger(message.timestamp.low) && $util.isInteger(message.timestamp.high)))
+                            return "timestamp: integer|Long expected";
+                    return null;
+                };
+
+                /**
+                 * Creates a ViewOnceOpen message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof signalservice.SyncMessage.ViewOnceOpen
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {signalservice.SyncMessage.ViewOnceOpen} ViewOnceOpen
+                 */
+                ViewOnceOpen.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.SyncMessage.ViewOnceOpen)
+                        return object;
+                    var message = new $root.signalservice.SyncMessage.ViewOnceOpen();
+                    if (object.sender != null)
+                        message.sender = String(object.sender);
+                    if (object.timestamp != null)
+                        if ($util.Long)
+                            (message.timestamp = $util.Long.fromValue(object.timestamp)).unsigned = true;
+                        else if (typeof object.timestamp === "string")
+                            message.timestamp = parseInt(object.timestamp, 10);
+                        else if (typeof object.timestamp === "number")
+                            message.timestamp = object.timestamp;
+                        else if (typeof object.timestamp === "object")
+                            message.timestamp = new $util.LongBits(object.timestamp.low >>> 0, object.timestamp.high >>> 0).toNumber(true);
+                    return message;
+                };
+
+                /**
+                 * Creates a plain object from a ViewOnceOpen message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof signalservice.SyncMessage.ViewOnceOpen
+                 * @static
+                 * @param {signalservice.SyncMessage.ViewOnceOpen} message ViewOnceOpen
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                ViewOnceOpen.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.sender = "";
+                        if ($util.Long) {
+                            var long = new $util.Long(0, 0, true);
+                            object.timestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                        } else
+                            object.timestamp = options.longs === String ? "0" : 0;
+                    }
+                    if (message.sender != null && message.hasOwnProperty("sender"))
+                        object.sender = message.sender;
+                    if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                        if (typeof message.timestamp === "number")
+                            object.timestamp = options.longs === String ? String(message.timestamp) : message.timestamp;
+                        else
+                            object.timestamp = options.longs === String ? $util.Long.prototype.toString.call(message.timestamp) : options.longs === Number ? new $util.LongBits(message.timestamp.low >>> 0, message.timestamp.high >>> 0).toNumber(true) : message.timestamp;
+                    return object;
+                };
+
+                /**
+                 * Converts this ViewOnceOpen to JSON.
+                 * @function toJSON
+                 * @memberof signalservice.SyncMessage.ViewOnceOpen
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                ViewOnceOpen.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+
+                return ViewOnceOpen;
             })();
 
             return SyncMessage;
@@ -8396,6 +10905,7 @@
              * @property {number|null} [flags] AttachmentPointer flags
              * @property {number|null} [width] AttachmentPointer width
              * @property {number|null} [height] AttachmentPointer height
+             * @property {string|null} [caption] AttachmentPointer caption
              */
 
             /**
@@ -8494,6 +11004,14 @@
             AttachmentPointer.prototype.height = 0;
 
             /**
+             * AttachmentPointer caption.
+             * @member {string} caption
+             * @memberof signalservice.AttachmentPointer
+             * @instance
+             */
+            AttachmentPointer.prototype.caption = "";
+
+            /**
              * Creates a new AttachmentPointer instance using the specified properties.
              * @function create
              * @memberof signalservice.AttachmentPointer
@@ -8537,6 +11055,8 @@
                     writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.width);
                 if (message.height != null && message.hasOwnProperty("height"))
                     writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.height);
+                if (message.caption != null && message.hasOwnProperty("caption"))
+                    writer.uint32(/* id 11, wireType 2 =*/90).string(message.caption);
                 return writer;
             };
 
@@ -8600,6 +11120,9 @@
                             break;
                         case 10:
                             message.height = reader.uint32();
+                            break;
+                        case 11:
+                            message.caption = reader.string();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -8666,6 +11189,9 @@
                 if (message.height != null && message.hasOwnProperty("height"))
                     if (!$util.isInteger(message.height))
                         return "height: integer expected";
+                if (message.caption != null && message.hasOwnProperty("caption"))
+                    if (!$util.isString(message.caption))
+                        return "caption: string expected";
                 return null;
             };
 
@@ -8717,6 +11243,8 @@
                     message.width = object.width >>> 0;
                 if (object.height != null)
                     message.height = object.height >>> 0;
+                if (object.caption != null)
+                    message.caption = String(object.caption);
                 return message;
             };
 
@@ -8748,6 +11276,7 @@
                     object.flags = 0;
                     object.width = 0;
                     object.height = 0;
+                    object.caption = "";
                 }
                 if (message.id != null && message.hasOwnProperty("id"))
                     if (typeof message.id === "number")
@@ -8772,6 +11301,8 @@
                     object.width = message.width;
                 if (message.height != null && message.hasOwnProperty("height"))
                     object.height = message.height;
+                if (message.caption != null && message.hasOwnProperty("caption"))
+                    object.caption = message.caption;
                 return object;
             };
 
@@ -9727,6 +12258,8 @@
              * @property {signalservice.GroupDetails.IAvatar|null} [avatar] GroupDetails avatar
              * @property {boolean|null} [active] GroupDetails active
              * @property {number|null} [expireTimer] GroupDetails expireTimer
+             * @property {string|null} [color] GroupDetails color
+             * @property {boolean|null} [blocked] GroupDetails blocked
              */
 
             /**
@@ -9794,6 +12327,22 @@
             GroupDetails.prototype.expireTimer = 0;
 
             /**
+             * GroupDetails color.
+             * @member {string} color
+             * @memberof signalservice.GroupDetails
+             * @instance
+             */
+            GroupDetails.prototype.color = "";
+
+            /**
+             * GroupDetails blocked.
+             * @member {boolean} blocked
+             * @memberof signalservice.GroupDetails
+             * @instance
+             */
+            GroupDetails.prototype.blocked = false;
+
+            /**
              * Creates a new GroupDetails instance using the specified properties.
              * @function create
              * @memberof signalservice.GroupDetails
@@ -9830,6 +12379,10 @@
                     writer.uint32(/* id 5, wireType 0 =*/40).bool(message.active);
                 if (message.expireTimer != null && message.hasOwnProperty("expireTimer"))
                     writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.expireTimer);
+                if (message.color != null && message.hasOwnProperty("color"))
+                    writer.uint32(/* id 7, wireType 2 =*/58).string(message.color);
+                if (message.blocked != null && message.hasOwnProperty("blocked"))
+                    writer.uint32(/* id 8, wireType 0 =*/64).bool(message.blocked);
                 return writer;
             };
 
@@ -9883,6 +12436,12 @@
                             break;
                         case 6:
                             message.expireTimer = reader.uint32();
+                            break;
+                        case 7:
+                            message.color = reader.string();
+                            break;
+                        case 8:
+                            message.blocked = reader.bool();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -9943,6 +12502,12 @@
                 if (message.expireTimer != null && message.hasOwnProperty("expireTimer"))
                     if (!$util.isInteger(message.expireTimer))
                         return "expireTimer: integer expected";
+                if (message.color != null && message.hasOwnProperty("color"))
+                    if (!$util.isString(message.color))
+                        return "color: string expected";
+                if (message.blocked != null && message.hasOwnProperty("blocked"))
+                    if (typeof message.blocked !== "boolean")
+                        return "blocked: boolean expected";
                 return null;
             };
 
@@ -9981,6 +12546,10 @@
                     message.active = Boolean(object.active);
                 if (object.expireTimer != null)
                     message.expireTimer = object.expireTimer >>> 0;
+                if (object.color != null)
+                    message.color = String(object.color);
+                if (object.blocked != null)
+                    message.blocked = Boolean(object.blocked);
                 return message;
             };
 
@@ -10005,6 +12574,8 @@
                     object.avatar = null;
                     object.active = true;
                     object.expireTimer = 0;
+                    object.color = "";
+                    object.blocked = false;
                 }
                 if (message.id != null && message.hasOwnProperty("id"))
                     object.id = options.bytes === String ? $util.base64.encode(message.id, 0, message.id.length) : options.bytes === Array ? Array.prototype.slice.call(message.id) : message.id;
@@ -10021,6 +12592,10 @@
                     object.active = message.active;
                 if (message.expireTimer != null && message.hasOwnProperty("expireTimer"))
                     object.expireTimer = message.expireTimer;
+                if (message.color != null && message.hasOwnProperty("color"))
+                    object.color = message.color;
+                if (message.blocked != null && message.hasOwnProperty("blocked"))
+                    object.blocked = message.blocked;
                 return object;
             };
 
@@ -10248,6 +12823,497 @@
             return GroupDetails;
         })();
 
+        signalservice.StickerPack = (function () {
+
+            /**
+             * Properties of a StickerPack.
+             * @memberof signalservice
+             * @interface IStickerPack
+             * @property {string|null} [title] StickerPack title
+             * @property {string|null} [author] StickerPack author
+             * @property {signalservice.StickerPack.ISticker|null} [cover] StickerPack cover
+             * @property {Array.<signalservice.StickerPack.ISticker>|null} [stickers] StickerPack stickers
+             */
+
+            /**
+             * Constructs a new StickerPack.
+             * @memberof signalservice
+             * @classdesc Represents a StickerPack.
+             * @implements IStickerPack
+             * @constructor
+             * @param {signalservice.IStickerPack=} [properties] Properties to set
+             */
+            function StickerPack(properties) {
+                this.stickers = [];
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * StickerPack title.
+             * @member {string} title
+             * @memberof signalservice.StickerPack
+             * @instance
+             */
+            StickerPack.prototype.title = "";
+
+            /**
+             * StickerPack author.
+             * @member {string} author
+             * @memberof signalservice.StickerPack
+             * @instance
+             */
+            StickerPack.prototype.author = "";
+
+            /**
+             * StickerPack cover.
+             * @member {signalservice.StickerPack.ISticker|null|undefined} cover
+             * @memberof signalservice.StickerPack
+             * @instance
+             */
+            StickerPack.prototype.cover = null;
+
+            /**
+             * StickerPack stickers.
+             * @member {Array.<signalservice.StickerPack.ISticker>} stickers
+             * @memberof signalservice.StickerPack
+             * @instance
+             */
+            StickerPack.prototype.stickers = $util.emptyArray;
+
+            /**
+             * Creates a new StickerPack instance using the specified properties.
+             * @function create
+             * @memberof signalservice.StickerPack
+             * @static
+             * @param {signalservice.IStickerPack=} [properties] Properties to set
+             * @returns {signalservice.StickerPack} StickerPack instance
+             */
+            StickerPack.create = function create(properties) {
+                return new StickerPack(properties);
+            };
+
+            /**
+             * Encodes the specified StickerPack message. Does not implicitly {@link signalservice.StickerPack.verify|verify} messages.
+             * @function encode
+             * @memberof signalservice.StickerPack
+             * @static
+             * @param {signalservice.IStickerPack} message StickerPack message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            StickerPack.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.title != null && message.hasOwnProperty("title"))
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.title);
+                if (message.author != null && message.hasOwnProperty("author"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.author);
+                if (message.cover != null && message.hasOwnProperty("cover"))
+                    $root.signalservice.StickerPack.Sticker.encode(message.cover, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                if (message.stickers != null && message.stickers.length)
+                    for (var i = 0; i < message.stickers.length; ++i)
+                        $root.signalservice.StickerPack.Sticker.encode(message.stickers[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                return writer;
+            };
+
+            /**
+             * Encodes the specified StickerPack message, length delimited. Does not implicitly {@link signalservice.StickerPack.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof signalservice.StickerPack
+             * @static
+             * @param {signalservice.IStickerPack} message StickerPack message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            StickerPack.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a StickerPack message from the specified reader or buffer.
+             * @function decode
+             * @memberof signalservice.StickerPack
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {signalservice.StickerPack} StickerPack
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            StickerPack.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.StickerPack();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                        case 1:
+                            message.title = reader.string();
+                            break;
+                        case 2:
+                            message.author = reader.string();
+                            break;
+                        case 3:
+                            message.cover = $root.signalservice.StickerPack.Sticker.decode(reader, reader.uint32());
+                            break;
+                        case 4:
+                            if (!(message.stickers && message.stickers.length))
+                                message.stickers = [];
+                            message.stickers.push($root.signalservice.StickerPack.Sticker.decode(reader, reader.uint32()));
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a StickerPack message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof signalservice.StickerPack
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {signalservice.StickerPack} StickerPack
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            StickerPack.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a StickerPack message.
+             * @function verify
+             * @memberof signalservice.StickerPack
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            StickerPack.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.title != null && message.hasOwnProperty("title"))
+                    if (!$util.isString(message.title))
+                        return "title: string expected";
+                if (message.author != null && message.hasOwnProperty("author"))
+                    if (!$util.isString(message.author))
+                        return "author: string expected";
+                if (message.cover != null && message.hasOwnProperty("cover")) {
+                    var error = $root.signalservice.StickerPack.Sticker.verify(message.cover);
+                    if (error)
+                        return "cover." + error;
+                }
+                if (message.stickers != null && message.hasOwnProperty("stickers")) {
+                    if (!Array.isArray(message.stickers))
+                        return "stickers: array expected";
+                    for (var i = 0; i < message.stickers.length; ++i) {
+                        var error = $root.signalservice.StickerPack.Sticker.verify(message.stickers[i]);
+                        if (error)
+                            return "stickers." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates a StickerPack message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof signalservice.StickerPack
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {signalservice.StickerPack} StickerPack
+             */
+            StickerPack.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.StickerPack)
+                    return object;
+                var message = new $root.signalservice.StickerPack();
+                if (object.title != null)
+                    message.title = String(object.title);
+                if (object.author != null)
+                    message.author = String(object.author);
+                if (object.cover != null) {
+                    if (typeof object.cover !== "object")
+                        throw TypeError(".signalservice.StickerPack.cover: object expected");
+                    message.cover = $root.signalservice.StickerPack.Sticker.fromObject(object.cover);
+                }
+                if (object.stickers) {
+                    if (!Array.isArray(object.stickers))
+                        throw TypeError(".signalservice.StickerPack.stickers: array expected");
+                    message.stickers = [];
+                    for (var i = 0; i < object.stickers.length; ++i) {
+                        if (typeof object.stickers[i] !== "object")
+                            throw TypeError(".signalservice.StickerPack.stickers: object expected");
+                        message.stickers[i] = $root.signalservice.StickerPack.Sticker.fromObject(object.stickers[i]);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a StickerPack message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof signalservice.StickerPack
+             * @static
+             * @param {signalservice.StickerPack} message StickerPack
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            StickerPack.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.arrays || options.defaults)
+                    object.stickers = [];
+                if (options.defaults) {
+                    object.title = "";
+                    object.author = "";
+                    object.cover = null;
+                }
+                if (message.title != null && message.hasOwnProperty("title"))
+                    object.title = message.title;
+                if (message.author != null && message.hasOwnProperty("author"))
+                    object.author = message.author;
+                if (message.cover != null && message.hasOwnProperty("cover"))
+                    object.cover = $root.signalservice.StickerPack.Sticker.toObject(message.cover, options);
+                if (message.stickers && message.stickers.length) {
+                    object.stickers = [];
+                    for (var j = 0; j < message.stickers.length; ++j)
+                        object.stickers[j] = $root.signalservice.StickerPack.Sticker.toObject(message.stickers[j], options);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this StickerPack to JSON.
+             * @function toJSON
+             * @memberof signalservice.StickerPack
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            StickerPack.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            StickerPack.Sticker = (function () {
+
+                /**
+                 * Properties of a Sticker.
+                 * @memberof signalservice.StickerPack
+                 * @interface ISticker
+                 * @property {number|null} [id] Sticker id
+                 * @property {string|null} [emoji] Sticker emoji
+                 */
+
+                /**
+                 * Constructs a new Sticker.
+                 * @memberof signalservice.StickerPack
+                 * @classdesc Represents a Sticker.
+                 * @implements ISticker
+                 * @constructor
+                 * @param {signalservice.StickerPack.ISticker=} [properties] Properties to set
+                 */
+                function Sticker(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Sticker id.
+                 * @member {number} id
+                 * @memberof signalservice.StickerPack.Sticker
+                 * @instance
+                 */
+                Sticker.prototype.id = 0;
+
+                /**
+                 * Sticker emoji.
+                 * @member {string} emoji
+                 * @memberof signalservice.StickerPack.Sticker
+                 * @instance
+                 */
+                Sticker.prototype.emoji = "";
+
+                /**
+                 * Creates a new Sticker instance using the specified properties.
+                 * @function create
+                 * @memberof signalservice.StickerPack.Sticker
+                 * @static
+                 * @param {signalservice.StickerPack.ISticker=} [properties] Properties to set
+                 * @returns {signalservice.StickerPack.Sticker} Sticker instance
+                 */
+                Sticker.create = function create(properties) {
+                    return new Sticker(properties);
+                };
+
+                /**
+                 * Encodes the specified Sticker message. Does not implicitly {@link signalservice.StickerPack.Sticker.verify|verify} messages.
+                 * @function encode
+                 * @memberof signalservice.StickerPack.Sticker
+                 * @static
+                 * @param {signalservice.StickerPack.ISticker} message Sticker message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Sticker.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.id);
+                    if (message.emoji != null && message.hasOwnProperty("emoji"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.emoji);
+                    return writer;
+                };
+
+                /**
+                 * Encodes the specified Sticker message, length delimited. Does not implicitly {@link signalservice.StickerPack.Sticker.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof signalservice.StickerPack.Sticker
+                 * @static
+                 * @param {signalservice.StickerPack.ISticker} message Sticker message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Sticker.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+
+                /**
+                 * Decodes a Sticker message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof signalservice.StickerPack.Sticker
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {signalservice.StickerPack.Sticker} Sticker
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Sticker.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.StickerPack.Sticker();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                            case 1:
+                                message.id = reader.uint32();
+                                break;
+                            case 2:
+                                message.emoji = reader.string();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                        }
+                    }
+                    return message;
+                };
+
+                /**
+                 * Decodes a Sticker message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof signalservice.StickerPack.Sticker
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {signalservice.StickerPack.Sticker} Sticker
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Sticker.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+
+                /**
+                 * Verifies a Sticker message.
+                 * @function verify
+                 * @memberof signalservice.StickerPack.Sticker
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                Sticker.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        if (!$util.isInteger(message.id))
+                            return "id: integer expected";
+                    if (message.emoji != null && message.hasOwnProperty("emoji"))
+                        if (!$util.isString(message.emoji))
+                            return "emoji: string expected";
+                    return null;
+                };
+
+                /**
+                 * Creates a Sticker message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof signalservice.StickerPack.Sticker
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {signalservice.StickerPack.Sticker} Sticker
+                 */
+                Sticker.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.StickerPack.Sticker)
+                        return object;
+                    var message = new $root.signalservice.StickerPack.Sticker();
+                    if (object.id != null)
+                        message.id = object.id >>> 0;
+                    if (object.emoji != null)
+                        message.emoji = String(object.emoji);
+                    return message;
+                };
+
+                /**
+                 * Creates a plain object from a Sticker message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof signalservice.StickerPack.Sticker
+                 * @static
+                 * @param {signalservice.StickerPack.Sticker} message Sticker
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Sticker.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.id = 0;
+                        object.emoji = "";
+                    }
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        object.id = message.id;
+                    if (message.emoji != null && message.hasOwnProperty("emoji"))
+                        object.emoji = message.emoji;
+                    return object;
+                };
+
+                /**
+                 * Converts this Sticker to JSON.
+                 * @function toJSON
+                 * @memberof signalservice.StickerPack.Sticker
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Sticker.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+
+                return Sticker;
+            })();
+
+            return StickerPack;
+        })();
+
         signalservice.WebSocketRequestMessage = (function () {
 
             /**
@@ -10257,6 +13323,7 @@
              * @property {string|null} [verb] WebSocketRequestMessage verb
              * @property {string|null} [path] WebSocketRequestMessage path
              * @property {Uint8Array|null} [body] WebSocketRequestMessage body
+             * @property {Array.<string>|null} [headers] WebSocketRequestMessage headers
              * @property {number|Long|null} [id] WebSocketRequestMessage id
              */
 
@@ -10269,6 +13336,7 @@
              * @param {signalservice.IWebSocketRequestMessage=} [properties] Properties to set
              */
             function WebSocketRequestMessage(properties) {
+                this.headers = [];
                 if (properties)
                     for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -10298,6 +13366,14 @@
              * @instance
              */
             WebSocketRequestMessage.prototype.body = $util.newBuffer([]);
+
+            /**
+             * WebSocketRequestMessage headers.
+             * @member {Array.<string>} headers
+             * @memberof signalservice.WebSocketRequestMessage
+             * @instance
+             */
+            WebSocketRequestMessage.prototype.headers = $util.emptyArray;
 
             /**
              * WebSocketRequestMessage id.
@@ -10339,6 +13415,9 @@
                     writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.body);
                 if (message.id != null && message.hasOwnProperty("id"))
                     writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.id);
+                if (message.headers != null && message.headers.length)
+                    for (var i = 0; i < message.headers.length; ++i)
+                        writer.uint32(/* id 5, wireType 2 =*/42).string(message.headers[i]);
                 return writer;
             };
 
@@ -10381,6 +13460,11 @@
                             break;
                         case 3:
                             message.body = reader.bytes();
+                            break;
+                        case 5:
+                            if (!(message.headers && message.headers.length))
+                                message.headers = [];
+                            message.headers.push(reader.string());
                             break;
                         case 4:
                             message.id = reader.uint64();
@@ -10429,6 +13513,13 @@
                 if (message.body != null && message.hasOwnProperty("body"))
                     if (!(message.body && typeof message.body.length === "number" || $util.isString(message.body)))
                         return "body: buffer expected";
+                if (message.headers != null && message.hasOwnProperty("headers")) {
+                    if (!Array.isArray(message.headers))
+                        return "headers: array expected";
+                    for (var i = 0; i < message.headers.length; ++i)
+                        if (!$util.isString(message.headers[i]))
+                            return "headers: string[] expected";
+                }
                 if (message.id != null && message.hasOwnProperty("id"))
                     if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
                         return "id: integer|Long expected";
@@ -10456,6 +13547,13 @@
                         $util.base64.decode(object.body, message.body = $util.newBuffer($util.base64.length(object.body)), 0);
                     else if (object.body.length)
                         message.body = object.body;
+                if (object.headers) {
+                    if (!Array.isArray(object.headers))
+                        throw TypeError(".signalservice.WebSocketRequestMessage.headers: array expected");
+                    message.headers = [];
+                    for (var i = 0; i < object.headers.length; ++i)
+                        message.headers[i] = String(object.headers[i]);
+                }
                 if (object.id != null)
                     if ($util.Long)
                         (message.id = $util.Long.fromValue(object.id)).unsigned = true;
@@ -10481,6 +13579,8 @@
                 if (!options)
                     options = {};
                 var object = {};
+                if (options.arrays || options.defaults)
+                    object.headers = [];
                 if (options.defaults) {
                     object.verb = "";
                     object.path = "";
@@ -10502,6 +13602,11 @@
                         object.id = options.longs === String ? String(message.id) : message.id;
                     else
                         object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
+                if (message.headers && message.headers.length) {
+                    object.headers = [];
+                    for (var j = 0; j < message.headers.length; ++j)
+                        object.headers[j] = message.headers[j];
+                }
                 return object;
             };
 
@@ -10528,6 +13633,7 @@
              * @property {number|Long|null} [id] WebSocketResponseMessage id
              * @property {number|null} [status] WebSocketResponseMessage status
              * @property {string|null} [message] WebSocketResponseMessage message
+             * @property {Array.<string>|null} [headers] WebSocketResponseMessage headers
              * @property {Uint8Array|null} [body] WebSocketResponseMessage body
              */
 
@@ -10540,6 +13646,7 @@
              * @param {signalservice.IWebSocketResponseMessage=} [properties] Properties to set
              */
             function WebSocketResponseMessage(properties) {
+                this.headers = [];
                 if (properties)
                     for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -10569,6 +13676,14 @@
              * @instance
              */
             WebSocketResponseMessage.prototype.message = "";
+
+            /**
+             * WebSocketResponseMessage headers.
+             * @member {Array.<string>} headers
+             * @memberof signalservice.WebSocketResponseMessage
+             * @instance
+             */
+            WebSocketResponseMessage.prototype.headers = $util.emptyArray;
 
             /**
              * WebSocketResponseMessage body.
@@ -10610,6 +13725,9 @@
                     writer.uint32(/* id 3, wireType 2 =*/26).string(message.message);
                 if (message.body != null && message.hasOwnProperty("body"))
                     writer.uint32(/* id 4, wireType 2 =*/34).bytes(message.body);
+                if (message.headers != null && message.headers.length)
+                    for (var i = 0; i < message.headers.length; ++i)
+                        writer.uint32(/* id 5, wireType 2 =*/42).string(message.headers[i]);
                 return writer;
             };
 
@@ -10652,6 +13770,11 @@
                             break;
                         case 3:
                             message.message = reader.string();
+                            break;
+                        case 5:
+                            if (!(message.headers && message.headers.length))
+                                message.headers = [];
+                            message.headers.push(reader.string());
                             break;
                         case 4:
                             message.body = reader.bytes();
@@ -10700,6 +13823,13 @@
                 if (message.message != null && message.hasOwnProperty("message"))
                     if (!$util.isString(message.message))
                         return "message: string expected";
+                if (message.headers != null && message.hasOwnProperty("headers")) {
+                    if (!Array.isArray(message.headers))
+                        return "headers: array expected";
+                    for (var i = 0; i < message.headers.length; ++i)
+                        if (!$util.isString(message.headers[i]))
+                            return "headers: string[] expected";
+                }
                 if (message.body != null && message.hasOwnProperty("body"))
                     if (!(message.body && typeof message.body.length === "number" || $util.isString(message.body)))
                         return "body: buffer expected";
@@ -10731,6 +13861,13 @@
                     message.status = object.status >>> 0;
                 if (object.message != null)
                     message.message = String(object.message);
+                if (object.headers) {
+                    if (!Array.isArray(object.headers))
+                        throw TypeError(".signalservice.WebSocketResponseMessage.headers: array expected");
+                    message.headers = [];
+                    for (var i = 0; i < object.headers.length; ++i)
+                        message.headers[i] = String(object.headers[i]);
+                }
                 if (object.body != null)
                     if (typeof object.body === "string")
                         $util.base64.decode(object.body, message.body = $util.newBuffer($util.base64.length(object.body)), 0);
@@ -10752,6 +13889,8 @@
                 if (!options)
                     options = {};
                 var object = {};
+                if (options.arrays || options.defaults)
+                    object.headers = [];
                 if (options.defaults) {
                     if ($util.Long) {
                         var long = new $util.Long(0, 0, true);
@@ -10773,6 +13912,11 @@
                     object.message = message.message;
                 if (message.body != null && message.hasOwnProperty("body"))
                     object.body = options.bytes === String ? $util.base64.encode(message.body, 0, message.body.length) : options.bytes === Array ? Array.prototype.slice.call(message.body) : message.body;
+                if (message.headers && message.headers.length) {
+                    object.headers = [];
+                    for (var j = 0; j < message.headers.length; ++j)
+                        object.headers[j] = message.headers[j];
+                }
                 return object;
             };
 
@@ -11064,6 +14208,1457 @@
             })();
 
             return WebSocketMessage;
+        })();
+
+        signalservice.ServerCertificate = (function () {
+
+            /**
+             * Properties of a ServerCertificate.
+             * @memberof signalservice
+             * @interface IServerCertificate
+             * @property {Uint8Array|null} [certificate] ServerCertificate certificate
+             * @property {Uint8Array|null} [signature] ServerCertificate signature
+             */
+
+            /**
+             * Constructs a new ServerCertificate.
+             * @memberof signalservice
+             * @classdesc Represents a ServerCertificate.
+             * @implements IServerCertificate
+             * @constructor
+             * @param {signalservice.IServerCertificate=} [properties] Properties to set
+             */
+            function ServerCertificate(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * ServerCertificate certificate.
+             * @member {Uint8Array} certificate
+             * @memberof signalservice.ServerCertificate
+             * @instance
+             */
+            ServerCertificate.prototype.certificate = $util.newBuffer([]);
+
+            /**
+             * ServerCertificate signature.
+             * @member {Uint8Array} signature
+             * @memberof signalservice.ServerCertificate
+             * @instance
+             */
+            ServerCertificate.prototype.signature = $util.newBuffer([]);
+
+            /**
+             * Creates a new ServerCertificate instance using the specified properties.
+             * @function create
+             * @memberof signalservice.ServerCertificate
+             * @static
+             * @param {signalservice.IServerCertificate=} [properties] Properties to set
+             * @returns {signalservice.ServerCertificate} ServerCertificate instance
+             */
+            ServerCertificate.create = function create(properties) {
+                return new ServerCertificate(properties);
+            };
+
+            /**
+             * Encodes the specified ServerCertificate message. Does not implicitly {@link signalservice.ServerCertificate.verify|verify} messages.
+             * @function encode
+             * @memberof signalservice.ServerCertificate
+             * @static
+             * @param {signalservice.IServerCertificate} message ServerCertificate message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ServerCertificate.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.certificate != null && message.hasOwnProperty("certificate"))
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.certificate);
+                if (message.signature != null && message.hasOwnProperty("signature"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.signature);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ServerCertificate message, length delimited. Does not implicitly {@link signalservice.ServerCertificate.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof signalservice.ServerCertificate
+             * @static
+             * @param {signalservice.IServerCertificate} message ServerCertificate message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ServerCertificate.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a ServerCertificate message from the specified reader or buffer.
+             * @function decode
+             * @memberof signalservice.ServerCertificate
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {signalservice.ServerCertificate} ServerCertificate
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ServerCertificate.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.ServerCertificate();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                        case 1:
+                            message.certificate = reader.bytes();
+                            break;
+                        case 2:
+                            message.signature = reader.bytes();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a ServerCertificate message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof signalservice.ServerCertificate
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {signalservice.ServerCertificate} ServerCertificate
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ServerCertificate.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a ServerCertificate message.
+             * @function verify
+             * @memberof signalservice.ServerCertificate
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ServerCertificate.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.certificate != null && message.hasOwnProperty("certificate"))
+                    if (!(message.certificate && typeof message.certificate.length === "number" || $util.isString(message.certificate)))
+                        return "certificate: buffer expected";
+                if (message.signature != null && message.hasOwnProperty("signature"))
+                    if (!(message.signature && typeof message.signature.length === "number" || $util.isString(message.signature)))
+                        return "signature: buffer expected";
+                return null;
+            };
+
+            /**
+             * Creates a ServerCertificate message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof signalservice.ServerCertificate
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {signalservice.ServerCertificate} ServerCertificate
+             */
+            ServerCertificate.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.ServerCertificate)
+                    return object;
+                var message = new $root.signalservice.ServerCertificate();
+                if (object.certificate != null)
+                    if (typeof object.certificate === "string")
+                        $util.base64.decode(object.certificate, message.certificate = $util.newBuffer($util.base64.length(object.certificate)), 0);
+                    else if (object.certificate.length)
+                        message.certificate = object.certificate;
+                if (object.signature != null)
+                    if (typeof object.signature === "string")
+                        $util.base64.decode(object.signature, message.signature = $util.newBuffer($util.base64.length(object.signature)), 0);
+                    else if (object.signature.length)
+                        message.signature = object.signature;
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a ServerCertificate message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof signalservice.ServerCertificate
+             * @static
+             * @param {signalservice.ServerCertificate} message ServerCertificate
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            ServerCertificate.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.certificate = options.bytes === String ? "" : [];
+                    object.signature = options.bytes === String ? "" : [];
+                }
+                if (message.certificate != null && message.hasOwnProperty("certificate"))
+                    object.certificate = options.bytes === String ? $util.base64.encode(message.certificate, 0, message.certificate.length) : options.bytes === Array ? Array.prototype.slice.call(message.certificate) : message.certificate;
+                if (message.signature != null && message.hasOwnProperty("signature"))
+                    object.signature = options.bytes === String ? $util.base64.encode(message.signature, 0, message.signature.length) : options.bytes === Array ? Array.prototype.slice.call(message.signature) : message.signature;
+                return object;
+            };
+
+            /**
+             * Converts this ServerCertificate to JSON.
+             * @function toJSON
+             * @memberof signalservice.ServerCertificate
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            ServerCertificate.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            ServerCertificate.Certificate = (function () {
+
+                /**
+                 * Properties of a Certificate.
+                 * @memberof signalservice.ServerCertificate
+                 * @interface ICertificate
+                 * @property {number|null} [id] Certificate id
+                 * @property {Uint8Array|null} [key] Certificate key
+                 */
+
+                /**
+                 * Constructs a new Certificate.
+                 * @memberof signalservice.ServerCertificate
+                 * @classdesc Represents a Certificate.
+                 * @implements ICertificate
+                 * @constructor
+                 * @param {signalservice.ServerCertificate.ICertificate=} [properties] Properties to set
+                 */
+                function Certificate(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Certificate id.
+                 * @member {number} id
+                 * @memberof signalservice.ServerCertificate.Certificate
+                 * @instance
+                 */
+                Certificate.prototype.id = 0;
+
+                /**
+                 * Certificate key.
+                 * @member {Uint8Array} key
+                 * @memberof signalservice.ServerCertificate.Certificate
+                 * @instance
+                 */
+                Certificate.prototype.key = $util.newBuffer([]);
+
+                /**
+                 * Creates a new Certificate instance using the specified properties.
+                 * @function create
+                 * @memberof signalservice.ServerCertificate.Certificate
+                 * @static
+                 * @param {signalservice.ServerCertificate.ICertificate=} [properties] Properties to set
+                 * @returns {signalservice.ServerCertificate.Certificate} Certificate instance
+                 */
+                Certificate.create = function create(properties) {
+                    return new Certificate(properties);
+                };
+
+                /**
+                 * Encodes the specified Certificate message. Does not implicitly {@link signalservice.ServerCertificate.Certificate.verify|verify} messages.
+                 * @function encode
+                 * @memberof signalservice.ServerCertificate.Certificate
+                 * @static
+                 * @param {signalservice.ServerCertificate.ICertificate} message Certificate message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Certificate.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.id);
+                    if (message.key != null && message.hasOwnProperty("key"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.key);
+                    return writer;
+                };
+
+                /**
+                 * Encodes the specified Certificate message, length delimited. Does not implicitly {@link signalservice.ServerCertificate.Certificate.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof signalservice.ServerCertificate.Certificate
+                 * @static
+                 * @param {signalservice.ServerCertificate.ICertificate} message Certificate message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Certificate.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+
+                /**
+                 * Decodes a Certificate message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof signalservice.ServerCertificate.Certificate
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {signalservice.ServerCertificate.Certificate} Certificate
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Certificate.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.ServerCertificate.Certificate();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                            case 1:
+                                message.id = reader.uint32();
+                                break;
+                            case 2:
+                                message.key = reader.bytes();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                        }
+                    }
+                    return message;
+                };
+
+                /**
+                 * Decodes a Certificate message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof signalservice.ServerCertificate.Certificate
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {signalservice.ServerCertificate.Certificate} Certificate
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Certificate.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+
+                /**
+                 * Verifies a Certificate message.
+                 * @function verify
+                 * @memberof signalservice.ServerCertificate.Certificate
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                Certificate.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        if (!$util.isInteger(message.id))
+                            return "id: integer expected";
+                    if (message.key != null && message.hasOwnProperty("key"))
+                        if (!(message.key && typeof message.key.length === "number" || $util.isString(message.key)))
+                            return "key: buffer expected";
+                    return null;
+                };
+
+                /**
+                 * Creates a Certificate message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof signalservice.ServerCertificate.Certificate
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {signalservice.ServerCertificate.Certificate} Certificate
+                 */
+                Certificate.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.ServerCertificate.Certificate)
+                        return object;
+                    var message = new $root.signalservice.ServerCertificate.Certificate();
+                    if (object.id != null)
+                        message.id = object.id >>> 0;
+                    if (object.key != null)
+                        if (typeof object.key === "string")
+                            $util.base64.decode(object.key, message.key = $util.newBuffer($util.base64.length(object.key)), 0);
+                        else if (object.key.length)
+                            message.key = object.key;
+                    return message;
+                };
+
+                /**
+                 * Creates a plain object from a Certificate message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof signalservice.ServerCertificate.Certificate
+                 * @static
+                 * @param {signalservice.ServerCertificate.Certificate} message Certificate
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Certificate.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.id = 0;
+                        object.key = options.bytes === String ? "" : [];
+                    }
+                    if (message.id != null && message.hasOwnProperty("id"))
+                        object.id = message.id;
+                    if (message.key != null && message.hasOwnProperty("key"))
+                        object.key = options.bytes === String ? $util.base64.encode(message.key, 0, message.key.length) : options.bytes === Array ? Array.prototype.slice.call(message.key) : message.key;
+                    return object;
+                };
+
+                /**
+                 * Converts this Certificate to JSON.
+                 * @function toJSON
+                 * @memberof signalservice.ServerCertificate.Certificate
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Certificate.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+
+                return Certificate;
+            })();
+
+            return ServerCertificate;
+        })();
+
+        signalservice.SenderCertificate = (function () {
+
+            /**
+             * Properties of a SenderCertificate.
+             * @memberof signalservice
+             * @interface ISenderCertificate
+             * @property {Uint8Array|null} [certificate] SenderCertificate certificate
+             * @property {Uint8Array|null} [signature] SenderCertificate signature
+             */
+
+            /**
+             * Constructs a new SenderCertificate.
+             * @memberof signalservice
+             * @classdesc Represents a SenderCertificate.
+             * @implements ISenderCertificate
+             * @constructor
+             * @param {signalservice.ISenderCertificate=} [properties] Properties to set
+             */
+            function SenderCertificate(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * SenderCertificate certificate.
+             * @member {Uint8Array} certificate
+             * @memberof signalservice.SenderCertificate
+             * @instance
+             */
+            SenderCertificate.prototype.certificate = $util.newBuffer([]);
+
+            /**
+             * SenderCertificate signature.
+             * @member {Uint8Array} signature
+             * @memberof signalservice.SenderCertificate
+             * @instance
+             */
+            SenderCertificate.prototype.signature = $util.newBuffer([]);
+
+            /**
+             * Creates a new SenderCertificate instance using the specified properties.
+             * @function create
+             * @memberof signalservice.SenderCertificate
+             * @static
+             * @param {signalservice.ISenderCertificate=} [properties] Properties to set
+             * @returns {signalservice.SenderCertificate} SenderCertificate instance
+             */
+            SenderCertificate.create = function create(properties) {
+                return new SenderCertificate(properties);
+            };
+
+            /**
+             * Encodes the specified SenderCertificate message. Does not implicitly {@link signalservice.SenderCertificate.verify|verify} messages.
+             * @function encode
+             * @memberof signalservice.SenderCertificate
+             * @static
+             * @param {signalservice.ISenderCertificate} message SenderCertificate message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SenderCertificate.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.certificate != null && message.hasOwnProperty("certificate"))
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.certificate);
+                if (message.signature != null && message.hasOwnProperty("signature"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.signature);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SenderCertificate message, length delimited. Does not implicitly {@link signalservice.SenderCertificate.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof signalservice.SenderCertificate
+             * @static
+             * @param {signalservice.ISenderCertificate} message SenderCertificate message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SenderCertificate.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a SenderCertificate message from the specified reader or buffer.
+             * @function decode
+             * @memberof signalservice.SenderCertificate
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {signalservice.SenderCertificate} SenderCertificate
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SenderCertificate.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.SenderCertificate();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                        case 1:
+                            message.certificate = reader.bytes();
+                            break;
+                        case 2:
+                            message.signature = reader.bytes();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a SenderCertificate message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof signalservice.SenderCertificate
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {signalservice.SenderCertificate} SenderCertificate
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SenderCertificate.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a SenderCertificate message.
+             * @function verify
+             * @memberof signalservice.SenderCertificate
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SenderCertificate.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.certificate != null && message.hasOwnProperty("certificate"))
+                    if (!(message.certificate && typeof message.certificate.length === "number" || $util.isString(message.certificate)))
+                        return "certificate: buffer expected";
+                if (message.signature != null && message.hasOwnProperty("signature"))
+                    if (!(message.signature && typeof message.signature.length === "number" || $util.isString(message.signature)))
+                        return "signature: buffer expected";
+                return null;
+            };
+
+            /**
+             * Creates a SenderCertificate message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof signalservice.SenderCertificate
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {signalservice.SenderCertificate} SenderCertificate
+             */
+            SenderCertificate.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.SenderCertificate)
+                    return object;
+                var message = new $root.signalservice.SenderCertificate();
+                if (object.certificate != null)
+                    if (typeof object.certificate === "string")
+                        $util.base64.decode(object.certificate, message.certificate = $util.newBuffer($util.base64.length(object.certificate)), 0);
+                    else if (object.certificate.length)
+                        message.certificate = object.certificate;
+                if (object.signature != null)
+                    if (typeof object.signature === "string")
+                        $util.base64.decode(object.signature, message.signature = $util.newBuffer($util.base64.length(object.signature)), 0);
+                    else if (object.signature.length)
+                        message.signature = object.signature;
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a SenderCertificate message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof signalservice.SenderCertificate
+             * @static
+             * @param {signalservice.SenderCertificate} message SenderCertificate
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            SenderCertificate.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.certificate = options.bytes === String ? "" : [];
+                    object.signature = options.bytes === String ? "" : [];
+                }
+                if (message.certificate != null && message.hasOwnProperty("certificate"))
+                    object.certificate = options.bytes === String ? $util.base64.encode(message.certificate, 0, message.certificate.length) : options.bytes === Array ? Array.prototype.slice.call(message.certificate) : message.certificate;
+                if (message.signature != null && message.hasOwnProperty("signature"))
+                    object.signature = options.bytes === String ? $util.base64.encode(message.signature, 0, message.signature.length) : options.bytes === Array ? Array.prototype.slice.call(message.signature) : message.signature;
+                return object;
+            };
+
+            /**
+             * Converts this SenderCertificate to JSON.
+             * @function toJSON
+             * @memberof signalservice.SenderCertificate
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            SenderCertificate.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            SenderCertificate.Certificate = (function () {
+
+                /**
+                 * Properties of a Certificate.
+                 * @memberof signalservice.SenderCertificate
+                 * @interface ICertificate
+                 * @property {string|null} [sender] Certificate sender
+                 * @property {number|null} [senderDevice] Certificate senderDevice
+                 * @property {number|Long|null} [expires] Certificate expires
+                 * @property {Uint8Array|null} [identityKey] Certificate identityKey
+                 * @property {signalservice.IServerCertificate|null} [signer] Certificate signer
+                 */
+
+                /**
+                 * Constructs a new Certificate.
+                 * @memberof signalservice.SenderCertificate
+                 * @classdesc Represents a Certificate.
+                 * @implements ICertificate
+                 * @constructor
+                 * @param {signalservice.SenderCertificate.ICertificate=} [properties] Properties to set
+                 */
+                function Certificate(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Certificate sender.
+                 * @member {string} sender
+                 * @memberof signalservice.SenderCertificate.Certificate
+                 * @instance
+                 */
+                Certificate.prototype.sender = "";
+
+                /**
+                 * Certificate senderDevice.
+                 * @member {number} senderDevice
+                 * @memberof signalservice.SenderCertificate.Certificate
+                 * @instance
+                 */
+                Certificate.prototype.senderDevice = 0;
+
+                /**
+                 * Certificate expires.
+                 * @member {number|Long} expires
+                 * @memberof signalservice.SenderCertificate.Certificate
+                 * @instance
+                 */
+                Certificate.prototype.expires = $util.Long ? $util.Long.fromBits(0, 0, false) : 0;
+
+                /**
+                 * Certificate identityKey.
+                 * @member {Uint8Array} identityKey
+                 * @memberof signalservice.SenderCertificate.Certificate
+                 * @instance
+                 */
+                Certificate.prototype.identityKey = $util.newBuffer([]);
+
+                /**
+                 * Certificate signer.
+                 * @member {signalservice.IServerCertificate|null|undefined} signer
+                 * @memberof signalservice.SenderCertificate.Certificate
+                 * @instance
+                 */
+                Certificate.prototype.signer = null;
+
+                /**
+                 * Creates a new Certificate instance using the specified properties.
+                 * @function create
+                 * @memberof signalservice.SenderCertificate.Certificate
+                 * @static
+                 * @param {signalservice.SenderCertificate.ICertificate=} [properties] Properties to set
+                 * @returns {signalservice.SenderCertificate.Certificate} Certificate instance
+                 */
+                Certificate.create = function create(properties) {
+                    return new Certificate(properties);
+                };
+
+                /**
+                 * Encodes the specified Certificate message. Does not implicitly {@link signalservice.SenderCertificate.Certificate.verify|verify} messages.
+                 * @function encode
+                 * @memberof signalservice.SenderCertificate.Certificate
+                 * @static
+                 * @param {signalservice.SenderCertificate.ICertificate} message Certificate message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Certificate.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.sender != null && message.hasOwnProperty("sender"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.sender);
+                    if (message.senderDevice != null && message.hasOwnProperty("senderDevice"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.senderDevice);
+                    if (message.expires != null && message.hasOwnProperty("expires"))
+                        writer.uint32(/* id 3, wireType 1 =*/25).fixed64(message.expires);
+                    if (message.identityKey != null && message.hasOwnProperty("identityKey"))
+                        writer.uint32(/* id 4, wireType 2 =*/34).bytes(message.identityKey);
+                    if (message.signer != null && message.hasOwnProperty("signer"))
+                        $root.signalservice.ServerCertificate.encode(message.signer, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                    return writer;
+                };
+
+                /**
+                 * Encodes the specified Certificate message, length delimited. Does not implicitly {@link signalservice.SenderCertificate.Certificate.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof signalservice.SenderCertificate.Certificate
+                 * @static
+                 * @param {signalservice.SenderCertificate.ICertificate} message Certificate message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Certificate.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+
+                /**
+                 * Decodes a Certificate message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof signalservice.SenderCertificate.Certificate
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {signalservice.SenderCertificate.Certificate} Certificate
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Certificate.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.SenderCertificate.Certificate();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                            case 1:
+                                message.sender = reader.string();
+                                break;
+                            case 2:
+                                message.senderDevice = reader.uint32();
+                                break;
+                            case 3:
+                                message.expires = reader.fixed64();
+                                break;
+                            case 4:
+                                message.identityKey = reader.bytes();
+                                break;
+                            case 5:
+                                message.signer = $root.signalservice.ServerCertificate.decode(reader, reader.uint32());
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                        }
+                    }
+                    return message;
+                };
+
+                /**
+                 * Decodes a Certificate message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof signalservice.SenderCertificate.Certificate
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {signalservice.SenderCertificate.Certificate} Certificate
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Certificate.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+
+                /**
+                 * Verifies a Certificate message.
+                 * @function verify
+                 * @memberof signalservice.SenderCertificate.Certificate
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                Certificate.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.sender != null && message.hasOwnProperty("sender"))
+                        if (!$util.isString(message.sender))
+                            return "sender: string expected";
+                    if (message.senderDevice != null && message.hasOwnProperty("senderDevice"))
+                        if (!$util.isInteger(message.senderDevice))
+                            return "senderDevice: integer expected";
+                    if (message.expires != null && message.hasOwnProperty("expires"))
+                        if (!$util.isInteger(message.expires) && !(message.expires && $util.isInteger(message.expires.low) && $util.isInteger(message.expires.high)))
+                            return "expires: integer|Long expected";
+                    if (message.identityKey != null && message.hasOwnProperty("identityKey"))
+                        if (!(message.identityKey && typeof message.identityKey.length === "number" || $util.isString(message.identityKey)))
+                            return "identityKey: buffer expected";
+                    if (message.signer != null && message.hasOwnProperty("signer")) {
+                        var error = $root.signalservice.ServerCertificate.verify(message.signer);
+                        if (error)
+                            return "signer." + error;
+                    }
+                    return null;
+                };
+
+                /**
+                 * Creates a Certificate message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof signalservice.SenderCertificate.Certificate
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {signalservice.SenderCertificate.Certificate} Certificate
+                 */
+                Certificate.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.SenderCertificate.Certificate)
+                        return object;
+                    var message = new $root.signalservice.SenderCertificate.Certificate();
+                    if (object.sender != null)
+                        message.sender = String(object.sender);
+                    if (object.senderDevice != null)
+                        message.senderDevice = object.senderDevice >>> 0;
+                    if (object.expires != null)
+                        if ($util.Long)
+                            (message.expires = $util.Long.fromValue(object.expires)).unsigned = false;
+                        else if (typeof object.expires === "string")
+                            message.expires = parseInt(object.expires, 10);
+                        else if (typeof object.expires === "number")
+                            message.expires = object.expires;
+                        else if (typeof object.expires === "object")
+                            message.expires = new $util.LongBits(object.expires.low >>> 0, object.expires.high >>> 0).toNumber();
+                    if (object.identityKey != null)
+                        if (typeof object.identityKey === "string")
+                            $util.base64.decode(object.identityKey, message.identityKey = $util.newBuffer($util.base64.length(object.identityKey)), 0);
+                        else if (object.identityKey.length)
+                            message.identityKey = object.identityKey;
+                    if (object.signer != null) {
+                        if (typeof object.signer !== "object")
+                            throw TypeError(".signalservice.SenderCertificate.Certificate.signer: object expected");
+                        message.signer = $root.signalservice.ServerCertificate.fromObject(object.signer);
+                    }
+                    return message;
+                };
+
+                /**
+                 * Creates a plain object from a Certificate message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof signalservice.SenderCertificate.Certificate
+                 * @static
+                 * @param {signalservice.SenderCertificate.Certificate} message Certificate
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Certificate.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.sender = "";
+                        object.senderDevice = 0;
+                        if ($util.Long) {
+                            var long = new $util.Long(0, 0, false);
+                            object.expires = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                        } else
+                            object.expires = options.longs === String ? "0" : 0;
+                        object.identityKey = options.bytes === String ? "" : [];
+                        object.signer = null;
+                    }
+                    if (message.sender != null && message.hasOwnProperty("sender"))
+                        object.sender = message.sender;
+                    if (message.senderDevice != null && message.hasOwnProperty("senderDevice"))
+                        object.senderDevice = message.senderDevice;
+                    if (message.expires != null && message.hasOwnProperty("expires"))
+                        if (typeof message.expires === "number")
+                            object.expires = options.longs === String ? String(message.expires) : message.expires;
+                        else
+                            object.expires = options.longs === String ? $util.Long.prototype.toString.call(message.expires) : options.longs === Number ? new $util.LongBits(message.expires.low >>> 0, message.expires.high >>> 0).toNumber() : message.expires;
+                    if (message.identityKey != null && message.hasOwnProperty("identityKey"))
+                        object.identityKey = options.bytes === String ? $util.base64.encode(message.identityKey, 0, message.identityKey.length) : options.bytes === Array ? Array.prototype.slice.call(message.identityKey) : message.identityKey;
+                    if (message.signer != null && message.hasOwnProperty("signer"))
+                        object.signer = $root.signalservice.ServerCertificate.toObject(message.signer, options);
+                    return object;
+                };
+
+                /**
+                 * Converts this Certificate to JSON.
+                 * @function toJSON
+                 * @memberof signalservice.SenderCertificate.Certificate
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Certificate.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+
+                return Certificate;
+            })();
+
+            return SenderCertificate;
+        })();
+
+        signalservice.UnidentifiedSenderMessage = (function () {
+
+            /**
+             * Properties of an UnidentifiedSenderMessage.
+             * @memberof signalservice
+             * @interface IUnidentifiedSenderMessage
+             * @property {Uint8Array|null} [ephemeralPublic] UnidentifiedSenderMessage ephemeralPublic
+             * @property {Uint8Array|null} [encryptedStatic] UnidentifiedSenderMessage encryptedStatic
+             * @property {Uint8Array|null} [encryptedMessage] UnidentifiedSenderMessage encryptedMessage
+             */
+
+            /**
+             * Constructs a new UnidentifiedSenderMessage.
+             * @memberof signalservice
+             * @classdesc Represents an UnidentifiedSenderMessage.
+             * @implements IUnidentifiedSenderMessage
+             * @constructor
+             * @param {signalservice.IUnidentifiedSenderMessage=} [properties] Properties to set
+             */
+            function UnidentifiedSenderMessage(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * UnidentifiedSenderMessage ephemeralPublic.
+             * @member {Uint8Array} ephemeralPublic
+             * @memberof signalservice.UnidentifiedSenderMessage
+             * @instance
+             */
+            UnidentifiedSenderMessage.prototype.ephemeralPublic = $util.newBuffer([]);
+
+            /**
+             * UnidentifiedSenderMessage encryptedStatic.
+             * @member {Uint8Array} encryptedStatic
+             * @memberof signalservice.UnidentifiedSenderMessage
+             * @instance
+             */
+            UnidentifiedSenderMessage.prototype.encryptedStatic = $util.newBuffer([]);
+
+            /**
+             * UnidentifiedSenderMessage encryptedMessage.
+             * @member {Uint8Array} encryptedMessage
+             * @memberof signalservice.UnidentifiedSenderMessage
+             * @instance
+             */
+            UnidentifiedSenderMessage.prototype.encryptedMessage = $util.newBuffer([]);
+
+            /**
+             * Creates a new UnidentifiedSenderMessage instance using the specified properties.
+             * @function create
+             * @memberof signalservice.UnidentifiedSenderMessage
+             * @static
+             * @param {signalservice.IUnidentifiedSenderMessage=} [properties] Properties to set
+             * @returns {signalservice.UnidentifiedSenderMessage} UnidentifiedSenderMessage instance
+             */
+            UnidentifiedSenderMessage.create = function create(properties) {
+                return new UnidentifiedSenderMessage(properties);
+            };
+
+            /**
+             * Encodes the specified UnidentifiedSenderMessage message. Does not implicitly {@link signalservice.UnidentifiedSenderMessage.verify|verify} messages.
+             * @function encode
+             * @memberof signalservice.UnidentifiedSenderMessage
+             * @static
+             * @param {signalservice.IUnidentifiedSenderMessage} message UnidentifiedSenderMessage message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            UnidentifiedSenderMessage.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.ephemeralPublic != null && message.hasOwnProperty("ephemeralPublic"))
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.ephemeralPublic);
+                if (message.encryptedStatic != null && message.hasOwnProperty("encryptedStatic"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.encryptedStatic);
+                if (message.encryptedMessage != null && message.hasOwnProperty("encryptedMessage"))
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.encryptedMessage);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified UnidentifiedSenderMessage message, length delimited. Does not implicitly {@link signalservice.UnidentifiedSenderMessage.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof signalservice.UnidentifiedSenderMessage
+             * @static
+             * @param {signalservice.IUnidentifiedSenderMessage} message UnidentifiedSenderMessage message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            UnidentifiedSenderMessage.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes an UnidentifiedSenderMessage message from the specified reader or buffer.
+             * @function decode
+             * @memberof signalservice.UnidentifiedSenderMessage
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {signalservice.UnidentifiedSenderMessage} UnidentifiedSenderMessage
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            UnidentifiedSenderMessage.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.UnidentifiedSenderMessage();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                        case 1:
+                            message.ephemeralPublic = reader.bytes();
+                            break;
+                        case 2:
+                            message.encryptedStatic = reader.bytes();
+                            break;
+                        case 3:
+                            message.encryptedMessage = reader.bytes();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes an UnidentifiedSenderMessage message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof signalservice.UnidentifiedSenderMessage
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {signalservice.UnidentifiedSenderMessage} UnidentifiedSenderMessage
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            UnidentifiedSenderMessage.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies an UnidentifiedSenderMessage message.
+             * @function verify
+             * @memberof signalservice.UnidentifiedSenderMessage
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            UnidentifiedSenderMessage.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.ephemeralPublic != null && message.hasOwnProperty("ephemeralPublic"))
+                    if (!(message.ephemeralPublic && typeof message.ephemeralPublic.length === "number" || $util.isString(message.ephemeralPublic)))
+                        return "ephemeralPublic: buffer expected";
+                if (message.encryptedStatic != null && message.hasOwnProperty("encryptedStatic"))
+                    if (!(message.encryptedStatic && typeof message.encryptedStatic.length === "number" || $util.isString(message.encryptedStatic)))
+                        return "encryptedStatic: buffer expected";
+                if (message.encryptedMessage != null && message.hasOwnProperty("encryptedMessage"))
+                    if (!(message.encryptedMessage && typeof message.encryptedMessage.length === "number" || $util.isString(message.encryptedMessage)))
+                        return "encryptedMessage: buffer expected";
+                return null;
+            };
+
+            /**
+             * Creates an UnidentifiedSenderMessage message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof signalservice.UnidentifiedSenderMessage
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {signalservice.UnidentifiedSenderMessage} UnidentifiedSenderMessage
+             */
+            UnidentifiedSenderMessage.fromObject = function fromObject(object) {
+                if (object instanceof $root.signalservice.UnidentifiedSenderMessage)
+                    return object;
+                var message = new $root.signalservice.UnidentifiedSenderMessage();
+                if (object.ephemeralPublic != null)
+                    if (typeof object.ephemeralPublic === "string")
+                        $util.base64.decode(object.ephemeralPublic, message.ephemeralPublic = $util.newBuffer($util.base64.length(object.ephemeralPublic)), 0);
+                    else if (object.ephemeralPublic.length)
+                        message.ephemeralPublic = object.ephemeralPublic;
+                if (object.encryptedStatic != null)
+                    if (typeof object.encryptedStatic === "string")
+                        $util.base64.decode(object.encryptedStatic, message.encryptedStatic = $util.newBuffer($util.base64.length(object.encryptedStatic)), 0);
+                    else if (object.encryptedStatic.length)
+                        message.encryptedStatic = object.encryptedStatic;
+                if (object.encryptedMessage != null)
+                    if (typeof object.encryptedMessage === "string")
+                        $util.base64.decode(object.encryptedMessage, message.encryptedMessage = $util.newBuffer($util.base64.length(object.encryptedMessage)), 0);
+                    else if (object.encryptedMessage.length)
+                        message.encryptedMessage = object.encryptedMessage;
+                return message;
+            };
+
+            /**
+             * Creates a plain object from an UnidentifiedSenderMessage message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof signalservice.UnidentifiedSenderMessage
+             * @static
+             * @param {signalservice.UnidentifiedSenderMessage} message UnidentifiedSenderMessage
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            UnidentifiedSenderMessage.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.ephemeralPublic = options.bytes === String ? "" : [];
+                    object.encryptedStatic = options.bytes === String ? "" : [];
+                    object.encryptedMessage = options.bytes === String ? "" : [];
+                }
+                if (message.ephemeralPublic != null && message.hasOwnProperty("ephemeralPublic"))
+                    object.ephemeralPublic = options.bytes === String ? $util.base64.encode(message.ephemeralPublic, 0, message.ephemeralPublic.length) : options.bytes === Array ? Array.prototype.slice.call(message.ephemeralPublic) : message.ephemeralPublic;
+                if (message.encryptedStatic != null && message.hasOwnProperty("encryptedStatic"))
+                    object.encryptedStatic = options.bytes === String ? $util.base64.encode(message.encryptedStatic, 0, message.encryptedStatic.length) : options.bytes === Array ? Array.prototype.slice.call(message.encryptedStatic) : message.encryptedStatic;
+                if (message.encryptedMessage != null && message.hasOwnProperty("encryptedMessage"))
+                    object.encryptedMessage = options.bytes === String ? $util.base64.encode(message.encryptedMessage, 0, message.encryptedMessage.length) : options.bytes === Array ? Array.prototype.slice.call(message.encryptedMessage) : message.encryptedMessage;
+                return object;
+            };
+
+            /**
+             * Converts this UnidentifiedSenderMessage to JSON.
+             * @function toJSON
+             * @memberof signalservice.UnidentifiedSenderMessage
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            UnidentifiedSenderMessage.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            UnidentifiedSenderMessage.Message = (function () {
+
+                /**
+                 * Properties of a Message.
+                 * @memberof signalservice.UnidentifiedSenderMessage
+                 * @interface IMessage
+                 * @property {signalservice.UnidentifiedSenderMessage.Message.Type|null} [type] Message type
+                 * @property {signalservice.ISenderCertificate|null} [senderCertificate] Message senderCertificate
+                 * @property {Uint8Array|null} [content] Message content
+                 */
+
+                /**
+                 * Constructs a new Message.
+                 * @memberof signalservice.UnidentifiedSenderMessage
+                 * @classdesc Represents a Message.
+                 * @implements IMessage
+                 * @constructor
+                 * @param {signalservice.UnidentifiedSenderMessage.IMessage=} [properties] Properties to set
+                 */
+                function Message(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Message type.
+                 * @member {signalservice.UnidentifiedSenderMessage.Message.Type} type
+                 * @memberof signalservice.UnidentifiedSenderMessage.Message
+                 * @instance
+                 */
+                Message.prototype.type = 1;
+
+                /**
+                 * Message senderCertificate.
+                 * @member {signalservice.ISenderCertificate|null|undefined} senderCertificate
+                 * @memberof signalservice.UnidentifiedSenderMessage.Message
+                 * @instance
+                 */
+                Message.prototype.senderCertificate = null;
+
+                /**
+                 * Message content.
+                 * @member {Uint8Array} content
+                 * @memberof signalservice.UnidentifiedSenderMessage.Message
+                 * @instance
+                 */
+                Message.prototype.content = $util.newBuffer([]);
+
+                /**
+                 * Creates a new Message instance using the specified properties.
+                 * @function create
+                 * @memberof signalservice.UnidentifiedSenderMessage.Message
+                 * @static
+                 * @param {signalservice.UnidentifiedSenderMessage.IMessage=} [properties] Properties to set
+                 * @returns {signalservice.UnidentifiedSenderMessage.Message} Message instance
+                 */
+                Message.create = function create(properties) {
+                    return new Message(properties);
+                };
+
+                /**
+                 * Encodes the specified Message message. Does not implicitly {@link signalservice.UnidentifiedSenderMessage.Message.verify|verify} messages.
+                 * @function encode
+                 * @memberof signalservice.UnidentifiedSenderMessage.Message
+                 * @static
+                 * @param {signalservice.UnidentifiedSenderMessage.IMessage} message Message message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Message.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.type != null && message.hasOwnProperty("type"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).int32(message.type);
+                    if (message.senderCertificate != null && message.hasOwnProperty("senderCertificate"))
+                        $root.signalservice.SenderCertificate.encode(message.senderCertificate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                    if (message.content != null && message.hasOwnProperty("content"))
+                        writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.content);
+                    return writer;
+                };
+
+                /**
+                 * Encodes the specified Message message, length delimited. Does not implicitly {@link signalservice.UnidentifiedSenderMessage.Message.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof signalservice.UnidentifiedSenderMessage.Message
+                 * @static
+                 * @param {signalservice.UnidentifiedSenderMessage.IMessage} message Message message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Message.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+
+                /**
+                 * Decodes a Message message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof signalservice.UnidentifiedSenderMessage.Message
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {signalservice.UnidentifiedSenderMessage.Message} Message
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Message.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.signalservice.UnidentifiedSenderMessage.Message();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                            case 1:
+                                message.type = reader.int32();
+                                break;
+                            case 2:
+                                message.senderCertificate = $root.signalservice.SenderCertificate.decode(reader, reader.uint32());
+                                break;
+                            case 3:
+                                message.content = reader.bytes();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                        }
+                    }
+                    return message;
+                };
+
+                /**
+                 * Decodes a Message message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof signalservice.UnidentifiedSenderMessage.Message
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {signalservice.UnidentifiedSenderMessage.Message} Message
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Message.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+
+                /**
+                 * Verifies a Message message.
+                 * @function verify
+                 * @memberof signalservice.UnidentifiedSenderMessage.Message
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                Message.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.type != null && message.hasOwnProperty("type"))
+                        switch (message.type) {
+                            default:
+                                return "type: enum value expected";
+                            case 1:
+                            case 2:
+                                break;
+                        }
+                    if (message.senderCertificate != null && message.hasOwnProperty("senderCertificate")) {
+                        var error = $root.signalservice.SenderCertificate.verify(message.senderCertificate);
+                        if (error)
+                            return "senderCertificate." + error;
+                    }
+                    if (message.content != null && message.hasOwnProperty("content"))
+                        if (!(message.content && typeof message.content.length === "number" || $util.isString(message.content)))
+                            return "content: buffer expected";
+                    return null;
+                };
+
+                /**
+                 * Creates a Message message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof signalservice.UnidentifiedSenderMessage.Message
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {signalservice.UnidentifiedSenderMessage.Message} Message
+                 */
+                Message.fromObject = function fromObject(object) {
+                    if (object instanceof $root.signalservice.UnidentifiedSenderMessage.Message)
+                        return object;
+                    var message = new $root.signalservice.UnidentifiedSenderMessage.Message();
+                    switch (object.type) {
+                        case "PREKEY_MESSAGE":
+                        case 1:
+                            message.type = 1;
+                            break;
+                        case "MESSAGE":
+                        case 2:
+                            message.type = 2;
+                            break;
+                    }
+                    if (object.senderCertificate != null) {
+                        if (typeof object.senderCertificate !== "object")
+                            throw TypeError(".signalservice.UnidentifiedSenderMessage.Message.senderCertificate: object expected");
+                        message.senderCertificate = $root.signalservice.SenderCertificate.fromObject(object.senderCertificate);
+                    }
+                    if (object.content != null)
+                        if (typeof object.content === "string")
+                            $util.base64.decode(object.content, message.content = $util.newBuffer($util.base64.length(object.content)), 0);
+                        else if (object.content.length)
+                            message.content = object.content;
+                    return message;
+                };
+
+                /**
+                 * Creates a plain object from a Message message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof signalservice.UnidentifiedSenderMessage.Message
+                 * @static
+                 * @param {signalservice.UnidentifiedSenderMessage.Message} message Message
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Message.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.type = options.enums === String ? "PREKEY_MESSAGE" : 1;
+                        object.senderCertificate = null;
+                        object.content = options.bytes === String ? "" : [];
+                    }
+                    if (message.type != null && message.hasOwnProperty("type"))
+                        object.type = options.enums === String ? $root.signalservice.UnidentifiedSenderMessage.Message.Type[message.type] : message.type;
+                    if (message.senderCertificate != null && message.hasOwnProperty("senderCertificate"))
+                        object.senderCertificate = $root.signalservice.SenderCertificate.toObject(message.senderCertificate, options);
+                    if (message.content != null && message.hasOwnProperty("content"))
+                        object.content = options.bytes === String ? $util.base64.encode(message.content, 0, message.content.length) : options.bytes === Array ? Array.prototype.slice.call(message.content) : message.content;
+                    return object;
+                };
+
+                /**
+                 * Converts this Message to JSON.
+                 * @function toJSON
+                 * @memberof signalservice.UnidentifiedSenderMessage.Message
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Message.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+
+                /**
+                 * Type enum.
+                 * @name signalservice.UnidentifiedSenderMessage.Message.Type
+                 * @enum {string}
+                 * @property {number} PREKEY_MESSAGE=1 PREKEY_MESSAGE value
+                 * @property {number} MESSAGE=2 MESSAGE value
+                 */
+                Message.Type = (function () {
+                    var valuesById = {}, values = Object.create(valuesById);
+                    values[valuesById[1] = "PREKEY_MESSAGE"] = 1;
+                    values[valuesById[2] = "MESSAGE"] = 2;
+                    return values;
+                })();
+
+                return Message;
+            })();
+
+            return UnidentifiedSenderMessage;
         })();
 
         return signalservice;

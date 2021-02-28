@@ -17,6 +17,7 @@
   // We need to refresh our own profile regularly to account for newly-added devices which
   //   do not support unidentified delivery.
   function refreshOurProfile() {
+    window.log.info('refreshOurProfile');
     const ourNumber = textsecure.storage.user.getNumber();
     const conversation = ConversationController.getOrCreate(ourNumber, 'private');
     conversation.getProfiles();
@@ -38,7 +39,7 @@
       const now = Date.now();
       const certificate = storage.get('senderCertificate');
       if (!certificate) {
-        setTimeoutForNextRun(now);
+        setTimeoutForNextRun(scheduledTime || now);
 
         return;
       }
@@ -86,7 +87,7 @@
         scheduleNextRotation();
       } catch (error) {
         logger.error(
-          'refreshSenderCertificate: Get failed. Trying again in two minutes...',
+          'refreshSenderCertificate: Get failed. Trying again in five minutes...',
           error && error.stack ? error.stack : error
         );
 

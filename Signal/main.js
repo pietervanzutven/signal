@@ -3,10 +3,14 @@
 const path = window.path;
 const url = window.url;
 const os = window.os;
-const fs = window.fs;
+const fs = window.fs_extra;
 const crypto = window.crypto;
 const qs = window.qs;
+const normalizePath = window.normalize_path;
+const fg = window.fast_glob;
+const PQueue = window.p_queue.default;
 
+const _ = window._;
 const pify = window.pify;
 const electron = window.electron;
 
@@ -17,6 +21,10 @@ const packageJson = {
 const GlobalErrors = window.app.global_errors;
 
 GlobalErrors.addHandler();
+
+// Set umask early on in the process lifecycle to ensure file permissions are
+// set such that only we have read access to our files
+process.umask(0o077);
 
 const getRealPath = pify(fs.realpath);
 const {
@@ -69,6 +77,7 @@ const development = config.environment === 'development';
 //   data directory has been set.
 const attachments = window.app.attachments
 const attachmentChannel = window.app.attachment_channel;
+const updater = window.ts.updater.index;
 const createTrayIcon = window.app.tray_icon;
 const dockIcon = window.app.dock_icon;
 const ephemeralConfig = window.app.ephemeral_config;
@@ -284,10 +293,10 @@ function createWindow() {
 
   // Create the browser window.
   mainWindow = new BrowserWindow(windowOptions);
-  if (windowConfig && windowConfig.maximized) {
+  if (!usingTrayIcon && windowConfig && windowConfig.maximized) {
     mainWindow.maximize();
   }
-  if (windowConfig && windowConfig.fullscreen) {
+  if (!usingTrayIcon && windowConfig && windowConfig.fullscreen) {
     mainWindow.setFullScreen(true);
   }
 
@@ -420,7 +429,7 @@ async function readyForUpdates() {
 
   // Second, start checking for app updates
   try {
-    await updater.start(getMainWindow, locale.messages, logger);
+    await updater.start(getMainWindow, locale, logger);
   } catch (error) {
     logger.error(
       'Error starting update checks:',
@@ -457,12 +466,6 @@ function openForums() {
 function showKeyboardShortcuts() {
   if (mainWindow) {
     mainWindow.webContents.send('show-keyboard-shortcuts');
-  }
-}
-
-function setupWithImport() {
-  if (mainWindow) {
-    mainWindow.webContents.send('set-up-with-import');
   }
 }
 
@@ -863,7 +866,6 @@ function setupMenu(options) {
       openSupportPage,
       openForums,
       platform,
-      setupWithImport,
       setupAsNewDevice,
       setupAsStandalone,
     }
@@ -1124,3 +1126,51 @@ ipc.on('install-sticker-pack', (_event, packId, packKeyHex) => {
   const packKey = Buffer.from(packKeyHex, 'hex').toString('base64');
   mainWindow.webContents.send('install-sticker-pack', { packId, packKey });
 });
+
+ipc.on('ensure-file-permissions', async event => {
+  await ensureFilePermissions();
+  event.reply('ensure-file-permissions-done');
+});
+
+/**
+ * Ensure files in the user's data directory have the proper permissions.
+ * Optionally takes an array of file paths to exclusively affect.
+ *
+ * @param {string[]} [onlyFiles] - Only ensure permissions on these given files
+ */
+async function ensureFilePermissions(onlyFiles) {
+  console.log('Begin ensuring permissions');
+
+  const start = Date.now();
+  const userDataPath = await getRealPath(app.getPath('userData'));
+  // fast-glob uses `/` for all platforms
+  const userDataGlob = normalizePath(path.join(userDataPath, '**', '*'));
+
+  // Determine files to touch
+  const files = onlyFiles
+    ? onlyFiles.map(f => path.join(userDataPath, f))
+    : await fg(userDataGlob, {
+        markDirectories: true,
+        onlyFiles: false,
+        ignore: ['**/Singleton*'],
+      });
+
+  console.log(`Ensuring file permissions for ${files.length} files`);
+
+  // Touch each file in a queue
+  const q = new PQueue({ concurrency: 5 });
+  q.addAll(
+    files.map(f => async () => {
+      const isDir = f.endsWith('/');
+      try {
+        await fs.chmod(path.normalize(f), isDir ? 0o700 : 0o600);
+      } catch (error) {
+        console.error('ensureFilePermissions: Error from chmod', error.message);
+      }
+    })
+  );
+
+  await q.onEmpty();
+
+  console.log(`Finish ensuring permissions in ${Date.now() - start}ms`);
+}

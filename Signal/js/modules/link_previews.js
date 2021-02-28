@@ -6,7 +6,7 @@
   const { isNumber, compact } = window.lodash;
   const he = window.he;
   const nodeUrl = window.url;
-  const LinkifyIt = window.linkify_it.linkify_it;
+  const LinkifyIt = window.linkify_it;
 
   const linkify = LinkifyIt();
   const { concatenateBytes, getViewOfArrayBuffer } = window.crypto;
@@ -219,9 +219,17 @@
 
   function isLinkSneaky(link) {
     const domain = getDomain(link);
+    // If the domain is falsy, something fishy is going on
+    if (!domain) {
+      return true;
+    }
 
-    // This is necesary because getDomain returns domains in punycode form. We check whether
-    //   it's available for the StyleGuide.
+    // Domains cannot contain encoded characters
+    if (domain.includes('%')) {
+      return true;
+    }
+
+    // This is necesary because getDomain returns domains in punycode form.
     const unicodeDomain = nodeUrl.domainToUnicode
       ? nodeUrl.domainToUnicode(domain)
       : domain;

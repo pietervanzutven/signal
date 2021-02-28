@@ -7,6 +7,7 @@
   const path = window.path;
   const fs = window.fs;
   const _ = window.lodash;
+  const { setup } = window.modules.i18n;
 
   function normalizeLocaleName(locale) {
     if (/^es-/.test(locale)) {
@@ -72,11 +73,16 @@
       messages = english;
     }
 
+    const i18n = setup(appLocale, messages);
+
     return {
+      i18n,
       name: localeName,
       messages,
     };
   }
 
-  window.app.locale.load = load;
+  window.app.locale = {
+    load,
+  };
 })();

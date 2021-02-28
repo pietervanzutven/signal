@@ -4,7 +4,7 @@
   window.app = window.app || {};
 
   const electron = window.electron;
-  const Queue = window.p_queue;
+  const Queue = window.p_queue.default;
   const sql = window.app.sql;
   const { remove: removeUserConfig } = window.app.user_config;
   const { remove: removeEphemeralConfig } = window.app.ephemeral_config;

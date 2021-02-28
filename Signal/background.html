@@ -6,8 +6,22 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'none';
+            child-src 'self';
+            connect-src 'self' https: wss:;
+            font-src 'self';
+            form-action 'self';
+            frame-src ms-appx:;
+            img-src 'self' blob: data: ms-appdata:;
+            media-src 'self' blob: ms-appdata:;
+            object-src 'none';
+            script-src 'self';
+            style-src 'self' 'unsafe-inline';"
+  >
   <title>Signal</title>
   <link href='images/icon_128.png' rel='shortcut icon'>
+  <link href="node_modules/sanitize.css/sanitize.css" rel="stylesheet" type="text/css" />
   <link href="stylesheets/manifest.css" rel="stylesheet" type="text/css" />
   <link href="node_modules/draft-js/dist/Draft.css" rel="stylesheet" type="text/css" />
 
@@ -40,7 +54,6 @@
 
   <script type='text/x-tmpl-mustache' id='two-column'>
     <div class='gutter'>
-      <div class='network-status-container' aria-live='assertive'></div>
       <div class='left-pane-placeholder'></div>
         </div>
     <div class='conversation-stack'>
@@ -56,13 +69,6 @@
     </div>
     </div>
     <div class='lightbox-container'></div>
-  </script>
-
-  <script type='text/x-tmpl-mustache' id='expired_alert'>
-    <a target='_blank' href='https://signal.org/download/'>
-      <button class='upgrade'>{{ upgrade }}</button>
-    </a>
-      {{ expiredWarning }}
   </script>
 
   <script type='text/x-tmpl-mustache' id='banner'>
@@ -213,99 +219,6 @@
     {{/isStep2}}
   </script>
 
-  <script type='text/x-tmpl-mustache' id='networkStatus'>
-    <div class='network-status-message'>
-      <h3>{{ message }}</h3>
-      <span>{{ instructions }}</span>
-    </div>
-    {{ #reconnectDurationAsSeconds }}
-    <div class="network-status-message">
-      {{ attemptingReconnectionMessage }}
-    </div>
-    {{/reconnectDurationAsSeconds }}
-    {{ #action }}
-      <div class="action">
-        <button class='small blue {{ buttonClass }}'>{{ action }}</button>
-      </div>
-    {{/action }}
-  </script>
-
-  <script type='text/x-tmpl-mustache' id='import-flow-template'>
-    {{#isStep2}}
-    <div id='step2' class='step'>
-      <div class='inner'>
-        <div class='step-body'>
-          <span class='banner-icon folder-outline'></span>
-          <div class='header'>{{ chooseHeader }}</div>
-          <div class='body-text'>{{ choose }}</div>
-        </div>
-        <div class='nav'>
-          <div>
-            <a class='button choose'>{{ chooseButton }}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/isStep2}}
-    {{#isStep3}}
-    <div id='step3' class='step'>
-      <div class='inner'>
-        <div class='step-body'>
-          <span class='banner-icon import'></span>
-          <div class='header'>{{ importingHeader }}</div>
-        </div>
-        <div class='progress'>
-          <div class='bar-container'>
-            <div class='bar progress-bar progress-bar-striped active'></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/isStep3}}
-    {{#isStep4}}
-    <div id='step4' class='step'>
-      <div class='inner'>
-        <div class='step-body'>
-          <span class='banner-icon check-circle-outline'></span>
-          <div class='header'>{{ completeHeader }}</div>
-        </div>
-        <div class='nav'>
-          {{#restartButton}}
-          <div>
-            <a class='button restart'>{{ restartButton }}</a>
-          </div>
-          {{/restartButton}}
-          {{#registerButton}}
-          <div>
-            <a class='button register'>{{ registerButton }}</a>
-          </div>
-          {{/registerButton}}
-        </div>
-      </div>
-    </div>
-    {{/isStep4}}
-
-    {{#isError}}
-    <div id='error' class='step'>
-      <div class='inner error-dialog clearfix'>
-        <div class='step-body'>
-          <span class='banner-icon alert-outline'></span>
-          <div class='header'>{{ errorHeader }}</div>
-          <div class='body-text-wide'>
-            {{ errorMessageFirst }}
-            <p>{{ errorMessageSecond }}</p>
-          </div>
-        </div>
-        <div class='nav'>
-          <div>
-            <a class='button choose'>{{ chooseButton }}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/isError}}
-  </script>
-
   <script type='text/x-tmpl-mustache' id='link-flow-template'>
     {{#isStep3}}
     <div id='step3' class='step'>
@@ -447,6 +360,7 @@
   <script type='text/javascript' src='node_modules/lodash/compact.js'></script>
   <script type='text/javascript' src='node_modules/lodash/debounce.js'></script>
   <script type='text/javascript' src='node_modules/lodash/difference.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/drop.js'></script>
   <script type='text/javascript' src='node_modules/lodash/escapeRegExp.js'></script>
   <script type='text/javascript' src='node_modules/lodash/get.js'></script>
   <script type='text/javascript' src='node_modules/lodash/filter.js'></script>
@@ -550,8 +464,8 @@
   <script type='text/javascript' src='node_modules/uc.micro/categories/Z/regex.js'></script>
   <script type='text/javascript' src='node_modules/uc.micro/properties/Any/regex.js'></script>
   <script type='text/javascript' src='node_modules/uc.micro/uc.micro.js'></script>
-  <script type='text/javascript' src='node_modules/linkify-it/re.js'></script>
-  <script type='text/javascript' src='node_modules/linkify-it/linkify-it.js'></script>
+  <script type='text/javascript' src='node_modules/linkify-it/lib/re.js'></script>
+  <script type='text/javascript' src='node_modules/linkify-it/index.js'></script>
   <script type='text/javascript' src='node_modules/filesize/filesize.js'></script>
   <script type='text/javascript' src='node_modules/uuid/v4.js'></script>
   <script type='text/javascript' src='node_modules/sjcl/sjcl.js'></script>
@@ -573,6 +487,10 @@
   <script type='text/javascript' src='node_modules/config/config.js'></script>
   <script type='text/javascript' src='node_modules/memoizee/index.js'></script>
   <script type='text/javascript' src='node_modules/eventemitter3/index.js'></script>
+  <script type='text/javascript' src='node_modules/p-finally/index.js'></script>
+  <script type='text/javascript' src='node_modules/p-timeout/index.js'></script>
+  <script type='text/javascript' src='node_modules/p-queue/lower-bound.js'></script>
+  <script type='text/javascript' src='node_modules/p-queue/priority-queue.js'></script>
   <script type='text/javascript' src='node_modules/p-queue/index.js'></script>
   <script type='text/javascript' src='node_modules/p-map/index.js'></script>
   <script type='text/javascript' src='node_modules/qs/qs.js'></script>
@@ -592,12 +510,14 @@
   <script type='text/javascript' src='js/typescript/util/formatDuration.js'></script>
   <script type='text/javascript' src='js/typescript/util/formatRelativeTime.js'></script>
   <script type='text/javascript' src='js/typescript/util/getInitials.js'></script>
+  <script type='text/javascript' src='js/typescript/util/hasExpired.js'></script>
   <script type='text/javascript' src='js/typescript/util/GoogleChrome.js'></script>
   <script type='text/javascript' src='js/typescript/util/isFileDangerous.js'></script>
   <script type='text/javascript' src='js/typescript/util/libphonenumberInstance.js'></script>
   <script type='text/javascript' src='js/typescript/util/makeLookup.js'></script>
   <script type='text/javascript' src='js/typescript/util/migrateColor.js'></script>
   <script type='text/javascript' src='js/typescript/util/missingCaseError.js'></script>
+  <script type='text/javascript' src='js/typescript/util/registration.js'></script>
   <script type='text/javascript' src='js/typescript/util/saveURLAsFile.js'></script>
   <script type='text/javascript' src='js/typescript/util/timer.js'></script>
   <script type='text/javascript' src='js/typescript/util/waitBatcher.js'></script>
@@ -606,15 +526,19 @@
   <script type='text/javascript' src='js/typescript/shims/storage.js'></script>
   <script type='text/javascript' src='js/typescript/shims/textsecure.js'></script>
   <script type='text/javascript' src='js/typescript/shims/Whisper.js'></script>
+  <script type='text/javascript' src='js/typescript/shims/socketStatus.js'></script>
+  <script type='text/javascript' src='js/typescript/shims/updateIpc.js'></script>
   <script type='text/javascript' src='js/typescript/types/MIME.js'></script>
   <script type='text/javascript' src='js/typescript/types/Attachment.js'></script>
   <script type='text/javascript' src='js/typescript/types/Contact.js'></script>
   <script type='text/javascript' src='js/typescript/types/Conversation.js'></script>
+  <script type='text/javascript' src='js/typescript/types/Dialogs.js'></script>
   <script type='text/javascript' src='js/typescript/types/IndexedDB.js'></script>
   <script type='text/javascript' src='js/typescript/types/Message.js'></script>
   <script type='text/javascript' src='js/typescript/types/PhoneNumber.js'></script>
   <script type='text/javascript' src='js/typescript/types/message/initializeAttachmentMetadata.js'></script>
   <script type='text/javascript' src='js/typescript/types/Settings.js'></script>
+  <script type='text/javascript' src='js/typescript/types/SocketStatus.js'></script>
   <script type='text/javascript' src='js/typescript/types/Util.js'></script>
   <script type='text/javascript' src='js/modules/crypto.js'></script>
   <script type='text/javascript' src='js/modules/types/errors.js'></script>
@@ -642,16 +566,21 @@
   <script type='text/javascript' src='js/modules/migrations/get_placeholder_migrations.js'></script>
   <script type='text/javascript' src='js/modules/metadata/CiphertextMessage.js'></script>
   <script type='text/javascript' src='js/modules/metadata/SecretSessionCipher.js'></script>
+  <script type='text/javascript' src='js/typescript/services/networkObserver.js'></script>
+  <script type='text/javascript' src='js/typescript/services/updateListener.js'></script>
   <script type='text/javascript' src='js/typescript/components/hooks.js'></script>
   <script type='text/javascript' src='js/typescript/components/_util.js'></script>
   <script type='text/javascript' src='js/typescript/components/Avatar.js'></script>
   <script type='text/javascript' src='js/typescript/components/AvatarPopup.js'></script>
+  <script type='text/javascript' src='js/typescript/components/ExpiredBuildDialog.js'></script>
   <script type='text/javascript' src='js/typescript/components/Lightbox.js'></script>
   <script type='text/javascript' src='js/typescript/components/LightboxGallery.js'></script>
   <script type='text/javascript' src='js/typescript/components/MainHeader.js'></script>
+  <script type='text/javascript' src='js/typescript/components/NetworkStatus.js'></script>
   <script type='text/javascript' src='js/typescript/components/styles/Colors.js'></script>
   <script type='text/javascript' src='js/typescript/components/Intl.js'></script>
   <script type='text/javascript' src='js/typescript/components/Spinner.js'></script>
+  <script type='text/javascript' src='js/typescript/components/UpdateDialog.js'></script>
   <script type='text/javascript' src='js/typescript/components/ConfirmationDialog.js'></script>
   <script type='text/javascript' src='js/typescript/components/ConfirmationModal.js'></script>
   <script type='text/javascript' src='js/typescript/components/Countdown.js'></script>
@@ -739,6 +668,8 @@
   <script type='text/javascript' src='app/sql_channel.js'></script>
   <script type='text/javascript' src='app/attachment_channel.js'></script>
 
+  <script type='text/javascript' src='js/typescript/updater/index.js'></script>
+  
   <script type='text/javascript' src='js/modules/debug.js'></script>
   
   <script type='text/javascript' src='main.js'></script>
@@ -757,21 +688,28 @@
 
   <script type='text/javascript' src='js/typescript/state/ducks/conversations.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/emojis.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/expiration.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/items.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/network.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/noop.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/search.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/stickers.js'></script>
+  <script type='text/javascript' src='js/typescript/state/ducks/updates.js'></script>
   <script type='text/javascript' src='js/typescript/state/ducks/user.js'></script>
   <script type='text/javascript' src='js/typescript/state/actions.js'></script>
   <script type='text/javascript' src='js/typescript/state/reducer.js'></script>
   <script type='text/javascript' src='js/typescript/state/createStore.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/user.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/conversations.js'></script>
+  <script type='text/javascript' src='js/typescript/state/selectors/network.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/search.js'></script>
   <script type='text/javascript' src='js/typescript/state/selectors/stickers.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/CompositionArea.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/ExpiredBuildDialog.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/MainHeader.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/MessageSearchResult.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/NetworkStatus.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/UpdateDialog.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/LastSeenIndicator.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/LeftPane.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/ShortcutGuideModal.js'></script>
@@ -835,8 +773,6 @@
   <script type='text/javascript' src='js/expiring_tap_to_view_messages.js'></script>
 
   <script type='text/javascript' src='js/chromium.js'></script>
-  <script type='text/javascript' src='js/registration.js'></script>
-  <script type='text/javascript' src='js/expire.js'></script>
   <script type='text/javascript' src='js/conversation_controller.js'></script>
   <script type='text/javascript' src='js/message_controller.js'></script>
 
@@ -850,7 +786,6 @@
   <script type='text/javascript' src='js/views/recorder_view.js'></script>
   <script type='text/javascript' src='js/views/conversation_view.js'></script>
   <script type='text/javascript' src='js/views/inbox_view.js'></script>
-  <script type='text/javascript' src='js/views/network_status_view.js'></script>
   <script type='text/javascript' src='js/views/confirmation_dialog_view.js'></script>
   <script type='text/javascript' src='js/views/identicon_svg_view.js'></script>
   <script type='text/javascript' src='js/views/install_view.js'></script>
@@ -858,7 +793,6 @@
   <script type="text/javascript" src="js/views/phone-input-view.js"></script>
   <script type='text/javascript' src='js/views/standalone_registration_view.js'></script>
   <script type='text/javascript' src='js/views/app_view.js'></script>
-  <script type='text/javascript' src='js/views/import_view.js'></script>
   <script type='text/javascript' src='js/views/clear_data_view.js'></script>
 
   <script type='text/javascript' src='js/wall_clock_listener.js'></script>

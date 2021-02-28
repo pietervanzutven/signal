@@ -11,7 +11,7 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
-    const linkify_it_1 = __importDefault(window.linkify_it.linkify_it);
+    const linkify_it_1 = __importDefault(window.linkify_it);
     const link_previews_1 = window.link_previews;
     const linkify = linkify_it_1.default();
     const SUPPORTED_PROTOCOLS = /^(http|https):/i;

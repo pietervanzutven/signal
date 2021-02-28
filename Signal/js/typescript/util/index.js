@@ -14,6 +14,8 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
     exports.GoogleChrome = GoogleChrome;
+    const Registration = __importStar(window.ts.util.registration);
+    exports.Registration = Registration;
     const arrayBufferToObjectURL_1 = require_ts_util_arrayBufferToObjectURL();
     exports.arrayBufferToObjectURL = arrayBufferToObjectURL_1.arrayBufferToObjectURL;
     const combineNames_1 = require_ts_util_combineNames();
@@ -22,12 +24,14 @@
     exports.createBatcher = batcher_1.createBatcher;
     const waitBatcher_1 = require_ts_util_waitBatcher();
     exports.createWaitBatcher = waitBatcher_1.createWaitBatcher;
+    const hasExpired_1 = require_ts_util_hasExpired();
+    exports.hasExpired = hasExpired_1.hasExpired;
     const isFileDangerous_1 = require_ts_util_isFileDangerous();
     exports.isFileDangerous = isFileDangerous_1.isFileDangerous;
-    const missingCaseError_1 = require_ts_util_missingCaseError();
-    exports.missingCaseError = missingCaseError_1.missingCaseError;
-    const migrateColor_1 = require_ts_util_migrateColor();
-    exports.migrateColor = migrateColor_1.migrateColor;
     const makeLookup_1 = require_ts_util_makeLookup();
     exports.makeLookup = makeLookup_1.makeLookup;
+    const migrateColor_1 = require_ts_util_migrateColor();
+    exports.migrateColor = migrateColor_1.migrateColor;
+    const missingCaseError_1 = require_ts_util_missingCaseError();
+    exports.missingCaseError = missingCaseError_1.missingCaseError;
 })();

@@ -69,9 +69,12 @@
   const { createStore } = window.ts.state.createStore;
   const conversationsDuck = window.ts.state.ducks.conversations;
   const emojisDuck = window.ts.state.ducks.emojis;
+  const expirationDuck = window.ts.state.ducks.expiration;
   const itemsDuck = window.ts.state.ducks.items;
+  const networkDuck = window.ts.state.ducks.network;
   const searchDuck = window.ts.state.ducks.search;
   const stickersDuck = window.ts.state.ducks.stickers;
+  const updatesDuck = window.ts.state.ducks.updates;
   const userDuck = window.ts.state.ducks.user;
 
   const conversationsSelectors = window.ts.state.selectors.conversations;
@@ -102,6 +105,14 @@
   // Workflow
   const { IdleDetector } = window.idle_detector;
   const MessageDataMigrator = window.messages_data_migrator;
+
+  // Processes / Services
+  const {
+    initializeNetworkObserver,
+  } = window.ts.services.networkObserver;
+  const {
+    initializeUpdateListener,
+  } = window.ts.services.updateListener;
 
   function initializeMigrations({
     userDataPath,
@@ -289,17 +300,27 @@
       createStickerPreviewModal,
       createTimeline,
     };
+
     const Ducks = {
       conversations: conversationsDuck,
       emojis: emojisDuck,
+      expiration: expirationDuck,
       items: itemsDuck,
+      network: networkDuck,
+      updates: updatesDuck,
       user: userDuck,
       search: searchDuck,
       stickers: stickersDuck,
     };
+
     const Selectors = {
       conversations: conversationsSelectors,
       search: searchSelectors,
+    };
+
+    const Services = {
+      initializeNetworkObserver,
+      initializeUpdateListener,
     };
 
     const State = {
@@ -349,6 +370,7 @@
       OS,
       RefreshSenderCertificate,
       Settings,
+      Services,
       State,
       Stickers,
       Types,
