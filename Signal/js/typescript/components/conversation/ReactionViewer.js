@@ -11,8 +11,10 @@
         for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
             t[p] = s[p];
         if (s != null && typeof Object.getOwnPropertySymbols === "function")
-            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
-                t[p[i]] = s[p[i]];
+            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+                if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                    t[p[i]] = s[p[i]];
+            }
         return t;
     };
     var __importStar = (this && this.__importStar) || function (mod) {
@@ -112,8 +114,7 @@
                 React.createElement("main", { className: "module-reaction-viewer__body" }, selectedReactions.map(({ from, emoji }) => (React.createElement("div", { key: `${from.id}-${emoji}`, className: "module-reaction-viewer__body__row" },
                     React.createElement("div", { className: "module-reaction-viewer__body__row__avatar" },
                         React.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, conversationType: "direct", size: 32, name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber, i18n: i18n })),
-                    React.createElement("div", { className: "module-reaction-viewer__body__row__name" },
-                        React.createElement(ContactName_1.ContactName, { module: "module-reaction-viewer__body__row__name__contact-name", name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber })),
+                    React.createElement("div", { className: "module-reaction-viewer__body__row__name" }, from.isMe ? (i18n('you')) : (React.createElement(ContactName_1.ContactName, { module: "module-reaction-viewer__body__row__name__contact-name", name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber }))),
                     React.createElement("div", { className: "module-reaction-viewer__body__row__emoji" },
                         React.createElement(Emoji_1.Emoji, { size: 18, emoji: emoji }))))))));
         });
