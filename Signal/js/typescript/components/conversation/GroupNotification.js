@@ -14,7 +14,7 @@
     // import classNames from 'classnames';
     const lodash_1 = window.lodash;
     const ContactName_1 = window.ts.components.conversation.ContactName;
-    const Emojify_1 = window.components.conversation.Emojify;
+    const Emojify_1 = window.ts.components.conversation.Emojify;
     const Intl_1 = window.ts.components.Intl;
     const missingCaseError_1 = require_ts_util_missingCaseError();
     class GroupNotification extends react_1.default.Component {
