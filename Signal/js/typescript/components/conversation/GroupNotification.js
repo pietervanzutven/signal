@@ -14,6 +14,7 @@
     // import classNames from 'classnames';
     const lodash_1 = window.lodash;
     const ContactName_1 = window.ts.components.conversation.ContactName;
+    const Emojify_1 = window.components.conversation.Emojify;
     const Intl_1 = window.ts.components.Intl;
     const missingCaseError_1 = require_ts_util_missingCaseError();
     class GroupNotification extends react_1.default.Component {
@@ -27,7 +28,7 @@
             })));
             switch (type) {
                 case 'name':
-                    return i18n('titleIsNow', [newName || '']);
+                    return react_1.default.createElement(Emojify_1.Emojify, { text: i18n('titleIsNow', [newName || '']) });
                 case 'add':
                     if (!contacts || !contacts.length) {
                         throw new Error('Group update is missing contacts');
