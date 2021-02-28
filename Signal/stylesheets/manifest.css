@@ -6167,10 +6167,10 @@ img.emoji.jumbo {
     .dark-theme .module-sticker-manager__preview-modal__container__meta-overlay {
       background: #5e5e5e; }
     .module-sticker-manager__preview-modal__container__meta-overlay__info {
-      width: 317px;
       display: flex;
       flex-direction: column;
-      justify-content: center; }
+      justify-content: center;
+      flex-grow: 1; }
       .module-sticker-manager__preview-modal__container__meta-overlay__info__title {
         margin: 0;
         overflow: hidden;
@@ -6201,7 +6201,8 @@ img.emoji.jumbo {
         .dark-theme .module-sticker-manager__preview-modal__container__meta-overlay__info__blessed-icon {
           background-image: url("../images/check-circle-outline.svg"); }
     .module-sticker-manager__preview-modal__container__meta-overlay__install {
-      flex-shrink: 1; }
+      flex-shrink: 0;
+      overflow: hidden; }
 
 .sticker-button-wrapper {
   height: 36px;
