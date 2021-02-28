@@ -382,10 +382,7 @@
 
       showStickerPack: async (packId, key) => {
         // We can get these events even if the user has never linked this instance.
-        if (
-          Whisper.Import.isIncomplete() ||
-          !window.Signal.Util.Registration.everDone()
-        ) {
+        if (!window.Signal.Util.Registration.everDone()) {
           return;
         }
 
@@ -1293,13 +1290,6 @@
     });
   }
 
-  Whisper.events.on('setupWithImport', () => {
-    const { appView } = window.owsDesktopApp;
-    if (appView) {
-      appView.openImporter();
-    }
-  });
-
   Whisper.events.on('setupAsNewDevice', () => {
     const { appView } = window.owsDesktopApp;
     if (appView) {
@@ -1388,10 +1378,7 @@
     Whisper.ExpiringMessagesListener.init(Whisper.events);
     Whisper.TapToViewMessagesListener.init(Whisper.events);
 
-    if (Whisper.Import.isIncomplete()) {
-      window.log.info('Import was interrupted, showing import error screen');
-      appView.openImporter();
-    } else if (window.Signal.Util.Registration.everDone()) {
+    if (window.Signal.Util.Registration.everDone()) {
       // listeners
       Whisper.RotateSignedPreKeyListener.init(Whisper.events, newVersion);
       window.Signal.RefreshSenderCertificate.initialize({
@@ -1405,8 +1392,6 @@
       appView.openInbox({
         initialLoadComplete,
       });
-    } else if (window.isImportMode()) {
-      appView.openImporter();
     } else {
       appView.openInstaller();
     }
@@ -1517,9 +1502,6 @@
     }
 
     if (!window.Signal.Util.Registration.everDone()) {
-      return;
-    }
-    if (Whisper.Import.isIncomplete()) {
       return;
     }
 
@@ -1687,17 +1669,6 @@
         ).catch(error => {
           window.log.error(
             'Failed to send installed sticker packs via sync message',
-            error && error.stack ? error.stack : error
-          );
-        });
-      }
-
-      if (Whisper.Import.isComplete()) {
-        wrap(
-          textsecure.messaging.sendRequestConfigurationSyncMessage(sendOptions)
-        ).catch(error => {
-          window.log.error(
-            'Import complete, but failed to send sync message',
             error && error.stack ? error.stack : error
           );
         });

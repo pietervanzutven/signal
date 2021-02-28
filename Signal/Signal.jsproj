@@ -410,7 +410,6 @@
     <Content Include="js\views\debug_log_view.js" />
     <Content Include="js\views\group_member_list_view.js" />
     <Content Include="js\views\identicon_svg_view.js" />
-    <Content Include="js\views\import_view.js" />
     <Content Include="js\views\inbox_view.js" />
     <Content Include="js\views\install_view.js" />
     <Content Include="js\views\key_verification_view.js" />

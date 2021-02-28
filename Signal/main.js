@@ -469,12 +469,6 @@ function showKeyboardShortcuts() {
   }
 }
 
-function setupWithImport() {
-  if (mainWindow) {
-    mainWindow.webContents.send('set-up-with-import');
-  }
-}
-
 function setupAsNewDevice() {
   if (mainWindow) {
     mainWindow.webContents.send('set-up-as-new-device');
@@ -872,7 +866,6 @@ function setupMenu(options) {
       openSupportPage,
       openForums,
       platform,
-      setupWithImport,
       setupAsNewDevice,
       setupAsStandalone,
     }
