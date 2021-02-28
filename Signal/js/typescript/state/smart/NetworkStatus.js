@@ -12,9 +12,9 @@
     const NetworkStatus_1 = window.ts.components.NetworkStatus;
     const user_1 = window.ts.state.selectors.user;
     const network_1 = window.ts.state.selectors.network;
-    const registration_1 = window.ts.state.selectors.registration;
+    const registration_1 = window.ts.util.registration;
     const mapStateToProps = (state) => {
-        return Object.assign(Object.assign({}, state.network), { hasNetworkDialog: network_1.hasNetworkDialog(state), i18n: user_1.getIntl(state), isRegistrationDone: registration_1.isDone(state) });
+        return Object.assign(Object.assign({}, state.network), { hasNetworkDialog: network_1.hasNetworkDialog(state), i18n: user_1.getIntl(state), isRegistrationDone: registration_1.isDone() });
     };
     const smart = react_redux_1.connect(mapStateToProps, actions_1.mapDispatchToProps);
     exports.SmartNetworkStatus = smart(NetworkStatus_1.NetworkStatus);

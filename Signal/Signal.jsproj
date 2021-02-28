@@ -349,7 +349,6 @@
     <Content Include="js\typescript\state\roots\createTimeline.js" />
     <Content Include="js\typescript\state\selectors\conversations.js" />
     <Content Include="js\typescript\state\selectors\network.js" />
-    <Content Include="js\typescript\state\selectors\registration.js" />
     <Content Include="js\typescript\state\selectors\search.js" />
     <Content Include="js\typescript\state\selectors\stickers.js" />
     <Content Include="js\typescript\state\selectors\user.js" />

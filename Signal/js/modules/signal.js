@@ -78,7 +78,6 @@
   const userDuck = window.ts.state.ducks.user;
 
   const conversationsSelectors = window.ts.state.selectors.conversations;
-  const registrationSelectors = window.ts.state.selectors.registration;
   const searchSelectors = window.ts.state.selectors.search;
 
   // Migrations
@@ -316,7 +315,6 @@
 
     const Selectors = {
       conversations: conversationsSelectors,
-      registration: registrationSelectors,
       search: searchSelectors,
     };
 

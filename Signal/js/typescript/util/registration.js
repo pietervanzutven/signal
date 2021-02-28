@@ -5,15 +5,7 @@
     window.ts.util = window.ts.util || {};
     const exports = window.ts.util.registration = {};
 
-    var __importStar = (this && this.__importStar) || function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-        result["default"] = mod;
-        return result;
-    };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const RegistrationSelectors = __importStar(window.ts.state.selectors.registration);
     function markEverDone() {
         // @ts-ignore
         window.storage.put('chromiumRegistrationDoneEver', '');
@@ -32,12 +24,14 @@
     exports.remove = remove;
     function isDone() {
         // @ts-ignore
-        return RegistrationSelectors.isDone(window.reduxStore.getState());
+        // tslint:disable-next-line no-backbone-get-set-outside-model
+        return window.storage.get('chromiumRegistrationDone') === '';
     }
     exports.isDone = isDone;
     function everDone() {
         // @ts-ignore
-        return RegistrationSelectors.everDone(window.reduxStore.getState());
+        // tslint:disable-next-line no-backbone-get-set-outside-model
+        return window.storage.get('chromiumRegistrationDoneEver') === '' || isDone();
     }
     exports.everDone = everDone;
 })();

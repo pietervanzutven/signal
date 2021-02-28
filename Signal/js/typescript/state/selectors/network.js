@@ -8,7 +8,7 @@
 
     Object.defineProperty(exports, "__esModule", { value: true });
     const reselect_1 = window.reselect;
-    const registration_1 = window.ts.state.selectors.registration;
+    const registration_1 = window.ts.util.registration;
     const getNetwork = (state) => state.network;
     exports.hasNetworkDialog = reselect_1.createSelector(getNetwork, registration_1.isDone, ({ isOnline, socketStatus, withinConnectingGracePeriod }, isRegistrationDone) => !isOnline ||
         !isRegistrationDone ||
