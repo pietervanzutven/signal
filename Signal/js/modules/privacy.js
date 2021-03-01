@@ -13,6 +13,7 @@
 
   const APP_ROOT_PATH = path.join(__dirname, '..', '..', '..');
   const PHONE_NUMBER_PATTERN = /\+\d{7,12}(\d{3})/g;
+  const UUID_PATTERN = /[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{10}([0-9A-F]{2})/gi;
   const GROUP_ID_PATTERN = /(group\()([^)]+)(\))/g;
   const REDACTION_PLACEHOLDER = '[REDACTED]';
 
@@ -69,6 +70,15 @@
     return text.replace(PHONE_NUMBER_PATTERN, `+${REDACTION_PLACEHOLDER}$1`);
   };
 
+  //      redactUuids :: String -> String
+  exports.redactUuids = text => {
+    if (!is.string(text)) {
+      throw new TypeError("'text' must be a string");
+    }
+
+    return text.replace(UUID_PATTERN, `${REDACTION_PLACEHOLDER}$1`);
+  };
+
   //      redactGroupIds :: String -> String
   exports.redactGroupIds = text => {
     if (!is.string(text)) {
@@ -89,7 +99,8 @@
   exports.redactAll = compose(
     exports.redactSensitivePaths,
     exports.redactGroupIds,
-    exports.redactPhoneNumbers
+    exports.redactPhoneNumbers,
+    exports.redactUuids
   );
 
   const removeNewlines = text => text.replace(/\r?\n|\r/g, '');

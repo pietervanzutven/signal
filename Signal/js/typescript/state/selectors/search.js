@@ -62,7 +62,7 @@
                 const data = lookup[id];
                 items.push({
                     type: 'conversation',
-                    data: Object.assign({}, data, { isSelected: Boolean(data && id === selectedConversationId) }),
+                    data: Object.assign(Object.assign({}, data), { isSelected: Boolean(data && id === selectedConversationId) }),
                 });
             });
         }
@@ -85,7 +85,7 @@
                 const data = lookup[id];
                 items.push({
                     type: 'contact',
-                    data: Object.assign({}, data, { isSelected: Boolean(data && id === selectedConversationId) }),
+                    data: Object.assign(Object.assign({}, data), { isSelected: Boolean(data && id === selectedConversationId) }),
                 });
             });
         }
@@ -134,7 +134,7 @@
         recipient, searchConversationId, selectedMessageId) {
         // Note: We don't use all of those parameters here, but the shim we call does.
         //   We want to call this function again if any of those parameters change.
-        return Object.assign({}, Whisper_1.getSearchResultsProps(message), { isSelected: message.id === selectedMessageId, isSearchingInConversation: Boolean(searchConversationId) });
+        return Object.assign(Object.assign({}, Whisper_1.getSearchResultsProps(message)), { isSelected: message.id === selectedMessageId, isSearchingInConversation: Boolean(searchConversationId) });
     }
     exports._messageSearchResultSelector = _messageSearchResultSelector;
     exports.getCachedSelectorForMessageSearchResult = reselect_1.createSelector(user_1.getRegionCode, user_1.getUserNumber, () => {

@@ -57,11 +57,13 @@
             };
             // tslint:disable-next-line member-ordering
             this.search = lodash_1.debounce((searchTerm) => {
-                const { i18n, ourNumber, regionCode, searchDiscussions, searchMessages, searchConversationId, } = this.props;
+                const { i18n, ourConversationId, ourNumber, ourUuid, regionCode, searchDiscussions, searchMessages, searchConversationId, } = this.props;
                 if (searchDiscussions && !searchConversationId) {
                     searchDiscussions(searchTerm, {
                         noteToSelf: i18n('noteToSelf').toLowerCase(),
+                        ourConversationId,
                         ourNumber,
+                        ourUuid,
                     });
                 }
                 if (searchMessages) {

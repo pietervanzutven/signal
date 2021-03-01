@@ -47,9 +47,9 @@
         };
     }
     async function doSearchDiscussions(query, options) {
-        const { ourNumber, noteToSelf } = options;
+        const { ourConversationId, noteToSelf } = options;
         const { conversations, contacts } = await queryConversationsAndContacts(query, {
-            ourNumber,
+            ourConversationId,
             noteToSelf,
         });
         return {
@@ -118,7 +118,7 @@
         }
     }
     async function queryConversationsAndContacts(providedQuery, options) {
-        const { ourNumber, noteToSelf } = options;
+        const { ourConversationId, noteToSelf } = options;
         const query = providedQuery.replace(/[+-.()]*/g, '');
         const searchResults = await data_1.searchConversations(query);
         // Split into two groups - active conversations and items just from address book
@@ -134,12 +134,18 @@
                 conversations.push(conversation.id);
             }
         }
+        // // @ts-ignore
+        // console._log(
+        //   '%cqueryConversationsAndContacts',
+        //   'background:black;color:red;',
+        //   { searchResults, conversations, ourNumber, ourUuid }
+        // );
         // Inject synthetic Note to Self entry if query matches localized 'Note to Self'
         if (noteToSelf.indexOf(providedQuery.toLowerCase()) !== -1) {
             // ensure that we don't have duplicates in our results
-            contacts = contacts.filter(id => id !== ourNumber);
-            conversations = conversations.filter(id => id !== ourNumber);
-            contacts.unshift(ourNumber);
+            contacts = contacts.filter(id => id !== ourConversationId);
+            conversations = conversations.filter(id => id !== ourConversationId);
+            contacts.unshift(ourConversationId);
         }
         return { conversations, contacts };
     }
@@ -162,7 +168,7 @@
             return getEmptyState();
         }
         if (action.type === 'SEARCH_START') {
-            return Object.assign({}, state, { searchConversationId: undefined, searchConversationName: undefined, startSearchCounter: state.startSearchCounter + 1 });
+            return Object.assign(Object.assign({}, state), { searchConversationId: undefined, searchConversationName: undefined, startSearchCounter: state.startSearchCounter + 1 });
         }
         if (action.type === 'SEARCH_CLEAR') {
             return getEmptyState();
@@ -172,7 +178,7 @@
             const { query } = payload;
             const hasQuery = Boolean(query && query.length >= 2);
             const isWithinConversation = Boolean(state.searchConversationId);
-            return Object.assign({}, state, { query, messagesLoading: hasQuery }, (hasQuery
+            return Object.assign(Object.assign(Object.assign({}, state), { query, messagesLoading: hasQuery }), (hasQuery
                 ? {
                     messageIds: [],
                     messageLookup: {},
@@ -186,16 +192,16 @@
             const { payload } = action;
             const { searchConversationId, searchConversationName } = payload;
             if (searchConversationId === state.searchConversationId) {
-                return Object.assign({}, state, { startSearchCounter: state.startSearchCounter + 1 });
+                return Object.assign(Object.assign({}, state), { startSearchCounter: state.startSearchCounter + 1 });
             }
-            return Object.assign({}, getEmptyState(), {
+            return Object.assign(Object.assign({}, getEmptyState()), {
                 searchConversationId,
                 searchConversationName, startSearchCounter: state.startSearchCounter + 1
             });
         }
         if (action.type === 'CLEAR_CONVERSATION_SEARCH') {
             const { searchConversationId, searchConversationName } = state;
-            return Object.assign({}, getEmptyState(), {
+            return Object.assign(Object.assign({}, getEmptyState()), {
                 searchConversationId,
                 searchConversationName
             });
@@ -208,7 +214,7 @@
                 return state;
             }
             const messageIds = messages.map(message => message.id);
-            return Object.assign({}, state, {
+            return Object.assign(Object.assign({}, state), {
                 normalizedPhoneNumber,
                 query,
                 messageIds, messageLookup: makeLookup_1.makeLookup(messages, 'id'), messagesLoading: false
@@ -217,7 +223,7 @@
         if (action.type === 'SEARCH_DISCUSSIONS_RESULTS_FULFILLED') {
             const { payload } = action;
             const { contacts, conversations } = payload;
-            return Object.assign({}, state, {
+            return Object.assign(Object.assign({}, state), {
                 contacts,
                 conversations, discussionsLoading: false
             });
@@ -232,7 +238,7 @@
             if (searchConversationId && searchConversationId !== id) {
                 return getEmptyState();
             }
-            return Object.assign({}, state, { selectedMessage: messageId });
+            return Object.assign(Object.assign({}, state), { selectedMessage: messageId });
         }
         if (action.type === 'CONVERSATION_UNLOADED') {
             const { payload } = action;
@@ -250,7 +256,7 @@
             }
             const { payload } = action;
             const { id } = payload;
-            return Object.assign({}, state, { messageIds: lodash_1.reject(messageIds, messageId => id === messageId), messageLookup: lodash_1.omit(messageLookup, ['id']) });
+            return Object.assign(Object.assign({}, state), { messageIds: lodash_1.reject(messageIds, messageId => id === messageId), messageLookup: lodash_1.omit(messageLookup, ['id']) });
         }
         return state;
     }

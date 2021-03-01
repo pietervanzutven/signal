@@ -23,6 +23,8 @@
             attachmentsPath: 'missing',
             stickersPath: 'missing',
             tempPath: 'missing',
+            ourConversationId: 'missing',
+            ourUuid: 'missing',
             ourNumber: 'missing',
             regionCode: 'missing',
             platform: 'missing',
@@ -36,7 +38,7 @@
         }
         if (action.type === 'USER_CHANGED') {
             const { payload } = action;
-            return Object.assign({}, state, payload);
+            return Object.assign(Object.assign({}, state), payload);
         }
         return state;
     }

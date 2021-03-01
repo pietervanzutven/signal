@@ -71,7 +71,8 @@ const userConfig = window.app.user_config;
 const importMode =
   process.argv.some(arg => arg === '--import') || config.get('import');
 
-const development = config.environment === 'development';
+const development =
+  config.environment === 'development' || config.environment === 'staging';
 
 // We generally want to pull in our own modules after this point, after the user
 //   data directory has been set.
