@@ -90,12 +90,12 @@
                     container.focus();
                 }
             };
-            this.toggleReactionViewer = (onlyRemove = false, pickedReaction) => {
+            this.toggleReactionViewer = (onlyRemove = false) => {
                 this.setState(({ reactionViewerRoot }) => {
                     if (reactionViewerRoot) {
                         document.body.removeChild(reactionViewerRoot);
                         document.body.removeEventListener('click', this.handleClickOutsideReactionViewer, true);
-                        return { reactionViewerRoot: null, pickedReaction };
+                        return { reactionViewerRoot: null };
                     }
                     if (!onlyRemove) {
                         const root = document.createElement('div');
@@ -103,10 +103,9 @@
                         document.body.addEventListener('click', this.handleClickOutsideReactionViewer, true);
                         return {
                             reactionViewerRoot: root,
-                            pickedReaction,
                         };
                     }
-                    return { reactionViewerRoot: null, pickedReaction };
+                    return { reactionViewerRoot: null };
                 });
             };
             this.toggleReactionPicker = (onlyRemove = false) => {
@@ -875,7 +874,7 @@
             const maybeNotRenderedTotal = maybeNotRendered.reduce((sum, res) => sum + res.length, 0);
             const notRenderedIsMe = someNotRendered &&
                 maybeNotRendered.some(res => res.some(re => Boolean(re.from.isMe)));
-            const { reactionViewerRoot, containerWidth, pickedReaction } = this.state;
+            const { reactionViewerRoot, containerWidth } = this.state;
             // Calculate the width of the reactions container
             const reactionsWidth = toRender.reduce((sum, res, i, arr) => {
                 if (someNotRendered && i === arr.length - 1) {
