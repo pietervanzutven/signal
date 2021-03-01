@@ -6219,7 +6219,9 @@ img.emoji.jumbo {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      flex-grow: 1; }
+      flex-grow: 1;
+      flex-shrink: 1;
+      overflow: hidden; }
       .module-sticker-manager__preview-modal__container__meta-overlay__info__title {
         margin: 0;
         overflow: hidden;
