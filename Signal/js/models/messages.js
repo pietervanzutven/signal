@@ -136,6 +136,7 @@
         !this.isUnsupportedMessage() &&
         !this.isExpirationTimerUpdate() &&
         !this.isKeyChange() &&
+        !this.isMessageHistoryUnsynced() &&
         !this.isVerifiedChange() &&
         !this.isGroupUpdate() &&
         !this.isEndSession()
@@ -148,6 +149,11 @@
         return {
           type: 'unsupportedMessage',
           data: this.getPropsForUnsupportedMessage(),
+        };
+      } else if (this.isMessageHistoryUnsynced()) {
+        return {
+          type: 'linkNotification',
+          data: null,
         };
       } else if (this.isExpirationTimerUpdate()) {
         return {
@@ -348,6 +354,9 @@
     },
     isVerifiedChange() {
       return this.get('type') === 'verified-change';
+    },
+    isMessageHistoryUnsynced() {
+      return this.get('type') === 'message-history-unsynced';
     },
     isGroupUpdate() {
       return !!this.get('group_update');

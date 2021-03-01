@@ -1981,6 +1981,7 @@
         name: details.name,
         color: details.color,
         active_at: activeAt,
+        inbox_position: details.inboxPosition,
       });
 
       // Update the conversation avatar only if new avatar exists and hash differs
@@ -2036,6 +2037,14 @@
         verifiedEvent.viaContactSync = true;
         await onVerified(verifiedEvent);
       }
+
+      const { appView } = window.owsDesktopApp;
+      if (appView && appView.installView && appView.installView.didLink) {
+        window.log.info(
+          'onContactReceived: Adding the message history disclaimer on link'
+        );
+        await conversation.addMessageHistoryDisclaimer();
+      }
     } catch (error) {
       window.log.error('onContactReceived error:', Errors.toLogFormat(error));
     }
@@ -2069,6 +2078,7 @@
       members,
       color: details.color,
       type: 'group',
+      inbox_position: details.inboxPosition,
     };
 
     if (details.active) {
@@ -2109,6 +2119,13 @@
 
     window.Signal.Data.updateConversation(id, conversation.attributes);
 
+    const { appView } = window.owsDesktopApp;
+    if (appView && appView.installView && appView.installView.didLink) {
+      window.log.info(
+        'onGroupReceived: Adding the message history disclaimer on link'
+      );
+      await conversation.addMessageHistoryDisclaimer();
+    }
     const { expireTimer } = details;
     const isValidExpireTimer = typeof expireTimer === 'number';
     if (!isValidExpireTimer) {

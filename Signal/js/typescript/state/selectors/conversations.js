@@ -65,6 +65,16 @@
             if (leftTimestamp && rightTimestamp && leftTimestamp !== rightTimestamp) {
                 return rightTimestamp - leftTimestamp;
             }
+            if (typeof left.inboxPosition === 'number' &&
+                typeof right.inboxPosition === 'number') {
+                return right.inboxPosition > left.inboxPosition ? -1 : 1;
+            }
+            if (typeof left.inboxPosition === 'number' && right.inboxPosition == null) {
+                return -1;
+            }
+            if (typeof right.inboxPosition === 'number' && left.inboxPosition == null) {
+                return 1;
+            }
             const leftTitle = getConversationTitle(left, {
                 i18n,
                 ourRegionCode,

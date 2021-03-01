@@ -13,6 +13,7 @@
     const memoizee_1 = __importDefault(window.memoizee);
     const reselect_1 = window.reselect;
     const Whisper_1 = window.ts.shims.Whisper;
+    const libphonenumberInstance_1 = window.ts.util.libphonenumberInstance;
     const user_1 = window.ts.state.selectors.user;
     const conversations_1 = window.ts.state.selectors.conversations;
     exports.getSearch = (state) => state.search;
@@ -29,10 +30,11 @@
     exports.getSearchResults = reselect_1.createSelector([
         exports.getSearch,
         user_1.getRegionCode,
+        user_1.getUserAgent,
         conversations_1.getConversationLookup,
         conversations_1.getSelectedConversation,
         exports.getSelectedMessage,
-    ], (state, regionCode, lookup, selectedConversationId, selectedMessageId
+    ], (state, regionCode, userAgent, lookup, selectedConversationId, selectedMessageId
         // tslint:disable-next-line max-func-body-length
     ) => {
         const { contacts, conversations, discussionsLoading, messageIds, messagesLoading, searchConversationName, } = state;
@@ -52,6 +54,15 @@
                 type: 'start-new-conversation',
                 data: undefined,
             });
+            const isIOS = userAgent === 'OWI';
+            const parsedNumber = libphonenumberInstance_1.instance.parse(state.query, regionCode);
+            const isValidNumber = libphonenumberInstance_1.instance.isValidNumber(parsedNumber);
+            if (!isIOS && isValidNumber) {
+                items.push({
+                    type: 'sms-mms-not-supported-text',
+                    data: undefined,
+                });
+            }
         }
         if (haveConversations) {
             items.push({

@@ -214,6 +214,9 @@
             if (row.type === 'start-new-conversation') {
                 return (react_1.default.createElement(StartNewConversation_1.StartNewConversation, { phoneNumber: searchTerm, i18n: i18n, onClick: this.handleStartNewConversation }));
             }
+            else if (row.type === 'sms-mms-not-supported-text') {
+                return (react_1.default.createElement("div", { className: "module-search-results__sms-not-supported" }, i18n('notSupportedSMS')));
+            }
             else if (row.type === 'conversations-header') {
                 return (react_1.default.createElement("div", { className: "module-search-results__conversations-header", role: "heading", "aria-level": 1 }, i18n('conversationsHeader')));
             }

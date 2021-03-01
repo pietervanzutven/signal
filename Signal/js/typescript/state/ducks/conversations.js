@@ -264,7 +264,7 @@
             const { payload } = action;
             const { id, data } = payload;
             const { conversationLookup } = state;
-            return Object.assign({}, state, { conversationLookup: Object.assign({}, conversationLookup, { [id]: data }) });
+            return Object.assign(Object.assign({}, state), { conversationLookup: Object.assign(Object.assign({}, conversationLookup), { [id]: data }) });
         }
         if (action.type === 'CONVERSATION_CHANGED') {
             const { payload } = action;
@@ -290,16 +290,16 @@
                     selectedConversation = undefined;
                 }
             }
-            return Object.assign({}, state, {
+            return Object.assign(Object.assign({}, state), {
                 selectedConversation,
-                showArchived, conversationLookup: Object.assign({}, conversationLookup, { [id]: data })
+                showArchived, conversationLookup: Object.assign(Object.assign({}, conversationLookup), { [id]: data })
             });
         }
         if (action.type === 'CONVERSATION_REMOVED') {
             const { payload } = action;
             const { id } = payload;
             const { conversationLookup } = state;
-            return Object.assign({}, state, { conversationLookup: lodash_1.omit(conversationLookup, [id]) });
+            return Object.assign(Object.assign({}, state), { conversationLookup: lodash_1.omit(conversationLookup, [id]) });
         }
         if (action.type === 'CONVERSATION_UNLOADED') {
             const { payload } = action;
@@ -312,7 +312,7 @@
             const selectedConversation = state.selectedConversation !== id
                 ? state.selectedConversation
                 : undefined;
-            return Object.assign({}, state, { selectedConversation, messagesLookup: lodash_1.omit(state.messagesLookup, messageIds), messagesByConversation: lodash_1.omit(state.messagesByConversation, [id]) });
+            return Object.assign(Object.assign({}, state), { selectedConversation, messagesLookup: lodash_1.omit(state.messagesLookup, messageIds), messagesByConversation: lodash_1.omit(state.messagesByConversation, [id]) });
         }
         if (action.type === 'CONVERSATIONS_REMOVE_ALL') {
             return getEmptyState();
@@ -322,7 +322,7 @@
             if (state.selectedConversation !== conversationId) {
                 return state;
             }
-            return Object.assign({}, state, { selectedMessage: messageId, selectedMessageCounter: state.selectedMessageCounter + 1 });
+            return Object.assign(Object.assign({}, state), { selectedMessage: messageId, selectedMessageCounter: state.selectedMessageCounter + 1 });
         }
         if (action.type === 'MESSAGE_CHANGED') {
             const { id, conversationId, data } = action.payload;
@@ -343,7 +343,7 @@
             const updatedChanges = hasHeightChanged
                 ? lodash_1.uniq([...heightChangeMessageIds, id])
                 : heightChangeMessageIds;
-            return Object.assign({}, state, { messagesLookup: Object.assign({}, state.messagesLookup, { [id]: data }), messagesByConversation: Object.assign({}, state.messagesByConversation, { [conversationId]: Object.assign({}, existingConversation, { heightChangeMessageIds: updatedChanges }) }) });
+            return Object.assign(Object.assign({}, state), { messagesLookup: Object.assign(Object.assign({}, state.messagesLookup), { [id]: data }), messagesByConversation: Object.assign(Object.assign({}, state.messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { heightChangeMessageIds: updatedChanges }) }) });
         }
         if (action.type === 'MESSAGES_RESET') {
             const { conversationId, messages, metrics, scrollToMessageId, } = action.payload;
@@ -367,8 +367,8 @@
                     newest = lodash_1.pick(last, ['id', 'received_at']);
                 }
             }
-            return Object.assign({}, state, {
-                selectedMessage: scrollToMessageId, selectedMessageCounter: state.selectedMessageCounter + 1, messagesLookup: Object.assign({}, messagesLookup, lookup), messagesByConversation: Object.assign({}, messagesByConversation, {
+            return Object.assign(Object.assign({}, state), {
+                selectedMessage: scrollToMessageId, selectedMessageCounter: state.selectedMessageCounter + 1, messagesLookup: Object.assign(Object.assign({}, messagesLookup), lookup), messagesByConversation: Object.assign(Object.assign({}, messagesByConversation), {
                     [conversationId]: {
                         isLoadingMessages: false,
                         scrollToMessageId,
@@ -376,7 +376,7 @@
                             ? existingConversation.scrollToMessageCounter + 1
                             : 0,
                         messageIds,
-                        metrics: Object.assign({}, metrics, {
+                        metrics: Object.assign(Object.assign({}, metrics), {
                             newest,
                             oldest
                         }),
@@ -394,7 +394,7 @@
             if (!existingConversation) {
                 return state;
             }
-            return Object.assign({}, state, { messagesByConversation: Object.assign({}, messagesByConversation, { [conversationId]: Object.assign({}, existingConversation, { loadCountdownStart: undefined, isLoadingMessages }) }) });
+            return Object.assign(Object.assign({}, state), { messagesByConversation: Object.assign(Object.assign({}, messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { loadCountdownStart: undefined, isLoadingMessages }) }) });
         }
         if (action.type === 'SET_LOAD_COUNTDOWN_START') {
             const { payload } = action;
@@ -404,7 +404,7 @@
             if (!existingConversation) {
                 return state;
             }
-            return Object.assign({}, state, { messagesByConversation: Object.assign({}, messagesByConversation, { [conversationId]: Object.assign({}, existingConversation, { loadCountdownStart }) }) });
+            return Object.assign(Object.assign({}, state), { messagesByConversation: Object.assign(Object.assign({}, messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { loadCountdownStart }) }) });
         }
         if (action.type === 'SET_NEAR_BOTTOM') {
             const { payload } = action;
@@ -414,7 +414,7 @@
             if (!existingConversation) {
                 return state;
             }
-            return Object.assign({}, state, { messagesByConversation: Object.assign({}, messagesByConversation, { [conversationId]: Object.assign({}, existingConversation, { isNearBottom }) }) });
+            return Object.assign(Object.assign({}, state), { messagesByConversation: Object.assign(Object.assign({}, messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { isNearBottom }) }) });
         }
         if (action.type === 'SCROLL_TO_MESSAGE') {
             const { payload } = action;
@@ -430,7 +430,7 @@
             if (!existingConversation.messageIds.includes(messageId)) {
                 return state;
             }
-            return Object.assign({}, state, { selectedMessage: messageId, selectedMessageCounter: state.selectedMessageCounter + 1, messagesByConversation: Object.assign({}, messagesByConversation, { [conversationId]: Object.assign({}, existingConversation, { isLoadingMessages: false, scrollToMessageId: messageId, scrollToMessageCounter: existingConversation.scrollToMessageCounter + 1 }) }) });
+            return Object.assign(Object.assign({}, state), { selectedMessage: messageId, selectedMessageCounter: state.selectedMessageCounter + 1, messagesByConversation: Object.assign(Object.assign({}, messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { isLoadingMessages: false, scrollToMessageId: messageId, scrollToMessageCounter: existingConversation.scrollToMessageCounter + 1 }) }) });
         }
         if (action.type === 'MESSAGE_DELETED') {
             const { id, conversationId } = action.payload;
@@ -461,11 +461,11 @@
             // Removing it from our caches
             const messageIds = lodash_1.without(existingConversation.messageIds, id);
             const heightChangeMessageIds = lodash_1.without(existingConversation.heightChangeMessageIds, id);
-            return Object.assign({}, state, {
+            return Object.assign(Object.assign({}, state), {
                 messagesLookup: lodash_1.omit(messagesLookup, id), messagesByConversation: {
-                    [conversationId]: Object.assign({}, existingConversation, {
+                    [conversationId]: Object.assign(Object.assign({}, existingConversation), {
                         messageIds,
-                        heightChangeMessageIds, metrics: Object.assign({}, existingConversation.metrics, {
+                        heightChangeMessageIds, metrics: Object.assign(Object.assign({}, existingConversation.metrics), {
                             oldest,
                             newest
                         })
@@ -542,11 +542,11 @@
                 ...changedIds,
                 ...existingConversation.heightChangeMessageIds,
             ]);
-            return Object.assign({}, state, {
-                messagesLookup: Object.assign({}, messagesLookup, lookup), messagesByConversation: Object.assign({}, messagesByConversation, {
-                    [conversationId]: Object.assign({}, existingConversation, {
+            return Object.assign(Object.assign({}, state), {
+                messagesLookup: Object.assign(Object.assign({}, messagesLookup), lookup), messagesByConversation: Object.assign(Object.assign({}, messagesByConversation), {
+                    [conversationId]: Object.assign(Object.assign({}, existingConversation), {
                         isLoadingMessages: false, messageIds,
-                        heightChangeMessageIds, scrollToMessageId: undefined, metrics: Object.assign({}, existingConversation.metrics, {
+                        heightChangeMessageIds, scrollToMessageId: undefined, metrics: Object.assign(Object.assign({}, existingConversation.metrics), {
                             newest,
                             oldest,
                             totalUnread,
@@ -557,7 +557,7 @@
             });
         }
         if (action.type === 'CLEAR_SELECTED_MESSAGE') {
-            return Object.assign({}, state, { selectedMessage: undefined });
+            return Object.assign(Object.assign({}, state), { selectedMessage: undefined });
         }
         if (action.type === 'CLEAR_CHANGED_MESSAGES') {
             const { payload } = action;
@@ -566,7 +566,7 @@
             if (!existingConversation) {
                 return state;
             }
-            return Object.assign({}, state, { messagesByConversation: Object.assign({}, state.messagesByConversation, { [conversationId]: Object.assign({}, existingConversation, { heightChangeMessageIds: [] }) }) });
+            return Object.assign(Object.assign({}, state), { messagesByConversation: Object.assign(Object.assign({}, state.messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { heightChangeMessageIds: [] }) }) });
         }
         if (action.type === 'CLEAR_UNREAD_METRICS') {
             const { payload } = action;
@@ -575,18 +575,18 @@
             if (!existingConversation) {
                 return state;
             }
-            return Object.assign({}, state, { messagesByConversation: Object.assign({}, state.messagesByConversation, { [conversationId]: Object.assign({}, existingConversation, { metrics: Object.assign({}, existingConversation.metrics, { oldestUnread: undefined, totalUnread: 0 }) }) }) });
+            return Object.assign(Object.assign({}, state), { messagesByConversation: Object.assign(Object.assign({}, state.messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { metrics: Object.assign(Object.assign({}, existingConversation.metrics), { oldestUnread: undefined, totalUnread: 0 }) }) }) });
         }
         if (action.type === 'SELECTED_CONVERSATION_CHANGED') {
             const { payload } = action;
             const { id } = payload;
-            return Object.assign({}, state, { selectedConversation: id });
+            return Object.assign(Object.assign({}, state), { selectedConversation: id });
         }
         if (action.type === 'SHOW_INBOX') {
-            return Object.assign({}, state, { showArchived: false });
+            return Object.assign(Object.assign({}, state), { showArchived: false });
         }
         if (action.type === 'SHOW_ARCHIVED_CONVERSATIONS') {
-            return Object.assign({}, state, { showArchived: true });
+            return Object.assign(Object.assign({}, state), { showArchived: true });
         }
         return state;
     }

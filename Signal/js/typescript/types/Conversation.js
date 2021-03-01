@@ -15,9 +15,12 @@
             };
         }
         const { type, expirationTimerUpdate } = lastMessage;
+        const isMessageHistoryUnsynced = type === 'message-history-unsynced';
         const isVerifiedChangeMessage = type === 'verified-change';
         const isExpireTimerUpdateFromSync = Boolean(expirationTimerUpdate && expirationTimerUpdate.fromSync);
-        const shouldUpdateTimestamp = Boolean(!isVerifiedChangeMessage && !isExpireTimerUpdateFromSync);
+        const shouldUpdateTimestamp = Boolean(!isMessageHistoryUnsynced &&
+            !isVerifiedChangeMessage &&
+            !isExpireTimerUpdateFromSync);
         const newTimestamp = shouldUpdateTimestamp
             ? lastMessage.sent_at
             : currentTimestamp;

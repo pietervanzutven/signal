@@ -23,14 +23,17 @@
         if (message.type === 'verified-change') {
             return message;
         }
+        if (message.type === 'message-history-unsynced') {
+            return message;
+        }
         if (message.messageTimer || message.isViewOnce) {
             return message;
         }
         const attachments = message.attachments.filter((attachment) => attachment.contentType !== 'text/x-signal-plain');
         const hasAttachments = IndexedDB.toIndexableBoolean(attachments.length > 0);
-        const hasFileAttachments = hasFileAttachment(Object.assign({}, message, { attachments }));
-        const hasVisualMediaAttachments = hasVisualMediaAttachment(Object.assign({}, message, { attachments }));
-        return Object.assign({}, message, {
+        const hasFileAttachments = hasFileAttachment(Object.assign(Object.assign({}, message), { attachments }));
+        const hasVisualMediaAttachments = hasVisualMediaAttachment(Object.assign(Object.assign({}, message), { attachments }));
+        return Object.assign(Object.assign({}, message), {
             hasAttachments,
             hasFileAttachments,
             hasVisualMediaAttachments

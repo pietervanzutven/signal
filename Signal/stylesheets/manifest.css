@@ -3310,6 +3310,25 @@ img.emoji.jumbo {
   .dark-theme.keyboard-mode .module-safety-number-notification__button:focus {
     background-color: #5e5e5e; }
 
+.module-message-unsynced {
+  padding-bottom: 24px;
+  text-align: center;
+  color: #5e5e5e; }
+  .dark-theme .module-message-unsynced {
+    color: #b9b9b9; }
+
+.module-message-unsynced__icon {
+  height: 24px;
+  margin-bottom: 4px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 24px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>info-outline-24</title><path d='M12,2.5A9.5,9.5,0,1,1,2.5,12,9.511,9.511,0,0,1,12,2.5M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,7.5A1.5,1.5,0,0,0,13.5,7a1.5,1.5,0,1,0-2.56,1.06A1.435,1.435,0,0,0,12,8.5Zm1,8V10H9.5v1.5h2v5H9V18h6V16.5Z' fill='%235E5E5E'/></svg>") no-repeat center;
+  background-size: 100%; }
+  .dark-theme .module-message-unsynced__icon {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>info-solid-24</title><path d='M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1ZM10.94,5.939A1.5,1.5,0,0,1,13.5,7a1.5,1.5,0,0,1-2.56,1.06,1.5,1.5,0,0,1,0-2.121ZM15,18H9V16.5h2.5v-5h-2V10H13v6.5h2Z' fill='%23B9B9B9'/></svg>") no-repeat center;
+    background-size: 100%; }
+
 .module-verification-notification {
   text-align: center;
   color: #5e5e5e; }
@@ -5232,6 +5251,14 @@ img.emoji.jumbo {
   padding-top: 8px; }
   .dark-theme .module-search-results__conversations-header {
     color: #e9e9e9; }
+
+.module-search-results__sms-not-supported {
+  font-size: 14px;
+  padding-top: 12px;
+  text-align: center;
+  color: #5e5e5e; }
+  .dark-theme .module-search-results__sms-not-supported {
+    color: #b9b9b9; }
 
 .module-search-results__no-results {
   margin-top: 27px;
