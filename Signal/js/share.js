@@ -5,9 +5,6 @@ Windows.UI.WebUI.WebUIApplication.addEventListener('activated', event => {
         var file = files[0];
         var type = file.contentType.split('/')[0];
         switch (type) {
-            case 'video':
-                preview.src = '/images/movie.svg';
-                break;
             case 'image':
                 preview.src = URL.createObjectURL(file);
                 break;

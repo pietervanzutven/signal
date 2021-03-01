@@ -250,7 +250,7 @@ function createWindow() {
       backgroundColor:
         config.environment === 'test' || config.environment === 'test-lib'
           ? '#ffffff' // Tests should always be rendered on a white background
-          : '#2090EA',
+          : '#3a76f0',
       vibrancy: 'appearance-based',
       webPreferences: {
         nodeIntegration: false,
@@ -495,7 +495,7 @@ function showAbout() {
     resizable: false,
     title: locale.messages.aboutSignalDesktop.message,
     autoHideMenuBar: true,
-    backgroundColor: '#2090EA',
+    backgroundColor: '#3a76f0',
     show: false,
     vibrancy: 'appearance-based',
     webPreferences: {
@@ -543,7 +543,7 @@ async function showSettingsWindow() {
     resizable: false,
     title: locale.messages.signalDesktopPreferences.message,
     autoHideMenuBar: true,
-    backgroundColor: '#2090EA',
+    backgroundColor: '#3a76f0',
     show: false,
     modal: true,
     vibrancy: 'appearance-based',
@@ -613,7 +613,7 @@ async function showStickerCreator() {
     height: 650,
     title: locale.messages.signalDesktopStickerCreator,
     autoHideMenuBar: true,
-    backgroundColor: '#2090EA',
+    backgroundColor: '#3a76f0',
     show: false,
     webPreferences: {
       nodeIntegration: false,
@@ -663,7 +663,7 @@ async function showDebugLogWindow() {
     resizable: false,
     title: locale.messages.debugLog.message,
     autoHideMenuBar: true,
-    backgroundColor: '#2090EA',
+    backgroundColor: '#3a76f0',
     show: false,
     modal: true,
     vibrancy: 'appearance-based',
@@ -712,7 +712,7 @@ async function showPermissionsPopupWindow() {
     resizable: false,
     title: locale.messages.allowAccess.message,
     autoHideMenuBar: true,
-    backgroundColor: '#2090EA',
+    backgroundColor: '#3a76f0',
     show: false,
     modal: true,
     vibrancy: 'appearance-based',
