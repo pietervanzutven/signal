@@ -7,14 +7,23 @@
     const exports = window.ts.state.ducks.user = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
+    const events_1 = window.ts.shims.events;
     // Action Creators
     exports.actions = {
         userChanged,
+        manualReconnect,
     };
     function userChanged(attributes) {
         return {
             type: 'USER_CHANGED',
             payload: attributes,
+        };
+    }
+    function manualReconnect() {
+        events_1.trigger('manualConnect');
+        return {
+            type: 'NOOP',
+            payload: null,
         };
     }
     // Reducer

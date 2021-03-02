@@ -1452,6 +1452,7 @@
     new textsecure.SyncRequest(textsecure.messaging, messageReceiver);
 
   let disconnectTimer = null;
+  let reconnectTimer = null;
   function onOffline() {
     window.log.info('offline');
 
@@ -1505,7 +1506,12 @@
 
   let connectCount = 0;
   async function connect(firstRun) {
-    window.log.info('connect', firstRun);
+    window.log.info('connect', { firstRun, connectCount });
+
+    if (reconnectTimer) {
+      clearTimeout(reconnectTimer);
+      reconnectTimer = null;
+    }
 
     // Bootstrap our online/offline detection, only the first time we connect
     if (connectCount === 0 && navigator.onLine) {
@@ -1803,6 +1809,11 @@
     if (view) {
       view.onProgress(initialStartupCount);
     }
+  }
+
+  Whisper.events.on('manualConnect', manualConnect);
+  function manualConnect() {
+    connect();
   }
 
   function onConfiguration(ev) {
@@ -2441,11 +2452,15 @@
       return;
     }
 
-    if (error && error.name === 'HTTPError' && error.code === -1) {
+    if (
+      error &&
+      error.name === 'HTTPError' &&
+      (error.code === -1 || error.code === 502)
+    ) {
       // Failed to connect to server
       if (navigator.onLine) {
         window.log.info('retrying in 1 minute');
-        setTimeout(connect, 60000);
+        reconnectTimer = setTimeout(connect, 60000);
 
         Whisper.events.trigger('reconnectTimer');
       }
