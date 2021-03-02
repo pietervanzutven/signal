@@ -44,6 +44,10 @@ console.log('Set Windows Application User Model ID (AUMID)', {
 });
 app.setAppUserModelId(appUserModelId);
 
+// We don't navigate, but this is the way of the future
+//   https://github.com/electron/electron/issues/18397
+app.allowRendererProcessReuse = true;
+
 // Keep a global reference of the window object, if you don't, the window will
 //   be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -251,7 +255,6 @@ function createWindow() {
         config.environment === 'test' || config.environment === 'test-lib'
           ? '#ffffff' // Tests should always be rendered on a white background
           : '#3a76f0',
-      vibrancy: 'appearance-based',
       webPreferences: {
         nodeIntegration: false,
         nodeIntegrationInWorker: false,
@@ -312,7 +315,7 @@ function createWindow() {
     // so if we need to recreate the window, we have the most recent settings
     windowConfig = {
       maximized: mainWindow.isMaximized(),
-      autoHideMenuBar: mainWindow.isMenuBarAutoHide(),
+      autoHideMenuBar: mainWindow.autoHideMenuBar,
       fullscreen: mainWindow.isFullScreen(),
       width: size[0],
       height: size[1],
@@ -497,7 +500,6 @@ function showAbout() {
     autoHideMenuBar: true,
     backgroundColor: '#3a76f0',
     show: false,
-    vibrancy: 'appearance-based',
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
@@ -546,7 +548,6 @@ async function showSettingsWindow() {
     backgroundColor: '#3a76f0',
     show: false,
     modal: true,
-    vibrancy: 'appearance-based',
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
@@ -666,7 +667,6 @@ async function showDebugLogWindow() {
     backgroundColor: '#3a76f0',
     show: false,
     modal: true,
-    vibrancy: 'appearance-based',
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
@@ -715,7 +715,6 @@ async function showPermissionsPopupWindow() {
     backgroundColor: '#3a76f0',
     show: false,
     modal: true,
-    vibrancy: 'appearance-based',
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
@@ -955,7 +954,7 @@ ipc.on('restart', () => {
 
 ipc.on('set-auto-hide-menu-bar', (event, autoHide) => {
   if (mainWindow) {
-    mainWindow.setAutoHideMenuBar(autoHide);
+    mainWindow.autoHideMenuBar = autoHide;
   }
 });
 

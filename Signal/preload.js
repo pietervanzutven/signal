@@ -16,7 +16,7 @@
 
     const { remote } = electron;
     const { app } = remote;
-    const { systemPreferences } = remote.require('electron');
+    const { nativeTheme } = remote.require('electron');
 
     window.PROTO_ROOT = '/protos';
     const config = window.app.config || {};
@@ -41,22 +41,16 @@
     window.isBehindProxy = () => Boolean(config.proxyUrl);
 
     function setSystemTheme() {
-      window.systemTheme = systemPreferences.isDarkMode() ? 'dark' : 'light';
+      window.systemTheme = nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
     }
 
     setSystemTheme();
 
     window.subscribeToSystemThemeChange = fn => {
-      if (!systemPreferences.subscribeNotification) {
-        return;
-      }
-      systemPreferences.subscribeNotification(
-        'AppleInterfaceThemeChangedNotification',
-        () => {
+      nativeTheme.on('updated', () => {
           setSystemTheme();
           fn();
-        }
-      );
+      });
     };
 
     window.isBeforeVersion = (toCheck, baseVersion) => {

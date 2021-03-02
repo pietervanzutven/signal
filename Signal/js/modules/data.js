@@ -183,8 +183,22 @@
   };
 
   // When IPC arguments are prepared for the cross-process send, they are JSON.stringified.
-  // We can't send ArrayBuffers or BigNumbers (what we get from proto library for dates).
-  function _cleanData(data) {
+  //   We can't send ArrayBuffers or BigNumbers (what we get from proto library for dates),
+  //   We also cannot send objects with function-value keys, like what protobufjs gives us.
+  function _cleanData(data, path = 'root') {
+    if (data === null || data === undefined) {
+      window.log.warn(`_cleanData: null or undefined value at path ${path}`);
+      return data;
+    }
+
+    if (
+      typeof data === 'string' ||
+      typeof data === 'number' ||
+      typeof data === 'boolean'
+    ) {
+      return data;
+    }
+
     const keys = Object.keys(data);
     for (let index = 0, max = keys.length; index < max; index += 1) {
       const key = keys[index];
@@ -195,15 +209,21 @@
         continue;
       }
 
-      if (isFunction(value.toNumber)) {
+      if (isFunction(value)) {
+        // To prepare for Electron v9 IPC, we need to take functions off of any object
+        // eslint-disable-next-line no-param-reassign
+        delete data[key];
+      } else if (isFunction(value.toNumber)) {
         // eslint-disable-next-line no-param-reassign
         data[key] = value.toNumber();
       } else if (Array.isArray(value)) {
         // eslint-disable-next-line no-param-reassign
-        data[key] = value.map(item => _cleanData(item));
+        data[key] = value.map((item, mapIndex) =>
+          _cleanData(item, `${path}.${key}.${mapIndex}`)
+        );
       } else if (isObject(value)) {
         // eslint-disable-next-line no-param-reassign
-        data[key] = _cleanData(value);
+        data[key] = _cleanData(value, `${path}.${key}`);
       } else if (
         typeof value !== 'string' &&
         typeof value !== 'number' &&
@@ -212,6 +232,7 @@
         window.log.info(`_cleanData: key ${key} had type ${typeof value}`);
       }
     }
+
     return data;
   }
 
@@ -357,19 +378,25 @@
       const jobId = _makeJob(fnName);
 
       return new Promise((resolve, reject) => {
-        ipcRenderer.send(SQL_CHANNEL_KEY, jobId, fnName, ...args);
+        try {
+          ipcRenderer.send(SQL_CHANNEL_KEY, jobId, fnName, ...args);
 
-        _updateJob(jobId, {
-          resolve,
-          reject,
-          args: _DEBUG ? args : null,
-        });
+          _updateJob(jobId, {
+            resolve,
+            reject,
+            args: _DEBUG ? args : null,
+          });
 
-        setTimeout(
-          () =>
-            reject(new Error(`SQL channel job ${jobId} (${fnName}) timed out`)),
-          DATABASE_UPDATE_TIMEOUT
-        );
+          setTimeout(
+            () =>
+              reject(new Error(`SQL channel job ${jobId} (${fnName}) timed out`)),
+            DATABASE_UPDATE_TIMEOUT
+          );
+        } catch (error) {
+          _removeJob(jobId);
+
+          reject(error);
+        }
       });
     };
   }
@@ -522,16 +549,8 @@
 
   const ITEM_KEYS = {
     identityKey: ['value.pubKey', 'value.privKey'],
-    senderCertificate: [
-      'value.certificate',
-      'value.signature',
-      'value.serialized',
-    ],
-    senderCertificateWithUuid: [
-      'value.certificate',
-      'value.signature',
-      'value.serialized',
-    ],
+    senderCertificate: ['value.serialized'],
+    senderCertificateWithUuid: ['value.serialized'],
     signaling_key: ['value'],
     profileKey: ['value'],
   };
@@ -990,7 +1009,7 @@
     return channels.getNextAttachmentDownloadJobs(limit);
   }
   async function saveAttachmentDownloadJob(job) {
-    await channels.saveAttachmentDownloadJob(job);
+    await channels.saveAttachmentDownloadJob(_cleanData(job));
   }
   async function setAttachmentDownloadJobPending(id, pending) {
     await channels.setAttachmentDownloadJobPending(id, pending);
