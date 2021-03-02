@@ -9,7 +9,7 @@ function require_logging() {
   const electron = window.electron;
   const _ = window.lodash;
 
-  const debuglogs = require_debuglogs();
+  const debuglogs = window.debuglogs;
   const Privacy = window.privacy;
   const { createBatcher } = require_ts_util_batcher();
 
