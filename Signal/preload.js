@@ -48,8 +48,8 @@
 
     window.subscribeToSystemThemeChange = fn => {
       nativeTheme.on('updated', () => {
-          setSystemTheme();
-          fn();
+        setSystemTheme();
+        fn();
       });
     };
 
@@ -378,8 +378,8 @@
       Ed25519Verify: wrapWithPromise(externalCurve.Ed25519Verify),
     };
     window.libsignal = window.libsignal || {};
-    window.libsignal.externalCurve = externalCurve;
-    window.libsignal.externalCurveAsync = externalCurveAsync;
+    window.libsignal.externalCurve = curve ? externalCurve : null;
+    window.libsignal.externalCurveAsync = curve ? externalCurveAsync : null;
 
     // Pulling these in separately since they access filesystem, electron
     window.Signal.Backup = window.backup;

@@ -75,6 +75,7 @@
     <Content Include="app\global_errors.js" />
     <Content Include="app\logging.js" />
     <Content Include="app\config.js" />
+    <Content Include="app\spell_check.js" />
     <Content Include="app\sql.js" />
     <Content Include="app\sql_channel.js" />
     <Content Include="app\user_config.js" />
