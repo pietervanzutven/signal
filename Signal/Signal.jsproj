@@ -438,6 +438,8 @@
     <Content Include="libtextsecure\stringview.js" />
     <Content Include="libtextsecure\sync_request.js" />
     <Content Include="libtextsecure\task_with_timeout.js" />
+    <Content Include="loading.html" />
+    <Content Include="loading_preload.js" />
     <Content Include="main.js" />
     <Content Include="node_modules\blob-util\blob-util.js" />
     <Content Include="node_modules\blueimp-canvas-to-blob\canvas-to-blob.js" />
