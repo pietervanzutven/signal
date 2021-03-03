@@ -19,6 +19,7 @@ const packageJson = {
   productName: 'Signal',
 };
 const GlobalErrors = window.app.global_errors;
+const { setup: setupSpellChecker } = window.app.spell_check;
 
 GlobalErrors.addHandler();
 
@@ -85,6 +86,19 @@ const logging = window.app.logging;
 const sql = window.app.sql;
 const sqlChannels = window.app.sql_channel;
 const windowState = window.app.window_state;
+
+let appStartInitialSpellcheckSetting = true;
+
+async function getSpellCheckSetting() {
+  const json = await sql.getItemById('spell-check');
+
+  // Default to `true` if setting doesn't exist yet
+  if (!json) {
+    return true;
+  }
+
+  return json.value;
+}
 
 function showWindow() {
   if (!mainWindow) {
@@ -171,11 +185,12 @@ function prepareURL(pathSegments, moreKeys) {
           environment: config.environment,
           uwp_version: process.versions.uwp,
           hostname: os.hostname(),
-          appInstance: process.env.NODE_APP_INSTANCE,
+          appInstance: process.env.UWP_APP_INSTANCE,
           proxyUrl: process.env.HTTPS_PROXY || process.env.https_proxy,
           contentProxyUrl: config.contentProxyUrl,
           importMode: importMode ? true : undefined, // for stringify()
           serverTrustRoot: config.get('serverTrustRoot'),
+          appStartInitialSpellcheckSetting,
         },
         moreKeys,
       ),
@@ -236,7 +251,7 @@ function isVisible(window, bounds) {
   );
 }
 
-function createWindow() {
+async function createWindow() {
   const { screen } = electron;
   const windowOptions = Object.assign(
     {
@@ -252,11 +267,12 @@ function createWindow() {
           : '#2090EA',
       vibrancy: 'appearance-based',
       webPreferences: {
-        nodeIntegration: false,
-        nodeIntegrationInWorker: false,
+        uwpIntegration: false,
+        uwpIntegrationInWorker: false,
         contextIsolation: false,
         preload: path.join(__dirname, 'preload.js'),
         nativeWindowOpen: true,
+        spellcheck: await getSpellCheckSetting(),
       },
       icon: path.join(__dirname, 'images', 'icon_256.png'),
     },
@@ -293,6 +309,7 @@ function createWindow() {
 
   // Create the browser window.
   mainWindow = new BrowserWindow(windowOptions);
+  setupSpellChecker(mainWindow, locale.messages);
   if (!usingTrayIcon && windowConfig && windowConfig.maximized) {
     mainWindow.maximize();
   }
@@ -498,8 +515,8 @@ function showAbout() {
     show: false,
     vibrancy: 'appearance-based',
     webPreferences: {
-      nodeIntegration: false,
-      nodeIntegrationInWorker: false,
+      uwpIntegration: false,
+      uwpIntegrationInWorker: false,
       contextIsolation: false,
       preload: path.join(__dirname, 'about_preload.js'),
       nativeWindowOpen: true,
@@ -523,7 +540,7 @@ function showAbout() {
 }
 
 let settingsWindow;
-async function showSettingsWindow() {
+function showSettingsWindow() {
   if (settingsWindow) {
     settingsWindow.show();
     return;
@@ -547,8 +564,8 @@ async function showSettingsWindow() {
     modal: true,
     vibrancy: 'appearance-based',
     webPreferences: {
-      nodeIntegration: false,
-      nodeIntegrationInWorker: false,
+      uwpIntegration: false,
+      uwpIntegrationInWorker: false,
       contextIsolation: false,
       preload: path.join(__dirname, 'settings_preload.js'),
       nativeWindowOpen: true,
@@ -615,15 +632,17 @@ async function showStickerCreator() {
     backgroundColor: '#2090EA',
     show: false,
     webPreferences: {
-      nodeIntegration: false,
-      nodeIntegrationInWorker: false,
+      uwpIntegration: false,
+      uwpIntegrationInWorker: false,
       contextIsolation: false,
       preload: path.join(__dirname, 'sticker-creator/preload.js'),
       nativeWindowOpen: true,
+      spellcheck: await getSpellCheckSetting(),
     },
   };
 
   stickerCreatorWindow = new BrowserWindow(options);
+  setupSpellChecker(stickerCreatorWindow, locale.messages);
 
   handleCommonWindowEvents(stickerCreatorWindow);
 
@@ -667,8 +686,8 @@ async function showDebugLogWindow() {
     modal: true,
     vibrancy: 'appearance-based',
     webPreferences: {
-      nodeIntegration: false,
-      nodeIntegrationInWorker: false,
+      uwpIntegration: false,
+      uwpIntegrationInWorker: false,
       contextIsolation: false,
       preload: path.join(__dirname, 'debug_log_preload.js'),
       nativeWindowOpen: true,
@@ -716,8 +735,8 @@ async function showPermissionsPopupWindow() {
     modal: true,
     vibrancy: 'appearance-based',
     webPreferences: {
-      nodeIntegration: false,
-      nodeIntegrationInWorker: false,
+      uwpIntegration: false,
+      uwpIntegrationInWorker: false,
       contextIsolation: false,
       preload: path.join(__dirname, 'permissions_popup_preload.js'),
       nativeWindowOpen: true,
@@ -782,6 +801,8 @@ let ready = false;
     console.log('sql.initialize was unsuccessful; returning early');
     return;
   }
+  // eslint-disable-next-line more/no-then
+  appStartInitialSpellcheckSetting = await getSpellCheckSetting();
   await sqlChannels.initialize();
 
   try {
@@ -1150,10 +1171,10 @@ async function ensureFilePermissions(onlyFiles) {
   const files = onlyFiles
     ? onlyFiles.map(f => path.join(userDataPath, f))
     : await fg(userDataGlob, {
-        markDirectories: true,
-        onlyFiles: false,
-        ignore: ['**/Singleton*'],
-      });
+      markDirectories: true,
+      onlyFiles: false,
+      ignore: ['**/Singleton*'],
+    });
 
   console.log(`Ensuring file permissions for ${files.length} files`);
 
