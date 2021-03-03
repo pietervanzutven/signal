@@ -9,13 +9,14 @@
     const electron = window.electron;
     const semver = window.semver;
     const curve = window.curve25519_n;
+    const _ = window.lodash;
     const { installGetter, installSetter } = window.preload_utils;
 
     const { deferredToPromise } = window.deferred_to_promise;
 
     const { remote } = electron;
     const { app } = remote;
-    const { systemPreferences } = remote.require('electron');
+    const { nativeTheme } = remote.require('electron');
 
     window.PROTO_ROOT = '/protos';
     const config = window.app.config || {};
@@ -40,22 +41,16 @@
     window.isBehindProxy = () => Boolean(config.proxyUrl);
 
     function setSystemTheme() {
-      window.systemTheme = systemPreferences.isDarkMode() ? 'dark' : 'light';
+      window.systemTheme = nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
     }
 
     setSystemTheme();
 
     window.subscribeToSystemThemeChange = fn => {
-      if (!systemPreferences.subscribeNotification) {
-        return;
-      }
-      systemPreferences.subscribeNotification(
-        'AppleInterfaceThemeChangedNotification',
-        () => {
-          setSystemTheme();
-          fn();
-        }
-      );
+      nativeTheme.on('updated', () => {
+        setSystemTheme();
+        fn();
+      });
     };
 
     window.isBeforeVersion = (toCheck, baseVersion) => {
@@ -244,6 +239,30 @@
     window.libphonenumber.PhoneNumberFormat = window.google_libphonenumber.PhoneNumberFormat;
     window.loadImage = window.blueimp_load_image;
     window.getGuid = window.uuid.v4;
+
+    window.isValidGuid = maybeGuid =>
+      /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(
+        maybeGuid
+      );
+    // https://stackoverflow.com/a/23299989
+    window.isValidE164 = maybeE164 => /^\+?[1-9]\d{1,14}$/.test(maybeE164);
+
+    window.normalizeUuids = (obj, paths, context) => {
+      if (!obj) {
+        return;
+      }
+      paths.forEach(path => {
+        const val = _.get(obj, path);
+        if (val) {
+          if (!window.isValidGuid(val)) {
+            window.log.warn(
+              `Normalizing invalid uuid: ${val} at path ${path} in context "${context}"`
+            );
+          }
+          _.set(obj, path, val.toLowerCase());
+        }
+      });
+    };
 
     window.React = window.react;
     window.ReactDOM = window.react_dom;

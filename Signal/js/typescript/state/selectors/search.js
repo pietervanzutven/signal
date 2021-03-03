@@ -13,6 +13,7 @@
     const memoizee_1 = __importDefault(window.memoizee);
     const reselect_1 = window.reselect;
     const Whisper_1 = window.ts.shims.Whisper;
+    const libphonenumberInstance_1 = window.ts.util.libphonenumberInstance;
     const user_1 = window.ts.state.selectors.user;
     const conversations_1 = window.ts.state.selectors.conversations;
     exports.getSearch = (state) => state.search;
@@ -29,10 +30,11 @@
     exports.getSearchResults = reselect_1.createSelector([
         exports.getSearch,
         user_1.getRegionCode,
+        user_1.getUserAgent,
         conversations_1.getConversationLookup,
         conversations_1.getSelectedConversation,
         exports.getSelectedMessage,
-    ], (state, regionCode, lookup, selectedConversationId, selectedMessageId
+    ], (state, regionCode, userAgent, lookup, selectedConversationId, selectedMessageId
         // tslint:disable-next-line max-func-body-length
     ) => {
         const { contacts, conversations, discussionsLoading, messageIds, messagesLoading, searchConversationName, } = state;
@@ -52,6 +54,15 @@
                 type: 'start-new-conversation',
                 data: undefined,
             });
+            const isIOS = userAgent === 'OWI';
+            const parsedNumber = libphonenumberInstance_1.instance.parse(state.query, regionCode);
+            const isValidNumber = libphonenumberInstance_1.instance.isValidNumber(parsedNumber);
+            if (!isIOS && isValidNumber) {
+                items.push({
+                    type: 'sms-mms-not-supported-text',
+                    data: undefined,
+                });
+            }
         }
         if (haveConversations) {
             items.push({
@@ -62,7 +73,7 @@
                 const data = lookup[id];
                 items.push({
                     type: 'conversation',
-                    data: Object.assign({}, data, { isSelected: Boolean(data && id === selectedConversationId) }),
+                    data: Object.assign(Object.assign({}, data), { isSelected: Boolean(data && id === selectedConversationId) }),
                 });
             });
         }
@@ -85,7 +96,7 @@
                 const data = lookup[id];
                 items.push({
                     type: 'contact',
-                    data: Object.assign({}, data, { isSelected: Boolean(data && id === selectedConversationId) }),
+                    data: Object.assign(Object.assign({}, data), { isSelected: Boolean(data && id === selectedConversationId) }),
                 });
             });
         }
@@ -134,7 +145,7 @@
         recipient, searchConversationId, selectedMessageId) {
         // Note: We don't use all of those parameters here, but the shim we call does.
         //   We want to call this function again if any of those parameters change.
-        return Object.assign({}, Whisper_1.getSearchResultsProps(message), { isSelected: message.id === selectedMessageId, isSearchingInConversation: Boolean(searchConversationId) });
+        return Object.assign(Object.assign({}, Whisper_1.getSearchResultsProps(message)), { isSelected: message.id === selectedMessageId, isSearchingInConversation: Boolean(searchConversationId) });
     }
     exports._messageSearchResultSelector = _messageSearchResultSelector;
     exports.getCachedSelectorForMessageSearchResult = reselect_1.createSelector(user_1.getRegionCode, user_1.getUserNumber, () => {

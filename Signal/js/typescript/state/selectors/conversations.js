@@ -65,6 +65,16 @@
             if (leftTimestamp && rightTimestamp && leftTimestamp !== rightTimestamp) {
                 return rightTimestamp - leftTimestamp;
             }
+            if (typeof left.inboxPosition === 'number' &&
+                typeof right.inboxPosition === 'number') {
+                return right.inboxPosition > left.inboxPosition ? -1 : 1;
+            }
+            if (typeof left.inboxPosition === 'number' && right.inboxPosition == null) {
+                return -1;
+            }
+            if (typeof right.inboxPosition === 'number' && left.inboxPosition == null) {
+                return 1;
+            }
             const leftTitle = getConversationTitle(left, {
                 i18n,
                 ourRegionCode,
@@ -88,7 +98,7 @@
                 continue;
             }
             if (selectedConversation === conversation.id) {
-                conversation = Object.assign({}, conversation, { isSelected: true });
+                conversation = Object.assign(Object.assign({}, conversation), { isSelected: true });
             }
             if (conversation.isArchived) {
                 archivedConversations.push(conversation);
@@ -102,8 +112,8 @@
         return { conversations, archivedConversations };
     };
     exports.getLeftPaneLists = reselect_1.createSelector(exports.getConversationLookup, exports.getConversationComparator, exports.getSelectedConversation, exports._getLeftPaneLists);
-    exports.getMe = reselect_1.createSelector([exports.getConversationLookup, user_1.getUserNumber], (lookup, ourNumber) => {
-        return lookup[ourNumber];
+    exports.getMe = reselect_1.createSelector([exports.getConversationLookup, user_1.getUserConversationId], (lookup, ourConversationId) => {
+        return lookup[ourConversationId];
     });
     // This is where we will put Conversation selector logic, replicating what
     // is currently in models/conversation.getProps()
@@ -154,9 +164,9 @@
         //   We want to call this function again if any of those parameters change.
         const props = Whisper_1.getBubbleProps(message);
         if (selectedMessageId === message.id) {
-            return Object.assign({}, props, { data: Object.assign({}, props.data, { interactionMode, isSelected: true, isSelectedCounter: selectedMessageCounter }) });
+            return Object.assign(Object.assign({}, props), { data: Object.assign(Object.assign({}, props.data), { interactionMode, isSelected: true, isSelectedCounter: selectedMessageCounter }) });
         }
-        return Object.assign({}, props, { data: Object.assign({}, props.data, { interactionMode }) });
+        return Object.assign(Object.assign({}, props), { data: Object.assign(Object.assign({}, props.data), { interactionMode }) });
     }
     exports._messageSelector = _messageSelector;
     exports.getCachedSelectorForMessage = reselect_1.createSelector(user_1.getRegionCode, user_1.getUserNumber, () => {

@@ -53,6 +53,7 @@
             this.audioRef = react_1.default.createRef();
             this.focusRef = react_1.default.createRef();
             this.reactionsContainerRef = react_1.default.createRef();
+            this.reactionsContainerRefMerger = _util_1.createRefMerger();
             this.handleWideMlChange = (event) => {
                 this.setState({ isWide: event.matches });
             };
@@ -889,7 +890,7 @@
             const popperPlacement = outgoing ? 'bottom-end' : 'bottom-start';
             return (react_1.default.createElement(react_popper_1.Manager, null,
                 react_1.default.createElement(react_popper_1.Reference, null, ({ ref: popperRef }) => (react_1.default.createElement("div", {
-                    ref: _util_1.mergeRefs(this.reactionsContainerRef, popperRef), className: classnames_1.default('module-message__reactions', outgoing
+                    ref: this.reactionsContainerRefMerger(this.reactionsContainerRef, popperRef), className: classnames_1.default('module-message__reactions', outgoing
                         ? 'module-message__reactions--outgoing'
                         : 'module-message__reactions--incoming'), style: {
                             [outgoing ? 'right' : 'left']: `${reactionsXAxisOffset}px`,

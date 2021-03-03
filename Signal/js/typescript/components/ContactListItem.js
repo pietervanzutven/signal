@@ -21,7 +21,7 @@
         render() {
             const { i18n, name, onClick, isMe, phoneNumber, profileName, verified, } = this.props;
             const title = name ? name : phoneNumber;
-            const displayName = isMe ? i18n('me') : title;
+            const displayName = isMe ? i18n('you') : title;
             const profileElement = !isMe && profileName && !name ? (react_1.default.createElement("span", { className: "module-contact-list-item__text__profile-name" },
                 "~",
                 react_1.default.createElement(Emojify_1.Emojify, { text: profileName }))) : null;

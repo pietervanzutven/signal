@@ -327,10 +327,6 @@
       }
     }
   },
-  "me": {
-    "message": "Me",
-    "description": "The label for yourself when shown in a group member list"
-  },
   "view": {
     "message": "View",
     "description": "Used as a label on a button allowing user to see more information"
@@ -364,6 +360,10 @@
         "example": "5"
       }
     }
+  },
+  "messageHistoryUnsynced": {
+    "message": "For your security, conversation history isn't transferred to new linked devices.",
+    "description": "Shown in the conversation history when a user links a new device to explain what is not supported."
   },
   "youMarkedAsVerified": {
     "message": "You marked your Safety Number with $name$ as verified",
@@ -650,6 +650,10 @@
   "connecting": {
     "message": "Connecting",
     "description": "Displayed when the desktop client is currently connecting to the server."
+  },
+  "connect": {
+    "message": "Connect",
+    "description": "Shown to allow the user to manually attempt a reconnect."
   },
   "connectingHangOn": {
     "message": "Shouldn't be long...",
@@ -1156,9 +1160,13 @@
     "message": "Enable spell check of text entered in message composition box",
     "description": "Description of the media permission description"
   },
-  "spellCheckDirty": {
-    "message": "You must restart Signal to apply your new settings",
-    "description": "Shown when the user changes their spellcheck setting to indicate that they must restart Signal."
+  "spellCheckWillBeEnabled": {
+    "message": "Spell check will be enabled the next time Signal starts.",
+    "description": "Shown when the user enables spellcheck to indicate that they must restart Signal."
+  },
+  "spellCheckWillBeDisabled": {
+    "message": "Spell check will be disabled the next time Signal starts.",
+    "description": "Shown when the user disables spellcheck to indicate that they must restart Signal."
   },
   "clearDataHeader": {
     "message": "Clear Data",
@@ -1617,6 +1625,10 @@
   "startConversation": {
     "message": "Start new conversation…",
     "description": "Label underneath number a user enters that is not an existing contact"
+  },
+  "notSupportedSMS": {
+    "message": "SMS/MMS messages are not supported.",
+    "description": "Label underneath number informing user that SMS is not supported on desktop"
   },
   "newPhoneNumber": {
     "message": "Enter a phone number to add a contact.",

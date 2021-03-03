@@ -12,7 +12,7 @@
   const { locale } = config;
   const localeMessages = ipcRenderer.sendSync('locale-data');
 
-  const { systemPreferences } = remote.require('electron');
+  const { nativeTheme } = remote.require('electron');
 
   window.platform = window.top.process.platform;
   window.theme = config.theme;
@@ -21,22 +21,16 @@
     config.appStartInitialSpellcheckSetting === 'true';
 
   function setSystemTheme() {
-    window.systemTheme = systemPreferences.isDarkMode() ? 'dark' : 'light';
+    window.systemTheme = nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
   }
 
   setSystemTheme();
 
   window.subscribeToSystemThemeChange = fn => {
-    if (!systemPreferences.subscribeNotification) {
-      return;
-    }
-    systemPreferences.subscribeNotification(
-      'AppleInterfaceThemeChangedNotification',
-      () => {
-        setSystemTheme();
-        fn();
-      }
-    );
+    nativeTheme.on('updated', () => {
+      setSystemTheme();
+      fn();
+    });
   };
 
   window.getEnvironment = () => config.environment;

@@ -247,7 +247,7 @@
             };
             this.rowRenderer = ({ index, key, parent, style, }) => {
                 const { id, haveOldest, items, renderItem, renderLoadingRow, renderLastSeenIndicator, renderTypingBubble, } = this.props;
-                const styleWithWidth = Object.assign({}, style, { width: `${this.mostRecentWidth}px` });
+                const styleWithWidth = Object.assign(Object.assign({}, style), { width: `${this.mostRecentWidth}px` });
                 const row = index;
                 const oldestUnreadRow = this.getLastSeenIndicatorRow();
                 const typingBubbleRow = this.getTypingBubbleRow();
@@ -437,7 +437,7 @@
             if (lodash_1.isNumber(props.scrollToIndex) &&
                 (props.scrollToIndex !== state.prevPropScrollToIndex ||
                     props.scrollToIndexCounter !== state.prevPropScrollToIndexCounter)) {
-                return Object.assign({}, state, { propScrollToIndex: props.scrollToIndex, prevPropScrollToIndex: props.scrollToIndex, prevPropScrollToIndexCounter: props.scrollToIndexCounter });
+                return Object.assign(Object.assign({}, state), { propScrollToIndex: props.scrollToIndex, prevPropScrollToIndex: props.scrollToIndex, prevPropScrollToIndexCounter: props.scrollToIndexCounter });
             }
             return state;
         }
