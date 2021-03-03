@@ -92,7 +92,7 @@
             end += 1;
         }
         const word = str.slice(start, end);
-        if (word === ':' && str.length > 1) {
+        if (word === ':' && index + 1 <= str.length) {
             return getWordAtIndex(str, index + 1);
         }
         return {
@@ -142,6 +142,7 @@
         const focusRef = React.useRef(false);
         const editorStateRef = React.useRef(editorRenderState);
         const rootElRef = React.useRef();
+        const rootElRefMerger = React.useMemo(_util_1.createRefMerger, []);
         // This function sets editorState and also keeps a reference to the newly set
         // state so we can reference the state in effects and callbacks without
         // excessive cleanup
@@ -502,7 +503,7 @@
             };
         }
         return (React.createElement(react_popper_1.Manager, null,
-            React.createElement(react_popper_1.Reference, null, popperRef => (React.createElement(react_measure_1.default, { bounds: true, onResize: handleEditorSizeChange }, ({ measureRef }) => (React.createElement("div", { className: "module-composition-input__input", ref: _util_1.mergeRefs(popperRef.ref, measureRef, rootElRef) },
+            React.createElement(react_popper_1.Reference, null, popperRef => (React.createElement(react_measure_1.default, { bounds: true, onResize: handleEditorSizeChange }, ({ measureRef }) => (React.createElement("div", { className: "module-composition-input__input", ref: rootElRefMerger(popperRef.ref, measureRef, rootElRef) },
                 React.createElement("div", {
                     className: classnames_1.default('module-composition-input__input__scroller', large
                         ? 'module-composition-input__input__scroller--large'
