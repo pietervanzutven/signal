@@ -1431,7 +1431,7 @@ img.emoji.jumbo {
   margin-right: 12px; }
 
 .module-message__error-container {
-  width: 28px;
+  min-width: 28px;
   position: relative; }
 
 .module-message__error {

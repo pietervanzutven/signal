@@ -223,9 +223,18 @@
             showArchived: false,
         };
     }
+    // tslint:disable-next-line cyclomatic-complexity
     function hasMessageHeightChanged(message, previous) {
         const messageAttachments = message.attachments || [];
         const previousAttachments = previous.attachments || [];
+        const errorStatusChanged = (!message.errors && previous.errors) ||
+            (message.errors && !previous.errors) ||
+            (message.errors &&
+                previous.errors &&
+                message.errors.length !== previous.errors.length);
+        if (errorStatusChanged) {
+            return true;
+        }
         const stickerPendingChanged = message.sticker &&
             message.sticker.data &&
             previous.sticker &&
