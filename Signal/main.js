@@ -52,6 +52,7 @@ app.allowRendererProcessReuse = true;
 // Keep a global reference of the window object, if you don't, the window will
 //   be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let mainWindowCreated = false;
 let loadingWindow;
 
 function getMainWindow() {
@@ -314,6 +315,7 @@ async function createWindow() {
 
   // Create the browser window.
   mainWindow = new BrowserWindow(windowOptions);
+  mainWindowCreated = true;
   setupSpellChecker(mainWindow, locale.messages);
   if (!usingTrayIcon && windowConfig && windowConfig.maximized) {
     mainWindow.maximize();
