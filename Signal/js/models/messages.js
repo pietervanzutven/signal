@@ -244,7 +244,7 @@
       // Older messages don't have the recipients included on the message, so we fall
       //   back to the conversation's current recipients
       const conversationIds = this.isIncoming()
-        ? [this.getConversation().get('id')]
+        ? [this.getContact().get('id')]
         : _.union(
             (this.get('sent_to') || []).map(id =>
               ConversationController.getConversationId(id)
@@ -422,11 +422,11 @@
     getPropsForSafetyNumberNotification() {
       const conversation = this.getConversation();
       const isGroup = conversation && !conversation.isPrivate();
-      const phoneNumber = this.get('key_changed');
+      const identifier = this.get('key_changed');
 
       return {
         isGroup,
-        contact: this.findAndFormatContact(phoneNumber),
+        contact: this.findAndFormatContact(identifier),
       };
     },
     getPropsForVerificationNotification() {
@@ -916,8 +916,8 @@
         );
       }
       if (this.isKeyChange()) {
-        const phoneNumber = this.get('key_changed');
-        const conversation = this.findContact(phoneNumber);
+        const identifier = this.get('key_changed');
+        const conversation = this.findContact(identifier);
         return i18n(
           'safetyNumberChangedGroup',
           conversation ? conversation.getTitle() : null
