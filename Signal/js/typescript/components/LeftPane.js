@@ -9,6 +9,7 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    const react_measure_1 = __importDefault(window.react_measure);
     const react_1 = __importDefault(window.react);
     const react_virtualized_1 = window.react_virtualized;
     const lodash_1 = window.lodash;
@@ -22,6 +23,12 @@
             this.containerRef = react_1.default.createRef();
             this.setFocusToFirstNeeded = false;
             this.setFocusToLastNeeded = false;
+            this.state = {
+                dimensions: {
+                    height: 0,
+                    width: 0,
+                },
+            };
             this.renderRow = ({ index, key, style, }) => {
                 const { archivedConversations, conversations, i18n, openConversationInternal, showArchived, } = this.props;
                 if (!conversations || !archivedConversations) {
@@ -65,6 +72,9 @@
                     event.stopPropagation();
                     return;
                 }
+            };
+            this.handleResize = ({ bounds }) => {
+                this.setState({ dimensions: bounds });
             };
             this.handleFocus = () => {
                 const { selectedConversationId } = this.props;
@@ -168,11 +178,12 @@
                 //   archive explainer text at the top of the archive view causes problems otherwise.
                 //   It also ensures that we scroll to the top when switching views.
                 const listKey = showArchived ? 1 : 0;
+                const { height, width } = this.state.dimensions;
                 // Note: conversations is not a known prop for List, but it is required to ensure that
                 //   it re-renders when our conversation data changes. Otherwise it would just render
                 //   on startup and scroll.
-                const list = (react_1.default.createElement("div", { className: "module-left-pane__list", key: listKey, "aria-live": "polite", role: "group", tabIndex: -1, ref: this.containerRef, onKeyDown: this.handleKeyDown, onFocus: this.handleFocus },
-                    react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => (react_1.default.createElement(react_virtualized_1.List, { ref: this.listRef, onScroll: this.onScroll, className: "module-left-pane__virtual-list", conversations: conversations, height: height, rowCount: length, rowHeight: 68, tabIndex: -1, rowRenderer: this.renderRow, width: width })))));
+                const list = (react_1.default.createElement("div", { "aria-live": "polite", className: "module-left-pane__list", key: listKey, onFocus: this.handleFocus, onKeyDown: this.handleKeyDown, ref: this.containerRef, role: "group", tabIndex: -1 },
+                    react_1.default.createElement(react_virtualized_1.List, { className: "module-left-pane__virtual-list", conversations: conversations, height: height, onScroll: this.onScroll, ref: this.listRef, rowCount: length, rowHeight: 68, rowRenderer: this.renderRow, tabIndex: -1, width: width })));
                 return [archived, list];
             };
             this.renderArchivedHeader = () => {
@@ -184,12 +195,12 @@
         }
         render() {
             const { renderExpiredBuildDialog, renderMainHeader, renderNetworkStatus, renderUpdateDialog, showArchived, } = this.props;
-            return (react_1.default.createElement("div", { className: "module-left-pane" },
+            return (react_1.default.createElement(react_measure_1.default, { bounds: true, onResize: this.handleResize }, ({ measureRef }) => (react_1.default.createElement("div", { className: "module-left-pane", ref: measureRef },
                 react_1.default.createElement("div", { className: "module-left-pane__header" }, showArchived ? this.renderArchivedHeader() : renderMainHeader()),
                 renderExpiredBuildDialog(),
                 renderNetworkStatus(),
                 renderUpdateDialog(),
-                this.renderList()));
+                this.renderList()))));
         }
     }
     exports.LeftPane = LeftPane;
