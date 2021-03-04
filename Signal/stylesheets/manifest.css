@@ -1107,7 +1107,7 @@ img.emoji.jumbo {
   border-left-style: none; }
   .dark-theme.ios-theme .bottom-bar .module-quote {
     background-color: #1851b4;
-    border-left-color: #000000; }
+    border-left-color: #b0c8f9; }
   .ios-theme .bottom-bar .module-quote {
     background-color: #b0c8f9;
     border-left-color: #ffffff; }
@@ -2640,6 +2640,15 @@ img.emoji.jumbo {
     background-color: #b0c8f9;
     border-left-color: #ffffff; }
 
+.module-composition-area__row .module-quote--outgoing {
+  border-left-style: solid; }
+  .dark-theme.ios-theme .module-composition-area__row .module-quote--outgoing {
+    background-color: #1851b4;
+    border-left-color: #b0c8f9; }
+  .ios-theme .module-composition-area__row .module-quote--outgoing {
+    background-color: #b0c8f9;
+    border-left-color: #2c6bed; }
+
 .module-quote--outgoing-red {
   border-left-color: #cc163d; }
 
@@ -2747,10 +2756,10 @@ img.emoji.jumbo {
     background-color: #5a5a63; }
   .ios-theme .module-quote--incoming {
     background-color: #b0c8f9;
-    border-left-color: #ffffff; }
+    border-left-color: #2c6bed; }
   .dark-theme.ios-theme .module-quote--incoming {
-    background-color: #6191f3;
-    border-left-color: #000000; }
+    background-color: #1851b4;
+    border-left-color: #b0c8f9; }
 
 .module-quote--incoming-red {
   background-color: #eda6ae; }
