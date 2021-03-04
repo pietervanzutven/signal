@@ -86,6 +86,13 @@
                 showEventsCount: state.showEventsCount,
             };
         }
+        if (action.type === START_UPDATE) {
+            return {
+                dialogType: Dialogs_1.Dialogs.None,
+                didSnooze: state.didSnooze,
+                showEventsCount: state.showEventsCount,
+            };
+        }
         if (action.type === DISMISS_DIALOG &&
             state.dialogType === Dialogs_1.Dialogs.MacOS_Read_Only) {
             return {
