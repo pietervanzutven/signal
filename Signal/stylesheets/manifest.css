@@ -1553,6 +1553,9 @@ img.emoji.jumbo {
 .module-message__container--incoming-blue_grey {
   background-color: #895d66; }
 
+.module-message__container--incoming-ultramarine {
+  background-color: #2c6bed; }
+
 .module-message__container--with-tap-to-view {
   min-width: 148px;
   cursor: pointer; }
@@ -1595,6 +1598,9 @@ img.emoji.jumbo {
 
 .module-message__container--incoming-blue_grey-tap-to-view-pending {
   background-color: #6a4e54; }
+
+.module-message__container--incoming-ultramarine-tap-to-view-pending {
+  background-color: #1851b4; }
 
 .module-message__container--with-tap-to-view-pending {
   cursor: default; }
@@ -2682,6 +2688,9 @@ img.emoji.jumbo {
 .module-quote--outgoing-blue_grey {
   border-left-color: #895d66; }
 
+.module-quote--outgoing-ultramarine {
+  border-left-color: #2c6bed; }
+
 .module-quote--outgoing-red {
   background-color: #eda6ae; }
 
@@ -2715,6 +2724,9 @@ img.emoji.jumbo {
 .module-quote--outgoing-blue_grey {
   background-color: #cfb5bb; }
 
+.module-quote--outgoing-ultramarine {
+  background-color: #b0c8f9; }
+
 .dark-theme .module-quote--outgoing-red {
   background-color: #8a0f29; }
 
@@ -2747,6 +2759,9 @@ img.emoji.jumbo {
 
 .dark-theme .module-quote--outgoing-blue_grey {
   background-color: #6a4e54; }
+
+.dark-theme .module-quote--outgoing-ultramarine {
+  background-color: #1851b4; }
 
 .module-quote--incoming {
   border-left-color: #ffffff;
@@ -2794,6 +2809,9 @@ img.emoji.jumbo {
 .module-quote--incoming-blue_grey {
   background-color: #cfb5bb; }
 
+.module-quote--incoming-ultramarine {
+  background-color: #b0c8f9; }
+
 .dark-theme .module-quote--incoming-red {
   background-color: #8a0f29; }
 
@@ -2826,6 +2844,9 @@ img.emoji.jumbo {
 
 .dark-theme .module-quote--incoming-blue_grey {
   background-color: #6a4e54; }
+
+.dark-theme .module-quote--incoming-ultramarine {
+  background-color: #1851b4; }
 
 .module-quote__primary {
   flex-grow: 1;
@@ -4420,6 +4441,9 @@ img.emoji.jumbo {
 .module-avatar--blue_grey {
   background-color: #895d66; }
 
+.module-avatar--ultramarine {
+  background-color: #2c6bed; }
+
 .dark-theme .module-avatar--red {
   background-color: #8a0f29; }
 
@@ -4452,6 +4476,9 @@ img.emoji.jumbo {
 
 .dark-theme .module-avatar--blue_grey {
   background-color: #6a4e54; }
+
+.dark-theme .module-avatar--ultramarine {
+  background-color: #1851b4; }
 
 .module-main-header {
   height: 48px;
