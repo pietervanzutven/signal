@@ -57,8 +57,8 @@
             return results;
         }
     }
+    exports.Intl = Intl;
     Intl.defaultProps = {
         renderText: ({ text, key }) => (react_1.default.createElement(react_1.default.Fragment, { key: key }, text)),
     };
-    exports.Intl = Intl;
 })();

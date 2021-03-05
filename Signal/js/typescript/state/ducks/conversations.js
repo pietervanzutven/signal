@@ -235,6 +235,10 @@
         if (errorStatusChanged) {
             return true;
         }
+        const groupUpdateChanged = message.group_update !== previous.group_update;
+        if (groupUpdateChanged) {
+            return true;
+        }
         const stickerPendingChanged = message.sticker &&
             message.sticker.data &&
             previous.sticker &&

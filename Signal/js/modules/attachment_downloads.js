@@ -442,23 +442,43 @@
         return;
       }
 
-      const existingAvatar = conversation.get('avatar');
-      if (existingAvatar && existingAvatar.path) {
-        await Signal.Migrations.deleteAttachmentData(existingAvatar.path);
-      }
-
       const loadedAttachment = await Signal.Migrations.loadAttachmentData(
         attachment
       );
+      const hash = await computeHash(loadedAttachment.data);
+      const existingAvatar = conversation.get('avatar');
+
+      if (existingAvatar) {
+        if (existingAvatar.hash === hash) {
+          logger.info(
+            '_addAttachmentToMessage: Group avatar hash matched; not replacing group avatar'
+          );
+          return;
+        }
+
+        await Signal.Migrations.deleteAttachmentData(existingAvatar.path);
+      }
+
       conversation.set({
         avatar: Object.assign({},
           attachment,
           {
-            hash: await computeHash(loadedAttachment.data),
+            hash,
           }
         ),
       });
       Signal.Data.updateConversation(conversationId, conversation.attributes);
+
+      message.set({
+        group_update: Object.assign({},
+          message.get('group_update'),
+          {
+            avatar: null,
+            avatarUpdated: true,
+          }
+        ),
+      });
+
       return;
     }
 

@@ -23,7 +23,7 @@
         }
         static getDerivedStateFromProps(props, state) {
             if (props.avatarPath !== state.lastAvatarPath) {
-                return Object.assign({}, state, { lastAvatarPath: props.avatarPath, imageBroken: false });
+                return Object.assign(Object.assign({}, state), { lastAvatarPath: props.avatarPath, imageBroken: false });
             }
             return state;
         }

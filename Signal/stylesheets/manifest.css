@@ -3289,14 +3289,16 @@ img.emoji.jumbo {
 .module-group-notification {
   margin-left: 1em;
   margin-right: 1em;
+  margin-top: 5px;
+  margin-bottom: 5px;
   text-align: center;
   color: #5e5e5e; }
   .dark-theme .module-group-notification {
     color: #b9b9b9; }
 
 .module-group-notification__change {
-  margin-top: 5px;
-  margin-bottom: 5px; }
+  margin-top: 2px;
+  margin-bottom: 2px; }
 
 .module-group-notification__contact {
   font-weight: bold; }
