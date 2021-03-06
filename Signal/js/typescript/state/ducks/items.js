@@ -25,9 +25,10 @@
         resetItems,
     };
     function putItem(key, value) {
+        storageShim.put(key, value);
         return {
             type: 'items/PUT',
-            payload: storageShim.put(key, value),
+            payload: null,
         };
     }
     function putItemExternal(key, value) {
@@ -40,9 +41,10 @@
         };
     }
     function removeItem(key) {
+        storageShim.remove(key);
         return {
             type: 'items/REMOVE',
-            payload: storageShim.remove(key),
+            payload: null,
         };
     }
     function removeItemExternal(key) {
@@ -61,7 +63,7 @@
     function reducer(state = getEmptyState(), action) {
         if (action.type === 'items/PUT_EXTERNAL') {
             const { payload } = action;
-            return Object.assign({}, state, { [payload.key]: payload.value });
+            return Object.assign(Object.assign({}, state), { [payload.key]: payload.value });
         }
         if (action.type === 'items/REMOVE_EXTERNAL') {
             const { payload } = action;

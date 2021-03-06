@@ -1323,7 +1323,7 @@ MessageReceiver.prototype.extend({
       throw new Error('Failure: Ask sender to update Signal and resend.');
     }
 
-    const data = await textsecure.crypto.decryptAttachment(
+    const paddedData = await textsecure.crypto.decryptAttachment(
       encrypted,
       window.Signal.Crypto.base64ToArrayBuffer(key),
       window.Signal.Crypto.base64ToArrayBuffer(digest)
@@ -1331,16 +1331,16 @@ MessageReceiver.prototype.extend({
 
     if (!_.isNumber(size)) {
       throw new Error(
-        `downloadAttachment: Size was not provided, actual size was ${data.byteLength}`
+        `downloadAttachment: Size was not provided, actual size was ${paddedData.byteLength}`
       );
     }
 
-    const typedArray = window.Signal.Crypto.getFirstBytes(data, size);
+    const data = window.Signal.Crypto.getFirstBytes(paddedData, size);
 
     return Object.assign({},
       _.omit(attachment, 'digest', 'key'),
       {
-        data: window.Signal.Crypto.typedArrayToArrayBuffer(typedArray),
+        data,
       }
     );
   },

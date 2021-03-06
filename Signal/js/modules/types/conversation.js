@@ -7,7 +7,10 @@
 
   const { isFunction, isNumber } = window.lodash;
   const { createLastMessageUpdate } = window.ts.types.Conversation;
-  const { arrayBufferToBase64, base64ToArrayBuffer } = window.crypto;
+  const {
+    arrayBufferToBase64,
+    base64ToArrayBuffer,
+  } = window.ts.Crypto;
 
   async function computeHash(arraybuffer) {
     const hash = await crypto.subtle.digest({ name: 'SHA-512' }, arraybuffer);

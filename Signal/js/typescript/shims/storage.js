@@ -6,14 +6,12 @@
     const exports = window.ts.shims.storage = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    async function put(key, value) {
-        // @ts-ignore
-        return window.storage.put(key, value);
+    function put(key, value) {
+        window.storage.put(key, value);
     }
     exports.put = put;
-    async function remove(key) {
-        // @ts-ignore
-        return window.storage.remove(key);
+    function remove(key) {
+        window.storage.remove(key);
     }
     exports.remove = remove;
 })();

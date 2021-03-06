@@ -9,7 +9,7 @@
   const LinkifyIt = window.linkify_it;
 
   const linkify = LinkifyIt();
-  const { concatenateBytes, getViewOfArrayBuffer } = window.crypto;
+  const { concatenateBytes, getViewOfArrayBuffer } = window.ts.Crypto;
 
   window.link_previews = {
     assembleChunks,

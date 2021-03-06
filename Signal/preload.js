@@ -218,7 +218,7 @@
       window.log.info('Using provided proxy url');
     }
 
-    const { initialize: initializeWebAPI } = window.web_api;
+    const { initialize: initializeWebAPI } = window.ts.WebAPI;
 
     window.WebAPI = initializeWebAPI({
       url: config.serverUrl,
@@ -299,17 +299,13 @@
     function wrapWithPromise(fn) {
       return (...args) => Promise.resolve(fn(...args));
     }
-    function typedArrayToArrayBuffer(typedArray) {
-      const { buffer, byteOffset, byteLength } = typedArray;
-      return buffer.slice(byteOffset, byteLength + byteOffset);
-    }
     const externalCurve = {
       generateKeyPair: () => {
         const { privKey, pubKey } = curve.generateKeyPair();
 
         return {
-          privKey: typedArrayToArrayBuffer(privKey),
-          pubKey: typedArrayToArrayBuffer(pubKey),
+          privKey: window.Signal.Crypto.typedArrayToArrayBuffer(privKey),
+          pubKey: window.Signal.Crypto.typedArrayToArrayBuffer(pubKey),
         };
       },
       createKeyPair: incomingKey => {
@@ -317,8 +313,8 @@
         const { privKey, pubKey } = curve.createKeyPair(incomingKeyBuffer);
 
         return {
-          privKey: typedArrayToArrayBuffer(privKey),
-          pubKey: typedArrayToArrayBuffer(pubKey),
+          privKey: window.Signal.Crypto.typedArrayToArrayBuffer(privKey),
+          pubKey: window.Signal.Crypto.typedArrayToArrayBuffer(pubKey),
         };
       },
       calculateAgreement: (pubKey, privKey) => {
@@ -327,7 +323,7 @@
 
         const buffer = curve.calculateAgreement(pubKeyBuffer, privKeyBuffer);
 
-        return typedArrayToArrayBuffer(buffer);
+        return window.Signal.Crypto.typedArrayToArrayBuffer(buffer);
       },
       verifySignature: (pubKey, message, signature) => {
         const pubKeyBuffer = Buffer.from(pubKey);
@@ -348,7 +344,7 @@
 
         const buffer = curve.calculateSignature(privKeyBuffer, messageBuffer);
 
-        return typedArrayToArrayBuffer(buffer);
+        return window.Signal.Crypto.typedArrayToArrayBuffer(buffer);
       },
       validatePubKeyFormat: pubKey => {
         const pubKeyBuffer = Buffer.from(pubKey);

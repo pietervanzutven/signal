@@ -169,6 +169,7 @@
     <Content Include="js\legacy_storage.js" />
     <Content Include="js\libphonenumber-util.js" />
     <Content Include="js\libsignal-protocol-worker.js" />
+    <Content Include="js\loading_start.js" />
     <Content Include="js\logging.js" />
     <Content Include="js\message_controller.js" />
     <Content Include="js\models\blockedNumbers.js" />
@@ -176,7 +177,6 @@
     <Content Include="js\models\messages.js" />
     <Content Include="js\modules\attachment_downloads.js" />
     <Content Include="js\modules\auto_orient_image.js" />
-    <Content Include="js\modules\crypto.js" />
     <Content Include="js\modules\data.js" />
     <Content Include="js\modules\database.js" />
     <Content Include="js\modules\debug.js" />
@@ -212,7 +212,6 @@
     <Content Include="js\modules\types\schema_version.js" />
     <Content Include="js\modules\types\visual_attachment.js" />
     <Content Include="js\modules\views\initialization.js" />
-    <Content Include="js\modules\web_api.js" />
     <Content Include="js\Mp3LameEncoder.min.js" />
     <Content Include="js\notifications.js" />
     <Content Include="js\permissions_popup_start.js" />
@@ -313,6 +312,7 @@
     <Content Include="js\typescript\components\styles\Colors.js" />
     <Content Include="js\typescript\components\UpdateDialog.js" />
     <Content Include="js\typescript\components\_util.js" />
+    <Content Include="js\typescript\Crypto.js" />
     <Content Include="js\typescript\notifications\getStatus.js" />
     <Content Include="js\typescript\OS.js" />
     <Content Include="js\typescript\protobuf\protobuf.js" />
@@ -395,6 +395,7 @@
     <Content Include="js\typescript\util\saveURLAsFile.js" />
     <Content Include="js\typescript\util\timer.js" />
     <Content Include="js\typescript\util\waitBatcher.js" />
+    <Content Include="js\typescript\WebAPI.js" />
     <Content Include="js\util_worker.js" />
     <Content Include="js\views\about_view.js" />
     <Content Include="js\views\app_view.js" />
@@ -3661,6 +3662,7 @@
     <Content Include="node_modules\google-libphonenumber\libphonenumber.js" />
     <Content Include="node_modules\got\got.js" />
     <Content Include="node_modules\he\he.js" />
+    <Content Include="node_modules\https\index.js" />
     <Content Include="node_modules\immutable\immutable.js" />
     <Content Include="node_modules\int-tel-input\build\img\flags.png" />
     <Content Include="node_modules\journeyapps\sqlcipher.js" />
@@ -3722,6 +3724,7 @@
     <Content Include="node_modules\memoizee\index.js" />
     <Content Include="node_modules\mkdirp\index.js" />
     <Content Include="node_modules\moment\moment.js" />
+    <Content Include="node_modules\node-fetch\index.js" />
     <Content Include="node_modules\normalize-path\index.js" />
     <Content Include="node_modules\p-finally\index.js" />
     <Content Include="node_modules\p-map\index.js" />
@@ -3734,6 +3737,7 @@
     <Content Include="node_modules\popper.js\popper.js" />
     <Content Include="node_modules\prop-types\prop-types.js" />
     <Content Include="node_modules\protobuf\protobuf.js" />
+    <Content Include="node_modules\proxy-agent\index.js" />
     <Content Include="node_modules\punycode\punycode.js" />
     <Content Include="node_modules\qs\qs.js" />
     <Content Include="node_modules\querystring\decode.js" />
@@ -3786,6 +3790,7 @@
     <Content Include="node_modules\url\url.js" />
     <Content Include="node_modules\url\util.js" />
     <Content Include="node_modules\uuid\v4.js" />
+    <Content Include="node_modules\websocket\index.js" />
     <Content Include="permissions_popup.html" />
     <Content Include="permissions_popup_preload.js" />
     <Content Include="preload.js" />

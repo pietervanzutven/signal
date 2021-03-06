@@ -22,7 +22,7 @@
     intsToByteHighAndLow,
     splitBytes,
     trimBytes,
-  } = window.crypto;
+  } = window.ts.Crypto;
 
   const REVOKED_CERTIFICATES = [];
 

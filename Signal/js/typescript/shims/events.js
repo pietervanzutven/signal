@@ -7,7 +7,6 @@
 
     Object.defineProperty(exports, "__esModule", { value: true });
     function trigger(name, param1, param2) {
-        // @ts-ignore
         window.Whisper.events.trigger(name, param1, param2);
     }
     exports.trigger = trigger;

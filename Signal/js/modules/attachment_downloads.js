@@ -22,7 +22,7 @@
     saveMessage,
     setAttachmentDownloadJobPending,
   } = window.data;
-  const { stringFromBytes } = window.crypto;
+  const { stringFromBytes } = window.ts.Crypto;
 
   window.attachment_downloads = {
     start,

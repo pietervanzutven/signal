@@ -36,7 +36,10 @@
   const qs = window.qs;
 
   const { makeLookup } = require_ts_util_makeLookup();
-  const { base64ToArrayBuffer, deriveStickerPackKey } = window.crypto;
+  const {
+    base64ToArrayBuffer,
+    deriveStickerPackKey,
+  } = window.ts.Crypto;
   const {
     addStickerPackReference,
     createOrUpdateSticker,

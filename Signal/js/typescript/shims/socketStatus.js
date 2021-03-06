@@ -6,10 +6,8 @@
     const exports = window.ts.shims.socketStatus = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const unknownWindow = window;
-    const shimmedWindow = unknownWindow;
     function getSocketStatus() {
-        const { getSocketStatus: getMessageReceiverStatus } = shimmedWindow;
+        const { getSocketStatus: getMessageReceiverStatus } = window;
         return getMessageReceiverStatus();
     }
     exports.getSocketStatus = getSocketStatus;

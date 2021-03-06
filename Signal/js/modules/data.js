@@ -17,7 +17,7 @@
     set,
   } = window.lodash;
 
-  const { base64ToArrayBuffer, arrayBufferToBase64 } = window.crypto;
+  const { base64ToArrayBuffer, arrayBufferToBase64 } = window.ts.Crypto;
   const MessageType = window.types.message;
   const { createBatcher } = require_ts_util_batcher();
 
