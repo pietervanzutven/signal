@@ -2355,7 +2355,7 @@
       sourceUuid: data.sourceUuid,
       sourceDevice: data.sourceDevice,
       sent_at: data.timestamp,
-      received_at: data.receivedAt || Date.now(),
+      received_at: Date.now(),
       conversationId,
       unidentifiedDeliveryReceived: data.unidentifiedDeliveryReceived,
       type: 'incoming',

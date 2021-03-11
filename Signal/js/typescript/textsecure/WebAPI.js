@@ -2,7 +2,8 @@
     "use strict";
 
     window.ts = window.ts || {};
-    const exports = window.ts.WebAPI = {};
+    window.ts.textsecure = window.ts.textsecure || {};
+    const exports = window.ts.textsecure.WebAPI = {};
 
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -351,7 +352,6 @@
         getStickerPackUpload: 'v1/sticker/pack/form',
         whoami: 'v1/accounts/whoami',
     };
-    window.ts.WebAPI.initialize = initialize;
     // We first set up the data that won't change during this session of the app
     // tslint:disable-next-line max-func-body-length
     function initialize({ url, cdnUrl, certificateAuthority, contentProxyUrl, proxyUrl, version, }) {
@@ -685,20 +685,20 @@
                     identityKey: _base64ToBytes(res.identityKey),
                 };
             }
-            async function getKeysForIdentifier(identifier, deviceId = '*') {
+            async function getKeysForIdentifier(identifier, deviceId) {
                 return _ajax({
                     call: 'keys',
                     httpType: 'GET',
-                    urlParameters: `/${identifier}/${deviceId}`,
+                    urlParameters: `/${identifier}/${deviceId || '*'}`,
                     responseType: 'json',
                     validateResponse: { identityKey: 'string', devices: 'object' },
                 }).then(handleKeys);
             }
-            async function getKeysForIdentifierUnauth(identifier, deviceId = '*', { accessKey } = {}) {
+            async function getKeysForIdentifierUnauth(identifier, deviceId, { accessKey } = {}) {
                 return _ajax({
                     call: 'keys',
                     httpType: 'GET',
-                    urlParameters: `/${identifier}/${deviceId}`,
+                    urlParameters: `/${identifier}/${deviceId || '*'}`,
                     responseType: 'json',
                     validateResponse: { identityKey: 'string', devices: 'object' },
                     unauthenticated: true,
@@ -922,4 +922,5 @@
             }
         }
     }
+    exports.initialize = initialize;
 })();

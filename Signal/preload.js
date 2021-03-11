@@ -218,9 +218,9 @@
       window.log.info('Using provided proxy url');
     }
 
-    const { initialize: initializeWebAPI } = window.ts.WebAPI;
+    window.textsecure = window.ts.textsecure.default;
 
-    window.WebAPI = initializeWebAPI({
+    window.WebAPI = window.textsecure.WebAPI.initialize({
       url: config.serverUrl,
       cdnUrl: config.cdnUrl,
       certificateAuthority: config.certificateAuthority,

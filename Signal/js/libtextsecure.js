@@ -1,3 +1,4 @@
+;(function() {
 ;(function(){
 var Internal = {};
 window.libsignal = window.libsignal || {};
@@ -36105,7 +36106,6 @@ SessionCipher.prototype = {
               var ourIdentityKeyBuffer = util.toArrayBuffer(ourIdentityKey.pubKey);
               var theirIdentityKey = util.toArrayBuffer(session.indexInfo.remoteIdentityKey);
               var macInput = new Uint8Array(encodedMsg.byteLength + 33*2 + 1);
-
               macInput.set(new Uint8Array(ourIdentityKeyBuffer));
               macInput.set(new Uint8Array(theirIdentityKey), 33);
               macInput[33*2] = (3 << 4) | 3;
@@ -36512,10 +36512,20 @@ Internal.SessionLock = {};
 var jobQueue = {};
 
 Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJob) {
-     jobQueue[number] = jobQueue[number] || new window.PQueue({ concurrency: 1 });
-     var queue = jobQueue[number];
+    if (window.PQueue) {
+        jobQueue[number] = jobQueue[number] || new window.PQueue({ concurrency: 1 });
+        var queue = jobQueue[number];
+        return queue.add(runJob);
+    }
 
-     return queue.add(runJob);
+    var runPrevious = jobQueue[number] || Promise.resolve();
+    var runCurrent = jobQueue[number] = runPrevious.then(runJob, runJob);
+    runCurrent.then(function() {
+        if (jobQueue[number] === runCurrent) {
+            delete jobQueue[number];
+        }
+    });
+    return runCurrent;
 };
 
 })();
@@ -36555,7 +36565,7 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
         let i = 0;
         let buf = new Uint8Array(16);
 
-        uuid.replace(/[0-9A-F]{2}/ig, oct => {
+        uuid.replace(/[0-9A-F]{2}/ig, function(oct) {
             buf[i++] = parseInt(oct, 16);
         });
 
@@ -36603,4 +36613,177 @@ Internal.SessionLock.queueJobForNumber = function queueJobForNumber(number, runJ
 })();
 
 
+})();
+/* global window, textsecure, SignalProtocolStore, libsignal */
+
+// eslint-disable-next-line func-names
+(function() {
+  window.textsecure = window.textsecure || {};
+  window.textsecure.storage = window.textsecure.storage || {};
+
+  textsecure.storage.protocol = new SignalProtocolStore();
+
+  textsecure.ProvisioningCipher = libsignal.ProvisioningCipher;
+  textsecure.startWorker = libsignal.worker.startWorker;
+  textsecure.stopWorker = libsignal.worker.stopWorker;
+})();
+
+/* global textsecure, window */
+
+// eslint-disable-next-line func-names
+(function() {
+  /** *******************************************
+   *** Utilities to store data about the user ***
+   ********************************************* */
+  window.textsecure = window.textsecure || {};
+  window.textsecure.storage = window.textsecure.storage || {};
+
+  window.textsecure.storage.user = {
+    setNumberAndDeviceId(number, deviceId, deviceName) {
+      textsecure.storage.put('number_id', `${number}.${deviceId}`);
+      if (deviceName) {
+        textsecure.storage.put('device_name', deviceName);
+      }
+    },
+
+    setUuidAndDeviceId(uuid, deviceId) {
+      textsecure.storage.put('uuid_id', `${uuid}.${deviceId}`);
+    },
+
+    getNumber() {
+      const numberId = textsecure.storage.get('number_id');
+      if (numberId === undefined) return undefined;
+      return textsecure.utils.unencodeNumber(numberId)[0];
+    },
+
+    getUuid() {
+      const uuid = textsecure.storage.get('uuid_id');
+      if (uuid === undefined) return undefined;
+      return textsecure.utils.unencodeNumber(uuid)[0];
+    },
+
+    getDeviceId() {
+      return this._getDeviceIdFromUuid() || this._getDeviceIdFromNumber();
+    },
+
+    _getDeviceIdFromUuid() {
+      const uuid = textsecure.storage.get('uuid_id');
+      if (uuid === undefined) return undefined;
+      return textsecure.utils.unencodeNumber(uuid)[1];
+    },
+
+    _getDeviceIdFromNumber() {
+      const numberId = textsecure.storage.get('number_id');
+      if (numberId === undefined) return undefined;
+      return textsecure.utils.unencodeNumber(numberId)[1];
+    },
+
+    getDeviceName() {
+      return textsecure.storage.get('device_name');
+    },
+
+    setDeviceNameEncrypted() {
+      return textsecure.storage.put('deviceNameEncrypted', true);
+    },
+
+    getDeviceNameEncrypted() {
+      return textsecure.storage.get('deviceNameEncrypted');
+    },
+
+    getSignalingKey() {
+      return textsecure.storage.get('signaling_key');
+    },
+  };
+})();
+
+/* global window, textsecure */
+
+// eslint-disable-next-line func-names
+(function() {
+  /** ***************************************
+   *** Not-yet-processed message storage ***
+   **************************************** */
+  window.textsecure = window.textsecure || {};
+  window.textsecure.storage = window.textsecure.storage || {};
+
+  window.textsecure.storage.unprocessed = {
+    getCount() {
+      return textsecure.storage.protocol.getUnprocessedCount();
+    },
+    getAll() {
+      return textsecure.storage.protocol.getAllUnprocessed();
+    },
+    get(id) {
+      return textsecure.storage.protocol.getUnprocessedById(id);
+    },
+    add(data) {
+      return textsecure.storage.protocol.addUnprocessed(data);
+    },
+    batchAdd(array) {
+      return textsecure.storage.protocol.addMultipleUnprocessed(array);
+    },
+    updateAttempts(id, attempts) {
+      return textsecure.storage.protocol.updateUnprocessedAttempts(
+        id,
+        attempts
+      );
+    },
+    addDecryptedData(id, data) {
+      return textsecure.storage.protocol.updateUnprocessedWithData(id, data);
+    },
+    addDecryptedDataToList(array) {
+      return textsecure.storage.protocol.updateUnprocessedsWithData(array);
+    },
+    remove(idOrArray) {
+      return textsecure.storage.protocol.removeUnprocessed(idOrArray);
+    },
+    removeAll() {
+      return textsecure.storage.protocol.removeAllUnprocessed();
+    },
+  };
+})();
+
+/* global window, dcodeIO, textsecure */
+
+// eslint-disable-next-line func-names
+(function() {
+  window.textsecure = window.textsecure || {};
+  window.textsecure.protobuf = {};
+
+  function loadProtoBufs(filename) {
+    return dcodeIO.ProtoBuf.loadProtoFile(
+      { root: window.PROTO_ROOT, file: filename },
+      (error, result) => {
+        if (error) {
+          const text = `Error loading protos from ${filename} (root: ${
+            window.PROTO_ROOT
+          }) ${error && error.stack ? error.stack : error}`;
+          window.log.error(text);
+          throw error;
+        }
+        const protos = result.build('signalservice');
+        if (!protos) {
+          const text = `Error loading protos from ${filename} (root: ${window.PROTO_ROOT})`;
+          window.log.error(text);
+          throw new Error(text);
+        }
+        // eslint-disable-next-line no-restricted-syntax, guard-for-in
+        for (const protoName in protos) {
+          textsecure.protobuf[protoName] = protos[protoName];
+        }
+      }
+    );
+  }
+
+  loadProtoBufs('SignalService.proto');
+  loadProtoBufs('SubProtocol.proto');
+  loadProtoBufs('DeviceMessages.proto');
+  loadProtoBufs('Stickers.proto');
+
+  // Just for encrypting device names
+  loadProtoBufs('DeviceName.proto');
+
+  // Metadata-specific protos
+  loadProtoBufs('UnidentifiedDelivery.proto');
+})();
 })();

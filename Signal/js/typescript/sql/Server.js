@@ -1168,6 +1168,7 @@
             }
             await instance.run('PRAGMA user_version = 20;');
             await instance.run('COMMIT TRANSACTION;');
+            console.log('updateToSchemaVersion20: success!');
         }
         catch (error) {
             await instance.run('ROLLBACK;');
