@@ -25,7 +25,7 @@
 
     saveConversations,
     _removeConversations,
-  } = window.data;
+  } = window.ts.sql.Client.default;
   const {
     getMessageExportLastIndex,
     setMessageExportLastIndex,

@@ -1127,13 +1127,7 @@
     },
 
     async saveModel() {
-      window.Signal.Data.updateConversation(
-        this.model.id,
-        this.model.attributes,
-        {
-          Conversation: Whisper.Conversation,
-        }
-      );
+      window.Signal.Data.updateConversation(this.model.attributes);
     },
 
     async addAttachment(attachment) {

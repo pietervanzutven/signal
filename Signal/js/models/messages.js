@@ -2485,10 +2485,7 @@
           }
 
           MessageController.register(message.id, message);
-          window.Signal.Data.updateConversation(
-            conversationId,
-            conversation.attributes
-          );
+          window.Signal.Data.updateConversation(conversation.attributes);
 
           await message.queueAttachmentDownloads();
           await window.Signal.Data.saveMessage(message.attributes, {

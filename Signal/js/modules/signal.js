@@ -8,7 +8,7 @@
   const { bindActionCreators } = window.redux;
   const Backbone = window.ts.backbone;
   const Crypto = window.ts.Crypto;
-  const Data = window.data;
+  const Data = window.ts.sql.Client.default;
   const Database = window.database;
   const Emojis = window.emojis;
   const EmojiLib = window.ts.components.emoji.lib;

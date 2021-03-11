@@ -21,7 +21,7 @@
     saveAttachmentDownloadJob,
     saveMessage,
     setAttachmentDownloadJobPending,
-  } = window.data;
+  } = window.ts.sql.Client.default;
   const { stringFromBytes } = window.ts.Crypto;
 
   window.attachment_downloads = {
@@ -467,7 +467,7 @@
           }
         ),
       });
-      Signal.Data.updateConversation(conversationId, conversation.attributes);
+      Signal.Data.updateConversation(conversation.attributes);
 
       message.set({
         group_update: Object.assign({},

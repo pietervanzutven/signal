@@ -50,7 +50,7 @@
     getAllStickers,
     getRecentStickers,
     updateStickerPackStatus,
-  } = window.data;
+  } = window.ts.sql.Client.default;
 
   window.stickers = {
     BLESSED_PACKS,

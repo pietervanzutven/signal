@@ -76,7 +76,6 @@
     <Content Include="app\logging.js" />
     <Content Include="app\config.js" />
     <Content Include="app\spell_check.js" />
-    <Content Include="app\sql.js" />
     <Content Include="app\sql_channel.js" />
     <Content Include="app\user_config.js" />
     <Content Include="background.html" />
@@ -177,7 +176,6 @@
     <Content Include="js\models\messages.js" />
     <Content Include="js\modules\attachment_downloads.js" />
     <Content Include="js\modules\auto_orient_image.js" />
-    <Content Include="js\modules\data.js" />
     <Content Include="js\modules\database.js" />
     <Content Include="js\modules\debug.js" />
     <Content Include="js\modules\debuglogs.js" />
@@ -324,6 +322,9 @@
     <Content Include="js\typescript\shims\textsecure.js" />
     <Content Include="js\typescript\shims\updateIpc.js" />
     <Content Include="js\typescript\shims\Whisper.js" />
+    <Content Include="js\typescript\sql\Client.js" />
+    <Content Include="js\typescript\sql\Interface.js" />
+    <Content Include="js\typescript\sql\Server.js" />
     <Content Include="js\typescript\state\actions.js" />
     <Content Include="js\typescript\state\createStore.js" />
     <Content Include="js\typescript\state\ducks\conversations.js" />
@@ -367,7 +368,9 @@
     <Content Include="js\typescript\types\Contact.js" />
     <Content Include="js\typescript\types\Conversation.js" />
     <Content Include="js\typescript\types\Dialogs.js" />
+    <Content Include="js\typescript\types\I18N.js" />
     <Content Include="js\typescript\types\IndexedDB.js" />
+    <Content Include="js\typescript\types\Logging.js" />
     <Content Include="js\typescript\types\Message.js" />
     <Content Include="js\typescript\types\message\initializeAttachmentMetadata.js" />
     <Content Include="js\typescript\types\MIME.js" />

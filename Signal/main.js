@@ -90,7 +90,7 @@ const createTrayIcon = window.app.tray_icon;
 const dockIcon = window.app.dock_icon;
 const ephemeralConfig = window.app.ephemeral_config;
 const logging = window.app.logging;
-const sql = window.app.sql;
+const sql = window.ts.sql.Server.default;
 const sqlChannels = window.app.sql_channel;
 const windowState = window.app.window_state;
 
