@@ -227,7 +227,7 @@
     exports.encryptAesCtr = encryptAesCtr;
     async function decryptAesCtr(key, ciphertext, counter) {
         const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
-        const ctBits = window.sjcl.codec.bytes.toBits(ciphertext);
+        const ctBits = window.sjcl.codec.arrayBuffer.toBits(ciphertext);
         const counterBits = window.sjcl.codec.arrayBuffer.toBits(counter);
 
         const aes = new window.sjcl.cipher.aes(keyBits);
@@ -239,7 +239,7 @@
     exports.decryptAesCtr = decryptAesCtr;
     async function _encrypt_aes_gcm(key, iv, plaintext) {
         const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
-        const ptBits = window.sjcl.codec.bytes.toBits(plaintext);
+        const ptBits = window.sjcl.codec.arrayBuffer.toBits(plaintext);
         const ivBits = window.sjcl.codec.arrayBuffer.toBits(iv);
 
         const aes = new window.sjcl.cipher.aes(keyBits);
