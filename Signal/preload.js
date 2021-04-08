@@ -18,6 +18,9 @@
     const { app } = remote;
     const { nativeTheme } = remote.require('electron');
 
+    // Derive profile key versions, then use those to fetch versioned profiles from server
+    window.VERSIONED_PROFILE_FETCH = false;
+
     window.PROTO_ROOT = '/protos';
     const config = window.app.config || {};
 
@@ -38,6 +41,7 @@
     window.getUWPVersion = () => config.uwp_version;
     window.getHostName = () => config.hostname;
     window.getServerTrustRoot = () => config.serverTrustRoot;
+    window.getServerPublicParams = () => config.serverPublicParams;
     window.isBehindProxy = () => Boolean(config.proxyUrl);
 
     function setSystemTheme() {

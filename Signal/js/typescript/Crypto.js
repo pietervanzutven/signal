@@ -24,10 +24,18 @@
         return window.dcodeIO.ByteBuffer.wrap(arrayBuffer).toString('base64');
     }
     exports.arrayBufferToBase64 = arrayBufferToBase64;
+    function arrayBufferToHex(arrayBuffer) {
+        return window.dcodeIO.ByteBuffer.wrap(arrayBuffer).toString('hex');
+    }
+    exports.arrayBufferToHex = arrayBufferToHex;
     function base64ToArrayBuffer(base64string) {
         return window.dcodeIO.ByteBuffer.wrap(base64string, 'base64').toArrayBuffer();
     }
     exports.base64ToArrayBuffer = base64ToArrayBuffer;
+    function hexToArrayBuffer(hexString) {
+        return window.dcodeIO.ByteBuffer.wrap(hexString, 'hex').toArrayBuffer();
+    }
+    exports.hexToArrayBuffer = hexToArrayBuffer;
     function fromEncodedBinaryToArrayBuffer(key) {
         return window.dcodeIO.ByteBuffer.wrap(key, 'binary').toArrayBuffer();
     }

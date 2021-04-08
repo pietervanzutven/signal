@@ -500,19 +500,27 @@
                     jsonData: { capabilities },
                 });
             }
-            async function getProfile(identifier) {
+            function getProfileUrl(identifier, profileKeyVersion, profileKeyCredentialRequest) {
+                if (profileKeyVersion && profileKeyCredentialRequest) {
+                    return `/${identifier}/${profileKeyVersion}/${profileKeyCredentialRequest}`;
+                }
+                return `/${identifier}`;
+            }
+            async function getProfile(identifier, options = {}) {
+                const { profileKeyVersion, profileKeyCredentialRequest } = options;
                 return _ajax({
                     call: 'profile',
                     httpType: 'GET',
-                    urlParameters: `/${identifier}`,
+                    urlParameters: getProfileUrl(identifier, profileKeyVersion, profileKeyCredentialRequest),
                     responseType: 'json',
                 });
             }
-            async function getProfileUnauth(identifier, { accessKey } = {}) {
+            async function getProfileUnauth(identifier, options) {
+                const { accessKey, profileKeyVersion, profileKeyCredentialRequest, } = options;
                 return _ajax({
                     call: 'profile',
                     httpType: 'GET',
-                    urlParameters: `/${identifier}`,
+                    urlParameters: getProfileUrl(identifier, profileKeyVersion, profileKeyCredentialRequest),
                     responseType: 'json',
                     unauthenticated: true,
                     accessKey,

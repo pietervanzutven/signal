@@ -416,11 +416,13 @@
             const silent = true;
             return this.sendIndividualProto(myUuid || myNumber, contentMessage, timestamp, silent, options);
         }
-        async getProfile(number, { accessKey } = {}) {
+        async getProfile(number, options = {}) {
+            const { accessKey } = options;
             if (accessKey) {
-                return this.server.getProfileUnauth(number, { accessKey });
+                const unauthOptions = Object.assign(Object.assign({}, options), { accessKey });
+                return this.server.getProfileUnauth(number, unauthOptions);
             }
-            return this.server.getProfile(number);
+            return this.server.getProfile(number, options);
         }
         async getAvatar(path) {
             return this.server.getAvatar(path);

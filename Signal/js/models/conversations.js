@@ -1932,7 +1932,15 @@
       }
 
       const c = await ConversationController.getOrCreateAndWait(id, 'private');
+      const {
+        generateProfileKeyCredentialRequest,
+        getClientZkProfileOperations,
+        handleProfileKeyCredential,
+      } = Util.zkgroup;
 
+      const clientZkProfileCipher = getClientZkProfileOperations(
+        window.getServerPublicParams()
+      );
       // Because we're no longer using Backbone-integrated saves, we need to manually
       //   clear the changed fields here so our hasChanged() check is useful.
       c.changed = {};
@@ -1940,7 +1948,36 @@
       let profile;
 
       try {
-        await c.deriveAccessKeyIfNeeded();
+        await Promise.all([
+          c.deriveAccessKeyIfNeeded(),
+          c.deriveProfileKeyVersionIfNeeded(),
+        ]);
+
+        const profileKey = c.get('profileKey');
+        const uuid = c.get('uuid');
+        const profileKeyVersionHex = window.VERSIONED_PROFILE_FETCH
+          ? c.get('profileKeyVersion')
+          : null;
+        const existingProfileKeyCredential = c.get('profileKeyCredential');
+
+        const weHaveVersion = Boolean(
+          profileKey && uuid && profileKeyVersionHex
+        );
+        let profileKeyCredentialRequestHex;
+        let profileCredentialRequestContext;
+
+        if (weHaveVersion && !existingProfileKeyCredential) {
+          window.log.info('Generating request...');
+          ({
+            requestHex: profileKeyCredentialRequestHex,
+            context: profileCredentialRequestContext,
+          } = generateProfileKeyCredentialRequest(
+            clientZkProfileCipher,
+            uuid,
+            profileKey
+          ));
+        }
+
         const sendMetadata = c.getSendMetadata({ disableMeCheck: true }) || {};
         const getInfo = sendMetadata[c.id] || {};
 
@@ -1948,6 +1985,8 @@
           try {
             profile = await textsecure.messaging.getProfile(id, {
               accessKey: getInfo.accessKey,
+              profileKeyVersion: profileKeyVersionHex,
+              profileKeyCredentialRequest: profileKeyCredentialRequestHex,
             });
           } catch (error) {
             if (error.code === 401 || error.code === 403) {
@@ -1955,13 +1994,19 @@
                 `Setting sealedSender to DISABLED for conversation ${c.idForLogging()}`
               );
               c.set({ sealedSender: SEALED_SENDER.DISABLED });
-              profile = await textsecure.messaging.getProfile(id);
+              profile = await textsecure.messaging.getProfile(id, {
+                profileKeyVersion: profileKeyVersionHex,
+                profileKeyCredentialRequest: profileKeyCredentialRequestHex,
+              });
             } else {
               throw error;
             }
           }
         } else {
-          profile = await textsecure.messaging.getProfile(id);
+          profile = await textsecure.messaging.getProfile(id, {
+            profileKeyVersion: profileKeyVersionHex,
+            profileKeyCredentialRequest: profileKeyCredentialRequestHex,
+          });
         }
 
         const identityKey = window.Signal.Crypto.base64ToArrayBuffer(
@@ -2028,10 +2073,18 @@
         if (profile.capabilities) {
           c.set({ capabilities: profile.capabilities });
         }
+        if (profileCredentialRequestContext && profile.credential) {
+          const profileKeyCredential = handleProfileKeyCredential(
+            clientZkProfileCipher,
+            profileCredentialRequestContext,
+            profile.credential
+          );
+          c.set({ profileKeyCredential });
+        }
       } catch (error) {
         if (error.code !== 403 && error.code !== 404) {
-          window.log.error(
-            'getProfile error:',
+          window.log.warn(
+            'getProfile failure:',
             id,
             error && error.stack ? error.stack : error
           );
@@ -2044,11 +2097,11 @@
       try {
         await c.setProfileName(profile.name);
       } catch (error) {
-          window.log.error(
-          'getProfile decryption error:',
-            id,
-            error && error.stack ? error.stack : error
-          );
+        window.log.warn(
+          'getProfile decryption failure:',
+          id,
+          error && error.stack ? error.stack : error
+        );
         await c.dropProfileKey();
       }
 
@@ -2056,6 +2109,9 @@
         await c.setProfileAvatar(profile.avatar);
       } catch (error) {
         if (error.code === 403 || error.code === 404) {
+          window.log.info(
+            `Clearing profile avatar for conversation ${c.idForLogging()}`
+          );
           c.set({
             profileAvatar: null,
           });
@@ -2134,6 +2190,8 @@
         );
         this.set({
           profileKey,
+          profileKeyVersion: null,
+          profileKeyCredential: null,
           accessKey: null,
           profileName: null,
           profileFamilyName: null,
@@ -2141,7 +2199,10 @@
           sealedSender: SEALED_SENDER.UNKNOWN,
         });
 
-        await this.deriveAccessKeyIfNeeded();
+        await Promise.all([
+          this.deriveAccessKeyIfNeeded(),
+          this.deriveProfileKeyVersionIfNeeded(),
+        ]);
 
         window.Signal.Data.updateConversation(this.attributes, {
           Conversation: Whisper.Conversation,
@@ -2159,11 +2220,13 @@
         }
 
         this.set({
-          profileAvatar: null,
           profileKey: null,
+          profileKeyVersion: null,
+          profileKeyCredential: null,
+          accessKey: null,
           profileName: null,
           profileFamilyName: null,
-          accessKey: null,
+          profileAvatar: null,
           sealedSender: SEALED_SENDER.UNKNOWN,
         });
 
@@ -2190,6 +2253,28 @@
         accessKeyBuffer
       );
       this.set({ accessKey });
+    },
+    async deriveProfileKeyVersionIfNeeded() {
+      const profileKey = this.get('profileKey');
+      if (!profileKey) {
+        return;
+      }
+      // We won't even save derived profile key versions if we haven't flipped this switch
+      if (!window.VERSIONED_PROFILE_FETCH) {
+        return;
+      }
+
+      const uuid = this.get('uuid');
+      if (!uuid || this.get('profileKeyVersion')) {
+        return;
+      }
+
+      const profileKeyVersion = Util.zkgroup.deriveProfileKeyVersion(
+        profileKey,
+        uuid
+      );
+
+      this.set({ profileKeyVersion });
     },
 
     hasMember(identifier) {

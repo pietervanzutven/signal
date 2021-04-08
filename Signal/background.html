@@ -16,7 +16,7 @@
             img-src 'self' blob: data: ms-appdata:;
             media-src 'self' blob: ms-appdata:;
             object-src 'none';
-            script-src 'self';
+            script-src 'self' 'unsafe-eval';
             style-src 'self' 'unsafe-inline';"
   >
   <title>Signal</title>
@@ -344,6 +344,7 @@
 
   <script type='text/javascript' src='node_modules/core/buffer.js'></script>
   <script type='text/javascript' src='node_modules/core/electron.js'></script>
+  <script type='text/javascript' src='node_modules/core/error.js'></script>
   <script type='text/javascript' src='node_modules/core/events.js'></script>
   <script type='text/javascript' src='node_modules/core/fs.js'></script>
   <script type='text/javascript' src='node_modules/core/fs_extra.js'></script>
@@ -353,6 +354,7 @@
   <script type='text/javascript' src='node_modules/core/path.js'></script>
   <script type='text/javascript' src='node_modules/core/process.js'></script>
   <script type='text/javascript' src='node_modules/core/uwp-config.js'></script>
+  <script type='text/javascript' src='node_modules/core/require.js'></script>
   <script type='text/javascript' src='node_modules/lodash/chunk.js'></script>
   <script type='text/javascript' src='node_modules/lodash/clamp.js'></script>
   <script type='text/javascript' src='node_modules/lodash/clonedeep.js'></script>
@@ -502,7 +504,50 @@
   <script type='text/javascript' src='node_modules/proxy-agent/index.js'></script>
   <script type='text/javascript' src='node_modules/websocket/index.js'></script>
   <script type='text/javascript' src='node_modules/node-fetch/index.js'></script>
-
+  <script type='text/javascript' src='node_modules/ref-array-napi/index.js'></script>
+  <!--<script type='text/javascript' src='node_modules/ref-array-napi/index2.js'></script>-->
+  <script type='text/javascript' src='node_modules/ref-napi/index.js'></script>
+  <script type='text/javascript' src='node_modules/ffi_napi/index.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/auth/AuthCredential.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/auth/AuthCredentialPresentation.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/auth/AuthCredentialResponse.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/auth/ClientZkAuthOperations.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/auth/ServerZkAuthOperations.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/errors/AssertionError.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/errors/IllegalArgumentException.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/errors/InvalidInputException.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/errors/VerificationFailedException.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/ChangeSignature.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/ClientZkGroupCipher.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/GroupIdentifier.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/GroupMasterKey.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/GroupPublicParams.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/GroupSecretParams.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/ProfileKeyCiphertext.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/UuidCiphertext.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/ZkGroupError.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/internal/ByteArray.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/internal/Constants.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/internal/FFICompatArray.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/internal/Native.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/internal/UUIDUtil.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ClientZkProfileOperations.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKey.js'></script> 
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKeyCommitment.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKeyCredential.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKeyCredentialPresentation.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKeyCredentialRequest.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKeyCredentialRequestContext.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKeyCredentialResponse.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKeyVersion.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ServerZkProfileOperations.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/NotarySignature.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/ServerPublicParams.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/ServerSecretParams.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/index.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup.asm.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup_bg.js'></script>
+  
   <script type='text/javascript' src='js/modules/auto_orient_image.js'></script>
   <script type='text/javascript' src='js/modules/types/schema_version.js'></script>
   <script type='text/javascript' src='js/typescript/protobuf/protobuf.js'></script>
@@ -526,6 +571,7 @@
   <script type='text/javascript' src='js/typescript/util/saveURLAsFile.js'></script>
   <script type='text/javascript' src='js/typescript/util/timer.js'></script>
   <script type='text/javascript' src='js/typescript/util/waitBatcher.js'></script>
+  <script type='text/javascript' src='js/typescript/util/zkgroup.js'></script>
   <script type='text/javascript' src='js/typescript/util/index.js'></script>
   <script type='text/javascript' src='js/typescript/shims/events.js'></script>
   <script type='text/javascript' src='js/typescript/shims/storage.js'></script>

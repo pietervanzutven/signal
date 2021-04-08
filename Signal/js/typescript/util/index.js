@@ -34,4 +34,6 @@
     exports.migrateColor = migrateColor_1.migrateColor;
     const missingCaseError_1 = require_ts_util_missingCaseError();
     exports.missingCaseError = missingCaseError_1.missingCaseError;
+    const zkgroup = __importStar(require_ts_util_zkgroup());
+    exports.zkgroup = zkgroup;
 })();
