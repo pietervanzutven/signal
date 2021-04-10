@@ -11,11 +11,9 @@
     const actions_1 = window.ts.state.actions;
     const RelinkDialog_1 = window.ts.components.RelinkDialog;
     const user_1 = window.ts.state.selectors.user;
-    const network_1 = window.ts.state.selectors.network;
     const registration_1 = window.ts.util.registration;
     const mapStateToProps = (state) => {
         return {
-            hasNetworkDialog: network_1.hasNetworkDialog(state),
             i18n: user_1.getIntl(state),
             isRegistrationDone: registration_1.isDone(),
         };
