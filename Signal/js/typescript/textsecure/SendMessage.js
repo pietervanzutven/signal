@@ -731,6 +731,7 @@
             const proto = new window.textsecure.protobuf.DataMessage();
             proto.body = 'TERMINATE';
             proto.flags = window.textsecure.protobuf.DataMessage.Flags.END_SESSION;
+            proto.timestamp = timestamp;
             const logError = (prefix) => (error) => {
                 window.log.error(prefix, error && error.stack ? error.stack : error);
                 throw error;
