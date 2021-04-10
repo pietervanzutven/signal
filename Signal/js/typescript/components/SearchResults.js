@@ -23,8 +23,6 @@
             super(...arguments);
             this.setFocusToFirstNeeded = false;
             this.setFocusToLastNeeded = false;
-            this.mostRecentWidth = 0;
-            this.mostRecentHeight = 0;
             this.cellSizeCache = new react_virtualized_1.CellMeasurerCache({
                 defaultHeight: 80,
                 fixedWidth: true,
@@ -185,10 +183,10 @@
                     }
                 }, 100, { maxWait: 100 });
             this.renderRow = ({ index, key, parent, style, }) => {
-                const { items } = this.props;
+                const { items, width } = this.props;
                 const row = items[index];
                 return (react_1.default.createElement("div", { role: "row", key: key, style: style },
-                    react_1.default.createElement(react_virtualized_1.CellMeasurer, { cache: this.cellSizeCache, columnIndex: 0, key: key, parent: parent, rowIndex: index, width: this.mostRecentWidth }, this.renderRowContents(row))));
+                    react_1.default.createElement(react_virtualized_1.CellMeasurer, { cache: this.cellSizeCache, columnIndex: 0, key: key, parent: parent, rowIndex: index, width: width }, this.renderRowContents(row))));
             };
             this.getList = () => {
                 if (!this.listRef) {
@@ -266,7 +264,7 @@
             return items ? items.length : 0;
         }
         render() {
-            const { i18n, items, noResults, searchConversationName, searchTerm, } = this.props;
+            const { height, i18n, items, noResults, searchConversationName, searchTerm, width, } = this.props;
             const { scrollToIndex } = this.state;
             if (noResults) {
                 return (react_1.default.createElement("div", { className: "module-search-results", tabIndex: -1, ref: this.containerRef, onFocus: this.handleFocus }, !searchConversationName || searchTerm ? (react_1.default.createElement("div", {
@@ -280,11 +278,7 @@
                 })) : (i18n('noSearchResults', [searchTerm])))) : null));
             }
             return (react_1.default.createElement("div", { className: "module-search-results", "aria-live": "polite", role: "group", tabIndex: -1, ref: this.containerRef, onKeyDown: this.handleKeyDown, onFocus: this.handleFocus },
-                react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => {
-                    this.mostRecentWidth = width;
-                    this.mostRecentHeight = height;
-                    return (react_1.default.createElement(react_virtualized_1.List, { className: "module-search-results__virtual-list", deferredMeasurementCache: this.cellSizeCache, height: height, items: items, overscanRowCount: 5, ref: this.listRef, rowCount: this.getRowCount(), rowHeight: this.cellSizeCache.rowHeight, rowRenderer: this.renderRow, scrollToIndex: scrollToIndex, tabIndex: -1, onScroll: this.onScroll, width: width }));
-                })));
+                react_1.default.createElement(react_virtualized_1.List, { className: "module-search-results__virtual-list", deferredMeasurementCache: this.cellSizeCache, height: height, items: items, overscanRowCount: 5, ref: this.listRef, rowCount: this.getRowCount(), rowHeight: this.cellSizeCache.rowHeight, rowRenderer: this.renderRow, scrollToIndex: scrollToIndex, tabIndex: -1, onScroll: this.onScroll, width: width })));
         }
     }
     exports.SearchResults = SearchResults;
