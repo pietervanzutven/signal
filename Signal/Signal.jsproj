@@ -54,7 +54,7 @@
     <MinimumVisualStudioVersion>$(VersionNumberMajor).$(VersionNumberMinor)</MinimumVisualStudioVersion>
     <DefaultLanguage>en</DefaultLanguage>
     <PackageCertificateKeyFile>Signal_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>0129299496503C815BCAB5310A50064948A96409</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>CF323D79F28F09DB172273A1E3E06FF36F38A563</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
