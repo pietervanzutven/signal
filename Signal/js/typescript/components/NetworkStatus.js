@@ -9,7 +9,7 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
+const react_1 = __importDefault(window.react);
     const FIVE_SECONDS = 5 * 1000;
     function renderDialog({ title, subtext, renderActionableButton, }) {
         return (react_1.default.createElement("div", { className: "module-left-pane-dialog module-left-pane-dialog--warning" },
@@ -18,7 +18,7 @@
                 react_1.default.createElement("span", null, subtext)),
             renderActionableButton && renderActionableButton()));
     }
-    exports.NetworkStatus = ({ hasNetworkDialog, i18n, isOnline, isRegistrationDone, socketStatus, relinkDevice, manualReconnect, }) => {
+exports.NetworkStatus = ({ hasNetworkDialog, i18n, isOnline, socketStatus, manualReconnect, }) => {
         if (!hasNetworkDialog) {
             return null;
         }
@@ -42,15 +42,7 @@
         };
         const manualReconnectButton = () => (react_1.default.createElement("div", { className: "module-left-pane-dialog__actions" },
             react_1.default.createElement("button", { onClick: reconnect }, i18n('connect'))));
-        if (!isRegistrationDone) {
-            return renderDialog({
-                renderActionableButton: () => (react_1.default.createElement("div", { className: "module-left-pane-dialog__actions" },
-                    react_1.default.createElement("button", { onClick: relinkDevice }, i18n('relink')))),
-                subtext: i18n('unlinkedWarning'),
-                title: i18n('unlinked'),
-            });
-        }
-        else if (isConnecting) {
+    if (isConnecting) {
             return renderDialog({
                 subtext: i18n('connectingHangOn'),
                 title: i18n('connecting'),

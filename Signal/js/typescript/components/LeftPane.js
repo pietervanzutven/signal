@@ -194,12 +194,13 @@
             };
         }
         render() {
-            const { renderExpiredBuildDialog, renderMainHeader, renderNetworkStatus, renderUpdateDialog, showArchived, } = this.props;
+            const { renderExpiredBuildDialog, renderMainHeader, renderNetworkStatus, renderRelinkDialog, renderUpdateDialog, showArchived, } = this.props;
             return (react_1.default.createElement(react_measure_1.default, { bounds: true, onResize: this.handleResize }, ({ measureRef }) => (react_1.default.createElement("div", { className: "module-left-pane", ref: measureRef },
                 react_1.default.createElement("div", { className: "module-left-pane__header" }, showArchived ? this.renderArchivedHeader() : renderMainHeader()),
                 renderExpiredBuildDialog(),
                 renderNetworkStatus(),
                 renderUpdateDialog(),
+                renderRelinkDialog(),
                 this.renderList()))));
         }
     }

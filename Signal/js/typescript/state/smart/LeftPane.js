@@ -21,6 +21,7 @@
     const MainHeader_1 = window.ts.state.smart.MainHeader;
     const MessageSearchResult_1 = window.ts.state.smart.MessageSearchResult;
     const NetworkStatus_1 = window.ts.state.smart.NetworkStatus;
+    const RelinkDialog_1 = window.ts.state.smart.RelinkDialog;
     const UpdateDialog_1 = window.ts.state.smart.UpdateDialog;
     // Workaround: A react component's required properties are filtering up through connect()
     //   https://github.com/DefinitelyTyped/DefinitelyTyped/issues/31363
@@ -29,6 +30,7 @@
     const FilteredSmartNetworkStatus = NetworkStatus_1.SmartNetworkStatus;
     const FilteredSmartUpdateDialog = UpdateDialog_1.SmartUpdateDialog;
     const FilteredSmartExpiredBuildDialog = ExpiredBuildDialog_1.SmartExpiredBuildDialog;
+    const FilteredSmartRelinkDialog = RelinkDialog_1.SmartRelinkDialog;
     function renderExpiredBuildDialog() {
         return react_1.default.createElement(FilteredSmartExpiredBuildDialog, null);
     }
@@ -38,11 +40,14 @@
     function renderMessageSearchResult(id) {
         return react_1.default.createElement(FilteredSmartMessageSearchResult, { id: id });
     }
-    function renderUpdateDialog() {
-        return react_1.default.createElement(FilteredSmartUpdateDialog, null);
-    }
     function renderNetworkStatus() {
         return react_1.default.createElement(FilteredSmartNetworkStatus, null);
+    }
+    function renderRelinkDialog() {
+        return react_1.default.createElement(FilteredSmartRelinkDialog, null);
+    }
+    function renderUpdateDialog() {
+        return react_1.default.createElement(FilteredSmartUpdateDialog, null);
     }
     const mapStateToProps = (state) => {
         const showSearch = search_1.isSearching(state);
@@ -55,6 +60,7 @@
             renderMainHeader,
             renderMessageSearchResult,
             renderNetworkStatus,
+            renderRelinkDialog,
             renderUpdateDialog
         });
     };
