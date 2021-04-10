@@ -55,8 +55,15 @@
                 data: undefined,
             });
             const isIOS = userAgent === 'OWI';
-            const parsedNumber = libphonenumberInstance_1.instance.parse(state.query, regionCode);
-            const isValidNumber = libphonenumberInstance_1.instance.isValidNumber(parsedNumber);
+            let isValidNumber = false;
+            try {
+                // Sometimes parse() throws, like for invalid country codes
+                const parsedNumber = libphonenumberInstance_1.instance.parse(state.query, regionCode);
+                isValidNumber = libphonenumberInstance_1.instance.isValidNumber(parsedNumber);
+            }
+            catch (_) {
+                // no-op
+            }
             if (!isIOS && isValidNumber) {
                 items.push({
                     type: 'sms-mms-not-supported-text',
