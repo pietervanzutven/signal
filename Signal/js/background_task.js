@@ -2,7 +2,8 @@
 
 var window = this;
 window.PROTO_ROOT = '/protos';
-importScripts('ms-appx:///libtextsecure/components.js', 'ms-appx:///libtextsecure/event_target.js', 'ms-appx:///libtextsecure/protobufs.js', 'ms-appx:///libtextsecure/websocket-resources.js');
+importScripts('ms-appx:///libtextsecure/components.js','ms-appx:///libtextsecure/protobufs.js','ms-appx:///js/typescript/textsecure/EventTarget.js','ms-appx:///js/typescript/textsecure/WebsocketResources.js');
+window.textsecure = Object.assign(window.textsecure, window.ts.textsecure);
 
 function updateToast(message) {
     var shouldShowNotification = Windows.Storage.ApplicationData.current.localSettings.values['notification-setting'] || 'message';
@@ -41,7 +42,7 @@ url.replace('https://', 'wss://').replace('http://', 'ws://')
 
 socket.onclose = () => close();
 
-var wsr = new WebSocketResource(socket, {
+var wsr = new window.ts.textsecure.WebsocketResources.default(socket, {
     handleRequest: request => {
         if (request.path === '/api/v1/message' && Notifications.ToastNotificationManager.history.getHistory().length < 1) {
             updateToast('New message(s) received');

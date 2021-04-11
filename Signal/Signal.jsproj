@@ -168,7 +168,6 @@
     <Content Include="js\legacy_storage.js" />
     <Content Include="js\libphonenumber-util.js" />
     <Content Include="js\libsignal-protocol-worker.js" />
-    <Content Include="js\libtextsecure.js" />
     <Content Include="js\loading_start.js" />
     <Content Include="js\logging.js" />
     <Content Include="js\message_controller.js" />
@@ -444,6 +443,12 @@
     <Content Include="js\view_syncs.js" />
     <Content Include="js\wall_clock_listener.js" />
     <Content Include="js\WebAudioRecorderMp3.js" />
+    <Content Include="libtextsecure\components.js" />
+    <Content Include="libtextsecure\libsignal-protocol.js" />
+    <Content Include="libtextsecure\protobufs.js" />
+    <Content Include="libtextsecure\protocol_wrapper.js" />
+    <Content Include="libtextsecure\storage\unprocessed.js" />
+    <Content Include="libtextsecure\storage\user.js" />
     <Content Include="loading.html" />
     <Content Include="loading_preload.js" />
     <Content Include="main.js" />
