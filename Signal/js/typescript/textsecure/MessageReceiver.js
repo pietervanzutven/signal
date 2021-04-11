@@ -1107,10 +1107,11 @@
                 .includes(groupId);
         }
         cleanAttachment(attachment) {
-            return Object.assign(Object.assign({}, lodash_1.omit(attachment, 'thumbnail')), { id: attachment.id.toString(), key: attachment.key ? attachment.key.toString('base64') : null, digest: attachment.digest ? attachment.digest.toString('base64') : null });
+            var _a;
+            return Object.assign(Object.assign({}, lodash_1.omit(attachment, 'thumbnail')), { cdnId: (_a = attachment.cdnId) === null || _a === void 0 ? void 0 : _a.toString(), key: attachment.key ? attachment.key.toString('base64') : null, digest: attachment.digest ? attachment.digest.toString('base64') : null });
         }
         async downloadAttachment(attachment) {
-            const encrypted = await this.server.getAttachment(attachment.id);
+            const encrypted = await this.server.getAttachment(attachment.cdnId || attachment.cdnKey, attachment.cdnNumber || 0);
             const { key, digest, size } = attachment;
             if (!digest) {
                 throw new Error('Failure: Ask sender to update Signal and resend.');
