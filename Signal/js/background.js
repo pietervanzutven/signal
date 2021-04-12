@@ -2587,14 +2587,10 @@
 
     const { source, sourceUuid, timestamp } = ev;
     window.log.info(`view sync ${source} ${timestamp}`);
-    const conversationId = ConversationController.getConversationId(
-      source || sourceUuid
-    );
 
     const sync = Whisper.ViewSyncs.add({
       source,
       sourceUuid,
-      conversationId,
       timestamp,
     });
 
