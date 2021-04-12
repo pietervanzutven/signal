@@ -23,12 +23,6 @@
             this.containerRef = react_1.default.createRef();
             this.setFocusToFirstNeeded = false;
             this.setFocusToLastNeeded = false;
-            this.state = {
-                dimensions: {
-                    height: 0,
-                    width: 0,
-                },
-            };
             this.renderRow = ({ index, key, style, }) => {
                 const { archivedConversations, conversations, i18n, openConversationInternal, showArchived, } = this.props;
                 if (!conversations || !archivedConversations) {
@@ -72,9 +66,6 @@
                     event.stopPropagation();
                     return;
                 }
-            };
-            this.handleResize = ({ bounds }) => {
-                this.setState({ dimensions: bounds });
             };
             this.handleFocus = () => {
                 const { selectedConversationId } = this.props;
@@ -163,28 +154,25 @@
                     ? archivedConversations.length
                     : conversations.length + (archivedConversations.length ? 1 : 0);
             };
-            this.renderList = () => {
+            this.renderList = ({ height, width, }) => {
                 const { archivedConversations, i18n, conversations, openConversationInternal, renderMessageSearchResult, startNewConversation, searchResults, showArchived, } = this.props;
                 if (searchResults) {
-                    return (react_1.default.createElement(SearchResults_1.SearchResults, Object.assign({}, searchResults, { openConversationInternal: openConversationInternal, startNewConversation: startNewConversation, renderMessageSearchResult: renderMessageSearchResult, i18n: i18n })));
+                    return (react_1.default.createElement(SearchResults_1.SearchResults, Object.assign({}, searchResults, { height: height || 0, width: width || 0, openConversationInternal: openConversationInternal, startNewConversation: startNewConversation, renderMessageSearchResult: renderMessageSearchResult, i18n: i18n })));
                 }
                 if (!conversations || !archivedConversations) {
                     throw new Error('render: must provided conversations and archivedConverstions if no search results are provided');
                 }
                 const length = this.getLength();
-                const archived = showArchived ? (react_1.default.createElement("div", { className: "module-left-pane__archive-helper-text", key: 0 }, i18n('archiveHelperText'))) : null;
                 // We ensure that the listKey differs between inbox and archive views, which ensures
                 //   that AutoSizer properly detects the new size of its slot in the flexbox. The
                 //   archive explainer text at the top of the archive view causes problems otherwise.
                 //   It also ensures that we scroll to the top when switching views.
                 const listKey = showArchived ? 1 : 0;
-                const { height, width } = this.state.dimensions;
                 // Note: conversations is not a known prop for List, but it is required to ensure that
                 //   it re-renders when our conversation data changes. Otherwise it would just render
                 //   on startup and scroll.
-                const list = (react_1.default.createElement("div", { "aria-live": "polite", className: "module-left-pane__list", key: listKey, onFocus: this.handleFocus, onKeyDown: this.handleKeyDown, ref: this.containerRef, role: "group", tabIndex: -1 },
-                    react_1.default.createElement(react_virtualized_1.List, { className: "module-left-pane__virtual-list", conversations: conversations, height: height, onScroll: this.onScroll, ref: this.listRef, rowCount: length, rowHeight: 68, rowRenderer: this.renderRow, tabIndex: -1, width: width })));
-                return [archived, list];
+                return (react_1.default.createElement("div", { "aria-live": "polite", className: "module-left-pane__list", key: listKey, onFocus: this.handleFocus, onKeyDown: this.handleKeyDown, ref: this.containerRef, role: "group", tabIndex: -1 },
+                    react_1.default.createElement(react_virtualized_1.List, { className: "module-left-pane__virtual-list", conversations: conversations, height: height || 0, onScroll: this.onScroll, ref: this.listRef, rowCount: length, rowHeight: 68, rowRenderer: this.renderRow, tabIndex: -1, width: width || 0 })));
             };
             this.renderArchivedHeader = () => {
                 const { i18n, showInbox } = this.props;
@@ -194,14 +182,17 @@
             };
         }
         render() {
-            const { renderExpiredBuildDialog, renderMainHeader, renderNetworkStatus, renderRelinkDialog, renderUpdateDialog, showArchived, } = this.props;
-            return (react_1.default.createElement(react_measure_1.default, { bounds: true, onResize: this.handleResize }, ({ measureRef }) => (react_1.default.createElement("div", { className: "module-left-pane", ref: measureRef },
+            const { i18n, renderExpiredBuildDialog, renderMainHeader, renderNetworkStatus, renderRelinkDialog, renderUpdateDialog, showArchived, } = this.props;
+            /* tslint:disable no-non-null-assertion */
+            return (react_1.default.createElement("div", { className: "module-left-pane" },
                 react_1.default.createElement("div", { className: "module-left-pane__header" }, showArchived ? this.renderArchivedHeader() : renderMainHeader()),
                 renderExpiredBuildDialog(),
                 renderNetworkStatus(),
                 renderUpdateDialog(),
                 renderRelinkDialog(),
-                this.renderList()))));
+                showArchived && (react_1.default.createElement("div", { className: "module-left-pane__archive-helper-text", key: 0 }, i18n('archiveHelperText'))),
+                react_1.default.createElement(react_measure_1.default, { bounds: true }, ({ contentRect, measureRef }) => (react_1.default.createElement("div", { className: "module-left-pane__list--measure", ref: measureRef },
+                    react_1.default.createElement("div", { className: "module-left-pane__list--wrapper" }, this.renderList(contentRect.bounds)))))));
         }
     }
     exports.LeftPane = LeftPane;
