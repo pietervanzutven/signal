@@ -195,6 +195,10 @@
       }
 
       try {
+        if (attachment.id) {
+          // eslint-disable-next-line no-param-reassign
+          attachment.cdnId = attachment.id;
+        }
         downloaded = await messageReceiver.downloadAttachment(attachment);
       } catch (error) {
         // Attachments on the server expire after 30 days, then start returning 404
