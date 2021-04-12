@@ -165,7 +165,6 @@
     <Content Include="js\expiring_messages.js" />
     <Content Include="js\expiring_tap_to_view_messages.js" />
     <Content Include="js\keychange_listener.js" />
-    <Content Include="js\legacy_storage.js" />
     <Content Include="js\libphonenumber-util.js" />
     <Content Include="js\libsignal-protocol-worker.js" />
     <Content Include="js\loading_start.js" />
@@ -176,10 +175,8 @@
     <Content Include="js\models\messages.js" />
     <Content Include="js\modules\attachment_downloads.js" />
     <Content Include="js\modules\auto_orient_image.js" />
-    <Content Include="js\modules\database.js" />
     <Content Include="js\modules\debug.js" />
     <Content Include="js\modules\debuglogs.js" />
-    <Content Include="js\modules\deferred_to_promise.js" />
     <Content Include="js\modules\emojis.js" />
     <Content Include="js\modules\i18n.js" />
     <Content Include="js\modules\idle_detector.js" />
@@ -189,11 +186,6 @@
     <Content Include="js\modules\messages_data_migrator.js" />
     <Content Include="js\modules\metadata\CiphertextMessage.js" />
     <Content Include="js\modules\metadata\SecretSessionCipher.js" />
-    <Content Include="js\modules\migrate_to_sql.js" />
-    <Content Include="js\modules\migrations\18\index.js" />
-    <Content Include="js\modules\migrations\get_placeholder_migrations.js" />
-    <Content Include="js\modules\migrations\migrations.js" />
-    <Content Include="js\modules\migrations\run_migrations.js" />
     <Content Include="js\modules\privacy.js" />
     <Content Include="js\modules\refresh_sender_certificate.js" />
     <Content Include="js\modules\settings.js" />

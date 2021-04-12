@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset='utf-8'>
@@ -16,7 +16,7 @@
             img-src 'self' blob: data: ms-appdata:;
             media-src 'self' blob: ms-appdata:;
             object-src 'none';
-            script-src 'self' 'unsafe-eval';
+            script-src 'self';
             style-src 'self' 'unsafe-inline';"
   >
   <title>Signal</title>
@@ -505,7 +505,6 @@
   <script type='text/javascript' src='node_modules/websocket/index.js'></script>
   <script type='text/javascript' src='node_modules/node-fetch/index.js'></script>
   <script type='text/javascript' src='node_modules/ref-array-napi/index.js'></script>
-  <!--<script type='text/javascript' src='node_modules/ref-array-napi/index2.js'></script>-->
   <script type='text/javascript' src='node_modules/ref-napi/index.js'></script>
   <script type='text/javascript' src='node_modules/ffi_napi/index.js'></script>
   <script type='text/javascript' src='node_modules/zkgroup/zkgroup/auth/AuthCredential.js'></script>
@@ -601,21 +600,14 @@
   <script type='text/javascript' src='js/modules/types/message.js'></script>
   <script type='text/javascript' src='js/modules/types/visual_attachment.js'></script>
   <script type='text/javascript' src='js/modules/privacy.js'></script>
-  <script type='text/javascript' src='js/modules/deferred_to_promise.js'></script>
-  <script type='text/javascript' src='js/modules/database.js'></script>
   <script type='text/javascript' src='js/modules/refresh_sender_certificate.js'></script>
   <script type='text/javascript' src='js/modules/idle_detector.js'></script>
-  <script type='text/javascript' src='js/modules/database.js'></script>
   <script type='text/javascript' src='js/modules/settings.js'></script>
   <script type='text/javascript' src='js/modules/sleep.js'></script>
   <script type='text/javascript' src='js/modules/views/initialization.js'></script>
   <script type='text/javascript' src='js/modules/i18n.js'></script>
   <script type='text/javascript' src='js/modules/string_to_array_buffer.js'></script>
   <script type='text/javascript' src='js/modules/link_previews.js'></script>
-  <script type='text/javascript' src='js/modules/migrations/run_migrations.js'></script>
-  <script type='text/javascript' src='js/modules/migrations/18/index.js'></script>
-  <script type='text/javascript' src='js/modules/migrations/migrations.js'></script>
-  <script type='text/javascript' src='js/modules/migrations/get_placeholder_migrations.js'></script>
   <script type='text/javascript' src='js/modules/metadata/CiphertextMessage.js'></script>
   <script type='text/javascript' src='js/modules/metadata/SecretSessionCipher.js'></script>
   <script type='text/javascript' src='js/typescript/services/networkObserver.js'></script>
@@ -731,7 +723,6 @@
   <script type='text/javascript' src='main.js'></script>
 
   <script type='text/javascript' src='js/modules/emojis.js'></script>
-  <script type='text/javascript' src='js/modules/migrate_to_sql.js'></script>
   <script type='text/javascript' src='js/modules/messages_data_migrator.js'></script>
   <script type='text/javascript' src='js/modules/indexeddb.js'></script>
   <script type='text/javascript' src='js/modules/logs.js'></script>
@@ -807,7 +798,6 @@
   <script type='text/javascript' src='js/reliable_trigger.js'></script>
   <script type='text/javascript' src='js/database.js'></script>
   <script type='text/javascript' src='js/storage.js'></script>
-  <script type='text/javascript' src='js/legacy_storage.js'></script>
   <script type='text/javascript' src='js/signal_protocol_store.js'></script>
   <script type='text/javascript' src='libtextsecure/libsignal-protocol.js'></script>
   <script type='text/javascript' src='libtextsecure/protocol_wrapper.js'></script>

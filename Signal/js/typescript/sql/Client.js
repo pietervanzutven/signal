@@ -12,7 +12,6 @@
     const Crypto_1 = window.ts.Crypto;
     const message_1 = window.types.message;
     const batcher_1 = window.require_ts_util_batcher();
-    const uuid_1 = window.uuid;
     // We listen to a lot of events on ipcRenderer, often on the same channel. This prevents
     //   any warnings that might be sent to the console in that case.
     electron_1.ipcRenderer.setMaxListeners(0);
@@ -145,8 +144,6 @@
         removeOtherData,
         cleanupOrphanedAttachments,
         ensureFilePermissions,
-        getLegacyMessagesNeedingUpgrade,
-        saveLegacyMessage,
         // Client-side only, and test-only
         _removeConversations,
         _removeMessages,
@@ -880,68 +877,5 @@
         return channels.getMessagesWithFileAttachments(conversationId, {
             limit,
         });
-    }
-    // Legacy IndexedDB Support
-    async function getLegacyMessagesNeedingUpgrade(limit, { maxVersion = message_1.CURRENT_SCHEMA_VERSION }) {
-        const db = await window.Whisper.Database.open();
-        try {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction('messages', 'readonly');
-                const messages = [];
-                transaction.onerror = () => {
-                    window.Whisper.Database.handleDOMException('getLegacyMessagesNeedingUpgrade transaction error', transaction.error, reject);
-                };
-                transaction.oncomplete = () => {
-                    resolve(messages);
-                };
-                const store = transaction.objectStore('messages');
-                const index = store.index('schemaVersion');
-                const range = IDBKeyRange.upperBound(maxVersion, true);
-                const request = index.openCursor(range);
-                let count = 0;
-                request.onsuccess = event => {
-                    // @ts-ignore
-                    const cursor = event.target.result;
-                    if (cursor) {
-                        count += 1;
-                        messages.push(cursor.value);
-                        if (count >= limit) {
-                            return;
-                        }
-                        cursor.continue();
-                    }
-                };
-                request.onerror = () => {
-                    window.Whisper.Database.handleDOMException('getLegacyMessagesNeedingUpgrade request error', request.error, reject);
-                };
-            });
-        }
-        finally {
-            db.close();
-        }
-    }
-    async function saveLegacyMessage(data) {
-        const db = await window.Whisper.Database.open();
-        try {
-            await new Promise((resolve, reject) => {
-                const transaction = db.transaction('messages', 'readwrite');
-                transaction.onerror = () => {
-                    window.Whisper.Database.handleDOMException('saveLegacyMessage transaction error', transaction.error, reject);
-                };
-                transaction.oncomplete = resolve;
-                const store = transaction.objectStore('messages');
-                if (!data.id) {
-                    data.id = uuid_1.v4();
-                }
-                const request = store.put(data, data.id);
-                request.onsuccess = resolve;
-                request.onerror = () => {
-                    window.Whisper.Database.handleDOMException('saveLegacyMessage request error', request.error, reject);
-                };
-            });
-        }
-        finally {
-            db.close();
-        }
     }
 })();

@@ -12,8 +12,6 @@
     const _ = window.lodash;
     const { installGetter, installSetter } = window.preload_utils;
 
-    const { deferredToPromise } = window.deferred_to_promise;
-
     const { remote } = electron;
     const { app } = remote;
     const { nativeTheme } = remote.require('electron');
@@ -69,8 +67,6 @@
       }
     };
 
-    window.wrapDeferred = deferredToPromise;
-
     const ipc = electron.ipcRenderer;
     const localeMessages = ipc.sendSync('locale-data');
 
@@ -94,6 +90,10 @@
     window.restart = () => {
       window.log.info('restart');
       ipc.send('restart');
+    };
+    window.shutdown = () => {
+      window.log.info('shutdown');
+      ipc.send('shutdown');
     };
 
     window.closeAbout = () => ipc.send('close-about');
