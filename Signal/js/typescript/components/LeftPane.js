@@ -187,9 +187,9 @@
             return (react_1.default.createElement("div", { className: "module-left-pane" },
                 react_1.default.createElement("div", { className: "module-left-pane__header" }, showArchived ? this.renderArchivedHeader() : renderMainHeader()),
                 renderExpiredBuildDialog(),
+                renderRelinkDialog(),
                 renderNetworkStatus(),
                 renderUpdateDialog(),
-                renderRelinkDialog(),
                 showArchived && (react_1.default.createElement("div", { className: "module-left-pane__archive-helper-text", key: 0 }, i18n('archiveHelperText'))),
                 react_1.default.createElement(react_measure_1.default, { bounds: true }, ({ contentRect, measureRef }) => (react_1.default.createElement("div", { className: "module-left-pane__list--measure", ref: measureRef },
                     react_1.default.createElement("div", { className: "module-left-pane__list--wrapper" }, this.renderList(contentRect.bounds)))))));

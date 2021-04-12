@@ -10,8 +10,8 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
-    exports.RelinkDialog = ({ hasNetworkDialog, i18n, isRegistrationDone, relinkDevice, }) => {
-        if (hasNetworkDialog || isRegistrationDone) {
+    exports.RelinkDialog = ({ i18n, isRegistrationDone, relinkDevice, }) => {
+        if (isRegistrationDone) {
             return null;
         }
         return (react_1.default.createElement("div", { className: "module-left-pane-dialog module-left-pane-dialog--warning" },
