@@ -7100,11 +7100,13 @@ img.emoji.jumbo {
     left: calc(50% - 24px);
     top: -18px;
     border-radius: 12px 12px 0 0;
+    pointer-events: none;
     opacity: 0;
     transition: opacity 200ms ease-out;
     background-color: #ffffff; }
     .module-composition-area:hover .module-composition-area__toggle-large {
-      opacity: 1; }
+      opacity: 1;
+      pointer-events: all; }
     .dark-theme .module-composition-area__toggle-large {
       background-color: #121212; }
     .module-composition-area__toggle-large__button {
