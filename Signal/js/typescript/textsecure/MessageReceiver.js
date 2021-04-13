@@ -699,6 +699,11 @@
             if (!msg) {
                 throw new Error('MessageReceiver.handleSentMessage: message was falsey!');
             }
+            if (msg.groupV2) {
+                window.log.warn('MessageReceiver.handleSentMessage: Dropping GroupsV2 message');
+                this.removeFromCache(envelope);
+                return;
+            }
             let p = Promise.resolve();
             // eslint-disable-next-line no-bitwise
             if (msg.flags &&
