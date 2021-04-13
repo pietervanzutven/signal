@@ -4185,7 +4185,7 @@ img.emoji.jumbo {
   .dark-theme .module-conversation-list-item__message__text--has-unread {
     color: #e9e9e9; }
 
-.module-conversation-list-item__message__draft-prefix {
+.module-conversation-list-item__message__draft-prefix, .module-conversation-list-item__message__deleted-for-everyone {
   font-style: italic;
   margin-right: 3px; }
 
@@ -7528,6 +7528,8 @@ img.emoji.jumbo {
   max-width: 302px; }
   .module-message__container--with-reactions {
     margin-bottom: 12px; }
+  .module-message__container--deleted-for-everyone {
+    font-style: italic; }
 
 /* Spec: container > 438px and container < 593px */
 @media (min-width: 800px) and (max-width: 925px) {

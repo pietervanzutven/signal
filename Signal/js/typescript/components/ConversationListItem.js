@@ -52,6 +52,7 @@
                 return null;
             }
             const showingDraft = shouldShowDraft && draftPreview;
+            const deletedForEveryone = Boolean(lastMessage && lastMessage.deletedForEveryone);
             // Note: instead of re-using showingDraft here we explode it because
             //   typescript can't tell that draftPreview is truthy otherwise
             const text = shouldShowDraft && draftPreview
@@ -65,7 +66,7 @@
                         ? 'module-conversation-list-item__message__text--has-unread'
                         : null)
                 }, typingContact ? (react_1.default.createElement(TypingAnimation_1.TypingAnimation, { i18n: i18n })) : (react_1.default.createElement(react_1.default.Fragment, null,
-                    showingDraft ? (react_1.default.createElement("span", { className: "module-conversation-list-item__message__draft-prefix" }, i18n('ConversationListItem--draft-prefix'))) : null,
+                    showingDraft ? (react_1.default.createElement("span", { className: "module-conversation-list-item__message__draft-prefix" }, i18n('ConversationListItem--draft-prefix'))) : deletedForEveryone ? (react_1.default.createElement("span", { className: "module-conversation-list-item__message__deleted-for-everyone" }, i18n('message--deletedForEveryone'))) : null,
                     react_1.default.createElement(MessageBody_1.MessageBody, { text: text.split('\n')[0], disableJumbomoji: true, disableLinks: true, i18n: i18n })))),
                 !showingDraft && lastMessage && lastMessage.status ? (react_1.default.createElement("div", { className: classnames_1.default('module-conversation-list-item__message__status-icon', `module-conversation-list-item__message__status-icon--${lastMessage.status}`) })) : null));
         }

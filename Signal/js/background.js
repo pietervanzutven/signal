@@ -2247,7 +2247,7 @@
   // Note: We do very little in this function, since everything in handleDataMessage is
   //   inside a conversation-specific queue(). Any code here might run before an earlier
   //   message is processed in handleDataMessage().
-  async function onMessageReceived(event) {
+  function onMessageReceived(event) {
     const { data, confirm } = event;
 
     const messageDescriptor = getDescriptorForReceived(data);
@@ -2256,17 +2256,16 @@
     // eslint-disable-next-line no-bitwise
     const isProfileUpdate = Boolean(data.message.flags & PROFILE_KEY_UPDATE);
     if (isProfileUpdate) {
-      await handleMessageReceivedProfileUpdate({
+      return handleMessageReceivedProfileUpdate({
         data,
         confirm,
         messageDescriptor,
       });
-      return;
     }
 
-    const message = await initIncomingMessage(data);
+    const message = initIncomingMessage(data);
 
-    const result = await ConversationController.getOrCreateAndWait(
+    const result = ConversationController.getOrCreate(
       messageDescriptor.id,
       messageDescriptor.type
     );
@@ -2292,11 +2291,26 @@
       // Note: We do not wait for completion here
       Whisper.Reactions.onReaction(reactionModel);
       confirm();
-      return;
+      return Promise.resolve();
+    }
+
+    if (data.message.delete) {
+      const { delete: del } = data.message;
+      const deleteModel = Whisper.Deletes.add({
+        targetSentTimestamp: del.targetSentTimestamp,
+        serverTimestamp: data.serverTimestamp,
+        fromId: data.source || data.sourceUuid,
+      });
+      // Note: We do not wait for completion here
+      Whisper.Deletes.onDelete(deleteModel);
+      confirm();
+      return Promise.resolve();
     }
 
     // Don't wait for handleDataMessage, as it has its own per-conversation queueing
     message.handleDataMessage(data.message, event.confirm);
+
+    return Promise.resolve();
   }
 
   async function handleMessageSentProfileUpdate({
@@ -2347,6 +2361,7 @@
       sourceUuid: textsecure.storage.user.getUuid(),
       sourceDevice: data.device,
       sent_at: data.timestamp,
+      serverTimestamp: data.serverTimestamp,
       sent_to: sentTo,
       received_at: now,
       conversationId: data.destination,
@@ -2363,7 +2378,7 @@
   // Note: We do very little in this function, since everything in handleDataMessage is
   //   inside a conversation-specific queue(). Any code here might run before an earlier
   //   message is processed in handleDataMessage().
-  async function onSentMessage(event) {
+  function onSentMessage(event) {
     const { data, confirm } = event;
 
     const messageDescriptor = getDescriptorForSent(data);
@@ -2372,20 +2387,20 @@
     // eslint-disable-next-line no-bitwise
     const isProfileUpdate = Boolean(data.message.flags & PROFILE_KEY_UPDATE);
     if (isProfileUpdate) {
-      await handleMessageSentProfileUpdate({
+      return handleMessageSentProfileUpdate({
         data,
         confirm,
         messageDescriptor,
       });
-      return;
     }
 
-    const message = await createSentMessage(data);
+    const message = createSentMessage(data);
+
+    const ourNumber = textsecure.storage.user.getNumber();
+    const ourUuid = textsecure.storage.user.getUuid();
 
     if (data.message.reaction) {
       const { reaction } = data.message;
-      const ourNumber = textsecure.storage.user.getNumber();
-      const ourUuid = textsecure.storage.user.getUuid();
       const reactionModel = Whisper.Reactions.add({
         emoji: reaction.emoji,
         remove: reaction.remove,
@@ -2400,10 +2415,23 @@
       Whisper.Reactions.onReaction(reactionModel);
 
       event.confirm();
-      return;
+      return Promise.resolve();
     }
 
-    await ConversationController.getOrCreateAndWait(
+    if (data.message.delete) {
+      const { delete: del } = data.message;
+      const deleteModel = Whisper.Deletes.add({
+        targetSentTimestamp: del.targetSentTimestamp,
+        serverTimestamp: del.serverTimestamp,
+        fromId: ourNumber || ourUuid,
+      });
+      // Note: We do not wait for completion here
+      Whisper.Deletes.onDelete(deleteModel);
+      confirm();
+      return Promise.resolve();
+    }
+
+    ConversationController.getOrCreate(
       messageDescriptor.id,
       messageDescriptor.type
     );
@@ -2412,9 +2440,11 @@
     message.handleDataMessage(data.message, event.confirm, {
       data,
     });
+
+    return Promise.resolve();
   }
 
-  async function initIncomingMessage(data) {
+  function initIncomingMessage(data) {
     const targetId = data.source || data.sourceUuid;
     const conversation = ConversationController.get(targetId);
     const conversationId = conversation ? conversation.id : targetId;
@@ -2424,6 +2454,7 @@
       sourceUuid: data.sourceUuid,
       sourceDevice: data.sourceDevice,
       sent_at: data.timestamp,
+      serverTimestamp: data.serverTimestamp,
       received_at: Date.now(),
       conversationId,
       unidentifiedDeliveryReceived: data.unidentifiedDeliveryReceived,
@@ -2491,7 +2522,7 @@
     }
   }
 
-  async function onError(ev) {
+  function onError(ev) {
     const { error } = ev;
     window.log.error('background onError:', Errors.toLogFormat(error));
 
@@ -2500,8 +2531,7 @@
       error.name === 'HTTPError' &&
       (error.code === 401 || error.code === 403)
     ) {
-      await unlinkAndDisconnect();
-      return;
+      return unlinkAndDisconnect();
     }
 
     if (
@@ -2516,7 +2546,7 @@
 
         Whisper.events.trigger('reconnectTimer');
       }
-      return;
+      return Promise.resolve();
     }
 
     if (ev.proto) {
@@ -2526,13 +2556,13 @@
         }
         // Ignore this message. It is likely a duplicate delivery
         // because the server lost our ack the first time.
-        return;
+        return Promise.resolve();
       }
       const envelope = ev.proto;
-      const message = await initIncomingMessage(envelope);
+      const message = initIncomingMessage(envelope);
 
       const conversationId = message.get('conversationId');
-      const conversation = await ConversationController.getOrCreateAndWait(
+      const conversation = ConversationController.getOrCreate(
         conversationId,
         'private'
       );

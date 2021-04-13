@@ -269,6 +269,11 @@
         if (reactionsChanged) {
             return true;
         }
+        const isDeletedForEveryone = message.deletedForEveryone;
+        const wasDeletedForEveryone = previous.deletedForEveryone;
+        if (isDeletedForEveryone !== wasDeletedForEveryone) {
+            return true;
+        }
         return false;
     }
     // tslint:disable-next-line cyclomatic-complexity max-func-body-length

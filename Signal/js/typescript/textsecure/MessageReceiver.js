@@ -729,6 +729,7 @@
                 ev.data = {
                     destination,
                     timestamp: timestamp.toNumber(),
+                    serverTimestamp: envelope.serverTimestamp,
                     device: envelope.sourceDevice,
                     unidentifiedStatus,
                     message,
@@ -780,6 +781,7 @@
                     sourceUuid: envelope.sourceUuid,
                     sourceDevice: envelope.sourceDevice,
                     timestamp: envelope.timestamp.toNumber(),
+                    serverTimestamp: envelope.serverTimestamp,
                     unidentifiedDeliveryReceived: envelope.unidentifiedDeliveryReceived,
                     message,
                 };
@@ -1250,6 +1252,12 @@
                 }
                 if (sticker.data) {
                     sticker.data = this.cleanAttachment(sticker.data);
+                }
+            }
+            const { delete: del } = decrypted;
+            if (del) {
+                if (del.targetSentTimestamp) {
+                    del.targetSentTimestamp = del.targetSentTimestamp.toNumber();
                 }
             }
             const groupMembers = decrypted.group ? decrypted.group.members || [] : [];

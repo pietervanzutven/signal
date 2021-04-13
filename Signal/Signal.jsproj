@@ -161,6 +161,7 @@
     <Content Include="js\conversation_controller.js" />
     <Content Include="js\database.js" />
     <Content Include="js\debug_log_start.js" />
+    <Content Include="js\deletes.js" />
     <Content Include="js\delivery_receipts.js" />
     <Content Include="js\expiring_messages.js" />
     <Content Include="js\expiring_tap_to_view_messages.js" />

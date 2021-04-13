@@ -614,6 +614,8 @@
         isTapToViewExpired: isTapToView && this.get('isErased'),
         isTapToViewError:
           isTapToView && this.isIncoming() && this.get('isTapToViewInvalid'),
+
+        deletedForEveryone: this.get('deletedForEveryone') || false,
       };
     },
 
@@ -1127,7 +1129,7 @@
     isErased() {
       return Boolean(this.get('isErased'));
     },
-    async eraseContents() {
+    async eraseContents(additionalProperties = {}) {
       if (this.get('isErased')) {
         return;
       }
@@ -1143,15 +1145,18 @@
         );
       }
 
-      this.set({
-        isErased: true,
-        body: '',
-        attachments: [],
-        quote: null,
-        contact: [],
-        sticker: null,
-        preview: [],
-      });
+      this.set(Object.assign({},
+        {
+          isErased: true,
+          body: '',
+          attachments: [],
+          quote: null,
+          contact: [],
+          sticker: null,
+          preview: [],
+        },
+        additionalProperties,
+      ));
       this.trigger('content-changed');
 
       await window.Signal.Data.saveMessage(this.attributes, {
@@ -1464,12 +1469,17 @@
       const isOutgoing = this.get('type') === 'outgoing';
       const numDelivered = this.get('delivered');
 
-      // Case 1: We can reply if this is outgoing and delievered to at least one recipient
+      // Case 1: We cannot reply if this message is deleted for everyone
+      if (this.get('deletedForEveryone')) {
+        return false;
+      }
+
+      // Case 2: We can reply if this is outgoing and delievered to at least one recipient
       if (isOutgoing && numDelivered > 0) {
         return true;
       }
 
-      // Case 2: We can reply if there are no errors
+      // Case 3: We can reply if there are no errors
       if (!errors || (errors && errors.length === 0)) {
         return true;
       }
@@ -2505,6 +2515,11 @@
             message.handleReaction(reaction);
           });
 
+          // Does this message have any pending, previously-received associated
+          // delete for everyone messages?
+          const deletes = Whisper.Deletes.forMessage(message);
+          deletes.forEach(del => Whisper.Deletes.onDelete(del));
+
           Whisper.events.trigger('incrementProgress');
           confirm();
         } catch (error) {
@@ -2521,6 +2536,10 @@
     },
 
     async handleReaction(reaction) {
+      if (this.get('deletedForEveryone')) {
+        return;
+      }
+
       const reactions = this.get('reactions') || [];
       const messageId = this.idForLogging();
       const count = reactions.length;
@@ -2559,6 +2578,27 @@
       await window.Signal.Data.saveMessage(this.attributes, {
         Message: Whisper.Message,
       });
+    },
+
+    async handleDeleteForEveryone(del) {
+      window.log.info('Handling DOE.', {
+        fromId: del.get('fromId'),
+        targetSentTimestamp: del.get('targetSentTimestamp'),
+        messageServerTimestamp: this.get('serverTimestamp'),
+        deleteServerTimestamp: del.get('serverTimestamp'),
+      });
+
+      // Remove any notifications for this message
+      const notificationForMessage = Whisper.Notifications.findWhere({
+        messageId: this.get('id'),
+      });
+      Whisper.Notifications.remove(notificationForMessage);
+
+      // Erase the contents of this message
+      await this.eraseContents({ deletedForEveryone: true, reactions: [] });
+
+      // Update the conversation's last message in case this was the last message
+      this.getConversation().updateLastMessage();
     },
   });
 
