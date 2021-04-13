@@ -7501,19 +7501,26 @@ img.emoji.jumbo {
 
 .react-contextmenu-item.react-contextmenu-item--active,
 .react-contextmenu-item.react-contextmenu-item--selected {
-  color: #ffffff;
-  background-color: #b9b9b9; }
+  color: #000000;
+  background-color: #dedede; }
   .dark-theme .react-contextmenu-item.react-contextmenu-item--active, .dark-theme
   .react-contextmenu-item.react-contextmenu-item--selected {
-    background-color: #848484; }
+    background-color: #3b3b3b;
+    color: #ffffff; }
 
 .react-contextmenu-item.react-contextmenu-item--active.react-contextmenu-item--checked:before,
 .react-contextmenu-item.react-contextmenu-item--selected.react-contextmenu-item--checked:before {
-  color: #ffffff; }
+  color: #000000; }
+  .dark-theme .react-contextmenu-item.react-contextmenu-item--active.react-contextmenu-item--checked:before, .dark-theme
+  .react-contextmenu-item.react-contextmenu-item--selected.react-contextmenu-item--checked:before {
+    color: #ffffff; }
 
 .react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item.react-contextmenu-item--active:after,
 .react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item.react-contextmenu-item--selected:after {
-  color: #ffffff; }
+  color: #000000; }
+  .dark-theme .react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item.react-contextmenu-item--active:after, .dark-theme
+  .react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item.react-contextmenu-item--selected:after {
+    color: #ffffff; }
 
 .module-message__buttons__download {
   display: none; }
