@@ -5616,6 +5616,18 @@ img.emoji.jumbo {
       animation-fill-mode: forwards; }
     .module-reaction-picker__emoji-btn--selected {
       background: rgba(255, 255, 255, 0.3); }
+    .module-reaction-picker__emoji-btn--more {
+      background: url("../images/any-emoji-32.svg") no-repeat center; }
+      .module-reaction-picker__emoji-btn--more::after {
+        content: '';
+        display: block;
+        width: 52px;
+        height: 52px;
+        background: url("../images/any-emoji-32-hover.svg") no-repeat center;
+        opacity: 0;
+        transition: opacity 400ms cubic-bezier(0.19, 1, 0.22, 1); }
+      .module-reaction-picker__emoji-btn--more:hover::after {
+        opacity: 1; }
     .keyboard-mode .module-reaction-picker__emoji-btn:focus:before {
       content: '';
       display: block;

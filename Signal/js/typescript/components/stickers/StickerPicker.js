@@ -21,7 +21,7 @@
     /* tslint:disable:cyclomatic-complexity */
     const React = __importStar(window.react);
     const classnames_1 = __importDefault(window.classnames);
-    const hooks_1 = window.ts.components.hooks;
+    const hooks_1 = window.ts.util.hooks;
     function useTabs(tabs, initialTab = tabs[0]) {
         const [tab, setTab] = React.useState(initialTab);
         const handlers = React.useMemo(() => tabs.map(t => () => {

@@ -1,9 +1,9 @@
 (function () {
-    "use strict";
+    'use strict';
 
     window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    const exports = window.ts.components.hooks = {};
+    window.ts.util = window.ts.util || {};
+    const exports = window.ts.util.hooks = {}
 
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
@@ -14,6 +14,8 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const React = __importStar(window.react);
+    const redux_1 = window.redux;
+    const react_redux_1 = window.react_redux;
     // Restore focus on teardown
     exports.useRestoreFocus = (
         // The ref for the element to receive initial focus
@@ -38,5 +40,11 @@
                 });
             };
         }, [focusRef, root]);
+    };
+    exports.useBoundActions = (actions) => {
+        const dispatch = react_redux_1.useDispatch();
+        return React.useMemo(() => {
+            return redux_1.bindActionCreators(actions, dispatch);
+        }, [dispatch]);
     };
 })();

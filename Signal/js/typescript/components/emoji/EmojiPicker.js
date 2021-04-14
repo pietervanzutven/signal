@@ -23,7 +23,7 @@
     const lodash_1 = window.lodash;
     const Emoji_1 = window.ts.components.emoji.Emoji;
     const lib_1 = window.ts.components.emoji.lib;
-    const hooks_1 = window.ts.components.hooks;
+    const hooks_1 = window.ts.util.hooks;
     function focusOnRender(el) {
         if (el) {
             el.focus();
@@ -54,12 +54,13 @@
             const [searchText, setSearchText] = React.useState('');
             const [scrollToRow, setScrollToRow] = React.useState(0);
             const [selectedTone, setSelectedTone] = React.useState(skinTone);
-            const handleToggleSearch = React.useCallback(() => {
+            const handleToggleSearch = React.useCallback((e) => {
+                e.stopPropagation();
                 setSearchText('');
                 setSelectedCategory(categories[0]);
                 setSearchMode(m => !m);
             }, [setSearchText, setSearchMode]);
-            const debounceSearchChange = React.useMemo(() => lodash_1.debounce(query => {
+            const debounceSearchChange = React.useMemo(() => lodash_1.debounce((query) => {
                 setSearchText(query);
                 setScrollToRow(0);
             }, 200), [setSearchText, setScrollToRow]);
@@ -74,16 +75,17 @@
             }, []);
             const handlePickEmoji = React.useCallback((e) => {
                 if ('key' in e) {
-                    if (e.key === 'Enter') {
+                    if (e.key === 'Enter' && doSend) {
+                        e.stopPropagation();
                         e.preventDefault();
-                        if (doSend) {
-                            doSend();
-                        }
+                        doSend();
                     }
                 }
                 else {
                     const { shortName } = e.currentTarget.dataset;
                     if (shortName) {
+                        e.stopPropagation();
+                        e.preventDefault();
                         onPickEmoji({ skinTone: selectedTone, shortName });
                     }
                 }
@@ -108,7 +110,9 @@
                             'Tab',
                             ' ',
                         ].includes(event.key)) {
-                        onClose();
+                        if (onClose) {
+                            onClose();
+                        }
                         event.preventDefault();
                         event.stopPropagation();
                     }
@@ -143,8 +147,9 @@
                 return lodash_1.zipObject(categories, [0, ...offsets]);
             }, [categories, catRowEnds]);
             const catOffsetEntries = React.useMemo(() => Object.entries(catToRowOffsets), [catToRowOffsets]);
-            const handleSelectCategory = React.useCallback(({ currentTarget }) => {
-                const { category } = currentTarget.dataset;
+            const handleSelectCategory = React.useCallback((e) => {
+                e.stopPropagation();
+                const { category } = e.currentTarget.dataset;
                 if (category) {
                     setSelectedCategory(category);
                     setScrollToRow(catToRowOffsets[category]);

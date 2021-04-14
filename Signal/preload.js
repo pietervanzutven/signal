@@ -18,6 +18,8 @@
 
     // Derive profile key versions, then use those to fetch versioned profiles from server
     window.VERSIONED_PROFILE_FETCH = false;
+    // Enable full emoji picker for reactions
+    window.REACT_ANY_EMOJI = false;
 
     window.PROTO_ROOT = '/protos';
     const config = window.app.config || {};

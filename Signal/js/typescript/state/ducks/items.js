@@ -15,7 +15,11 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = window.lodash;
+    const reselect_1 = window.reselect;
+    const react_redux_1 = window.react_redux;
     const storageShim = __importStar(window.ts.shims.storage);
+    const lib_1 = window.ts.components.emoji.lib;
+    const hooks_1 = window.ts.util.hooks;
     // Action Creators
     exports.actions = {
         putItem,
@@ -24,6 +28,7 @@
         removeItemExternal,
         resetItems,
     };
+    exports.useActions = () => hooks_1.useBoundActions(exports.actions);
     function putItem(key, value) {
         storageShim.put(key, value);
         return {
@@ -75,4 +80,7 @@
         return state;
     }
     exports.reducer = reducer;
+    // Selectors
+    const selectRecentEmojis = reselect_1.createSelector(({ emojis }) => emojis.recents, recents => recents.filter(lib_1.isShortName));
+    exports.useRecentEmojis = () => react_redux_1.useSelector(selectRecentEmojis);
 })();

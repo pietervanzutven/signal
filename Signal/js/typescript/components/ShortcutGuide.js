@@ -18,7 +18,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const React = __importStar(window.react);
     const classnames_1 = __importDefault(window.classnames);
-    const hooks_1 = window.ts.components.hooks;
+    const hooks_1 = window.ts.util.hooks;
     const NAVIGATION_SHORTCUTS = [
         {
             description: 'Keyboard--navigate-by-section',

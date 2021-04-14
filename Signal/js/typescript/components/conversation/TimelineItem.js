@@ -34,6 +34,11 @@
             if (item.type === 'unsupportedMessage') {
                 notification = (react_1.default.createElement(UnsupportedMessage_1.UnsupportedMessage, Object.assign({}, this.props, item.data, { i18n: i18n })));
             }
+            else if (item.type === 'linkNotification') {
+                notification = (react_1.default.createElement("div", { className: "module-message-unsynced" },
+                    react_1.default.createElement("div", { className: "module-message-unsynced__icon" }),
+                    i18n('messageHistoryUnsynced')));
+            }
             else if (item.type === 'timerNotification') {
                 notification = (react_1.default.createElement(TimerNotification_1.TimerNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));
             }

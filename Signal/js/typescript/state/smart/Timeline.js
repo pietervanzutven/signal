@@ -11,8 +11,10 @@
         for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
             t[p] = s[p];
         if (s != null && typeof Object.getOwnPropertySymbols === "function")
-            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
-                t[p[i]] = s[p[i]];
+            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+                if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                    t[p[i]] = s[p[i]];
+            }
         return t;
     };
     var __importDefault = (this && this.__importDefault) || function (mod) {
@@ -30,6 +32,7 @@
     const TypingBubble_1 = window.ts.state.smart.TypingBubble;
     const LastSeenIndicator_1 = window.ts.state.smart.LastSeenIndicator;
     const TimelineLoadingRow_1 = window.ts.state.smart.TimelineLoadingRow;
+    const EmojiPicker_1 = window.ts.state.smart.EmojiPicker;
     // Workaround: A react component's required properties are filtering up through connect()
     //   https://github.com/DefinitelyTyped/DefinitelyTyped/issues/31363
     const FilteredSmartTimelineItem = TimelineItem_1.SmartTimelineItem;
@@ -37,7 +40,10 @@
     const FilteredSmartLastSeenIndicator = LastSeenIndicator_1.SmartLastSeenIndicator;
     const FilteredSmartTimelineLoadingRow = TimelineLoadingRow_1.SmartTimelineLoadingRow;
     function renderItem(messageId, conversationId, actionProps) {
-        return (react_1.default.createElement(FilteredSmartTimelineItem, Object.assign({}, actionProps, { conversationId: conversationId, id: messageId })));
+        return (react_1.default.createElement(FilteredSmartTimelineItem, Object.assign({}, actionProps, { conversationId: conversationId, id: messageId, renderEmojiPicker: renderEmojiPicker })));
+    }
+    function renderEmojiPicker({ ref, onPickEmoji, onClose, style, }) {
+        return (react_1.default.createElement(EmojiPicker_1.SmartEmojiPicker, { ref: ref, onPickEmoji: onPickEmoji, onClose: onClose, style: style }));
     }
     function renderLastSeenIndicator(id) {
         return react_1.default.createElement(FilteredSmartLastSeenIndicator, { id: id });
@@ -53,12 +59,12 @@
         const conversation = conversations_1.getConversationSelector(state)(id);
         const conversationMessages = conversations_1.getConversationMessagesSelector(state)(id);
         const selectedMessage = conversations_1.getSelectedMessage(state);
-        return Object.assign({ id }, lodash_1.pick(conversation, ['unreadCount', 'typingContact']), conversationMessages, {
+        return Object.assign(Object.assign(Object.assign(Object.assign({ id }, lodash_1.pick(conversation, ['unreadCount', 'typingContact'])), conversationMessages), {
             selectedMessageId: selectedMessage ? selectedMessage.id : undefined, i18n: user_1.getIntl(state), renderItem,
             renderLastSeenIndicator,
             renderLoadingRow,
             renderTypingBubble
-        }, actions);
+        }), actions);
     };
     const smart = react_redux_1.connect(mapStateToProps, actions_1.mapDispatchToProps);
     exports.SmartTimeline = smart(Timeline_1.Timeline);

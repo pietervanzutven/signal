@@ -616,7 +616,7 @@
         renderMenu(isCorrectSide, triggerId) {
             const { attachments,
                 // tslint:disable-next-line max-func-body-length
-                canReply, direction, disableMenu, id, isSticker, isTapToView, replyToMessage, } = this.props;
+                canReply, direction, disableMenu, i18n, id, isSticker, isTapToView, renderEmojiPicker, replyToMessage, } = this.props;
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
@@ -672,13 +672,13 @@
                     menuButton),
                 reactionPickerRoot &&
                 react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: "top" }, ({ ref, style }) => (react_1.default.createElement(ReactionPicker_1.ReactionPicker, {
-                    ref: ref, style: style, selected: this.props.selectedReaction, onClose: this.toggleReactionPicker, onPick: emoji => {
+                    i18n: i18n, ref: ref, style: style, selected: this.props.selectedReaction, onClose: this.toggleReactionPicker, onPick: emoji => {
                         this.toggleReactionPicker(true);
                         this.props.reactToMessage(id, {
                             emoji,
                             remove: emoji === this.props.selectedReaction,
                         });
-                    }
+                    }, renderEmojiPicker: renderEmojiPicker
                 }))), reactionPickerRoot)));
         }
         // tslint:disable-next-line max-func-body-length
