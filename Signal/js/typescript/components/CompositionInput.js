@@ -266,9 +266,10 @@
         }, [editorStateRef, resetEmojiResults, setAndTrackEditorState]);
         const submit = React.useCallback(() => {
             const { current: state } = editorStateRef;
-            const text = state.getCurrentContent().getPlainText();
-            const emojidText = lib_1.replaceColons(text);
-            const trimmedText = emojidText.trim();
+            const trimmedText = state
+                .getCurrentContent()
+                .getPlainText()
+                .trim();
             onSubmit(trimmedText);
         }, [editorStateRef, onSubmit]);
         const handleEditorSizeChange = React.useCallback((rect) => {

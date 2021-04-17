@@ -28,7 +28,7 @@
             // sort_order for the People & Body emojis so that they fall below the
             // Smiley & Emotions category.
             emoji.category === 'People & Body'
-                ? Object.assign({}, emoji, { sort_order: emoji.sort_order + 1000 }) : emoji);
+                ? Object.assign(Object.assign({}, emoji), { sort_order: emoji.sort_order + 1000 }) : emoji);
     // @ts-ignore
     const ROOT_PATH = lodash_1.get(
         // tslint:disable-next-line no-typeof-undefined
@@ -172,20 +172,6 @@
         return imageByEmoji[emoji];
     }
     exports.emojiToImage = emojiToImage;
-    function replaceColons(str) {
-        return str.replace(/:[a-z0-9-_+]+:(?::skin-tone-[1-5]:)?/gi, m => {
-            const [shortName = '', skinTone = '0'] = m
-                .replace('skin-tone-', '')
-                .toLowerCase()
-                .split(':')
-                .filter(Boolean);
-            if (shortName && isShortName(shortName)) {
-                return convertShortName(shortName, parseInt(skinTone, 10));
-            }
-            return m;
-        });
-    }
-    exports.replaceColons = replaceColons;
     function getCountOfAllMatches(str, regex) {
         let match = regex.exec(str);
         let count = 0;
