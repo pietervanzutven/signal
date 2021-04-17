@@ -43,7 +43,7 @@
         return (react_1.default.createElement(FilteredSmartTimelineItem, Object.assign({}, actionProps, { conversationId: conversationId, id: messageId, renderEmojiPicker: renderEmojiPicker })));
     }
     function renderEmojiPicker({ ref, onPickEmoji, onClose, style, }) {
-        return (react_1.default.createElement(EmojiPicker_1.SmartEmojiPicker, { ref: ref, onPickEmoji: onPickEmoji, onClose: onClose, style: style }));
+        return (react_1.default.createElement(EmojiPicker_1.SmartEmojiPicker, { ref: ref, onPickEmoji: onPickEmoji, onClose: onClose, style: style, disableSkinTones: true }));
     }
     function renderLastSeenIndicator(id) {
         return react_1.default.createElement(FilteredSmartLastSeenIndicator, { id: id });

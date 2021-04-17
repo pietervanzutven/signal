@@ -21,7 +21,7 @@
     const emojis_1 = window.ts.state.ducks.emojis;
     const EmojiPicker_1 = window.ts.components.emoji.EmojiPicker;
     const user_1 = window.ts.state.selectors.user;
-    exports.SmartEmojiPicker = React.forwardRef(({ onPickEmoji, onClose, style }, ref) => {
+    exports.SmartEmojiPicker = React.forwardRef(({ onPickEmoji, onClose, style, disableSkinTones }, ref) => {
         const i18n = react_redux_1.useSelector(user_1.getIntl);
         const skinTone = react_redux_1.useSelector(state => lodash_1.get(state, ['items', 'skinTone'], 0));
         const recentEmojis = items_1.useRecentEmojis();
@@ -34,6 +34,6 @@
             onUseEmoji({ shortName: data.shortName });
             onPickEmoji(data);
         }, [onUseEmoji, onPickEmoji]);
-        return (React.createElement(EmojiPicker_1.EmojiPicker, { ref: ref, i18n: i18n, skinTone: skinTone, onSetSkinTone: onSetSkinTone, onPickEmoji: handlePickEmoji, recentEmojis: recentEmojis, onClose: onClose, style: style }));
+        return (React.createElement(EmojiPicker_1.EmojiPicker, { ref: ref, i18n: i18n, skinTone: skinTone, onSetSkinTone: onSetSkinTone, onPickEmoji: handlePickEmoji, recentEmojis: recentEmojis, onClose: onClose, style: style, disableSkinTones: disableSkinTones }));
     });
 })();
