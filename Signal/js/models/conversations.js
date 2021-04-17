@@ -1405,14 +1405,10 @@
 
     getSendOptions(options = {}) {
       const senderCertificate = storage.get('senderCertificate');
-      const senderCertificateWithUuid = storage.get(
-        'senderCertificateWithUuid'
-      );
       const sendMetadata = this.getSendMetadata(options);
 
       return {
         senderCertificate,
-        senderCertificateWithUuid,
         sendMetadata,
       };
     },
@@ -1470,7 +1466,9 @@
             window.Signal.Crypto.arrayBufferToBase64(
               window.Signal.Crypto.getRandomBytes(16)
             ),
-          useUuidSenderCert: uuidCapable,
+          // Indicates that a client is capable of receiving uuid-only messages.
+          // Not used yet.
+          uuidCapable,
         };
         return Object.assign({},
           (e164 ? { [e164]: info } : {}),
@@ -1489,7 +1487,9 @@
             : window.Signal.Crypto.arrayBufferToBase64(
                 window.Signal.Crypto.getRandomBytes(16)
               ),
-        useUuidSenderCert: uuidCapable,
+        // Indicates that a client is capable of receiving uuid-only messages.
+        // Not used yet.
+        uuidCapable,
       };
 
       return Object.assign({},

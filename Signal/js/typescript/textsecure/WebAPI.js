@@ -483,13 +483,13 @@
                     responseType: 'json',
                 });
             }
-            async function getSenderCertificate(withUuid = false) {
+            async function getSenderCertificate() {
                 return _ajax({
                     call: 'deliveryCert',
                     httpType: 'GET',
                     responseType: 'json',
                     validateResponse: { certificate: 'string' },
-                    urlParameters: withUuid ? '?includeUuid=true' : undefined,
+                    urlParameters: '?includeUuid=true',
                 });
             }
             async function registerSupportForUnauthenticatedDelivery() {
@@ -562,9 +562,11 @@
             async function confirmCode(number, code, newPassword, registrationId, deviceName, options = {}) {
                 const { accessKey } = options;
                 const jsonData = {
-                    capabilities: {
-                        uuid: true,
-                    },
+                    // tslint:disable-next-line: no-suspicious-comment
+                    // TODO: uncomment this once we want to start registering UUID support
+                    // capabilities: {
+                    //   uuid: true,
+                    // },
                     fetchesMessages: true,
                     name: deviceName ? deviceName : undefined,
                     registrationId,

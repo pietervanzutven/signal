@@ -445,7 +445,6 @@
     const ITEM_KEYS = {
         identityKey: ['value.pubKey', 'value.privKey'],
         senderCertificate: ['value.serialized'],
-        senderCertificateWithUuid: ['value.serialized'],
         signaling_key: ['value'],
         profileKey: ['value'],
     };

@@ -30,10 +30,9 @@
             this.successfulIdentifiers = [];
             this.failoverIdentifiers = [];
             this.unidentifiedDeliveries = [];
-            const { sendMetadata, senderCertificate, senderCertificateWithUuid, online, } = options || {};
+            const { sendMetadata, senderCertificate, online } = options || {};
             this.sendMetadata = sendMetadata;
             this.senderCertificate = senderCertificate;
-            this.senderCertificateWithUuid = senderCertificateWithUuid;
             this.online = online;
         }
         numberCompleted() {
@@ -194,14 +193,11 @@
         async doSendMessage(identifier, deviceIds, recurse) {
             const ciphers = {};
             const plaintext = this.getPlaintext();
-            const { sendMetadata } = this;
+            const { sendMetadata, senderCertificate } = this;
             const info = sendMetadata && sendMetadata[identifier]
                 ? sendMetadata[identifier]
-                : { accessKey: undefined, useUuidSenderCert: undefined };
-            const { accessKey, useUuidSenderCert } = info;
-            const senderCertificate = useUuidSenderCert
-                ? this.senderCertificateWithUuid
-                : this.senderCertificate;
+                : { accessKey: undefined };
+            const { accessKey } = info;
             if (accessKey && !senderCertificate) {
                 window.log.warn('OutgoingMessage.doSendMessage: accessKey was provided, but senderCertificate was not');
             }
