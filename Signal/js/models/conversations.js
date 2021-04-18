@@ -1680,6 +1680,15 @@
     },
 
     async addMessageHistoryDisclaimer() {
+      const lastMessage = this.messageCollection.last();
+      if (
+        lastMessage &&
+        lastMessage.get('type') === 'message-history-unsynced'
+      ) {
+        // We do not need another message history disclaimer
+        return lastMessage;
+      }
+
       const timestamp = Date.now();
 
       const model = new Whisper.Message({
@@ -1957,9 +1966,7 @@
 
         const profileKey = c.get('profileKey');
         const uuid = c.get('uuid');
-        const profileKeyVersionHex = window.VERSIONED_PROFILE_FETCH
-          ? c.get('profileKeyVersion')
-          : null;
+        const profileKeyVersionHex = c.get('profileKeyVersion');
         const existingProfileKeyCredential = c.get('profileKeyCredential');
 
         const weHaveVersion = Boolean(
@@ -2260,10 +2267,6 @@
     async deriveProfileKeyVersionIfNeeded() {
       const profileKey = this.get('profileKey');
       if (!profileKey) {
-        return;
-      }
-      // We won't even save derived profile key versions if we haven't flipped this switch
-      if (!window.VERSIONED_PROFILE_FETCH) {
         return;
       }
 

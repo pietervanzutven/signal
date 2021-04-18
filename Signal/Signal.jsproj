@@ -78,6 +78,7 @@
     <Content Include="app\spell_check.js" />
     <Content Include="app\sql_channel.js" />
     <Content Include="app\user_config.js" />
+    <Content Include="app\version.js" />
     <Content Include="background.html" />
     <Content Include="cdnsignalorg.cer" />
     <Content Include="config\default.json" />
