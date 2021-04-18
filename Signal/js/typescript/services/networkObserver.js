@@ -8,10 +8,8 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const socketStatus_1 = window.ts.shims.socketStatus;
     const REFRESH_INTERVAL = 5000;
-    const unknownWindow = window;
-    const shimmedWindow = unknownWindow;
     function initializeNetworkObserver(networkActions) {
-        const { log } = shimmedWindow;
+        const { log } = window;
         log.info(`Initializing network observer every ${REFRESH_INTERVAL}ms`);
         const refresh = () => {
             networkActions.checkNetworkStatus({

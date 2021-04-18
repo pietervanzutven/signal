@@ -12,11 +12,14 @@
     const _ = window.lodash;
     const { installGetter, installSetter } = window.preload_utils;
 
-    const { deferredToPromise } = window.deferred_to_promise;
-
     const { remote } = electron;
     const { app } = remote;
     const { nativeTheme } = remote.require('electron');
+
+    // Derive profile key versions, then use those to fetch versioned profiles from server
+    window.VERSIONED_PROFILE_FETCH = false;
+    // Enable full emoji picker for reactions
+    window.REACT_ANY_EMOJI = false;
 
     window.PROTO_ROOT = '/protos';
     const config = window.app.config || {};
@@ -38,6 +41,7 @@
     window.getUWPVersion = () => config.uwp_version;
     window.getHostName = () => config.hostname;
     window.getServerTrustRoot = () => config.serverTrustRoot;
+    window.getServerPublicParams = () => config.serverPublicParams;
     window.isBehindProxy = () => Boolean(config.proxyUrl);
 
     function setSystemTheme() {
@@ -65,8 +69,6 @@
       }
     };
 
-    window.wrapDeferred = deferredToPromise;
-
     const ipc = electron.ipcRenderer;
     const localeMessages = ipc.sendSync('locale-data');
 
@@ -90,6 +92,10 @@
     window.restart = () => {
       window.log.info('restart');
       ipc.send('restart');
+    };
+    window.shutdown = () => {
+      window.log.info('shutdown');
+      ipc.send('shutdown');
     };
 
     window.closeAbout = () => ipc.send('close-about');
@@ -218,11 +224,14 @@
       window.log.info('Using provided proxy url');
     }
 
-    const { initialize: initializeWebAPI } = window.web_api;
+    window.textsecure = window.ts.textsecure.default;
 
-    window.WebAPI = initializeWebAPI({
+    window.WebAPI = window.textsecure.WebAPI.initialize({
       url: config.serverUrl,
-      cdnUrl: config.cdnUrl,
+      cdnUrlObject: {
+        '0': config.cdnUrl0,
+        '2': config.cdnUrl2,
+      },
       certificateAuthority: config.certificateAuthority,
       contentProxyUrl: config.contentProxyUrl,
       proxyUrl: config.proxyUrl,
@@ -299,17 +308,13 @@
     function wrapWithPromise(fn) {
       return (...args) => Promise.resolve(fn(...args));
     }
-    function typedArrayToArrayBuffer(typedArray) {
-      const { buffer, byteOffset, byteLength } = typedArray;
-      return buffer.slice(byteOffset, byteLength + byteOffset);
-    }
     const externalCurve = {
       generateKeyPair: () => {
         const { privKey, pubKey } = curve.generateKeyPair();
 
         return {
-          privKey: typedArrayToArrayBuffer(privKey),
-          pubKey: typedArrayToArrayBuffer(pubKey),
+          privKey: window.Signal.Crypto.typedArrayToArrayBuffer(privKey),
+          pubKey: window.Signal.Crypto.typedArrayToArrayBuffer(pubKey),
         };
       },
       createKeyPair: incomingKey => {
@@ -317,8 +322,8 @@
         const { privKey, pubKey } = curve.createKeyPair(incomingKeyBuffer);
 
         return {
-          privKey: typedArrayToArrayBuffer(privKey),
-          pubKey: typedArrayToArrayBuffer(pubKey),
+          privKey: window.Signal.Crypto.typedArrayToArrayBuffer(privKey),
+          pubKey: window.Signal.Crypto.typedArrayToArrayBuffer(pubKey),
         };
       },
       calculateAgreement: (pubKey, privKey) => {
@@ -327,7 +332,7 @@
 
         const buffer = curve.calculateAgreement(pubKeyBuffer, privKeyBuffer);
 
-        return typedArrayToArrayBuffer(buffer);
+        return window.Signal.Crypto.typedArrayToArrayBuffer(buffer);
       },
       verifySignature: (pubKey, message, signature) => {
         const pubKeyBuffer = Buffer.from(pubKey);
@@ -348,7 +353,7 @@
 
         const buffer = curve.calculateSignature(privKeyBuffer, messageBuffer);
 
-        return typedArrayToArrayBuffer(buffer);
+        return window.Signal.Crypto.typedArrayToArrayBuffer(buffer);
       },
       validatePubKeyFormat: pubKey => {
         const pubKeyBuffer = Buffer.from(pubKey);

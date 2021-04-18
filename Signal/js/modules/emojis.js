@@ -2,7 +2,7 @@
   'use strict';
 
   const { take } = window.lodash;
-  const { getRecentEmojis } = window.data;
+  const { getRecentEmojis } = window.ts.sql.Client.default;
 
   window.emojis = {
     getInitialState,

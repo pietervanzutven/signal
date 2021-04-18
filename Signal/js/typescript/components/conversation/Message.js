@@ -589,10 +589,12 @@
                 react_1.default.createElement(Avatar_1.Avatar, { avatarPath: authorAvatarPath, color: authorColor, conversationType: "direct", i18n: i18n, name: authorName, phoneNumber: authorPhoneNumber, profileName: authorProfileName, size: 28 })));
         }
         renderText() {
-            const { text, textPending, i18n, direction, status } = this.props;
-            const contents = direction === 'incoming' && status === 'error'
-                ? i18n('incomingError')
-                : text;
+            const { deletedForEveryone, direction, i18n, status, text, textPending, } = this.props;
+            const contents = deletedForEveryone
+                ? i18n('message--deletedForEveryone')
+                : direction === 'incoming' && status === 'error'
+                    ? i18n('incomingError')
+                    : text;
             if (!contents) {
                 return null;
             }
@@ -614,7 +616,7 @@
         renderMenu(isCorrectSide, triggerId) {
             const { attachments,
                 // tslint:disable-next-line max-func-body-length
-                canReply, direction, disableMenu, id, isSticker, isTapToView, replyToMessage, } = this.props;
+                canReply, direction, disableMenu, i18n, id, isSticker, isTapToView, renderEmojiPicker, replyToMessage, } = this.props;
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
@@ -670,13 +672,13 @@
                     menuButton),
                 reactionPickerRoot &&
                 react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: "top" }, ({ ref, style }) => (react_1.default.createElement(ReactionPicker_1.ReactionPicker, {
-                    ref: ref, style: style, selected: this.props.selectedReaction, onClose: this.toggleReactionPicker, onPick: emoji => {
+                    i18n: i18n, ref: ref, style: style, selected: this.props.selectedReaction, onClose: this.toggleReactionPicker, onPick: emoji => {
                         this.toggleReactionPicker(true);
                         this.props.reactToMessage(id, {
                             emoji,
                             remove: emoji === this.props.selectedReaction,
                         });
-                    }
+                    }, renderEmojiPicker: renderEmojiPicker
                 }))), reactionPickerRoot)));
         }
         // tslint:disable-next-line max-func-body-length
@@ -934,7 +936,10 @@
                 react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: popperPlacement }, ({ ref, style }) => (react_1.default.createElement(ReactionViewer_1.ReactionViewer, { ref: ref, style: Object.assign(Object.assign({}, style), { zIndex: 2 }), reactions: reactions, i18n: i18n, onClose: this.toggleReactionViewer }))), reactionViewerRoot)));
         }
         renderContents() {
-            const { isTapToView } = this.props;
+            const { isTapToView, deletedForEveryone } = this.props;
+            if (deletedForEveryone) {
+                return this.renderText();
+            }
             if (isTapToView) {
                 return (react_1.default.createElement(react_1.default.Fragment, null,
                     this.renderTapToView(),
@@ -949,8 +954,9 @@
                 this.renderMetadata(),
                 this.renderSendMessageButton()));
         }
+        // tslint:disable-next-line: cyclomatic-complexity
         renderContainer() {
-            const { authorColor, direction, isSticker, isTapToView, isTapToViewExpired, isTapToViewError, reactions, } = this.props;
+            const { authorColor, deletedForEveryone, direction, isSticker, isTapToView, isTapToViewExpired, isTapToViewError, reactions, } = this.props;
             const { isSelected } = this.state;
             const isAttachmentPending = this.isAttachmentPending();
             const width = this.getWidth();
@@ -967,6 +973,8 @@
                 ? 'module-message__container--with-tap-to-view-error'
                 : null, reactions && reactions.length > 0
                 ? 'module-message__container--with-reactions'
+                : null, deletedForEveryone
+                ? 'module-message__container--deleted-for-everyone'
                 : null);
             const containerStyles = {
                 width: isShowingImage ? width : undefined,

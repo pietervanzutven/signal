@@ -23,7 +23,7 @@
     const lodash_1 = window.lodash;
     const Emoji_1 = window.ts.components.emoji.Emoji;
     const lib_1 = window.ts.components.emoji.lib;
-    const hooks_1 = window.ts.components.hooks;
+    const hooks_1 = window.ts.util.hooks;
     function focusOnRender(el) {
         if (el) {
             el.focus();
@@ -43,7 +43,7 @@
     ];
     exports.EmojiPicker = React.memo(React.forwardRef(
         // tslint:disable-next-line max-func-body-length
-        ({ i18n, doSend, onPickEmoji, skinTone = 0, onSetSkinTone, recentEmojis = [], style, onClose, }, ref) => {
+        ({ i18n, doSend, onPickEmoji, skinTone = 0, disableSkinTones = false, onSetSkinTone, recentEmojis = [], style, onClose, }, ref) => {
             const focusRef = React.useRef(null);
             // Per design: memoize the initial recent emojis so the grid only updates after re-opening the picker.
             const firstRecent = React.useMemo(() => {
@@ -53,13 +53,14 @@
             const [searchMode, setSearchMode] = React.useState(false);
             const [searchText, setSearchText] = React.useState('');
             const [scrollToRow, setScrollToRow] = React.useState(0);
-            const [selectedTone, setSelectedTone] = React.useState(skinTone);
-            const handleToggleSearch = React.useCallback(() => {
+            const [selectedTone, setSelectedTone] = React.useState(disableSkinTones ? 0 : skinTone);
+            const handleToggleSearch = React.useCallback((e) => {
+                e.stopPropagation();
                 setSearchText('');
                 setSelectedCategory(categories[0]);
                 setSearchMode(m => !m);
             }, [setSearchText, setSearchMode]);
-            const debounceSearchChange = React.useMemo(() => lodash_1.debounce(query => {
+            const debounceSearchChange = React.useMemo(() => lodash_1.debounce((query) => {
                 setSearchText(query);
                 setScrollToRow(0);
             }, 200), [setSearchText, setScrollToRow]);
@@ -70,20 +71,23 @@
                 const { tone = '0' } = e.currentTarget.dataset;
                 const parsedTone = parseInt(tone, 10);
                 setSelectedTone(parsedTone);
-                onSetSkinTone(parsedTone);
-            }, []);
+                if (onSetSkinTone) {
+                    onSetSkinTone(parsedTone);
+                }
+            }, [onSetSkinTone]);
             const handlePickEmoji = React.useCallback((e) => {
                 if ('key' in e) {
-                    if (e.key === 'Enter') {
+                    if (e.key === 'Enter' && doSend) {
+                        e.stopPropagation();
                         e.preventDefault();
-                        if (doSend) {
-                            doSend();
-                        }
+                        doSend();
                     }
                 }
                 else {
                     const { shortName } = e.currentTarget.dataset;
                     if (shortName) {
+                        e.stopPropagation();
+                        e.preventDefault();
                         onPickEmoji({ skinTone: selectedTone, shortName });
                     }
                 }
@@ -108,7 +112,9 @@
                             'Tab',
                             ' ',
                         ].includes(event.key)) {
-                        onClose();
+                        if (onClose) {
+                            onClose();
+                        }
                         event.preventDefault();
                         event.stopPropagation();
                     }
@@ -143,8 +149,9 @@
                 return lodash_1.zipObject(categories, [0, ...offsets]);
             }, [categories, catRowEnds]);
             const catOffsetEntries = React.useMemo(() => Object.entries(catToRowOffsets), [catToRowOffsets]);
-            const handleSelectCategory = React.useCallback(({ currentTarget }) => {
-                const { category } = currentTarget.dataset;
+            const handleSelectCategory = React.useCallback((e) => {
+                e.stopPropagation();
+                const { category } = e.currentTarget.dataset;
                 if (category) {
                     setSelectedCategory(category);
                     setScrollToRow(catToRowOffsets[category]);
@@ -187,11 +194,11 @@
                     React.createElement(react_virtualized_1.AutoSizer, null, ({ width, height }) => (React.createElement(react_virtualized_1.Grid, { key: searchText, className: "module-emoji-picker__body", width: width, height: height, columnCount: COL_COUNT, columnWidth: 38, rowHeight: getRowHeight, rowCount: emojiGrid.length, cellRenderer: cellRenderer, scrollToRow: scrollToRow, scrollToAlignment: "start", onSectionRendered: onSectionRendered }))))) : (React.createElement("div", { className: classnames_1.default('module-emoji-picker__body', 'module-emoji-picker__body--empty') },
                         i18n('EmojiPicker--empty'),
                         React.createElement(Emoji_1.Emoji, { shortName: "slightly_frowning_face", size: 16, inline: true, style: { marginLeft: '4px' } }))),
-                React.createElement("footer", { className: "module-emoji-picker__footer" }, [0, 1, 2, 3, 4, 5].map(tone => (React.createElement("button", {
+                !disableSkinTones ? (React.createElement("footer", { className: "module-emoji-picker__footer" }, [0, 1, 2, 3, 4, 5].map(tone => (React.createElement("button", {
                     key: tone, "data-tone": tone, onClick: handlePickTone, title: i18n('EmojiPicker--skin-tone', [`${tone}`]), className: classnames_1.default('module-emoji-picker__button', 'module-emoji-picker__button--footer', selectedTone === tone
                         ? 'module-emoji-picker__button--selected'
                         : null)
                 },
-                    React.createElement(Emoji_1.Emoji, { shortName: "hand", skinTone: tone, size: 20 })))))));
+                    React.createElement(Emoji_1.Emoji, { shortName: "hand", skinTone: tone, size: 20 })))))) : null));
         }));
 })();

@@ -36,6 +36,8 @@
 
   config.environment = environment;
   config.enableHttp = process.env.SIGNAL_ENABLE_HTTP;
+  config.cdnUrl0 = config.cdn['0'];
+  config.cdnUrl2 = config.cdn['2'];
 
   // Log resulting env vars in use by config
   [

@@ -24,7 +24,7 @@
     const StickerPackInstallButton_1 = window.ts.components.stickers.StickerPackInstallButton;
     const ConfirmationDialog_1 = window.ts.components.ConfirmationDialog;
     const Spinner_1 = window.ts.components.Spinner;
-    const hooks_1 = window.ts.components.hooks;
+    const hooks_1 = window.ts.util.hooks;
     function renderBody({ pack, i18n }) {
         if (pack && pack.status === 'error') {
             return (React.createElement("div", { className: "module-sticker-manager__preview-modal__container__error" }, i18n('stickers--StickerPreview--Error')));

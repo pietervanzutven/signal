@@ -19,5 +19,7 @@
     exports.isJPEG = (value) => value === 'image/jpeg';
     exports.isImage = (value) => value && value.startsWith('image/');
     exports.isVideo = (value) => value && value.startsWith('video/');
-    exports.isAudio = (value) => value && value.startsWith('audio/');
+    // As of 2020-04-16 aif files do not play in Electron nor Chrome. We should only
+    // recognize them as file attachments.
+    exports.isAudio = (value) => value && value.startsWith('audio/') && !value.endsWith('aiff');
 })();

@@ -9,7 +9,7 @@
   const LinkifyIt = window.linkify_it;
 
   const linkify = LinkifyIt();
-  const { concatenateBytes, getViewOfArrayBuffer } = window.crypto;
+  const { concatenateBytes, getViewOfArrayBuffer } = window.ts.Crypto;
 
   window.link_previews = {
     assembleChunks,
@@ -136,6 +136,15 @@
     );
   }
 
+  function hasAuth(url) {
+    try {
+      const urlObject = new URL(url);
+      return Boolean(urlObject.username);
+    } catch (e) {
+      return null;
+    }
+  }
+
   function getDomain(url) {
     try {
       const urlObject = new URL(url);
@@ -218,6 +227,11 @@
   const ASCII_PATTERN = new RegExp('[\\u0000-\\u007F]', 'g');
 
   function isLinkSneaky(link) {
+    // Any links which contain auth are considered sneaky
+    if (hasAuth(link)) {
+      return true;
+    }
+
     const domain = getDomain(link);
     // If the domain is falsy, something fishy is going on
     if (!domain) {

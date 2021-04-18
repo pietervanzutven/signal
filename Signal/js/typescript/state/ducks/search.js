@@ -6,13 +6,17 @@
     window.ts.state.ducks = window.ts.state.ducks || {};
     const exports = window.ts.state.ducks.search = {};
 
+    var __importDefault = (this && this.__importDefault) || function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = window.lodash;
     const PhoneNumber_1 = window.ts.types.PhoneNumber;
     const events_1 = window.ts.shims.events;
     const cleanSearchTerm_1 = window.ts.util.cleanSearchTerm;
-    const data_1 = window.data;
-    const makeLookup_1 = require_ts_util_makeLookup();
+    const Client_1 = __importDefault(window.ts.sql.Client);
+    const makeLookup_1 = window.ts.util.makeLookup;
+    const { searchConversations: dataSearchConversations, searchMessages: dataSearchMessages, searchMessagesInConversation, } = Client_1.default;
     // Action Creators
     exports.actions = {
         searchMessages,
@@ -109,9 +113,9 @@
         try {
             const normalized = cleanSearchTerm_1.cleanSearchTerm(query);
             if (searchConversationId) {
-                return data_1.searchMessagesInConversation(normalized, searchConversationId);
+                return searchMessagesInConversation(normalized, searchConversationId);
             }
-            return data_1.searchMessages(normalized);
+            return dataSearchMessages(normalized);
         }
         catch (e) {
             return [];
@@ -120,7 +124,7 @@
     async function queryConversationsAndContacts(providedQuery, options) {
         const { ourConversationId, noteToSelf } = options;
         const query = providedQuery.replace(/[+-.()]*/g, '');
-        const searchResults = await data_1.searchConversations(query);
+        const searchResults = await dataSearchConversations(query);
         // Split into two groups - active conversations and items just from address book
         let conversations = [];
         let contacts = [];

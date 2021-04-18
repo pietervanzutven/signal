@@ -5,7 +5,7 @@
 
   const electron = window.electron;
   const Queue = window.p_queue.default;
-  const sql = window.app.sql;
+  const sql = window.ts.sql.Server.default;
   const { remove: removeUserConfig } = window.app.user_config;
   const { remove: removeEphemeralConfig } = window.app.ephemeral_config;
 

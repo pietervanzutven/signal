@@ -53,7 +53,7 @@
             showPickerHint,
         };
     };
-    const dispatchPropsMap = Object.assign({}, actions_1.mapDispatchToProps, { onSetSkinTone: (tone) => actions_1.mapDispatchToProps.putItem('skinTone', tone), clearShowIntroduction: () => actions_1.mapDispatchToProps.removeItem('showStickersIntroduction'), clearShowPickerHint: () => actions_1.mapDispatchToProps.removeItem('showStickerPickerHint'), onPickEmoji: actions_1.mapDispatchToProps.useEmoji });
+    const dispatchPropsMap = Object.assign(Object.assign({}, actions_1.mapDispatchToProps), { onSetSkinTone: (tone) => actions_1.mapDispatchToProps.putItem('skinTone', tone), clearShowIntroduction: () => actions_1.mapDispatchToProps.removeItem('showStickersIntroduction'), clearShowPickerHint: () => actions_1.mapDispatchToProps.removeItem('showStickerPickerHint'), onPickEmoji: actions_1.mapDispatchToProps.onUseEmoji });
     const smart = react_redux_1.connect(mapStateToProps, dispatchPropsMap);
     exports.SmartCompositionArea = smart(CompositionArea_1.CompositionArea);
 })();

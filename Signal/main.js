@@ -90,7 +90,7 @@ const createTrayIcon = window.app.tray_icon;
 const dockIcon = window.app.dock_icon;
 const ephemeralConfig = window.app.ephemeral_config;
 const logging = window.app.logging;
-const sql = window.app.sql;
+const sql = window.ts.sql.Server.default;
 const sqlChannels = window.app.sql_channel;
 const windowState = window.app.window_state;
 
@@ -187,7 +187,8 @@ function prepareURL(pathSegments, moreKeys) {
           version: app.getVersion(),
           buildExpiration: config.get('buildExpiration'),
           serverUrl: config.get('serverUrl'),
-          cdnUrl: config.get('cdnUrl'),
+          cdnUrl0: config.get('cdn').get('0'),
+          cdnUrl2: config.get('cdn').get('2'),
           certificateAuthority: config.get('certificateAuthority'),
           environment: config.environment,
           uwp_version: process.versions.uwp,
@@ -196,6 +197,7 @@ function prepareURL(pathSegments, moreKeys) {
           proxyUrl: process.env.HTTPS_PROXY || process.env.https_proxy,
           contentProxyUrl: config.contentProxyUrl,
           importMode: importMode ? true : undefined, // for stringify()
+          serverPublicParams: config.get('serverPublicParams'),
           serverTrustRoot: config.get('serverTrustRoot'),
           appStartInitialSpellcheckSetting,
         },
@@ -1018,6 +1020,9 @@ ipc.on('draw-attention', () => {
 
 ipc.on('restart', () => {
   app.relaunch();
+  app.quit();
+});
+ipc.on('shutdown', () => {
   app.quit();
 });
 

@@ -36,7 +36,10 @@
   const qs = window.qs;
 
   const { makeLookup } = require_ts_util_makeLookup();
-  const { base64ToArrayBuffer, deriveStickerPackKey } = window.crypto;
+  const {
+    base64ToArrayBuffer,
+    deriveStickerPackKey,
+  } = window.ts.Crypto;
   const {
     addStickerPackReference,
     createOrUpdateSticker,
@@ -47,7 +50,7 @@
     getAllStickers,
     getRecentStickers,
     updateStickerPackStatus,
-  } = window.data;
+  } = window.ts.sql.Client.default;
 
   window.stickers = {
     BLESSED_PACKS,

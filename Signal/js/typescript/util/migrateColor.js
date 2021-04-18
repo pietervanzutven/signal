@@ -34,6 +34,7 @@ function require_ts_util_migrateColor() {
             case 'light_green':
             case 'blue_grey':
             case 'grey':
+            case 'ultramarine':
                 return color;
             // Can uncomment this to ensure that we've covered all potential cases
             // default:

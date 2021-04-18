@@ -7,9 +7,8 @@
 
   const { bindActionCreators } = window.redux;
   const Backbone = window.ts.backbone;
-  const Crypto = window.crypto;
-  const Data = window.data;
-  const Database = window.database;
+  const Crypto = window.ts.Crypto;
+  const Data = window.ts.sql.Client.default;
   const Emojis = window.emojis;
   const EmojiLib = window.ts.components.emoji.lib;
   const IndexedDB = window.indexeddb;
@@ -18,7 +17,6 @@
   const Stickers = window.stickers;
   const Settings = window.settings;
   const Util = window.ts.util;
-  const { migrateToSQL } = window.migrate_to_sql;
   const Metadata = window.metadata.SecretSessionCipher;
   const RefreshSenderCertificate = window.refresh_sender_certificate;
   const LinkPreviews = window.link_previews;
@@ -79,13 +77,6 @@
 
   const conversationsSelectors = window.ts.state.selectors.conversations;
   const searchSelectors = window.ts.state.selectors.search;
-
-  // Migrations
-  const {
-    getPlaceholderMigrations,
-    getCurrentVersion,
-  } = window.migrations.get_placeholder_migrations;
-  const { run } = window.migrations.migrations;
 
   // Types
   const AttachmentType = window.types.attachment;
@@ -198,8 +189,6 @@
       getAbsoluteDraftPath,
       getAbsoluteStickerPath,
       getAbsoluteTempPath,
-      getPlaceholderMigrations,
-      getCurrentVersion,
       loadAttachmentData,
       loadMessage: MessageType.createAttachmentLoader(loadAttachmentData),
       loadPreviewData,
@@ -210,7 +199,6 @@
       readDraftData,
       readStickerData,
       readTempData,
-      run,
       saveAttachmentToDisk,
       processNewAttachment: attachment =>
         MessageType.processNewAttachment(attachment, {
@@ -358,13 +346,11 @@
       Components,
       Crypto,
       Data,
-      Database,
       Emojis,
       EmojiLib,
       IndexedDB,
       LinkPreviews,
       Metadata,
-      migrateToSQL,
       Migrations,
       Notifications,
       OS,

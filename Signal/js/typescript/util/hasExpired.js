@@ -1,14 +1,12 @@
 function require_ts_util_hasExpired() {
+    "use strict";
     const exports = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const unknownWindow = window;
-    const shimmedWindow = unknownWindow;
-    // @ts-ignore
     const env = window.getEnvironment();
     const NINETY_ONE_DAYS = 86400 * 91 * 1000;
     function hasExpired() {
-        const { getExpiration, log } = shimmedWindow;
+        const { getExpiration, log } = window;
         let buildExpiration = 0;
         try {
             buildExpiration = parseInt(getExpiration(), 10);

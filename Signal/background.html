@@ -306,6 +306,9 @@
         </div>
         <div class='nav'>
           <a class='button try-again'>{{ errorButton }}</a>
+          {{#errorSecondButton}}
+            <a class='button second'>{{ errorSecondButton }}</a>
+          {{/errorSecondButton}}
         </div>
       </div>
     </div>
@@ -344,6 +347,7 @@
 
   <script type='text/javascript' src='node_modules/core/buffer.js'></script>
   <script type='text/javascript' src='node_modules/core/electron.js'></script>
+  <script type='text/javascript' src='node_modules/core/error.js'></script>
   <script type='text/javascript' src='node_modules/core/events.js'></script>
   <script type='text/javascript' src='node_modules/core/fs.js'></script>
   <script type='text/javascript' src='node_modules/core/fs_extra.js'></script>
@@ -353,6 +357,7 @@
   <script type='text/javascript' src='node_modules/core/path.js'></script>
   <script type='text/javascript' src='node_modules/core/process.js'></script>
   <script type='text/javascript' src='node_modules/core/uwp-config.js'></script>
+  <script type='text/javascript' src='node_modules/core/require.js'></script>
   <script type='text/javascript' src='node_modules/lodash/chunk.js'></script>
   <script type='text/javascript' src='node_modules/lodash/clamp.js'></script>
   <script type='text/javascript' src='node_modules/lodash/clonedeep.js'></script>
@@ -498,11 +503,58 @@
   <script type='text/javascript' src='node_modules/draft-js/Draft.js'></script>
   <script type='text/javascript' src='node_modules/sanitize-filename/index.js'></script>
   <script type='text/javascript' src='node_modules/normalize-path/index.js'></script>
-
+  <script type='text/javascript' src='node_modules/https/index.js'></script>
+  <script type='text/javascript' src='node_modules/proxy-agent/index.js'></script>
+  <script type='text/javascript' src='node_modules/websocket/index.js'></script>
+  <script type='text/javascript' src='node_modules/node-fetch/index.js'></script>
+  <script type='text/javascript' src='node_modules/ref-array-napi/index.js'></script>
+  <script type='text/javascript' src='node_modules/ref-napi/index.js'></script>
+  <script type='text/javascript' src='node_modules/ffi_napi/index.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/auth/AuthCredential.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/auth/AuthCredentialPresentation.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/auth/AuthCredentialResponse.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/auth/ClientZkAuthOperations.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/auth/ServerZkAuthOperations.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/errors/AssertionError.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/errors/IllegalArgumentException.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/errors/InvalidInputException.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/errors/VerificationFailedException.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/ChangeSignature.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/ClientZkGroupCipher.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/GroupIdentifier.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/GroupMasterKey.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/GroupPublicParams.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/GroupSecretParams.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/ProfileKeyCiphertext.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/UuidCiphertext.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/groups/ZkGroupError.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/internal/ByteArray.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/internal/Constants.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/internal/FFICompatArray.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/internal/Native.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/internal/UUIDUtil.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ClientZkProfileOperations.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKey.js'></script> 
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKeyCommitment.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKeyCredential.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKeyCredentialPresentation.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKeyCredentialRequest.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKeyCredentialRequestContext.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKeyCredentialResponse.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ProfileKeyVersion.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/profiles/ServerZkProfileOperations.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/NotarySignature.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/ServerPublicParams.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup/ServerSecretParams.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/index.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup.asm.js'></script>
+  <script type='text/javascript' src='node_modules/zkgroup/zkgroup_bg.js'></script>
+  
   <script type='text/javascript' src='js/modules/auto_orient_image.js'></script>
   <script type='text/javascript' src='js/modules/types/schema_version.js'></script>
   <script type='text/javascript' src='js/typescript/protobuf/protobuf.js'></script>
   <script type='text/javascript' src='js/typescript/OS.js'></script>
+  <script type='text/javascript' src='js/typescript/Crypto.js'></script>
   <script type='text/javascript' src='js/typescript/util/arrayBufferToObjectURL.js'></script>
   <script type='text/javascript' src='js/typescript/util/batcher.js'></script>
   <script type='text/javascript' src='js/typescript/util/cleanSearchTerm.js'></script>
@@ -521,6 +573,8 @@
   <script type='text/javascript' src='js/typescript/util/saveURLAsFile.js'></script>
   <script type='text/javascript' src='js/typescript/util/timer.js'></script>
   <script type='text/javascript' src='js/typescript/util/waitBatcher.js'></script>
+  <script type='text/javascript' src='js/typescript/util/zkgroup.js'></script>
+  <script type='text/javascript' src='js/typescript/util/hooks.js'></script>
   <script type='text/javascript' src='js/typescript/util/index.js'></script>
   <script type='text/javascript' src='js/typescript/shims/events.js'></script>
   <script type='text/javascript' src='js/typescript/shims/storage.js'></script>
@@ -540,7 +594,8 @@
   <script type='text/javascript' src='js/typescript/types/Settings.js'></script>
   <script type='text/javascript' src='js/typescript/types/SocketStatus.js'></script>
   <script type='text/javascript' src='js/typescript/types/Util.js'></script>
-  <script type='text/javascript' src='js/modules/crypto.js'></script>
+  <script type='text/javascript' src='js/typescript/types/I18N.js'></script>
+  <script type='text/javascript' src='js/typescript/types/Logging.js'></script>
   <script type='text/javascript' src='js/modules/types/errors.js'></script>
   <script type='text/javascript' src='js/modules/types/attachment/migrate_data_to_file_system.js'></script>
   <script type='text/javascript' src='js/modules/types/attachment.js'></script>
@@ -549,26 +604,18 @@
   <script type='text/javascript' src='js/modules/types/message.js'></script>
   <script type='text/javascript' src='js/modules/types/visual_attachment.js'></script>
   <script type='text/javascript' src='js/modules/privacy.js'></script>
-  <script type='text/javascript' src='js/modules/deferred_to_promise.js'></script>
-  <script type='text/javascript' src='js/modules/database.js'></script>
   <script type='text/javascript' src='js/modules/refresh_sender_certificate.js'></script>
   <script type='text/javascript' src='js/modules/idle_detector.js'></script>
-  <script type='text/javascript' src='js/modules/database.js'></script>
   <script type='text/javascript' src='js/modules/settings.js'></script>
   <script type='text/javascript' src='js/modules/sleep.js'></script>
   <script type='text/javascript' src='js/modules/views/initialization.js'></script>
   <script type='text/javascript' src='js/modules/i18n.js'></script>
   <script type='text/javascript' src='js/modules/string_to_array_buffer.js'></script>
   <script type='text/javascript' src='js/modules/link_previews.js'></script>
-  <script type='text/javascript' src='js/modules/migrations/run_migrations.js'></script>
-  <script type='text/javascript' src='js/modules/migrations/18/index.js'></script>
-  <script type='text/javascript' src='js/modules/migrations/migrations.js'></script>
-  <script type='text/javascript' src='js/modules/migrations/get_placeholder_migrations.js'></script>
   <script type='text/javascript' src='js/modules/metadata/CiphertextMessage.js'></script>
   <script type='text/javascript' src='js/modules/metadata/SecretSessionCipher.js'></script>
   <script type='text/javascript' src='js/typescript/services/networkObserver.js'></script>
   <script type='text/javascript' src='js/typescript/services/updateListener.js'></script>
-  <script type='text/javascript' src='js/typescript/components/hooks.js'></script>
   <script type='text/javascript' src='js/typescript/components/_util.js'></script>
   <script type='text/javascript' src='js/typescript/components/Avatar.js'></script>
   <script type='text/javascript' src='js/typescript/components/AvatarPopup.js'></script>
@@ -666,7 +713,9 @@
   <script type='text/javascript' src='app/user_config.js'></script>
   <script type='text/javascript' src='app/global_errors.js'></script>
   <script type='text/javascript' src='app/spell_check.js'></script>
-  <script type='text/javascript' src='app/sql.js'></script>
+  <script type='text/javascript' src='js/typescript/sql/Client.js'></script>
+  <script type='text/javascript' src='js/typescript/sql/Server.js'></script>
+  <script type='text/javascript' src='js/typescript/sql/Interface.js'></script>
   <script type='text/javascript' src='app/sql_channel.js'></script>
   <script type='text/javascript' src='app/attachment_channel.js'></script>
 
@@ -676,16 +725,13 @@
   
   <script type='text/javascript' src='main.js'></script>
 
-  <script type='text/javascript' src='js/modules/data.js'></script>
   <script type='text/javascript' src='js/modules/emojis.js'></script>
-  <script type='text/javascript' src='js/modules/migrate_to_sql.js'></script>
   <script type='text/javascript' src='js/modules/messages_data_migrator.js'></script>
   <script type='text/javascript' src='js/modules/indexeddb.js'></script>
   <script type='text/javascript' src='js/modules/logs.js'></script>
   <script type='text/javascript' src='js/modules/debuglogs.js'></script>
   <script type='text/javascript' src='js/modules/attachment_downloads.js'></script>
   <script type='text/javascript' src='js/modules/stickers.js'></script>
-  <script type='text/javascript' src='js/modules/web_api.js'></script>
   <script type='text/javascript' src='js/logging.js'></script>
 
   <script type='text/javascript' src='js/typescript/state/ducks/conversations.js'></script>
@@ -719,6 +765,7 @@
   <script type='text/javascript' src='js/typescript/state/smart/StickerManager.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/StickerPreviewModal.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/TypingBubble.js'></script>
+  <script type='text/javascript' src='js/typescript/state/smart/EmojiPicker.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/TimelineItem.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/TimelineLoadingRow.js'></script>
   <script type='text/javascript' src='js/typescript/state/smart/Timeline.js'></script>
@@ -728,7 +775,25 @@
   <script type='text/javascript' src='js/typescript/state/roots/createStickerManager.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createStickerPreviewModal.js'></script>
   <script type='text/javascript' src='js/typescript/state/roots/createTimeline.js'></script>
-
+  
+  <script type='text/javascript' src='js/typescript/textsecure/ContactsParser.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/Crypto.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/Errors.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/EventTarget.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/Helpers.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/OutgoingMessage.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/ProvisioningCipher.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/Storage.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/StringView.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/TaskWithTimeout.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/SendMessage.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/WebAPI.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/WebsocketResources.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/MessageReceiver.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/AccountManager.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/SyncRequest.js'></script>
+  <script type='text/javascript' src='js/typescript/textsecure/index.js'></script>
+  
   <script type='text/javascript' src='js/modules/signal.js'></script>
   
   <script type='text/javascript' src='preload_utils.js'></script>
@@ -738,29 +803,12 @@
   <script type='text/javascript' src='js/reliable_trigger.js'></script>
   <script type='text/javascript' src='js/database.js'></script>
   <script type='text/javascript' src='js/storage.js'></script>
-  <script type='text/javascript' src='js/legacy_storage.js'></script>
   <script type='text/javascript' src='js/signal_protocol_store.js'></script>
-
-  <script type='text/javascript' src='libtextsecure/errors.js'></script>
   <script type='text/javascript' src='libtextsecure/libsignal-protocol.js'></script>
   <script type='text/javascript' src='libtextsecure/protocol_wrapper.js'></script>
-  <script type='text/javascript' src='libtextsecure/crypto.js'></script>
-  <script type='text/javascript' src='libtextsecure/storage.js'></script>
   <script type='text/javascript' src='libtextsecure/storage/user.js'></script>
   <script type='text/javascript' src='libtextsecure/storage/unprocessed.js'></script>
   <script type='text/javascript' src='libtextsecure/protobufs.js'></script>
-  <script type='text/javascript' src='libtextsecure/helpers.js'></script>
-  <script type='text/javascript' src='libtextsecure/stringview.js'></script>
-  <script type='text/javascript' src='libtextsecure/event_target.js'></script>
-  <script type='text/javascript' src='libtextsecure/account_manager.js'></script>
-  <script type='text/javascript' src='libtextsecure/websocket-resources.js'></script>
-  <script type='text/javascript' src='libtextsecure/message_receiver.js'></script>
-  <script type='text/javascript' src='libtextsecure/outgoing_message.js'></script>
-  <script type='text/javascript' src='libtextsecure/sendmessage.js'></script>
-  <script type='text/javascript' src='libtextsecure/sync_request.js'></script>
-  <script type='text/javascript' src='libtextsecure/contacts_parser.js'></script>
-  <script type='text/javascript' src='libtextsecure/ProvisioningCipher.js'></script>
-  <script type='text/javascript' src='libtextsecure/task_with_timeout.js'></script>
 
   <script type='text/javascript' src='js/notifications.js'></script>
   <script type='text/javascript' src='js/delivery_receipts.js'></script>
@@ -768,6 +816,7 @@
   <script type='text/javascript' src='js/read_syncs.js'></script>
   <script type='text/javascript' src='js/view_syncs.js'></script>
   <script type='text/javascript' src='js/reactions.js'></script>
+  <script type='text/javascript' src='js/deletes.js'></script>
   <script type='text/javascript' src='js/libphonenumber-util.js'></script>
   <script type='text/javascript' src='js/models/messages.js'></script>
   <script type='text/javascript' src='js/models/conversations.js'></script>

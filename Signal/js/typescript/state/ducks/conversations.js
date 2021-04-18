@@ -235,6 +235,10 @@
         if (errorStatusChanged) {
             return true;
         }
+        const groupUpdateChanged = message.group_update !== previous.group_update;
+        if (groupUpdateChanged) {
+            return true;
+        }
         const stickerPendingChanged = message.sticker &&
             message.sticker.data &&
             previous.sticker &&
@@ -263,6 +267,11 @@
         const lastReactions = previous.reactions || [];
         const reactionsChanged = (currentReactions.length === 0) !== (lastReactions.length === 0);
         if (reactionsChanged) {
+            return true;
+        }
+        const isDeletedForEveryone = message.deletedForEveryone;
+        const wasDeletedForEveryone = previous.deletedForEveryone;
+        if (isDeletedForEveryone !== wasDeletedForEveryone) {
             return true;
         }
         return false;

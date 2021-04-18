@@ -20,7 +20,7 @@
     const classnames_1 = __importDefault(window.classnames);
     const lodash_1 = window.lodash;
     const Avatar_1 = window.ts.components.Avatar;
-    const hooks_1 = window.ts.components.hooks;
+    const hooks_1 = window.ts.util.hooks;
     exports.AvatarPopup = (props) => {
         const focusRef = React.useRef(null);
         const { i18n, profileName, phoneNumber, onViewPreferences, onViewArchive, style, } = props;

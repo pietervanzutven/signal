@@ -14,7 +14,7 @@
                 timestamp: null,
             };
         }
-        const { type, expirationTimerUpdate } = lastMessage;
+        const { type, expirationTimerUpdate, deletedForEveryone } = lastMessage;
         const isMessageHistoryUnsynced = type === 'message-history-unsynced';
         const isVerifiedChangeMessage = type === 'verified-change';
         const isExpireTimerUpdateFromSync = Boolean(expirationTimerUpdate && expirationTimerUpdate.fromSync);
@@ -29,9 +29,10 @@
             ? lastMessageNotificationText
             : '';
         return {
-            lastMessage: newLastMessageText || '',
+            lastMessage: deletedForEveryone ? '' : newLastMessageText || '',
             lastMessageStatus: lastMessageStatus || null,
             timestamp: newTimestamp || null,
+            lastMessageDeletedForEveryone: deletedForEveryone,
         };
     };
 })();
