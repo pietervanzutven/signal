@@ -725,13 +725,14 @@
                 profileKey,
             }, options);
         }
-        async resetSession(identifier, timestamp, options) {
+        async resetSession(uuid, e164, timestamp, options) {
             window.log.info('resetting secure session');
             const silent = false;
             const proto = new window.textsecure.protobuf.DataMessage();
             proto.body = 'TERMINATE';
             proto.flags = window.textsecure.protobuf.DataMessage.Flags.END_SESSION;
             proto.timestamp = timestamp;
+            const identifier = e164 || uuid;
             const logError = (prefix) => (error) => {
                 window.log.error(prefix, error && error.stack ? error.stack : error);
                 throw error;
@@ -754,11 +755,11 @@
             const myNumber = window.textsecure.storage.user.getNumber();
             const myUuid = window.textsecure.storage.user.getUuid();
             // We already sent the reset session to our other devices in the code above!
-            if (identifier === myNumber || identifier === myUuid) {
+            if (e164 === myNumber || uuid === myUuid) {
                 return sendToContactPromise;
             }
             const buffer = proto.toArrayBuffer();
-            const sendSyncPromise = this.sendSyncMessage(buffer, timestamp, identifier, null, null, [], [], false, options).catch(logError('resetSession/sendSync error:'));
+            const sendSyncPromise = this.sendSyncMessage(buffer, timestamp, e164, uuid, null, [], [], false, options).catch(logError('resetSession/sendSync error:'));
             return Promise.all([sendToContactPromise, sendSyncPromise]);
         }
         async sendMessageToGroup(groupId, recipients, messageText, attachments, quote, preview, sticker, reaction, timestamp, expireTimer, profileKey, options) {

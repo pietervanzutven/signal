@@ -22,8 +22,7 @@
     const Emoji_1 = window.ts.components.emoji.Emoji;
     const lib_1 = window.ts.components.emoji.lib;
     const hooks_1 = window.ts.util.hooks;
-    const emojis = ['❤️', '👍', '👎', '😂', '😮', '😢', '😡'];
-    const getEmojis = () => emojis.slice(0, window.REACT_ANY_EMOJI ? emojis.length - 1 : emojis.length);
+    const emojis = ['❤️', '👍', '👎', '😂', '😮', '😢'];
     exports.ReactionPicker = React.forwardRef(({ i18n, selected, onClose, onPick, renderEmojiPicker, style }, ref) => {
         const [pickingOther, setPickingOther] = React.useState(false);
         const focusRef = React.useRef(null);
@@ -45,9 +44,9 @@
         }, [onPick]);
         // Focus first button and restore focus on unmount
         hooks_1.useRestoreFocus(focusRef);
-        const otherSelected = selected && !getEmojis().includes(selected);
+        const otherSelected = selected && !emojis.includes(selected);
         return pickingOther ? (renderEmojiPicker({ onPickEmoji, onClose, style, ref })) : (React.createElement("div", { ref: ref, style: style, className: "module-reaction-picker" },
-            getEmojis().map((emoji, index) => {
+            emojis.map((emoji, index) => {
                 const maybeFocusRef = index === 0 ? focusRef : undefined;
                 return (React.createElement("button", {
                     key: emoji, ref: maybeFocusRef, tabIndex: 0, className: classnames_1.default('module-reaction-picker__emoji-btn', emoji === selected
@@ -60,7 +59,7 @@
                     React.createElement("div", { className: "module-reaction-picker__emoji-btn__emoji" },
                         React.createElement(Emoji_1.Emoji, { size: 48, emoji: emoji }))));
             }),
-            window.REACT_ANY_EMOJI ? (React.createElement("button", {
+            React.createElement("button", {
                 className: classnames_1.default('module-reaction-picker__emoji-btn', otherSelected
                     ? 'module-reaction-picker__emoji-btn--selected'
                     : 'module-reaction-picker__emoji-btn--more'), onClick: e => {
@@ -73,6 +72,6 @@
                         }
                     }, title: i18n('ReactionsViewer--more')
             }, otherSelected ? (React.createElement("div", { className: "module-reaction-picker__emoji-btn__emoji" },
-                React.createElement(Emoji_1.Emoji, { size: 48, emoji: selected }))) : null)) : null));
+                React.createElement(Emoji_1.Emoji, { size: 48, emoji: selected }))) : null)));
     });
 })();
