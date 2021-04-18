@@ -45,8 +45,9 @@
                             return (react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: "joinedTheGroup", components: [otherPeopleWithCommas] }));
                         }
                     }
+                    const joinedKey = contacts.length > 1 ? 'multipleJoinedTheGroup' : 'joinedTheGroup';
                     return (react_1.default.createElement(react_1.default.Fragment, null,
-                        react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: "multipleJoinedTheGroup", components: [otherPeopleWithCommas] }),
+                        react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: joinedKey, components: [otherPeopleWithCommas] }),
                         contactsIncludesMe ? (react_1.default.createElement("div", { className: "module-group-notification__change" },
                             react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: "youJoinedTheGroup" }))) : null));
                 case 'remove':
