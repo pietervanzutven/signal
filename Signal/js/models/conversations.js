@@ -1980,7 +1980,8 @@
         }
 
         const sendMetadata = c.getSendMetadata({ disableMeCheck: true }) || {};
-        const getInfo = sendMetadata[c.id] || {};
+        const getInfo =
+          sendMetadata[c.get('e164')] || sendMetadata[c.get('uuid')] || {};
 
         if (getInfo.accessKey) {
           try {
