@@ -989,9 +989,11 @@
 
     // General
     idForLogging() {
-      return `${this.get('source')}.${this.get('sourceDevice')} ${this.get(
-        'sent_at'
-      )}`;
+      const source = this.getSource();
+      const device = this.getSourceDevice();
+      const timestamp = this.get('sent_at');
+
+      return `${source}.${device} ${timestamp}`;
     },
     defaults() {
       return {
@@ -1184,6 +1186,13 @@
       }
 
       return this.OUR_NUMBER;
+    },
+    getSourceDevice() {
+      if (this.isIncoming()) {
+        return this.get('sourceDevice');
+      }
+
+      return window.textsecure.storage.user.getDeviceId();
     },
     getSourceUuid() {
       if (this.isIncoming()) {
