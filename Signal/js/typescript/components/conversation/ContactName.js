@@ -22,7 +22,7 @@
                 "~",
                 react_1.default.createElement(Emojify_1.Emojify, { text: profileName || '' }))) : null;
             return (react_1.default.createElement("span", { className: prefix, dir: "auto" },
-                react_1.default.createElement(Emojify_1.Emojify, { text: title }),
+                react_1.default.createElement(Emojify_1.Emojify, { text: title || '' }),
                 shouldShowProfile ? ' ' : null,
                 profileElement));
         }
