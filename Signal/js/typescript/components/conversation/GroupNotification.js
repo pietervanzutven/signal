@@ -37,19 +37,13 @@
                     if (!contacts || !contacts.length) {
                         throw new Error('Group update is missing contacts');
                     }
-                    if (contacts.length === 1) {
-                        if (contactsIncludesMe) {
-                            return react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: "youJoinedTheGroup" });
-                        }
-                        else {
-                            return (react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: "joinedTheGroup", components: [otherPeopleWithCommas] }));
-                        }
-                    }
-                    const joinedKey = contacts.length > 1 ? 'multipleJoinedTheGroup' : 'joinedTheGroup';
+                    const otherPeopleNotifMsg = otherPeople.length === 1
+                        ? 'joinedTheGroup'
+                        : 'multipleJoinedTheGroup';
                     return (react_1.default.createElement(react_1.default.Fragment, null,
-                        react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: joinedKey, components: [otherPeopleWithCommas] }),
-                        contactsIncludesMe ? (react_1.default.createElement("div", { className: "module-group-notification__change" },
-                            react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: "youJoinedTheGroup" }))) : null));
+                        otherPeople.length > 0 && (react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: otherPeopleNotifMsg, components: [otherPeopleWithCommas] })),
+                        contactsIncludesMe && (react_1.default.createElement("div", { className: "module-group-notification__change" },
+                            react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: "youJoinedTheGroup" })))));
                 case 'remove':
                     if (from && from.isMe) {
                         return i18n('youLeftTheGroup');
