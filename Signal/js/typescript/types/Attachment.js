@@ -224,17 +224,20 @@
             ? await readAttachmentData(attachment.path)
             : attachment.data;
         const name = exports.getSuggestedFilename({ attachment, timestamp, index });
-        const { fullPath } = await saveAttachmentToDisk({
+        const result = await saveAttachmentToDisk({
             data,
             name,
         });
-        return fullPath;
+        if (!result) {
+            return null;
+        }
+        return result.fullPath;
     };
     exports.getSuggestedFilename = ({ attachment, timestamp, index, }) => {
         if (!lodash_1.isNumber(index) && attachment.fileName) {
             return attachment.fileName;
         }
-        const prefix = 'signal-attachment';
+        const prefix = 'signal';
         const suffix = timestamp
             ? moment_1.default(timestamp).format('-YYYY-MM-DD-HHmmss')
             : '';
