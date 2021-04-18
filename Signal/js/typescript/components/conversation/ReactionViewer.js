@@ -113,7 +113,7 @@
                     })),
                 React.createElement("main", { className: "module-reaction-viewer__body" }, selectedReactions.map(({ from, emoji }) => (React.createElement("div", { key: `${from.id}-${emoji}`, className: "module-reaction-viewer__body__row" },
                     React.createElement("div", { className: "module-reaction-viewer__body__row__avatar" },
-                        React.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, conversationType: "direct", size: 32, name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber, i18n: i18n })),
+                        React.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, conversationType: "direct", size: 32, color: from.color, name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber, i18n: i18n })),
                     React.createElement("div", { className: "module-reaction-viewer__body__row__name" }, from.isMe ? (i18n('you')) : (React.createElement(ContactName_1.ContactName, { module: "module-reaction-viewer__body__row__name__contact-name", name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber }))),
                     React.createElement("div", { className: "module-reaction-viewer__body__row__emoji" },
                         React.createElement(Emoji_1.Emoji, { size: 18, emoji: emoji }))))))));
