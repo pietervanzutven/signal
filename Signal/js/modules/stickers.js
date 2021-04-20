@@ -712,7 +712,7 @@
     const paths = await deleteStickerPackReference(messageId, packId);
 
     // If we don't get a list of paths back, then the sticker pack was not deleted
-    if (!paths) {
+    if (!paths || !paths.length) {
       return;
     }
 
