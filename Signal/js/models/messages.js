@@ -2570,6 +2570,18 @@
           window.Signal.Data.updateConversation(conversation.attributes);
 
           await message.queueAttachmentDownloads();
+
+          // Does this message have any pending, previously-received associated reactions?
+          const reactions = Whisper.Reactions.forMessage(message);
+          reactions.forEach(reaction => {
+            message.handleReaction(reaction, false);
+          });
+
+          // Does this message have any pending, previously-received associated
+          // delete for everyone messages?
+          const deletes = Whisper.Deletes.forMessage(message);
+          deletes.forEach(del => Whisper.Deletes.onDelete(del, false));
+
           await window.Signal.Data.saveMessage(message.attributes, {
             Message: Whisper.Message,
             forceSave: true,
@@ -2580,17 +2592,6 @@
           if (message.get('unread')) {
             await conversation.notify(message);
           }
-
-          // Does this message have any pending, previously-received associated reactions?
-          const reactions = Whisper.Reactions.forMessage(message);
-          reactions.forEach(reaction => {
-            message.handleReaction(reaction);
-          });
-
-          // Does this message have any pending, previously-received associated
-          // delete for everyone messages?
-          const deletes = Whisper.Deletes.forMessage(message);
-          deletes.forEach(del => Whisper.Deletes.onDelete(del));
 
           Whisper.events.trigger('incrementProgress');
           confirm();
@@ -2607,7 +2608,7 @@
       });
     },
 
-    async handleReaction(reaction) {
+    async handleReaction(reaction, shouldPersist = true) {
       if (this.get('deletedForEveryone')) {
         return;
       }
@@ -2647,9 +2648,11 @@
         `Done processing reaction for message ${messageId}. Went from ${count} to ${newCount} reactions.`
       );
 
-      await window.Signal.Data.saveMessage(this.attributes, {
-        Message: Whisper.Message,
-      });
+      if (shouldPersist) {
+        await window.Signal.Data.saveMessage(this.attributes, {
+          Message: Whisper.Message,
+        });
+      }
     },
 
     async handleDeleteForEveryone(del) {
