@@ -112,10 +112,11 @@
             },
         };
     }
-    function messagesReset(conversationId, messages, metrics, scrollToMessageId) {
+    function messagesReset(conversationId, messages, metrics, scrollToMessageId, unboundedFetch) {
         return {
             type: 'MESSAGES_RESET',
             payload: {
+                unboundedFetch: Boolean(unboundedFetch),
                 conversationId,
                 messages,
                 metrics,
@@ -364,7 +365,7 @@
             return Object.assign(Object.assign({}, state), { messagesLookup: Object.assign(Object.assign({}, state.messagesLookup), { [id]: data }), messagesByConversation: Object.assign(Object.assign({}, state.messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { heightChangeMessageIds: updatedChanges }) }) });
         }
         if (action.type === 'MESSAGES_RESET') {
-            const { conversationId, messages, metrics, scrollToMessageId, } = action.payload;
+            const { conversationId, messages, metrics, scrollToMessageId, unboundedFetch, } = action.payload;
             const { messagesByConversation, messagesLookup } = state;
             const existingConversation = messagesByConversation[conversationId];
             const resetCounter = existingConversation
@@ -381,7 +382,8 @@
                     oldest = lodash_1.pick(first, ['id', 'received_at']);
                 }
                 const last = messages[messages.length - 1];
-                if (last && (!newest || last.received_at >= newest.received_at)) {
+                if (last &&
+                    (!newest || unboundedFetch || last.received_at >= newest.received_at)) {
                     newest = lodash_1.pick(last, ['id', 'received_at']);
                 }
             }

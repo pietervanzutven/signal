@@ -1940,17 +1940,36 @@
         });
         return lodash_1.map(rows, row => jsonToObject(row.json));
     }
-    async function getOlderMessagesByConversation(conversationId, { limit = 100, receivedAt = Number.MAX_VALUE, } = {}) {
+    async function getOlderMessagesByConversation(conversationId, { limit = 100, receivedAt = Number.MAX_VALUE, messageId, } = {}) {
+        if (receivedAt !== Number.MAX_VALUE && !messageId) {
+            throw new Error('If receivedAt is supplied, messageId should be as well');
+        }
         const db = getInstance();
-        const rows = await db.all(`SELECT json FROM messages WHERE
+        let rows;
+        if (messageId) {
+            rows = await db.all(`SELECT json FROM messages WHERE
+       conversationId = $conversationId AND
+       received_at <= $received_at AND
+       id != $messageId
+     ORDER BY received_at DESC
+     LIMIT $limit;`, {
+                $conversationId: conversationId,
+                $received_at: receivedAt,
+                $limit: limit,
+                $messageId: messageId,
+            });
+        }
+        else {
+            rows = await db.all(`SELECT json FROM messages WHERE
        conversationId = $conversationId AND
        received_at < $received_at
      ORDER BY received_at DESC
      LIMIT $limit;`, {
-            $conversationId: conversationId,
-            $received_at: receivedAt,
-            $limit: limit,
-        });
+                $conversationId: conversationId,
+                $received_at: receivedAt,
+                $limit: limit,
+            });
+        }
         return rows.reverse();
     }
     async function getNewerMessagesByConversation(conversationId, { limit = 100, receivedAt = 0 } = {}) {

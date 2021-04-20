@@ -656,10 +656,11 @@
     function handleMessageJSON(messages) {
         return messages.map(message => JSON.parse(message.json));
     }
-    async function getOlderMessagesByConversation(conversationId, { limit = 100, receivedAt = Number.MAX_VALUE, MessageCollection, }) {
+    async function getOlderMessagesByConversation(conversationId, { limit = 100, receivedAt = Number.MAX_VALUE, messageId, MessageCollection, }) {
         const messages = await channels.getOlderMessagesByConversation(conversationId, {
             limit,
             receivedAt,
+            messageId,
         });
         return new MessageCollection(handleMessageJSON(messages));
     }
