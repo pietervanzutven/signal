@@ -21,7 +21,7 @@
     const lodash_1 = window.lodash;
     const MIME = __importStar(window.ts.types.MIME);
     const protobuf_1 = window.ts.protobuf;
-    const GoogleChrome_1 = window.ts.util.GoogleChrome;
+    const GoogleChrome_1 = require("../util/GoogleChrome");
     const MAX_WIDTH = 300;
     const MAX_HEIGHT = MAX_WIDTH * 1.5;
     const MIN_WIDTH = 200;

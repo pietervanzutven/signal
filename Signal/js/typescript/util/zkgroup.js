@@ -1,7 +1,5 @@
-function require_ts_util_zkgroup() {
+require(exports => {
     "use strict";
-
-    const exports = {};
 
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -64,6 +62,4 @@ function require_ts_util_zkgroup() {
         return compatArrayToBase64(credentialArray);
     }
     exports.handleProfileKeyCredential = handleProfileKeyCredential;
-
-    return exports;
-};
+});

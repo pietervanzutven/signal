@@ -11,7 +11,7 @@ function require_logging() {
 
   const debuglogs = window.debuglogs;
   const Privacy = window.privacy;
-  const { createBatcher } = require_ts_util_batcher();
+  const { createBatcher } = require('../ts/util/batcher');
 
   const ipc = electron.ipcRenderer;
 

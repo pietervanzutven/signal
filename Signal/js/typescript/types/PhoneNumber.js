@@ -9,7 +9,7 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const libphonenumberInstance_1 = window.ts.util.libphonenumberInstance;
+    const libphonenumberInstance_1 = require("../util/libphonenumberInstance");
     const memoizee_1 = __importDefault(window.memoizee);
     function _format(phoneNumber, options) {
         try {

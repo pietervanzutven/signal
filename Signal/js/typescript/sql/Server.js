@@ -18,7 +18,7 @@
     const electron_1 = window.electron;
     const privacy_1 = window.privacy;
     const user_config_1 = window.app.user_config;
-    const combineNames_1 = window.require_ts_util_combineNames();
+    const combineNames_1 = require("../util/combineNames");
     const pify_1 = __importDefault(window.pify);
     const uuid_1 = window.uuid;
     const lodash_1 = window.lodash;

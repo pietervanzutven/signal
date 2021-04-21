@@ -37,8 +37,8 @@
     const ReactionPicker_1 = window.ts.components.conversation.ReactionPicker;
     const Emoji_1 = window.ts.components.emoji.Emoji;
     const Attachment_1 = window.ts.types.Attachment;
-    const timer_1 = window.ts.util.timer;
-    const isFileDangerous_1 = require_ts_util_isFileDangerous();
+    const timer_1 = require("../../util/timer");
+    const isFileDangerous_1 = require("../../util/isFileDangerous");
     const _util_1 = window.ts.components._util;
     const react_contextmenu_1 = window.react_contextmenu;
     // Same as MIN_WIDTH in ImageGrid.tsx

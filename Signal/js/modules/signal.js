@@ -16,7 +16,7 @@
   const OS = window.ts.OS;
   const Stickers = window.stickers;
   const Settings = window.settings;
-  const Util = window.ts.util;
+  const Util = require('../../ts/util');
   const Metadata = window.metadata.SecretSessionCipher;
   const RefreshSenderCertificate = window.refresh_sender_certificate;
   const LinkPreviews = window.link_previews;

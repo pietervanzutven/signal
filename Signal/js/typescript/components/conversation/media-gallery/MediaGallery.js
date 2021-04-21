@@ -17,7 +17,7 @@
     const AttachmentSection_1 = window.ts.components.conversation.media_gallery.AttachmentSection;
     const EmptyState_1 = window.ts.components.conversation.media_gallery.EmptyState;
     const groupMediaItemsByDate_1 = window.ts.components.conversation.media_gallery.groupMediaItemsByDate;
-    const missingCaseError_1 = require_ts_util_missingCaseError();
+    const missingCaseError_1 = require("../../../ts/util/missingCaseError");
     const MONTH_FORMAT = 'MMMM YYYY';
     const Tab = ({ isSelected, label, onSelect, type, }) => {
         const handleClick = onSelect

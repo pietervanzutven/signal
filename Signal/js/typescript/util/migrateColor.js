@@ -1,7 +1,5 @@
-function require_ts_util_migrateColor() {
+require(exports => {
     "use strict";
-
-    const exports = {};
 
     // import { missingCaseError } from './missingCaseError';
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -44,6 +42,4 @@ function require_ts_util_migrateColor() {
         }
     }
     exports.migrateColor = migrateColor;
-
-    return exports;
-}
+});

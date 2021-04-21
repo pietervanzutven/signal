@@ -14,7 +14,7 @@
     const react_1 = __importDefault(window.react);
     const DocumentListItem_1 = window.ts.components.conversation.media_gallery.DocumentListItem;
     const MediaGridItem_1 = window.ts.components.conversation.media_gallery.MediaGridItem;
-    const missingCaseError_1 = require_ts_util_missingCaseError();
+    const missingCaseError_1 = require("../../../ts/util/missingCaseError");
     class AttachmentSection extends react_1.default.Component {
         constructor() {
             super(...arguments);

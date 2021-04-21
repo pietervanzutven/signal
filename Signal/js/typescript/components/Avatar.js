@@ -11,7 +11,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
-    const getInitials_1 = window.ts.util.getInitials;
+    const getInitials_1 = require("../util/getInitials");
     class Avatar extends react_1.default.Component {
         constructor(props) {
             super(props);

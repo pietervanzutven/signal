@@ -35,7 +35,7 @@
   const Queue = window.p_queue.default;
   const qs = window.qs;
 
-  const { makeLookup } = require_ts_util_makeLookup();
+  const { makeLookup } = require('../../ts/util/makeLookup');
   const {
     base64ToArrayBuffer,
     deriveStickerPackKey,

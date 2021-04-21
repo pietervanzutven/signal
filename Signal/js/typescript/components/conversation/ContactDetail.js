@@ -12,7 +12,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const Contact_1 = window.ts.types.Contact;
-    const missingCaseError_1 = require_ts_util_missingCaseError();
+    const missingCaseError_1 = require("../../util/missingCaseError");
     const _contactUtil_1 = window.ts.components.conversation._contactUtil;
     function getLabelForEmail(method, i18n) {
         switch (method.type) {

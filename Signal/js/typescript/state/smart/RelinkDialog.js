@@ -11,7 +11,7 @@
     const actions_1 = window.ts.state.actions;
     const RelinkDialog_1 = window.ts.components.RelinkDialog;
     const user_1 = window.ts.state.selectors.user;
-    const registration_1 = window.ts.util.registration;
+    const registration_1 = require("../../util/registration");
     const mapStateToProps = (state) => {
         return {
             i18n: user_1.getIntl(state),

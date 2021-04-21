@@ -11,7 +11,7 @@
     const lodash_1 = window.lodash;
     const Crypto_1 = window.ts.Crypto;
     const message_1 = window.types.message;
-    const batcher_1 = window.require_ts_util_batcher();
+    const batcher_1 = require("../util/batcher");
     // We listen to a lot of events on ipcRenderer, often on the same channel. This prevents
     //   any warnings that might be sent to the console in that case.
     electron_1.ipcRenderer.setMaxListeners(0);

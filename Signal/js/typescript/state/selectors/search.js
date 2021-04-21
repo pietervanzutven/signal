@@ -13,7 +13,7 @@
     const memoizee_1 = __importDefault(window.memoizee);
     const reselect_1 = window.reselect;
     const Whisper_1 = window.ts.shims.Whisper;
-    const libphonenumberInstance_1 = window.ts.util.libphonenumberInstance;
+    const libphonenumberInstance_1 = require("../../util/libphonenumberInstance");
     const user_1 = window.ts.state.selectors.user;
     const conversations_1 = window.ts.state.selectors.conversations;
     exports.getSearch = (state) => state.search;

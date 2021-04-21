@@ -14,7 +14,7 @@
     const lodash_1 = window.lodash;
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const Intl_1 = window.ts.components.Intl;
-    const missingCaseError_1 = require_ts_util_missingCaseError();
+    const missingCaseError_1 = require("../../util/missingCaseError");
     class GroupNotification extends react_1.default.Component {
         renderChange(change, from) {
             const { contacts, type, newName } = change;

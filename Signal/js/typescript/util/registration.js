@@ -1,9 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.util = window.ts.util || {};
-    const exports = window.ts.util.registration = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
     function markEverDone() {
@@ -30,4 +26,4 @@
         return window.storage.get('chromiumRegistrationDoneEver') === '' || isDone();
     }
     exports.everDone = everDone;
-})();
+});

@@ -1,9 +1,5 @@
-(function () {
+require(exports => {
     'use strict';
-
-    window.ts = window.ts || {};
-    window.ts.util = window.ts.util || {};
-    const exports = window.ts.util.hooks = {}
 
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
@@ -47,4 +43,4 @@
             return redux_1.bindActionCreators(actions, dispatch);
         }, [dispatch]);
     };
-})();
+});

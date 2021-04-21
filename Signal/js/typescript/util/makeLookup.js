@@ -1,7 +1,5 @@
-function require_ts_util_makeLookup() {
+require(exports => {
     "use strict";
-
-    const exports = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = window.lodash;
@@ -12,6 +10,4 @@ function require_ts_util_makeLookup() {
         return lodash_1.fromPairs(pairs);
     }
     exports.makeLookup = makeLookup;
-
-    return exports;
-}
+});

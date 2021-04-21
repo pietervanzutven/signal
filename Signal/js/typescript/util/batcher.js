@@ -1,7 +1,5 @@
-function require_ts_util_batcher() {
+require(exports => {
     "use strict";
-
-    const exports = {};
 
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -87,6 +85,4 @@ function require_ts_util_batcher() {
         return batcher;
     }
     exports.createBatcher = createBatcher;
-
-    return exports;
-}
+});

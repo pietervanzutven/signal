@@ -34,7 +34,7 @@
     const ContactName_1 = window.ts.components.conversation.ContactName;
     const Avatar_1 = window.ts.components.Avatar;
     const Emoji_1 = window.ts.components.emoji.Emoji;
-    const hooks_1 = window.ts.util.hooks;
+    const hooks_1 = require("../../../ts/util/hooks");
     const emojisOrder = ['❤️', '👍', '👎', '😂', '😮', '😢', '😡'];
     exports.ReactionViewer = React.forwardRef(
         // tslint:disable-next-line max-func-body-length

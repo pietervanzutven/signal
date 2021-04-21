@@ -1,7 +1,5 @@
-function require_ts_util_missingCaseError() {
+require(exports => {
     "use strict";
-
-    const exports = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
     // `missingCaseError` is useful for compile-time checking that all `case`s in
@@ -26,4 +24,4 @@ function require_ts_util_missingCaseError() {
     exports.missingCaseError = (x) => new TypeError(`Unhandled case: ${x}`);
 
     return exports;
-}
+});

@@ -1,9 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.util = window.ts.util || {};
-    const exports = window.ts.util.getInitials = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
     const BAD_CHARACTERS = /[^A-Za-z\s]+/g;
@@ -24,4 +20,4 @@
         return initials.slice(0, 2).join('');
     }
     exports.getInitials = getInitials;
-})();
+});

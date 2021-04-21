@@ -7,7 +7,7 @@
   const is = window.sindresorhus.is;
 
   const AttachmentTS = window.ts.types.Attachment;
-  const GoogleChrome = window.ts.util.GoogleChrome;
+  const GoogleChrome = require('../../../ts/util/GoogleChrome');
   const MIME = window.ts.types.MIME;
   const { toLogFormat } = window.types.errors;
   const {

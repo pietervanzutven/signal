@@ -1,9 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.util = window.ts.util || {};
-    const exports = window.ts.util.cleanSearchTerm = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
     function cleanSearchTerm(searchTerm) {
@@ -24,4 +20,4 @@
         return withWildcards.join(' ').trim();
     }
     exports.cleanSearchTerm = cleanSearchTerm;
-})();
+});
