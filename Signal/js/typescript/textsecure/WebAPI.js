@@ -154,7 +154,9 @@
                 ca: certificateAuthority,
             };
         }
-        return new websocket_1.w3cwebsocket(url, undefined, undefined, undefined, requestOptions);
+        return new websocket_1.w3cwebsocket(url, undefined, undefined, undefined, requestOptions, {
+            maxReceivedFrameSize: 0x210000,
+        });
     }
     const FIVE_MINUTES = 1000 * 60 * 5;
     const agents = {};
