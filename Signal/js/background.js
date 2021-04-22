@@ -2294,6 +2294,7 @@
 
     if (data.message.reaction) {
       const { reaction } = data.message;
+      window.log.info('Queuing reaction for', reaction.targetTimestamp);
       const reactionModel = Whisper.Reactions.add({
         emoji: reaction.emoji,
         remove: reaction.remove,
@@ -2311,6 +2312,7 @@
 
     if (data.message.delete) {
       const { delete: del } = data.message;
+      window.log.info('Queuing DOE for', del.targetSentTimestamp);
       const deleteModel = Whisper.Deletes.add({
         targetSentTimestamp: del.targetSentTimestamp,
         serverTimestamp: data.serverTimestamp,
