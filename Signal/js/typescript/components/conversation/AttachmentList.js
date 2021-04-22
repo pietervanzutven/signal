@@ -11,7 +11,7 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
-    const GoogleChrome_1 = window.ts.util.GoogleChrome;
+    const GoogleChrome_1 = require("../../util/GoogleChrome");
     const Image_1 = window.ts.components.conversation.Image;
     const StagedGenericAttachment_1 = window.ts.components.conversation.StagedGenericAttachment;
     const StagedPlaceholderAttachment_1 = window.ts.components.conversation.StagedPlaceholderAttachment;

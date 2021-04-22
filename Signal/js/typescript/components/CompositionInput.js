@@ -131,7 +131,7 @@
         return draft_js_1.EditorState.forceSelection(state, selectionAtEnd);
     };
     // tslint:disable-next-line max-func-body-length
-    exports.CompositionInput = ({ i18n, disabled, large, editorRef, inputApi, onDirtyChange, onEditorStateChange, onEditorSizeChange, onTextTooLong, onPickEmoji, onSubmit, skinTone, startingText, }) => {
+    exports.CompositionInput = ({ i18n, disabled, large, editorRef, inputApi, onDirtyChange, onEditorStateChange, onEditorSizeChange, onTextTooLong, onPickEmoji, onSubmit, skinTone, startingText, getQuotedMessage, clearQuotedMessage, }) => {
         const [editorRenderState, setEditorRenderState] = React.useState(getInitialEditorState(startingText));
         const [searchText, setSearchText] = React.useState('');
         const [emojiResults, setEmojiResults] = React.useState([]);
@@ -317,6 +317,9 @@
             if (emojiResults.length > 0) {
                 e.preventDefault();
                 resetEmojiResults();
+            }
+            else if (getQuotedMessage()) {
+                clearQuotedMessage();
             }
         }, [resetEmojiResults, emojiResults]);
         const getWordAtCaret = React.useCallback((state = editorStateRef.current) => {

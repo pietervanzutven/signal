@@ -13,9 +13,9 @@
     const lodash_1 = window.lodash;
     const PhoneNumber_1 = window.ts.types.PhoneNumber;
     const events_1 = window.ts.shims.events;
-    const cleanSearchTerm_1 = window.ts.util.cleanSearchTerm;
+    const cleanSearchTerm_1 = require("../../util/cleanSearchTerm");
     const Client_1 = __importDefault(window.ts.sql.Client);
-    const makeLookup_1 = window.ts.util.makeLookup;
+    const makeLookup_1 = require("../../util/makeLookup");
     const { searchConversations: dataSearchConversations, searchMessages: dataSearchMessages, searchMessagesInConversation, } = Client_1.default;
     // Action Creators
     exports.actions = {

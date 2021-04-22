@@ -1,7 +1,5 @@
-function require_ts_util_isFileDangerous() {
+require(exports => {
     "use strict";
-
-    const exports = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
     // tslint:disable-next-line max-line-length
@@ -10,6 +8,4 @@ function require_ts_util_isFileDangerous() {
         return DANGEROUS_FILE_TYPES.test(fileName);
     }
     exports.isFileDangerous = isFileDangerous;
-
-    return exports;
-}
+});

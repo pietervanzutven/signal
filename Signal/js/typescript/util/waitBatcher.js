@@ -1,7 +1,5 @@
-function require_ts_util_waitBatcher() {
+require(exports => {
     "use strict";
-
-    const exports = {};
 
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -103,6 +101,4 @@ function require_ts_util_waitBatcher() {
         return waitBatcher;
     }
     exports.createWaitBatcher = createWaitBatcher;
-
-    return exports;
-}
+});

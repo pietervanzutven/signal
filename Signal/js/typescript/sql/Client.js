@@ -11,7 +11,7 @@
     const lodash_1 = window.lodash;
     const Crypto_1 = window.ts.Crypto;
     const message_1 = window.types.message;
-    const batcher_1 = window.require_ts_util_batcher();
+    const batcher_1 = require("../util/batcher");
     // We listen to a lot of events on ipcRenderer, often on the same channel. This prevents
     //   any warnings that might be sent to the console in that case.
     electron_1.ipcRenderer.setMaxListeners(0);
@@ -656,10 +656,11 @@
     function handleMessageJSON(messages) {
         return messages.map(message => JSON.parse(message.json));
     }
-    async function getOlderMessagesByConversation(conversationId, { limit = 100, receivedAt = Number.MAX_VALUE, MessageCollection, }) {
+    async function getOlderMessagesByConversation(conversationId, { limit = 100, receivedAt = Number.MAX_VALUE, messageId, MessageCollection, }) {
         const messages = await channels.getOlderMessagesByConversation(conversationId, {
             limit,
             receivedAt,
+            messageId,
         });
         return new MessageCollection(handleMessageJSON(messages));
     }

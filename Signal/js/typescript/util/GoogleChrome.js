@@ -1,9 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.util = window.ts.util || {};
-    const exports = window.ts.util.GoogleChrome = {}
 
     Object.defineProperty(exports, "__esModule", { value: true });
     // See: https://en.wikipedia.org/wiki/Comparison_of_web_browsers#Image_format_support
@@ -32,4 +28,4 @@
     };
     // See: https://www.chromium.org/audio-video
     exports.isVideoTypeSupported = (mimeType) => SUPPORTED_VIDEO_MIME_TYPES[mimeType] === true;
-})();
+});

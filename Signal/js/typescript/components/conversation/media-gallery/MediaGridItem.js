@@ -13,7 +13,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
-    const GoogleChrome_1 = window.ts.util.GoogleChrome;
+    const GoogleChrome_1 = require("../../../util/GoogleChrome");
     class MediaGridItem extends react_1.default.Component {
         constructor(props) {
             super(props);

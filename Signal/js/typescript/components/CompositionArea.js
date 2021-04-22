@@ -34,7 +34,7 @@
         // EmojiButton
         onPickEmoji, onSetSkinTone, recentEmojis, skinTone,
         // StickerButton
-        knownPacks, receivedPacks, installedPack, installedPacks, blessedPacks, recentStickers, clearInstalledStickerPack, onClickAddPack, onPickSticker, clearShowIntroduction, showPickerHint, clearShowPickerHint, }) => {
+        knownPacks, receivedPacks, installedPack, installedPacks, blessedPacks, recentStickers, clearInstalledStickerPack, onClickAddPack, onPickSticker, clearShowIntroduction, showPickerHint, clearShowPickerHint, clearQuotedMessage, getQuotedMessage, }) => {
         const [disabled, setDisabled] = React.useState(false);
         const [showMic, setShowMic] = React.useState(!startingText);
         const [micActive, setMicActive] = React.useState(false);
@@ -160,7 +160,7 @@
             React.createElement("div", { className: classnames_1.default('module-composition-area__row', large ? 'module-composition-area__row--padded' : null) },
                 !large ? emojiButtonFragment : null,
                 React.createElement("div", { className: "module-composition-area__input" },
-                    React.createElement(CompositionInput_1.CompositionInput, { i18n: i18n, disabled: disabled, large: large, editorRef: editorRef, inputApi: inputApiRef, onPickEmoji: onPickEmoji, onSubmit: handleSubmit, onEditorSizeChange: onEditorSizeChange, onEditorStateChange: onEditorStateChange, onTextTooLong: onTextTooLong, onDirtyChange: setDirty, skinTone: skinTone, startingText: startingText })),
+                    React.createElement(CompositionInput_1.CompositionInput, { i18n: i18n, disabled: disabled, large: large, editorRef: editorRef, inputApi: inputApiRef, onPickEmoji: onPickEmoji, onSubmit: handleSubmit, onEditorSizeChange: onEditorSizeChange, onEditorStateChange: onEditorStateChange, onTextTooLong: onTextTooLong, onDirtyChange: setDirty, skinTone: skinTone, startingText: startingText, clearQuotedMessage: clearQuotedMessage, getQuotedMessage: getQuotedMessage })),
                 !large ? (React.createElement(React.Fragment, null,
                     stickerButtonFragment,
                     !dirty ? micButtonFragment : null,

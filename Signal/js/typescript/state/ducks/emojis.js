@@ -12,7 +12,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = window.lodash;
     const Client_1 = __importDefault(window.ts.sql.Client);
-    const hooks_1 = window.ts.util.hooks;
+    const hooks_1 = require("../../util/hooks");
     const { updateEmojiUsage } = Client_1.default;
     // Action Creators
     exports.actions = {

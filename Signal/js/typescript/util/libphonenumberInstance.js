@@ -1,9 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.util = window.ts.util || {};
-    const exports = window.ts.util.libphonenumberInstance = {};
 
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -14,4 +10,4 @@
     exports.instance = instance;
     const PhoneNumberFormat = google_libphonenumber_1.default.PhoneNumberFormat;
     exports.PhoneNumberFormat = PhoneNumberFormat;
-})();
+});

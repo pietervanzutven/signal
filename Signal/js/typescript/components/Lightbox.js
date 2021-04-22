@@ -20,9 +20,9 @@
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
     const is_1 = __importDefault(window.sindresorhus.is);
-    const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
+    const GoogleChrome = __importStar(require("../util/GoogleChrome"));
     const MIME = __importStar(window.ts.types.MIME);
-    const formatDuration_1 = window.ts.util.formatDuration;
+    const formatDuration_1 = require("../util/formatDuration");
     const Colors = {
         ICON_SECONDARY: '#b9b9b9',
     };

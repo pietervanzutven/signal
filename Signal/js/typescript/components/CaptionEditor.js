@@ -18,7 +18,7 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(window.react);
-    const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
+    const GoogleChrome = __importStar(require("../util/GoogleChrome"));
     class CaptionEditor extends react_1.default.Component {
         constructor(props) {
             super(props);

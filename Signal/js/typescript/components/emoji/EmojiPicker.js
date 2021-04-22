@@ -23,7 +23,7 @@
     const lodash_1 = window.lodash;
     const Emoji_1 = window.ts.components.emoji.Emoji;
     const lib_1 = window.ts.components.emoji.lib;
-    const hooks_1 = window.ts.util.hooks;
+    const hooks_1 = require("../../util/hooks");
     function focusOnRender(el) {
         if (el) {
             el.focus();

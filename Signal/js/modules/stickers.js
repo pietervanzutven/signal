@@ -35,7 +35,7 @@
   const Queue = window.p_queue.default;
   const qs = window.qs;
 
-  const { makeLookup } = require_ts_util_makeLookup();
+  const { makeLookup } = require('../../ts/util/makeLookup');
   const {
     base64ToArrayBuffer,
     deriveStickerPackKey,
@@ -712,7 +712,7 @@
     const paths = await deleteStickerPackReference(messageId, packId);
 
     // If we don't get a list of paths back, then the sticker pack was not deleted
-    if (!paths) {
+    if (!paths || !paths.length) {
       return;
     }
 

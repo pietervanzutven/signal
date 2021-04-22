@@ -18,7 +18,7 @@
     const electron_1 = window.electron;
     const privacy_1 = window.privacy;
     const user_config_1 = window.app.user_config;
-    const combineNames_1 = window.require_ts_util_combineNames();
+    const combineNames_1 = require("../util/combineNames");
     const pify_1 = __importDefault(window.pify);
     const uuid_1 = window.uuid;
     const lodash_1 = window.lodash;
@@ -1708,13 +1708,13 @@
         const db = getInstance();
         const rows = await db.all(`SELECT json FROM conversations WHERE
       (
-        id LIKE $id OR
+        e164 LIKE $e164 OR
         name LIKE $name OR
         profileFullName LIKE $profileFullName
       )
      ORDER BY active_at DESC
      LIMIT $limit`, {
-            $id: `%${query}%`,
+            $e164: `%${query}%`,
             $name: `%${query}%`,
             $profileFullName: `%${query}%`,
             $limit: limit || 100,
@@ -1940,17 +1940,36 @@
         });
         return lodash_1.map(rows, row => jsonToObject(row.json));
     }
-    async function getOlderMessagesByConversation(conversationId, { limit = 100, receivedAt = Number.MAX_VALUE, } = {}) {
+    async function getOlderMessagesByConversation(conversationId, { limit = 100, receivedAt = Number.MAX_VALUE, messageId, } = {}) {
+        if (receivedAt !== Number.MAX_VALUE && !messageId) {
+            throw new Error('If receivedAt is supplied, messageId should be as well');
+        }
         const db = getInstance();
-        const rows = await db.all(`SELECT json FROM messages WHERE
+        let rows;
+        if (messageId) {
+            rows = await db.all(`SELECT json FROM messages WHERE
+       conversationId = $conversationId AND
+       received_at <= $received_at AND
+       id != $messageId
+     ORDER BY received_at DESC
+     LIMIT $limit;`, {
+                $conversationId: conversationId,
+                $received_at: receivedAt,
+                $limit: limit,
+                $messageId: messageId,
+            });
+        }
+        else {
+            rows = await db.all(`SELECT json FROM messages WHERE
        conversationId = $conversationId AND
        received_at < $received_at
      ORDER BY received_at DESC
      LIMIT $limit;`, {
-            $conversationId: conversationId,
-            $received_at: receivedAt,
-            $limit: limit,
-        });
+                $conversationId: conversationId,
+                $received_at: receivedAt,
+                $limit: limit,
+            });
+        }
         return rows.reverse();
     }
     async function getNewerMessagesByConversation(conversationId, { limit = 100, receivedAt = 0 } = {}) {

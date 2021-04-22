@@ -21,7 +21,7 @@
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
     const MIME = __importStar(window.ts.types.MIME);
-    const GoogleChrome = __importStar(window.ts.util.GoogleChrome);
+    const GoogleChrome = __importStar(require("../../../ts/util/GoogleChrome"));
     const MessageBody_1 = window.ts.components.conversation.MessageBody;
     const ContactName_1 = window.ts.components.conversation.ContactName;
     function validateQuote(quote) {

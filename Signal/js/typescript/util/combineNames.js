@@ -1,7 +1,5 @@
-function require_ts_util_combineNames() {
+require(exports => {
     "use strict";
-
-    const exports = {};
 
     // We don't include unicode-12.1.0 because it's over 100MB in size
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -87,6 +85,4 @@ function require_ts_util_combineNames() {
             isIdeographic.test(codePoint));
 
     }
-
-    return exports;
-}
+});

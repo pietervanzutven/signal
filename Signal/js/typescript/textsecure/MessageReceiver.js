@@ -15,7 +15,7 @@
     const p_queue_1 = __importDefault(window.p_queue);
     const uuid_1 = window.uuid;
     const EventTarget_1 = __importDefault(window.ts.textsecure.EventTarget);
-    const batcher_1 = window.require_ts_util_batcher();
+    const batcher_1 = require("../util/batcher");
     const Helpers_1 = __importDefault(window.ts.textsecure.Helpers);
     const WebsocketResources_1 = __importDefault(window.ts.textsecure.WebsocketResources);
     const Crypto_1 = __importDefault(window.ts.textsecure.Crypto);

@@ -1,9 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.util = window.ts.util || {};
-    const exports = window.ts.util.saveURLAsFile = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -15,4 +11,4 @@
         anchorElement.download = filename;
         anchorElement.click();
     };
-})();
+});

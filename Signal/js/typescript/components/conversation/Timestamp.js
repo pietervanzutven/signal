@@ -13,7 +13,7 @@
     const react_1 = __importDefault(window.react);
     const classnames_1 = __importDefault(window.classnames);
     const moment_1 = __importDefault(window.moment);
-    const formatRelativeTime_1 = window.ts.util.formatRelativeTime;
+    const formatRelativeTime_1 = require("../../util/formatRelativeTime");
     const UPDATE_FREQUENCY = 60 * 1000;
     class Timestamp extends react_1.default.Component {
         constructor(props) {

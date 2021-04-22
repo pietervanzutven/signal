@@ -1,6 +1,5 @@
-function require_ts_util_hasExpired() {
+require(exports => {
     "use strict";
-    const exports = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
     const env = window.getEnvironment();
@@ -28,6 +27,4 @@ function require_ts_util_hasExpired() {
         return buildExpiration && Date.now() > buildExpiration;
     }
     exports.hasExpired = hasExpired;
-
-    return exports;
-}
+});

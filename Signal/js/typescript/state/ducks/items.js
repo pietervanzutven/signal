@@ -19,7 +19,7 @@
     const react_redux_1 = window.react_redux;
     const storageShim = __importStar(window.ts.shims.storage);
     const lib_1 = window.ts.components.emoji.lib;
-    const hooks_1 = window.ts.util.hooks;
+    const hooks_1 = require("../../util/hooks");
     // Action Creators
     exports.actions = {
         putItem,
