@@ -797,20 +797,14 @@
             proto.group = new window.textsecure.protobuf.GroupContext();
             proto.group.id = stringToArrayBuffer(id);
             proto.group.type = window.textsecure.protobuf.GroupContext.Type.UPDATE;
-            proto.group.members = targetIdentifiers;
+            proto.group.membersE164 = targetIdentifiers;
             proto.group.name = name;
             return this.makeAttachmentPointer(avatar).then(async (attachment) => {
                 if (!proto.group) {
                     throw new Error('createGroup: proto.group was set to null');
                 }
                 proto.group.avatar = attachment;
-                return this.sendGroupProto(targetIdentifiers.map(item => {
-                    const identifier = item.uuid || item.e164;
-                    if (!identifier) {
-                        throw new Error('SendMessage.createGroup: Provided group member had neither uuid nor e164');
-                    }
-                    return identifier;
-                }), proto, Date.now(), options).then(() => {
+                return this.sendGroupProto(targetIdentifiers, proto, Date.now(), options).then(() => {
                     if (!proto.group) {
                         throw new Error('createGroup: proto.group was set to null');
                     }
@@ -824,19 +818,13 @@
             proto.group.id = stringToArrayBuffer(groupId);
             proto.group.type = window.textsecure.protobuf.GroupContext.Type.UPDATE;
             proto.group.name = name;
-            proto.group.members = targetIdentifiers;
+            proto.group.membersE164 = targetIdentifiers;
             return this.makeAttachmentPointer(avatar).then(async (attachment) => {
                 if (!proto.group) {
                     throw new Error('updateGroup: proto.group was set to null');
                 }
                 proto.group.avatar = attachment;
-                return this.sendGroupProto(targetIdentifiers.map(item => {
-                    const identifier = item.uuid || item.e164;
-                    if (!identifier) {
-                        throw new Error('SendMessage.updateGroup: Provided group member had neither uuid nor e164');
-                    }
-                    return identifier;
-                }), proto, Date.now(), options).then(() => {
+                return this.sendGroupProto(targetIdentifiers, proto, Date.now(), options).then(() => {
                     if (!proto.group) {
                         throw new Error('updateGroup: proto.group was set to null');
                     }
@@ -849,14 +837,8 @@
             proto.group = new window.textsecure.protobuf.GroupContext();
             proto.group.id = stringToArrayBuffer(groupId);
             proto.group.type = window.textsecure.protobuf.GroupContext.Type.UPDATE;
-            proto.group.members = newIdentifiers;
-            return this.sendGroupProto(newIdentifiers.map(item => {
-                const identifier = item.uuid || item.e164;
-                if (!identifier) {
-                    throw new Error('SendMessage.addIdentifierToGroup: Provided group member had neither uuid nor e164');
-                }
-                return identifier;
-            }), proto, Date.now(), options);
+            proto.group.membersE164 = newIdentifiers;
+            return this.sendGroupProto(newIdentifiers, proto, Date.now(), options);
         }
         async setGroupName(groupId, name, groupIdentifiers, options) {
             const proto = new window.textsecure.protobuf.DataMessage();
@@ -864,33 +846,21 @@
             proto.group.id = stringToArrayBuffer(groupId);
             proto.group.type = window.textsecure.protobuf.GroupContext.Type.UPDATE;
             proto.group.name = name;
-            proto.group.members = groupIdentifiers;
-            return this.sendGroupProto(groupIdentifiers.map(item => {
-                const identifier = item.uuid || item.e164;
-                if (!identifier) {
-                    throw new Error('SendMessage.setGroupName: Provided group member had neither uuid nor e164');
-                }
-                return identifier;
-            }), proto, Date.now(), options);
+            proto.group.membersE164 = groupIdentifiers;
+            return this.sendGroupProto(groupIdentifiers, proto, Date.now(), options);
         }
         async setGroupAvatar(groupId, avatar, groupIdentifiers, options) {
             const proto = new window.textsecure.protobuf.DataMessage();
             proto.group = new window.textsecure.protobuf.GroupContext();
             proto.group.id = stringToArrayBuffer(groupId);
             proto.group.type = window.textsecure.protobuf.GroupContext.Type.UPDATE;
-            proto.group.members = groupIdentifiers;
+            proto.group.membersE164 = groupIdentifiers;
             return this.makeAttachmentPointer(avatar).then(async (attachment) => {
                 if (!proto.group) {
                     throw new Error('setGroupAvatar: proto.group was set to null');
                 }
                 proto.group.avatar = attachment;
-                return this.sendGroupProto(groupIdentifiers.map(item => {
-                    const identifier = item.uuid || item.e164;
-                    if (!identifier) {
-                        throw new Error('SendMessage.setGroupAvatar: Provided group member had neither uuid nor e164');
-                    }
-                    return identifier;
-                }), proto, Date.now(), options);
+                return this.sendGroupProto(groupIdentifiers, proto, Date.now(), options);
             });
         }
         async leaveGroup(groupId, groupIdentifiers, options) {
