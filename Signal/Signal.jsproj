@@ -285,6 +285,7 @@
     <Content Include="js\typescript\components\emoji\lib.js" />
     <Content Include="js\typescript\components\ExpiredBuildDialog.js" />
     <Content Include="js\typescript\state\smart\EmojiPicker.js" />
+    <Content Include="js\typescript\util\deleteForEveryone.js" />
     <Content Include="js\typescript\util\downloadAttachment.js" />
     <Content Include="js\typescript\util\hooks.js" />
     <Content Include="js\typescript\components\Intl.js" />

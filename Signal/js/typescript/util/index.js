@@ -1,6 +1,5 @@
 require(exports => {
     "use strict";
-
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
@@ -21,6 +20,8 @@ require(exports => {
     exports.createBatcher = batcher_1.createBatcher;
     const waitBatcher_1 = require("./waitBatcher");
     exports.createWaitBatcher = waitBatcher_1.createWaitBatcher;
+    const deleteForEveryone_1 = require("./deleteForEveryone");
+    exports.deleteForEveryone = deleteForEveryone_1.deleteForEveryone;
     const downloadAttachment_1 = require("./downloadAttachment");
     exports.downloadAttachment = downloadAttachment_1.downloadAttachment;
     const hasExpired_1 = require("./hasExpired");

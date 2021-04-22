@@ -1133,7 +1133,7 @@
     isErased() {
       return Boolean(this.get('isErased'));
     },
-    async eraseContents(additionalProperties = {}) {
+    async eraseContents(additionalProperties = {}, shouldPersist = true) {
       if (this.get('isErased')) {
         return;
       }
@@ -1163,9 +1163,11 @@
       ));
       this.trigger('content-changed');
 
-      await window.Signal.Data.saveMessage(this.attributes, {
-        Message: Whisper.Message,
-      });
+      if (shouldPersist) {
+        await window.Signal.Data.saveMessage(this.attributes, {
+          Message: Whisper.Message,
+        });
+      }
     },
     unload() {
       if (this.quotedMessage) {
@@ -2288,20 +2290,9 @@
             if (dataMessage.group) {
               const pendingGroupUpdate = [];
               const memberConversations = await Promise.all(
-                (
-                  dataMessage.group.members || dataMessage.group.membersE164
-                ).map(member => {
-                  if (member.e164 || member.uuid) {
-                    return ConversationController.getOrCreateAndWait(
-                      member.e164 || member.uuid,
-                      'private'
-                    );
-                  }
-                  return ConversationController.getOrCreateAndWait(
-                    member,
-                    'private'
-                  );
-                })
+                dataMessage.group.membersE164.map(e164 =>
+                  ConversationController.getOrCreateAndWait(e164, 'private')
+                )
               );
               const members = memberConversations.map(c => c.get('id'));
               attributes = Object.assign({},
@@ -2633,7 +2624,9 @@
           // Does this message have any pending, previously-received associated
           // delete for everyone messages?
           const deletes = Whisper.Deletes.forMessage(message);
-          deletes.forEach(del => Whisper.Deletes.onDelete(del, false));
+          deletes.forEach(del => {
+            window.Signal.Util.deleteForEveryone(message, del, false);
+          });
 
           await window.Signal.Data.saveMessage(message.attributes, {
             Message: Whisper.Message,
@@ -2708,7 +2701,7 @@
       }
     },
 
-    async handleDeleteForEveryone(del) {
+    async handleDeleteForEveryone(del, shouldPersist = true) {
       window.log.info('Handling DOE.', {
         fromId: del.get('fromId'),
         targetSentTimestamp: del.get('targetSentTimestamp'),
@@ -2723,7 +2716,10 @@
       Whisper.Notifications.remove(notificationForMessage);
 
       // Erase the contents of this message
-      await this.eraseContents({ deletedForEveryone: true, reactions: [] });
+      await this.eraseContents(
+        { deletedForEveryone: true, reactions: [] },
+        shouldPersist
+      );
 
       // Update the conversation's last message in case this was the last message
       this.getConversation().updateLastMessage();
