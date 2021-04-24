@@ -1742,7 +1742,7 @@ img.emoji.jumbo {
   margin-left: -12px;
   margin-right: -12px;
   margin-top: -10px;
-  margin-bottom: -10px;
+  margin-bottom: -15px;
   border-radius: 16px;
   overflow: hidden;
   background-color: #ffffff; }
@@ -1756,6 +1756,8 @@ img.emoji.jumbo {
     margin-top: 4px;
     border-top-left-radius: 0px;
     border-top-right-radius: 0px; }
+  .module-message__attachment-container--with-collapsed-metadata {
+    margin-bottom: -10px; }
 
 .module-message__sticker-container {
   text-align: center;
@@ -1803,6 +1805,10 @@ img.emoji.jumbo {
 
 .module-message__generic-attachment--with-content-above {
   padding-top: 4px; }
+
+.module-message__generic-attachment--not-active {
+  cursor: default;
+  pointer-events: none; }
 
 .module-message__generic-attachment__icon-container {
   position: relative; }
@@ -4031,6 +4037,97 @@ img.emoji.jumbo {
   letter-spacing: -0.56px;
   color: #848484; }
 
+.module-conversation-hero {
+  padding: 32px 0 28px 0;
+  text-align: center; }
+  .module-conversation-hero__avatar {
+    margin-bottom: 12px; }
+  .module-conversation-hero__profile-name {
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-weight: bolder;
+    font-size: 20px;
+    line-height: 26px;
+    letter-spacing: -0.34px;
+    margin-bottom: 2px;
+    color: #1b1b1b; }
+    .dark-theme .module-conversation-hero__profile-name {
+      color: #e9e9e9; }
+  .module-conversation-hero__with {
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: -0.03px;
+    margin-bottom: 16px;
+    color: #5e5e5e; }
+    .dark-theme .module-conversation-hero__with {
+      color: #b9b9b9; }
+  .module-conversation-hero__membership {
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: -0.03px;
+    padding: 0 16px;
+    color: #5e5e5e; }
+    .dark-theme .module-conversation-hero__membership {
+      color: #b9b9b9; }
+    .module-conversation-hero__membership__name {
+      font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      line-height: 18px;
+      letter-spacing: -0.03px;
+      font-weight: bold; }
+
+.module-message-request-actions {
+  padding: 8px 16px 12px 16px;
+  background: #ffffff; }
+  .dark-theme .module-message-request-actions {
+    background: #121212; }
+  .module-message-request-actions__message {
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: -0.03px;
+    text-align: center;
+    margin-bottom: 12px;
+    color: #5e5e5e; }
+    .dark-theme .module-message-request-actions__message {
+      color: #b9b9b9; }
+    .module-message-request-actions__message__name {
+      font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      line-height: 18px;
+      letter-spacing: -0.03px;
+      font-weight: bold; }
+  .module-message-request-actions__buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; }
+    .module-message-request-actions__buttons__button {
+      border: none;
+      border-radius: 4px;
+      min-width: 80px;
+      height: 36px;
+      padding: 0 14px;
+      text-align: center;
+      font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 21px;
+      letter-spacing: -0.14px;
+      font-weight: bold;
+      background-color: #e9e9e9; }
+      .module-message-request-actions__buttons__button:focus {
+        outline: none; }
+        .keyboard-mode .module-message-request-actions__buttons__button:focus {
+          box-shadow: 0px 0px 0px 2px #2c6bed; }
+      .dark-theme .module-message-request-actions__buttons__button {
+        background-color: #3b3b3b; }
+      .module-message-request-actions__buttons__button:not(:last-of-type) {
+        margin-right: 8px; }
+      .module-message-request-actions__buttons__button--deny {
+        color: #f44336; }
+      .module-message-request-actions__buttons__button--accept {
+        color: #2c6bed; }
+
 .module-conversation-list-item {
   background: none;
   color: inherit;
@@ -4389,6 +4486,26 @@ img.emoji.jumbo {
   height: 62px;
   width: 62px; }
 
+.module-avatar--112 {
+  height: 112px;
+  width: 112px; }
+  .module-avatar--112 img {
+    height: 112px;
+    width: 112px; }
+
+.module-avatar__label--112 {
+  width: 112px;
+  font-size: 56px;
+  line-height: 112px; }
+
+.module-avatar__icon--112 {
+  height: 81px;
+  width: 81px; }
+
+.module-avatar__icon--112.module-avatar__icon--direct {
+  height: 87px;
+  width: 87px; }
+
 .module-avatar__icon--note-to-self {
   width: 70%;
   height: 70%;
@@ -4592,7 +4709,8 @@ img.emoji.jumbo {
   position: relative;
   display: inline-block;
   margin: 1px;
-  vertical-align: middle; }
+  vertical-align: middle;
+  overflow: hidden; }
 
 .module-image--with-background {
   background-color: #ffffff; }
@@ -6480,8 +6598,18 @@ img.emoji.jumbo {
   .dark-theme .module-confirmation-dialog__container {
     background: #3b3b3b;
     color: #e9e9e9; }
+  .module-confirmation-dialog__container__title {
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 21px;
+    letter-spacing: -0.14px;
+    font-weight: bold; }
   .module-confirmation-dialog__container__content {
-    margin-bottom: 20px; }
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 21px;
+    letter-spacing: -0.14px;
+    margin-bottom: 22px; }
   .module-confirmation-dialog__container__buttons {
     display: flex;
     flex-direction: row;

@@ -16,6 +16,7 @@
   const OS = window.ts.OS;
   const Stickers = window.stickers;
   const Settings = window.settings;
+  const RemoteConfig = require('../../ts/RemoteConfig');
   const Util = require('../../ts/util');
   const Metadata = window.metadata.SecretSessionCipher;
   const RefreshSenderCertificate = window.refresh_sender_certificate;
@@ -355,6 +356,7 @@
       Notifications,
       OS,
       RefreshSenderCertificate,
+      RemoteConfig,
       Settings,
       Services,
       State,

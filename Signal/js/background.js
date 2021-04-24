@@ -1485,6 +1485,34 @@
         });
       }
     });
+
+    window.Signal.RemoteConfig.initRemoteConfig();
+
+    // Maybe refresh remote configuration when we become active
+    window.registerForActive(async () => {
+      await window.Signal.RemoteConfig.maybeRefreshRemoteConfig();
+    });
+
+    // Listen for changes to the `desktop.messageRequests` remote configuration flag
+    const removeMessageRequestListener = window.Signal.RemoteConfig.onChange(
+      'desktop.messageRequests',
+      ({ enabled }) => {
+        if (!enabled) {
+          return;
+        }
+
+        const conversations = window.getConversations();
+        conversations.forEach(conversation => {
+          conversation.set({
+            messageCountBeforeMessageRequests:
+              conversation.get('messageCount') || 0,
+          });
+          window.Signal.Data.updateConversation(conversation.attributes);
+        });
+
+        removeMessageRequestListener();
+      }
+    );
   }
 
   window.getSyncRequest = () =>
@@ -1635,6 +1663,8 @@
     addQueuedEventListener('typing', onTyping);
     addQueuedEventListener('sticker-pack', onStickerPack);
     addQueuedEventListener('viewSync', onViewSync);
+    addQueuedEventListener('messageRequestResponse', onMessageRequestResponse);
+    addQueuedEventListener('profileKeyUpdate', onProfileKeyUpdate);
 
     window.Signal.AttachmentDownloads.start({
       getMessageReceiver: () => messageReceiver,
@@ -2264,7 +2294,10 @@
 
     const result = ConversationController.getOrCreate(
       messageDescriptor.id,
-      messageDescriptor.type
+      messageDescriptor.type,
+      messageDescriptor.type === 'group'
+        ? { addedBy: message.getContact().get('id') }
+        : undefined
     );
 
     if (messageDescriptor.type === 'private') {
@@ -2312,6 +2345,41 @@
     return Promise.resolve();
   }
 
+  async function onProfileKeyUpdate({ data, confirm }) {
+    const conversation = ConversationController.get(
+      data.source || data.sourceUuid
+    );
+
+    if (!conversation) {
+      window.log.error(
+        'onProfileKeyUpdate: could not find conversation',
+        data.source,
+        data.sourceUuid
+      );
+      confirm();
+      return;
+    }
+
+    if (!data.profileKey) {
+      window.log.error(
+        'onProfileKeyUpdate: missing profileKey',
+        data.profileKey
+      );
+      confirm();
+      return;
+    }
+
+    window.log.info(
+      'onProfileKeyUpdate: updating profileKey',
+      data.source,
+      data.sourceUuid
+    );
+
+    await conversation.setProfileKey(data.profileKey);
+
+    confirm();
+  }
+
   async function handleMessageSentProfileUpdate({
     data,
     confirm,
@@ -2324,7 +2392,7 @@
       type
     );
 
-    conversation.set({ profileSharing: true });
+    conversation.enableProfileSharing();
     window.Signal.Data.updateConversation(conversation.attributes);
 
     // Then we update our own profileKey if it's different from what we have
@@ -2641,6 +2709,25 @@
     });
 
     Whisper.ViewSyncs.onSync(sync);
+  }
+
+  async function onMessageRequestResponse(ev) {
+    ev.confirm();
+
+    const { threadE164, threadUuid, groupId, messageRequestResponseType } = ev;
+
+    const args = {
+      threadE164,
+      threadUuid,
+      groupId,
+      type: messageRequestResponseType,
+    };
+
+    window.log.info('message request response', args);
+
+    const sync = Whisper.MessageRequests.add(args);
+
+    Whisper.MessageRequests.onResponse(sync);
   }
 
   function onReadReceipt(ev) {

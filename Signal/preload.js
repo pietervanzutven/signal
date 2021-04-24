@@ -234,9 +234,11 @@
     });
 
     const { autoOrientImage } = window.auto_orient_image;
+    const { imageToBlurHash } = require('./ts/util/imageToBlurHash');
 
     window.autoOrientImage = autoOrientImage;
     window.dataURLToBlobSync = window.blueimp_canvas_to_blob;
+    window.imageToBlurHash = imageToBlurHash;
     window.emojiData = window.emoji_datasource;
     window.filesize = window.filesize;
     window.libphonenumber = window.google_libphonenumber.PhoneNumberUtil.getInstance();
