@@ -146,6 +146,7 @@ require(exports => {
             try {
                 await window.textsecure.messaging.sendCallingMessage(remoteUserId, message, sendOptions);
                 window.log.info('handleOutgoingSignaling() completed successfully');
+                return true;
             }
             catch (err) {
                 if (err && err.errors && err.errors.length > 0) {
@@ -154,6 +155,7 @@ require(exports => {
                 else {
                     window.log.error('handleOutgoingSignaling() failed');
                 }
+                return false;
             }
         }
         async handleIncomingCall(call) {

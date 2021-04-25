@@ -449,14 +449,13 @@
         }
         async registrationDone({ uuid, number }) {
             window.log.info('registration done');
-            const identifier = number || uuid;
-            if (!identifier) {
-                throw new Error('registrationDone: no identifier!');
+            const conversationId = window.ConversationController.ensureContactIds({
+                e164: number,
+                uuid,
+            });
+            if (!conversationId) {
+                throw new Error('registrationDone: no conversationId!');
             }
-            // Ensure that we always have a conversation for ourself
-            const conversation = await window.ConversationController.getOrCreateAndWait(identifier, 'private');
-            conversation.updateE164(number);
-            conversation.updateUuid(uuid);
             window.log.info('dispatching registration event');
             this.dispatchEvent(new Event('registration'));
         }

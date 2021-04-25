@@ -20,12 +20,11 @@
     window.log.info('refreshOurProfile');
     const ourNumber = textsecure.storage.user.getNumber();
     const ourUuid = textsecure.storage.user.getUuid();
-    const conversation = ConversationController.getOrCreate(
-      // This is explicitly ourNumber first in order to avoid creating new
-      // conversations when an old one exists
-      ourNumber || ourUuid,
-      'private'
-    );
+    const ourId = ConversationController.ensureContactIds({
+      e164: ourNumber,
+      uuid: ourUuid,
+    });
+    const conversation = ConversationController.get(ourId, 'private');
     conversation.updateUuid(ourUuid);
     conversation.updateE164(ourNumber);
     conversation.getProfiles();

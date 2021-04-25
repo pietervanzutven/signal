@@ -92,35 +92,41 @@
       const id = window.getGuid();
 
       if (type === 'group') {
-        conversation = conversations.add({
-          id,
-          uuid: null,
-          e164: null,
-          groupId: identifier,
-          type,
-          version: 2,
-          ...additionalInitialProps,
-        });
+        conversation = conversations.add(Object.assign({},
+          {
+            id,
+            uuid: null,
+            e164: null,
+            groupId: identifier,
+            type,
+            version: 2,
+          },
+          additionalInitialProps,
+        ));
       } else if (window.isValidGuid(identifier)) {
-        conversation = conversations.add({
-          id,
-          uuid: identifier,
-          e164: null,
-          groupId: null,
-          type,
-          version: 2,
-          ...additionalInitialProps,
-        });
+        conversation = conversations.add(Object.assign({},
+          {
+            id,
+            uuid: identifier,
+            e164: null,
+            groupId: null,
+            type,
+            version: 2,
+          },
+          additionalInitialProps,
+        ));
       } else {
-        conversation = conversations.add({
-          id,
-          uuid: null,
-          e164: identifier,
-          groupId: null,
-          type,
-          version: 2,
-          ...additionalInitialProps,
-        });
+        conversation = conversations.add(Object.assign({},
+          {
+            id,
+            uuid: null,
+            e164: identifier,
+            groupId: null,
+            type,
+            version: 2,
+          },
+          additionalInitialProps,
+        ));
       }
 
       const create = async () => {
