@@ -4,8 +4,7 @@
 (function () {
   'use strict';
 
-  window.modules = window.modules || {};
-  const exports = window.modules.i18n = {};
+  const exports = window.i18n = {};
 
   exports.setup = (locale, messages) => {
     if (!locale) {

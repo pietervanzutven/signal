@@ -117,6 +117,7 @@
         this.startConnectionListener();
       } else {
         this.setupLeftPane();
+        this.setupCallManagerUI();
       }
 
       Whisper.events.on('pack-install-failed', () => {
@@ -131,6 +132,19 @@
     },
     events: {
       click: 'onClick',
+    },
+    setupCallManagerUI() {
+      if (!window.CALLING) {
+        return;
+      }
+      if (this.callManagerView) {
+        return;
+      }
+      this.callManagerView = new Whisper.ReactWrapperView({
+        className: 'call-manager-wrapper',
+        JSX: Signal.State.Roots.createCallManager(window.reduxStore),
+      });
+      this.$('.call-manager-placeholder').append(this.callManagerView.el);
     },
     setupLeftPane() {
       if (this.leftPaneView) {
@@ -170,6 +184,7 @@
     },
     onEmpty() {
       this.setupLeftPane();
+      this.setupCallManagerUI();
 
       const view = this.appLoadingScreen;
       if (view) {

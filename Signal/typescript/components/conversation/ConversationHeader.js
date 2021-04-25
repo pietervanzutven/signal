@@ -10,11 +10,11 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const Emojify_1 = window.ts.components.conversation.Emojify;
-    const Avatar_1 = window.ts.components.Avatar;
-    const react_contextmenu_1 = window.react_contextmenu;
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const Emojify_1 = require("./Emojify");
+    const Avatar_1 = require("../Avatar");
+    const react_contextmenu_1 = require("react-contextmenu");
     class ConversationHeader extends react_1.default.Component {
         constructor(props) {
             super(props);
@@ -84,6 +84,34 @@
                     : 'module-conversation-header__search-button--show'), disabled: showBackButton
             }));
         }
+        renderOutgoingAudioCallButton() {
+            if (!window.CALLING) {
+                return null;
+            }
+            if (this.props.isGroup || this.props.isMe) {
+                return null;
+            }
+            const { onOutgoingAudioCallInConversation, showBackButton } = this.props;
+            return (react_1.default.createElement("button", {
+                onClick: onOutgoingAudioCallInConversation, className: classnames_1.default('module-conversation-header__audio-calling-button', showBackButton
+                    ? null
+                    : 'module-conversation-header__audio-calling-button--show'), disabled: showBackButton
+            }));
+        }
+        renderOutgoingVideoCallButton() {
+            if (!window.CALLING) {
+                return null;
+            }
+            if (this.props.isGroup || this.props.isMe) {
+                return null;
+            }
+            const { onOutgoingVideoCallInConversation, showBackButton } = this.props;
+            return (react_1.default.createElement("button", {
+                onClick: onOutgoingVideoCallInConversation, className: classnames_1.default('module-conversation-header__video-calling-button', showBackButton
+                    ? null
+                    : 'module-conversation-header__video-calling-button--show'), disabled: showBackButton
+            }));
+        }
         renderMenu(triggerId) {
             const { i18n, isAccepted, isMe, isGroup, isArchived, leftGroup, onDeleteMessages, onResetSession, onSetDisappearingMessages, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onMoveToInbox, timerOptions, } = this.props;
             const disappearingTitle = i18n('disappearingMessages');
@@ -111,6 +139,8 @@
                         this.renderTitle())),
                 this.renderExpirationLength(),
                 this.renderSearchButton(),
+                this.renderOutgoingVideoCallButton(),
+                this.renderOutgoingAudioCallButton(),
                 this.renderMoreButton(triggerId),
                 this.renderMenu(triggerId)));
         }

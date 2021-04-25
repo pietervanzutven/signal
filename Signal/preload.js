@@ -6,15 +6,18 @@
   'use strict';
 
   try {
-    const electron = window.electron;
-    const semver = window.semver;
-    const curve = window.curve25519_n;
-    const _ = window.lodash;
-    const { installGetter, installSetter } = window.preload_utils;
+    const electron = require('electron');
+    const semver = require('semver');
+    const curve = require('curve25519-n');
+    const _ = require('lodash');
+    const { installGetter, installSetter } = require('./preload_utils');
 
     const { remote } = electron;
     const { app } = remote;
     const { nativeTheme } = remote.require('electron');
+
+    // Enable calling
+    window.CALLING = true;
 
     window.PROTO_ROOT = '/protos';
     const config = window.app.config || {};
@@ -111,6 +114,8 @@
 
     window.showSettings = () => ipc.send('show-settings');
     window.showPermissionsPopup = () => ipc.send('show-permissions-popup');
+    window.showCallingPermissionsPopup = forCamera =>
+      ipc.invoke('show-calling-permissions-popup', forCamera);
 
     ipc.on('show-keyboard-shortcuts', () => {
       window.Events.showKeyboardShortcuts();
@@ -137,6 +142,75 @@
     installGetter('spell-check', 'getSpellCheck');
     installSetter('spell-check', 'setSpellCheck');
 
+    installGetter('always-relay-calls', 'getAlwaysRelayCalls');
+    installSetter('always-relay-calls', 'setAlwaysRelayCalls');
+
+    installGetter('call-ringtone-notification', 'getCallRingtoneNotification');
+    installSetter('call-ringtone-notification', 'setCallRingtoneNotification');
+
+    window.getCallRingtoneNotification = () =>
+      new Promise((resolve, reject) => {
+        ipc.once(
+          'get-success-call-ringtone-notification',
+          (_event, error, value) => {
+            if (error) {
+              return reject(new Error(error));
+            }
+
+            return resolve(value);
+          }
+        );
+        ipc.send('get-call-ringtone-notification');
+      });
+
+    installGetter('call-system-notification', 'getCallSystemNotification');
+    installSetter('call-system-notification', 'setCallSystemNotification');
+
+    window.getCallSystemNotification = () =>
+      new Promise((resolve, reject) => {
+        ipc.once(
+          'get-success-call-system-notification',
+          (_event, error, value) => {
+            if (error) {
+              return reject(new Error(error));
+            }
+
+            return resolve(value);
+          }
+        );
+        ipc.send('get-call-system-notification');
+      });
+
+    installGetter('incoming-call-notification', 'getIncomingCallNotification');
+    installSetter('incoming-call-notification', 'setIncomingCallNotification');
+
+    window.getIncomingCallNotification = () =>
+      new Promise((resolve, reject) => {
+        ipc.once(
+          'get-success-incoming-call-notification',
+          (_event, error, value) => {
+            if (error) {
+              return reject(new Error(error));
+            }
+
+            return resolve(value);
+          }
+        );
+        ipc.send('get-incoming-call-notification');
+      });
+
+    window.getAlwaysRelayCalls = () =>
+      new Promise((resolve, reject) => {
+        ipc.once('get-success-always-relay-calls', (_event, error, value) => {
+          if (error) {
+            return reject(new Error(error));
+          }
+
+          return resolve(value);
+        });
+        ipc.send('get-always-relay-calls');
+      });
+
     window.getMediaPermissions = () =>
       new Promise((resolve, reject) => {
         ipc.once('get-success-media-permissions', (_event, error, value) => {
@@ -147,6 +221,21 @@
           return resolve(value);
         });
         ipc.send('get-media-permissions');
+      });
+
+    window.getMediaCameraPermissions = () =>
+      new Promise((resolve, reject) => {
+        ipc.once(
+          'get-success-media-camera-permissions',
+          (_event, error, value) => {
+            if (error) {
+              return reject(new Error(error));
+            }
+
+            return resolve(value);
+          }
+        );
+        ipc.send('get-media-camera-permissions');
       });
 
     window.getBuiltInImages = () =>
@@ -219,7 +308,7 @@
       window.log.info('Using provided proxy url');
     }
 
-    window.textsecure = window.ts.textsecure.default;
+    window.textsecure = require('./ts/textsecure').default;
 
     window.WebAPI = window.textsecure.WebAPI.initialize({
       url: config.serverUrl,
@@ -233,18 +322,18 @@
       version: config.version,
     });
 
-    const { autoOrientImage } = window.auto_orient_image;
+    const { autoOrientImage } = require('./js/modules/auto_orient_image');
     const { imageToBlurHash } = require('./ts/util/imageToBlurHash');
 
     window.autoOrientImage = autoOrientImage;
-    window.dataURLToBlobSync = window.blueimp_canvas_to_blob;
+    window.dataURLToBlobSync = require('blueimp-canvas-to-blob');
     window.imageToBlurHash = imageToBlurHash;
-    window.emojiData = window.emoji_datasource;
-    window.filesize = window.filesize;
-    window.libphonenumber = window.google_libphonenumber.PhoneNumberUtil.getInstance();
-    window.libphonenumber.PhoneNumberFormat = window.google_libphonenumber.PhoneNumberFormat;
-    window.loadImage = window.blueimp_load_image;
-    window.getGuid = window.uuid.v4;
+    window.emojiData = require('emoji-datasource');
+    window.filesize = require('filesize');
+    window.libphonenumber = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+    window.libphonenumber.PhoneNumberFormat = require('google-libphonenumber').PhoneNumberFormat;
+    window.loadImage = require('blueimp-load-image');
+    window.getGuid = require('uuid/v4');
 
     window.isValidGuid = maybeGuid =>
       /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(
@@ -270,14 +359,14 @@
       });
     };
 
-    window.React = window.react;
-    window.ReactDOM = window.react_dom;
-    window.moment = window.moment;
-    window.PQueue = window.p_queue.default;
+    window.React = require('react');
+    window.ReactDOM = require('react-dom');
+    window.moment = require('moment');
+    window.PQueue = require('p-queue').default;
 
-    const Signal = window.signal;
-    const i18n = window.modules.i18n;
-    const Attachments = window.app.attachments;
+    const Signal = require('./js/modules/signal');
+    const i18n = require('./js/modules/i18n');
+    const Attachments = require('./app/attachments');
 
     const { locale } = config;
     window.i18n = i18n.setup(locale, localeMessages);
@@ -384,9 +473,20 @@
     window.libsignal.externalCurveAsync = curve ? externalCurveAsync : null;
 
     // Pulling these in separately since they access filesystem, electron
-    window.Signal.Backup = window.backup;
-    window.Signal.Debug = window.debug;
-    window.Signal.Logs = window.logs;
+    window.Signal.Backup = require('./js/modules/backup');
+    window.Signal.Debug = require('./js/modules/debug');
+    window.Signal.Logs = require('./js/modules/logs');
+
+    window.addEventListener('contextmenu', e => {
+      const editable = e.target.closest(
+        'textarea, input, [contenteditable="true"]'
+      );
+      const link = e.target.closest('a');
+      const selection = Boolean(window.getSelection().toString());
+      if (!editable && !selection && !link) {
+        e.preventDefault();
+      }
+    });
 
     if (config.environment === 'test') {
       /* eslint-disable global-require, import/no-extraneous-dependencies */

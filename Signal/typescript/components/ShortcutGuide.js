@@ -16,8 +16,8 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const React = __importStar(window.react);
-    const classnames_1 = __importDefault(window.classnames);
+    const React = __importStar(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
     const hooks_1 = require("../util/hooks");
     const NAVIGATION_SHORTCUTS = [
         {
@@ -159,6 +159,16 @@
             keys: [['commandOrCtrl', 'shift', 'P']],
         },
     ];
+    const CALLING_SHORTCUTS = [
+        {
+            description: 'Keyboard--toggle-audio',
+            keys: [['shift', 'M']],
+        },
+        {
+            description: 'Keyboard--toggle-video',
+            keys: [['shift', 'V']],
+        },
+    ];
     exports.ShortcutGuide = (props) => {
         const focusRef = React.useRef(null);
         const { i18n, close, hasInstalledStickers, platform } = props;
@@ -185,7 +195,10 @@
                         React.createElement("div", { className: "module-shortcut-guide__section-list" }, MESSAGE_SHORTCUTS.map((shortcut, index) => renderShortcut(shortcut, index, isMacOS, i18n)))),
                     React.createElement("div", { className: "module-shortcut-guide__section" },
                         React.createElement("div", { className: "module-shortcut-guide__section-header" }, i18n('Keyboard--composer-header')),
-                        React.createElement("div", { className: "module-shortcut-guide__section-list" }, COMPOSER_SHORTCUTS.map((shortcut, index) => renderShortcut(shortcut, index, isMacOS, i18n))))))));
+                        React.createElement("div", { className: "module-shortcut-guide__section-list" }, COMPOSER_SHORTCUTS.map((shortcut, index) => renderShortcut(shortcut, index, isMacOS, i18n)))),
+                    React.createElement("div", { className: "module-shortcut-guide__section" },
+                        React.createElement("div", { className: "module-shortcut-guide__section-header" }, i18n('Keyboard--calling-header')),
+                        React.createElement("div", { className: "module-shortcut-guide__section-list" }, CALLING_SHORTCUTS.map((shortcut, index) => renderShortcut(shortcut, index, isMacOS, i18n))))))));
     };
     function renderShortcut(shortcut, index, isMacOS, i18n) {
         return (React.createElement("div", { key: index, className: "module-shortcut-guide__shortcut", tabIndex: 0 },

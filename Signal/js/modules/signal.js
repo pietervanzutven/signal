@@ -5,106 +5,110 @@
 
   const exports = window.signal = {};
 
-  const { bindActionCreators } = window.redux;
-  const Backbone = window.ts.backbone;
-  const Crypto = window.ts.Crypto;
-  const Data = window.ts.sql.Client.default;
-  const Emojis = window.emojis;
-  const EmojiLib = window.ts.components.emoji.lib;
-  const IndexedDB = window.indexeddb;
-  const Notifications = window.ts.notifications;
-  const OS = window.ts.OS;
-  const Stickers = window.stickers;
-  const Settings = window.settings;
+  const { bindActionCreators } = require('redux');
+  const Backbone = require('../../ts/backbone');
+  const Crypto = require('../../ts/Crypto');
+  const Data = require('../../ts/sql/Client').default;
+  const Emojis = require('./emojis');
+  const EmojiLib = require('../../ts/components/emoji/lib');
+  const IndexedDB = require('./indexeddb');
+  const Notifications = require('../../ts/notifications');
+  const OS = require('../../ts/OS');
+  const Stickers = require('./stickers');
+  const Settings = require('./settings');
   const RemoteConfig = require('../../ts/RemoteConfig');
   const Util = require('../../ts/util');
-  const Metadata = window.metadata.SecretSessionCipher;
-  const RefreshSenderCertificate = window.refresh_sender_certificate;
-  const LinkPreviews = window.link_previews;
-  const AttachmentDownloads = window.attachment_downloads;
+  const Metadata = require('./metadata/SecretSessionCipher');
+  const RefreshSenderCertificate = require('./refresh_sender_certificate');
+  const LinkPreviews = require('./link_previews');
+  const AttachmentDownloads = require('./attachment_downloads');
 
   // Components
   const {
     AttachmentList,
-  } = window.ts.components.conversation.AttachmentList;
-  const { CaptionEditor } = window.ts.components.CaptionEditor;
+  } = require('../../ts/components/conversation/AttachmentList');
+  const { CaptionEditor } = require('../../ts/components/CaptionEditor');
   const {
     ContactDetail,
-  } = window.ts.components.conversation.ContactDetail;
-  const { ContactListItem } = window.ts.components.ContactListItem;
+  } = require('../../ts/components/conversation/ContactDetail');
+  const { ContactListItem } = require('../../ts/components/ContactListItem');
   const {
     ConversationHeader,
-  } = window.ts.components.conversation.ConversationHeader;
-  const { Emojify } = window.ts.components.conversation.Emojify;
-  const { Lightbox } = window.ts.components.Lightbox;
-  const { LightboxGallery } = window.ts.components.LightboxGallery;
+  } = require('../../ts/components/conversation/ConversationHeader');
+  const { Emojify } = require('../../ts/components/conversation/Emojify');
+  const { Lightbox } = require('../../ts/components/Lightbox');
+  const { LightboxGallery } = require('../../ts/components/LightboxGallery');
   const {
     MediaGallery,
-  } = window.ts.components.conversation.media_gallery.MediaGallery;
+  } = require('../../ts/components/conversation/media-gallery/MediaGallery');
   const {
     MessageDetail,
-  } = window.ts.components.conversation.MessageDetail;
-  const { Quote } = window.ts.components.conversation.Quote;
+  } = require('../../ts/components/conversation/MessageDetail');
+  const { Quote } = require('../../ts/components/conversation/Quote');
   const {
     StagedLinkPreview,
-  } = window.ts.components.conversation.StagedLinkPreview;
+  } = require('../../ts/components/conversation/StagedLinkPreview');
 
   // State
-  const { createTimeline } = window.ts.state.roots.createTimeline;
+  const { createTimeline } = require('../../ts/state/roots/createTimeline');
   const {
     createCompositionArea,
-  } = window.ts.state.roots.createCompositionArea;
-  const { createLeftPane } = window.ts.state.roots.createLeftPane;
+  } = require('../../ts/state/roots/createCompositionArea');
+  const { createCallManager } = require('../../ts/state/roots/createCallManager');
+  const { createLeftPane } = require('../../ts/state/roots/createLeftPane');
   const {
     createStickerManager,
-  } = window.ts.state.roots.createStickerManager;
+  } = require('../../ts/state/roots/createStickerManager');
   const {
     createStickerPreviewModal,
-  } = window.ts.state.roots.createStickerPreviewModal;
+  } = require('../../ts/state/roots/createStickerPreviewModal');
   const {
     createShortcutGuideModal,
-  } = window.ts.state.roots.createShortcutGuideModal;
+  } = require('../../ts/state/roots/createShortcutGuideModal');
 
-  const { createStore } = window.ts.state.createStore;
-  const conversationsDuck = window.ts.state.ducks.conversations;
-  const emojisDuck = window.ts.state.ducks.emojis;
-  const expirationDuck = window.ts.state.ducks.expiration;
-  const itemsDuck = window.ts.state.ducks.items;
-  const networkDuck = window.ts.state.ducks.network;
-  const searchDuck = window.ts.state.ducks.search;
-  const stickersDuck = window.ts.state.ducks.stickers;
-  const updatesDuck = window.ts.state.ducks.updates;
-  const userDuck = window.ts.state.ducks.user;
+  const { createStore } = require('../../ts/state/createStore');
+  const callingDuck = require('../../ts/state/ducks/calling');
+  const conversationsDuck = require('../../ts/state/ducks/conversations');
+  const emojisDuck = require('../../ts/state/ducks/emojis');
+  const expirationDuck = require('../../ts/state/ducks/expiration');
+  const itemsDuck = require('../../ts/state/ducks/items');
+  const networkDuck = require('../../ts/state/ducks/network');
+  const searchDuck = require('../../ts/state/ducks/search');
+  const stickersDuck = require('../../ts/state/ducks/stickers');
+  const updatesDuck = require('../../ts/state/ducks/updates');
+  const userDuck = require('../../ts/state/ducks/user');
 
-  const conversationsSelectors = window.ts.state.selectors.conversations;
-  const searchSelectors = window.ts.state.selectors.search;
+  const conversationsSelectors = require('../../ts/state/selectors/conversations');
+  const searchSelectors = require('../../ts/state/selectors/search');
 
   // Types
-  const AttachmentType = window.types.attachment;
-  const VisualAttachment = window.types.visual_attachment;
-  const Contact = window.ts.types.Contact;
-  const Conversation = window.types.conversation;
-  const Errors = window.types.errors;
-  const MediaGalleryMessage = window.ts.components.conversation.media_gallery.types.Message;
-  const MessageType = window.types.message;
-  const MIME = window.ts.types.MIME;
-  const PhoneNumber = window.ts.types.PhoneNumber;
-  const SettingsType = window.ts.types.Settings;
+  const AttachmentType = require('./types/attachment');
+  const VisualAttachment = require('./types/visual_attachment');
+  const Contact = require('../../ts/types/Contact');
+  const Conversation = require('./types/conversation');
+  const Errors = require('./types/errors');
+  const MediaGalleryMessage = require('../../ts/components/conversation/media-gallery/types/Message');
+  const MessageType = require('./types/message');
+  const MIME = require('../../ts/types/MIME');
+  const PhoneNumber = require('../../ts/types/PhoneNumber');
+  const SettingsType = require('../../ts/types/Settings');
 
   // Views
-  const Initialization = window.views.initialization;
+  const Initialization = require('./views/initialization');
 
   // Workflow
-  const { IdleDetector } = window.idle_detector;
-  const MessageDataMigrator = window.messages_data_migrator;
+  const { IdleDetector } = require('./idle_detector');
+  const MessageDataMigrator = require('./messages_data_migrator');
 
   // Processes / Services
   const {
     initializeNetworkObserver,
-  } = window.ts.services.networkObserver;
+  } = require('../../ts/services/networkObserver');
   const {
     initializeUpdateListener,
-  } = window.ts.services.updateListener;
+  } = require('../../ts/services/updateListener');
+  const { notify } = require('../../ts/services/notify');
+  const { calling } = require('../../ts/services/calling');
 
   function initializeMigrations({
     userDataPath,
@@ -282,6 +286,7 @@
     };
 
     const Roots = {
+      createCallManager,
       createCompositionArea,
       createLeftPane,
       createShortcutGuideModal,
@@ -291,6 +296,7 @@
     };
 
     const Ducks = {
+      calling: callingDuck,
       conversations: conversationsDuck,
       emojis: emojisDuck,
       expiration: expirationDuck,
@@ -310,6 +316,8 @@
     const Services = {
       initializeNetworkObserver,
       initializeUpdateListener,
+      notify,
+      calling,
     };
 
     const State = {

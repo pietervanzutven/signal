@@ -9,15 +9,15 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const websocket_1 = window.websocket;
-    const node_fetch_1 = __importDefault(window.node_fetch);
-    const proxy_agent_1 = __importDefault(window.proxy_agent);
-    const https_1 = window.https;
-    const is_1 = __importDefault(window.sindresorhus.is);
-    const stickers_1 = window.stickers;
-    const Crypto_1 = window.ts.Crypto;
-    const p_queue_1 = __importDefault(window.p_queue);
-    const uuid_1 = window.uuid;
+    const websocket_1 = require("websocket");
+    const node_fetch_1 = __importDefault(require("node-fetch"));
+    const proxy_agent_1 = __importDefault(require("proxy-agent"));
+    const https_1 = require("https");
+    const is_1 = __importDefault(require("@sindresorhus/is"));
+    const stickers_1 = require("../../js/modules/stickers");
+    const Crypto_1 = require("../Crypto");
+    const p_queue_1 = __importDefault(require("p-queue"));
+    const uuid_1 = require("uuid");
     // tslint:disable no-bitwise
     function _btoa(str) {
         let buffer;
@@ -342,6 +342,7 @@
         accounts: 'v1/accounts',
         updateDeviceName: 'v1/accounts/name',
         removeSignalingKey: 'v1/accounts/signaling_key',
+        getIceServers: 'v1/accounts/turn',
         attachmentId: 'v2/attachments/form/upload',
         deliveryCert: 'v1/certificate/delivery',
         supportUnauthenticatedDelivery: 'v1/devices/unauthenticated_delivery',
@@ -398,6 +399,7 @@
                 getAttachment,
                 getAvatar,
                 getDevices,
+                getIceServers,
                 getKeysForIdentifier,
                 getKeysForIdentifierUnauth,
                 getMessageSocket,
@@ -611,6 +613,12 @@
                     jsonData: {
                         deviceName,
                     },
+                });
+            }
+            async function getIceServers() {
+                return _ajax({
+                    call: 'getIceServers',
+                    httpType: 'GET',
                 });
             }
             async function removeSignalingKey() {

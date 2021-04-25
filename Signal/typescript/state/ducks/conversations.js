@@ -7,8 +7,8 @@
     const exports = window.ts.state.ducks.conversations = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = window.lodash;
-    const events_1 = window.ts.shims.events;
+    const lodash_1 = require("lodash");
+    const events_1 = require("../../shims/events");
     // Action Creators
     exports.actions = {
         conversationAdded,

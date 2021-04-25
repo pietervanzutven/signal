@@ -6,17 +6,19 @@
     const exports = window.ts.state.reducer = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const redux_1 = window.redux;
-    const conversations_1 = window.ts.state.ducks.conversations;
-    const emojis_1 = window.ts.state.ducks.emojis;
-    const expiration_1 = window.ts.state.ducks.expiration;
-    const items_1 = window.ts.state.ducks.items;
-    const network_1 = window.ts.state.ducks.network;
-    const search_1 = window.ts.state.ducks.search;
-    const stickers_1 = window.ts.state.ducks.stickers;
-    const updates_1 = window.ts.state.ducks.updates;
-    const user_1 = window.ts.state.ducks.user;
+    const redux_1 = require("redux");
+    const calling_1 = require("./ducks/calling");
+    const conversations_1 = require("./ducks/conversations");
+    const emojis_1 = require("./ducks/emojis");
+    const expiration_1 = require("./ducks/expiration");
+    const items_1 = require("./ducks/items");
+    const network_1 = require("./ducks/network");
+    const search_1 = require("./ducks/search");
+    const stickers_1 = require("./ducks/stickers");
+    const updates_1 = require("./ducks/updates");
+    const user_1 = require("./ducks/user");
     exports.reducers = {
+        calling: calling_1.reducer,
         conversations: conversations_1.reducer,
         emojis: emojis_1.reducer,
         expiration: expiration_1.reducer,

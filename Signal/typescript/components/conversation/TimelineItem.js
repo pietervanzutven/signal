@@ -10,15 +10,16 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const Message_1 = window.ts.components.conversation.Message;
-    const InlineNotificationWrapper_1 = window.ts.components.conversation.InlineNotificationWrapper;
-    const UnsupportedMessage_1 = window.ts.components.conversation.UnsupportedMessage;
-    const TimerNotification_1 = window.ts.components.conversation.TimerNotification;
-    const SafetyNumberNotification_1 = window.ts.components.conversation.SafetyNumberNotification;
-    const VerificationNotification_1 = window.ts.components.conversation.VerificationNotification;
-    const GroupNotification_1 = window.ts.components.conversation.GroupNotification;
-    const ResetSessionNotification_1 = window.ts.components.conversation.ResetSessionNotification;
+    const react_1 = __importDefault(require("react"));
+    const Message_1 = require("./Message");
+    const CallingNotification_1 = require("./CallingNotification");
+    const InlineNotificationWrapper_1 = require("./InlineNotificationWrapper");
+    const UnsupportedMessage_1 = require("./UnsupportedMessage");
+    const TimerNotification_1 = require("./TimerNotification");
+    const SafetyNumberNotification_1 = require("./SafetyNumberNotification");
+    const VerificationNotification_1 = require("./VerificationNotification");
+    const GroupNotification_1 = require("./GroupNotification");
+    const ResetSessionNotification_1 = require("./ResetSessionNotification");
     class TimelineItem extends react_1.default.PureComponent {
         render() {
             const { conversationId, id, isSelected, item, i18n, selectMessage, } = this.props;
@@ -33,6 +34,9 @@
             let notification;
             if (item.type === 'unsupportedMessage') {
                 notification = (react_1.default.createElement(UnsupportedMessage_1.UnsupportedMessage, Object.assign({}, this.props, item.data, { i18n: i18n })));
+            }
+            else if (item.type === 'callHistory') {
+                notification = react_1.default.createElement(CallingNotification_1.CallingNotification, Object.assign({ i18n: i18n }, item.data));
             }
             else if (item.type === 'linkNotification') {
                 notification = (react_1.default.createElement("div", { className: "module-message-unsynced" },

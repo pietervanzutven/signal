@@ -10,17 +10,17 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = window.lodash;
-    const websocket_1 = window.websocket;
-    const p_queue_1 = __importDefault(window.p_queue);
-    const uuid_1 = window.uuid;
-    const EventTarget_1 = __importDefault(window.ts.textsecure.EventTarget);
+    const lodash_1 = require("lodash");
+    const websocket_1 = require("websocket");
+    const p_queue_1 = __importDefault(require("p-queue"));
+    const uuid_1 = require("uuid");
+    const EventTarget_1 = __importDefault(require("./EventTarget"));
     const batcher_1 = require("../util/batcher");
-    const Helpers_1 = __importDefault(window.ts.textsecure.Helpers);
-    const WebsocketResources_1 = __importDefault(window.ts.textsecure.WebsocketResources);
-    const Crypto_1 = __importDefault(window.ts.textsecure.Crypto);
-    const ContactsParser_1 = window.ts.textsecure.ContactsParser;
-    const Errors_1 = window.ts.textsecure.Errors;
+    const Helpers_1 = __importDefault(require("./Helpers"));
+    const WebsocketResources_1 = __importDefault(require("./WebsocketResources"));
+    const Crypto_1 = __importDefault(require("./Crypto"));
+    const ContactsParser_1 = require("./ContactsParser");
+    const Errors_1 = require("./Errors");
     const RETRY_TIMEOUT = 2 * 60 * 1000;
     class MessageReceiverInner extends EventTarget_1.default {
         constructor(oldUsername, username, password, signalingKey, options) {
@@ -839,9 +839,8 @@
                 this.handleNullMessage(envelope);
                 return;
             }
-            else if (content.callMessage) {
-                this.handleCallMessage(envelope);
-                return;
+            else if (content.callingMessage) {
+                return this.handleCallingMessage(envelope, content.callingMessage);
             }
             else if (content.receiptMessage) {
                 return this.handleReceiptMessage(envelope, content.receiptMessage);
@@ -852,9 +851,9 @@
             this.removeFromCache(envelope);
             throw new Error('Unsupported content message');
         }
-        handleCallMessage(envelope) {
-            window.log.info('call message from', this.getEnvelopeId(envelope));
+        async handleCallingMessage(envelope, callingMessage) {
             this.removeFromCache(envelope);
+            await window.Signal.Services.calling.handleCallingMessage(envelope, callingMessage);
         }
         async handleReceiptMessage(envelope, receiptMessage) {
             const results = [];

@@ -10,12 +10,12 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = window.lodash;
-    const p_queue_1 = __importDefault(window.p_queue);
-    const TaskWithTimeout_1 = __importDefault(window.ts.textsecure.TaskWithTimeout);
-    const OutgoingMessage_1 = __importDefault(window.ts.textsecure.OutgoingMessage);
-    const Crypto_1 = __importDefault(window.ts.textsecure.Crypto);
-    const Errors_1 = window.ts.textsecure.Errors;
+    const lodash_1 = require("lodash");
+    const p_queue_1 = __importDefault(require("p-queue"));
+    const TaskWithTimeout_1 = __importDefault(require("./TaskWithTimeout"));
+    const OutgoingMessage_1 = __importDefault(require("./OutgoingMessage"));
+    const Crypto_1 = __importDefault(require("./Crypto"));
+    const Errors_1 = require("./Errors");
     function stringToArrayBuffer(str) {
         if (typeof str !== 'string') {
             throw new Error('Passed non-string to stringToArrayBuffer');
@@ -543,6 +543,14 @@
                     },
                 }
                 : {})), sendOptions);
+        }
+        async sendCallingMessage(recipientId, callingMessage, sendOptions) {
+            const recipients = [recipientId];
+            const finalTimestamp = Date.now();
+            const contentMessage = new window.textsecure.protobuf.Content();
+            contentMessage.callingMessage = callingMessage;
+            const silent = true;
+            await this.sendMessageProtoAndWait(finalTimestamp, recipients, contentMessage, silent, sendOptions);
         }
         async sendDeliveryReceipt(recipientE164, recipientUuid, timestamps, options) {
             const myNumber = window.textsecure.storage.user.getNumber();
