@@ -281,7 +281,9 @@ require(exports => {
                 (endedReason === ringrtc_1.CallEndedReason.Declined ||
                     endedReason === ringrtc_1.CallEndedReason.DeclinedOnAnotherDevice ||
                     (isIncoming && endedReason === ringrtc_1.CallEndedReason.LocalHangup) ||
-                    (isOutgoing && endedReason === ringrtc_1.CallEndedReason.RemoteHangup));
+                    (isOutgoing && endedReason === ringrtc_1.CallEndedReason.RemoteHangup) ||
+                    (isOutgoing &&
+                        endedReason === ringrtc_1.CallEndedReason.RemoteHangupNeedPermission));
             if (call.endedReason === ringrtc_1.CallEndedReason.AcceptedOnAnotherDevice) {
                 // tslint:disable-next-line no-parameter-reassignment
                 acceptedTime = Date.now();
