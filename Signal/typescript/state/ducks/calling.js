@@ -10,6 +10,7 @@ require(exports => {
     // Actions
     const ACCEPT_CALL = 'calling/ACCEPT_CALL';
     const CALL_STATE_CHANGE = 'calling/CALL_STATE_CHANGE';
+    const CALL_STATE_CHANGE_FULFILLED = 'calling/CALL_STATE_CHANGE_FULFILLED';
     const DECLINE_CALL = 'calling/DECLINE_CALL';
     const HANG_UP = 'calling/HANG_UP';
     const INCOMING_CALL = 'calling/INCOMING_CALL';
@@ -35,13 +36,17 @@ require(exports => {
         };
     }
     function callStateChange(payload) {
+        return {
+            type: CALL_STATE_CHANGE,
+            payload: doCallStateChange(payload),
+        };
+    }
+    async function doCallStateChange(payload) {
         const { callDetails, callState } = payload;
         const { isIncoming } = callDetails;
         if (callState === Calling_1.CallState.Ringing && isIncoming) {
-            // tslint:disable-next-line no-floating-promises
-            callingTones_1.callingTones.playRingtone();
-            // tslint:disable-next-line no-floating-promises
-            showCallNotification(callDetails);
+            await callingTones_1.callingTones.playRingtone();
+            await showCallNotification(callDetails);
             bounceAppIcon_1.bounceAppIconStart();
         }
         if (callState !== Calling_1.CallState.Ringing) {
@@ -52,10 +57,7 @@ require(exports => {
             // tslint:disable-next-line no-floating-promises
             callingTones_1.callingTones.playEndCall();
         }
-        return {
-            type: CALL_STATE_CHANGE,
-            payload,
-        };
+        return payload;
     }
     async function showCallNotification(callDetails) {
         const canNotify = await window.getCallSystemNotification();
@@ -180,7 +182,7 @@ require(exports => {
         if (action.type === OUTGOING_CALL) {
             return Object.assign(Object.assign({}, state), { callDetails: action.payload.callDetails, callState: Calling_1.CallState.Prering, hasLocalAudio: true, hasLocalVideo: action.payload.callDetails.isVideoCall });
         }
-        if (action.type === CALL_STATE_CHANGE) {
+        if (action.type === CALL_STATE_CHANGE_FULFILLED) {
             if (action.payload.callState === Calling_1.CallState.Ended) {
                 return getEmptyState();
             }
