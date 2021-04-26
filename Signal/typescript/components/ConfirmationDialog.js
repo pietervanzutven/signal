@@ -16,8 +16,8 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const React = __importStar(window.react);
-    const classnames_1 = __importDefault(window.classnames);
+    const React = __importStar(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
     function focusRef(el) {
         if (el) {
             el.focus();
@@ -51,7 +51,7 @@
         return (React.createElement("div", { className: "module-confirmation-dialog__container" },
             title ? (React.createElement("h1", { className: "module-confirmation-dialog__container__title" }, title)) : null,
             React.createElement("div", { className: "module-confirmation-dialog__container__content" }, children),
-            React.createElement("div", { className: "module-confirmation-dialog__container__buttons" },
+            actions.length > 0 && (React.createElement("div", { className: "module-confirmation-dialog__container__buttons" },
                 React.createElement("button", { onClick: handleCancel, ref: focusRef, className: "module-confirmation-dialog__container__buttons__button" }, i18n('confirmation-dialog--Cancel')),
                 actions.map((action, i) => (React.createElement("button", {
                     key: i, onClick: handleAction, "data-action": i, className: classnames_1.default('module-confirmation-dialog__container__buttons__button', action.style === 'affirmative'
@@ -59,6 +59,6 @@
                         : null, action.style === 'negative'
                         ? 'module-confirmation-dialog__container__buttons__button--negative'
                         : null)
-                }, action.text))))));
+                }, action.text)))))));
     });
 })();

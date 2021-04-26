@@ -5,23 +5,23 @@
     window.ts.sql = window.ts.sql || {};
     const exports = window.ts.sql.Server = {};
 
-    // tslint:disable no-backbone-get-set-outside-model no-console no-default-export no-unnecessary-local-variable
+    // tslint:disable no-console no-default-export no-unnecessary-local-variable
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const path_1 = window.path;
-    const mkdirp_1 = __importDefault(window.mkdirp);
-    const rimraf_1 = __importDefault(window.rimraf);
-    const p_queue_1 = __importDefault(window.p_queue);
-    const sqlcipher_1 = __importDefault(window.journeyapps.sqlcipher);
-    const electron_1 = window.electron;
-    const privacy_1 = window.privacy;
-    const user_config_1 = window.app.user_config;
+    const path_1 = require("path");
+    const mkdirp_1 = __importDefault(require("mkdirp"));
+    const rimraf_1 = __importDefault(require("rimraf"));
+    const p_queue_1 = __importDefault(require("p-queue"));
+    const sqlcipher_1 = __importDefault(require("@journeyapps/sqlcipher"));
+    const electron_1 = require("electron");
+    const privacy_1 = require("../../js/modules/privacy");
+    const user_config_1 = require("../../app/user_config");
     const combineNames_1 = require("../util/combineNames");
-    const pify_1 = __importDefault(window.pify);
-    const uuid_1 = window.uuid;
-    const lodash_1 = window.lodash;
+    const pify_1 = __importDefault(require("pify"));
+    const uuid_1 = require("uuid");
+    const lodash_1 = require("lodash");
     // Because we can't force this module to conform to an interface, we narrow our exports
     //   to this one default export, which does conform to the interface.
     // Note: In Javascript, you need to access the .default property when requiring it

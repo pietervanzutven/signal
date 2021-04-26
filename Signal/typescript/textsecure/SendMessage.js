@@ -1,11 +1,11 @@
 (function () {
     "use strict";
-
+    
     window.ts = window.ts || {};
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.SendMessage = {};
 
-    // tslint:disable no-backbone-get-set-outside-model no-bitwise no-default-export
+    // tslint:disable no-bitwise no-default-export
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };

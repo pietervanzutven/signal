@@ -1024,79 +1024,6 @@ img.emoji.jumbo {
   .dark-theme .discussion-container {
     background-color: #121212; }
 
-.key-verification .container {
-  outline: none; }
-
-.key-verification label {
-  display: block;
-  margin: 10px 0; }
-
-.key-verification .icon {
-  height: 1.25em;
-  width: 1.25em;
-  vertical-align: text-bottom;
-  display: inline-block; }
-  .key-verification .icon.verified {
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>check-24</title><polygon points='9.172 18.5 2.984 12.313 4.045 11.252 9.172 16.379 19.955 5.595 21.016 6.656 9.172 18.5'  fill='%23121212'/></svg>") no-repeat center;
-    background-size: 100%; }
-    .dark-theme .key-verification .icon.verified {
-      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>check-24</title><polygon points='9.172 18.5 2.984 12.313 4.045 11.252 9.172 16.379 19.955 5.595 21.016 6.656 9.172 18.5'  fill='%23F6F6F6'/></svg>") no-repeat center;
-      background-size: 100%; }
-  .key-verification .icon.shield {
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>safety-number-outline-24</title><path d='M21.793,7.888A19.35,19.35,0,0,1,12,23C7.6,20.4,2,15.5,2,4.5,9,4.5,12,1,12,1s2.156,2.5,7.05,3.268L17.766,5.553A14.7,14.7,0,0,1,12,3,15.653,15.653,0,0,1,3.534,5.946c.431,8.846,4.8,12.96,8.458,15.29A17.39,17.39,0,0,0,19.983,9.7ZM22.53,5.03,21.47,3.97,12,13.439,8.53,9.97,7.47,11.03,12,15.561Z' fill='%23121212'/></svg>") no-repeat center;
-    background-size: 100%; }
-    .dark-theme .key-verification .icon.shield {
-      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>safety-number-solid-24</title><path d='M12,15.631,7.435,11.066l1.13-1.132L12,13.369l8.9-8.9C14.689,4.127,12,1,12,1S9,4.5,2,4.5C2,15.5,7.6,20.4,12,23c4.142-2.5,9.568-7.16,9.962-17.33Z' fill='%23F6F6F6'/></svg>") no-repeat center;
-      background-size: 100%; }
-
-.key-verification .key,
-.key-verification .placeholder {
-  padding: 0 1em;
-  -webkit-user-select: text; }
-
-.key-verification .key {
-  font-family: monospace;
-  padding: 10px;
-  margin: 20px auto 20px auto;
-  width: 16em;
-  border-radius: 5px;
-  background: #f6f6f6;
-  border: solid 1px #dedede; }
-  .dark-theme .key-verification .key {
-    color: #f6f6f6;
-    background: #1b1b1b;
-    border: solid 1px #848484; }
-
-.key-verification .placeholder {
-  font-weight: bold; }
-
-.key-verification .qr {
-  border-radius: 200px;
-  border: solid 1px #dedede;
-  width: 150px;
-  height: 150px;
-  text-align: center;
-  padding: 25px;
-  margin: 10px auto; }
-  .key-verification .qr canvas {
-    display: none; }
-  .key-verification .qr img {
-    display: inline-block;
-    max-width: 100%; }
-
-.key-verification .summary {
-  margin: 30px 0 10px;
-  text-align: center; }
-
-.key-verification div.verify {
-  text-align: center; }
-
-.key-verification button.verify {
-  border-radius: 5px;
-  font-weight: bold;
-  padding: 10px;
-  margin: 0; }
-
 .typing-bubble-wrapper {
   margin-bottom: 20px; }
 
@@ -6300,6 +6227,204 @@ img.emoji.jumbo {
     .dark-theme .module-sticker-picker ::-webkit-scrollbar-thumb, .dark-theme .module-emoji-picker ::-webkit-scrollbar-thumb {
       border: 2px solid #3b3b3b; }
 
+.module-sfn-dialog__title {
+  font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 21px;
+  letter-spacing: -0.14px;
+  font-weight: bold;
+  text-align: center; }
+  .dark-theme .module-sfn-dialog__title {
+    color: #ffffff; }
+
+.module-sfn-dialog__message {
+  font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: -0.03px;
+  text-align: center;
+  color: #5e5e5e; }
+  .dark-theme .module-sfn-dialog__message {
+    color: #b9b9b9; }
+
+.module-sfn-dialog__contacts {
+  list-style-type: none;
+  max-height: 300px;
+  overflow-y: scroll;
+  padding: 0; }
+
+.module-sfn-dialog__contact {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 16px; }
+  .module-sfn-dialog__contact--wrapper {
+    flex-grow: 1;
+    margin-left: 12px; }
+  .module-sfn-dialog__contact--name {
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 21px;
+    letter-spacing: -0.14px;
+    font-weight: bold; }
+    .dark-theme .module-sfn-dialog__contact--name {
+      color: #ffffff; }
+  .module-sfn-dialog__contact--number {
+    color: #5e5e5e; }
+    .dark-theme .module-sfn-dialog__contact--number {
+      color: #b9b9b9; }
+  .module-sfn-dialog__contact--view {
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 21px;
+    letter-spacing: -0.14px;
+    font-weight: bold;
+    background: inherit;
+    border: none;
+    cursor: pointer;
+    margin-right: 2px;
+    outline: none;
+    padding: 8px 14px;
+    color: #2c6bed; }
+    .keyboard-mode .module-sfn-dialog__contact--view:focus {
+      box-shadow: 0px 0px 0px 2px #2c6bed; }
+    .dark-theme .module-sfn-dialog__contact--view {
+      color: #6191f3; }
+
+.module-sfn-dialog__actions {
+  border-top: 1px solid #e9e9e9;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: -18px;
+  margin-left: -16px;
+  margin-right: -16px;
+  margin-top: -14px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 16px; }
+  .module-sfn-dialog__actions--cancel {
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 21px;
+    letter-spacing: -0.14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+    padding: 7px 14px;
+    background-color: #e9e9e9;
+    color: #2c6bed; }
+    .mouse-mode .module-sfn-dialog__actions--cancel:hover {
+      background: #dedede; }
+    .keyboard-mode .module-sfn-dialog__actions--cancel:focus {
+      box-shadow: 0px 0px 0px 2px #2c6bed; }
+    .dark-theme .module-sfn-dialog__actions--cancel {
+      background-color: #3b3b3b;
+      color: #6191f3; }
+  .module-sfn-dialog__actions--confirm {
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 21px;
+    letter-spacing: -0.14px;
+    font-weight: bold;
+    background: #2c6bed;
+    border: none;
+    border-radius: 4px;
+    color: #ffffff;
+    margin-left: 12px;
+    outline: none;
+    padding: 7px 14px; }
+    .mouse-mode .module-sfn-dialog__actions--confirm:hover {
+      background: #1851b4; }
+    .keyboard-mode .module-sfn-dialog__actions--confirm:focus {
+      box-shadow: 0px 0px 0px 2px #1851b4; }
+
+/* Safety Number verification */
+.module-safety-number__icon {
+  height: 1.25em;
+  width: 1.25em;
+  vertical-align: text-bottom;
+  display: inline-block; }
+
+.module-safety-number__verification-label {
+  margin: 10px 0; }
+
+.module-safety-number__icon--verified {
+  display: inline-block;
+  height: 1.25em;
+  margin-right: 4px;
+  vertical-align: text-bottom;
+  width: 1.25em;
+  -webkit-mask: url("../images/icons/v2/check-24.svg") no-repeat center;
+  -webkit-mask-size: 100%;
+  background-color: #121212; }
+  .dark-theme .module-safety-number__icon--verified {
+    -webkit-mask: url("../images/icons/v2/check-24.svg") no-repeat center;
+    -webkit-mask-size: 100%;
+    background-color: #f6f6f6; }
+
+.module-safety-number__icon--shield {
+  display: inline-block;
+  height: 1.25em;
+  margin-right: 4px;
+  vertical-align: text-bottom;
+  width: 1.25em;
+  -webkit-mask: url("../images/icons/v2/safety-number-outline-24.svg") no-repeat center;
+  -webkit-mask-size: 100%;
+  background-color: #121212; }
+  .dark-theme .module-safety-number__icon--shield {
+    -webkit-mask: url("../images/icons/v2/safety-number-solid-24.svg") no-repeat center;
+    -webkit-mask-size: 100%;
+    background-color: #f6f6f6; }
+
+.module-safety-number__verify-container {
+  text-align: center; }
+
+.module-safety-number__button--verify {
+  border-radius: 5px;
+  font-weight: bold;
+  margin: 0;
+  outline: none;
+  padding: 10px; }
+
+.module-safety-number__number {
+  background: #f6f6f6;
+  border-radius: 5px;
+  border: solid 1px #dedede;
+  font-family: monospace;
+  margin: 20px auto 20px auto;
+  padding: 10px;
+  text-align: center;
+  width: 16em; }
+  .dark-theme .module-safety-number__number {
+    background: #1b1b1b;
+    border: solid 1px #848484;
+    color: #f6f6f6; }
+
+.module-safety-number__verification-status {
+  margin: 30px 0 10px;
+  text-align: center; }
+
+.module-safety-number__close-button {
+  display: flex;
+  justify-content: flex-end; }
+  .module-safety-number__close-button button {
+    background: inherit;
+    border: none;
+    cursor: pointer;
+    padding: 0; }
+    .keyboard-mode .module-safety-number__close-button button:focus {
+      border: 1px solid #2c6bed; }
+    .module-safety-number__close-button button span {
+      display: inline-block;
+      height: 24px;
+      width: 24px;
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>x-24</title><polygon points='19.53 5.53 18.47 4.47 12 10.939 5.53 4.47 4.47 5.53 10.939 12 4.47 18.47 5.53 19.53 12 13.061 18.47 19.53 19.53 18.47 13.061 12 19.53 5.53' fill='%235E5E5E'/></svg>") no-repeat center;
+      background-size: 100%; }
+      .dark-theme .module-safety-number__close-button button span {
+        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>x-24</title><polygon points='19.53 5.53 18.47 4.47 12 10.939 5.53 4.47 4.47 5.53 10.939 12 4.47 18.47 5.53 19.53 12 13.061 18.47 19.53 19.53 18.47 13.061 12 19.53 5.53' fill='%23E9E9E9'/></svg>") no-repeat center;
+        background-size: 100%; }
+
 .module-sticker-picker {
   height: 400px;
   display: grid;
@@ -6913,7 +7038,7 @@ img.emoji.jumbo {
   background: #ffffff;
   color: #1b1b1b; }
   .dark-theme .module-confirmation-dialog__container {
-    background: #3b3b3b;
+    background: #2e2e2e;
     color: #e9e9e9; }
   .module-confirmation-dialog__container__title {
     font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;

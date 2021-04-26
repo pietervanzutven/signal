@@ -1,6 +1,5 @@
 require(exports => {
     "use strict";
-
     Object.defineProperty(exports, "__esModule", { value: true });
     function markEverDone() {
         // @ts-ignore
@@ -17,12 +16,10 @@ require(exports => {
     }
     exports.remove = remove;
     function isDone() {
-        // tslint:disable-next-line no-backbone-get-set-outside-model
         return window.storage.get('chromiumRegistrationDone') === '';
     }
     exports.isDone = isDone;
     function everDone() {
-        // tslint:disable-next-line no-backbone-get-set-outside-model
         return window.storage.get('chromiumRegistrationDoneEver') === '' || isDone();
     }
     exports.everDone = everDone;

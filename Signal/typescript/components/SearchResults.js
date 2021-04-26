@@ -9,15 +9,15 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const react_virtualized_1 = window.react_virtualized;
-    const lodash_1 = window.lodash;
-    const Intl_1 = window.ts.components.Intl;
-    const Emojify_1 = window.ts.components.conversation.Emojify;
-    const Spinner_1 = window.ts.components.Spinner;
-    const ConversationListItem_1 = window.ts.components.ConversationListItem;
-    const StartNewConversation_1 = window.ts.components.StartNewConversation;
-    const _util_1 = window.ts.components._util;
+    const react_1 = __importDefault(require("react"));
+    const react_virtualized_1 = require("react-virtualized");
+    const lodash_1 = require("lodash");
+    const Intl_1 = require("./Intl");
+    const Emojify_1 = require("./conversation/Emojify");
+    const Spinner_1 = require("./Spinner");
+    const ConversationListItem_1 = require("./ConversationListItem");
+    const StartNewConversation_1 = require("./StartNewConversation");
+    const _util_1 = require("./_util");
     class SearchResults extends react_1.default.Component {
         constructor() {
             super(...arguments);

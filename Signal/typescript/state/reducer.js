@@ -13,6 +13,7 @@
     const expiration_1 = require("./ducks/expiration");
     const items_1 = require("./ducks/items");
     const network_1 = require("./ducks/network");
+    const safetyNumber_1 = require("./ducks/safetyNumber");
     const search_1 = require("./ducks/search");
     const stickers_1 = require("./ducks/stickers");
     const updates_1 = require("./ducks/updates");
@@ -24,6 +25,7 @@
         expiration: expiration_1.reducer,
         items: items_1.reducer,
         network: network_1.reducer,
+        safetyNumber: safetyNumber_1.reducer,
         search: search_1.reducer,
         stickers: stickers_1.reducer,
         updates: updates_1.reducer,

@@ -5,17 +5,17 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.AccountManager = {};
 
-    // tslint:disable no-backbone-get-set-outside-model no-default-export no-unnecessary-local-variable
+    // tslint:disable no-default-export no-unnecessary-local-variable
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const EventTarget_1 = __importDefault(window.ts.textsecure.EventTarget);
-    const MessageReceiver_1 = __importDefault(window.ts.textsecure.MessageReceiver);
-    const Helpers_1 = __importDefault(window.ts.textsecure.Helpers);
-    const p_queue_1 = __importDefault(window.p_queue);
-    const ProvisioningCipher_1 = __importDefault(window.ts.textsecure.ProvisioningCipher);
-    const WebsocketResources_1 = __importDefault(window.ts.textsecure.WebsocketResources);
+    const EventTarget_1 = __importDefault(require("./EventTarget"));
+    const MessageReceiver_1 = __importDefault(require("./MessageReceiver"));
+    const Helpers_1 = __importDefault(require("./Helpers"));
+    const p_queue_1 = __importDefault(require("p-queue"));
+    const ProvisioningCipher_1 = __importDefault(require("./ProvisioningCipher"));
+    const WebsocketResources_1 = __importDefault(require("./WebsocketResources"));
     const ARCHIVE_AGE = 7 * 24 * 60 * 60 * 1000;
     function getIdentifier(id) {
         if (!id || !id.length) {

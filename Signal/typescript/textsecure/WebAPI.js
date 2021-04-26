@@ -162,7 +162,6 @@
     const agents = {};
     function getContentType(response) {
         if (response.headers && response.headers.get) {
-            // tslint:disable-next-line no-backbone-get-set-outside-model
             return response.headers.get('content-type');
         }
         return null;
@@ -236,7 +235,6 @@
                 .then(async (response) => {
                     let resultPromise;
                     if (options.responseType === 'json' &&
-                        // tslint:disable-next-line no-backbone-get-set-outside-model
                         response.headers.get('Content-Type') === 'application/json') {
                         resultPromise = response.json();
                     }
@@ -921,7 +919,6 @@
                 if (!response.headers || !response.headers.get) {
                     throw new Error('makeProxiedRequest: Problem retrieving header value');
                 }
-                // tslint:disable-next-line no-backbone-get-set-outside-model
                 const range = response.headers.get('content-range');
                 const match = PARSE_RANGE_HEADER.exec(range);
                 if (!match || !match[1]) {

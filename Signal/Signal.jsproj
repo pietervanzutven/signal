@@ -223,6 +223,7 @@
     <Content Include="js\share.js" />
     <Content Include="js\signal_protocol_store.js" />
     <Content Include="js\storage.js" />
+    <Content Include="js\views\safety_number_change_dialog_view.js" />
     <Content Include="node_modules\blurhash\base83.js" />
     <Content Include="node_modules\blurhash\decode.js" />
     <Content Include="node_modules\blurhash\encode.js" />
@@ -3754,6 +3755,8 @@
     <Content Include="typescript\components\MessageSearchResult.js" />
     <Content Include="typescript\components\NetworkStatus.js" />
     <Content Include="typescript\components\RelinkDialog.js" />
+    <Content Include="typescript\components\SafetyNumberChangeDialog.js" />
+    <Content Include="typescript\components\SafetyNumberViewer.js" />
     <Content Include="typescript\components\SearchResults.js" />
     <Content Include="typescript\components\ShortcutGuide.js" />
     <Content Include="typescript\components\ShortcutGuideModal.js" />
@@ -3780,6 +3783,7 @@
     <Content Include="typescript\services\notify.js" />
     <Content Include="typescript\services\updateListener.js" />
     <Content Include="typescript\shims\bounceAppIcon.js" />
+    <Content Include="typescript\shims\contactVerification.js" />
     <Content Include="typescript\shims\events.js" />
     <Content Include="typescript\shims\socketStatus.js" />
     <Content Include="typescript\shims\storage.js" />
@@ -3798,6 +3802,7 @@
     <Content Include="typescript\state\ducks\items.js" />
     <Content Include="typescript\state\ducks\network.js" />
     <Content Include="typescript\state\ducks\noop.js" />
+    <Content Include="typescript\state\ducks\safetyNumber.js" />
     <Content Include="typescript\state\ducks\search.js" />
     <Content Include="typescript\state\ducks\stickers.js" />
     <Content Include="typescript\state\ducks\updates.js" />
@@ -3806,12 +3811,14 @@
     <Content Include="typescript\state\roots\createCallManager.js" />
     <Content Include="typescript\state\roots\createCompositionArea.js" />
     <Content Include="typescript\state\roots\createLeftPane.js" />
+    <Content Include="typescript\state\roots\createSafetyNumberViewer.js" />
     <Content Include="typescript\state\roots\createShortcutGuideModal.js" />
     <Content Include="typescript\state\roots\createStickerManager.js" />
     <Content Include="typescript\state\roots\createStickerPreviewModal.js" />
     <Content Include="typescript\state\roots\createTimeline.js" />
     <Content Include="typescript\state\selectors\conversations.js" />
     <Content Include="typescript\state\selectors\network.js" />
+    <Content Include="typescript\state\selectors\safetyNumber.js" />
     <Content Include="typescript\state\selectors\search.js" />
     <Content Include="typescript\state\selectors\stickers.js" />
     <Content Include="typescript\state\selectors\user.js" />
@@ -3826,6 +3833,7 @@
     <Content Include="typescript\state\smart\MessageSearchResult.js" />
     <Content Include="typescript\state\smart\NetworkStatus.js" />
     <Content Include="typescript\state\smart\RelinkDialog.js" />
+    <Content Include="typescript\state\smart\SafetyNumberViewer.js" />
     <Content Include="typescript\state\smart\ShortcutGuideModal.js" />
     <Content Include="typescript\state\smart\StickerManager.js" />
     <Content Include="typescript\state\smart\StickerPreviewModal.js" />
@@ -3889,6 +3897,7 @@
     <Content Include="typescript\util\migrateColor.js" />
     <Content Include="typescript\util\missingCaseError.js" />
     <Content Include="typescript\util\registration.js" />
+    <Content Include="typescript\util\safetyNumber.js" />
     <Content Include="typescript\util\saveURLAsFile.js" />
     <Content Include="typescript\util\Sound.js" />
     <Content Include="typescript\util\timer.js" />

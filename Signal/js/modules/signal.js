@@ -46,6 +46,9 @@
   } = require('../../ts/components/conversation/MessageDetail');
   const { Quote } = require('../../ts/components/conversation/Quote');
   const {
+    SafetyNumberChangeDialog,
+  } = require('../../ts/components/SafetyNumberChangeDialog');
+  const {
     StagedLinkPreview,
   } = require('../../ts/components/conversation/StagedLinkPreview');
 
@@ -56,6 +59,9 @@
   } = require('../../ts/state/roots/createCompositionArea');
   const { createCallManager } = require('../../ts/state/roots/createCallManager');
   const { createLeftPane } = require('../../ts/state/roots/createLeftPane');
+  const {
+    createSafetyNumberViewer,
+  } = require('../../ts/state/roots/createSafetyNumberViewer');
   const {
     createStickerManager,
   } = require('../../ts/state/roots/createStickerManager');
@@ -279,6 +285,7 @@
       MediaGallery,
       MessageDetail,
       Quote,
+      SafetyNumberChangeDialog,
       StagedLinkPreview,
       Types: {
         Message: MediaGalleryMessage,
@@ -289,6 +296,7 @@
       createCallManager,
       createCompositionArea,
       createLeftPane,
+      createSafetyNumberViewer,
       createShortcutGuideModal,
       createStickerManager,
       createStickerPreviewModal,

@@ -1,7 +1,6 @@
 require(exports => {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // tslint:disable: no-backbone-get-set-outside-model
     const lodash_1 = require("lodash");
     function getServer() {
         const OLD_USERNAME = window.storage.get('number_id');
