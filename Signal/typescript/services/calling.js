@@ -101,11 +101,7 @@ require(exports => {
                 window.log.error('Missing identifier, ignoring call message.');
                 return;
             }
-            const now = new Date();
-            const serverTimestamp = envelope.serverTimestamp
-                ? envelope.serverTimestamp
-                : now.valueOf();
-            const messageAgeSec = Math.floor((now.valueOf() - serverTimestamp) / 1000);
+            const messageAgeSec = envelope.messageAgeSec ? envelope.messageAgeSec : 0;
             ringrtc_1.RingRTC.handleCallingMessage(remoteUserId, remoteDeviceId, this.localDeviceId, messageAgeSec, callingMessage);
         }
         async requestCameraPermissions() {
