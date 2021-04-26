@@ -245,7 +245,6 @@ require(exports => {
         window.log.info(`runStorageServiceSyncJob: manifest versions - previous: ${localManifestVersion}, current: ${version}`);
         const shouldUpdateVersion = await processManifest(manifest);
         if (shouldUpdateVersion) {
-            return;
             window.storage.put('manifestVersion', version);
         }
     }
