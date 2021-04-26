@@ -128,6 +128,14 @@
         return decryptSymmetric(key, ciphertext);
     }
     exports.decryptFile = decryptFile;
+    async function deriveStorageManifestKey(storageServiceKey, version) {
+        return hmacSha256(storageServiceKey, bytesFromString(`Manifest_${version}`));
+    }
+    exports.deriveStorageManifestKey = deriveStorageManifestKey;
+    async function deriveStorageItemKey(storageServiceKey, itemID) {
+        return hmacSha256(storageServiceKey, bytesFromString(`Item_${itemID}`));
+    }
+    exports.deriveStorageItemKey = deriveStorageItemKey;
     async function deriveAccessKey(profileKey) {
         const iv = getZeroes(12);
         const plaintext = getZeroes(16);

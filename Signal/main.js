@@ -190,6 +190,7 @@ function prepareURL(pathSegments, moreKeys) {
           version: app.getVersion(),
           buildExpiration: config.get('buildExpiration'),
           serverUrl: config.get('serverUrl'),
+          storageUrl: config.get('storageUrl'),
           cdnUrl0: config.get('cdn').get('0'),
           cdnUrl2: config.get('cdn').get('2'),
           certificateAuthority: config.get('certificateAuthority'),
@@ -817,8 +818,8 @@ function showPermissionsPopupWindow(forCalling, forCamera) {
       show: false,
       modal: true,
       webPreferences: {
-        nodeIntegration: false,
-        nodeIntegrationInWorker: false,
+        uwpIntegration: false,
+        uwpIntegrationInWorker: false,
         contextIsolation: false,
         preload: path.join(__dirname, 'permissions_popup_preload.js'),
         nativeWindowOpen: true,
@@ -908,7 +909,7 @@ let ready = false;
       frame: false,
       backgroundColor: '#3a76f0',
       webPreferences: {
-        nodeIntegration: false,
+        uwpIntegration: false,
         preload: path.join(__dirname, 'loading_preload.js'),
       },
       icon: windowIcon,

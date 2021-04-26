@@ -235,6 +235,7 @@
     <Content Include="node_modules\react-blurhash\BlurhashCanvas.js" />
     <Content Include="node_modules\react-blurhash\index.js" />
     <Content Include="node_modules\ringrtc\index.js" />
+    <Content Include="protos\SignalStorage.proto" />
     <Content Include="sounds\navigation-cancel.ogg" />
     <Content Include="sounds\ringtone_minimal.ogg" />
     <Content Include="js\util_worker.js" />
@@ -3900,6 +3901,7 @@
     <Content Include="typescript\util\safetyNumber.js" />
     <Content Include="typescript\util\saveURLAsFile.js" />
     <Content Include="typescript\util\Sound.js" />
+    <Content Include="typescript\util\storageService.js" />
     <Content Include="typescript\util\timer.js" />
     <Content Include="typescript\util\waitBatcher.js" />
     <Content Include="typescript\util\zkgroup.js" />

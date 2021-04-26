@@ -343,22 +343,29 @@
         getIceServers: 'v1/accounts/turn',
         attachmentId: 'v2/attachments/form/upload',
         deliveryCert: 'v1/certificate/delivery',
-        supportUnauthenticatedDelivery: 'v1/devices/unauthenticated_delivery',
-        registerCapabilities: 'v1/devices/capabilities',
         devices: 'v1/devices',
         keys: 'v2/keys',
         messages: 'v1/messages',
         profile: 'v1/profile',
+        registerCapabilities: 'v1/devices/capabilities',
         signed: 'v2/keys/signed',
+        storageManifest: 'v1/storage/manifest',
+        storageModify: 'v1/storage/',
+        storageRead: 'v1/storage/read',
+        storageToken: 'v1/storage/auth',
+        supportUnauthenticatedDelivery: 'v1/devices/unauthenticated_delivery',
         getStickerPackUpload: 'v1/sticker/pack/form',
         whoami: 'v1/accounts/whoami',
         config: 'v1/config',
     };
     // We first set up the data that won't change during this session of the app
     // tslint:disable-next-line max-func-body-length
-    function initialize({ url, cdnUrlObject, certificateAuthority, contentProxyUrl, proxyUrl, version, }) {
+    function initialize({ url, storageUrl, cdnUrlObject, certificateAuthority, contentProxyUrl, proxyUrl, version, }) {
         if (!is_1.default.string(url)) {
             throw new Error('WebAPI.initialize: Invalid server url');
+        }
+        if (!is_1.default.string(storageUrl)) {
+            throw new Error('WebAPI.initialize: Invalid storageUrl');
         }
         if (!is_1.default.object(cdnUrlObject)) {
             throw new Error('WebAPI.initialize: Invalid cdnUrlObject');
@@ -408,6 +415,9 @@
                 getSenderCertificate,
                 getSticker,
                 getStickerPackManifest,
+                getStorageCredentials,
+                getStorageManifest,
+                getStorageRecords,
                 makeProxiedRequest,
                 putAttachment,
                 registerCapabilities,
@@ -430,16 +440,16 @@
                 }
                 return _outerAjax(null, {
                     certificateAuthority,
-                    contentType: 'application/json; charset=utf-8',
-                    data: param.jsonData && _jsonThing(param.jsonData),
-                    host: url,
-                    password,
+                    contentType: param.contentType || 'application/json; charset=utf-8',
+                    data: param.data || (param.jsonData && _jsonThing(param.jsonData)),
+                    host: param.host || url,
+                    password: param.password || password,
                     path: URL_CALLS[param.call] + param.urlParameters,
                     proxyUrl,
                     responseType: param.responseType,
                     timeout: param.timeout,
                     type: param.httpType,
-                    user: username,
+                    user: param.username || username,
                     validateResponse: param.validateResponse,
                     version,
                     unauthenticated: param.unauthenticated,
@@ -503,6 +513,26 @@
                     validateResponse: { certificate: 'string' },
                     urlParameters: '?includeUuid=true',
                 });
+            }
+            async function getStorageCredentials() {
+                return _ajax({
+                    call: 'storageToken',
+                    httpType: 'GET',
+                    responseType: 'json',
+                    schema: { username: 'string', password: 'string' },
+                });
+            }
+            async function getStorageManifest(options = {}) {
+                const { credentials, greaterThanVersion } = options;
+                return _ajax(Object.assign({
+                    call: 'storageManifest', contentType: 'application/x-protobuf', host: storageUrl, httpType: 'GET', responseType: 'arraybuffer', urlParameters: greaterThanVersion
+                        ? `/version/${greaterThanVersion}`
+                        : ''
+                }, credentials));
+            }
+            async function getStorageRecords(data, options = {}) {
+                const { credentials } = options;
+                return _ajax(Object.assign({ call: 'storageRead', contentType: 'application/x-protobuf', data, host: storageUrl, httpType: 'PUT', responseType: 'arraybuffer' }, credentials));
             }
             async function registerSupportForUnauthenticatedDelivery() {
                 return _ajax({

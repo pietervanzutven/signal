@@ -39,6 +39,14 @@
     writeNewAttachmentData,
   } = window.Signal.Migrations;
   const { addStickerPackReference } = window.Signal.Data;
+  const {
+    arrayBufferToBase64,
+    base64ToArrayBuffer,
+    deriveAccessKey,
+    getRandomBytes,
+    stringFromBytes,
+    verifyAccessKey,
+  } = window.Signal.Crypto;
 
   const COLORS = [
     'red',
@@ -760,6 +768,8 @@
           verified
         );
       }
+
+      return keyChange;
     },
     sendVerifySyncMessage(e164, uuid, state) {
       // Because syncVerification sends a (null) message to the target of the verify and
@@ -1770,11 +1780,7 @@
       // If we've never fetched user's profile, we default to what we have
       if (sealedSender === SEALED_SENDER.UNKNOWN) {
         const info = {
-          accessKey:
-            accessKey ||
-            window.Signal.Crypto.arrayBufferToBase64(
-              window.Signal.Crypto.getRandomBytes(16)
-            ),
+          accessKey: accessKey || arrayBufferToBase64(getRandomBytes(16)),
           // Indicates that a client is capable of receiving uuid-only messages.
           // Not used yet.
           uuidCapable,
@@ -1793,9 +1799,7 @@
         accessKey:
           accessKey && sealedSender === SEALED_SENDER.ENABLED
             ? accessKey
-            : window.Signal.Crypto.arrayBufferToBase64(
-                window.Signal.Crypto.getRandomBytes(16)
-              ),
+            : arrayBufferToBase64(getRandomBytes(16)),
         // Indicates that a client is capable of receiving uuid-only messages.
         // Not used yet.
         uuidCapable,
@@ -2359,9 +2363,7 @@
           });
         }
 
-        const identityKey = window.Signal.Crypto.base64ToArrayBuffer(
-          profile.identityKey
-        );
+        const identityKey = base64ToArrayBuffer(profile.identityKey);
         const changed = await textsecure.storage.protocol.saveIdentity(
           `${id}.1`,
           identityKey,
@@ -2391,9 +2393,9 @@
             sealedSender: SEALED_SENDER.UNRESTRICTED,
           });
         } else if (accessKey && profile.unidentifiedAccess) {
-          const haveCorrectKey = await window.Signal.Crypto.verifyAccessKey(
-            window.Signal.Crypto.base64ToArrayBuffer(accessKey),
-            window.Signal.Crypto.base64ToArrayBuffer(profile.unidentifiedAccess)
+          const haveCorrectKey = await verifyAccessKey(
+            base64ToArrayBuffer(accessKey),
+            base64ToArrayBuffer(profile.unidentifiedAccess)
           );
 
           if (haveCorrectKey) {
@@ -2482,8 +2484,8 @@
       }
 
       // decode
-      const keyBuffer = window.Signal.Crypto.base64ToArrayBuffer(key);
-      const data = window.Signal.Crypto.base64ToArrayBuffer(encryptedName);
+      const keyBuffer = base64ToArrayBuffer(key);
+      const data = base64ToArrayBuffer(encryptedName);
 
       // decrypt
       const { given, family } = await textsecure.crypto.decryptProfileName(
@@ -2492,10 +2494,8 @@
       );
 
       // encode
-      const profileName = window.Signal.Crypto.stringFromBytes(given);
-      const profileFamilyName = family
-        ? window.Signal.Crypto.stringFromBytes(family)
-        : null;
+      const profileFamilyName = family ? stringFromBytes(family) : null;
+      const profileName = given ? stringFromBytes(given) : null;
 
       // set
       this.set({ profileName, profileFamilyName });
@@ -2510,7 +2510,7 @@
       if (!key) {
         return;
       }
-      const keyBuffer = window.Signal.Crypto.base64ToArrayBuffer(key);
+      const keyBuffer = base64ToArrayBuffer(key);
 
       // decrypt
       const decrypted = await textsecure.crypto.decryptProfile(
@@ -2593,15 +2593,9 @@
         return;
       }
 
-      const profileKeyBuffer = window.Signal.Crypto.base64ToArrayBuffer(
-        profileKey
-      );
-      const accessKeyBuffer = await window.Signal.Crypto.deriveAccessKey(
-        profileKeyBuffer
-      );
-      const accessKey = window.Signal.Crypto.arrayBufferToBase64(
-        accessKeyBuffer
-      );
+      const profileKeyBuffer = base64ToArrayBuffer(profileKey);
+      const accessKeyBuffer = await deriveAccessKey(profileKeyBuffer);
+      const accessKey = arrayBufferToBase64(accessKeyBuffer);
       this.set({ accessKey });
     },
     async deriveProfileKeyVersionIfNeeded() {

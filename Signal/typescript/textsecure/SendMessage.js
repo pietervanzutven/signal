@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    
+
     window.ts = window.ts || {};
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.SendMessage = {};
@@ -503,6 +503,22 @@
             }
             return Promise.resolve();
         }
+        async sendRequestKeySyncMessage(options) {
+            const myUuid = window.textsecure.storage.user.getUuid();
+            const myNumber = window.textsecure.storage.user.getNumber();
+            const myDevice = window.textsecure.storage.user.getDeviceId();
+            if (myDevice === 1 || myDevice === '1') {
+                return;
+            }
+            const request = new window.textsecure.protobuf.SyncMessage.Request();
+            request.type = window.textsecure.protobuf.SyncMessage.Request.Type.KEYS;
+            const syncMessage = this.createSyncMessage();
+            syncMessage.request = request;
+            const contentMessage = new window.textsecure.protobuf.Content();
+            contentMessage.syncMessage = syncMessage;
+            const silent = true;
+            await this.sendIndividualProto(myUuid || myNumber, contentMessage, Date.now(), silent, options);
+        }
         async sendTypingMessage(options, sendOptions = {}) {
             const ACTION_ENUM = window.textsecure.protobuf.TypingMessage.Action;
             const { recipientId, groupId, groupNumbers, isTyping, timestamp } = options;
@@ -949,6 +965,15 @@
         }
         async makeProxiedRequest(url, options) {
             return this.server.makeProxiedRequest(url, options);
+        }
+        async getStorageCredentials() {
+            return this.server.getStorageCredentials();
+        }
+        async getStorageManifest(options) {
+            return this.server.getStorageManifest(options);
+        }
+        async getStorageRecords(data, options) {
+            return this.server.getStorageRecords(data, options);
         }
     }
     exports.default = MessageSender;

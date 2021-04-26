@@ -1006,6 +1006,12 @@
             else if (syncMessage.messageRequestResponse) {
                 return this.handleMessageRequestResponse(envelope, syncMessage.messageRequestResponse);
             }
+            else if (syncMessage.fetchLatest) {
+                return this.handleFetchLatest(envelope, syncMessage.fetchLatest);
+            }
+            else if (syncMessage.keys) {
+                return this.handleKeys(envelope, syncMessage.keys);
+            }
             this.removeFromCache(envelope);
             throw new Error('Got empty SyncMessage');
         }
@@ -1035,6 +1041,22 @@
             ev.groupId = sync.groupId ? sync.groupId.toString('binary') : null;
             ev.messageRequestResponseType = sync.type;
             window.normalizeUuids(ev, ['threadUuid'], 'MessageReceiver::handleMessageRequestResponse');
+        }
+        async handleFetchLatest(envelope, sync) {
+            window.log.info('got fetch latest sync message');
+            const ev = new Event('fetchLatest');
+            ev.confirm = this.removeFromCache.bind(this, envelope);
+            ev.eventType = sync.type;
+            return this.dispatchAndWait(ev);
+        }
+        async handleKeys(envelope, sync) {
+            window.log.info('got keys sync message');
+            if (!sync.storageService) {
+                return;
+            }
+            const ev = new Event('keys');
+            ev.confirm = this.removeFromCache.bind(this, envelope);
+            ev.storageServiceKey = sync.storageService.toArrayBuffer();
             return this.dispatchAndWait(ev);
         }
         async handleStickerPackOperation(envelope, operations) {

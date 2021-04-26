@@ -37,6 +37,8 @@ require(exports => {
     exports.migrateColor = migrateColor_1.migrateColor;
     const missingCaseError_1 = require("./missingCaseError");
     exports.missingCaseError = missingCaseError_1.missingCaseError;
+    const storageService_1 = require("./storageService");
+    exports.runStorageServiceSyncJob = storageService_1.runStorageServiceSyncJob;
     const zkgroup = __importStar(require("./zkgroup"));
     exports.zkgroup = zkgroup;
 });
