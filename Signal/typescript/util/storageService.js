@@ -21,6 +21,9 @@ require(exports => {
     }
     async function fetchManifest(manifestVersion) {
         window.log.info('storageService.fetchManifest');
+        if (!window.textsecure.messaging) {
+            throw new Error('fetchManifest: We are offline!');
+        }
         try {
             const credentials = await window.textsecure.messaging.getStorageCredentials();
             window.storage.put('storageCredentials', credentials);
@@ -162,6 +165,9 @@ require(exports => {
         const credentials = window.storage.get('storageCredentials');
         const storageKeyBase64 = window.storage.get('storageKey');
         const storageKey = Crypto_2.base64ToArrayBuffer(storageKeyBase64);
+        if (!window.textsecure.messaging) {
+            throw new Error('processManifest: We are offline!');
+        }
         const remoteKeysTypeMap = new Map();
         manifest.keys.forEach(key => {
             remoteKeysTypeMap.set(Crypto_2.arrayBufferToBase64(key.raw.toArrayBuffer()), key.type);

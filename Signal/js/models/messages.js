@@ -195,30 +195,20 @@
 
     // Other top-level prop-generation
     getPropsForSearchResult() {
-      const sourceE164 = this.getSource();
-      const sourceUuid = this.getSourceUuid();
-      const fromContact = this.findAndFormatContact(sourceE164 || sourceUuid);
+      const ourId = ConversationController.getOurConversationId();
+      const sourceId = this.getContactId();
+      const fromContact = this.findAndFormatContact(sourceId);
 
-      if (
-        (sourceE164 && sourceE164 === this.OUR_NUMBER) ||
-        (sourceUuid && sourceUuid === this.OUR_UUID)
-      ) {
+      if (ourId === sourceId) {
         fromContact.isMe = true;
       }
 
       const convo = this.getConversation();
 
-      let to = convo ? this.findAndFormatContact(convo.get('id')) : {};
+      const to = convo ? this.findAndFormatContact(convo.get('id')) : {};
 
-      if (convo && convo.isMe()) {
+      if (to && convo && convo.isMe()) {
         to.isMe = true;
-      } else if (
-        (sourceE164 && convo && sourceE164 === convo.get('e164')) ||
-        (sourceUuid && convo && sourceUuid === convo.get('uuid'))
-      ) {
-        to = {
-          isMe: true,
-        };
       }
 
       return {
@@ -239,10 +229,10 @@
 
       const unidentifiedLookup = (
         this.get('unidentifiedDeliveries') || []
-      ).reduce((accumulator, uuidOrE164) => {
+      ).reduce((accumulator, identifier) => {
         // eslint-disable-next-line no-param-reassign
         accumulator[
-          ConversationController.getConversationId(uuidOrE164)
+          ConversationController.getConversationId(identifier)
         ] = true;
         return accumulator;
       }, Object.create(null));
@@ -251,7 +241,7 @@
       // Older messages don't have the recipients included on the message, so we fall
       //   back to the conversation's current recipients
       const conversationIds = this.isIncoming()
-        ? [this.getContact().get('id')]
+        ? [this.getContactId()]
         : _.union(
             (this.get('sent_to') || []).map(id =>
               ConversationController.getConversationId(id)
@@ -385,11 +375,11 @@
     getPropsForUnsupportedMessage() {
       const requiredVersion = this.get('requiredProtocolVersion');
       const canProcessNow = this.CURRENT_PROTOCOL_VERSION >= requiredVersion;
-      const phoneNumber = this.getSource();
+      const sourceId = this.getContactId();
 
       return {
         canProcessNow,
-        contact: this.findAndFormatContact(phoneNumber),
+        contact: this.findAndFormatContact(sourceId),
       };
     },
     getPropsForTimerNotification() {
@@ -402,8 +392,14 @@
       const timespan = Whisper.ExpirationTimerOptions.getName(expireTimer || 0);
       const disabled = !expireTimer;
 
+      const sourceId = ConversationController.ensureContactIds({
+        e164: source,
+        uuid: sourceUuid,
+      });
+      const ourId = ConversationController.getOurConversationId();
+
       const basicProps = Object.assign({},
-        this.findAndFormatContact(source),
+        this.findAndFormatContact(sourceId),
         {
           type: 'fromOther',
           timespan,
@@ -418,7 +414,7 @@
             type: 'fromSync',
           }
         );
-      } else if (source === this.OUR_NUMBER || sourceUuid === this.OUR_UUID) {
+      } else if (sourceId && sourceId === ourId) {
         return Object.assign({},
           basicProps,
           {
@@ -442,12 +438,12 @@
     getPropsForVerificationNotification() {
       const type = this.get('verified') ? 'markVerified' : 'markNotVerified';
       const isLocal = this.get('local');
-      const phoneNumber = this.get('verifiedChanged');
+      const identifier = this.get('verifiedChanged');
 
       return {
         type,
         isLocal,
-        contact: this.findAndFormatContact(phoneNumber),
+        contact: this.findAndFormatContact(identifier),
       };
     },
     getPropsForGroupNotification() {
@@ -472,7 +468,7 @@
             Array.isArray(groupUpdate.joined)
               ? groupUpdate.joined
               : [groupUpdate.joined],
-            phoneNumber => this.findAndFormatContact(phoneNumber)
+            identifier => this.findAndFormatContact(identifier)
           ),
         });
       }
@@ -489,7 +485,7 @@
             Array.isArray(groupUpdate.left)
               ? groupUpdate.left
               : [groupUpdate.left],
-            phoneNumber => this.findAndFormatContact(phoneNumber)
+            identifier => this.findAndFormatContact(identifier)
           ),
         });
       }
@@ -507,9 +503,8 @@
         });
       }
 
-      const sourceE164 = this.getSource();
-      const sourceUuid = this.getSourceUuid();
-      const from = this.findAndFormatContact(sourceE164 || sourceUuid);
+      const sourceId = this.getContactId();
+      const from = this.findAndFormatContact(sourceId);
 
       return {
         from,
@@ -551,10 +546,9 @@
         .map(attachment => this.getPropsForAttachment(attachment));
     },
     getPropsForMessage() {
-      const sourceE164 = this.getSource();
-      const sourceUuid = this.getSourceUuid();
-      const contact = this.findAndFormatContact(sourceE164 || sourceUuid);
-      const contactModel = this.findContact(sourceE164 || sourceUuid);
+      const sourceId = this.getContactId();
+      const contact = this.findAndFormatContact(sourceId);
+      const contactModel = this.findContact(sourceId);
 
       const authorColor = contactModel ? contactModel.getColor() : null;
       const authorAvatarPath = contactModel
@@ -796,7 +790,13 @@
         referencedMessageNotFound,
       } = quote;
       const contact =
-        author && ConversationController.get(author || authorUuid);
+        (author || authorUuid) &&
+        ConversationController.get(
+          ConversationController.ensureContactIds({
+            e164: author,
+            uuid: authorUuid,
+          })
+        );
       const authorColor = contact ? contact.getColor() : 'grey';
 
       const authorPhoneNumber = format(author, {
@@ -832,17 +832,18 @@
 
       const e164 = conversation.get('e164');
       const uuid = conversation.get('uuid');
+      const conversationId = conversation.get('id');
 
       const readBy = this.get('read_by') || [];
-      if (includesAny(readBy, identifier, e164, uuid)) {
+      if (includesAny(readBy, conversationId, e164, uuid)) {
         return 'read';
       }
       const deliveredTo = this.get('delivered_to') || [];
-      if (includesAny(deliveredTo, identifier, e164, uuid)) {
+      if (includesAny(deliveredTo, conversationId, e164, uuid)) {
         return 'delivered';
       }
       const sentTo = this.get('sent_to') || [];
-      if (includesAny(sentTo, identifier, e164, uuid)) {
+      if (includesAny(sentTo, conversationId, e164, uuid)) {
         return 'sent';
       }
 
@@ -1244,19 +1245,22 @@
 
       return this.OUR_UUID;
     },
-    getContact() {
+    getContactId() {
       const source = this.getSource();
       const sourceUuid = this.getSourceUuid();
 
       if (!source && !sourceUuid) {
-        return null;
+        return ConversationController.getOurConversationId();
       }
 
-      const contactId = ConversationController.ensureContactIds({
+      return ConversationController.ensureContactIds({
         e164: source,
         uuid: sourceUuid,
       });
-      return ConversationController.get(contactId, 'private');
+    },
+    getContact() {
+      const id = this.getContactId();
+      return ConversationController.get(id);
     },
     isOutgoing() {
       return this.get('type') === 'outgoing';
@@ -1419,7 +1423,7 @@
       let recipients = _.intersection(intendedRecipients, currentRecipients);
       recipients = _.without(recipients, successfulRecipients).map(id => {
         const c = ConversationController.get(id);
-        return c.get('uuid') || c.get('e164');
+        return c.getSendTarget();
       });
 
       if (!recipients.length) {
@@ -1723,7 +1727,7 @@
       try {
         this.set({
           // These are the same as a normal send()
-          sent_to: [conv.get('uuid') || conv.get('e164')],
+          sent_to: [conv.getSendTarget()],
           sent: true,
           expirationStartTimestamp: Date.now(),
         });
@@ -1733,8 +1737,8 @@
           unidentifiedDeliveries: result ? result.unidentifiedDeliveries : null,
 
           // These are unique to a Note to Self message - immediately read/delivered
-          delivered_to: [this.OUR_UUID || this.OUR_NUMBER],
-          read_by: [this.OUR_UUID || this.OUR_NUMBER],
+          delivered_to: [ConversationController.getOurConversationId()],
+          read_by: [ConversationController.getOurConversationId()],
         });
       } catch (result) {
         const errors = (result && result.errors) || [
@@ -2042,20 +2046,20 @@
         return message;
       }
 
-      const { attachments, id, author } = quote;
+      const { attachments, id, author, authorUuid } = quote;
       const firstAttachment = attachments[0];
+      const authorConversationId = ConversationController.ensureContactIds({
+        e164: author,
+        uuid: authorUuid,
+      });
 
       const collection = await window.Signal.Data.getMessagesBySentAt(id, {
         MessageCollection: Whisper.MessageCollection,
       });
       const found = collection.find(item => {
-        const messageAuthor = item.getContact();
+        const messageAuthorId = item.getContactId();
 
-        return (
-          messageAuthor &&
-          ConversationController.getConversationId(author) ===
-            messageAuthor.get('id')
-        );
+        return authorConversationId === messageAuthorId;
       });
 
       if (!found) {
@@ -2163,10 +2167,7 @@
       const source = message.get('source');
       const sourceUuid = message.get('sourceUuid');
       const type = message.get('type');
-      let conversationId = message.get('conversationId');
-      if (initialMessage.group) {
-        conversationId = initialMessage.group.id;
-      }
+      const conversationId = message.get('conversationId');
       const GROUP_TYPES = textsecure.protobuf.GroupContext.Type;
 
       const conversation = ConversationController.get(conversationId);
@@ -2442,10 +2443,13 @@
                 if (conversation.get('left')) {
                   window.log.warn('re-added to a left group');
                   attributes.left = false;
-                  conversation.set({ addedBy: message.getContact().get('id') });
+                  conversation.set({ addedBy: message.getContactId() });
                 }
               } else if (dataMessage.group.type === GROUP_TYPES.QUIT) {
-                const sender = ConversationController.get(source || sourceUuid);
+                const sender = ConversationController.ensureContactIds({
+                  e164: source,
+                  uuid: sourceUuid,
+                });
                 const inGroup = Boolean(
                   sender &&
                     (conversation.get('members') || []).includes(sender.id)
@@ -2503,6 +2507,7 @@
               message.set({
                 expirationTimerUpdate: {
                   source,
+                  sourceUuid,
                   expireTimer: dataMessage.expireTimer,
                 },
               });
@@ -2617,9 +2622,7 @@
                   e164: source,
                   uuid: sourceUuid,
                 });
-                ConversationController.get(localId, 'private').setProfileKey(
-                  profileKey
-                );
+                ConversationController.get(localId).setProfileKey(profileKey);
               }
             }
 

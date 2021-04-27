@@ -138,7 +138,13 @@ require(exports => {
         }
         async handleOutgoingSignaling(remoteUserId, message) {
             const conversation = window.ConversationController.get(remoteUserId);
-            const sendOptions = conversation ? conversation.getSendOptions() : {};
+            const sendOptions = conversation
+                ? conversation.getSendOptions()
+                : undefined;
+            if (!window.textsecure.messaging) {
+                window.log.warn('handleOutgoingSignaling() returning false; offline');
+                return false;
+            }
             try {
                 await window.textsecure.messaging.sendCallingMessage(remoteUserId, message, sendOptions);
                 window.log.info('handleOutgoingSignaling() completed successfully');
@@ -252,6 +258,9 @@ require(exports => {
             return null;
         }
         async getCallSettings(conversation) {
+            if (!window.textsecure.messaging) {
+                throw new Error('getCallSettings: offline!');
+            }
             const iceServerJson = await window.textsecure.messaging.server.getIceServers();
             const shouldRelayCalls = Boolean(await window.getAlwaysRelayCalls());
             // If the peer is 'unknown', i.e. not in the contact list, force IP hiding.

@@ -165,7 +165,6 @@
     <Content Include="js\background_task.js" />
     <Content Include="js\chromium.js" />
     <Content Include="js\components.js" />
-    <Content Include="js\conversation_controller.js" />
     <Content Include="js\database.js" />
     <Content Include="js\debug_log_start.js" />
     <Content Include="js\deletes.js" />
@@ -230,6 +229,7 @@
     <Content Include="node_modules\blurhash\error.js" />
     <Content Include="node_modules\blurhash\index.js" />
     <Content Include="node_modules\blurhash\utils.js" />
+    <Content Include="node_modules\lodash\reduce.js" />
     <Content Include="node_modules\lodash\throttle.js" />
     <Content Include="node_modules\react-blurhash\Blurhash.js" />
     <Content Include="node_modules\react-blurhash\BlurhashCanvas.js" />
@@ -3773,6 +3773,7 @@
     <Content Include="typescript\components\styles\Colors.js" />
     <Content Include="typescript\components\UpdateDialog.js" />
     <Content Include="typescript\components\_util.js" />
+    <Content Include="typescript\ConversationController.js" />
     <Content Include="typescript\Crypto.js" />
     <Content Include="typescript\notifications\getStatus.js" />
     <Content Include="typescript\OS.js" />
@@ -3961,9 +3962,6 @@
     <Content Include="TextSecure.cer" />
     <Content Include="textsecureservicewhispersystemsorg.cer" />
     <None Include="Signal_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="typescript\util\lint\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).targets" />
   <!-- To modify your build process, add your task inside one of the targets below then uncomment

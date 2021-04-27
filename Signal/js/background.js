@@ -25,14 +25,24 @@
     wait: 500,
     maxSize: 500,
     processBatch: async items => {
-      const bySource = _.groupBy(items, item => item.source || item.sourceUuid);
-      const sources = Object.keys(bySource);
+      const byConversationId = _.groupBy(items, item =>
+        ConversationController.ensureContactIds({
+          e164: item.source,
+          uuid: item.sourceUuid,
+        })
+      );
+      const ids = Object.keys(byConversationId);
 
-      for (let i = 0, max = sources.length; i < max; i += 1) {
-        const source = sources[i];
-        const timestamps = bySource[source].map(item => item.timestamp);
+      for (let i = 0, max = ids.length; i < max; i += 1) {
+        const conversationId = ids[i];
+        const timestamps = byConversationId[conversationId].map(
+          item => item.timestamp
+        );
 
-        const c = ConversationController.get(source);
+        const c = ConversationController.get(conversationId);
+        const uuid = c.get('uuid');
+        const e164 = c.get('e164');
+
         c.queueJob(async () => {
           try {
             const { wrap, sendOptions } = ConversationController.prepareForSend(
@@ -41,15 +51,15 @@
             // eslint-disable-next-line no-await-in-loop
             await wrap(
               textsecure.messaging.sendDeliveryReceipt(
-                c.get('e164'),
-                c.get('uuid'),
+                e164,
+                uuid,
                 timestamps,
                 sendOptions
               )
             );
           } catch (error) {
             window.log.error(
-              `Failed to send delivery receipt to ${source} for timestamps ${timestamps}:`,
+              `Failed to send delivery receipt to ${e164}/${uuid} for timestamps ${timestamps}:`,
               error && error.stack ? error.stack : error
             );
           }
@@ -577,6 +587,7 @@
       }
     });
 
+    window.Signal.conversationControllerStart();
     try {
       await Promise.all([
         ConversationController.load(),
@@ -584,6 +595,7 @@
         Signal.Emojis.load(),
         textsecure.storage.protocol.hydrateCaches(),
       ]);
+      await ConversationController.checkForConflicts();
     } catch (error) {
       window.log.error(
         'background.js: ConversationController failed to load:',
@@ -1765,6 +1777,7 @@
 
     const deviceId = textsecure.storage.user.getDeviceId();
 
+    // If we didn't capture a UUID on registration, go get it from the server
     if (!textsecure.storage.user.getUuid()) {
       const server = WebAPI.connect({
         username: OLD_USERNAME,
@@ -1960,6 +1973,7 @@
     const senderId = ConversationController.ensureContactIds({
       e164: sender,
       uuid: senderUuid,
+      highTrust: true,
     });
     const conversation = ConversationController.get(groupId || senderId);
     const ourId = ConversationController.getOurConversationId();
@@ -2053,6 +2067,7 @@
       const detailsId = ConversationController.ensureContactIds({
         e164: details.number,
         uuid: details.uuid,
+        highTrust: true,
       });
       const conversation = ConversationController.get(detailsId);
       let activeAt = conversation.get('active_at');
@@ -2242,12 +2257,10 @@
       return;
     }
 
-    const sourceE164 = textsecure.storage.user.getNumber();
-    const sourceUuid = textsecure.storage.user.getUuid();
     const receivedAt = Date.now();
     await conversation.updateExpirationTimer(
       expireTimer,
-      sourceE164 || sourceUuid,
+      ConversationController.getOurConversationId(),
       receivedAt,
       {
         fromSync: true,
@@ -2262,10 +2275,16 @@
   });
 
   // Matches event data from `libtextsecure` `MessageReceiver::handleSentMessage`:
-  const getDescriptorForSent = ({ message, destination }) =>
+  const getDescriptorForSent = ({ message, destination, destinationUuid }) =>
     message.group
       ? getGroupDescriptor(message.group)
-      : { type: Message.PRIVATE, id: destination };
+      : {
+          type: Message.PRIVATE,
+          id: ConversationController.ensureContactIds({
+            e164: destination,
+            uuid: destinationUuid,
+          }),
+        };
 
   // Matches event data from `libtextsecure` `MessageReceiver::handleDataMessage`:
   const getDescriptorForReceived = ({ message, source, sourceUuid }) =>
@@ -2276,6 +2295,7 @@
           id: ConversationController.ensureContactIds({
             e164: source,
             uuid: sourceUuid,
+            highTrust: true,
           }),
         };
 
@@ -2286,13 +2306,12 @@
     messageDescriptor,
   }) {
     const profileKey = data.message.profileKey.toString('base64');
-    const sender = await ConversationController.getOrCreateAndWait(
-      messageDescriptor.id,
-      'private'
-    );
+    const sender = await ConversationController.get(messageDescriptor.id);
 
-    // Will do the save for us
-    await sender.setProfileKey(profileKey);
+    if (sender) {
+      // Will do the save for us
+      await sender.setProfileKey(profileKey);
+    }
 
     return confirm();
   }
@@ -2363,9 +2382,12 @@
   }
 
   async function onProfileKeyUpdate({ data, confirm }) {
-    const conversation = ConversationController.get(
-      data.source || data.sourceUuid
-    );
+    const conversationId = ConversationController.ensureContactIds({
+      e164: data.source,
+      uuid: data.sourceUuid,
+      highTrust: true,
+    });
+    const conversation = ConversationController.get(conversationId);
 
     if (!conversation) {
       window.log.error(
@@ -2403,11 +2425,8 @@
     messageDescriptor,
   }) {
     // First set profileSharing = true for the conversation we sent to
-    const { id, type } = messageDescriptor;
-    const conversation = await ConversationController.getOrCreateAndWait(
-      id,
-      type
-    );
+    const { id } = messageDescriptor;
+    const conversation = await ConversationController.get(id);
 
     conversation.enableProfileSharing();
     window.Signal.Data.updateConversation(conversation.attributes);
@@ -2423,7 +2442,7 @@
     return confirm();
   }
 
-  function createSentMessage(data) {
+  function createSentMessage(data, descriptor) {
     const now = Date.now();
     let sentTo = [];
 
@@ -2436,6 +2455,11 @@
       data.unidentifiedDeliveries = unidentified.map(item => item.destination);
     }
 
+    const isGroup = descriptor.type === Message.GROUP;
+    const conversationId = isGroup
+      ? ConversationController.ensureGroup(descriptor.id)
+      : descriptor.id;
+
     return new Whisper.Message({
       source: textsecure.storage.user.getNumber(),
       sourceUuid: textsecure.storage.user.getUuid(),
@@ -2444,7 +2468,7 @@
       serverTimestamp: data.serverTimestamp,
       sent_to: sentTo,
       received_at: now,
-      conversationId: data.destination,
+      conversationId,
       type: 'outgoing',
       sent: true,
       unidentifiedDeliveries: data.unidentifiedDeliveries || [],
@@ -2474,7 +2498,7 @@
       });
     }
 
-    const message = createSentMessage(data);
+    const message = createSentMessage(data, messageDescriptor);
 
     if (data.message.reaction) {
       const { reaction } = data.message;
@@ -2508,12 +2532,7 @@
       return Promise.resolve();
     }
 
-    ConversationController.getOrCreate(
-      messageDescriptor.id,
-      messageDescriptor.type
-    );
     // Don't wait for handleDataMessage, as it has its own per-conversation queueing
-
     message.handleDataMessage(data.message, event.confirm, {
       data,
     });
@@ -2526,12 +2545,10 @@
     const fromContactId = ConversationController.ensureContactIds({
       e164: data.source,
       uuid: data.sourceUuid,
+      highTrust: true,
     });
 
-    // Determine if this message is in a group
     const isGroup = descriptor.type === Message.GROUP;
-
-    // Determine the conversationId this message belongs to
     const conversationId = isGroup
       ? ConversationController.ensureGroup(descriptor.id, {
           addedBy: fromContactId,
@@ -2657,10 +2674,7 @@
       });
 
       const conversationId = message.get('conversationId');
-      const conversation = ConversationController.getOrCreate(
-        conversationId,
-        'private'
-      );
+      const conversation = ConversationController.get(conversationId);
 
       // This matches the queueing behavior used in Message.handleDataMessage
       conversation.queueJob(async () => {
@@ -2799,9 +2813,13 @@
 
   function onReadReceipt(ev) {
     const readAt = ev.timestamp;
-    const { timestamp } = ev.read;
-    const reader = ConversationController.getConversationId(ev.read.reader);
-    window.log.info('read receipt', reader, timestamp);
+    const { timestamp, source, sourceUuid } = ev.read;
+    const reader = ConversationController.ensureContactIds({
+      e164: source,
+      uuid: sourceUuid,
+      highTrust: true,
+    });
+    window.log.info('read receipt', timestamp, source, sourceUuid, reader);
 
     ev.confirm();
 
@@ -2887,7 +2905,11 @@
       ev.viaContactSync ? 'via contact sync' : ''
     );
 
-    const verifiedId = ConversationController.ensureContactIds({ e164, uuid });
+    const verifiedId = ConversationController.ensureContactIds({
+      e164,
+      uuid,
+      highTrust: true,
+    });
     const contact = await ConversationController.get(verifiedId, 'private');
     const options = {
       viaSyncMessage: true,
@@ -2907,20 +2929,23 @@
   function onDeliveryReceipt(ev) {
     const { deliveryReceipt } = ev;
     const { sourceUuid, source } = deliveryReceipt;
-    const identifier = source || sourceUuid;
 
     window.log.info(
       'delivery receipt from',
-      `${identifier}.${deliveryReceipt.sourceDevice}`,
+      `${source} ${sourceUuid} ${deliveryReceipt.sourceDevice}`,
       deliveryReceipt.timestamp
     );
 
     ev.confirm();
 
-    const deliveredTo = ConversationController.getConversationId(identifier);
+    const deliveredTo = ConversationController.ensureContactIds({
+      e164: source,
+      uuid: sourceUuid,
+      highTrust: true,
+    });
 
     if (!deliveredTo) {
-      window.log.info('no conversation for identifier', identifier);
+      window.log.info('no conversation for', source, sourceUuid);
       return;
     }
 

@@ -604,7 +604,8 @@
                 for (let i = 0; i < reads.length; i += 1) {
                     const read = new window.textsecure.protobuf.SyncMessage.Read();
                     read.timestamp = reads[i].timestamp;
-                    read.sender = reads[i].sender;
+                    read.sender = reads[i].senderE164;
+                    read.senderUuid = reads[i].senderUuid;
                     syncMessage.read.push(read);
                 }
                 const contentMessage = new window.textsecure.protobuf.Content();
@@ -790,15 +791,15 @@
             proto.body = 'TERMINATE';
             proto.flags = window.textsecure.protobuf.DataMessage.Flags.END_SESSION;
             proto.timestamp = timestamp;
-            const identifier = e164 || uuid;
+            const identifier = uuid || e164;
             const logError = (prefix) => (error) => {
                 window.log.error(prefix, error && error.stack ? error.stack : error);
                 throw error;
             };
-            const deleteAllSessions = async (targetNumber) => window.textsecure.storage.protocol
-                .getDeviceIds(targetNumber)
+            const deleteAllSessions = async (targetIdentifier) => window.textsecure.storage.protocol
+                .getDeviceIds(targetIdentifier)
                 .then(async (deviceIds) => Promise.all(deviceIds.map(async (deviceId) => {
-                    const address = new window.libsignal.SignalProtocolAddress(targetNumber, deviceId);
+                    const address = new window.libsignal.SignalProtocolAddress(targetIdentifier, deviceId);
                     window.log.info('deleting sessions for', address.toString());
                     const sessionCipher = new window.libsignal.SessionCipher(window.textsecure.storage.protocol, address);
                     return sessionCipher.deleteAllSessionsForDevice();
@@ -813,7 +814,7 @@
             const myNumber = window.textsecure.storage.user.getNumber();
             const myUuid = window.textsecure.storage.user.getUuid();
             // We already sent the reset session to our other devices in the code above!
-            if (e164 === myNumber || uuid === myUuid) {
+            if ((e164 && e164 === myNumber) || (uuid && uuid === myUuid)) {
                 return sendToContactPromise;
             }
             const buffer = proto.toArrayBuffer();

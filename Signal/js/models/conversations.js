@@ -85,6 +85,12 @@
       return `group(${groupId})`;
     },
 
+    // This is one of the few times that we want to collapse our uuid/e164 pair down into
+    //   just one bit of data. If we have a UUID, we'll send using it.
+    getSendTarget() {
+      return this.get('uuid') || this.get('e164');
+    },
+
     handleMessageError(message, errors) {
       this.trigger('messageError', message, errors);
     },
@@ -318,9 +324,8 @@
       }
 
       const groupId = !this.isPrivate() ? this.get('groupId') : null;
-      const maybeRecipientId = this.get('uuid') || this.get('e164');
-      const recipientId = this.isPrivate() ? maybeRecipientId : null;
       const groupNumbers = this.getRecipients();
+      const recipientId = this.isPrivate() ? this.getSendTarget() : null;
 
       const sendOptions = this.getSendOptions();
 
@@ -395,10 +400,10 @@
 
     async onNewMessage(message) {
       // Clear typing indicator for a given contact if we receive a message from them
-      const identifier = message.get
-        ? `${message.get('source')}.${message.get('sourceDevice')}`
-        : `${message.source}.${message.sourceDevice}`;
-      this.clearContactTypingTimer(identifier);
+      const deviceId = message.get
+        ? `${message.get('conversationId')}.${message.get('sourceDevice')}`
+        : `${message.conversationId}.${message.sourceDevice}`;
+      this.clearContactTypingTimer(deviceId);
 
       this.debouncedUpdateLastMessage();
     },
@@ -582,7 +587,13 @@
           m => !m.hasErrors() && m.isIncoming()
         );
         const receiptSpecs = readMessages.map(m => ({
-          sender: m.get('source') || m.get('sourceUuid'),
+          senderE164: m.get('source'),
+          senderUuid: m.get('sourceUuid'),
+          senderId: ConversationController.get({
+            e164: m.get('source'),
+            uuid: m.get('sourceUuid'),
+            lowTrust: true,
+          }),
           timestamp: m.get('sent_at'),
           hasErrors: m.hasErrors(),
         }));
@@ -1173,14 +1184,12 @@
 
     getRecipients() {
       if (this.isPrivate()) {
-        return [this.get('uuid') || this.get('e164')];
+        return [this.getSendTarget()];
       }
-      const me = ConversationController.getConversationId(
-        textsecure.storage.user.getUuid() || textsecure.storage.user.getNumber()
-      );
+      const me = ConversationController.getOurConversationId();
       return _.without(this.get('members'), me).map(memberId => {
         const c = ConversationController.get(memberId);
-        return c.get('uuid') || c.get('e164');
+        return c.getSendTarget();
       });
     },
 
@@ -1344,11 +1353,7 @@
       const reactionModel = Whisper.Reactions.add(Object.assign({},
         outgoingReaction,
         {
-          fromId:
-            this.ourNumber ||
-            this.ourUuid ||
-            textsecure.storage.user.getNumber() ||
-            textsecure.storage.user.getUuid(),
+          fromId: ConversationController.getOurConversationId(),
           timestamp,
           fromSync: true,
         }
@@ -1460,9 +1465,7 @@
 
     async sendProfileKeyUpdate() {
       const id = this.get('id');
-      const recipients = this.isPrivate()
-        ? [this.get('uuid') || this.get('e164')]
-        : this.getRecipients();
+      const recipients = this.getRecipients();
       if (!this.get('profileSharing')) {
         window.log.error(
           'Attempted to send profileKeyUpdate to conversation without profileSharing enabled',
@@ -1491,7 +1494,7 @@
       const { clearUnreadMetrics } = window.reduxActions.conversations;
       clearUnreadMetrics(this.id);
 
-      const destination = this.get('uuid') || this.get('e164');
+      const destination = this.getSendTarget();
       const expireTimer = this.get('expireTimer');
       const recipients = this.getRecipients();
 
@@ -1565,7 +1568,7 @@
           ).map(contact => {
             const error = new Error('Network is not available');
             error.name = 'SendMessageNetworkError';
-            error.identifier = contact.get('uuid') || contact.get('e164');
+            error.identifier = contact.get('id');
             return error;
           });
           await message.saveErrors(errors);
@@ -1674,8 +1677,8 @@
 
     async handleMessageSendResult(failoverIdentifiers, unidentifiedDeliveries) {
       await Promise.all(
-        (failoverIdentifiers || []).map(async number => {
-          const conversation = ConversationController.get(number);
+        (failoverIdentifiers || []).map(async identifier => {
+          const conversation = ConversationController.get(identifier);
 
           if (
             conversation &&
@@ -1693,8 +1696,8 @@
       );
 
       await Promise.all(
-        (unidentifiedDeliveries || []).map(async number => {
-          const conversation = ConversationController.get(number);
+        (unidentifiedDeliveries || []).map(async identifier => {
+          const conversation = ConversationController.get(identifier);
 
           if (
             conversation &&
@@ -1738,17 +1741,10 @@
     getSendMetadata(options = {}) {
       const { syncMessage, disableMeCheck } = options;
 
-      if (!this.ourNumber && !this.ourUuid) {
-        return null;
-      }
-
       // START: this code has an Expiration date of ~2018/11/21
       // We don't want to enable unidentified delivery for send unless it is
       //   also enabled for our own account.
-      const myId = ConversationController.ensureContactIds({
-        e164: this.ourNumber,
-        uuid: this.ourUuid,
-      });
+      const myId = ConversationController.getOurConversationId();
       const me = ConversationController.get(myId);
       if (
         !disableMeCheck &&
@@ -1919,10 +1915,7 @@
         source,
       });
 
-      source =
-        source ||
-        textsecure.storage.user.getNumber() ||
-        textsecure.storage.user.getUuid();
+      source = source || ConversationController.getOurConversationId();
 
       // When we add a disappearing messages notification to the conversation, we want it
       //   to be above the message that initiated that change, hence the subtraction.
@@ -1949,7 +1942,7 @@
       });
 
       if (this.isPrivate()) {
-        model.set({ destination: this.get('uuid') || this.get('e164') });
+        model.set({ destination: this.getSendTarget() });
       }
       if (model.isOutgoing()) {
         model.set({ recipients: this.getRecipients() });
@@ -1979,7 +1972,7 @@
         const flags =
           textsecure.protobuf.DataMessage.Flags.EXPIRATION_TIMER_UPDATE;
         const dataMessage = await textsecure.messaging.getMessageProto(
-          this.get('uuid') || this.get('e164'),
+          this.getSendTarget(),
           null,
           [],
           null,
@@ -1996,7 +1989,7 @@
 
       if (this.get('type') === 'private') {
         promise = textsecure.messaging.sendExpirationTimerUpdateToIdentifier(
-          this.get('uuid') || this.get('e164'),
+          this.getSendTarget(),
           expireTimer,
           message.get('sent_at'),
           profileKey,
@@ -2196,7 +2189,12 @@
           await m.markRead(options.readAt);
 
           return {
-            sender: m.get('source') || m.get('sourceUuid'),
+            senderE164: m.get('source'),
+            senderUuid: m.get('sourceUuid'),
+            senderId: ConversationController.ensureContactIds({
+              e164: m.get('source'),
+              uuid: m.get('sourceUuid'),
+            }),
             timestamp: m.get('sent_at'),
             hasErrors: m.hasErrors(),
           };
@@ -2204,7 +2202,7 @@
       );
 
       // Some messages we're marking read are local notifications with no sender
-      read = _.filter(read, m => Boolean(m.sender));
+      read = _.filter(read, m => Boolean(m.senderId));
       unreadMessages = unreadMessages.filter(m => Boolean(m.isIncoming()));
 
       const unreadCount = unreadMessages.length - read.length;
@@ -2222,8 +2220,10 @@
         window.log.info(`Sending ${read.length} read syncs`);
         // Because syncReadMessages sends to our other devices, and sendReadReceipts goes
         //   to a contact, we need accessKeys for both.
-        const { sendOptions } = ConversationController.prepareForSend(
-          this.ourUuid || this.ourNumber,
+        const {
+          sendOptions,
+        } = ConversationController.prepareForSend(
+          ConversationController.getOurConversationId(),
           { syncMessage: true }
         );
         await this.wrapSend(
@@ -2238,12 +2238,12 @@
       if (storage.get('read-receipt-setting') && this.getAccepted()) {
         window.log.info(`Sending ${items.length} read receipts`);
         const convoSendOptions = this.getSendOptions();
-        const receiptsBySender = _.groupBy(items, 'sender');
+        const receiptsBySender = _.groupBy(items, 'senderId');
 
         await Promise.all(
-          _.map(receiptsBySender, async (receipts, identifier) => {
+          _.map(receiptsBySender, async (receipts, senderId) => {
             const timestamps = _.map(receipts, 'timestamp');
-            const c = ConversationController.get(identifier);
+            const c = ConversationController.get(senderId);
             await this.wrapSend(
               textsecure.messaging.sendReadReceipts(
                 c.get('e164'),
@@ -2265,28 +2265,33 @@
 
     getProfiles() {
       // request all conversation members' keys
-      let ids = [];
+      let conversations = [];
       if (this.isPrivate()) {
-        ids = [this.get('uuid') || this.get('e164')];
+        conversations = [this];
       } else {
-        ids = this.get('members')
-          .map(id => {
-            const c = ConversationController.get(id);
-            return c ? c.get('uuid') || c.get('e164') : null;
-          })
+        conversations = this.get('members')
+          .map(id => ConversationController.get(id))
           .filter(Boolean);
       }
-      return Promise.all(_.map(ids, this.getProfile));
+      return Promise.all(
+        _.map(conversations, conversation => {
+          this.getProfile(conversation.get('uuid'), conversation.get('e164'));
+        })
+      );
     },
 
-    async getProfile(id) {
+    async getProfile(providedUuid, providedE164) {
       if (!textsecure.messaging) {
         throw new Error(
           'Conversation.getProfile: textsecure.messaging not available'
         );
       }
 
-      const c = ConversationController.getOrCreate(id, 'private');
+      const id = ConversationController.ensureContactIds({
+        uuid: providedUuid,
+        e164: providedE164,
+      });
+      const c = ConversationController.get(id);
       const {
         generateProfileKeyCredentialRequest,
         getClientZkProfileOperations,
@@ -2310,6 +2315,7 @@
 
         const profileKey = c.get('profileKey');
         const uuid = c.get('uuid');
+        const identifier = c.getSendTarget();
         const profileKeyVersionHex = c.get('profileKeyVersion');
         const existingProfileKeyCredential = c.get('profileKeyCredential');
 
@@ -2333,11 +2339,11 @@
 
         const sendMetadata = c.getSendMetadata({ disableMeCheck: true }) || {};
         const getInfo =
-          sendMetadata[c.get('e164')] || sendMetadata[c.get('uuid')] || {};
+          sendMetadata[c.get('uuid')] || sendMetadata[c.get('e164')] || {};
 
         if (getInfo.accessKey) {
           try {
-            profile = await textsecure.messaging.getProfile(id, {
+            profile = await textsecure.messaging.getProfile(identifier, {
               accessKey: getInfo.accessKey,
               profileKeyVersion: profileKeyVersionHex,
               profileKeyCredentialRequest: profileKeyCredentialRequestHex,
@@ -2348,7 +2354,7 @@
                 `Setting sealedSender to DISABLED for conversation ${c.idForLogging()}`
               );
               c.set({ sealedSender: SEALED_SENDER.DISABLED });
-              profile = await textsecure.messaging.getProfile(id, {
+              profile = await textsecure.messaging.getProfile(identifier, {
                 profileKeyVersion: profileKeyVersionHex,
                 profileKeyCredentialRequest: profileKeyCredentialRequestHex,
               });
@@ -2357,7 +2363,7 @@
             }
           }
         } else {
-          profile = await textsecure.messaging.getProfile(id, {
+          profile = await textsecure.messaging.getProfile(identifier, {
             profileKeyVersion: profileKeyVersionHex,
             profileKeyCredentialRequest: profileKeyCredentialRequestHex,
           });
@@ -2365,14 +2371,14 @@
 
         const identityKey = base64ToArrayBuffer(profile.identityKey);
         const changed = await textsecure.storage.protocol.saveIdentity(
-          `${id}.1`,
+          `${identifier}.1`,
           identityKey,
           false
         );
         if (changed) {
           // save identity will close all sessions except for .1, so we
           // must close that one manually.
-          const address = new libsignal.SignalProtocolAddress(id, 1);
+          const address = new libsignal.SignalProtocolAddress(identifier, 1);
           window.log.info('closing session for', address.toString());
           const sessionCipher = new libsignal.SessionCipher(
             textsecure.storage.protocol,
@@ -2437,7 +2443,7 @@
         if (error.code !== 403 && error.code !== 404) {
           window.log.warn(
             'getProfile failure:',
-            id,
+            c.idForLogging(),
             error && error.stack ? error.stack : error
           );
         } else {
@@ -2451,7 +2457,7 @@
       } catch (error) {
         window.log.warn(
           'getProfile decryption failure:',
-          id,
+          c.idForLogging(),
           error && error.stack ? error.stack : error
         );
         await c.dropProfileKey();
@@ -2796,10 +2802,9 @@
 
       const conversationId = this.id;
 
-      const sender = await ConversationController.getOrCreateAndWait(
-        reaction ? reaction.get('fromId') : message.get('source'),
-        'private'
-      );
+      const sender = reaction
+        ? ConversationController.get(reaction.get('fromId'))
+        : message.getContact();
 
       const iconUrl = await sender.getNotificationIcon();
 
@@ -2821,42 +2826,33 @@
     },
 
     notifyTyping(options = {}) {
-      const {
-        isTyping,
-        sender,
-        senderUuid,
-        senderId,
-        isMe,
-        senderDevice,
-      } = options;
+      const { isTyping, senderId, isMe, senderDevice } = options;
 
       // We don't do anything with typing messages from our other devices
       if (isMe) {
         return;
       }
 
-      const identifier = `${sender}.${senderDevice}`;
+      const deviceId = `${senderId}.${senderDevice}`;
 
       this.contactTypingTimers = this.contactTypingTimers || {};
-      const record = this.contactTypingTimers[identifier];
+      const record = this.contactTypingTimers[deviceId];
 
       if (record) {
         clearTimeout(record.timer);
       }
 
       if (isTyping) {
-        this.contactTypingTimers[identifier] = this.contactTypingTimers[
-          identifier
+        this.contactTypingTimers[deviceId] = this.contactTypingTimers[
+          deviceId
         ] || {
           timestamp: Date.now(),
-          sender,
           senderId,
-          senderUuid,
           senderDevice,
         };
 
-        this.contactTypingTimers[identifier].timer = setTimeout(
-          this.clearContactTypingTimer.bind(this, identifier),
+        this.contactTypingTimers[deviceId].timer = setTimeout(
+          this.clearContactTypingTimer.bind(this, deviceId),
           15 * 1000
         );
         if (!record) {
@@ -2864,7 +2860,7 @@
           this.trigger('change', this);
         }
       } else {
-        delete this.contactTypingTimers[identifier];
+        delete this.contactTypingTimers[deviceId];
         if (record) {
           // User was previously typing, and is no longer. State change!
           this.trigger('change', this);
@@ -2872,13 +2868,13 @@
       }
     },
 
-    clearContactTypingTimer(identifier) {
+    clearContactTypingTimer(deviceId) {
       this.contactTypingTimers = this.contactTypingTimers || {};
-      const record = this.contactTypingTimers[identifier];
+      const record = this.contactTypingTimers[deviceId];
 
       if (record) {
         clearTimeout(record.timer);
-        delete this.contactTypingTimers[identifier];
+        delete this.contactTypingTimers[deviceId];
 
         // User was previously typing, but timed out or we received message. State change!
         this.trigger('change', this);
@@ -2895,9 +2891,9 @@
      * than just their id.
      */
     initialize() {
-      this._byE164 = {};
-      this._byUuid = {};
-      this._byGroupId = {};
+      this._byE164 = Object.create(null);
+      this._byUuid = Object.create(null);
+      this._byGroupId = Object.create(null);
       this.on('idUpdated', (model, idProp, oldValue) => {
         if (oldValue) {
           if (idProp === 'e164') {
@@ -2924,9 +2920,9 @@
 
     reset(...args) {
       Backbone.Collection.prototype.reset.apply(this, args);
-      this._byE164 = {};
-      this._byUuid = {};
-      this._byGroupId = {};
+      this._byE164 = Object.create(null);
+      this._byUuid = Object.create(null);
+      this._byGroupId = Object.create(null);
     },
 
     add(...models) {
@@ -2934,12 +2930,22 @@
       [].concat(res).forEach(model => {
         const e164 = model.get('e164');
         if (e164) {
-          this._byE164[e164] = model;
+          const existing = this._byE164[e164];
+
+          // Prefer the contact with both e164 and uuid
+          if (!existing || (existing && !existing.get('uuid'))) {
+            this._byE164[e164] = model;
+          }
         }
 
         const uuid = model.get('uuid');
         if (uuid) {
-          this._byUuid[uuid] = model;
+          const existing = this._byUuid[uuid];
+
+          // Prefer the contact with both e164 and uuid
+          if (!existing || (existing && !existing.get('e164'))) {
+            this._byUuid[uuid] = model;
+          }
         }
 
         const groupId = model.get('groupId');

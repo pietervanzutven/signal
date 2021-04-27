@@ -95,6 +95,7 @@
         getOlderMessagesByConversation,
         getNewerMessagesByConversation,
         getMessageMetricsForConversation,
+        migrateConversationMessages,
         getUnprocessedCount,
         getAllUnprocessed,
         saveUnprocessed,
@@ -2090,6 +2091,17 @@
         };
     }
     getMessageMetricsForConversation.needsSerial = true;
+    async function migrateConversationMessages(obsoleteId, currentId) {
+        const db = getInstance();
+        await db.run(`UPDATE messages SET
+      conversationId = $currentId,
+      json = json_set(json, '$.conversationId', $currentId)
+     WHERE conversationId = $obsoleteId;`, {
+            $obsoleteId: obsoleteId,
+            $currentId: currentId,
+        });
+    }
+    migrateConversationMessages.needsSerial = true;
     async function getMessagesBySentAt(sentAt) {
         const db = getInstance();
         const rows = await db.all(`SELECT * FROM messages

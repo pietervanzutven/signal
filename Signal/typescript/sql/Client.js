@@ -7,10 +7,10 @@
 
     // tslint:disable no-default-export no-unnecessary-local-variable
     Object.defineProperty(exports, "__esModule", { value: true });
-    const electron_1 = window.electron;
-    const lodash_1 = window.lodash;
-    const Crypto_1 = window.ts.Crypto;
-    const message_1 = window.types.message;
+    const electron_1 = require("electron");
+    const lodash_1 = require("lodash");
+    const Crypto_1 = require("../Crypto");
+    const message_1 = require("../../js/modules/types/message");
     const batcher_1 = require("../util/batcher");
     // We listen to a lot of events on ipcRenderer, often on the same channel. This prevents
     //   any warnings that might be sent to the console in that case.
@@ -102,6 +102,7 @@
         getOlderMessagesByConversation,
         getNewerMessagesByConversation,
         getMessageMetricsForConversation,
+        migrateConversationMessages,
         getUnprocessedCount,
         getAllUnprocessed,
         getUnprocessedById,
@@ -649,7 +650,7 @@
         }
         return new Message(messages[0]);
     }
-    async function getUnreadByConversation(conversationId, { MessageCollection }) {
+    async function getUnreadByConversation(conversationId, { MessageCollection, }) {
         const messages = await channels.getUnreadByConversation(conversationId);
         return new MessageCollection(messages);
     }
@@ -675,7 +676,10 @@
         const result = await channels.getMessageMetricsForConversation(conversationId);
         return result;
     }
-    async function removeAllMessagesInConversation(conversationId, { MessageCollection }) {
+    async function migrateConversationMessages(obsoleteId, currentId) {
+        await channels.migrateConversationMessages(obsoleteId, currentId);
+    }
+    async function removeAllMessagesInConversation(conversationId, { MessageCollection, }) {
         let messages;
         do {
             // Yes, we really want the await in the loop. We're deleting 100 at a
@@ -690,11 +694,11 @@
             const ids = messages.map((message) => message.id);
             // Note: It's very important that these models are fully hydrated because
             //   we need to delete all associated on-disk files along with the database delete.
-            await Promise.all(messages.map((message) => message.cleanup()));
+            await Promise.all(messages.map(async (message) => message.cleanup()));
             await channels.removeMessage(ids);
         } while (messages.length > 0);
     }
-    async function getMessagesBySentAt(sentAt, { MessageCollection }) {
+    async function getMessagesBySentAt(sentAt, { MessageCollection, }) {
         const messages = await channels.getMessagesBySentAt(sentAt);
         return new MessageCollection(messages);
     }
