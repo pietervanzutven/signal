@@ -31,7 +31,7 @@
             React.createElement("div", { className: "module-avatar-popup__profile" },
                 React.createElement(Avatar_1.Avatar, Object.assign({}, props, { size: 52 })),
                 React.createElement("div", { className: "module-avatar-popup__profile__text" },
-                    React.createElement("div", { className: "module-avatar-popup__profile__name" }, title),
+                    React.createElement("div", { className: "module-avatar-popup__profile__name" }, profileName || title),
                     shouldShowNumber ? (React.createElement("div", { className: "module-avatar-popup__profile__number" }, phoneNumber)) : null)),
             React.createElement("hr", { className: "module-avatar-popup__divider" }),
             React.createElement("button", { ref: focusRef, className: "module-avatar-popup__item", onClick: onViewPreferences },
