@@ -14,8 +14,8 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const Attachment = __importStar(window.ts.types.Attachment);
-    const IndexedDB = __importStar(window.ts.types.IndexedDB);
+    const Attachment = __importStar(require("../Attachment"));
+    const IndexedDB = __importStar(require("../IndexedDB"));
     const hasAttachment = (predicate) => (message) => IndexedDB.toIndexablePresence(message.attachments.some(predicate));
     const hasFileAttachment = hasAttachment(Attachment.isFile);
     const hasVisualMediaAttachment = hasAttachment(Attachment.isVisualMedia);
@@ -24,6 +24,9 @@
             return message;
         }
         if (message.type === 'message-history-unsynced') {
+            return message;
+        }
+        if (message.type === 'profile-change') {
             return message;
         }
         if (message.messageTimer || message.isViewOnce) {

@@ -3721,6 +3721,7 @@
     <Content Include="typescript\components\conversation\MessageDetail.js" />
     <Content Include="typescript\components\conversation\MessageRequestActions.js" />
     <Content Include="typescript\components\conversation\MessageRequestActionsConfirmation.js" />
+    <Content Include="typescript\components\conversation\ProfileChangeNotification.js" />
     <Content Include="typescript\components\conversation\Quote.js" />
     <Content Include="typescript\components\conversation\ReactionPicker.js" />
     <Content Include="typescript\components\conversation\ReactionViewer.js" />
@@ -3890,6 +3891,7 @@
     <Content Include="typescript\util\formatDuration.js" />
     <Content Include="typescript\util\formatRelativeTime.js" />
     <Content Include="typescript\util\getInitials.js" />
+    <Content Include="typescript\util\getStringForProfileChange.js" />
     <Content Include="typescript\util\GoogleChrome.js" />
     <Content Include="typescript\util\hasExpired.js" />
     <Content Include="typescript\util\hooks.js" />

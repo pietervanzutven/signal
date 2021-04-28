@@ -9,9 +9,9 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const Dialogs_1 = window.ts.types.Dialogs;
-    const Intl_1 = window.ts.components.Intl;
+    const react_1 = __importDefault(require("react"));
+    const Dialogs_1 = require("../types/Dialogs");
+    const Intl_1 = require("./Intl");
     exports.UpdateDialog = ({ ackRender, dialogType, didSnooze, dismissDialog, hasNetworkDialog, i18n, snoozeUpdate, startUpdate, }) => {
         react_1.default.useEffect(() => {
             ackRender();
@@ -39,10 +39,10 @@
                     react_1.default.createElement("h3", null, i18n('cannotUpdate')),
                     react_1.default.createElement("span", null,
                         react_1.default.createElement(Intl_1.Intl, {
-                            components: [
-                                react_1.default.createElement("strong", { key: "app" }, "Signal.app"),
-                                react_1.default.createElement("strong", { key: "folder" }, "/Applications"),
-                            ], i18n: i18n, id: "readOnlyVolume"
+                            components: {
+                                app: react_1.default.createElement("strong", { key: "app" }, "Signal.app"),
+                                folder: react_1.default.createElement("strong", { key: "folder" }, "/Applications"),
+                            }, i18n: i18n, id: "readOnlyVolume"
                         }))),
                 react_1.default.createElement("div", { className: "module-left-pane-dialog__actions" },
                     react_1.default.createElement("button", { onClick: dismissDialog }, i18n('ok')))));

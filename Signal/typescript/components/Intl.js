@@ -9,26 +9,43 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
+    const react_1 = __importDefault(require("react"));
     class Intl extends react_1.default.Component {
-        getComponent(index, key) {
+        getComponent(index, placeholderName, key) {
             const { id, components } = this.props;
-            if (!components || !components.length || components.length <= index) {
+            if (!components) {
                 // tslint:disable-next-line no-console
-                console.log(`Error: Intl missing provided components for id ${id}, index ${index}`);
+                console.log(`Error: Intl component prop not provided; Metadata: id '${id}', index ${index}, placeholder '${placeholderName}'`);
                 return;
             }
-            return react_1.default.createElement(react_1.default.Fragment, { key: key }, components[index]);
+            if (Array.isArray(components)) {
+                if (!components || !components.length || components.length <= index) {
+                    // tslint:disable-next-line no-console
+                    console.log(`Error: Intl missing provided component for id '${id}', index ${index}`);
+                    return;
+                }
+                return react_1.default.createElement(react_1.default.Fragment, { key: key }, components[index]);
+            }
+            const value = components[placeholderName];
+            if (!value) {
+                // tslint:disable-next-line no-console
+                console.log(`Error: Intl missing provided component for id '${id}', placeholder '${placeholderName}'`);
+                return;
+            }
+            return react_1.default.createElement(react_1.default.Fragment, { key: key }, value);
         }
         render() {
-            const { id, i18n, renderText } = this.props;
+            const { components, id, i18n, renderText } = this.props;
             const text = i18n(id);
             const results = [];
-            const FIND_REPLACEMENTS = /\$[^$]+\$/g;
+            const FIND_REPLACEMENTS = /\$([^$]+)\$/g;
             // We have to do this, because renderText is not required in our Props object,
             //   but it is always provided via defaultProps.
             if (!renderText) {
                 return;
+            }
+            if (Array.isArray(components) && components.length > 1) {
+                throw new Error('Array syntax is not supported with more than one placeholder');
             }
             let componentIndex = 0;
             let key = 0;
@@ -43,7 +60,8 @@
                     results.push(renderText({ text: textWithNoReplacements, key: key }));
                     key += 1;
                 }
-                results.push(this.getComponent(componentIndex, key));
+                const placeholderName = match[1];
+                results.push(this.getComponent(componentIndex, placeholderName, key));
                 componentIndex += 1;
                 key += 1;
                 // @ts-ignore

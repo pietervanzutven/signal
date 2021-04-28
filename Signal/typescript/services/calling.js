@@ -160,6 +160,7 @@ require(exports => {
                 return false;
             }
         }
+        // If we return null here, we hang up the call.
         async handleIncomingCall(call) {
             if (!this.uxActions || !this.localDeviceId) {
                 window.log.error('Missing required objects, ignoring incoming call.');

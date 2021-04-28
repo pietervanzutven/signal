@@ -11,17 +11,7 @@ require(exports => {
         if (!conversation) {
             throw new Error(`Did not find conversation ${id} in state!`);
         }
-        return {
-            i18n: user_1.getIntl(state),
-            avatarPath: conversation.avatarPath,
-            color: conversation.color,
-            conversationType: conversation.type,
-            isMe: conversation.isMe,
-            membersCount: conversation.membersCount,
-            name: conversation.name,
-            phoneNumber: conversation.phoneNumber,
-            profileName: conversation.profileName,
-        };
+        return Object.assign(Object.assign({ i18n: user_1.getIntl(state) }, conversation), { conversationType: conversation.type });
     };
     const smart = react_redux_1.connect(mapStateToProps, actions_1.mapDispatchToProps);
     exports.SmartHeroRow = smart(ConversationHero_1.ConversationHero);

@@ -11,6 +11,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
     const classnames_1 = __importDefault(require("classnames"));
+    const lodash_1 = require("lodash");
     const Avatar_1 = require("./Avatar");
     const MessageBody_1 = require("./conversation/MessageBody");
     const Timestamp_1 = require("./conversation/Timestamp");
@@ -26,31 +27,33 @@
         }
         renderUnread() {
             const { unreadCount } = this.props;
-            if (unreadCount > 0) {
+            if (lodash_1.isNumber(unreadCount) && unreadCount > 0) {
                 return (react_1.default.createElement("div", { className: "module-conversation-list-item__unread-count" }, unreadCount));
             }
             return null;
         }
         renderHeader() {
             const { unreadCount, i18n, isMe, lastUpdated, name, phoneNumber, profileName, title, } = this.props;
+            const withUnread = lodash_1.isNumber(unreadCount) && unreadCount > 0;
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__header" },
                 react_1.default.createElement("div", {
-                    className: classnames_1.default('module-conversation-list-item__header__name', unreadCount > 0
+                    className: classnames_1.default('module-conversation-list-item__header__name', withUnread
                         ? 'module-conversation-list-item__header__name--with-unread'
                         : null)
                 }, isMe ? (i18n('noteToSelf')) : (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: phoneNumber, name: name, profileName: profileName, title: title, i18n: i18n }))),
                 react_1.default.createElement("div", {
-                    className: classnames_1.default('module-conversation-list-item__header__date', unreadCount > 0
+                    className: classnames_1.default('module-conversation-list-item__header__date', withUnread
                         ? 'module-conversation-list-item__header__date--has-unread'
                         : null)
                 },
-                    react_1.default.createElement(Timestamp_1.Timestamp, { timestamp: lastUpdated, extended: false, module: "module-conversation-list-item__header__timestamp", withUnread: unreadCount > 0, i18n: i18n }))));
+                    react_1.default.createElement(Timestamp_1.Timestamp, { timestamp: lastUpdated, extended: false, module: "module-conversation-list-item__header__timestamp", withUnread: withUnread, i18n: i18n }))));
         }
         renderMessage() {
             const { draftPreview, i18n, lastMessage, shouldShowDraft, typingContact, unreadCount, } = this.props;
             if (!lastMessage && !typingContact) {
                 return null;
             }
+            const withUnread = lodash_1.isNumber(unreadCount) && unreadCount > 0;
             const showingDraft = shouldShowDraft && draftPreview;
             const deletedForEveryone = Boolean(lastMessage && lastMessage.deletedForEveryone);
             // Note: instead of re-using showingDraft here we explode it because
@@ -62,7 +65,7 @@
                     : '';
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__message" },
                 react_1.default.createElement("div", {
-                    dir: "auto", className: classnames_1.default('module-conversation-list-item__message__text', unreadCount > 0
+                    dir: "auto", className: classnames_1.default('module-conversation-list-item__message__text', withUnread
                         ? 'module-conversation-list-item__message__text--has-unread'
                         : null)
                 }, typingContact ? (react_1.default.createElement(TypingAnimation_1.TypingAnimation, { i18n: i18n })) : (react_1.default.createElement(react_1.default.Fragment, null,
@@ -72,12 +75,13 @@
         }
         render() {
             const { unreadCount, onClick, id, isSelected, style } = this.props;
+            const withUnread = lodash_1.isNumber(unreadCount) && unreadCount > 0;
             return (react_1.default.createElement("button", {
                 onClick: () => {
                     if (onClick) {
                         onClick(id);
                     }
-                }, style: style, className: classnames_1.default('module-conversation-list-item', unreadCount > 0 ? 'module-conversation-list-item--has-unread' : null, isSelected ? 'module-conversation-list-item--is-selected' : null), "data-id": _util_1.cleanId(id)
+                }, style: style, className: classnames_1.default('module-conversation-list-item', withUnread ? 'module-conversation-list-item--has-unread' : null, isSelected ? 'module-conversation-list-item--is-selected' : null), "data-id": _util_1.cleanId(id)
             },
                 this.renderAvatar(),
                 react_1.default.createElement("div", { className: "module-conversation-list-item__content" },

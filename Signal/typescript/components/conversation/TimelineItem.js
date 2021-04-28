@@ -20,6 +20,7 @@
     const VerificationNotification_1 = require("./VerificationNotification");
     const GroupNotification_1 = require("./GroupNotification");
     const ResetSessionNotification_1 = require("./ResetSessionNotification");
+    const ProfileChangeNotification_1 = require("./ProfileChangeNotification");
     class TimelineItem extends react_1.default.PureComponent {
         render() {
             const { conversationId, id, isSelected, item, i18n, selectMessage, } = this.props;
@@ -57,6 +58,9 @@
             }
             else if (item.type === 'resetSessionNotification') {
                 notification = (react_1.default.createElement(ResetSessionNotification_1.ResetSessionNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));
+            }
+            else if (item.type === 'profileChange') {
+                notification = (react_1.default.createElement(ProfileChangeNotification_1.ProfileChangeNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));
             }
             else {
                 throw new Error('TimelineItem: Unknown type!');

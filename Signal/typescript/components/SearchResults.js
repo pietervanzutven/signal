@@ -271,10 +271,10 @@
                     // We need this for Ctrl-T shortcut cycling through parts of app
                     tabIndex: -1, className: "module-search-results__no-results", key: searchTerm
                 }, searchConversationName ? (react_1.default.createElement(Intl_1.Intl, {
-                    id: "noSearchResultsInConversation", i18n: i18n, components: [
+                    id: "noSearchResultsInConversation", i18n: i18n, components: {
                         searchTerm,
-                        react_1.default.createElement(Emojify_1.Emojify, { key: "item-1", text: searchConversationName }),
-                    ]
+                        conversationName: (react_1.default.createElement(Emojify_1.Emojify, { key: "item-1", text: searchConversationName })),
+                    }
                 })) : (i18n('noSearchResults', [searchTerm])))) : null));
             }
             return (react_1.default.createElement("div", { className: "module-search-results", "aria-live": "polite", role: "group", tabIndex: -1, ref: this.containerRef, onKeyDown: this.handleKeyDown, onFocus: this.handleFocus },

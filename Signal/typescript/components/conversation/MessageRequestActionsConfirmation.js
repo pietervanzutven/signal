@@ -20,7 +20,7 @@ require(exports => {
         MessageRequestState[MessageRequestState["default"] = 3] = "default";
     })(MessageRequestState = exports.MessageRequestState || (exports.MessageRequestState = {}));
     // tslint:disable-next-line: max-func-body-length
-    exports.MessageRequestActionsConfirmation = ({ i18n, name, profileName, phoneNumber, title, conversationType, onBlock, onBlockAndDelete, onUnblock, onDelete, state, onChangeState, }) => {
+    exports.MessageRequestActionsConfirmation = ({ conversationType, i18n, name, onBlock, onBlockAndDelete, onChangeState, onDelete, onUnblock, phoneNumber, profileName, state, title, }) => {
         if (state === MessageRequestState.blocking) {
             return (
                 // tslint:disable-next-line: use-simple-attributes

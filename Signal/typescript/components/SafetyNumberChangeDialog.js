@@ -24,7 +24,7 @@ require(exports => {
             React.createElement("div", { className: "module-sfn-dialog__message" }, i18n('changedVerificationWarning')),
             React.createElement("ul", { className: "module-sfn-dialog__contacts" }, contacts.map((contact) => {
                 const shouldShowNumber = Boolean(contact.name || contact.profileName);
-                return (React.createElement("li", { className: "module-sfn-dialog__contact", key: contact.phoneNumber },
+                return (React.createElement("li", { className: "module-sfn-dialog__contact", key: contact.id },
                     React.createElement(Avatar_1.Avatar, { avatarPath: contact.avatarPath, color: contact.color, conversationType: "direct", i18n: i18n, name: contact.name, phoneNumber: contact.phoneNumber, profileName: contact.profileName, title: contact.title, size: 52 }),
                     React.createElement("div", { className: "module-sfn-dialog__contact--wrapper" },
                         React.createElement("div", { className: "module-sfn-dialog__contact--name" },
