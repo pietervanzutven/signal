@@ -7,6 +7,8 @@ require(exports => {
     const p_queue_1 = __importDefault(require("p-queue"));
     const Crypto_1 = __importDefault(require("../textsecure/Crypto"));
     const Crypto_2 = require("../Crypto");
+    const Client_1 = __importDefault(require("../sql/Client"));
+    const { eraseStorageIdFromConversations, updateConversation } = Client_1.default;
     function fromRecordVerified(verified) {
         const VERIFIED_ENUM = window.textsecure.storage.protocol.VerifiedStatus;
         const STATE_ENUM = window.textsecure.protobuf.ContactRecord.IdentityState;
@@ -87,7 +89,7 @@ require(exports => {
             storageID,
         });
         applyMessageRequestState(groupV1Record, conversation);
-        window.Signal.Data.updateConversation(conversation.attributes);
+        updateConversation(conversation.attributes);
         window.log.info(`storageService.mergeGroupV1Record: merged ${storageID}`);
     }
     async function mergeContactRecord(storageID, contactRecord) {
@@ -129,7 +131,7 @@ require(exports => {
         else if (conversation.get('verified')) {
             await window.textsecure.storage.protocol.setVerified(conversation.id, verified);
         }
-        window.Signal.Data.updateConversation(conversation.attributes);
+        updateConversation(conversation.attributes);
         window.log.info(`storageService.mergeContactRecord: merged ${storageID}`);
     }
     async function mergeAccountRecord(storageID, accountRecord) {
@@ -162,7 +164,7 @@ require(exports => {
             profileName: accountRecord.givenName,
             storageID,
         });
-        window.Signal.Data.updateConversation(conversation.attributes);
+        updateConversation(conversation.attributes);
         window.log.info(`storageService.mergeAccountRecord: merged profile ${storageID}`);
     }
     // tslint:disable-next-line max-func-body-length
@@ -238,12 +240,17 @@ require(exports => {
         }
     }
     async function runStorageServiceSyncJob() {
+        if (!window.storage.get('storageKey')) {
+            throw new Error('runStorageServiceSyncJob: Cannot start; no storage key!');
+        }
+        window.log.info('runStorageServiceSyncJob: starting...');
         const localManifestVersion = window.storage.get('manifestVersion') || 0;
         let manifest;
         try {
             manifest = await fetchManifest(localManifestVersion);
             // Guarding against no manifests being returned, everything should be ok
             if (!manifest) {
+                window.log.info('runStorageServiceSyncJob: no manifest, returning early');
                 return;
             }
         }
@@ -258,6 +265,16 @@ require(exports => {
         if (shouldUpdateVersion) {
             window.storage.put('manifestVersion', version);
         }
+        window.log.info('runStorageServiceSyncJob: complete');
     }
     exports.runStorageServiceSyncJob = runStorageServiceSyncJob;
+    // Note: this function is meant to be called before ConversationController is hydrated.
+    //   It goes directly to the database, so in-memory conversations will be out of date.
+    async function eraseAllStorageServiceState() {
+        window.log.info('eraseAllStorageServiceState: starting...');
+        await window.storage.remove('manifestVersion');
+        await eraseStorageIdFromConversations();
+        window.log.info('eraseAllStorageServiceState: complete');
+    }
+    exports.eraseAllStorageServiceState = eraseAllStorageServiceState;
 });

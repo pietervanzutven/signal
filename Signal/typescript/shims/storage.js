@@ -10,8 +10,8 @@
         window.storage.put(key, value);
     }
     exports.put = put;
-    function remove(key) {
-        window.storage.remove(key);
+    async function remove(key) {
+        await window.storage.remove(key);
     }
     exports.remove = remove;
 })();

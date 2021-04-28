@@ -66,6 +66,17 @@
         return true;
       }
     };
+    window.isAfterVersion = (toCheck, baseVersion) => {
+      try {
+        return semver.gt(toCheck, baseVersion);
+      } catch (error) {
+        window.log.error(
+          `isBeforeVersion error: toCheck: ${toCheck}, baseVersion: ${baseVersion}`,
+          error && error.stack ? error.stack : error
+        );
+        return true;
+      }
+    };
 
     const ipc = electron.ipcRenderer;
     const localeMessages = ipc.sendSync('locale-data');

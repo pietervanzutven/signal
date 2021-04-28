@@ -11,8 +11,8 @@ require(exports => {
         window.storage.put('chromiumRegistrationDone', '');
     }
     exports.markDone = markDone;
-    function remove() {
-        window.storage.remove('chromiumRegistrationDone');
+    async function remove() {
+        await window.storage.remove('chromiumRegistrationDone');
     }
     exports.remove = remove;
     function isDone() {

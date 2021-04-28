@@ -78,6 +78,7 @@
         updateConversation,
         updateConversations,
         removeConversation,
+        eraseStorageIdFromConversations,
         getAllConversations,
         getAllConversationIds,
         getAllPrivateConversations,
@@ -559,6 +560,9 @@
     // Note: this method will not clean up external files, just delete from SQL
     async function _removeConversations(ids) {
         await channels.removeConversation(ids);
+    }
+    async function eraseStorageIdFromConversations() {
+        await channels.eraseStorageIdFromConversations();
     }
     async function getAllConversations({ ConversationCollection, }) {
         const conversations = await channels.getAllConversations();
