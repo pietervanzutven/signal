@@ -10,10 +10,10 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const ContactName_1 = window.ts.components.conversation.ContactName;
-    const Intl_1 = window.ts.components.Intl;
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const ContactName_1 = require("./ContactName");
+    const Intl_1 = require("../Intl");
     class UnsupportedMessage extends react_1.default.Component {
         render() {
             const { canProcessNow, contact, i18n, downloadNewVersion } = this.props;
@@ -35,7 +35,7 @@
                     react_1.default.createElement(Intl_1.Intl, {
                         id: stringId, components: [
                             react_1.default.createElement("span", { key: "external-1", className: "module-unsupported-message__contact" },
-                                react_1.default.createElement(ContactName_1.ContactName, { name: contact.name, profileName: contact.profileName, phoneNumber: contact.phoneNumber, module: "module-unsupported-message__contact" })),
+                                react_1.default.createElement(ContactName_1.ContactName, { name: contact.name, profileName: contact.profileName, phoneNumber: contact.phoneNumber, title: contact.title, module: "module-unsupported-message__contact", i18n: i18n })),
                         ], i18n: i18n
                     })),
                 canProcessNow ? null : (react_1.default.createElement("button", {

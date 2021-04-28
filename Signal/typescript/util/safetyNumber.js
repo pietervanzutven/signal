@@ -24,6 +24,10 @@ require(exports => {
         if (!theirKey) {
             throw new Error('Could not load their key');
         }
+        if (!contact.e164) {
+            window.log.error('generateSecurityNumberBlock: Attempted to generate security number for contact with no e164');
+            return [];
+        }
         const securityNumber = await generateSecurityNumber(ourNumber, ourKey, contact.e164, theirKey);
         const chunks = [];
         for (let i = 0; i < securityNumber.length; i += 5) {

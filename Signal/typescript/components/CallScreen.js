@@ -151,9 +151,9 @@ require(exports => {
         }
         renderAvatar(callDetails) {
             const { i18n } = this.props;
-            const { avatarPath, contactColor, name, phoneNumber, profileName, } = callDetails;
+            const { avatarPath, color, name, phoneNumber, profileName, title, } = callDetails;
             return (react_1.default.createElement("div", { className: "module-ongoing-call__remote-video-disabled" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: contactColor || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 112 })));
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, size: 112 })));
         }
         renderLocalVideo() {
             return (react_1.default.createElement("video", { className: "module-ongoing-call__local-video", ref: this.localVideoRef, autoPlay: true }));

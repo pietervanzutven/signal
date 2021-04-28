@@ -18,14 +18,14 @@ require(exports => {
         if (!callDetails) {
             return null;
         }
-        const { avatarPath, callId, contactColor, name, phoneNumber, profileName, } = callDetails;
+        const { avatarPath, callId, color, title, name, phoneNumber, profileName, } = callDetails;
         return (react_1.default.createElement("div", { className: "module-incoming-call" },
             react_1.default.createElement("div", { className: "module-incoming-call__contact" },
                 react_1.default.createElement("div", { className: "module-incoming-call__contact--avatar" },
-                    react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: contactColor || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 52 })),
+                    react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, size: 52 })),
                 react_1.default.createElement("div", { className: "module-incoming-call__contact--name" },
                     react_1.default.createElement("div", { className: "module-incoming-call__contact--name-header" },
-                        react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: phoneNumber, name: name, profileName: profileName })),
+                        react_1.default.createElement(ContactName_1.ContactName, { name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, i18n: i18n })),
                     react_1.default.createElement("div", { dir: "auto", className: "module-incoming-call__contact--message-text" }, i18n(callDetails.isVideoCall
                         ? 'incomingVideoCall'
                         : 'incomingAudioCall')))),

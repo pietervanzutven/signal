@@ -28,13 +28,13 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const React = __importStar(window.react);
-    const lodash_1 = window.lodash;
-    const classnames_1 = __importDefault(window.classnames);
-    const ContactName_1 = window.ts.components.conversation.ContactName;
-    const Avatar_1 = window.ts.components.Avatar;
-    const Emoji_1 = window.ts.components.emoji.Emoji;
-    const hooks_1 = require("../../../ts/util/hooks");
+    const React = __importStar(require("react"));
+    const lodash_1 = require("lodash");
+    const classnames_1 = __importDefault(require("classnames"));
+    const ContactName_1 = require("./ContactName");
+    const Avatar_1 = require("../Avatar");
+    const Emoji_1 = require("../emoji/Emoji");
+    const hooks_1 = require("../../util/hooks");
     const emojisOrder = ['❤️', '👍', '👎', '😂', '😮', '😢', '😡'];
     exports.ReactionViewer = React.forwardRef(
         // tslint:disable-next-line max-func-body-length
@@ -113,8 +113,8 @@
                     })),
                 React.createElement("main", { className: "module-reaction-viewer__body" }, selectedReactions.map(({ from, emoji }) => (React.createElement("div", { key: `${from.id}-${emoji}`, className: "module-reaction-viewer__body__row" },
                     React.createElement("div", { className: "module-reaction-viewer__body__row__avatar" },
-                        React.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, conversationType: "direct", size: 32, color: from.color, name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber, i18n: i18n })),
-                    React.createElement("div", { className: "module-reaction-viewer__body__row__name" }, from.isMe ? (i18n('you')) : (React.createElement(ContactName_1.ContactName, { module: "module-reaction-viewer__body__row__name__contact-name", name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber }))),
+                        React.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, conversationType: "direct", size: 32, color: from.color, name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber, title: from.title, i18n: i18n })),
+                    React.createElement("div", { className: "module-reaction-viewer__body__row__name" }, from.isMe ? (i18n('you')) : (React.createElement(ContactName_1.ContactName, { module: "module-reaction-viewer__body__row__name__contact-name", name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber, title: from.title, i18n: i18n }))),
                     React.createElement("div", { className: "module-reaction-viewer__body__row__emoji" },
                         React.createElement(Emoji_1.Emoji, { size: 18, emoji: emoji }))))))));
         });

@@ -359,90 +359,82 @@
           ? Whisper.ExpirationTimerOptions.getName(expireTimer || 0)
           : null;
 
-        return {
-          id: this.model.id,
-          name: this.model.getName(),
-          phoneNumber: this.model.getNumber(),
-          profileName: this.model.getProfileName(),
-          color: this.model.getColor(),
-          avatarPath: this.model.getAvatarPath(),
+        return Object.assign({},
+          this.model.cachedProps,
 
-          isAccepted: this.model.getAccepted(),
-          isVerified: this.model.isVerified(),
-          isMe: this.model.isMe(),
-          isGroup: !this.model.isPrivate(),
-          isArchived: this.model.get('isArchived'),
-          leftGroup: this.model.get('left'),
+          {
+            leftGroup: this.model.get('left'),
 
-          expirationSettingName,
-          showBackButton: Boolean(this.panels && this.panels.length),
-          timerOptions: Whisper.ExpirationTimerOptions.map(item => ({
-            name: item.getName(),
-            value: item.get('seconds'),
-          })),
+            expirationSettingName,
+            showBackButton: Boolean(this.panels && this.panels.length),
+            timerOptions: Whisper.ExpirationTimerOptions.map(item => ({
+              name: item.getName(),
+              value: item.get('seconds'),
+            })),
 
-          onSetDisappearingMessages: seconds =>
-            this.setDisappearingMessages(seconds),
-          onDeleteMessages: () => this.destroyMessages(),
-          onResetSession: () => this.endSession(),
-          onSearchInConversation: () => {
-            const { searchInConversation } = window.reduxActions.search;
-            const name = this.model.isMe()
-              ? i18n('noteToSelf')
-              : this.model.getTitle();
-            searchInConversation(this.model.id, name);
-          },
+            onSetDisappearingMessages: seconds =>
+              this.setDisappearingMessages(seconds),
+            onDeleteMessages: () => this.destroyMessages(),
+            onResetSession: () => this.endSession(),
+            onSearchInConversation: () => {
+              const { searchInConversation } = window.reduxActions.search;
+              const name = this.model.isMe()
+                ? i18n('noteToSelf')
+                : this.model.getTitle();
+              searchInConversation(this.model.id, name);
+            },
 
-          // These are view only and don't update the Conversation model, so they
-          //   need a manual update call.
-          onOutgoingAudioCallInConversation: async () => {
-            const conversation = this.model;
-            const isVideoCall = false;
-            await window.Signal.Services.calling.startOutgoingCall(
-              conversation,
-              isVideoCall
-            );
-          },
-          onOutgoingVideoCallInConversation: async () => {
-            const conversation = this.model;
-            const isVideoCall = true;
-            await window.Signal.Services.calling.startOutgoingCall(
-              conversation,
-              isVideoCall
-            );
-          },
-          onShowSafetyNumber: () => {
-            this.showSafetyNumber();
-          },
-          onShowAllMedia: () => {
-            this.showAllMedia();
-          },
-          onShowGroupMembers: async () => {
-            await this.showMembers();
-            this.updateHeader();
-          },
-          onGoBack: () => {
-            this.resetPanel();
-          },
+            // These are view only and don't update the Conversation model, so they
+            //   need a manual update call.
+            onOutgoingAudioCallInConversation: async () => {
+              const conversation = this.model;
+              const isVideoCall = false;
+              await window.Signal.Services.calling.startOutgoingCall(
+                conversation,
+                isVideoCall
+              );
+            },
+            onOutgoingVideoCallInConversation: async () => {
+              const conversation = this.model;
+              const isVideoCall = true;
+              await window.Signal.Services.calling.startOutgoingCall(
+                conversation,
+                isVideoCall
+              );
+            },
+            onShowSafetyNumber: () => {
+              this.showSafetyNumber();
+            },
+            onShowAllMedia: () => {
+              this.showAllMedia();
+            },
+            onShowGroupMembers: async () => {
+              await this.showMembers();
+              this.updateHeader();
+            },
+            onGoBack: () => {
+              this.resetPanel();
+            },
 
-          onArchive: () => {
-            this.model.setArchived(true);
-            this.model.trigger('unload', 'archive');
+            onArchive: () => {
+              this.model.setArchived(true);
+              this.model.trigger('unload', 'archive');
 
-            Whisper.ToastView.show(
-              Whisper.ConversationArchivedToast,
-              document.body
-            );
-          },
-          onMoveToInbox: () => {
-            this.model.setArchived(false);
+              Whisper.ToastView.show(
+                Whisper.ConversationArchivedToast,
+                document.body
+              );
+            },
+            onMoveToInbox: () => {
+              this.model.setArchived(false);
 
-            Whisper.ToastView.show(
-              Whisper.ConversationUnarchivedToast,
-              document.body
-            );
-          },
-        };
+              Whisper.ToastView.show(
+                Whisper.ConversationUnarchivedToast,
+                document.body
+              );
+            },
+          }
+        );
       };
       this.titleView = new Whisper.ReactWrapperView({
         className: 'title-wrapper',

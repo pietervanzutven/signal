@@ -10,24 +10,24 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const Avatar_1 = window.ts.components.Avatar;
-    const Spinner_1 = window.ts.components.Spinner;
-    const Contact_1 = window.ts.types.Contact;
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const Avatar_1 = require("../Avatar");
+    const Spinner_1 = require("../Spinner");
+    const Contact_1 = require("../../types/Contact");
     // This file starts with _ to keep it from showing up in the StyleGuide.
     function renderAvatar({ contact, i18n, size, direction, }) {
         const { avatar } = contact;
         const avatarPath = avatar && avatar.avatar && avatar.avatar.path;
         const pending = avatar && avatar.avatar && avatar.avatar.pending;
-        const name = Contact_1.getName(contact) || '';
+        const title = Contact_1.getName(contact) || '';
         const spinnerSvgSize = size < 50 ? 'small' : 'normal';
         const spinnerSize = size < 50 ? '24px' : undefined;
         if (pending) {
             return (react_1.default.createElement("div", { className: "module-embedded-contact__spinner-container" },
                 react_1.default.createElement(Spinner_1.Spinner, { svgSize: spinnerSvgSize, size: spinnerSize, direction: direction })));
         }
-        return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: "grey", conversationType: "direct", i18n: i18n, name: name, size: size }));
+        return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: "grey", conversationType: "direct", i18n: i18n, title: title, size: size }));
     }
     exports.renderAvatar = renderAvatar;
     function renderName({ contact, isIncoming, module, }) {

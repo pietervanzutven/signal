@@ -9,14 +9,14 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const lodash_1 = window.lodash;
-    const react_popper_1 = window.react_popper;
-    const react_dom_1 = window.react_dom;
-    const Whisper_1 = window.ts.shims.Whisper;
-    const Avatar_1 = window.ts.components.Avatar;
-    const AvatarPopup_1 = window.ts.components.AvatarPopup;
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const lodash_1 = require("lodash");
+    const react_popper_1 = require("react-popper");
+    const react_dom_1 = require("react-dom");
+    const Whisper_1 = require("../shims/Whisper");
+    const Avatar_1 = require("./Avatar");
+    const AvatarPopup_1 = require("./AvatarPopup");
     class MainHeader extends react_1.default.Component {
         constructor(props) {
             super(props);
@@ -177,17 +177,17 @@
         }
         // tslint:disable-next-line:max-func-body-length
         render() {
-            const { avatarPath, color, i18n, name, phoneNumber, profileName, searchConversationId, searchConversationName, searchTerm, showArchivedConversations, } = this.props;
+            const { avatarPath, color, i18n, name, phoneNumber, profileName, title, searchConversationId, searchConversationName, searchTerm, showArchivedConversations, } = this.props;
             const { showingAvatarPopup, popperRoot } = this.state;
             const placeholder = searchConversationName
                 ? i18n('searchIn', [searchConversationName])
                 : i18n('search');
             return (react_1.default.createElement("div", { className: "module-main-header" },
                 react_1.default.createElement(react_popper_1.Manager, null,
-                    react_1.default.createElement(react_popper_1.Reference, null, ({ ref }) => (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28, innerRef: ref, onClick: this.showAvatarPopup }))),
+                    react_1.default.createElement(react_popper_1.Reference, null, ({ ref }) => (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, size: 28, innerRef: ref, onClick: this.showAvatarPopup }))),
                     showingAvatarPopup && popperRoot
                         ? react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: "bottom-end" }, ({ ref, style }) => (react_1.default.createElement(AvatarPopup_1.AvatarPopup, {
-                            innerRef: ref, i18n: i18n, style: style, color: color, conversationType: "direct", name: name, phoneNumber: phoneNumber, profileName: profileName, avatarPath: avatarPath, size: 28, onViewPreferences: () => {
+                            innerRef: ref, i18n: i18n, style: style, color: color, conversationType: "direct", name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, avatarPath: avatarPath, size: 28, onViewPreferences: () => {
                                 Whisper_1.showSettings();
                                 this.hideAvatarPopup();
                             }, onViewArchive: () => {

@@ -28,7 +28,7 @@ require(exports => {
         }
         return null;
     };
-    exports.ConversationHero = ({ i18n, avatarPath, color, conversationType, isMe, membersCount, groups = [], name, phoneNumber, profileName, onHeightChange, }) => {
+    exports.ConversationHero = ({ i18n, avatarPath, color, conversationType, isMe, membersCount, groups = [], name, phoneNumber, profileName, title, onHeightChange, }) => {
         const firstRenderRef = React.useRef(true);
         React.useEffect(() => {
             // If any of the depenencies for this hook change then the height of this
@@ -52,14 +52,18 @@ require(exports => {
             `pn-${profileName}`,
             ...groups.map(g => `g-${g}`),
         ]);
+        const displayName = name || (conversationType === 'group' ? i18n('unknownGroup') : undefined);
+        const phoneNumberOnly = Boolean(!name && !profileName && conversationType === 'direct');
         return (React.createElement("div", { className: "module-conversation-hero" },
-            React.createElement(Avatar_1.Avatar, { i18n: i18n, color: color, noteToSelf: isMe, avatarPath: avatarPath, conversationType: conversationType, name: name, profileName: profileName, size: 112, className: "module-conversation-hero__avatar" }),
-            React.createElement("h1", { className: "module-conversation-hero__profile-name" }, isMe ? (i18n('noteToSelf')) : (React.createElement(ContactName_1.ContactName, { name: name, profileName: profileName, phoneNumber: phoneNumber }))),
+            React.createElement(Avatar_1.Avatar, { i18n: i18n, color: color, noteToSelf: isMe, avatarPath: avatarPath, conversationType: conversationType, name: name, profileName: profileName, title: title, size: 112, className: "module-conversation-hero__avatar" }),
+            React.createElement("h1", { className: "module-conversation-hero__profile-name" }, isMe ? (i18n('noteToSelf')) : (React.createElement(ContactName_1.ContactName, { title: title, name: displayName, profileName: profileName, phoneNumber: phoneNumber, i18n: i18n }))),
             !isMe ? (React.createElement("div", { className: "module-conversation-hero__with" }, membersCount === 1
                 ? i18n('ConversationHero--members-1')
                 : membersCount !== undefined
                     ? i18n('ConversationHero--members', [`${membersCount}`])
-                    : phoneNumber)) : null,
+                    : phoneNumberOnly
+                        ? null
+                        : phoneNumber)) : null,
             renderMembershipRow({ isMe, groups, conversationType, i18n })));
     };
 });

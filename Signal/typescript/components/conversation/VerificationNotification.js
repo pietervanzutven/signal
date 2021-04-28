@@ -10,11 +10,11 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
+    const react_1 = __importDefault(require("react"));
     // import classNames from 'classnames';
-    const ContactName_1 = window.ts.components.conversation.ContactName;
-    const Intl_1 = window.ts.components.Intl;
-    const missingCaseError_1 = require("../../../ts/util/missingCaseError");
+    const ContactName_1 = require("./ContactName");
+    const Intl_1 = require("../Intl");
+    const missingCaseError_1 = require("../../util/missingCaseError");
     class VerificationNotification extends react_1.default.Component {
         getStringId() {
             const { isLocal, type } = this.props;
@@ -36,7 +36,7 @@
             const id = this.getStringId();
             return (react_1.default.createElement(Intl_1.Intl, {
                 id: id, components: [
-                    react_1.default.createElement(ContactName_1.ContactName, { key: "external-1", name: contact.name, profileName: contact.profileName, phoneNumber: contact.phoneNumber, module: "module-verification-notification__contact" }),
+                    react_1.default.createElement(ContactName_1.ContactName, { key: "external-1", name: contact.name, profileName: contact.profileName, phoneNumber: contact.phoneNumber, title: contact.title, module: "module-verification-notification__contact", i18n: i18n }),
                 ], i18n: i18n
             }));
         }

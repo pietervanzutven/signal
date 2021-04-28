@@ -26,22 +26,15 @@
           this.contactView = null;
         }
 
-        const isMe = this.model.isMe();
-
         this.contactView = new Whisper.ReactWrapperView({
           className: 'contact-wrapper',
           Component: window.Signal.Components.ContactListItem,
-          props: {
-            isMe,
-            color: this.model.getColor(),
-            avatarPath: this.model.getAvatarPath(),
-            phoneNumber: this.model.getNumber(),
-            name: this.model.getName(),
-            profileName: this.model.getProfileName(),
-            verified: this.model.isVerified(),
-            onClick: this.showIdentity.bind(this),
-            disabled: this.loading,
-          },
+          props: Object.assign({},
+            this.model.cachedProps,
+            {
+              onClick: this.showIdentity.bind(this),
+            }
+          ),
         });
         this.$el.append(this.contactView.el);
         return this;

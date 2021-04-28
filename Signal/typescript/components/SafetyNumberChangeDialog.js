@@ -11,6 +11,7 @@ require(exports => {
     const React = __importStar(require("react"));
     const Avatar_1 = require("./Avatar");
     const ConfirmationModal_1 = require("./ConfirmationModal");
+    const InContactsIcon_1 = require("./InContactsIcon");
     const SafetyDialogContents = ({ contacts, i18n, onCancel, onConfirm, onView, }) => {
         const cancelButtonRef = React.createRef();
         React.useEffect(() => {
@@ -21,18 +22,23 @@ require(exports => {
         return (React.createElement(React.Fragment, null,
             React.createElement("h1", { className: "module-sfn-dialog__title" }, i18n('safetyNumberChanges')),
             React.createElement("div", { className: "module-sfn-dialog__message" }, i18n('changedVerificationWarning')),
-            React.createElement("ul", { className: "module-sfn-dialog__contacts" }, contacts.map((contact) => (React.createElement("li", { className: "module-sfn-dialog__contact", key: contact.phoneNumber },
-                React.createElement(Avatar_1.Avatar, { avatarPath: contact.avatarPath, color: contact.color, conversationType: "direct", i18n: i18n, name: contact.name, phoneNumber: contact.phoneNumber, profileName: contact.profileName, size: 52 }),
-                React.createElement("div", { className: "module-sfn-dialog__contact--wrapper" },
-                    contact.name && (React.createElement(React.Fragment, null,
-                        React.createElement("div", { className: "module-sfn-dialog__contact--name" }, contact.name),
-                        React.createElement("div", { className: "module-sfn-dialog__contact--number" }, contact.phoneNumber))),
-                    !contact.name && (React.createElement("div", { className: "module-sfn-dialog__contact--name" }, contact.phoneNumber))),
-                React.createElement("button", {
-                    className: "module-sfn-dialog__contact--view", onClick: () => {
-                        onView(contact);
-                    }, tabIndex: 0
-                }, i18n('view')))))),
+            React.createElement("ul", { className: "module-sfn-dialog__contacts" }, contacts.map((contact) => {
+                const shouldShowNumber = Boolean(contact.name || contact.profileName);
+                return (React.createElement("li", { className: "module-sfn-dialog__contact", key: contact.phoneNumber },
+                    React.createElement(Avatar_1.Avatar, { avatarPath: contact.avatarPath, color: contact.color, conversationType: "direct", i18n: i18n, name: contact.name, phoneNumber: contact.phoneNumber, profileName: contact.profileName, title: contact.title, size: 52 }),
+                    React.createElement("div", { className: "module-sfn-dialog__contact--wrapper" },
+                        React.createElement("div", { className: "module-sfn-dialog__contact--name" },
+                            contact.title,
+                            contact.name ? (React.createElement("span", null,
+                                ' ',
+                                React.createElement(InContactsIcon_1.InContactsIcon, { i18n: i18n }))) : null),
+                        shouldShowNumber ? (React.createElement("div", { className: "module-sfn-dialog__contact--number" }, contact.phoneNumber)) : null),
+                    React.createElement("button", {
+                        className: "module-sfn-dialog__contact--view", onClick: () => {
+                            onView(contact);
+                        }, tabIndex: 0
+                    }, i18n('view'))));
+            })),
             React.createElement("div", { className: "module-sfn-dialog__actions" },
                 React.createElement("button", { className: "module-sfn-dialog__actions--cancel", onClick: onCancel, ref: cancelButtonRef, tabIndex: 0 }, i18n('cancel')),
                 React.createElement("button", { className: "module-sfn-dialog__actions--confirm", onClick: onConfirm, tabIndex: 0 }, i18n('sendMessageToContact')))));

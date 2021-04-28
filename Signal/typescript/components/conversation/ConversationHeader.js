@@ -12,9 +12,10 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
     const classnames_1 = __importDefault(require("classnames"));
+    const react_contextmenu_1 = require("react-contextmenu");
     const Emojify_1 = require("./Emojify");
     const Avatar_1 = require("../Avatar");
-    const react_contextmenu_1 = require("react-contextmenu");
+    const InContactsIcon_1 = require("../InContactsIcon");
     class ConversationHeader extends react_1.default.Component {
         constructor(props) {
             super(props);
@@ -31,28 +32,27 @@
             return (react_1.default.createElement("button", { onClick: onGoBack, className: classnames_1.default('module-conversation-header__back-icon', showBackButton ? 'module-conversation-header__back-icon--show' : null), disabled: !showBackButton }));
         }
         renderTitle() {
-            const { name, phoneNumber, i18n, isMe, profileName, isVerified, } = this.props;
+            const { name, phoneNumber, title, type, i18n, isMe, profileName, isVerified, } = this.props;
             if (isMe) {
                 return (react_1.default.createElement("div", { className: "module-conversation-header__title" }, i18n('noteToSelf')));
             }
+            const shouldShowIcon = Boolean(name && type === 'direct');
+            const shouldShowNumber = Boolean(phoneNumber && (name || profileName));
             return (react_1.default.createElement("div", { className: "module-conversation-header__title" },
-                name ? react_1.default.createElement(Emojify_1.Emojify, { text: name }) : null,
-                name && phoneNumber ? ' · ' : null,
-                phoneNumber ? phoneNumber : null,
-                ' ',
-                profileName && !name ? (react_1.default.createElement("span", { className: "module-conversation-header__title__profile-name" },
-                    "~",
-                    react_1.default.createElement(Emojify_1.Emojify, { text: profileName }))) : null,
-                isVerified ? ' · ' : null,
+                react_1.default.createElement(Emojify_1.Emojify, { text: title }),
+                shouldShowIcon ? (react_1.default.createElement("span", null,
+                    ' ',
+                    react_1.default.createElement(InContactsIcon_1.InContactsIcon, { i18n: i18n }))) : null,
+                shouldShowNumber ? ` · ${phoneNumber}` : null,
                 isVerified ? (react_1.default.createElement("span", null,
+                    ' · ',
                     react_1.default.createElement("span", { className: "module-conversation-header__title__verified-icon" }),
                     i18n('verified'))) : null));
         }
         renderAvatar() {
-            const { avatarPath, color, i18n, isGroup, isMe, name, phoneNumber, profileName, } = this.props;
-            const conversationType = isGroup ? 'group' : 'direct';
+            const { avatarPath, color, i18n, type, isMe, name, phoneNumber, profileName, title, } = this.props;
             return (react_1.default.createElement("span", { className: "module-conversation-header__avatar" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: conversationType, i18n: i18n, noteToSelf: isMe, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28 })));
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: type, i18n: i18n, noteToSelf: isMe, title: title, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28 })));
         }
         renderExpirationLength() {
             const { expirationSettingName, showBackButton } = this.props;
@@ -88,7 +88,7 @@
             if (!window.CALLING) {
                 return null;
             }
-            if (this.props.isGroup || this.props.isMe) {
+            if (this.props.type === 'group' || this.props.isMe) {
                 return null;
             }
             const { onOutgoingAudioCallInConversation, showBackButton } = this.props;
@@ -102,7 +102,7 @@
             if (!window.CALLING) {
                 return null;
             }
-            if (this.props.isGroup || this.props.isMe) {
+            if (this.props.type === 'group' || this.props.isMe) {
                 return null;
             }
             const { onOutgoingVideoCallInConversation, showBackButton } = this.props;
@@ -113,8 +113,9 @@
             }));
         }
         renderMenu(triggerId) {
-            const { i18n, isAccepted, isMe, isGroup, isArchived, leftGroup, onDeleteMessages, onResetSession, onSetDisappearingMessages, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onMoveToInbox, timerOptions, } = this.props;
+            const { i18n, isAccepted, isMe, type, isArchived, leftGroup, onDeleteMessages, onResetSession, onSetDisappearingMessages, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onMoveToInbox, timerOptions, } = this.props;
             const disappearingTitle = i18n('disappearingMessages');
+            const isGroup = type === 'group';
             return (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
                 !leftGroup && isAccepted ? (react_1.default.createElement(react_contextmenu_1.SubMenu, { title: disappearingTitle }, (timerOptions || []).map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     key: item.value, onClick: () => {

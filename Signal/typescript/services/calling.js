@@ -278,16 +278,7 @@ require(exports => {
             };
         }
         getUxCallDetails(conversation, call) {
-            return {
-                avatarPath: conversation.getAvatarPath(),
-                callId: call.callId,
-                contactColor: conversation.getColor(),
-                isIncoming: call.isIncoming,
-                isVideoCall: call.isVideoCall,
-                name: conversation.getName(),
-                phoneNumber: conversation.getNumber(),
-                profileName: conversation.getProfileName(),
-            };
+            return Object.assign(Object.assign({}, conversation.cachedProps), { callId: call.callId, isIncoming: call.isIncoming, isVideoCall: call.isVideoCall });
         }
         addCallHistoryForEndedCall(conversation, call, acceptedTime) {
             const { endedReason, isIncoming } = call;

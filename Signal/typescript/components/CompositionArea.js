@@ -16,14 +16,14 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const React = __importStar(window.react);
-    const lodash_1 = window.lodash;
-    const classnames_1 = __importDefault(window.classnames);
-    const EmojiButton_1 = window.ts.components.emoji.EmojiButton;
-    const StickerButton_1 = window.ts.components.stickers.StickerButton;
-    const CompositionInput_1 = window.ts.components.CompositionInput;
+    const React = __importStar(require("react"));
+    const lodash_1 = require("lodash");
+    const classnames_1 = __importDefault(require("classnames"));
+    const EmojiButton_1 = require("./emoji/EmojiButton");
+    const StickerButton_1 = require("./stickers/StickerButton");
+    const CompositionInput_1 = require("./CompositionInput");
     const MessageRequestActions_1 = require("./conversation/MessageRequestActions");
-    const lib_1 = window.ts.components.stickers.lib;
+    const lib_1 = require("./stickers/lib");
     const emptyElement = (el) => {
         // tslint:disable-next-line no-inner-html
         el.innerHTML = '';
@@ -37,7 +37,7 @@
         // StickerButton
         knownPacks, receivedPacks, installedPack, installedPacks, blessedPacks, recentStickers, clearInstalledStickerPack, onClickAddPack, onPickSticker, clearShowIntroduction, showPickerHint, clearShowPickerHint,
         // Message Requests
-        messageRequestsEnabled, acceptedMessageRequest, conversationType, isBlocked, name, onAccept, onBlock, onBlockAndDelete, onUnblock, onDelete, profileName, phoneNumber, }) => {
+        acceptedMessageRequest, conversationType, isBlocked, messageRequestsEnabled, name, onAccept, onBlock, onBlockAndDelete, onDelete, onUnblock, phoneNumber, profileName, title, }) => {
         const [disabled, setDisabled] = React.useState(false);
         const [showMic, setShowMic] = React.useState(!startingText);
         const [micActive, setMicActive] = React.useState(false);
@@ -151,7 +151,7 @@
             };
         }, [setLarge]);
         if ((!acceptedMessageRequest || isBlocked) && messageRequestsEnabled) {
-            return (React.createElement(MessageRequestActions_1.MessageRequestActions, { i18n: i18n, conversationType: conversationType, isBlocked: isBlocked, onBlock: onBlock, onBlockAndDelete: onBlockAndDelete, onUnblock: onUnblock, onDelete: onDelete, onAccept: onAccept, name: name, profileName: profileName, phoneNumber: phoneNumber }));
+            return (React.createElement(MessageRequestActions_1.MessageRequestActions, { i18n: i18n, conversationType: conversationType, isBlocked: isBlocked, onBlock: onBlock, onBlockAndDelete: onBlockAndDelete, onUnblock: onUnblock, onDelete: onDelete, onAccept: onAccept, name: name, profileName: profileName, phoneNumber: phoneNumber, title: title }));
         }
         return (React.createElement("div", { className: "module-composition-area" },
             React.createElement("div", { className: "module-composition-area__toggle-large" },

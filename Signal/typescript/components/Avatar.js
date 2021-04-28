@@ -16,10 +16,10 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
+    const React = __importStar(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
     const getInitials_1 = require("../util/getInitials");
-    class Avatar extends window.react.Component {
+    class Avatar extends React.Component {
         constructor(props) {
             super(props);
             this.handleImageErrorBound = this.handleImageError.bind(this);
@@ -42,12 +42,11 @@
             });
         }
         renderImage() {
-            const { avatarPath, i18n, name, phoneNumber, profileName } = this.props;
+            const { avatarPath, i18n, title } = this.props;
             const { imageBroken } = this.state;
             if (!avatarPath || imageBroken) {
                 return null;
             }
-            const title = `${name || phoneNumber}${!name && profileName ? ` ~${profileName}` : ''}`;
             return (React.createElement("img", { onError: this.handleImageErrorBound, alt: i18n('contactAvatarAlt', [title]), src: avatarPath }));
         }
         renderNoImage() {

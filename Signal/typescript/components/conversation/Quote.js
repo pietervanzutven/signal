@@ -1,12 +1,12 @@
 (function () {
     "use strict";
-    // tslint:disable:react-this-binding-issue
 
     window.ts = window.ts || {};
     window.ts.components = window.ts.components || {};
     window.ts.components.conversation = window.ts.components.conversation || {};
     const exports = window.ts.components.conversation.Quote = {};
 
+    // tslint:disable:react-this-binding-issue
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -18,12 +18,12 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const MIME = __importStar(window.ts.types.MIME);
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const MIME = __importStar(require("../../../ts/types/MIME"));
     const GoogleChrome = __importStar(require("../../../ts/util/GoogleChrome"));
-    const MessageBody_1 = window.ts.components.conversation.MessageBody;
-    const ContactName_1 = window.ts.components.conversation.ContactName;
+    const MessageBody_1 = require("./MessageBody");
+    const ContactName_1 = require("./ContactName");
     function validateQuote(quote) {
         if (quote.text) {
             return true;
@@ -65,6 +65,14 @@
                 // This is important to ensure that using this quote to navigate to the referenced
                 //   message doesn't also trigger its parent message's keydown.
                 if (onClick && (event.key === 'Enter' || event.key === ' ')) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    onClick();
+                }
+            };
+            this.handleClick = (event) => {
+                const { onClick } = this.props;
+                if (onClick) {
                     event.preventDefault();
                     event.stopPropagation();
                     onClick();
@@ -173,8 +181,8 @@
                 })));
         }
         renderAuthor() {
-            const { authorProfileName, authorPhoneNumber, authorName, i18n, isFromMe, isIncoming, } = this.props;
-            return (react_1.default.createElement("div", { className: classnames_1.default('module-quote__primary__author', isIncoming ? 'module-quote__primary__author--incoming' : null) }, isFromMe ? (i18n('you')) : (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName }))));
+            const { authorProfileName, authorPhoneNumber, authorTitle, authorName, i18n, isFromMe, isIncoming, } = this.props;
+            return (react_1.default.createElement("div", { className: classnames_1.default('module-quote__primary__author', isIncoming ? 'module-quote__primary__author--incoming' : null) }, isFromMe ? (i18n('you')) : (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, title: authorTitle, i18n: i18n }))));
         }
         renderReferenceWarning() {
             const { i18n, isIncoming, referencedMessageNotFound } = this.props;
@@ -200,7 +208,7 @@
             }
             return (react_1.default.createElement("div", { className: classnames_1.default('module-quote-container', withContentAbove ? 'module-quote-container--with-content-above' : null) },
                 react_1.default.createElement("button", {
-                    onClick: onClick, onKeyDown: this.handleKeyDown, className: classnames_1.default('module-quote', isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing', isIncoming
+                    onClick: this.handleClick, onKeyDown: this.handleKeyDown, className: classnames_1.default('module-quote', isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing', isIncoming
                         ? `module-quote--incoming-${authorColor}`
                         : `module-quote--outgoing-${authorColor}`, !onClick ? 'module-quote--no-click' : null, withContentAbove ? 'module-quote--with-content-above' : null, referencedMessageNotFound
                         ? 'module-quote--with-reference-warning'

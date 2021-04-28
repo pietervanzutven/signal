@@ -10,12 +10,11 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const memoizee_1 = __importDefault(window.memoizee);
-    const lodash_1 = window.lodash;
-    const reselect_1 = window.reselect;
-    const PhoneNumber_1 = window.ts.types.PhoneNumber;
-    const Whisper_1 = window.ts.shims.Whisper;
-    const user_1 = window.ts.state.selectors.user;
+    const memoizee_1 = __importDefault(require("memoizee"));
+    const lodash_1 = require("lodash");
+    const reselect_1 = require("reselect");
+    const Whisper_1 = require("../../shims/Whisper");
+    const user_1 = require("./user");
     exports.getConversations = (state) => state.conversations;
     exports.getConversationLookup = reselect_1.createSelector(exports.getConversations, (state) => {
         return state.conversationLookup;
@@ -41,18 +40,10 @@
     exports.getMessagesByConversation = reselect_1.createSelector(exports.getConversations, (state) => {
         return state.messagesByConversation;
     });
-    function getConversationTitle(conversation, options) {
-        if (conversation.name) {
-            return conversation.name;
-        }
-        if (conversation.type === 'group') {
-            const { i18n } = options;
-            return i18n('unknownGroup');
-        }
-        return PhoneNumber_1.format(conversation.phoneNumber, options);
-    }
     const collator = new Intl.Collator();
-    exports._getConversationComparator = (i18n, ourRegionCode) => {
+    // Note: we will probably want to put i18n and regionCode back when we are formatting
+    //   phone numbers and contacts from scratch here again.
+    exports._getConversationComparator = () => {
         return (left, right) => {
             const leftTimestamp = left.timestamp;
             const rightTimestamp = right.timestamp;
@@ -75,15 +66,7 @@
             if (typeof right.inboxPosition === 'number' && left.inboxPosition == null) {
                 return 1;
             }
-            const leftTitle = getConversationTitle(left, {
-                i18n,
-                ourRegionCode,
-            });
-            const rightTitle = getConversationTitle(right, {
-                i18n,
-                ourRegionCode,
-            });
-            return collator.compare(leftTitle, rightTitle);
+            return collator.compare(left.title, right.title);
         };
     };
     exports.getConversationComparator = reselect_1.createSelector(user_1.getIntl, user_1.getRegionCode, exports._getConversationComparator);

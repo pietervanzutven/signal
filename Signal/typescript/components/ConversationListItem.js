@@ -9,19 +9,19 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const Avatar_1 = window.ts.components.Avatar;
-    const MessageBody_1 = window.ts.components.conversation.MessageBody;
-    const Timestamp_1 = window.ts.components.conversation.Timestamp;
-    const ContactName_1 = window.ts.components.conversation.ContactName;
-    const TypingAnimation_1 = window.ts.components.conversation.TypingAnimation;
-    const _util_1 = window.ts.components._util;
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const Avatar_1 = require("./Avatar");
+    const MessageBody_1 = require("./conversation/MessageBody");
+    const Timestamp_1 = require("./conversation/Timestamp");
+    const ContactName_1 = require("./conversation/ContactName");
+    const TypingAnimation_1 = require("./conversation/TypingAnimation");
+    const _util_1 = require("./_util");
     class ConversationListItem extends react_1.default.PureComponent {
         renderAvatar() {
-            const { avatarPath, color, type, i18n, isMe, name, phoneNumber, profileName, } = this.props;
+            const { avatarPath, color, type, i18n, isMe, name, phoneNumber, profileName, title, } = this.props;
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__avatar-container" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, noteToSelf: isMe, conversationType: type, i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 52 }),
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, noteToSelf: isMe, conversationType: type, i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, size: 52 }),
                 this.renderUnread()));
         }
         renderUnread() {
@@ -32,13 +32,13 @@
             return null;
         }
         renderHeader() {
-            const { unreadCount, i18n, isMe, lastUpdated, name, phoneNumber, profileName, } = this.props;
+            const { unreadCount, i18n, isMe, lastUpdated, name, phoneNumber, profileName, title, } = this.props;
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__header" },
                 react_1.default.createElement("div", {
                     className: classnames_1.default('module-conversation-list-item__header__name', unreadCount > 0
                         ? 'module-conversation-list-item__header__name--with-unread'
                         : null)
-                }, isMe ? (i18n('noteToSelf')) : (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: phoneNumber, name: name, profileName: profileName }))),
+                }, isMe ? (i18n('noteToSelf')) : (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: phoneNumber, name: name, profileName: profileName, title: title, i18n: i18n }))),
                 react_1.default.createElement("div", {
                     className: classnames_1.default('module-conversation-list-item__header__date', unreadCount > 0
                         ? 'module-conversation-list-item__header__date--has-unread'

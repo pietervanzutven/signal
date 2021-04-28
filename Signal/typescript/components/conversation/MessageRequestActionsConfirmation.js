@@ -20,7 +20,7 @@ require(exports => {
         MessageRequestState[MessageRequestState["default"] = 3] = "default";
     })(MessageRequestState = exports.MessageRequestState || (exports.MessageRequestState = {}));
     // tslint:disable-next-line: max-func-body-length
-    exports.MessageRequestActionsConfirmation = ({ i18n, name, profileName, phoneNumber, conversationType, onBlock, onBlockAndDelete, onUnblock, onDelete, state, onChangeState, }) => {
+    exports.MessageRequestActionsConfirmation = ({ i18n, name, profileName, phoneNumber, title, conversationType, onBlock, onBlockAndDelete, onUnblock, onDelete, state, onChangeState, }) => {
         if (state === MessageRequestState.blocking) {
             return (
                 // tslint:disable-next-line: use-simple-attributes
@@ -29,7 +29,7 @@ require(exports => {
                         onChangeState(MessageRequestState.default);
                     }, title: React.createElement(Intl_1.Intl, {
                         i18n: i18n, id: `MessageRequests--block-${conversationType}-confirm-title`, components: [
-                            React.createElement(ContactName_1.ContactName, { key: "name", name: name, profileName: profileName, phoneNumber: phoneNumber }),
+                            React.createElement(ContactName_1.ContactName, { key: "name", name: name, profileName: profileName, phoneNumber: phoneNumber, title: title, i18n: i18n }),
                         ]
                     }), actions: [
                         {
@@ -53,7 +53,7 @@ require(exports => {
                         onChangeState(MessageRequestState.default);
                     }, title: React.createElement(Intl_1.Intl, {
                         i18n: i18n, id: 'MessageRequests--unblock-confirm-title', components: [
-                            React.createElement(ContactName_1.ContactName, { key: "name", name: name, profileName: profileName, phoneNumber: phoneNumber }),
+                            React.createElement(ContactName_1.ContactName, { key: "name", name: name, profileName: profileName, phoneNumber: phoneNumber, title: title, i18n: i18n }),
                         ]
                     }), actions: [
                         {
@@ -77,7 +77,7 @@ require(exports => {
                         onChangeState(MessageRequestState.default);
                     }, title: React.createElement(Intl_1.Intl, {
                         i18n: i18n, id: `MessageRequests--delete-${conversationType}-confirm-title`, components: [
-                            React.createElement(ContactName_1.ContactName, { key: "name", name: name, profileName: profileName, phoneNumber: phoneNumber }),
+                            React.createElement(ContactName_1.ContactName, { key: "name", name: name, profileName: profileName, phoneNumber: phoneNumber, title: title, i18n: i18n }),
                         ]
                     }), actions: [
                         {

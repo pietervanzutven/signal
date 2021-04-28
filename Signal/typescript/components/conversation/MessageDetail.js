@@ -10,12 +10,12 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const moment_1 = __importDefault(window.moment);
-    const Avatar_1 = window.ts.components.Avatar;
-    const ContactName_1 = window.ts.components.conversation.ContactName;
-    const Message_1 = window.ts.components.conversation.Message;
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const moment_1 = __importDefault(require("moment"));
+    const Avatar_1 = require("../Avatar");
+    const ContactName_1 = require("./ContactName");
+    const Message_1 = require("./Message");
     class MessageDetail extends react_1.default.Component {
         constructor() {
             super(...arguments);
@@ -32,8 +32,8 @@
         }
         renderAvatar(contact) {
             const { i18n } = this.props;
-            const { avatarPath, color, phoneNumber, name, profileName } = contact;
-            return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 52 }));
+            const { avatarPath, color, phoneNumber, name, profileName, title, } = contact;
+            return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, size: 52 }));
         }
         renderDeleteButton() {
             const { i18n, message } = this.props;
@@ -56,7 +56,7 @@
                 this.renderAvatar(contact),
                 react_1.default.createElement("div", { className: "module-message-detail__contact__text" },
                     react_1.default.createElement("div", { className: "module-message-detail__contact__name" },
-                        react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: contact.phoneNumber, name: contact.name, profileName: contact.profileName })),
+                        react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: contact.phoneNumber, name: contact.name, profileName: contact.profileName, title: contact.title, i18n: i18n })),
                     errors.map((error, index) => (react_1.default.createElement("div", { key: index, className: "module-message-detail__contact__error" }, error.message)))),
                 errorComponent,
                 unidentifiedDeliveryComponent,

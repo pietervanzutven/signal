@@ -64,10 +64,10 @@ require(exports => {
         if (!canNotify) {
             return;
         }
-        const { name, phoneNumber, profileName, isVideoCall } = callDetails;
+        const { title, isVideoCall } = callDetails;
         notify_1.notify({
             platform: window.platform,
-            title: `${name || phoneNumber} ${profileName || ''}`,
+            title,
             icon: isVideoCall
                 ? 'images/icons/v2/video-solid-24.svg'
                 : 'images/icons/v2/phone-right-solid-24.svg',

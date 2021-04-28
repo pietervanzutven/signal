@@ -16,15 +16,14 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const React = __importStar(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const lodash_1 = window.lodash;
-    const Avatar_1 = window.ts.components.Avatar;
+    const React = __importStar(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const Avatar_1 = require("./Avatar");
     const hooks_1 = require("../util/hooks");
     exports.AvatarPopup = (props) => {
         const focusRef = React.useRef(null);
-        const { i18n, profileName, phoneNumber, onViewPreferences, onViewArchive, style, } = props;
-        const hasProfileName = !lodash_1.isEmpty(profileName);
+        const { i18n, name, profileName, phoneNumber, title, onViewPreferences, onViewArchive, style, } = props;
+        const shouldShowNumber = Boolean(name || profileName);
         // Note: mechanisms to dismiss this view are all in its host, MainHeader
         // Focus first button after initial render, restore focus on teardown
         hooks_1.useRestoreFocus(focusRef);
@@ -32,8 +31,8 @@
             React.createElement("div", { className: "module-avatar-popup__profile" },
                 React.createElement(Avatar_1.Avatar, Object.assign({}, props, { size: 52 })),
                 React.createElement("div", { className: "module-avatar-popup__profile__text" },
-                    React.createElement("div", { className: "module-avatar-popup__profile__name" }, hasProfileName ? profileName : phoneNumber),
-                    hasProfileName ? (React.createElement("div", { className: "module-avatar-popup__profile__number" }, phoneNumber)) : null)),
+                    React.createElement("div", { className: "module-avatar-popup__profile__name" }, title),
+                    shouldShowNumber ? (React.createElement("div", { className: "module-avatar-popup__profile__number" }, phoneNumber)) : null)),
             React.createElement("hr", { className: "module-avatar-popup__divider" }),
             React.createElement("button", { ref: focusRef, className: "module-avatar-popup__item", onClick: onViewPreferences },
                 React.createElement("div", { className: classnames_1.default('module-avatar-popup__item__icon', 'module-avatar-popup__item__icon-settings') }),

@@ -17,30 +17,30 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const react_dom_1 = __importStar(window.react_dom);
-    const classnames_1 = __importDefault(window.classnames);
-    const react_measure_1 = __importDefault(window.react_measure);
-    const lodash_1 = window.lodash;
-    const react_popper_1 = window.react_popper;
-    const Avatar_1 = window.ts.components.Avatar;
-    const Spinner_1 = window.ts.components.Spinner;
-    const MessageBody_1 = window.ts.components.conversation.MessageBody;
-    const ExpireTimer_1 = window.ts.components.conversation.ExpireTimer;
-    const ImageGrid_1 = window.ts.components.conversation.ImageGrid;
-    const Image_1 = window.ts.components.conversation.Image;
-    const Timestamp_1 = window.ts.components.conversation.Timestamp;
-    const ContactName_1 = window.ts.components.conversation.ContactName;
-    const Quote_1 = window.ts.components.conversation.Quote;
-    const EmbeddedContact_1 = window.ts.components.conversation.EmbeddedContact;
-    const ReactionViewer_1 = window.ts.components.conversation.ReactionViewer;
-    const ReactionPicker_1 = window.ts.components.conversation.ReactionPicker;
-    const Emoji_1 = window.ts.components.emoji.Emoji;
-    const Attachment_1 = window.ts.types.Attachment;
+    const react_1 = __importDefault(require("react"));
+    const react_dom_1 = __importStar(require("react-dom"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const react_measure_1 = __importDefault(require("react-measure"));
+    const lodash_1 = require("lodash");
+    const react_popper_1 = require("react-popper");
+    const Avatar_1 = require("../Avatar");
+    const Spinner_1 = require("../Spinner");
+    const MessageBody_1 = require("./MessageBody");
+    const ExpireTimer_1 = require("./ExpireTimer");
+    const ImageGrid_1 = require("./ImageGrid");
+    const Image_1 = require("./Image");
+    const Timestamp_1 = require("./Timestamp");
+    const ContactName_1 = require("./ContactName");
+    const Quote_1 = require("./Quote");
+    const EmbeddedContact_1 = require("./EmbeddedContact");
+    const ReactionViewer_1 = require("./ReactionViewer");
+    const ReactionPicker_1 = require("./ReactionPicker");
+    const Emoji_1 = require("../emoji/Emoji");
+    const Attachment_1 = require("../../../ts/types/Attachment");
     const timer_1 = require("../../util/timer");
     const isFileDangerous_1 = require("../../util/isFileDangerous");
-    const _util_1 = window.ts.components._util;
-    const react_contextmenu_1 = window.react_contextmenu;
+    const _util_1 = require("../_util");
+    const react_contextmenu_1 = require("react-contextmenu");
     // Same as MIN_WIDTH in ImageGrid.tsx
     const MINIMUM_LINK_PREVIEW_IMAGE_WIDTH = 200;
     const STICKER_SIZE = 200;
@@ -397,12 +397,13 @@
                 })) : null));
         }
         renderAuthor() {
-            const { authorName, authorPhoneNumber, authorProfileName, collapseMetadata, conversationType, direction, isSticker, isTapToView, isTapToViewExpired, } = this.props;
+            const { authorTitle, authorName, authorPhoneNumber, authorProfileName, collapseMetadata, conversationType, direction, i18n, isSticker, isTapToView, isTapToViewExpired, } = this.props;
             if (collapseMetadata) {
                 return;
             }
-            const title = authorName ? authorName : authorPhoneNumber;
-            if (direction !== 'incoming' || conversationType !== 'group' || !title) {
+            if (direction !== 'incoming' ||
+                conversationType !== 'group' ||
+                !authorTitle) {
                 return null;
             }
             const withTapToViewExpired = isTapToView && isTapToViewExpired;
@@ -412,7 +413,7 @@
                 : '';
             const moduleName = `module-message__author${stickerSuffix}${tapToViewSuffix}`;
             return (react_1.default.createElement("div", { className: moduleName },
-                react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, module: moduleName })));
+                react_1.default.createElement(ContactName_1.ContactName, { title: authorTitle, phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, module: moduleName, i18n: i18n })));
         }
         // tslint:disable-next-line max-func-body-length cyclomatic-complexity
         renderAttachment() {
@@ -562,7 +563,7 @@
                         sentAt: quote.sentAt,
                     });
                 };
-            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: clickHandler, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quoteColor, referencedMessageNotFound: referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
+            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: clickHandler, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quoteColor, authorTitle: quote.authorTitle, referencedMessageNotFound: referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
         }
         renderEmbeddedContact() {
             const { collapseMetadata, contact, conversationType, direction, i18n, showContactDetail, text, } = this.props;
@@ -594,14 +595,14 @@
             }, i18n('sendMessageToContact')));
         }
         renderAvatar() {
-            const { authorAvatarPath, authorName, authorPhoneNumber, authorProfileName, collapseMetadata, authorColor, conversationType, direction, i18n, } = this.props;
+            const { authorAvatarPath, authorName, authorPhoneNumber, authorProfileName, authorTitle, collapseMetadata, authorColor, conversationType, direction, i18n, } = this.props;
             if (collapseMetadata ||
                 conversationType !== 'group' ||
                 direction === 'outgoing') {
                 return;
             }
             return (react_1.default.createElement("div", { className: "module-message__author-avatar" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: authorAvatarPath, color: authorColor, conversationType: "direct", i18n: i18n, name: authorName, phoneNumber: authorPhoneNumber, profileName: authorProfileName, size: 28 })));
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: authorAvatarPath, color: authorColor, conversationType: "direct", i18n: i18n, name: authorName, phoneNumber: authorPhoneNumber, profileName: authorProfileName, title: authorTitle, size: 28 })));
         }
         renderText() {
             const { deletedForEveryone, direction, i18n, status, text, textPending, } = this.props;

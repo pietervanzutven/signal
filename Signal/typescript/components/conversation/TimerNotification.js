@@ -10,13 +10,13 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const ContactName_1 = window.ts.components.conversation.ContactName;
-    const Intl_1 = window.ts.components.Intl;
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const ContactName_1 = require("./ContactName");
+    const Intl_1 = require("../Intl");
     class TimerNotification extends react_1.default.Component {
         renderContents() {
-            const { i18n, name, phoneNumber, profileName, timespan, type, disabled, } = this.props;
+            const { i18n, name, phoneNumber, profileName, title, timespan, type, disabled, } = this.props;
             const changeKey = disabled
                 ? 'disabledDisappearingMessages'
                 : 'theyChangedTheTimer';
@@ -24,7 +24,7 @@
                 case 'fromOther':
                     return (react_1.default.createElement(Intl_1.Intl, {
                         i18n: i18n, id: changeKey, components: [
-                            react_1.default.createElement(ContactName_1.ContactName, { key: "external-1", phoneNumber: phoneNumber, profileName: profileName, name: name }),
+                            react_1.default.createElement(ContactName_1.ContactName, { key: "external-1", phoneNumber: phoneNumber, profileName: profileName, title: title, name: name, i18n: i18n }),
                             timespan,
                         ]
                     }));

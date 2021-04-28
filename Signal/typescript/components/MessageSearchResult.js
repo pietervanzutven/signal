@@ -9,12 +9,12 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const Avatar_1 = window.ts.components.Avatar;
-    const MessageBodyHighlight_1 = window.ts.components.MessageBodyHighlight;
-    const Timestamp_1 = window.ts.components.conversation.Timestamp;
-    const ContactName_1 = window.ts.components.conversation.ContactName;
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const Avatar_1 = require("./Avatar");
+    const MessageBodyHighlight_1 = require("./MessageBodyHighlight");
+    const Timestamp_1 = require("./conversation/Timestamp");
+    const ContactName_1 = require("./conversation/ContactName");
     class MessageSearchResult extends react_1.default.PureComponent {
         renderFromName() {
             const { from, i18n, to } = this.props;
@@ -24,7 +24,7 @@
             if (from.isMe) {
                 return (react_1.default.createElement("span", { className: "module-message-search-result__header__name" }, i18n('you')));
             }
-            return (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: from.phoneNumber, name: from.name, profileName: from.profileName, module: "module-message-search-result__header__name" }));
+            return (react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: from.phoneNumber, name: from.name, profileName: from.profileName, title: from.title, module: "module-message-search-result__header__name", i18n: i18n }));
         }
         renderFrom() {
             const { i18n, to, isSearchingInConversation } = this.props;
@@ -36,14 +36,14 @@
                     i18n('toJoiner'),
                     ' ',
                     react_1.default.createElement("span", { className: "module-mesages-search-result__header__group" },
-                        react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: to.phoneNumber, name: to.name, profileName: to.profileName }))));
+                        react_1.default.createElement(ContactName_1.ContactName, { phoneNumber: to.phoneNumber, name: to.name, profileName: to.profileName, title: to.title, i18n: i18n }))));
             }
             return (react_1.default.createElement("div", { className: "module-message-search-result__header__from" }, fromName));
         }
         renderAvatar() {
             const { from, i18n, to } = this.props;
             const isNoteToSelf = from.isMe && to.isMe;
-            return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, color: from.color, conversationType: "direct", i18n: i18n, name: name, noteToSelf: isNoteToSelf, phoneNumber: from.phoneNumber, profileName: from.profileName, size: 52 }));
+            return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, color: from.color, conversationType: "direct", i18n: i18n, name: name, noteToSelf: isNoteToSelf, phoneNumber: from.phoneNumber, profileName: from.profileName, title: from.title, size: 52 }));
         }
         render() {
             const { from, i18n, id, isSelected, conversationId, openConversationInternal, sentAt, snippet, to, } = this.props;
