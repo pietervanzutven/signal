@@ -6037,7 +6037,7 @@ img.emoji.jumbo {
   width: 210px; }
 
 .module-ongoing-call__header {
-  background-color: rgba(0, 0, 0, 0.6);
+  background: linear-gradient(rgba(0, 0, 0, 0.4), transparent);
   padding-bottom: 24px;
   padding-top: 24px;
   position: absolute;
@@ -6061,7 +6061,7 @@ img.emoji.jumbo {
   letter-spacing: -0.0025em; }
 
 .module-ongoing-call__actions {
-  background-color: rgba(0, 0, 0, 0.6);
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.4));
   bottom: 0;
   display: flex;
   justify-content: center;
