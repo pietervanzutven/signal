@@ -2079,6 +2079,17 @@ img.emoji.jumbo {
   .dark-theme.ios-theme .module-message__metadata__date {
     color: rgba(255, 255, 255, 0.8); }
 
+.module-message__metadata__tapable {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  text-align: inherit; }
+
 .module-message__metadata__date--incoming {
   color: rgba(255, 255, 255, 0.8); }
   .ios-theme .module-message__metadata__date--incoming {
@@ -4402,10 +4413,12 @@ img.emoji.jumbo {
     background: url("data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg width='18px' height='12px' viewBox='0 0 18 12' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->    <title>Icons/Read/read-18x12</title>    <desc>Created with Sketch.</desc>    <g>        <path d='M7.91731278,0.313257194 C6.15053376,1.58392424 5,3.65760134 5,6 C5,6.343797 5.0247846,6.68180525 5.07266453,7.01233547 L5,7.085 L3.205,5.295 L2.5,6 L5,8.5 L5.33970233,8.16029767 C5.80439817,9.59399486 6.71914823,10.8250231 7.91731278,11.6867428 C7.31518343,11.8898758 6.67037399,12 6,12 C2.688,12 0,9.312 0,6 C0,2.688 2.688,0 6,0 C6.67037399,0 7.31518343,0.110124239 7.91731278,0.313257194 Z M12,0 C15.312,0 18,2.688 18,6 C18,9.312 15.312,12 12,12 C8.688,12 6,9.312 6,6 C6,2.688 8.688,0 12,0 Z M11,8.5 L15.5,4 L14.795,3.29 L11,7.085 L9.205,5.295 L8.5,6 L11,8.5 Z' id='path-1' fill='%23848484'></path>    </g></svg>") no-repeat center;
     background-size: 100%; }
 
-.module-conversation-list-item__message__status-icon--error {
+.module-conversation-list-item__message__status-icon--error,
+.module-conversation-list-item__message__status-icon--partial-sent {
   background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><title>error-outline-12</title><path d='M6,1A5,5,0,1,1,1,6,5.006,5.006,0,0,1,6,1M6,0a6,6,0,1,0,6,6A6,6,0,0,0,6,0ZM5.5,7h1l.25-4.5H5.25ZM6,8a.75.75,0,1,0,.75.75A.75.75,0,0,0,6,8Z' fill='%23F44336'/></svg>") no-repeat center;
   background-size: 100%; }
-  .dark-theme .module-conversation-list-item__message__status-icon--error {
+  .dark-theme .module-conversation-list-item__message__status-icon--error, .dark-theme
+  .module-conversation-list-item__message__status-icon--partial-sent {
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><title>error-solid-12</title><path d='M6,0a6,6,0,1,0,6,6A6,6,0,0,0,6,0ZM6,9.5a.75.75,0,1,1,.75-.75A.75.75,0,0,1,6,9.5ZM6.5,7h-1L5.25,2.5h1.5Z' fill='%23F44336'/></svg>") no-repeat center;
     background-size: 100%; }
 

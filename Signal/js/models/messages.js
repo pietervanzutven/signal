@@ -702,7 +702,13 @@
       return this.get('type') === 'incoming';
     },
     getMessagePropStatus() {
+      const sent = this.get('sent');
+      const sentTo = this.get('sent_to') || [];
+
       if (this.hasErrors()) {
+        if (sent || sentTo.length > 0) {
+          return 'partial-sent';
+        }
         return 'error';
       }
       if (!this.isOutgoing()) {
@@ -718,8 +724,6 @@
       if (delivered || deliveredTo.length > 0) {
         return 'delivered';
       }
-      const sent = this.get('sent');
-      const sentTo = this.get('sent_to') || [];
       if (sent || sentTo.length > 0) {
         return 'sent';
       }

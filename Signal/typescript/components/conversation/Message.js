@@ -360,41 +360,62 @@
                 this.expiredTimeout = setTimeout(setExpired, EXPIRED_DELAY);
             }
         }
+        renderTimestamp() {
+            const { direction, i18n, id, isSticker, isTapToViewExpired, showMessageDetail, status, text, timestamp, } = this.props;
+            const isShowingImage = this.isShowingImage();
+            const withImageNoCaption = Boolean(!isSticker && !text && isShowingImage);
+            const isError = status === 'error' && direction === 'outgoing';
+            const isPartiallySent = status === 'partial-sent' && direction === 'outgoing';
+            if (isError || isPartiallySent) {
+                return (react_1.default.createElement("span", {
+                    className: classnames_1.default({
+                        'module-message__metadata__date': true,
+                        'module-message__metadata__date--with-sticker': isSticker,
+                        [`module-message__metadata__date--${direction}`]: !isSticker,
+                        'module-message__metadata__date--with-image-no-caption': withImageNoCaption,
+                    })
+                }, isError ? (i18n('sendFailed')) : (react_1.default.createElement("button", {
+                    className: "module-message__metadata__tapable", onClick: (event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        showMessageDetail(id);
+                    }
+                }, i18n('partiallySent')))));
+            }
+            const metadataDirection = isSticker ? undefined : direction;
+            return (react_1.default.createElement(Timestamp_1.Timestamp, { i18n: i18n, timestamp: timestamp, extended: true, direction: metadataDirection, withImageNoCaption: withImageNoCaption, withSticker: isSticker, withTapToViewExpired: isTapToViewExpired, module: "module-message__metadata__date" }));
+        }
         // tslint:disable-next-line cyclomatic-complexity
         renderMetadata() {
-            const { collapseMetadata, direction, expirationLength, expirationTimestamp, i18n, isSticker, isTapToViewExpired, reactions, status, text, textPending, timestamp, } = this.props;
+            const { collapseMetadata, direction, expirationLength, expirationTimestamp, isSticker, isTapToViewExpired, reactions, status, text, textPending, } = this.props;
             if (collapseMetadata) {
                 return null;
             }
             const isShowingImage = this.isShowingImage();
             const withImageNoCaption = Boolean(!isSticker && !text && isShowingImage);
             const withReactions = reactions && reactions.length > 0;
-            const showError = status === 'error' && direction === 'outgoing';
             const metadataDirection = isSticker ? undefined : direction;
             return (react_1.default.createElement("div", {
                 className: classnames_1.default('module-message__metadata', `module-message__metadata--${direction}`, withReactions ? 'module-message__metadata--with-reactions' : null, withImageNoCaption
                     ? 'module-message__metadata--with-image-no-caption'
                     : null)
             },
-                showError ? (react_1.default.createElement("span", {
-                    className: classnames_1.default('module-message__metadata__date', isSticker ? 'module-message__metadata__date--with-sticker' : null, !isSticker
-                        ? `module-message__metadata__date--${direction}`
-                        : null, withImageNoCaption
-                        ? 'module-message__metadata__date--with-image-no-caption'
-                        : null)
-                }, i18n('sendFailed'))) : (react_1.default.createElement(Timestamp_1.Timestamp, { i18n: i18n, timestamp: timestamp, extended: true, direction: metadataDirection, withImageNoCaption: withImageNoCaption, withSticker: isSticker, withTapToViewExpired: isTapToViewExpired, module: "module-message__metadata__date" })),
+                this.renderTimestamp(),
                 expirationLength && expirationTimestamp ? (react_1.default.createElement(ExpireTimer_1.ExpireTimer, { direction: metadataDirection, expirationLength: expirationLength, expirationTimestamp: expirationTimestamp, withImageNoCaption: withImageNoCaption, withSticker: isSticker, withTapToViewExpired: isTapToViewExpired })) : null,
                 textPending ? (react_1.default.createElement("div", { className: "module-message__metadata__spinner-container" },
                     react_1.default.createElement(Spinner_1.Spinner, { svgSize: "small", size: "14px", direction: direction }))) : null,
-                !textPending && direction === 'outgoing' && status !== 'error' ? (react_1.default.createElement("div", {
-                    className: classnames_1.default('module-message__metadata__status-icon', `module-message__metadata__status-icon--${status}`, isSticker
-                        ? 'module-message__metadata__status-icon--with-sticker'
-                        : null, withImageNoCaption
-                        ? 'module-message__metadata__status-icon--with-image-no-caption'
-                        : null, isTapToViewExpired
-                        ? 'module-message__metadata__status-icon--with-tap-to-view-expired'
-                        : null)
-                })) : null));
+                !textPending &&
+                    direction === 'outgoing' &&
+                    status !== 'error' &&
+                    status !== 'partial-sent' ? (react_1.default.createElement("div", {
+                        className: classnames_1.default('module-message__metadata__status-icon', `module-message__metadata__status-icon--${status}`, isSticker
+                            ? 'module-message__metadata__status-icon--with-sticker'
+                            : null, withImageNoCaption
+                            ? 'module-message__metadata__status-icon--with-image-no-caption'
+                            : null, isTapToViewExpired
+                            ? 'module-message__metadata__status-icon--with-tap-to-view-expired'
+                            : null)
+                    })) : null));
         }
         renderAuthor() {
             const { authorTitle, authorName, authorPhoneNumber, authorProfileName, collapseMetadata, conversationType, direction, i18n, isSticker, isTapToView, isTapToViewExpired, } = this.props;
@@ -623,7 +644,7 @@
         }
         renderError(isCorrectSide) {
             const { status, direction } = this.props;
-            if (!isCorrectSide || status !== 'error') {
+            if (!isCorrectSide || (status !== 'error' && status !== 'partial-sent')) {
                 return null;
             }
             return (react_1.default.createElement("div", { className: "module-message__error-container" },
