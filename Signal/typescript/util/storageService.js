@@ -112,14 +112,15 @@ require(exports => {
             : window.textsecure.storage.protocol.VerifiedStatus.DEFAULT;
         conversation.set({
             isArchived: Boolean(contactRecord.archived),
-            profileFamilyName: contactRecord.familyName,
-            profileKey: contactRecord.profileKey
-                ? Crypto_2.arrayBufferToBase64(contactRecord.profileKey.toArrayBuffer())
-                : null,
-            profileName: contactRecord.givenName,
             storageID,
             verified,
         });
+        if (contactRecord.profileKey) {
+            await conversation.setProfileKey(Crypto_2.arrayBufferToBase64(contactRecord.profileKey.toArrayBuffer()));
+        }
+        else {
+            await conversation.dropProfileKey();
+        }
         applyMessageRequestState(contactRecord, conversation);
         const identityKey = await window.textsecure.storage.protocol.loadIdentityKey(conversation.id);
         const identityKeyChanged = identityKey && contactRecord.identityKey
@@ -157,13 +158,14 @@ require(exports => {
         }
         const conversation = await window.ConversationController.getOrCreateAndWait(ourID, 'private');
         conversation.set({
-            profileFamilyName: accountRecord.familyName,
-            profileKey: accountRecord.profileKey
-                ? Crypto_2.arrayBufferToBase64(accountRecord.profileKey.toArrayBuffer())
-                : null,
-            profileName: accountRecord.givenName,
             storageID,
         });
+        if (accountRecord.profileKey) {
+            await conversation.setProfileKey(Crypto_2.arrayBufferToBase64(accountRecord.profileKey.toArrayBuffer()));
+        }
+        else {
+            await conversation.dropProfileKey();
+        }
         updateConversation(conversation.attributes);
         window.log.info(`storageService.mergeAccountRecord: merged profile ${storageID}`);
     }

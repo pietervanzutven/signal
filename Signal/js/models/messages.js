@@ -471,6 +471,10 @@
         });
       }
 
+      const placeholderContact = {
+        title: i18n('unknownContact'),
+      };
+
       if (groupUpdate.joined) {
         changes.push({
           type: 'add',
@@ -478,7 +482,8 @@
             Array.isArray(groupUpdate.joined)
               ? groupUpdate.joined
               : [groupUpdate.joined],
-            identifier => this.findAndFormatContact(identifier)
+            identifier =>
+              this.findAndFormatContact(identifier) || placeholderContact
           ),
         });
       }
@@ -495,7 +500,8 @@
             Array.isArray(groupUpdate.left)
               ? groupUpdate.left
               : [groupUpdate.left],
-            identifier => this.findAndFormatContact(identifier)
+            identifier =>
+              this.findAndFormatContact(identifier) || placeholderContact
           ),
         });
       }
@@ -2501,7 +2507,12 @@
                   conversation.get('members')
                 );
                 if (difference.length > 0) {
-                  pendingGroupUpdate.push(['joined', difference]);
+                  // Because GroupV1 groups are based on e164 only
+                  const e164s = difference.map(id => {
+                    const c = ConversationController.get(id);
+                    return c ? c.get('e164') : null;
+                  });
+                  pendingGroupUpdate.push(['joined', e164s]);
                 }
                 if (conversation.get('left')) {
                   window.log.warn('re-added to a left group');

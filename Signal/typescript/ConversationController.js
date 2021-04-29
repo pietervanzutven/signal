@@ -434,6 +434,7 @@ require(exports => {
                     this._conversations.add(collection.models);
                     this._initialFetchComplete = true;
                     await Promise.all(this._conversations.map(async (conversation) => {
+                        conversation.generateProps();
                         if (!conversation.get('lastMessage')) {
                             await conversation.updateLastMessage();
                         }

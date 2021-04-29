@@ -14,16 +14,30 @@ require(exports => {
     const ContactName_1 = require("./ContactName");
     const Emojify_1 = require("./Emojify");
     const Intl_1 = require("../Intl");
-    const renderMembershipRow = ({ i18n, groups, conversationType, isMe, }) => {
+    const renderMembershipRow = ({ i18n, sharedGroupNames, conversationType, isMe, }) => {
         const className = 'module-conversation-hero__membership';
         const nameClassName = `${className}__name`;
         if (isMe) {
             return React.createElement("div", { className: className }, i18n('noteToSelfHero'));
         }
-        if (conversationType === 'direct' && groups && groups.length > 0) {
-            const firstThreeGroups = lodash_1.take(groups, 3).map((group, i) => (React.createElement("strong", { key: i, className: nameClassName },
+        if (conversationType === 'direct' &&
+            sharedGroupNames &&
+            sharedGroupNames.length > 0) {
+            const firstThreeGroups = lodash_1.take(sharedGroupNames, 3).map((group, i) => (React.createElement("strong", { key: i, className: nameClassName },
                 React.createElement(Emojify_1.Emojify, { text: group }))));
-            if (firstThreeGroups.length >= 3) {
+            if (sharedGroupNames.length > 3) {
+                const remainingCount = sharedGroupNames.length - 3;
+                return (React.createElement("div", { className: className },
+                    React.createElement(Intl_1.Intl, {
+                        i18n: i18n, id: "ConversationHero--membership-extra", components: {
+                            group1: firstThreeGroups[0],
+                            group2: firstThreeGroups[1],
+                            group3: firstThreeGroups[2],
+                            remainingCount: remainingCount.toString(),
+                        }
+                    })));
+            }
+            else if (firstThreeGroups.length === 3) {
                 return (React.createElement("div", { className: className },
                     React.createElement(Intl_1.Intl, {
                         i18n: i18n, id: "ConversationHero--membership-3", components: {
@@ -53,7 +67,7 @@ require(exports => {
         }
         return null;
     };
-    exports.ConversationHero = ({ i18n, avatarPath, color, conversationType, isMe, membersCount, groups = [], name, phoneNumber, profileName, title, onHeightChange, }) => {
+    exports.ConversationHero = ({ i18n, avatarPath, color, conversationType, isMe, membersCount, sharedGroupNames = [], name, phoneNumber, profileName, title, onHeightChange, }) => {
         const firstRenderRef = React.useRef(true);
         React.useEffect(() => {
             // If any of the depenencies for this hook change then the height of this
@@ -75,7 +89,7 @@ require(exports => {
             `mc-${membersCount}`,
             `n-${name}`,
             `pn-${profileName}`,
-            ...groups.map(g => `g-${g}`),
+            ...sharedGroupNames.map(g => `g-${g}`),
         ]);
         const phoneNumberOnly = Boolean(!name && !profileName && conversationType === 'direct');
         return (React.createElement("div", { className: "module-conversation-hero" },
@@ -88,6 +102,6 @@ require(exports => {
                     : phoneNumberOnly
                         ? null
                         : phoneNumber)) : null,
-            renderMembershipRow({ isMe, groups, conversationType, i18n })));
+            renderMembershipRow({ isMe, sharedGroupNames, conversationType, i18n })));
     };
 });
