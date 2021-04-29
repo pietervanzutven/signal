@@ -243,7 +243,7 @@
                         resultPromise = response.buffer();
                     }
                     else {
-                        resultPromise = response.textConverted();
+                        resultPromise = response.text();
                     }
                     return resultPromise.then(result => {
                         if (options.responseType === 'arraybuffer' ||

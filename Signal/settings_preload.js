@@ -63,6 +63,8 @@
 
   window.getNotificationSetting = makeGetter('notification-setting');
   window.setNotificationSetting = makeSetter('notification-setting');
+  window.getNotificationDrawAttention = makeGetter('notification-draw-attention');
+  window.setNotificationDrawAttention = makeSetter('notification-draw-attention');
   window.getAudioNotification = makeGetter('audio-notification');
   window.setAudioNotification = makeSetter('audio-notification');
   window.getCallRingtoneNotification = makeGetter('call-ringtone-notification');

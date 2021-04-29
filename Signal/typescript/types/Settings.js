@@ -13,7 +13,7 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const OS = __importStar(window.ts.OS);
+    const OS = __importStar(require("../OS"));
     const MIN_WINDOWS_VERSION = '8.0.0';
     exports.isAudioNotificationSupported = () => OS.isWindows(MIN_WINDOWS_VERSION) || OS.isMacOS();
     // Using `Notification::tag` has a bug on Windows 7:
@@ -21,4 +21,6 @@
     exports.isNotificationGroupingSupported = () => !OS.isWindows() || OS.isWindows(MIN_WINDOWS_VERSION);
     // the "hide menu bar" option is specific to Windows and Linux
     exports.isHideMenuBarSupported = () => !OS.isMacOS();
+    // the "draw attention on notification" option is specific to Windows and Linux
+    exports.isDrawAttentionSupported = () => !OS.isMacOS();
 })();

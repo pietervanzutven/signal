@@ -67,11 +67,7 @@ const startInTray = process.argv.some(arg => arg === '--start-in-tray');
 const usingTrayIcon =
   startInTray || process.argv.some(arg => arg === '--use-tray-icon');
 
-const disableFlashFrame = process.argv.some(
-  arg => arg === '--disable-flash-frame'
-);
-
-const config = window.app.config;
+const config = require('./app/config');
 
 // Very important to put before the single instance check, since it is based on the
 //   userData directory.
@@ -1092,9 +1088,6 @@ ipc.on('draw-attention', () => {
   if (!mainWindow) {
     return;
   }
-  if (disableFlashFrame) {
-    return;
-  }
 
   if (process.platform === 'win32' || process.platform === 'linux') {
     mainWindow.flashFrame(true);
@@ -1189,6 +1182,8 @@ installSettingsSetter('hide-menu-bar');
 
 installSettingsGetter('notification-setting');
 installSettingsSetter('notification-setting');
+installSettingsGetter('notification-draw-attention');
+installSettingsSetter('notification-draw-attention');
 installSettingsGetter('audio-notification');
 installSettingsSetter('audio-notification');
 
