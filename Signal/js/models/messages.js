@@ -1022,6 +1022,12 @@
       if (this.get('sticker')) {
         return i18n('message--getNotificationText--stickers');
       }
+      if (this.isCallHistory()) {
+        return window.Signal.Components.getCallingNotificationText(
+          this.get('callHistoryDetails'),
+          window.i18n
+        );
+      }
       if (this.isExpirationTimerUpdate()) {
         const { expireTimer } = this.get('expirationTimerUpdate');
         if (!expireTimer) {
