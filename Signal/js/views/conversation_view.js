@@ -394,19 +394,27 @@
             onOutgoingAudioCallInConversation: async () => {
               const conversation = this.model;
               const isVideoCall = false;
+
+            if (await this.isCallSafe()) {
               await window.Signal.Services.calling.startOutgoingCall(
                 conversation,
                 isVideoCall
               );
+            }
             },
+
             onOutgoingVideoCallInConversation: async () => {
               const conversation = this.model;
               const isVideoCall = true;
+
+            if (await this.isCallSafe()) {
               await window.Signal.Services.calling.startOutgoingCall(
                 conversation,
                 isVideoCall
               );
+            }
             },
+
             onShowSafetyNumber: () => {
               this.showSafetyNumber();
             },
@@ -2536,9 +2544,28 @@
       }
     },
 
-    showSendAnywayDialog(contacts) {
+    async isCallSafe() {
+      const contacts = await this.getUntrustedContacts();
+      if (contacts && contacts.length) {
+        const callAnyway = await this.showSendAnywayDialog(
+          contacts,
+          i18n('callAnyway')
+        );
+        if (!callAnyway) {
+          window.log.info(
+            'Safety number change dialog not accepted, new call not allowed.'
+          );
+          return false;
+        }
+      }
+
+      return true;
+    },
+
+    showSendAnywayDialog(contacts, confirmText) {
       return new Promise(resolve => {
         const dialog = new Whisper.SafetyNumberChangeDialogView({
+          confirmText,
           contacts,
           reject: () => {
             resolve(false);

@@ -12,7 +12,7 @@ require(exports => {
     const Avatar_1 = require("./Avatar");
     const ConfirmationModal_1 = require("./ConfirmationModal");
     const InContactsIcon_1 = require("./InContactsIcon");
-    const SafetyDialogContents = ({ contacts, i18n, onCancel, onConfirm, onView, }) => {
+    const SafetyDialogContents = ({ confirmText, contacts, i18n, onCancel, onConfirm, onView, }) => {
         const cancelButtonRef = React.createRef();
         React.useEffect(() => {
             if (cancelButtonRef && cancelButtonRef.current) {
@@ -41,7 +41,7 @@ require(exports => {
             })),
             React.createElement("div", { className: "module-sfn-dialog__actions" },
                 React.createElement("button", { className: "module-sfn-dialog__actions--cancel", onClick: onCancel, ref: cancelButtonRef, tabIndex: 0 }, i18n('cancel')),
-                React.createElement("button", { className: "module-sfn-dialog__actions--confirm", onClick: onConfirm, tabIndex: 0 }, i18n('sendMessageToContact')))));
+                React.createElement("button", { className: "module-sfn-dialog__actions--confirm", onClick: onConfirm, tabIndex: 0 }, confirmText || i18n('sendMessageToContact')))));
     };
     exports.SafetyNumberChangeDialog = (props) => {
         const { i18n, onCancel, renderSafetyNumber } = props;
