@@ -3602,8 +3602,7 @@ img.emoji.jumbo {
   color: #f6f6f6; }
 
 .module-conversation-header__avatar {
-  min-width: 28px;
-  user-select: none; }
+  min-width: 28px; }
 
 .module-conversation-header__title {
   margin-left: 6px;
@@ -4425,7 +4424,8 @@ img.emoji.jumbo {
   position: relative;
   vertical-align: middle;
   display: inline-block;
-  border-radius: 50%; }
+  border-radius: 50%;
+  user-select: none; }
   .module-avatar img {
     object-fit: cover;
     border-radius: 50%; }
