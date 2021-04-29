@@ -1679,8 +1679,9 @@ img.emoji.jumbo {
   margin-left: -12px;
   margin-right: -12px;
   margin-top: -10px;
-  margin-bottom: -15px;
+  margin-bottom: -10px;
   border-radius: 16px;
+  line-height: 0;
   overflow: hidden;
   background-color: #ffffff; }
   .dark-theme .module-message__attachment-container {
@@ -1693,8 +1694,6 @@ img.emoji.jumbo {
     margin-top: 4px;
     border-top-left-radius: 0px;
     border-top-right-radius: 0px; }
-  .module-message__attachment-container--with-collapsed-metadata {
-    margin-bottom: -10px; }
 
 .module-message__sticker-container {
   text-align: center;
@@ -4799,8 +4798,7 @@ img.emoji.jumbo {
   position: relative;
   display: inline-block;
   margin: 1px;
-  vertical-align: middle;
-  overflow: hidden; }
+  vertical-align: middle; }
 
 .module-image--with-background {
   background-color: #ffffff; }

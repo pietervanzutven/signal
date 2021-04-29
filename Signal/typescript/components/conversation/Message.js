@@ -462,8 +462,6 @@
                         ? `module-message__${prefix}-container--with-content-above`
                         : null, withContentBelow
                         ? 'module-message__attachment-container--with-content-below'
-                        : null, collapseMetadata
-                        ? 'module-message__attachment-container--with-collapsed-metadata'
                         : null, isSticker && !collapseMetadata
                         ? 'module-message__sticker-container--with-content-below'
                         : null)
