@@ -134,7 +134,7 @@ require(exports => {
                 : '--video--disabled';
             return (react_1.default.createElement("div", { className: "module-ongoing-call", onMouseMove: this.showControls, role: "group" },
                 react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__header', controlsFadeClass) },
-                    react_1.default.createElement("div", { className: "module-ongoing-call__header-name" }, callDetails.name),
+                    react_1.default.createElement("div", { className: "module-ongoing-call__header-name" }, callDetails.title),
                     this.renderMessage(callState)),
                 hasRemoteVideo
                     ? this.renderRemoteVideo()
