@@ -1917,7 +1917,7 @@
 
       const currentTimestamp = this.get('timestamp') || null;
       const timestamp = activityMessage
-        ? activityMessage.sent_at || currentTimestamp
+        ? activityMessage.get('sent_at') || currentTimestamp
         : currentTimestamp;
 
       this.set({

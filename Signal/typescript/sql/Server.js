@@ -2059,8 +2059,8 @@
         const db = getInstance();
         const row = await db.get(`SELECT * FROM messages WHERE
        conversationId = $conversationId AND
-       type NOT IN ('profile-change', 'verified-change', 'message-history-unsynced') AND
-       json_extract(json, '$.expirationTimerUpdate.fromSync') != true
+       (type IS NULL OR type NOT IN ('profile-change', 'verified-change', 'message-history-unsynced')) AND
+       (json_extract(json, '$.expirationTimerUpdate.fromSync') IS NULL OR json_extract(json, '$.expirationTimerUpdate.fromSync') != 1)
      ORDER BY received_at DESC
      LIMIT 1;`, {
             $conversationId: conversationId,
@@ -2074,7 +2074,7 @@
         const db = getInstance();
         const row = await db.get(`SELECT * FROM messages WHERE
        conversationId = $conversationId AND
-       type NOT IN ('profile-change', 'verified-change', 'message-history-unsynced')
+       (type IS NULL OR type NOT IN ('profile-change', 'verified-change', 'message-history-unsynced'))
      ORDER BY received_at DESC
      LIMIT 1;`, {
             $conversationId: conversationId,
