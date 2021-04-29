@@ -3866,6 +3866,7 @@
     <Content Include="typescript\textsecure\WebsocketResources.js" />
     <Content Include="typescript\types\Attachment.js" />
     <Content Include="typescript\types\Calling.js" />
+    <Content Include="typescript\types\Colors.js" />
     <Content Include="typescript\types\Contact.js" />
     <Content Include="typescript\types\Conversation.js" />
     <Content Include="typescript\types\Dialogs.js" />

@@ -1,7 +1,5 @@
 require(exports => {
     "use strict";
-
-    // import { missingCaseError } from './missingCaseError';
     Object.defineProperty(exports, "__esModule", { value: true });
     function migrateColor(color) {
         switch (color) {
