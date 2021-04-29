@@ -2812,7 +2812,7 @@ img.emoji.jumbo {
   line-height: 18px;
   letter-spacing: -0.03px;
   font-weight: bold;
-  overflow-x: hidden;
+  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   color: #1b1b1b; }
