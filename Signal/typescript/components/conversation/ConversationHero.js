@@ -67,13 +67,17 @@ require(exports => {
         }
         return null;
     };
-    exports.ConversationHero = ({ i18n, avatarPath, color, conversationType, isMe, membersCount, sharedGroupNames = [], name, phoneNumber, profileName, title, onHeightChange, }) => {
+    exports.ConversationHero = ({ i18n, avatarPath, color, conversationType, isMe, membersCount, sharedGroupNames = [], name, phoneNumber, profileName, title, onHeightChange, updateSharedGroups, }) => {
         const firstRenderRef = React.useRef(true);
         React.useEffect(() => {
             // If any of the depenencies for this hook change then the height of this
             // component may have changed. The cleanup function notifies listeners of
             // any potential height changes.
             return () => {
+                // Kick off the expensive hydration of the current sharedGroupNames
+                if (updateSharedGroups) {
+                    updateSharedGroups();
+                }
                 if (onHeightChange && !firstRenderRef.current) {
                     onHeightChange();
                 }
@@ -89,7 +93,7 @@ require(exports => {
             `mc-${membersCount}`,
             `n-${name}`,
             `pn-${profileName}`,
-            ...sharedGroupNames.map(g => `g-${g}`),
+            sharedGroupNames.map(g => `g-${g}`).join(' '),
         ]);
         const phoneNumberOnly = Boolean(!name && !profileName && conversationType === 'direct');
         return (React.createElement("div", { className: "module-conversation-hero" },

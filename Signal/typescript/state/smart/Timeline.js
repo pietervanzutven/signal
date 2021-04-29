@@ -21,19 +21,19 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = window.lodash;
-    const react_1 = __importDefault(window.react);
-    const react_redux_1 = window.react_redux;
-    const actions_1 = window.ts.state.actions;
-    const Timeline_1 = window.ts.components.conversation.Timeline;
-    const user_1 = window.ts.state.selectors.user;
-    const conversations_1 = window.ts.state.selectors.conversations;
-    const TimelineItem_1 = window.ts.state.smart.TimelineItem;
-    const TypingBubble_1 = window.ts.state.smart.TypingBubble;
-    const LastSeenIndicator_1 = window.ts.state.smart.LastSeenIndicator;
+    const lodash_1 = require("lodash");
+    const react_1 = __importDefault(require("react"));
+    const react_redux_1 = require("react-redux");
+    const actions_1 = require("../actions");
+    const Timeline_1 = require("../../components/conversation/Timeline");
+    const user_1 = require("../selectors/user");
+    const conversations_1 = require("../selectors/conversations");
+    const TimelineItem_1 = require("./TimelineItem");
+    const TypingBubble_1 = require("./TypingBubble");
+    const LastSeenIndicator_1 = require("./LastSeenIndicator");
     const HeroRow_1 = require("./HeroRow");
-    const TimelineLoadingRow_1 = window.ts.state.smart.TimelineLoadingRow;
-    const EmojiPicker_1 = window.ts.state.smart.EmojiPicker;
+    const TimelineLoadingRow_1 = require("./TimelineLoadingRow");
+    const EmojiPicker_1 = require("./EmojiPicker");
     // Workaround: A react component's required properties are filtering up through connect()
     //   https://github.com/DefinitelyTyped/DefinitelyTyped/issues/31363
     const FilteredSmartTimelineItem = TimelineItem_1.SmartTimelineItem;
@@ -50,8 +50,8 @@
     function renderLastSeenIndicator(id) {
         return react_1.default.createElement(FilteredSmartLastSeenIndicator, { id: id });
     }
-    function renderHeroRow(id, onHeightChange) {
-        return react_1.default.createElement(FilteredSmartHeroRow, { id: id, onHeightChange: onHeightChange });
+    function renderHeroRow(id, onHeightChange, updateSharedGroups) {
+        return (react_1.default.createElement(FilteredSmartHeroRow, { id: id, onHeightChange: onHeightChange, updateSharedGroups: updateSharedGroups }));
     }
     function renderLoadingRow(id) {
         return react_1.default.createElement(FilteredSmartTimelineLoadingRow, { id: id });

@@ -4319,6 +4319,16 @@ img.emoji.jumbo {
   flex-direction: row;
   align-items: center; }
 
+.module-conversation-list-item__message-request {
+  font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: -0.03px;
+  font-weight: bold;
+  color: #5e5e5e; }
+  .dark-theme .module-conversation-list-item__message-request {
+    color: #b9b9b9; }
+
 .module-conversation-list-item__message__text {
   flex-grow: 1;
   flex-shrink: 1;

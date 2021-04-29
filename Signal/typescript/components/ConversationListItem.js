@@ -49,7 +49,7 @@
                     react_1.default.createElement(Timestamp_1.Timestamp, { timestamp: lastUpdated, extended: false, module: "module-conversation-list-item__header__timestamp", withUnread: withUnread, i18n: i18n }))));
         }
         renderMessage() {
-            const { draftPreview, i18n, lastMessage, shouldShowDraft, typingContact, unreadCount, } = this.props;
+            const { draftPreview, i18n, isAccepted, lastMessage, shouldShowDraft, typingContact, unreadCount, } = this.props;
             if (!lastMessage && !typingContact) {
                 return null;
             }
@@ -68,7 +68,7 @@
                     dir: "auto", className: classnames_1.default('module-conversation-list-item__message__text', withUnread
                         ? 'module-conversation-list-item__message__text--has-unread'
                         : null)
-                }, typingContact ? (react_1.default.createElement(TypingAnimation_1.TypingAnimation, { i18n: i18n })) : (react_1.default.createElement(react_1.default.Fragment, null,
+                }, !isAccepted ? (react_1.default.createElement("span", { className: "module-conversation-list-item__message-request" }, i18n('ConversationListItem--message-request'))) : typingContact ? (react_1.default.createElement(TypingAnimation_1.TypingAnimation, { i18n: i18n })) : (react_1.default.createElement(react_1.default.Fragment, null,
                     showingDraft ? (react_1.default.createElement("span", { className: "module-conversation-list-item__message__draft-prefix" }, i18n('ConversationListItem--draft-prefix'))) : deletedForEveryone ? (react_1.default.createElement("span", { className: "module-conversation-list-item__message__deleted-for-everyone" }, i18n('message--deletedForEveryone'))) : null,
                     react_1.default.createElement(MessageBody_1.MessageBody, { text: text.split('\n')[0], disableJumbomoji: true, disableLinks: true, i18n: i18n })))),
                 !showingDraft && lastMessage && lastMessage.status ? (react_1.default.createElement("div", { className: classnames_1.default('module-conversation-list-item__message__status-icon', `module-conversation-list-item__message__status-icon--${lastMessage.status}`) })) : null));

@@ -971,7 +971,7 @@
                 }
                 const to = sentMessage.message.group
                     ? `group(${sentMessage.message.group.id.toBinary()})`
-                    : sentMessage.destination;
+                    : sentMessage.destination || sentMessage.destinationUuid;
                 window.log.info('sent message to', to, sentMessage.timestamp.toNumber(), 'from', this.getEnvelopeId(envelope));
                 return this.handleSentMessage(envelope, sentMessage);
             }

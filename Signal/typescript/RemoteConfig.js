@@ -27,7 +27,7 @@ require(exports => {
         };
     }
     exports.onChange = onChange;
-    const refreshRemoteConfig = async () => {
+    exports.refreshRemoteConfig = async () => {
         const now = Date.now();
         const server = getServer();
         const newConfig = await server.getConfig();
@@ -56,7 +56,7 @@ require(exports => {
         }, {});
         window.storage.put('remoteConfig', config);
     };
-    exports.maybeRefreshRemoteConfig = lodash_1.throttle(refreshRemoteConfig,
+    exports.maybeRefreshRemoteConfig = lodash_1.throttle(exports.refreshRemoteConfig,
         // Only fetch remote configuration if the last fetch was more than two hours ago
         2 * 60 * 60 * 1000, { trailing: false });
     function isEnabled(name) {

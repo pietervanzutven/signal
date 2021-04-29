@@ -10,10 +10,10 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = window.lodash;
-    const react_1 = __importDefault(window.react);
-    const react_virtualized_1 = window.react_virtualized;
-    const ScrollDownButton_1 = window.ts.components.conversation.ScrollDownButton;
+    const lodash_1 = require("lodash");
+    const react_1 = __importDefault(require("react"));
+    const react_virtualized_1 = require("react-virtualized");
+    const ScrollDownButton_1 = require("./ScrollDownButton");
     const AT_BOTTOM_THRESHOLD = 15;
     const NEAR_BOTTOM_THRESHOLD = 15;
     const AT_TOP_THRESHOLD = 10;
@@ -249,14 +249,14 @@
                 loadOlderMessages(oldestId);
             };
             this.rowRenderer = ({ index, key, parent, style, }) => {
-                const { id, haveOldest, items, renderItem, renderHeroRow, renderLoadingRow, renderLastSeenIndicator, renderTypingBubble, } = this.props;
+                const { id, haveOldest, items, renderItem, renderHeroRow, renderLoadingRow, renderLastSeenIndicator, renderTypingBubble, updateSharedGroups, } = this.props;
                 const styleWithWidth = Object.assign(Object.assign({}, style), { width: `${this.mostRecentWidth}px` });
                 const row = index;
                 const oldestUnreadRow = this.getLastSeenIndicatorRow();
                 const typingBubbleRow = this.getTypingBubbleRow();
                 let rowContents;
                 if (haveOldest && row === 0) {
-                    rowContents = (react_1.default.createElement("div", { "data-row": row, style: styleWithWidth, role: "row" }, renderHeroRow(id, this.resizeHeroRow)));
+                    rowContents = (react_1.default.createElement("div", { "data-row": row, style: styleWithWidth, role: "row" }, renderHeroRow(id, this.resizeHeroRow, updateSharedGroups)));
                 }
                 else if (!haveOldest && row === 0) {
                     rowContents = (react_1.default.createElement("div", { "data-row": row, style: styleWithWidth, role: "row" }, renderLoadingRow(id)));

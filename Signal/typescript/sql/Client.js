@@ -102,6 +102,8 @@
         getTapToViewMessagesNeedingErase,
         getOlderMessagesByConversation,
         getNewerMessagesByConversation,
+        getLastConversationActivity,
+        getLastConversationPreview,
         getMessageMetricsForConversation,
         migrateConversationMessages,
         getUnprocessedCount,
@@ -675,6 +677,22 @@
             receivedAt,
         });
         return new MessageCollection(handleMessageJSON(messages));
+    }
+    async function getLastConversationActivity(conversationId, options) {
+        const { Message } = options;
+        const result = await channels.getLastConversationActivity(conversationId);
+        if (result) {
+            return new Message(result);
+        }
+        return;
+    }
+    async function getLastConversationPreview(conversationId, options) {
+        const { Message } = options;
+        const result = await channels.getLastConversationPreview(conversationId);
+        if (result) {
+            return new Message(result);
+        }
+        return;
     }
     async function getMessageMetricsForConversation(conversationId) {
         const result = await channels.getMessageMetricsForConversation(conversationId);
