@@ -549,10 +549,14 @@
                 });
             }
             function getProfileUrl(identifier, profileKeyVersion, profileKeyCredentialRequest) {
-                if (profileKeyVersion && profileKeyCredentialRequest) {
-                    return `/${identifier}/${profileKeyVersion}/${profileKeyCredentialRequest}`;
+                let profileUrl = `/${identifier}`;
+                if (profileKeyVersion) {
+                    profileUrl += `/${profileKeyVersion}`;
                 }
-                return `/${identifier}`;
+                if (profileKeyVersion && profileKeyCredentialRequest) {
+                    profileUrl += `/${profileKeyCredentialRequest}`;
+                }
+                return profileUrl;
             }
             async function getProfile(identifier, options = {}) {
                 const { profileKeyVersion, profileKeyCredentialRequest } = options;
