@@ -12,6 +12,7 @@
     exports.AUDIO_MP3 = 'audio/mp3';
     exports.IMAGE_GIF = 'image/gif';
     exports.IMAGE_JPEG = 'image/jpeg';
+    exports.IMAGE_PNG = 'image/png';
     exports.IMAGE_WEBP = 'image/webp';
     exports.VIDEO_MP4 = 'video/mp4';
     exports.VIDEO_QUICKTIME = 'video/quicktime';
