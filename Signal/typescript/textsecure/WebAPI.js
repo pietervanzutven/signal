@@ -13,6 +13,7 @@
     const node_fetch_1 = __importDefault(require("node-fetch"));
     const proxy_agent_1 = __importDefault(require("proxy-agent"));
     const https_1 = require("https");
+    const lodash_1 = require("lodash");
     const is_1 = __importDefault(require("@sindresorhus/is"));
     const stickers_1 = require("../../js/modules/stickers");
     const Crypto_1 = require("../Crypto");
@@ -119,6 +120,17 @@
             }
         }
         return aBBytes;
+    }
+    function _createRedactor(...toReplace) {
+        // NOTE: It would be nice to remove this cast, but TypeScript doesn't support
+        //   it. However, there is [an issue][0] that discusses this in more detail.
+        // [0]: https://github.com/Microsoft/TypeScript/issues/16069
+        const stringsToReplace = toReplace.filter(Boolean);
+        return href => stringsToReplace.reduce((result, stringToReplace) => {
+            const pattern = RegExp(lodash_1.escapeRegExp(stringToReplace), 'g');
+            const replacement = `[REDACTED]${stringToReplace.slice(-3)}`;
+            return result.replace(pattern, replacement);
+        }, href);
     }
     function _validateResponse(response, schema) {
         try {
@@ -243,7 +255,7 @@
                         resultPromise = response.buffer();
                     }
                     else {
-                        resultPromise = response.text();
+                        resultPromise = response.textConverted();
                     }
                     return resultPromise.then(result => {
                         if (options.responseType === 'arraybuffer' ||
@@ -450,6 +462,7 @@
                     timeout: param.timeout,
                     type: param.httpType,
                     user: param.username || username,
+                    redactUrl: param.redactUrl,
                     validateResponse: param.validateResponse,
                     version,
                     unauthenticated: param.unauthenticated,
@@ -565,6 +578,7 @@
                     httpType: 'GET',
                     urlParameters: getProfileUrl(identifier, profileKeyVersion, profileKeyCredentialRequest),
                     responseType: 'json',
+                    redactUrl: _createRedactor(identifier, profileKeyVersion, profileKeyCredentialRequest),
                 });
             }
             async function getProfileUnauth(identifier, options) {
@@ -576,6 +590,7 @@
                     responseType: 'json',
                     unauthenticated: true,
                     accessKey,
+                    redactUrl: _createRedactor(identifier, profileKeyVersion, profileKeyCredentialRequest),
                 });
             }
             async function getAvatar(path) {
@@ -588,6 +603,10 @@
                     responseType: 'arraybuffer',
                     timeout: 0,
                     type: 'GET',
+                    redactUrl: (href) => {
+                        const pattern = RegExp(lodash_1.escapeRegExp(path), 'g');
+                        return href.replace(pattern, `[REDACTED]${path.slice(-3)}`);
+                    },
                     version,
                 });
             }
@@ -903,6 +922,7 @@
                     responseType: 'arraybuffer',
                     timeout: 0,
                     type: 'GET',
+                    redactUrl: _createRedactor(cdnKey),
                     version,
                 });
             }
