@@ -3006,11 +3006,13 @@
           pack.status === 'downloaded' ||
           pack.status === 'installed');
 
-      let id;
-      let key;
+      const dataFromLink = window.Signal.Stickers.getDataFromLink(url);
+      if (!dataFromLink) {
+        return null;
+      }
+      const { id, key } = dataFromLink;
 
       try {
-        ({ id, key } = window.Signal.Stickers.getDataFromLink(url));
         const keyBytes = window.Signal.Crypto.bytesFromHexString(key);
         const keyBase64 = window.Signal.Crypto.arrayBufferToBase64(keyBytes);
 
