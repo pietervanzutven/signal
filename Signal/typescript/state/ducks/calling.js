@@ -11,14 +11,18 @@ require(exports => {
     const ACCEPT_CALL = 'calling/ACCEPT_CALL';
     const CALL_STATE_CHANGE = 'calling/CALL_STATE_CHANGE';
     const CALL_STATE_CHANGE_FULFILLED = 'calling/CALL_STATE_CHANGE_FULFILLED';
+    const CHANGE_IO_DEVICE = 'calling/CHANGE_IO_DEVICE';
+    const CHANGE_IO_DEVICE_FULFILLED = 'calling/CHANGE_IO_DEVICE_FULFILLED';
     const DECLINE_CALL = 'calling/DECLINE_CALL';
     const HANG_UP = 'calling/HANG_UP';
     const INCOMING_CALL = 'calling/INCOMING_CALL';
     const OUTGOING_CALL = 'calling/OUTGOING_CALL';
+    const REFRESH_IO_DEVICES = 'calling/REFRESH_IO_DEVICES';
     const REMOTE_VIDEO_CHANGE = 'calling/REMOTE_VIDEO_CHANGE';
     const SET_LOCAL_AUDIO = 'calling/SET_LOCAL_AUDIO';
     const SET_LOCAL_VIDEO = 'calling/SET_LOCAL_VIDEO';
     const SET_LOCAL_VIDEO_FULFILLED = 'calling/SET_LOCAL_VIDEO_FULFILLED';
+    const TOGGLE_SETTINGS = 'calling/TOGGLE_SETTINGS';
     // Action Creators
     function acceptCall(payload) {
         // tslint:disable-next-line no-floating-promises
@@ -41,6 +45,24 @@ require(exports => {
             payload: doCallStateChange(payload),
         };
     }
+    function changeIODevice(payload) {
+        return {
+            type: CHANGE_IO_DEVICE,
+            payload: doChangeIODevice(payload),
+        };
+    }
+    async function doChangeIODevice(payload) {
+        if (payload.type === Calling_1.CallingDeviceType.CAMERA) {
+            await calling_1.calling.setPreferredCamera(payload.selectedDevice);
+        }
+        else if (payload.type === Calling_1.CallingDeviceType.MICROPHONE) {
+            calling_1.calling.setPreferredMicrophone(payload.selectedDevice);
+        }
+        else if (payload.type === Calling_1.CallingDeviceType.SPEAKER) {
+            calling_1.calling.setPreferredSpeaker(payload.selectedDevice);
+        }
+        return payload;
+    }
     async function doCallStateChange(payload) {
         const { callDetails, callState } = payload;
         const { isIncoming } = callDetails;
@@ -50,12 +72,11 @@ require(exports => {
             bounceAppIcon_1.bounceAppIconStart();
         }
         if (callState !== Calling_1.CallState.Ringing) {
-            callingTones_1.callingTones.stopRingtone();
+            await callingTones_1.callingTones.stopRingtone();
             bounceAppIcon_1.bounceAppIconStop();
         }
         if (callState === Calling_1.CallState.Ended) {
-            // tslint:disable-next-line no-floating-promises
-            callingTones_1.callingTones.playEndCall();
+            await callingTones_1.callingTones.playEndCall();
         }
         return payload;
     }
@@ -106,21 +127,27 @@ require(exports => {
             payload,
         };
     }
+    function refreshIODevices(payload) {
+        return {
+            type: REFRESH_IO_DEVICES,
+            payload,
+        };
+    }
     function remoteVideoChange(payload) {
         return {
             type: REMOTE_VIDEO_CHANGE,
             payload,
         };
     }
-    function setVideoCapturer(payload) {
-        calling_1.calling.setVideoCapturer(payload.callId, payload.capturer);
+    function setLocalPreview(payload) {
+        calling_1.calling.videoCapturer.setLocalPreview(payload.element);
         return {
             type: 'NOOP',
             payload: null,
         };
     }
-    function setVideoRenderer(payload) {
-        calling_1.calling.setVideoRenderer(payload.callId, payload.renderer);
+    function setRendererCanvas(payload) {
+        calling_1.calling.videoRenderer.setCanvas(payload.element);
         return {
             type: 'NOOP',
             payload: null,
@@ -139,6 +166,11 @@ require(exports => {
             payload: doSetLocalVideo(payload),
         };
     }
+    function toggleSettings() {
+        return {
+            type: TOGGLE_SETTINGS,
+        };
+    }
     async function doSetLocalVideo(payload) {
         if (await callingPermissions_1.requestCameraPermissions()) {
             calling_1.calling.setOutgoingVideo(payload.callId, payload.enabled);
@@ -149,26 +181,37 @@ require(exports => {
     exports.actions = {
         acceptCall,
         callStateChange,
+        changeIODevice,
         declineCall,
         hangUp,
         incomingCall,
         outgoingCall,
+        refreshIODevices,
         remoteVideoChange,
-        setVideoCapturer,
-        setVideoRenderer,
+        setLocalPreview,
+        setRendererCanvas,
         setLocalAudio,
         setLocalVideo,
+        toggleSettings,
     };
     // Reducer
     function getEmptyState() {
         return {
+            availableCameras: [],
+            availableMicrophones: [],
+            availableSpeakers: [],
             callDetails: undefined,
             callState: undefined,
             hasLocalAudio: false,
             hasLocalVideo: false,
             hasRemoteVideo: false,
+            selectedCamera: undefined,
+            selectedMicrophone: undefined,
+            selectedSpeaker: undefined,
+            settingsDialogOpen: false,
         };
     }
+    // tslint:disable-next-line max-func-body-length
     function reducer(state = getEmptyState(), action) {
         if (action.type === ACCEPT_CALL) {
             return Object.assign(Object.assign({}, state), { hasLocalAudio: true, hasLocalVideo: action.payload.asVideoCall });
@@ -196,6 +239,34 @@ require(exports => {
         }
         if (action.type === SET_LOCAL_VIDEO_FULFILLED) {
             return Object.assign(Object.assign({}, state), { hasLocalVideo: action.payload.enabled });
+        }
+        if (action.type === CHANGE_IO_DEVICE_FULFILLED) {
+            const { selectedDevice } = action.payload;
+            const nextState = Object.create(null);
+            if (action.payload.type === Calling_1.CallingDeviceType.CAMERA) {
+                nextState.selectedCamera = selectedDevice;
+            }
+            else if (action.payload.type === Calling_1.CallingDeviceType.MICROPHONE) {
+                nextState.selectedMicrophone = selectedDevice;
+            }
+            else if (action.payload.type === Calling_1.CallingDeviceType.SPEAKER) {
+                nextState.selectedSpeaker = selectedDevice;
+            }
+            return Object.assign(Object.assign({}, state), nextState);
+        }
+        if (action.type === REFRESH_IO_DEVICES) {
+            const { availableMicrophones, selectedMicrophone, availableSpeakers, selectedSpeaker, availableCameras, selectedCamera, } = action.payload;
+            return Object.assign(Object.assign({}, state), {
+                availableMicrophones,
+                selectedMicrophone,
+                availableSpeakers,
+                selectedSpeaker,
+                availableCameras,
+                selectedCamera
+            });
+        }
+        if (action.type === TOGGLE_SETTINGS) {
+            return Object.assign(Object.assign({}, state), { settingsDialogOpen: !state.settingsDialogOpen });
         }
         return state;
     }

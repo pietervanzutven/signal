@@ -97,13 +97,14 @@ require(exports => {
             this.controlsFadeTimer = null;
             this.localVideoRef = react_1.default.createRef();
             this.remoteVideoRef = react_1.default.createRef();
-            this.setVideoCapturerAndRenderer(props.getVideoCapturer(this.localVideoRef), props.getVideoRenderer(this.remoteVideoRef));
         }
         componentDidMount() {
             // It's really jump with a value of 500ms.
             this.interval = setInterval(this.updateAcceptedTimer, 100);
             this.fadeControls();
             document.addEventListener('keydown', this.handleKeyDown);
+            this.props.setLocalPreview({ element: this.localVideoRef });
+            this.props.setRendererCanvas({ element: this.remoteVideoRef });
         }
         componentWillUnmount() {
             document.removeEventListener('keydown', this.handleKeyDown);
@@ -113,10 +114,11 @@ require(exports => {
             if (this.controlsFadeTimer) {
                 clearTimeout(this.controlsFadeTimer);
             }
-            this.setVideoCapturerAndRenderer(null, null);
+            this.props.setLocalPreview({ element: undefined });
+            this.props.setRendererCanvas({ element: undefined });
         }
         render() {
-            const { callDetails, callState, hangUp, hasLocalAudio, hasLocalVideo, hasRemoteVideo, } = this.props;
+            const { callDetails, callState, hangUp, hasLocalAudio, hasLocalVideo, hasRemoteVideo, i18n, toggleSettings, } = this.props;
             const { showControls } = this.state;
             const isAudioOnly = !hasLocalVideo && !hasRemoteVideo;
             if (!callDetails || !callState) {
@@ -135,7 +137,9 @@ require(exports => {
             return (react_1.default.createElement("div", { className: "module-ongoing-call", onMouseMove: this.showControls, role: "group" },
                 react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__header', controlsFadeClass) },
                     react_1.default.createElement("div", { className: "module-ongoing-call__header-name" }, callDetails.title),
-                    this.renderMessage(callState)),
+                    this.renderMessage(callState),
+                    react_1.default.createElement("div", { className: "module-ongoing-call__settings" },
+                        react_1.default.createElement("button", { "aria-label": i18n('callingDeviceSelection__settings'), className: "module-ongoing-call__settings--button", onClick: toggleSettings }))),
                 hasRemoteVideo
                     ? this.renderRemoteVideo()
                     : this.renderAvatar(callDetails),
@@ -196,21 +200,6 @@ require(exports => {
                 return `${hours}:${mins}:${secs}`;
             }
             return `${mins}:${secs}`;
-        }
-        setVideoCapturerAndRenderer(capturer, renderer) {
-            const { callDetails, setVideoCapturer, setVideoRenderer } = this.props;
-            if (!callDetails) {
-                return;
-            }
-            const { callId } = callDetails;
-            setVideoCapturer({
-                callId,
-                capturer,
-            });
-            setVideoRenderer({
-                callId,
-                renderer,
-            });
         }
     }
     exports.CallScreen = CallScreen;

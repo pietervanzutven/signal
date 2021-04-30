@@ -11,6 +11,10 @@ require(exports => {
     exports.CanvasVideoRenderer = ringrtc_2.CanvasVideoRenderer;
     exports.GumVideoCapturer = ringrtc_2.GumVideoCapturer;
     class CallingClass {
+        constructor() {
+            this.videoCapturer = new ringrtc_1.GumVideoCapturer(640, 480, 30);
+            this.videoRenderer = new ringrtc_1.CanvasVideoRenderer();
+        }
         initialize(uxActions) {
             this.uxActions = uxActions;
             if (!uxActions) {
@@ -38,10 +42,6 @@ require(exports => {
                 window.log.error('Missing uxActions, new call not allowed.');
                 return;
             }
-            if (ringrtc_1.RingRTC.call && ringrtc_1.RingRTC.call.state !== ringrtc_1.CallState.Ended) {
-                window.log.info('Call already in progress, new call not allowed.');
-                return;
-            }
             const remoteUserId = this.getRemoteUserIdFromConversation(conversation);
             if (!remoteUserId || !this.localDeviceId) {
                 window.log.error('Missing identifier, new call not allowed.');
@@ -52,9 +52,18 @@ require(exports => {
                 window.log.info('Permissions were denied, new call not allowed.');
                 return;
             }
+            const callSettings = await this.getCallSettings(conversation);
+            // Check state after awaiting to debounce call button.
+            if (ringrtc_1.RingRTC.call && ringrtc_1.RingRTC.call.state !== ringrtc_1.CallState.Ended) {
+                window.log.info('Call already in progress, new call not allowed.');
+                return;
+            }
             // We could make this faster by getting the call object
             // from the RingRTC before we lookup the ICE servers.
-            const call = ringrtc_1.RingRTC.startOutgoingCall(remoteUserId, isVideoCall, this.localDeviceId, await this.getCallSettings(conversation));
+            const call = ringrtc_1.RingRTC.startOutgoingCall(remoteUserId, isVideoCall, this.localDeviceId, callSettings);
+            await this.startDeviceReselectionTimer();
+            ringrtc_1.RingRTC.setVideoCapturer(call.callId, this.videoCapturer);
+            ringrtc_1.RingRTC.setVideoRenderer(call.callId, this.videoRenderer);
             this.attachToCall(conversation, call);
             this.uxActions.outgoingCall({
                 callDetails: this.getUxCallDetails(conversation, call),
@@ -63,6 +72,9 @@ require(exports => {
         async accept(callId, asVideoCall) {
             const haveMediaPermissions = await this.requestPermissions(asVideoCall);
             if (haveMediaPermissions) {
+                await this.startDeviceReselectionTimer();
+                ringrtc_1.RingRTC.setVideoCapturer(callId, this.videoCapturer);
+                ringrtc_1.RingRTC.setVideoRenderer(callId, this.videoRenderer);
                 ringrtc_1.RingRTC.accept(callId, asVideoCall);
             }
             else {
@@ -82,11 +94,170 @@ require(exports => {
         setOutgoingVideo(callId, enabled) {
             ringrtc_1.RingRTC.setOutgoingVideo(callId, enabled);
         }
-        setVideoCapturer(callId, capturer) {
-            ringrtc_1.RingRTC.setVideoCapturer(callId, capturer);
+        async startDeviceReselectionTimer() {
+            // Poll once
+            await this.pollForMediaDevices();
+            // Start the timer
+            if (!this.deviceReselectionTimer) {
+                this.deviceReselectionTimer = setInterval(async () => {
+                    await this.pollForMediaDevices();
+                }, 3000);
+            }
         }
-        setVideoRenderer(callId, renderer) {
-            ringrtc_1.RingRTC.setVideoRenderer(callId, renderer);
+        stopDeviceReselectionTimer() {
+            if (this.deviceReselectionTimer) {
+                clearInterval(this.deviceReselectionTimer);
+                this.deviceReselectionTimer = undefined;
+            }
+        }
+        // tslint:disable-next-line cyclomatic-complexity
+        mediaDeviceSettingsEqual(a, b) {
+            if (!a && !b) {
+                return true;
+            }
+            if (!a || !b) {
+                return false;
+            }
+            if (a.availableCameras.length !== b.availableCameras.length ||
+                a.availableMicrophones.length !== b.availableMicrophones.length ||
+                a.availableSpeakers.length !== b.availableSpeakers.length) {
+                return false;
+            }
+            for (let i = 0; i < a.availableCameras.length; i++) {
+                if (a.availableCameras[i].deviceId !== b.availableCameras[i].deviceId ||
+                    a.availableCameras[i].groupId !== b.availableCameras[i].groupId ||
+                    a.availableCameras[i].label !== b.availableCameras[i].label) {
+                    return false;
+                }
+            }
+            for (let i = 0; i < a.availableMicrophones.length; i++) {
+                if (a.availableMicrophones[i].name !== b.availableMicrophones[i].name ||
+                    a.availableMicrophones[i].unique_id !==
+                    b.availableMicrophones[i].unique_id ||
+                    a.availableMicrophones[i].same_name_index !==
+                    b.availableMicrophones[i].same_name_index) {
+                    return false;
+                }
+            }
+            for (let i = 0; i < a.availableSpeakers.length; i++) {
+                if (a.availableSpeakers[i].name !== b.availableSpeakers[i].name ||
+                    a.availableSpeakers[i].unique_id !== b.availableSpeakers[i].unique_id ||
+                    a.availableSpeakers[i].same_name_index !==
+                    b.availableSpeakers[i].same_name_index) {
+                    return false;
+                }
+            }
+            if ((a.selectedCamera && !b.selectedCamera) ||
+                (!a.selectedCamera && b.selectedCamera) ||
+                (a.selectedMicrophone && !b.selectedMicrophone) ||
+                (!a.selectedMicrophone && b.selectedMicrophone) ||
+                (a.selectedSpeaker && !b.selectedSpeaker) ||
+                (!a.selectedSpeaker && b.selectedSpeaker)) {
+                return false;
+            }
+            if (a.selectedCamera &&
+                b.selectedCamera &&
+                a.selectedCamera !== b.selectedCamera) {
+                return false;
+            }
+            if (a.selectedMicrophone &&
+                b.selectedMicrophone &&
+                a.selectedMicrophone.index !== b.selectedMicrophone.index) {
+                return false;
+            }
+            if (a.selectedSpeaker &&
+                b.selectedSpeaker &&
+                a.selectedSpeaker.index !== b.selectedSpeaker.index) {
+                return false;
+            }
+            return true;
+        }
+        async pollForMediaDevices() {
+            var _a;
+            const newSettings = await this.getMediaDeviceSettings();
+            if (!this.mediaDeviceSettingsEqual(this.lastMediaDeviceSettings, newSettings)) {
+                window.log.info('MediaDevice: available devices changed (from->to)', this.lastMediaDeviceSettings, newSettings);
+                await this.selectPreferredMediaDevices(newSettings);
+                this.lastMediaDeviceSettings = newSettings;
+                (_a = this.uxActions) === null || _a === void 0 ? void 0 : _a.refreshIODevices(newSettings);
+            }
+        }
+        async getMediaDeviceSettings() {
+            const availableMicrophones = ringrtc_1.RingRTC.getAudioInputs();
+            const preferredMicrophone = window.storage.get('preferred-audio-input-device');
+            const selectedMicIndex = this.findBestMatchingDeviceIndex(availableMicrophones, preferredMicrophone);
+            const selectedMicrophone = selectedMicIndex !== undefined
+                ? availableMicrophones[selectedMicIndex]
+                : undefined;
+            const availableSpeakers = ringrtc_1.RingRTC.getAudioOutputs();
+            const preferredSpeaker = window.storage.get('preferred-audio-output-device');
+            const selectedSpeakerIndex = this.findBestMatchingDeviceIndex(availableSpeakers, preferredSpeaker);
+            const selectedSpeaker = selectedSpeakerIndex !== undefined
+                ? availableSpeakers[selectedSpeakerIndex]
+                : undefined;
+            const availableCameras = await window.Signal.Services.calling.videoCapturer.enumerateDevices();
+            const preferredCamera = window.storage.get('preferred-video-input-device');
+            const selectedCamera = this.findBestMatchingCamera(availableCameras, preferredCamera);
+            return {
+                availableMicrophones,
+                availableSpeakers,
+                selectedMicrophone,
+                selectedSpeaker,
+                availableCameras,
+                selectedCamera,
+            };
+        }
+        findBestMatchingDeviceIndex(available, preferred) {
+            if (!preferred) {
+                // No preference stored
+                return undefined;
+            }
+            // Match by UUID first, if available
+            if (preferred.unique_id) {
+                const matchIndex = available.findIndex(d => d.unique_id === preferred.unique_id);
+                if (matchIndex !== -1) {
+                    return matchIndex;
+                }
+            }
+            // Match by name second, and if there are multiple such names - by instance index.
+            const matchingNames = available.filter(d => d.name === preferred.name);
+            if (matchingNames.length > preferred.same_name_index) {
+                return matchingNames[preferred.same_name_index].index;
+            }
+            if (matchingNames.length > 0) {
+                return matchingNames[0].index;
+            }
+            // Nothing matches; take the first device if there are any
+            return available.length > 0 ? 0 : undefined;
+        }
+        findBestMatchingCamera(available, preferred) {
+            const matchingId = available.filter(d => d.deviceId === preferred);
+            const nonInfrared = available.filter(d => !d.label.includes('IR Camera'));
+            /// By default, pick the first non-IR camera (but allow the user to pick the infrared if they so desire)
+            if (matchingId.length > 0) {
+                return matchingId[0].deviceId;
+            }
+            else if (nonInfrared.length > 0) {
+                return nonInfrared[0].deviceId;
+            }
+            else {
+                return undefined;
+            }
+        }
+        setPreferredMicrophone(device) {
+            window.log.info('MediaDevice: setPreferredMicrophone', device);
+            window.storage.put('preferred-audio-input-device', device);
+            ringrtc_1.RingRTC.setAudioInput(device.index);
+        }
+        setPreferredSpeaker(device) {
+            window.log.info('MediaDevice: setPreferredSpeaker', device);
+            window.storage.put('preferred-audio-output-device', device);
+            ringrtc_1.RingRTC.setAudioOutput(device.index);
+        }
+        async setPreferredCamera(device) {
+            window.log.info('MediaDevice: setPreferredCamera', device);
+            window.storage.put('preferred-video-input-device', device);
+            await this.videoCapturer.setPreferredDevice(device);
         }
         async handleCallingMessage(envelope, callingMessage) {
             const enableIncomingCalls = await window.getIncomingCallNotification();
@@ -103,6 +274,21 @@ require(exports => {
             }
             const messageAgeSec = envelope.messageAgeSec ? envelope.messageAgeSec : 0;
             ringrtc_1.RingRTC.handleCallingMessage(remoteUserId, remoteDeviceId, this.localDeviceId, messageAgeSec, callingMessage);
+        }
+        async selectPreferredMediaDevices(settings) {
+            // Assume that the MediaDeviceSettings have been obtained very recently and the index is still valid (no devices have been plugged in in between).
+            if (settings.selectedMicrophone) {
+                window.log.info('MediaDevice: selecting microphone', settings.selectedMicrophone);
+                ringrtc_1.RingRTC.setAudioInput(settings.selectedMicrophone.index);
+            }
+            if (settings.selectedSpeaker) {
+                window.log.info('MediaDevice: selecting speaker', settings.selectedMicrophone);
+                ringrtc_1.RingRTC.setAudioOutput(settings.selectedSpeaker.index);
+            }
+            if (settings.selectedCamera) {
+                window.log.info('MediaDevice: selecting camera', settings.selectedCamera);
+                await this.videoCapturer.setPreferredDevice(settings.selectedCamera);
+            }
         }
         async requestCameraPermissions() {
             const cameraPermission = await window.getMediaCameraPermissions();
@@ -220,6 +406,8 @@ require(exports => {
                 }
                 else if (call.state === ringrtc_1.CallState.Ended) {
                     this.addCallHistoryForEndedCall(conversation, call, acceptedTime);
+                    this.stopDeviceReselectionTimer();
+                    this.lastMediaDeviceSettings = undefined;
                 }
                 uxActions.callStateChange({
                     callState: call.state,
