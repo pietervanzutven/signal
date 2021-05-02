@@ -229,13 +229,18 @@
     <Content Include="node_modules\blurhash\error.js" />
     <Content Include="node_modules\blurhash\index.js" />
     <Content Include="node_modules\blurhash\utils.js" />
+    <Content Include="node_modules\inherits\index.js" />
     <Content Include="node_modules\lodash\reduce.js" />
     <Content Include="node_modules\lodash\throttle.js" />
+    <Content Include="node_modules\path\index.js" />
+    <Content Include="node_modules\path\wrapper.js" />
     <Content Include="node_modules\react-blurhash\Blurhash.js" />
     <Content Include="node_modules\react-blurhash\BlurhashCanvas.js" />
     <Content Include="node_modules\react-blurhash\index.js" />
     <Content Include="node_modules\react-tooltip-lite\react-tooltip-lite.min.js" />
     <Content Include="node_modules\ringrtc\index.js" />
+    <Content Include="node_modules\util\index.js" />
+    <Content Include="node_modules\util\support\isBuffer.js" />
     <Content Include="protos\SignalStorage.proto" />
     <Content Include="sounds\navigation-cancel.ogg" />
     <Content Include="sounds\ringtone_minimal.ogg" />
@@ -292,7 +297,6 @@
     <Content Include="node_modules\core\indexedDB.js" />
     <Content Include="node_modules\core\notification.js" />
     <Content Include="node_modules\core\os.js" />
-    <Content Include="node_modules\core\path.js" />
     <Content Include="node_modules\core\process.js" />
     <Content Include="node_modules\core\error.js" />
     <Content Include="node_modules\core\require.js" />
@@ -3901,6 +3905,7 @@
     <Content Include="typescript\util\imageToBlurHash.js" />
     <Content Include="typescript\util\index.js" />
     <Content Include="typescript\util\isFileDangerous.js" />
+    <Content Include="typescript\util\isPathInside.js" />
     <Content Include="typescript\util\libphonenumberInstance.js" />
     <Content Include="typescript\util\makeLookup.js" />
     <Content Include="typescript\util\migrateColor.js" />

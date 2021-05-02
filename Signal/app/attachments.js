@@ -4,25 +4,26 @@
   window.app = window.app || {};
   const exports = window.app.attachments = {};
 
-  const crypto = window.crypto;
-  const path = window.path;
-  const { app, dialog, shell, remote } = window.electron;
+  const crypto = require('crypto');
+  const path = require('path');
+  const { app, dialog, shell, remote } = require('electron');
 
-  const fastGlob = window.fast_glob;
-  const glob = window.glob;
-  const pify = window.pify;
-  const fse = window.fs_extra;
-  const toArrayBuffer = window.to_arraybuffer;
-  const { map, isArrayBuffer, isString } = window.lodash;
-  const normalizePath = window.normalize_path;
-  const sanitizeFilename = window.sanitize_filename;
-  const getGuid = window.uuid.v4;
+  const fastGlob = require('fast-glob');
+  const glob = require('glob');
+  const pify = require('pify');
+  const fse = require('fs-extra');
+  const toArrayBuffer = require('to-arraybuffer');
+  const { map, isArrayBuffer, isString } = require('lodash');
+  const normalizePath = require('normalize-path');
+  const sanitizeFilename = require('sanitize-filename');
+  const { isPathInside } = require('../ts/util/isPathInside');
+  const getGuid = require('uuid/v4');
 
   let xattr;
   try {
     // eslint-disable-next-line max-len
     // eslint-disable-next-line global-require, import/no-extraneous-dependencies, import/no-unresolved
-    xattr = window.fs_xattr;
+    xattr = require('fs-xattr');
   } catch (e) {
     console.log('x-attr dependncy did not load successfully');
   }
@@ -31,6 +32,8 @@
   const STICKER_PATH = 'stickers.noindex';
   const TEMP_PATH = 'temp';
   const DRAFT_PATH = 'drafts.noindex';
+
+  const getApp = () => app || remote.app;
 
   exports.getAllAttachments = async userDataPath => {
     const dir = exports.getPath(userDataPath);
@@ -119,7 +122,7 @@
 
       const absolutePath = path.join(root, relativePath);
       const normalized = path.normalize(absolutePath);
-      if (!normalized.startsWith(root)) {
+      if (!isPathInside(normalized, root)) {
         throw new Error('Invalid relative path');
       }
       const buffer = await fse.readFile(normalized);
@@ -139,7 +142,7 @@
 
       const absolutePath = path.join(root, relativePath);
       const normalized = path.normalize(absolutePath);
-      if (!normalized.startsWith(root)) {
+      if (!isPathInside(normalized, root)) {
         throw new Error('Invalid relative path');
       }
       try {
@@ -156,16 +159,24 @@
       throw new TypeError("'root' must be a path");
     }
 
+    const userDataPath = getApp().getPath('userData');
+
     return async sourcePath => {
       if (!isString(sourcePath)) {
         throw new TypeError('sourcePath must be a string');
+      }
+
+      if (!isPathInside(sourcePath, userDataPath)) {
+        throw new Error(
+          "'sourcePath' must be relative to the user config directory"
+        );
       }
 
       const name = exports.createName();
       const relativePath = exports.getRelativePath(name);
       const absolutePath = path.join(root, relativePath);
       const normalized = path.normalize(absolutePath);
-      if (!normalized.startsWith(root)) {
+      if (!isPathInside(normalized, root)) {
         throw new Error('Invalid relative path');
       }
 
@@ -176,7 +187,7 @@
   };
 
   exports.writeToDownloads = async ({ data, name }) => {
-    const appToUse = app || remote.app;
+    const appToUse = getApp();
     const downloadsPath =
       appToUse.getPath('downloads') || appToUse.getPath('home');
     const sanitized = sanitizeFilename(name);
@@ -195,7 +206,7 @@
 
     const target = path.join(downloadsPath, candidateName);
     const normalized = path.normalize(target);
-    if (!normalized.startsWith(downloadsPath)) {
+    if (!isPathInside(normalized, downloadsPath)) {
       throw new Error('Invalid filename!');
     }
 
@@ -229,14 +240,14 @@
 
   exports.openFileInDownloads = async name => {
     const shellToUse = shell || remote.shell;
-    const appToUse = app || remote.app;
+    const appToUse = getApp();
 
     const downloadsPath =
       appToUse.getPath('downloads') || appToUse.getPath('home');
     const target = path.join(downloadsPath, name);
 
     const normalized = path.normalize(target);
-    if (!normalized.startsWith(downloadsPath)) {
+    if (!isPathInside(normalized, downloadsPath)) {
       throw new Error('Invalid filename!');
     }
 
@@ -316,7 +327,7 @@
       const buffer = Buffer.from(arrayBuffer);
       const absolutePath = path.join(root, relativePath);
       const normalized = path.normalize(absolutePath);
-      if (!normalized.startsWith(root)) {
+      if (!isPathInside(normalized, root)) {
         throw new Error('Invalid relative path');
       }
 
@@ -341,7 +352,7 @@
 
       const absolutePath = path.join(root, relativePath);
       const normalized = path.normalize(absolutePath);
-      if (!normalized.startsWith(root)) {
+      if (!isPathInside(normalized, root)) {
         throw new Error('Invalid relative path');
       }
       await fse.remove(absolutePath);
@@ -408,10 +419,9 @@
   exports.createAbsolutePathGetter = rootPath => relativePath => {
     const absolutePath = path.join(rootPath, relativePath);
     const normalized = path.normalize(absolutePath);
-    if (!normalized.startsWith(rootPath)) {
+    if (!isPathInside(normalized, rootPath)) {
       throw new Error('Invalid relative path');
     }
     return normalized;
   };
-
 })();
