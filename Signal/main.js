@@ -1,26 +1,25 @@
 /* eslint-disable no-console */
 
-const path = window.path;
-const url = window.url;
-const os = window.os;
-const fs = window.fs_extra;
-const crypto = window.crypto;
-const qs = window.qs;
-const normalizePath = window.normalize_path;
-const fg = window.fast_glob;
-const PQueue = window.p_queue.default;
+const path = require('path');
+const url = require('url');
+const os = require('os');
+const fs = require('fs-extra');
+const crypto = require('crypto');
+const normalizePath = require('normalize-path');
+const fg = require('fast-glob');
+const PQueue = require('p-queue').default;
 
-const _ = window._;
-const pify = window.pify;
-const electron = window.electron;
+const _ = require('lodash');
+const pify = require('pify');
+const electron = require('electron');
 
 const packageJson = {
   name: 'signal-desktop',
   productName: 'Signal',
 };
-const GlobalErrors = window.app.global_errors;
-const { isBeta } = window.app.version;
-const { setup: setupSpellChecker } = window.app.spell_check;
+const GlobalErrors = require('./app/global_errors');
+const { isBeta } = require('./app/version');
+const { setup: setupSpellChecker } = require('./app/spell_check');
 
 GlobalErrors.addHandler();
 
@@ -92,6 +91,7 @@ const logging = require('./app/logging');
 const sql = require('./ts/sql/Server').default;
 const sqlChannels = require('./app/sql_channel');
 const windowState = require('./app/window_state');
+const { isSgnlHref, parseSgnlHref } = require('./ts/util/sgnlHref');
 
 let appStartInitialSpellcheckSetting = true;
 
@@ -146,10 +146,10 @@ if (!process.mas) {
 
         showWindow();
       }
-      // Are they trying to open a sgnl link?
-      const incomingUrl = getIncomingUrl(argv);
-      if (incomingUrl) {
-        handleSgnlLink(incomingUrl);
+      // Are they trying to open a sgnl:// href?
+      const incomingHref = getIncomingHref(argv);
+      if (incomingHref) {
+        handleSgnlHref(incomingHref);
       }
       // Handled
       return true;
@@ -471,9 +471,9 @@ async function readyForUpdates() {
   isReadyForUpdates = true;
 
   // First, install requested sticker pack
-  const incomingUrl = getIncomingUrl(process.argv);
-  if (incomingUrl) {
-    handleSgnlLink(incomingUrl);
+  const incomingHref = getIncomingHref(process.argv);
+  if (incomingHref) {
+    handleSgnlHref(incomingHref);
   }
 
   // Second, start checking for app updates
@@ -1298,16 +1298,16 @@ function installSettingsSetter(name) {
   });
 }
 
-function getIncomingUrl(argv) {
-  return argv.find(arg => arg.startsWith('sgnl://'));
+function getIncomingHref(argv) {
+  return argv.find(arg => isSgnlHref(arg, logger));
 }
 
-function handleSgnlLink(incomingUrl) {
-  const { host: command, query } = url.parse(incomingUrl);
-  const args = qs.parse(query);
+function handleSgnlHref(incomingHref) {
+  const { command, args } = parseSgnlHref(incomingHref, logger);
   if (command === 'addstickers' && mainWindow && mainWindow.webContents) {
     console.log('Opening sticker pack from sgnl protocol link');
-    const { pack_id: packId, pack_key: packKeyHex } = args;
+    const packId = args.get('pack_id');
+    const packKeyHex = args.get('pack_key');
     const packKey = Buffer.from(packKeyHex, 'hex').toString('base64');
     mainWindow.webContents.send('show-sticker-pack', { packId, packKey });
   } else {
