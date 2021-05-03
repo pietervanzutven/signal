@@ -826,6 +826,9 @@
                 return stickerUrl.replace(/(\/stickers\/)([^/]+)(\/)/, (_, begin, packId, end) => `${begin}${stickers_1.redactPackId(packId)}${end}`);
             }
             async function getSticker(packId, stickerId) {
+                if (!stickers_1.isPackIdValid(packId)) {
+                    throw new Error('getSticker: pack ID was invalid');
+                }
                 return _outerAjax(`${cdnUrlObject['0']}/stickers/${packId}/full/${stickerId}`, {
                     certificateAuthority,
                     proxyUrl,
@@ -836,6 +839,9 @@
                 });
             }
             async function getStickerPackManifest(packId) {
+                if (!stickers_1.isPackIdValid(packId)) {
+                    throw new Error('getStickerPackManifest: pack ID was invalid');
+                }
                 return _outerAjax(`${cdnUrlObject['0']}/stickers/${packId}/manifest.proto`, {
                     certificateAuthority,
                     proxyUrl,
