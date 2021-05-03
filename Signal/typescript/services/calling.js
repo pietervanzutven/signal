@@ -173,7 +173,7 @@ require(exports => {
             const newSettings = await this.getMediaDeviceSettings();
             if (!this.mediaDeviceSettingsEqual(this.lastMediaDeviceSettings, newSettings)) {
                 window.log.info('MediaDevice: available devices changed (from->to)', this.lastMediaDeviceSettings, newSettings);
-                await this.selectPreferredMediaDevices(newSettings);
+                await this.selectPreferredDevices(newSettings);
                 this.lastMediaDeviceSettings = newSettings;
                 (_a = this.uxActions) === null || _a === void 0 ? void 0 : _a.refreshIODevices(newSettings);
             }
@@ -268,7 +268,14 @@ require(exports => {
             const messageAgeSec = envelope.messageAgeSec ? envelope.messageAgeSec : 0;
             ringrtc_1.RingRTC.handleCallingMessage(remoteUserId, remoteDeviceId, this.localDeviceId, messageAgeSec, callingMessage);
         }
-        async selectPreferredMediaDevices(settings) {
+        async selectPreferredDevices(settings) {
+            if ((!this.lastMediaDeviceSettings && settings.selectedCamera) ||
+                (this.lastMediaDeviceSettings &&
+                    settings.selectedCamera &&
+                    this.lastMediaDeviceSettings.selectedCamera !== settings.selectedCamera)) {
+                window.log.info('MediaDevice: selecting camera', settings.selectedCamera);
+                await this.videoCapturer.setPreferredDevice(settings.selectedCamera);
+            }
             // Assume that the MediaDeviceSettings have been obtained very recently and the index is still valid (no devices have been plugged in in between).
             if (settings.selectedMicrophone) {
                 window.log.info('MediaDevice: selecting microphone', settings.selectedMicrophone);
@@ -277,10 +284,6 @@ require(exports => {
             if (settings.selectedSpeaker) {
                 window.log.info('MediaDevice: selecting speaker', settings.selectedMicrophone);
                 ringrtc_1.RingRTC.setAudioOutput(settings.selectedSpeaker.index);
-            }
-            if (settings.selectedCamera) {
-                window.log.info('MediaDevice: selecting camera', settings.selectedCamera);
-                await this.videoCapturer.setPreferredDevice(settings.selectedCamera);
             }
         }
         async requestCameraPermissions() {
