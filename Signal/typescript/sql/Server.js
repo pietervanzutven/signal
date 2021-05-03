@@ -1985,9 +1985,6 @@
         return lodash_1.map(rows, row => jsonToObject(row.json));
     }
     async function getOlderMessagesByConversation(conversationId, { limit = 100, receivedAt = Number.MAX_VALUE, messageId, } = {}) {
-        if (receivedAt !== Number.MAX_VALUE && !messageId) {
-            throw new Error('If receivedAt is supplied, messageId should be as well');
-        }
         const db = getInstance();
         let rows;
         if (messageId) {
