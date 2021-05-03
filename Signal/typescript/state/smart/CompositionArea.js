@@ -7,15 +7,15 @@
     const exports = window.ts.state.smart.CompositionArea = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_redux_1 = window.react_redux;
-    const reselect_1 = window.reselect;
-    const lodash_1 = window.lodash;
-    const actions_1 = window.ts.state.actions;
-    const CompositionArea_1 = window.ts.components.CompositionArea;
-    const lib_1 = window.ts.components.emoji.lib;
-    const user_1 = window.ts.state.selectors.user;
-    const conversations_1 = window.ts.state.selectors.conversations;
-    const stickers_1 = window.ts.state.selectors.stickers;
+    const react_redux_1 = require("react-redux");
+    const reselect_1 = require("reselect");
+    const lodash_1 = require("lodash");
+    const actions_1 = require("../actions");
+    const CompositionArea_1 = require("../../components/CompositionArea");
+    const lib_1 = require("../../components/emoji/lib");
+    const user_1 = require("../selectors/user");
+    const conversations_1 = require("../selectors/conversations");
+    const stickers_1 = require("../selectors/stickers");
     const selectRecentEmojis = reselect_1.createSelector(({ emojis }) => emojis.recents, recents => recents.filter(lib_1.isShortName));
     const mapStateToProps = (state, props) => {
         const { id } = props;
@@ -34,13 +34,11 @@
         const showPickerHint = lodash_1.get(state.items, ['showStickerPickerHint'], false) &&
             receivedPacks.length > 0;
         const recentEmojis = selectRecentEmojis(state);
-        return {
+        return Object.assign(Object.assign({
             // Base
-            i18n: user_1.getIntl(state),
-            startingText: draftText,
+            i18n: user_1.getIntl(state), startingText: draftText,
             // Emojis
-            recentEmojis,
-            skinTone: lodash_1.get(state, ['items', 'skinTone'], 0),
+            recentEmojis, skinTone: lodash_1.get(state, ['items', 'skinTone'], 0),
             // Stickers
             receivedPacks,
             installedPack,
@@ -49,16 +47,8 @@
             installedPacks,
             recentStickers,
             showIntroduction,
-            showPickerHint,
-            // Message Requests
-            messageRequestsEnabled: conversation.messageRequestsEnabled,
-            acceptedMessageRequest: conversation.acceptedMessageRequest,
-            isBlocked: conversation.isBlocked,
-            conversationType: conversation.type,
-            name: conversation.name,
-            profileName: conversation.profileName,
-            phoneNumber: conversation.phoneNumber,
-        };
+            showPickerHint
+        }, conversation), { conversationType: conversation.type });
     };
     const dispatchPropsMap = Object.assign(Object.assign({}, actions_1.mapDispatchToProps), { onSetSkinTone: (tone) => actions_1.mapDispatchToProps.putItem('skinTone', tone), clearShowIntroduction: () => actions_1.mapDispatchToProps.removeItem('showStickersIntroduction'), clearShowPickerHint: () => actions_1.mapDispatchToProps.removeItem('showStickerPickerHint'), onPickEmoji: actions_1.mapDispatchToProps.onUseEmoji });
     const smart = react_redux_1.connect(mapStateToProps, dispatchPropsMap);

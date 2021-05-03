@@ -1906,7 +1906,8 @@
       if (
         this.hasDraft() &&
         this.get('draftTimestamp') &&
-        previewMessage.get('sent_at') < this.get('draftTimestamp')
+        (!previewMessage ||
+          previewMessage.get('sent_at') < this.get('draftTimestamp'))
       ) {
         return;
       }
