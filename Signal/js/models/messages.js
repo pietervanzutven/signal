@@ -799,6 +799,7 @@
           isStickerPack: window.Signal.LinkPreviews.isStickerPack(preview.url),
           domain: window.Signal.LinkPreviews.getDomain(preview.url),
           image: preview.image ? this.getPropsForAttachment(preview.image) : null,
+          date: preview.date ? preview.date.toNumber() : null,
         }
       )));
     },
@@ -2371,7 +2372,7 @@
             item =>
               (item.image || item.title) &&
               urls.includes(item.url) &&
-              window.Signal.LinkPreviews.isLinkInWhitelist(item.url)
+              window.Signal.LinkPreviews.isLinkSafeToPreview(item.url)
           );
           if (preview.length < incomingPreview.length) {
             window.log.info(

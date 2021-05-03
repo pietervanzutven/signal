@@ -1869,16 +1869,19 @@ img.emoji.jumbo {
 
 .module-message__link-preview__content {
   padding: 8px;
+  border: 1px solid transparent;
+  /* Color overwritten below. */
+  border-bottom: 0;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   background-color: #ffffff;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  border: 1px solid rgba(0, 0, 0, 0.2); }
+  border-color: rgba(0, 0, 0, 0.2); }
   .dark-theme .module-message__link-preview__content {
     background-color: #121212;
-    border: 1px solid #5e5e5e; }
+    border-color: #5e5e5e; }
 
 .module-message__link-preview__content--with-content-above {
   border-top: none;
@@ -1908,16 +1911,41 @@ img.emoji.jumbo {
   .dark-theme .module-message__link-preview__title {
     color: #e9e9e9; }
 
-.module-message__link-preview__location {
+.module-message__link-preview__description {
   font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
   font-size: 13px;
   line-height: 18px;
   letter-spacing: -0.03px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  color: #1b1b1b; }
+  .dark-theme .module-message__link-preview__description {
+    color: #e9e9e9; }
+
+.module-message__link-preview__footer {
+  font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: -0.03px;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
   margin-top: 4px;
-  text-transform: uppercase;
   color: #5e5e5e; }
-  .dark-theme .module-message__link-preview__location {
+  .dark-theme .module-message__link-preview__footer {
     color: #b9b9b9; }
+  .module-message__link-preview__footer > *:not(:first-child) {
+    display: flex; }
+    .module-message__link-preview__footer > *:not(:first-child):before {
+      content: '•';
+      font-size: 50%;
+      margin-left: 0.2rem;
+      margin-right: 0.2rem; }
+
+.module-message__link-preview__location {
+  text-transform: lowercase; }
 
 .module-message__author {
   font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
