@@ -30,6 +30,11 @@ require(exports => {
                         ]
                     })),
                 React.createElement("div", { className: "module-message-request-actions__buttons" },
+                    React.createElement("button", {
+                        onClick: () => {
+                            setMrState(MessageRequestActionsConfirmation_1.MessageRequestState.deleting);
+                        }, tabIndex: 0, className: classnames_1.default('module-message-request-actions__buttons__button', 'module-message-request-actions__buttons__button--deny')
+                    }, i18n('MessageRequests--delete')),
                     isBlocked ? (React.createElement("button", {
                         onClick: () => {
                             setMrState(MessageRequestActionsConfirmation_1.MessageRequestState.unblocking);
@@ -39,11 +44,6 @@ require(exports => {
                             setMrState(MessageRequestActionsConfirmation_1.MessageRequestState.blocking);
                         }, tabIndex: 0, className: classnames_1.default('module-message-request-actions__buttons__button', 'module-message-request-actions__buttons__button--deny')
                     }, i18n('MessageRequests--block'))),
-                    React.createElement("button", {
-                        onClick: () => {
-                            setMrState(MessageRequestActionsConfirmation_1.MessageRequestState.deleting);
-                        }, tabIndex: 0, className: classnames_1.default('module-message-request-actions__buttons__button', 'module-message-request-actions__buttons__button--deny')
-                    }, i18n('MessageRequests--delete')),
                     !isBlocked ? (React.createElement("button", { onClick: onAccept, tabIndex: 0, className: classnames_1.default('module-message-request-actions__buttons__button', 'module-message-request-actions__buttons__button--accept') }, i18n('MessageRequests--accept'))) : null))));
     };
 });
