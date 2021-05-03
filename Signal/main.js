@@ -1,26 +1,25 @@
 /* eslint-disable no-console */
 
-const path = window.path;
-const url = window.url;
-const os = window.os;
-const fs = window.fs_extra;
-const crypto = window.crypto;
-const qs = window.qs;
-const normalizePath = window.normalize_path;
-const fg = window.fast_glob;
-const PQueue = window.p_queue.default;
+const path = require('path');
+const url = require('url');
+const os = require('os');
+const fs = require('fs-extra');
+const crypto = require('crypto');
+const normalizePath = require('normalize-path');
+const fg = require('fast-glob');
+const PQueue = require('p-queue').default;
 
-const _ = window._;
-const pify = window.pify;
-const electron = window.electron;
+const _ = require('lodash');
+const pify = require('pify');
+const electron = require('electron');
 
 const packageJson = {
   name: 'signal-desktop',
   productName: 'Signal',
 };
-const GlobalErrors = window.app.global_errors;
-const { isBeta } = window.app.version;
-const { setup: setupSpellChecker } = window.app.spell_check;
+const GlobalErrors = require('./app/global_errors');
+const { isBeta } = require('./app/version');
+const { setup: setupSpellChecker } = require('./app/spell_check');
 
 GlobalErrors.addHandler();
 
@@ -48,7 +47,8 @@ app.setAppUserModelId(appUserModelId);
 
 // We don't navigate, but this is the way of the future
 //   https://github.com/electron/electron/issues/18397
-app.allowRendererProcessReuse = true;
+// TODO: Make ringrtc-node context-aware and change this to true.
+app.allowRendererProcessReuse = false;
 
 // Keep a global reference of the window object, if you don't, the window will
 //   be closed automatically when the JavaScript object is garbage collected.
@@ -66,11 +66,7 @@ const startInTray = process.argv.some(arg => arg === '--start-in-tray');
 const usingTrayIcon =
   startInTray || process.argv.some(arg => arg === '--use-tray-icon');
 
-const disableFlashFrame = process.argv.some(
-  arg => arg === '--disable-flash-frame'
-);
-
-const config = window.app.config;
+const config = require('./app/config');
 
 // Very important to put before the single instance check, since it is based on the
 //   userData directory.
@@ -84,16 +80,18 @@ const development =
 
 // We generally want to pull in our own modules after this point, after the user
 //   data directory has been set.
-const attachments = window.app.attachments
-const attachmentChannel = window.app.attachment_channel;
-const updater = window.ts.updater.index;
-const createTrayIcon = window.app.tray_icon;
-const dockIcon = window.app.dock_icon;
-const ephemeralConfig = window.app.ephemeral_config;
-const logging = window.app.logging;
-const sql = window.ts.sql.Server.default;
-const sqlChannels = window.app.sql_channel;
-const windowState = window.app.window_state;
+const attachments = require('./app/attachments');
+const attachmentChannel = require('./app/attachment_channel');
+const bounce = require('./ts/services/bounce');
+const updater = require('./ts/updater/index');
+const createTrayIcon = require('./app/tray_icon');
+const dockIcon = require('./app/dock_icon');
+const ephemeralConfig = require('./app/ephemeral_config');
+const logging = require('./app/logging');
+const sql = require('./ts/sql/Server').default;
+const sqlChannels = require('./app/sql_channel');
+const windowState = require('./app/window_state');
+const { isSgnlHref, parseSgnlHref } = require('./ts/util/sgnlHref');
 
 let appStartInitialSpellcheckSetting = true;
 
@@ -148,10 +146,10 @@ if (!process.mas) {
 
         showWindow();
       }
-      // Are they trying to open a sgnl link?
-      const incomingUrl = getIncomingUrl(argv);
-      if (incomingUrl) {
-        handleSgnlLink(incomingUrl);
+      // Are they trying to open a sgnl:// href?
+      const incomingHref = getIncomingHref(argv);
+      if (incomingHref) {
+        handleSgnlHref(incomingHref);
       }
       // Handled
       return true;
@@ -188,6 +186,7 @@ function prepareURL(pathSegments, moreKeys) {
           version: app.getVersion(),
           buildExpiration: config.get('buildExpiration'),
           serverUrl: config.get('serverUrl'),
+          storageUrl: config.get('storageUrl'),
           cdnUrl0: config.get('cdn').get('0'),
           cdnUrl2: config.get('cdn').get('2'),
           certificateAuthority: config.get('certificateAuthority'),
@@ -293,6 +292,7 @@ async function createWindow() {
         preload: path.join(__dirname, 'preload.js'),
         nativeWindowOpen: true,
         spellcheck: await getSpellCheckSetting(),
+        backgroundThrottling: false,
       },
       icon: windowIcon,
     },
@@ -385,6 +385,9 @@ async function createWindow() {
 
   handleCommonWindowEvents(mainWindow);
 
+  // App dock icon bounce
+  bounce.init(mainWindow);
+
   // Emitted when the window is about to be closed.
   // Note: We do most of our shutdown logic here because all windows are closed by
   //   Electron before the app quits.
@@ -468,9 +471,9 @@ async function readyForUpdates() {
   isReadyForUpdates = true;
 
   // First, install requested sticker pack
-  const incomingUrl = getIncomingUrl(process.argv);
-  if (incomingUrl) {
-    handleSgnlLink(incomingUrl);
+  const incomingHref = getIncomingHref(process.argv);
+  if (incomingHref) {
+    handleSgnlHref(incomingHref);
   }
 
   // Second, start checking for app updates
@@ -790,52 +793,60 @@ async function showDebugLogWindow() {
 }
 
 let permissionsPopupWindow;
-async function showPermissionsPopupWindow() {
-  if (permissionsPopupWindow) {
-    permissionsPopupWindow.show();
-    return;
-  }
-  if (!mainWindow) {
-    return;
-  }
+function showPermissionsPopupWindow(forCalling, forCamera) {
+  return new Promise(async (resolve, reject) => {
+    if (permissionsPopupWindow) {
+      permissionsPopupWindow.show();
+      reject(new Error('Permission window already showing'));
+    }
+    if (!mainWindow) {
+      reject(new Error('No main window'));
+    }
 
-  const theme = await pify(getDataFromMainWindow)('theme-setting');
-  const size = mainWindow.getSize();
-  const options = {
-    width: Math.min(400, size[0]),
-    height: Math.min(150, size[1]),
-    resizable: false,
-    title: locale.messages.allowAccess.message,
-    autoHideMenuBar: true,
-    backgroundColor: '#3a76f0',
-    show: false,
-    modal: true,
-    webPreferences: {
-      uwpIntegration: false,
-      uwpIntegrationInWorker: false,
-      contextIsolation: false,
-      preload: path.join(__dirname, 'permissions_popup_preload.js'),
-      nativeWindowOpen: true,
-    },
-    parent: mainWindow,
-  };
+    const theme = await pify(getDataFromMainWindow)('theme-setting');
+    const size = mainWindow.getSize();
+    const options = {
+      width: Math.min(400, size[0]),
+      height: Math.min(150, size[1]),
+      resizable: false,
+      title: locale.messages.allowAccess.message,
+      autoHideMenuBar: true,
+      backgroundColor: '#3a76f0',
+      show: false,
+      modal: true,
+      webPreferences: {
+        uwpIntegration: false,
+        uwpIntegrationInWorker: false,
+        contextIsolation: false,
+        preload: path.join(__dirname, 'permissions_popup_preload.js'),
+        nativeWindowOpen: true,
+      },
+      parent: mainWindow,
+    };
 
-  permissionsPopupWindow = new BrowserWindow(options);
+    permissionsPopupWindow = new BrowserWindow(options);
 
-  handleCommonWindowEvents(permissionsPopupWindow);
+    handleCommonWindowEvents(permissionsPopupWindow);
 
-  permissionsPopupWindow.loadURL(
-    prepareURL([__dirname, 'permissions_popup.html'], { theme })
-  );
+    permissionsPopupWindow.loadURL(
+      prepareURL([__dirname, 'permissions_popup.html'], {
+        theme,
+        forCalling,
+        forCamera,
+      })
+    );
 
-  permissionsPopupWindow.on('closed', () => {
-    removeDarkOverlay();
-    permissionsPopupWindow = null;
-  });
+    permissionsPopupWindow.on('closed', () => {
+      removeDarkOverlay();
+      permissionsPopupWindow = null;
 
-  permissionsPopupWindow.once('ready-to-show', () => {
-    addDarkOverlay();
-    permissionsPopupWindow.show();
+      resolve();
+    });
+
+    permissionsPopupWindow.once('ready-to-show', () => {
+      addDarkOverlay();
+      permissionsPopupWindow.show();
+    });
   });
 }
 
@@ -895,7 +906,7 @@ let ready = false;
       frame: false,
       backgroundColor: '#3a76f0',
       webPreferences: {
-        nodeIntegration: false,
+        uwpIntegration: false,
         preload: path.join(__dirname, 'loading_preload.js'),
       },
       icon: windowIcon,
@@ -1078,9 +1089,6 @@ ipc.on('draw-attention', () => {
   if (!mainWindow) {
     return;
   }
-  if (disableFlashFrame) {
-    return;
-  }
 
   if (process.platform === 'win32' || process.platform === 'linux') {
     mainWindow.flashFrame(true);
@@ -1130,7 +1138,16 @@ ipc.on('close-debug-log', () => {
 
 // Permissions Popup-related IPC calls
 
-ipc.on('show-permissions-popup', showPermissionsPopupWindow);
+ipc.on('show-permissions-popup', () => {
+  showPermissionsPopupWindow(false, false);
+});
+ipc.handle('show-calling-permissions-popup', async (event, forCamera) => {
+  try {
+    await showPermissionsPopupWindow(true, forCamera);
+  } catch (error) {
+    console.error(error);
+  }
+});
 ipc.on('close-permissions-popup', () => {
   if (permissionsPopupWindow) {
     permissionsPopupWindow.close();
@@ -1166,13 +1183,25 @@ installSettingsSetter('hide-menu-bar');
 
 installSettingsGetter('notification-setting');
 installSettingsSetter('notification-setting');
+installSettingsGetter('notification-draw-attention');
+installSettingsSetter('notification-draw-attention');
 installSettingsGetter('audio-notification');
 installSettingsSetter('audio-notification');
 
 installSettingsGetter('spell-check');
 installSettingsSetter('spell-check');
 
-// This one is different because its single source of truth is userConfig, not IndexedDB
+installSettingsGetter('always-relay-calls');
+installSettingsSetter('always-relay-calls');
+installSettingsGetter('call-ringtone-notification');
+installSettingsSetter('call-ringtone-notification');
+installSettingsGetter('call-system-notification');
+installSettingsSetter('call-system-notification');
+installSettingsGetter('incoming-call-notification');
+installSettingsSetter('incoming-call-notification');
+
+// These ones are different because its single source of truth is userConfig,
+// not IndexedDB
 ipc.on('get-media-permissions', event => {
   event.sender.send(
     'get-success-media-permissions',
@@ -1180,10 +1209,25 @@ ipc.on('get-media-permissions', event => {
     userConfig.get('mediaPermissions') || false
   );
 });
+ipc.on('get-media-camera-permissions', event => {
+  event.sender.send(
+    'get-success-media-camera-permissions',
+    null,
+    userConfig.get('mediaCameraPermissions') || false
+  );
+});
 ipc.on('set-media-permissions', (event, value) => {
   userConfig.set('mediaPermissions', value);
 
   event.sender.send('set-success-media-permissions', null);
+});
+ipc.on('set-media-camera-permissions', (event, value) => {
+  userConfig.set('mediaCameraPermissions', value);
+
+  // We reinstall permissions handler to ensure that a revoked permission takes effect
+  installPermissionsHandler({ session, userConfig });
+
+  event.sender.send('set-success-media-camera-permissions', null);
 });
 
 installSettingsGetter('is-primary');
@@ -1254,17 +1298,19 @@ function installSettingsSetter(name) {
   });
 }
 
-function getIncomingUrl(argv) {
-  return argv.find(arg => arg.startsWith('sgnl://'));
+function getIncomingHref(argv) {
+  return argv.find(arg => isSgnlHref(arg, logger));
 }
 
-function handleSgnlLink(incomingUrl) {
-  const { host: command, query } = url.parse(incomingUrl);
-  const args = qs.parse(query);
+function handleSgnlHref(incomingHref) {
+  const { command, args } = parseSgnlHref(incomingHref, logger);
   if (command === 'addstickers' && mainWindow && mainWindow.webContents) {
     console.log('Opening sticker pack from sgnl protocol link');
-    const { pack_id: packId, pack_key: packKeyHex } = args;
-    const packKey = Buffer.from(packKeyHex, 'hex').toString('base64');
+    const packId = args.get('pack_id');
+    const packKeyHex = args.get('pack_key');
+    const packKey = packKeyHex
+      ? Buffer.from(packKeyHex, 'hex').toString('base64')
+      : '';
     mainWindow.webContents.send('show-sticker-pack', { packId, packKey });
   } else {
     console.error('Unhandled sgnl link');

@@ -5,8 +5,7 @@
 
   window.types = window.types || {};
 
-  const { isFunction, isNumber } = window.lodash;
-  const { createLastMessageUpdate } = window.ts.types.Conversation;
+  const { isFunction, isNumber } = require('lodash');
   const {
     arrayBufferToBase64,
     base64ToArrayBuffer,
@@ -172,7 +171,7 @@
     arrayBufferToBase64,
     base64ToArrayBuffer,
     computeHash,
-    createLastMessageUpdate,
+
     deleteExternalFiles,
     maybeUpdateAvatar,
     maybeUpdateProfileAvatar,

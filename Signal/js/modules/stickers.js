@@ -5,7 +5,8 @@
   navigator,
   reduxStore,
   reduxActions,
-  URL
+  URL,
+  URLSearchParams
 */
 
 (function () {
@@ -30,16 +31,17 @@
     },
   };
 
-  const { isNumber, pick, reject, groupBy, values } = window.lodash;
-  const pMap = window.p_map;
-  const Queue = window.p_queue.default;
-  const qs = window.qs;
+  const VALID_PACK_ID_REGEXP = /^[0-9a-f]{32}$/i;
+
+  const { isNumber, pick, reject, groupBy, values } = require('lodash');
+  const pMap = require('p-map');
+  const Queue = require('p-queue').default;
 
   const { makeLookup } = require('../../ts/util/makeLookup');
   const {
     base64ToArrayBuffer,
     deriveStickerPackKey,
-  } = window.ts.Crypto;
+  } = require('../../ts/Crypto');
   const {
     addStickerPackReference,
     createOrUpdateSticker,
@@ -50,7 +52,7 @@
     getAllStickers,
     getRecentStickers,
     updateStickerPackStatus,
-  } = window.ts.sql.Client.default;
+  } = require('../../ts/sql/Client').default;
 
   window.stickers = {
     BLESSED_PACKS,
@@ -68,6 +70,7 @@
     load,
     maybeDeletePack,
     downloadQueuedPacks,
+    isPackIdValid,
     redactPackId,
     removeEphemeralPack,
     savePackMetadata,
@@ -93,18 +96,36 @@
   }
 
   function getDataFromLink(link) {
-    const { hash } = new URL(link);
+    let url;
+    try {
+      url = new URL(link);
+    } catch (err) {
+      return null;
+    }
+
+    const { hash } = url;
     if (!hash) {
       return null;
     }
 
-    const data = hash.slice(1);
-    const params = qs.parse(data);
+    let params;
+    try {
+      params = new URLSearchParams(hash.slice(1));
+    } catch (err) {
+      return null;
+    }
 
-    return {
-      id: params.pack_id,
-      key: params.pack_key,
-    };
+    const id = params.get('pack_id');
+    if (!isPackIdValid(id)) {
+      return null;
+    }
+
+    const key = params.get('pack_key');
+    if (!key) {
+      return null;
+    }
+
+    return { id, key };
   }
 
   function getInstalledStickerPacks() {
@@ -236,6 +257,10 @@
 
   function getInitialState() {
     return initialState;
+  }
+
+  function isPackIdValid(packId) {
+    return typeof packId === 'string' && VALID_PACK_ID_REGEXP.test(packId);
   }
 
   function redactPackId(packId) {
@@ -658,10 +683,7 @@
   }
 
   function getSticker(packId, stickerId) {
-    const state = reduxStore.getState();
-    const { stickers } = state;
-    const { packs } = stickers;
-    const pack = packs[packId];
+    const pack = getStickerPack(packId);
 
     if (!pack || !pack.stickers) {
       return null;

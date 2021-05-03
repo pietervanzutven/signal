@@ -7,7 +7,7 @@
   const path = window.path;
   const fs = window.fs;
   const _ = window.lodash;
-  const { setup } = window.modules.i18n;
+  const { setup } = window.i18n;
 
   function normalizeLocaleName(locale) {
     if (/^es-/.test(locale)) {
