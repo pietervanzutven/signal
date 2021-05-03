@@ -3912,6 +3912,7 @@
     <Content Include="typescript\util\formatDuration.js" />
     <Content Include="typescript\util\formatRelativeTime.js" />
     <Content Include="typescript\util\getInitials.js" />
+    <Content Include="typescript\util\getMuteOptions.js" />
     <Content Include="typescript\util\getStringForProfileChange.js" />
     <Content Include="typescript\util\GoogleChrome.js" />
     <Content Include="typescript\util\hasExpired.js" />

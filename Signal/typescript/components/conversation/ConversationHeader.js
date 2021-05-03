@@ -16,6 +16,7 @@
     const Emojify_1 = require("./Emojify");
     const Avatar_1 = require("../Avatar");
     const InContactsIcon_1 = require("../InContactsIcon");
+    const getMuteOptions_1 = require("../../util/getMuteOptions");
     class ConversationHeader extends react_1.default.Component {
         constructor(props) {
             super(props);
@@ -113,8 +114,24 @@
             }));
         }
         renderMenu(triggerId) {
-            const { i18n, isAccepted, isMe, type, isArchived, leftGroup, onDeleteMessages, onResetSession, onSetDisappearingMessages, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onMoveToInbox, timerOptions, } = this.props;
+            const { i18n, isAccepted, isMe, type, isArchived, leftGroup, muteExpirationLabel, onDeleteMessages, onResetSession, onSetDisappearingMessages, onSetMuteNotifications, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onMoveToInbox, timerOptions, } = this.props;
+            const muteOptions = [];
+            if (muteExpirationLabel) {
+                muteOptions.push(...[
+                    {
+                        name: i18n('muteExpirationLabel', [muteExpirationLabel]),
+                        disabled: true,
+                        value: 0,
+                    },
+                    {
+                        name: i18n('unmute'),
+                        value: 0,
+                    },
+                ]);
+            }
+            muteOptions.push(...getMuteOptions_1.getMuteOptions(i18n));
             const disappearingTitle = i18n('disappearingMessages');
+            const muteTitle = i18n('muteNotificationsTitle');
             const isGroup = type === 'group';
             return (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
                 !leftGroup && isAccepted ? (react_1.default.createElement(react_contextmenu_1.SubMenu, { title: disappearingTitle }, (timerOptions || []).map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
@@ -122,6 +139,11 @@
                         onSetDisappearingMessages(item.value);
                     }
                 }, item.name))))) : null,
+                react_1.default.createElement(react_contextmenu_1.SubMenu, { title: muteTitle }, muteOptions.map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                    key: item.name, disabled: item.disabled, onClick: () => {
+                        onSetMuteNotifications(item.value);
+                    }
+                }, item.name)))),
                 react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowAllMedia }, i18n('viewRecentMedia')),
                 isGroup ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowGroupMembers }, i18n('showMembers'))) : null,
                 !isGroup && !isMe ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowSafetyNumber }, i18n('showSafetyNumber'))) : null,
