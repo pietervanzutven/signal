@@ -17,12 +17,12 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const React = __importStar(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const lodash_1 = window.lodash;
-    const react_popper_1 = window.react_popper;
-    const react_dom_1 = window.react_dom;
-    const EmojiPicker_1 = window.ts.components.emoji.EmojiPicker;
+    const React = __importStar(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const lodash_1 = require("lodash");
+    const react_popper_1 = require("react-popper");
+    const react_dom_1 = require("react-dom");
+    const EmojiPicker_1 = require("./EmojiPicker");
     exports.EmojiButton = React.memo(
         // tslint:disable-next-line:max-func-body-length
         ({ i18n, doSend, onPickEmoji, skinTone, onSetSkinTone, recentEmojis, }) => {

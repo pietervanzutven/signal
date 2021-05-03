@@ -17,13 +17,13 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const React = __importStar(window.react);
-    const react_dom_1 = window.react_dom;
-    const lodash_1 = window.lodash;
-    const classnames_1 = __importDefault(window.classnames);
-    const StickerPackInstallButton_1 = window.ts.components.stickers.StickerPackInstallButton;
-    const ConfirmationDialog_1 = window.ts.components.ConfirmationDialog;
-    const Spinner_1 = window.ts.components.Spinner;
+    const React = __importStar(require("react"));
+    const react_dom_1 = require("react-dom");
+    const lodash_1 = require("lodash");
+    const classnames_1 = __importDefault(require("classnames"));
+    const StickerPackInstallButton_1 = require("./StickerPackInstallButton");
+    const ConfirmationDialog_1 = require("../ConfirmationDialog");
+    const Spinner_1 = require("../Spinner");
     const hooks_1 = require("../../util/hooks");
     function renderBody({ pack, i18n }) {
         if (pack && pack.status === 'error') {
