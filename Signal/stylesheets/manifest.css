@@ -4810,7 +4810,8 @@ img.emoji.jumbo {
   position: relative;
   display: inline-block;
   margin: 1px;
-  vertical-align: middle; }
+  vertical-align: middle;
+  overflow: hidden; }
 
 .module-image--with-background {
   background-color: #ffffff; }
