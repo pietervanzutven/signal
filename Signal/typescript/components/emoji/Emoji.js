@@ -17,19 +17,22 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const React = __importStar(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const lib_1 = window.ts.components.emoji.lib;
+    const React = __importStar(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const lib_1 = require("./lib");
+    exports.EmojiSizes = [16, 18, 20, 24, 28, 32, 48, 64, 66];
     exports.Emoji = React.memo(React.forwardRef(({ style = {}, size = 28, shortName, skinTone, emoji, inline, className, children, }, ref) => {
-        const image = shortName
-            ? lib_1.getImagePath(shortName, skinTone)
-            : emoji
-                ? lib_1.emojiToImage(emoji)
-                : '';
+        let image = '';
+        if (shortName) {
+            image = lib_1.getImagePath(shortName, skinTone);
+        }
+        else if (emoji) {
+            image = lib_1.emojiToImage(emoji) || '';
+        }
         const backgroundStyle = inline
             ? { backgroundImage: `url('${image}')` }
             : {};
-        return (React.createElement("span", { ref: ref, className: classnames_1.default('module-emoji', `module-emoji--${size}px`, inline ? `module-emoji--${size}px--inline` : null, className), style: Object.assign({}, style, backgroundStyle) }, inline ? (
+        return (React.createElement("span", { ref: ref, className: classnames_1.default('module-emoji', `module-emoji--${size}px`, inline ? `module-emoji--${size}px--inline` : null, className), style: Object.assign(Object.assign({}, style), backgroundStyle) }, inline ? (
             // When using this component as a draft.js decorator it is very
             // important that these children are the only elements to render
             children) : (React.createElement("img", { className: `module-emoji__image--${size}px`, src: image, alt: shortName }))));

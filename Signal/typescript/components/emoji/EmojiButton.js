@@ -84,10 +84,10 @@
             }, [open, setOpen]);
             return (React.createElement(react_popper_1.Manager, null,
                 React.createElement(react_popper_1.Reference, null, ({ ref }) => (React.createElement("button", {
-                    ref: ref, onClick: handleClickButton, className: classnames_1.default({
+                    type: "button", ref: ref, onClick: handleClickButton, className: classnames_1.default({
                         'module-emoji-button__button': true,
                         'module-emoji-button__button--active': open,
-                    })
+                    }), "aria-label": i18n('EmojiButton__label')
                 }))),
                 open && popperRoot
                     ? react_dom_1.createPortal(React.createElement(react_popper_1.Popper, { placement: "top-start" }, ({ ref, style }) => (React.createElement(EmojiPicker_1.EmojiPicker, { ref: ref, i18n: i18n, style: style, onPickEmoji: onPickEmoji, doSend: doSend, onClose: handleClose, skinTone: skinTone, onSetSkinTone: onSetSkinTone, recentEmojis: recentEmojis }))), popperRoot)

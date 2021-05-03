@@ -10,13 +10,14 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    // @ts-ignore: untyped json
-    const emoji_datasource_1 = __importDefault(window.emoji_datasource);
-    const emoji_regex_1 = __importDefault(window.emoji_regex);
-    const lodash_1 = window.lodash;
-    const fuse_js_1 = __importDefault(window.fuse_js);
-    const p_queue_1 = __importDefault(window.p_queue);
-    const is_1 = __importDefault(window.sindresorhus.is);
+    // Camelcase disabled due to emoji-datasource using snake_case
+    /* eslint-disable camelcase */
+    const emoji_datasource_1 = __importDefault(require("emoji-datasource"));
+    const emoji_regex_1 = __importDefault(require("emoji-regex"));
+    const lodash_1 = require("lodash");
+    const fuse_js_1 = __importDefault(require("fuse.js"));
+    const p_queue_1 = __importDefault(require("p-queue"));
+    const is_1 = __importDefault(require("@sindresorhus/is"));
     exports.skinTones = ['1F3FB', '1F3FC', '1F3FD', '1F3FE', '1F3FF'];
     const data = emoji_datasource_1.default
         .filter(emoji => emoji.has_img_apple)
@@ -29,7 +30,6 @@
             // Smiley & Emotions category.
             emoji.category === 'People & Body'
                 ? Object.assign(Object.assign({}, emoji), { sort_order: emoji.sort_order + 1000 }) : emoji);
-    // @ts-ignore
     const ROOT_PATH = lodash_1.get(
         // tslint:disable-next-line no-typeof-undefined
         typeof window !== 'undefined' ? window : null, 'ROOT_PATH', '');
@@ -49,7 +49,7 @@
             // tslint:disable-next-line  no-string-based-set-timeout
             setTimeout(reject, 5000);
         });
-        // tslint:disable-next-line no-console
+        // eslint-disable-next-line no-console
         console.log('Preloading emoji images');
         const start = Date.now();
         data.forEach(emoji => {
@@ -64,7 +64,7 @@
         });
         await imageQueue.onEmpty();
         const end = Date.now();
-        // tslint:disable-next-line no-console
+        // eslint-disable-next-line no-console
         console.log(`Done preloading emoji images in ${end - start}ms`);
     };
     const dataByShortName = lodash_1.keyBy(data, 'short_name');
@@ -193,18 +193,16 @@
         if (emojiCount > 8) {
             return '';
         }
-        else if (emojiCount > 6) {
+        if (emojiCount > 6) {
             return 'small';
         }
-        else if (emojiCount > 4) {
+        if (emojiCount > 4) {
             return 'medium';
         }
-        else if (emojiCount > 2) {
+        if (emojiCount > 2) {
             return 'large';
         }
-        else {
-            return 'jumbo';
-        }
+        return 'jumbo';
     }
     exports.getSizeClass = getSizeClass;
     data.forEach(emoji => {

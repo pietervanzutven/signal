@@ -242,7 +242,7 @@
     return concatenateBytes(...chunks);
   }
 
-  const ASCII_PATTERN = new RegExp('[\\u0000-\\u007F]', 'g');
+  const ASCII_PATTERN = new RegExp('[\\u0020-\\u007F]', 'g');
 
   function isLinkSneaky(link) {
     // Any links which contain auth are considered sneaky
