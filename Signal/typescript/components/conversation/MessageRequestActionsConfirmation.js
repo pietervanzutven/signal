@@ -61,11 +61,6 @@ require(exports => {
                             action: onUnblock,
                             style: 'affirmative',
                         },
-                        {
-                            text: i18n('MessageRequests--delete'),
-                            action: onDelete,
-                            style: 'negative',
-                        },
                     ]
                 }, i18n(`MessageRequests--unblock-${conversationType}-confirm-body`)));
         }

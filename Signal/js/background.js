@@ -2107,18 +2107,10 @@
       }
 
       if (typeof details.blocked !== 'undefined') {
-        const e164 = conversation.get('e164');
-        if (details.blocked && e164) {
-          storage.addBlockedNumber(e164);
+        if (details.blocked) {
+          conversation.block();
         } else {
-          storage.removeBlockedNumber(e164);
-        }
-
-        const uuid = conversation.get('uuid');
-        if (details.blocked && uuid) {
-          storage.addBlockedUuid(uuid);
-        } else {
-          storage.removeBlockedUuid(uuid);
+          conversation.unblock();
         }
       }
 
@@ -2239,9 +2231,9 @@
     }
 
     if (details.blocked) {
-      storage.addBlockedGroup(id);
+      conversation.block();
     } else {
-      storage.removeBlockedGroup(id);
+      conversation.unblock();
     }
 
     conversation.set(updates);
