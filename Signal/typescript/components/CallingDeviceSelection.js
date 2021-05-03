@@ -11,13 +11,18 @@ require(exports => {
     const React = __importStar(require("react"));
     const ConfirmationModal_1 = require("./ConfirmationModal");
     const Calling_1 = require("../types/Calling");
+    function localizeDefault(i18n, deviceLabel) {
+        return deviceLabel.toLowerCase().startsWith('default')
+            ? deviceLabel.replace(/default/i, i18n('callingDeviceSelection__select--default'))
+            : deviceLabel;
+    }
     function renderAudioOptions(devices, i18n, selectedDevice) {
         if (!devices.length) {
             return (React.createElement("option", { "aria-selected": true }, i18n('callingDeviceSelection__select--no-device')));
         }
         return (React.createElement(React.Fragment, null, devices.map((device) => {
             const isSelected = selectedDevice && selectedDevice.index === device.index;
-            return (React.createElement("option", { "aria-selected": isSelected, key: device.index, value: device.index }, device.name));
+            return (React.createElement("option", { "aria-selected": isSelected, key: device.index, value: device.index }, localizeDefault(i18n, device.name)));
         })));
     }
     function renderVideoOptions(devices, i18n, selectedCamera) {
@@ -26,7 +31,7 @@ require(exports => {
         }
         return (React.createElement(React.Fragment, null, devices.map((device) => {
             const isSelected = selectedCamera === device.deviceId;
-            return (React.createElement("option", { "aria-selected": isSelected, key: device.deviceId, value: device.deviceId }, device.label));
+            return (React.createElement("option", { "aria-selected": isSelected, key: device.deviceId, value: device.deviceId }, localizeDefault(i18n, device.label)));
         })));
     }
     function createAudioChangeHandler(devices, changeIODevice, type) {
