@@ -191,7 +191,7 @@ require(exports => {
             const selectedSpeaker = selectedSpeakerIndex !== undefined
                 ? availableSpeakers[selectedSpeakerIndex]
                 : undefined;
-            const availableCameras = await window.Signal.Services.calling.videoCapturer.enumerateDevices();
+            const availableCameras = await this.videoCapturer.enumerateDevices();
             const preferredCamera = window.storage.get('preferred-video-input-device');
             const selectedCamera = this.findBestMatchingCamera(availableCameras, preferredCamera);
             return {
