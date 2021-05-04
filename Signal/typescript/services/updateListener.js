@@ -6,8 +6,8 @@
     const exports = window.ts.services.updateListener = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const electron_1 = window.electron;
-    const Dialogs_1 = window.ts.types.Dialogs;
+    const electron_1 = require("electron");
+    const Dialogs_1 = require("../types/Dialogs");
     function initializeUpdateListener(updatesActions, events) {
         electron_1.ipcRenderer.on('show-update-dialog', (_, dialogType) => {
             updatesActions.showUpdateDialog(dialogType);

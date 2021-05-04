@@ -8,9 +8,6 @@ require(exports => {
             if (electron_1.app.dock) {
                 const type = isCritical ? 'critical' : 'informational';
                 bounceId = electron_1.app.dock.bounce(type);
-                if (bounceId < 0) {
-                    return;
-                }
             }
             else if (win && win.flashFrame) {
                 win.once('focus', () => {

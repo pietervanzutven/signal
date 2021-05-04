@@ -12,7 +12,6 @@
         if (!container) {
             throw new TypeError("'.lightbox-container' is required");
         }
-        // tslint:disable-next-line:no-inner-html
         container.innerHTML = '';
         container.style.display = 'block';
         container.appendChild(element);
@@ -22,7 +21,6 @@
         if (!container) {
             return;
         }
-        // tslint:disable-next-line:no-inner-html
         container.innerHTML = '';
         container.style.display = 'none';
     };

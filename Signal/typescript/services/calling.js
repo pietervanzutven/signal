@@ -1,5 +1,6 @@
 require(exports => {
     "use strict";
+    /* eslint-disable class-methods-use-this */
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -110,7 +111,6 @@ require(exports => {
                 this.deviceReselectionTimer = undefined;
             }
         }
-        // tslint:disable-next-line cyclomatic-complexity
         mediaDeviceSettingsEqual(a, b) {
             if (!a && !b) {
                 return true;
@@ -123,21 +123,21 @@ require(exports => {
                 a.availableSpeakers.length !== b.availableSpeakers.length) {
                 return false;
             }
-            for (let i = 0; i < a.availableCameras.length; i++) {
+            for (let i = 0; i < a.availableCameras.length; i += 1) {
                 if (a.availableCameras[i].deviceId !== b.availableCameras[i].deviceId ||
                     a.availableCameras[i].groupId !== b.availableCameras[i].groupId ||
                     a.availableCameras[i].label !== b.availableCameras[i].label) {
                     return false;
                 }
             }
-            for (let i = 0; i < a.availableMicrophones.length; i++) {
+            for (let i = 0; i < a.availableMicrophones.length; i += 1) {
                 if (a.availableMicrophones[i].name !== b.availableMicrophones[i].name ||
                     a.availableMicrophones[i].uniqueId !==
                     b.availableMicrophones[i].uniqueId) {
                     return false;
                 }
             }
-            for (let i = 0; i < a.availableSpeakers.length; i++) {
+            for (let i = 0; i < a.availableSpeakers.length; i += 1) {
                 if (a.availableSpeakers[i].name !== b.availableSpeakers[i].name ||
                     a.availableSpeakers[i].uniqueId !== b.availableSpeakers[i].uniqueId) {
                     return false;
@@ -226,7 +226,8 @@ require(exports => {
         findBestMatchingCamera(available, preferred) {
             const matchingId = available.filter(d => d.deviceId === preferred);
             const nonInfrared = available.filter(d => !d.label.includes('IR Camera'));
-            /// By default, pick the first non-IR camera (but allow the user to pick the infrared if they so desire)
+            // By default, pick the first non-IR camera (but allow the user to pick the
+            // infrared if they so desire)
             if (matchingId.length > 0) {
                 return matchingId[0].deviceId;
             }
@@ -276,7 +277,8 @@ require(exports => {
                 window.log.info('MediaDevice: selecting camera', settings.selectedCamera);
                 await this.videoCapturer.setPreferredDevice(settings.selectedCamera);
             }
-            // Assume that the MediaDeviceSettings have been obtained very recently and the index is still valid (no devices have been plugged in in between).
+            // Assume that the MediaDeviceSettings have been obtained very recently and
+            // the index is still valid (no devices have been plugged in in between).
             if (settings.selectedMicrophone) {
                 window.log.info('MediaDevice: selecting microphone', settings.selectedMicrophone);
                 ringrtc_1.RingRTC.setAudioInput(settings.selectedMicrophone.index);
@@ -396,6 +398,7 @@ require(exports => {
                 return;
             }
             let acceptedTime;
+            // eslint-disable-next-line no-param-reassign
             call.handleStateChanged = () => {
                 if (call.state === ringrtc_1.CallState.Accepted) {
                     acceptedTime = Date.now();
@@ -410,6 +413,7 @@ require(exports => {
                     callDetails: this.getUxCallDetails(conversation, call),
                 });
             };
+            // eslint-disable-next-line no-param-reassign
             call.handleRemoteVideoEnabled = () => {
                 uxActions.remoteVideoChange({
                     remoteVideoEnabled: call.remoteVideoEnabled,
@@ -417,8 +421,6 @@ require(exports => {
             };
         }
         async handleLogMessage(level, fileName, line, message) {
-            // info/warn/error are only needed to be logged for now.
-            // tslint:disable-next-line switch-default
             switch (level) {
                 case ringrtc_1.CallLogLevel.Info:
                     window.log.info(`${fileName}:${line} ${message}`);
@@ -428,6 +430,9 @@ require(exports => {
                     break;
                 case ringrtc_1.CallLogLevel.Error:
                     window.log.error(`${fileName}:${line} ${message}`);
+                    break;
+                default:
+                    break;
             }
         }
         getRemoteUserIdFromConversation(conversation) {
@@ -465,7 +470,8 @@ require(exports => {
         getUxCallDetails(conversation, call) {
             return Object.assign(Object.assign({}, conversation.cachedProps), { callId: call.callId, isIncoming: call.isIncoming, isVideoCall: call.isVideoCall });
         }
-        addCallHistoryForEndedCall(conversation, call, acceptedTime) {
+        addCallHistoryForEndedCall(conversation, call, acceptedTimeParam) {
+            let acceptedTime = acceptedTimeParam;
             const { endedReason, isIncoming } = call;
             const wasAccepted = Boolean(acceptedTime);
             const isOutgoing = !isIncoming;
@@ -477,7 +483,6 @@ require(exports => {
                     (isOutgoing &&
                         endedReason === ringrtc_1.CallEndedReason.RemoteHangupNeedPermission));
             if (call.endedReason === ringrtc_1.CallEndedReason.AcceptedOnAnotherDevice) {
-                // tslint:disable-next-line no-parameter-reassignment
                 acceptedTime = Date.now();
             }
             const callHistoryDetails = {

@@ -6,7 +6,7 @@
     const exports = window.ts.services.networkObserver = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const socketStatus_1 = window.ts.shims.socketStatus;
+    const socketStatus_1 = require("../shims/socketStatus");
     const REFRESH_INTERVAL = 5000;
     function initializeNetworkObserver(networkActions) {
         const { log } = window;
