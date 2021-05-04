@@ -1193,6 +1193,28 @@
             var _a;
             return Object.assign(Object.assign({}, lodash_1.omit(attachment, 'thumbnail')), { cdnId: (_a = attachment.cdnId) === null || _a === void 0 ? void 0 : _a.toString(), key: attachment.key ? attachment.key.toString('base64') : null, digest: attachment.digest ? attachment.digest.toString('base64') : null });
         }
+        isLinkPreviewDateValid(value) {
+            return (typeof value === 'number' &&
+                !Number.isNaN(value) &&
+                Number.isFinite(value) &&
+                value > 0);
+        }
+        cleanLinkPreviewDate(value) {
+            if (this.isLinkPreviewDateValid(value)) {
+                return value;
+            }
+            if (!value) {
+                return null;
+            }
+            let result;
+            try {
+                result = value.toNumber();
+            }
+            catch (err) {
+                return null;
+            }
+            return this.isLinkPreviewDateValid(result) ? result : null;
+        }
         async downloadAttachment(attachment) {
             const encrypted = await this.server.getAttachment(attachment.cdnId || attachment.cdnKey, attachment.cdnNumber || 0);
             const { key, digest, size } = attachment;
@@ -1297,13 +1319,7 @@
                 }
             }
             decrypted.attachments = (decrypted.attachments || []).map(this.cleanAttachment.bind(this));
-            decrypted.preview = (decrypted.preview || []).map(item => {
-                const { image } = item;
-                if (!image) {
-                    return item;
-                }
-                return Object.assign(Object.assign({}, item), { image: this.cleanAttachment(image) });
-            });
+            decrypted.preview = (decrypted.preview || []).map(item => (Object.assign(Object.assign(Object.assign({}, item), { date: this.cleanLinkPreviewDate(item.date) }), (item.image ? this.cleanAttachment(item.image) : {}))));
             decrypted.contact = (decrypted.contact || []).map(item => {
                 const { avatar } = item;
                 if (!avatar || !avatar.avatar) {
