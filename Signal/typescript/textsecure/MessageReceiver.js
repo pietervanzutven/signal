@@ -1319,7 +1319,7 @@
                 }
             }
             decrypted.attachments = (decrypted.attachments || []).map(this.cleanAttachment.bind(this));
-            decrypted.preview = (decrypted.preview || []).map(item => (Object.assign(Object.assign(Object.assign({}, item), { date: this.cleanLinkPreviewDate(item.date) }), (item.image ? this.cleanAttachment(item.image) : {}))));
+            decrypted.preview = (decrypted.preview || []).map(item => (Object.assign(Object.assign(Object.assign({}, item), { date: this.cleanLinkPreviewDate(item.date) }), (item.image ? { image: this.cleanAttachment(item.image) } : {}))));
             decrypted.contact = (decrypted.contact || []).map(item => {
                 const { avatar } = item;
                 if (!avatar || !avatar.avatar) {
