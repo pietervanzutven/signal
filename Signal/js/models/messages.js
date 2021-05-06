@@ -1094,9 +1094,11 @@
           return { text: i18n('disappearingMessagesDisabled') };
         }
 
-        return i18n('timerSetTo', [
-          Whisper.ExpirationTimerOptions.getAbbreviated(expireTimer || 0),
-        ]);
+        return {
+          text: i18n('timerSetTo', [
+            Whisper.ExpirationTimerOptions.getAbbreviated(expireTimer || 0),
+          ]),
+        };
       }
 
       if (this.isKeyChange()) {
