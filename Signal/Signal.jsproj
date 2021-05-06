@@ -3810,6 +3810,8 @@
     <Content Include="typescript\services\calling.js" />
     <Content Include="typescript\services\networkObserver.js" />
     <Content Include="typescript\services\notify.js" />
+    <Content Include="typescript\services\storage.js" />
+    <Content Include="typescript\services\storageRecordOps.js" />
     <Content Include="typescript\services\updateListener.js" />
     <Content Include="typescript\shims\bounceAppIcon.js" />
     <Content Include="typescript\shims\contactVerification.js" />

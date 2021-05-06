@@ -472,6 +472,7 @@
                 getStorageRecords,
                 getUuidsForE164s,
                 makeProxiedRequest,
+                modifyStorageRecords,
                 putAttachment,
                 registerCapabilities,
                 putStickers,
@@ -587,6 +588,15 @@
             async function getStorageRecords(data, options = {}) {
                 const { credentials } = options;
                 return _ajax(Object.assign({ call: 'storageRead', contentType: 'application/x-protobuf', data, host: storageUrl, httpType: 'PUT', responseType: 'arraybuffer' }, credentials));
+            }
+            async function modifyStorageRecords(data, options = {}) {
+                const { credentials } = options;
+                return _ajax(Object.assign({
+                    call: 'storageModify', contentType: 'application/x-protobuf', data, host: storageUrl, httpType: 'PUT',
+                    // If we run into a conflict, the current manifest is returned -
+                    //   it will will be an ArrayBuffer at the response key on the Error
+                    responseType: 'arraybuffer'
+                }, credentials));
             }
             async function registerSupportForUnauthenticatedDelivery() {
                 return _ajax({
