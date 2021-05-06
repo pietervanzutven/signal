@@ -1474,11 +1474,7 @@
         this.set({ expirationStartTimestamp });
       }
 
-      Whisper.Notifications.remove(
-        Whisper.Notifications.where({
-          messageId: this.id,
-        })
-      );
+      Whisper.Notifications.removeBy({ messageId: this.id });
 
       if (!skipSave) {
         await window.Signal.Data.saveMessage(this.attributes, {
@@ -2974,10 +2970,7 @@
       });
 
       // Remove any notifications for this message
-      const notificationForMessage = Whisper.Notifications.findWhere({
-        messageId: this.get('id'),
-      });
-      Whisper.Notifications.remove(notificationForMessage);
+      Whisper.Notifications.removeBy({ messageId: this.get('id') });
 
       // Erase the contents of this message
       await this.eraseContents(
