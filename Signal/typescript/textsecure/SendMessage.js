@@ -427,6 +427,9 @@
             }
             return this.server.getProfile(number, options);
         }
+        async getUuidsForE164s(numbers) {
+            return this.server.getUuidsForE164s(numbers);
+        }
         async getAvatar(path) {
             return this.server.getAvatar(path);
         }
@@ -847,6 +850,7 @@
                     errors: [],
                     unidentifiedDeliveries: [],
                     dataMessage: await this.getMessageProtoObj(attrs),
+                    discoveredIdentifierPairs: [],
                 });
             }
             return this.sendMessage(attrs, options);
@@ -951,6 +955,7 @@
                     errors: [],
                     unidentifiedDeliveries: [],
                     dataMessage: await this.getMessageProtoObj(attrs),
+                    discoveredIdentifierPairs: [],
                 });
             }
             return this.sendMessage(attrs, options);

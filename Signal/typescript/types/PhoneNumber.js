@@ -10,7 +10,7 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const libphonenumberInstance_1 = require("../util/libphonenumberInstance");
-    const memoizee_1 = __importDefault(window.memoizee);
+    const memoizee_1 = __importDefault(require("memoizee"));
     function _format(phoneNumber, options) {
         try {
             const { ourRegionCode } = options;
@@ -25,6 +25,17 @@
             return phoneNumber;
         }
     }
+    function isValidNumber(phoneNumber, options) {
+        const { regionCode } = options || { regionCode: undefined };
+        try {
+            const parsedNumber = libphonenumberInstance_1.instance.parse(phoneNumber, regionCode);
+            return libphonenumberInstance_1.instance.isValidNumber(parsedNumber);
+        }
+        catch (error) {
+            return false;
+        }
+    }
+    exports.isValidNumber = isValidNumber;
     exports.format = memoizee_1.default(_format, {
         primitive: true,
         // Convert the arguments to a unique string, required for primitive mode.

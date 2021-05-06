@@ -229,6 +229,9 @@
     <Content Include="node_modules\blurhash\error.js" />
     <Content Include="node_modules\blurhash\index.js" />
     <Content Include="node_modules\blurhash\utils.js" />
+    <Content Include="node_modules\crypto-browserify\index.js" />
+    <Content Include="node_modules\crypto\index.js" />
+    <Content Include="node_modules\curve25519-n\index.js" />
     <Content Include="node_modules\inherits\index.js" />
     <Content Include="node_modules\lodash\assignIn.js" />
     <Content Include="node_modules\lodash\clone.js" />
@@ -247,6 +250,8 @@
     <Content Include="node_modules\lodash\throttle.js" />
     <Content Include="node_modules\lodash\_baseGet.js" />
     <Content Include="node_modules\lodash\_toPath.js" />
+    <Content Include="node_modules\node-forge\forge.all.min.js" />
+    <Content Include="node_modules\p-props\index.js" />
     <Content Include="node_modules\path\index.js" />
     <Content Include="node_modules\path\wrapper.js" />
     <Content Include="node_modules\react-blurhash\Blurhash.js" />

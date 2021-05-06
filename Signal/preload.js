@@ -326,6 +326,9 @@
     window.WebAPI = window.textsecure.WebAPI.initialize({
       url: config.serverUrl,
       storageUrl: config.storageUrl,
+      directoryUrl: config.directoryUrl,
+      directoryEnclaveId: config.directoryEnclaveId,
+      directoryTrustAnchor: config.directoryTrustAnchor,
       cdnUrlObject: {
         '0': config.cdnUrl0,
         '2': config.cdnUrl2,
@@ -483,8 +486,8 @@
       Ed25519Verify: wrapWithPromise(externalCurve.Ed25519Verify),
     };
     window.libsignal = window.libsignal || {};
-    window.libsignal.externalCurve = curve ? externalCurve : null;
-    window.libsignal.externalCurveAsync = curve ? externalCurveAsync : null;
+    window.libsignal.externalCurve = externalCurve;
+    window.libsignal.externalCurveAsync = externalCurveAsync;
 
     // Pulling these in separately since they access filesystem, electron
     window.Signal.Backup = require('./js/modules/backup');

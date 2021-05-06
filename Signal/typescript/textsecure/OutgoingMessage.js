@@ -7,8 +7,9 @@
 
     // tslint:disable no-default-export
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = window.lodash;
-    const Errors_1 = window.ts.textsecure.Errors;
+    const lodash_1 = require("lodash");
+    const Errors_1 = require("./Errors");
+    const PhoneNumber_1 = require("../types/PhoneNumber");
     class OutgoingMessage {
         constructor(server, timestamp, identifiers, message, silent, callback, options = {}) {
             if (message instanceof window.textsecure.protobuf.DataMessage) {
@@ -30,6 +31,7 @@
             this.successfulIdentifiers = [];
             this.failoverIdentifiers = [];
             this.unidentifiedDeliveries = [];
+            this.discoveredIdentifierPairs = [];
             const { sendMetadata, senderCertificate, online } = options || {};
             this.sendMetadata = sendMetadata;
             this.senderCertificate = senderCertificate;
@@ -43,6 +45,7 @@
                     failoverIdentifiers: this.failoverIdentifiers,
                     errors: this.errors,
                     unidentifiedDeliveries: this.unidentifiedDeliveries,
+                    discoveredIdentifierPairs: this.discoveredIdentifierPairs,
                 });
             }
         }
@@ -351,8 +354,34 @@
             }
             return promise;
         }
-        async sendToIdentifier(identifier) {
+        async sendToIdentifier(providedIdentifier) {
+            let identifier = providedIdentifier;
             try {
+                if (window.isValidGuid(identifier)) {
+                    // We're good!
+                }
+                else if (PhoneNumber_1.isValidNumber(identifier)) {
+                    if (!window.textsecure.messaging) {
+                        throw new Error('sendToIdentifier: window.textsecure.messaging is not available!');
+                    }
+                    const lookup = await window.textsecure.messaging.getUuidsForE164s([
+                        identifier,
+                    ]);
+                    const uuid = lookup[identifier];
+                    if (uuid) {
+                        this.discoveredIdentifierPairs.push({
+                            uuid,
+                            e164: identifier,
+                        });
+                        identifier = uuid;
+                    }
+                    else {
+                        throw new Errors_1.UnregisteredUserError(identifier, new Error('User is not registered'));
+                    }
+                }
+                else {
+                    throw new Error(`sendToIdentifier: identifier ${identifier} was neither a UUID or E164`);
+                }
                 const updateDevices = await this.getStaleDeviceIdsForIdentifier(identifier);
                 await this.getKeysForIdentifier(identifier, updateDevices);
                 await this.reloadDevicesAndSend(identifier, true)();
@@ -363,7 +392,7 @@
                     this.registerError(identifier, 'Identity key changed', newError);
                 }
                 else {
-                    this.registerError(identifier, `Failed to retrieve new device keys for number ${identifier}`, error);
+                    this.registerError(identifier, `Failed to retrieve new device keys for identifier ${identifier}`, error);
                 }
             }
         }

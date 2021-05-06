@@ -13,12 +13,36 @@
     const node_fetch_1 = __importDefault(require("node-fetch"));
     const proxy_agent_1 = __importDefault(require("proxy-agent"));
     const https_1 = require("https");
+    const p_props_1 = __importDefault(require("p-props"));
     const lodash_1 = require("lodash");
+    const crypto_1 = require("crypto");
+    const node_forge_1 = require("node-forge");
     const is_1 = __importDefault(require("@sindresorhus/is"));
     const stickers_1 = require("../../js/modules/stickers");
     const Crypto_1 = require("../Crypto");
     const p_queue_1 = __importDefault(require("p-queue"));
     const uuid_1 = require("uuid");
+    let sgxConstantCache = null;
+    function makeLong(value) {
+        return window.dcodeIO.Long.fromString(value);
+    }
+    function getSgxConstants() {
+        if (sgxConstantCache) {
+            return sgxConstantCache;
+        }
+        sgxConstantCache = {
+            SGX_FLAGS_INITTED: makeLong('x0000000000000001L'),
+            SGX_FLAGS_DEBUG: makeLong('x0000000000000002L'),
+            SGX_FLAGS_MODE64BIT: makeLong('x0000000000000004L'),
+            SGX_FLAGS_PROVISION_KEY: makeLong('x0000000000000004L'),
+            SGX_FLAGS_EINITTOKEN_KEY: makeLong('x0000000000000004L'),
+            SGX_FLAGS_RESERVED: makeLong('xFFFFFFFFFFFFFFC8L'),
+            SGX_XFRM_LEGACY: makeLong('x0000000000000003L'),
+            SGX_XFRM_AVX: makeLong('x0000000000000006L'),
+            SGX_XFRM_RESERVED: makeLong('xFFFFFFFFFFFFFFF8L'),
+        };
+        return sgxConstantCache;
+    }
     // tslint:disable no-bitwise
     function _btoa(str) {
         let buffer;
@@ -246,7 +270,8 @@
                 // tslint:disable-next-line max-func-body-length
                 .then(async (response) => {
                     let resultPromise;
-                    if (options.responseType === 'json' &&
+                    if ((options.responseType === 'json' ||
+                        options.responseType === 'jsonwithdetails') &&
                         response.headers.get('Content-Type') === 'application/json') {
                         resultPromise = response.json();
                     }
@@ -265,7 +290,8 @@
                                 // tslint:disable-next-line: restrict-plus-operands
                                 result.byteOffset + result.byteLength);
                         }
-                        if (options.responseType === 'json') {
+                        if (options.responseType === 'json' ||
+                            options.responseType === 'jsonwithdetails') {
                             if (options.validateResponse) {
                                 if (!_validateResponse(result, options.validateResponse)) {
                                     if (options.redactUrl) {
@@ -286,7 +312,8 @@
                             else {
                                 window.log.info(options.type, url, response.status, 'Success');
                             }
-                            if (options.responseType === 'arraybufferwithdetails') {
+                            if (options.responseType === 'arraybufferwithdetails' ||
+                                options.responseType === 'jsonwithdetails') {
                                 resolve({
                                     data: result,
                                     contentType: getContentType(response),
@@ -369,15 +396,28 @@
         getStickerPackUpload: 'v1/sticker/pack/form',
         whoami: 'v1/accounts/whoami',
         config: 'v1/config',
+        directoryAuth: 'v1/directory/auth',
+        // CDS endpoints
+        attestation: 'v1/attestation',
+        discovery: 'v1/discovery',
     };
     // We first set up the data that won't change during this session of the app
     // tslint:disable-next-line max-func-body-length
-    function initialize({ url, storageUrl, cdnUrlObject, certificateAuthority, contentProxyUrl, proxyUrl, version, }) {
+    function initialize({ url, storageUrl, directoryEnclaveId, directoryTrustAnchor, directoryUrl, cdnUrlObject, certificateAuthority, contentProxyUrl, proxyUrl, version, }) {
         if (!is_1.default.string(url)) {
             throw new Error('WebAPI.initialize: Invalid server url');
         }
         if (!is_1.default.string(storageUrl)) {
             throw new Error('WebAPI.initialize: Invalid storageUrl');
+        }
+        if (!is_1.default.string(directoryEnclaveId)) {
+            throw new Error('WebAPI.initialize: Invalid directory enclave id');
+        }
+        if (!is_1.default.string(directoryTrustAnchor)) {
+            throw new Error('WebAPI.initialize: Invalid directory enclave id');
+        }
+        if (!is_1.default.string(directoryUrl)) {
+            throw new Error('WebAPI.initialize: Invalid directory url');
         }
         if (!is_1.default.object(cdnUrlObject)) {
             throw new Error('WebAPI.initialize: Invalid cdnUrlObject');
@@ -430,6 +470,7 @@
                 getStorageCredentials,
                 getStorageManifest,
                 getStorageRecords,
+                getUuidsForE164s,
                 makeProxiedRequest,
                 putAttachment,
                 registerCapabilities,
@@ -1009,6 +1050,241 @@
                     .replace('http://', 'ws://');
                 const clientVersion = encodeURIComponent(version);
                 return _createSocket(`${fixedScheme}/v1/websocket/provisioning/?agent=OWD&version=${clientVersion}`, { certificateAuthority, proxyUrl });
+            }
+            async function getDirectoryAuth() {
+                return _ajax({
+                    call: 'directoryAuth',
+                    httpType: 'GET',
+                    responseType: 'json',
+                });
+            }
+            function validateAttestationQuote({ serverStaticPublic, quote, }) {
+                const SGX_CONSTANTS = getSgxConstants();
+                const byteBuffer = window.dcodeIO.ByteBuffer.wrap(quote, 'binary', window.dcodeIO.ByteBuffer.LITTLE_ENDIAN);
+                const quoteVersion = byteBuffer.readShort(0) & 0xffff;
+                if (quoteVersion < 0 || quoteVersion > 2) {
+                    throw new Error(`Unknown version ${quoteVersion}`);
+                }
+                const miscSelect = new Uint8Array(Crypto_1.getBytes(quote, 64, 4));
+                if (!miscSelect.every(byte => byte === 0)) {
+                    throw new Error('Quote miscSelect invalid!');
+                }
+                const reserved1 = new Uint8Array(Crypto_1.getBytes(quote, 68, 28));
+                if (!reserved1.every(byte => byte === 0)) {
+                    throw new Error('Quote reserved1 invalid!');
+                }
+                const flags = byteBuffer.readLong(96);
+                if (flags.and(SGX_CONSTANTS.SGX_FLAGS_RESERVED).notEquals(0) ||
+                    flags.and(SGX_CONSTANTS.SGX_FLAGS_INITTED).equals(0) ||
+                    flags.and(SGX_CONSTANTS.SGX_FLAGS_MODE64BIT).equals(0)) {
+                    throw new Error(`Quote flags invalid ${flags.toString()}`);
+                }
+                const xfrm = byteBuffer.readLong(104);
+                if (xfrm.and(SGX_CONSTANTS.SGX_XFRM_RESERVED).notEquals(0)) {
+                    throw new Error(`Quote xfrm invalid ${xfrm}`);
+                }
+                const mrenclave = new Uint8Array(Crypto_1.getBytes(quote, 112, 32));
+                const enclaveIdBytes = new Uint8Array(Crypto_1.bytesFromHexString(directoryEnclaveId));
+                if (!mrenclave.every((byte, index) => byte === enclaveIdBytes[index])) {
+                    throw new Error('Quote mrenclave invalid!');
+                }
+                const reserved2 = new Uint8Array(Crypto_1.getBytes(quote, 144, 32));
+                if (!reserved2.every(byte => byte === 0)) {
+                    throw new Error('Quote reserved2 invalid!');
+                }
+                const reportData = new Uint8Array(Crypto_1.getBytes(quote, 368, 64));
+                const serverStaticPublicBytes = new Uint8Array(serverStaticPublic);
+                if (!reportData.every((byte, index) => {
+                    if (index >= 32) {
+                        return byte === 0;
+                    }
+                    return byte === serverStaticPublicBytes[index];
+                })) {
+                    throw new Error('Quote report_data invalid!');
+                }
+                const reserved3 = new Uint8Array(Crypto_1.getBytes(quote, 208, 96));
+                if (!reserved3.every(byte => byte === 0)) {
+                    throw new Error('Quote reserved3 invalid!');
+                }
+                const reserved4 = new Uint8Array(Crypto_1.getBytes(quote, 308, 60));
+                if (!reserved4.every(byte => byte === 0)) {
+                    throw new Error('Quote reserved4 invalid!');
+                }
+                const signatureLength = byteBuffer.readInt(432) & 4294967295;
+                if (signatureLength !== quote.byteLength - 436) {
+                    throw new Error(`Bad signatureLength ${signatureLength}`);
+                }
+                // const signature = Uint8Array.from(getBytes(quote, 436, signatureLength));
+            }
+            function validateAttestationSignatureBody(signatureBody, encodedQuote) {
+                // Parse timestamp as UTC
+                const { timestamp } = signatureBody;
+                const utcTimestamp = timestamp.endsWith('Z')
+                    ? timestamp
+                    : `${timestamp}Z`;
+                const signatureTime = new Date(utcTimestamp).getTime();
+                const now = Date.now();
+                if (signatureBody.version !== 3) {
+                    throw new Error('Attestation signature invalid version!');
+                }
+                if (!encodedQuote.startsWith(signatureBody.isvEnclaveQuoteBody)) {
+                    throw new Error('Attestion signature mismatches quote!');
+                }
+                if (signatureBody.isvEnclaveQuoteStatus !== 'OK') {
+                    throw new Error('Attestation signature status not "OK"!');
+                }
+                if (signatureTime < now - 24 * 60 * 60 * 1000) {
+                    throw new Error('Attestation signature timestamp older than 24 hours!');
+                }
+            }
+            async function validateAttestationSignature(signature, signatureBody, certificates) {
+                const CERT_PREFIX = '-----BEGIN CERTIFICATE-----';
+                const pem = lodash_1.compact(certificates.split(CERT_PREFIX).map(match => {
+                    if (!match) {
+                        return null;
+                    }
+                    return `${CERT_PREFIX}${match}`;
+                }));
+                if (pem.length < 2) {
+                    throw new Error(`validateAttestationSignature: Expect two or more entries; got ${pem.length}`);
+                }
+                const verify = crypto_1.createVerify('RSA-SHA256');
+                verify.update(Buffer.from(Crypto_1.bytesFromString(signatureBody)));
+                const isValid = verify.verify(pem[0], Buffer.from(signature));
+                if (!isValid) {
+                    throw new Error('Validation of signature across signatureBody failed!');
+                }
+                const caStore = node_forge_1.pki.createCaStore([directoryTrustAnchor]);
+                const chain = lodash_1.compact(pem.map(cert => node_forge_1.pki.certificateFromPem(cert)));
+                const isChainValid = node_forge_1.pki.verifyCertificateChain(caStore, chain);
+                if (!isChainValid) {
+                    throw new Error('Validation of certificate chain failed!');
+                }
+                const leafCert = chain[0];
+                const fieldCN = leafCert.subject.getField('CN');
+                if (!fieldCN ||
+                    fieldCN.value !== 'Intel SGX Attestation Report Signing') {
+                    throw new Error('Leaf cert CN field had unexpected value');
+                }
+                const fieldO = leafCert.subject.getField('O');
+                if (!fieldO || fieldO.value !== 'Intel Corporation') {
+                    throw new Error('Leaf cert O field had unexpected value');
+                }
+                const fieldL = leafCert.subject.getField('L');
+                if (!fieldL || fieldL.value !== 'Santa Clara') {
+                    throw new Error('Leaf cert L field had unexpected value');
+                }
+                const fieldST = leafCert.subject.getField('ST');
+                if (!fieldST || fieldST.value !== 'CA') {
+                    throw new Error('Leaf cert ST field had unexpected value');
+                }
+                const fieldC = leafCert.subject.getField('C');
+                if (!fieldC || fieldC.value !== 'US') {
+                    throw new Error('Leaf cert C field had unexpected value');
+                }
+            }
+            // tslint:disable-next-line max-func-body-length
+            async function putRemoteAttestation(auth) {
+                const keyPair = await window.libsignal.externalCurveAsync.generateKeyPair();
+                const { privKey, pubKey } = keyPair;
+                // Remove first "key type" byte from public key
+                const slicedPubKey = pubKey.slice(1);
+                const pubKeyBase64 = Crypto_1.arrayBufferToBase64(slicedPubKey);
+                // Do request
+                const data = JSON.stringify({ clientPublic: pubKeyBase64 });
+                const result = await _outerAjax(null, {
+                    certificateAuthority,
+                    type: 'PUT',
+                    contentType: 'application/json; charset=utf-8',
+                    host: directoryUrl,
+                    path: `${URL_CALLS.attestation}/${directoryEnclaveId}`,
+                    user: auth.username,
+                    password: auth.password,
+                    responseType: 'jsonwithdetails',
+                    data,
+                    version,
+                });
+                const { data: responseBody, response } = result;
+                const attestationsLength = Object.keys(responseBody.attestations).length;
+                if (attestationsLength > 3) {
+                    throw new Error('Got more than three attestations from the Contact Discovery Service');
+                }
+                if (attestationsLength < 1) {
+                    throw new Error('Got no attestations from the Contact Discovery Service');
+                }
+                const cookie = response.headers.get('set-cookie');
+                // Decode response
+                return {
+                    cookie,
+                    attestations: await p_props_1.default(responseBody.attestations, async (attestation) => {
+                        const decoded = Object.assign({}, attestation);
+                        [
+                            'ciphertext',
+                            'iv',
+                            'quote',
+                            'serverEphemeralPublic',
+                            'serverStaticPublic',
+                            'signature',
+                            'tag',
+                        ].forEach(prop => {
+                            decoded[prop] = Crypto_1.base64ToArrayBuffer(decoded[prop]);
+                        });
+                        // Validate response
+                        validateAttestationQuote(decoded);
+                        validateAttestationSignatureBody(JSON.parse(decoded.signatureBody), attestation.quote);
+                        await validateAttestationSignature(decoded.signature, decoded.signatureBody, decoded.certificates);
+                        // Derive key
+                        const ephemeralToEphemeral = await window.libsignal.externalCurveAsync.calculateAgreement(decoded.serverEphemeralPublic, privKey);
+                        const ephemeralToStatic = await window.libsignal.externalCurveAsync.calculateAgreement(decoded.serverStaticPublic, privKey);
+                        const masterSecret = Crypto_1.concatenateBytes(ephemeralToEphemeral, ephemeralToStatic);
+                        const publicKeys = Crypto_1.concatenateBytes(slicedPubKey, decoded.serverEphemeralPublic, decoded.serverStaticPublic);
+                        const [clientKey, serverKey,] = await window.libsignal.HKDF.deriveSecrets(masterSecret, publicKeys);
+                        // Decrypt ciphertext into requestId
+                        const requestId = await Crypto_1.decryptAesGcm(serverKey, decoded.iv, Crypto_1.concatenateBytes(decoded.ciphertext, decoded.tag));
+                        return { clientKey, serverKey, requestId };
+                    }),
+                };
+            }
+            async function getUuidsForE164s(e164s) {
+                const directoryAuth = await getDirectoryAuth();
+                const attestationResult = await putRemoteAttestation(directoryAuth);
+                // Encrypt data for discovery
+                const data = await Crypto_1.encryptCdsDiscoveryRequest(attestationResult.attestations, e164s);
+                const { cookie } = attestationResult;
+                // Send discovery request
+                const discoveryResponse = await _outerAjax(null, {
+                    certificateAuthority,
+                    type: 'PUT',
+                    headers: cookie
+                        ? {
+                            cookie,
+                        }
+                        : undefined,
+                    contentType: 'application/json; charset=utf-8',
+                    host: directoryUrl,
+                    path: `${URL_CALLS.discovery}/${directoryEnclaveId}`,
+                    user: directoryAuth.username,
+                    password: directoryAuth.password,
+                    responseType: 'json',
+                    data: JSON.stringify(data),
+                    version,
+                });
+                // Decode discovery request response
+                const decodedDiscoveryResponse = lodash_1.mapValues(discoveryResponse, value => {
+                    return Crypto_1.base64ToArrayBuffer(value);
+                });
+                const returnedAttestation = Object.values(attestationResult.attestations).find(at => Crypto_1.constantTimeEqual(at.requestId, decodedDiscoveryResponse.requestId));
+                if (!returnedAttestation) {
+                    throw new Error('No known attestations returned from CDS');
+                }
+                // Decrypt discovery response
+                const decryptedDiscoveryData = await Crypto_1.decryptAesGcm(returnedAttestation.serverKey, decodedDiscoveryResponse.iv, Crypto_1.concatenateBytes(decodedDiscoveryResponse.data, decodedDiscoveryResponse.mac));
+                // Process and return result
+                const uuids = Crypto_1.splitUuids(decryptedDiscoveryData);
+                if (uuids.length !== e164s.length) {
+                    throw new Error('Returned set of UUIDs did not match returned set of e164s!');
+                }
+                return lodash_1.zipObject(e164s, uuids);
             }
         }
     }

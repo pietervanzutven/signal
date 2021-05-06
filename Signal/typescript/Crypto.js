@@ -7,9 +7,13 @@
     window.sjcl.beware["CTR mode is dangerous because it doesn't protect message integrity."]();
     window.crypto.randomBytes = n => Buffer.from(window.ts.Crypto.getRandomBytes(n));
 
+    var __importDefault = (this && this.__importDefault) || function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports, "__esModule", { value: true });
+    const p_props_1 = __importDefault(require("p-props"));
     // Yep, we're doing some bitwise stuff in an encryption-related file
     // tslint:disable no-bitwise
-    Object.defineProperty(exports, "__esModule", { value: true });
     // We want some extra variables to make the decrption algorithm easier to understand
     // tslint:disable no-unnecessary-local-variable
     // Seems that tslint doesn't understand that crypto.subtle.importKey does return a Promise
@@ -122,7 +126,7 @@
     exports.encryptFile = encryptFile;
     async function decryptFile(staticPrivateKey, uniqueId, data) {
         const ephemeralPublicKey = getFirstBytes(data, PUB_KEY_LENGTH);
-        const ciphertext = _getBytes(data, PUB_KEY_LENGTH, data.byteLength);
+        const ciphertext = getBytes(data, PUB_KEY_LENGTH, data.byteLength);
         const agreement = await window.libsignal.Curve.async.calculateAgreement(ephemeralPublicKey, staticPrivateKey);
         const key = await hmacSha256(agreement, uniqueId);
         return decryptSymmetric(key, ciphertext);
@@ -139,7 +143,7 @@
     async function deriveAccessKey(profileKey) {
         const iv = getZeroes(12);
         const plaintext = getZeroes(16);
-        const accessKey = await _encrypt_aes_gcm(profileKey, iv, plaintext);
+        const accessKey = await encryptAesGcm(profileKey, iv, plaintext);
         return getFirstBytes(accessKey, 16);
     }
     exports.deriveAccessKey = deriveAccessKey;
@@ -172,8 +176,8 @@
     async function decryptSymmetric(key, data) {
         const iv = getZeroes(IV_LENGTH);
         const nonce = getFirstBytes(data, NONCE_LENGTH);
-        const cipherText = _getBytes(data, NONCE_LENGTH, data.byteLength - NONCE_LENGTH - MAC_LENGTH);
-        const theirMac = _getBytes(data, data.byteLength - MAC_LENGTH, MAC_LENGTH);
+        const cipherText = getBytes(data, NONCE_LENGTH, data.byteLength - NONCE_LENGTH - MAC_LENGTH);
+        const theirMac = getBytes(data, data.byteLength - MAC_LENGTH, MAC_LENGTH);
         const cipherKey = await hmacSha256(key, nonce);
         const macKey = await hmacSha256(key, cipherKey);
         const ourMac = getFirstBytes(await hmacSha256(macKey, cipherText), MAC_LENGTH);
@@ -253,10 +257,10 @@
         return new Uint8Array(pt);
     }
     exports.decryptAesCtr = decryptAesCtr;
-    async function _encrypt_aes_gcm(key, iv, plaintext) {
+    async function encryptAesGcm(key, iv, plaintext) {
         const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
-        const ptBits = window.sjcl.codec.arrayBuffer.toBits(plaintext);
         const ivBits = window.sjcl.codec.arrayBuffer.toBits(iv);
+        const ptBits = window.sjcl.codec.arrayBuffer.toBits(plaintext);
 
         const aes = new window.sjcl.cipher.aes(keyBits);
         const ctBits = window.sjcl.mode.gcm.encrypt(aes, ptBits, ivBits);
@@ -264,7 +268,25 @@
         const ct = window.sjcl.codec.bytes.fromBits(ctBits);
         return new Uint8Array(ct);
     }
-    exports._encrypt_aes_gcm = _encrypt_aes_gcm;
+    exports.encryptAesGcm = encryptAesGcm;
+    async function decryptAesGcm(key, iv, ciphertext, additionalData) {
+        const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
+        const ivBits = window.sjcl.codec.arrayBuffer.toBits(iv);
+        const ctBits = window.sjcl.codec.arrayBuffer.toBits(ciphertext);
+        const adataBits = additionalData ? window.sjcl.codec.arrayBuffer.toBits(additionalData) : undefined;
+
+        const aes = new window.sjcl.cipher.aes(keyBits);
+        const ptBits = window.sjcl.mode.gcm.decrypt(aes, ctBits, ivBits, adataBits);
+
+        const pt = window.sjcl.codec.bytes.fromBits(ptBits);
+        return new Uint8Array(pt);
+    }
+    exports.decryptAesGcm = decryptAesGcm;
+    // Hashing
+    async function sha256(data) {
+        return window.crypto.subtle.digest('SHA-256', data);
+    }
+    exports.sha256 = sha256;
     // Utility
     function getRandomBytes(n) {
         const bytes = new Uint8Array(n);
@@ -349,10 +371,72 @@
         return typedArrayToArrayBuffer(source.subarray(0, n));
     }
     exports.getFirstBytes = getFirstBytes;
-    // Internal-only
-    function _getBytes(data, start, n) {
+    function getBytes(data, start, n) {
         const source = new Uint8Array(data);
         return typedArrayToArrayBuffer(source.subarray(start, start + n));
     }
-    exports._getBytes = _getBytes;
+    exports.getBytes = getBytes;
+    function _getMacAndData(ciphertext) {
+        const dataLength = ciphertext.byteLength - MAC_LENGTH;
+        const data = getBytes(ciphertext, 0, dataLength);
+        const mac = getBytes(ciphertext, dataLength, MAC_LENGTH);
+        return { data, mac };
+    }
+    async function encryptCdsDiscoveryRequest(attestations, phoneNumbers) {
+        const nonce = getRandomBytes(32);
+        const numbersArray = new window.dcodeIO.ByteBuffer(phoneNumbers.length * 8, window.dcodeIO.ByteBuffer.BIG_ENDIAN);
+        phoneNumbers.forEach(number => {
+            // Long.fromString handles numbers with or without a leading '+'
+            numbersArray.writeLong(window.dcodeIO.ByteBuffer.Long.fromString(number));
+        });
+        const queryDataPlaintext = concatenateBytes(nonce, numbersArray.buffer);
+        const queryDataKey = getRandomBytes(32);
+        const commitment = await sha256(queryDataPlaintext);
+        const iv = getRandomBytes(12);
+        const queryDataCiphertext = await encryptAesGcm(queryDataKey, iv, queryDataPlaintext);
+        const { data: queryDataCiphertextData, mac: queryDataCiphertextMac, } = _getMacAndData(queryDataCiphertext);
+        const envelopes = await p_props_1.default(attestations, async ({ clientKey, requestId }) => {
+            const envelopeIv = getRandomBytes(12);
+            const ciphertext = await encryptAesGcm(clientKey, envelopeIv, queryDataKey, requestId);
+            const { data, mac } = _getMacAndData(ciphertext);
+            return {
+                requestId: arrayBufferToBase64(requestId),
+                data: arrayBufferToBase64(data),
+                iv: arrayBufferToBase64(envelopeIv),
+                mac: arrayBufferToBase64(mac),
+            };
+        });
+        return {
+            addressCount: phoneNumbers.length,
+            commitment: arrayBufferToBase64(commitment),
+            data: arrayBufferToBase64(queryDataCiphertextData),
+            iv: arrayBufferToBase64(iv),
+            mac: arrayBufferToBase64(queryDataCiphertextMac),
+            envelopes,
+        };
+    }
+    exports.encryptCdsDiscoveryRequest = encryptCdsDiscoveryRequest;
+    function splitUuids(arrayBuffer) {
+        const uuids = [];
+        for (let i = 0; i < arrayBuffer.byteLength; i += 16) {
+            const bytes = getBytes(arrayBuffer, i, 16);
+            const hex = arrayBufferToHex(bytes);
+            const chunks = [
+                hex.substring(0, 8),
+                hex.substring(8, 12),
+                hex.substring(12, 16),
+                hex.substring(16, 20),
+                hex.substring(20),
+            ];
+            const uuid = chunks.join('-');
+            if (uuid !== '00000000-0000-0000-0000-000000000000') {
+                uuids.push(uuid);
+            }
+            else {
+                uuids.push(null);
+            }
+        }
+        return uuids;
+    }
+    exports.splitUuids = splitUuids;
 })();
