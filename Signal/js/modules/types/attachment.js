@@ -4,21 +4,21 @@
   window.types = window.types || {};
   const exports = window.types.attachment = window.types.attachment || {};
 
-  const is = window.sindresorhus.is;
+  const is = require('@sindresorhus/is');
 
-  const AttachmentTS = window.ts.types.Attachment;
+  const AttachmentTS = require('../../../ts/types/Attachment');
   const GoogleChrome = require('../../../ts/util/GoogleChrome');
-  const MIME = window.ts.types.MIME;
-  const { toLogFormat } = window.types.errors;
+  const MIME = require('../../../ts/types/MIME');
+  const { toLogFormat } = require('./errors');
   const {
     arrayBufferToBlob,
     blobToArrayBuffer,
     dataURLToBlob,
-  } = window.blob_util;
-  const { autoOrientImage } = window.auto_orient_image;
+  } = require('blob-util');
+  const { autoOrientImage } = require('../auto_orient_image');
   const {
     migrateDataToFileSystem,
-  } = window.types.attachment.migrate_data_to_file_system;
+  } = require('./attachment/migrate_data_to_file_system');
 
   // // Incoming message attachment fields
   // {
@@ -219,6 +219,9 @@
     };
   };
 
+  exports.isImage = AttachmentTS.isImage;
+  exports.isVideo = AttachmentTS.isVideo;
+  exports.isAudio = AttachmentTS.isAudio;
   exports.isVoiceMessage = AttachmentTS.isVoiceMessage;
   exports.save = AttachmentTS.save;
 
