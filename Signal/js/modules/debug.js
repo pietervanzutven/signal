@@ -6,8 +6,8 @@
 
   const exports = window.debug = {};
 
-  const fs = window.fs_extra;
-  const path = window.path;
+  const fs = require('fs-extra');
+  const path = require('path');
 
   const {
     isFunction,
@@ -17,11 +17,11 @@
     random,
     range,
     sample,
-  } = window.lodash;
+  } = require('lodash');
 
-  const Attachments = window.app.attachments;
-  const Message = window.types.message;
-  const { sleep } = window.sleep;
+  const Attachments = require('../../app/attachments');
+  const Message = require('./types/message');
+  const { sleep } = require('./sleep');
 
   // See: https://en.wikipedia.org/wiki/Fictitious_telephone_number#North_American_Numbering_Plan
   const SENDER_ID = '+12126647665';
@@ -116,20 +116,26 @@
   const _createMessage = ({ commonProperties, conversationId, type } = {}) => {
     switch (type) {
       case 'incoming':
-        return Object.assign({}, commonProperties, {
-          flags: 0,
-          source: conversationId,
-          sourceDevice: 1,
-        });
+        return Object.assign({},
+          commonProperties,
+          {
+            flags: 0,
+            source: conversationId,
+            sourceDevice: 1,
+          }
+        );
       case 'outgoing':
-        return Object.assign({}, commonProperties, {
-          delivered: 1,
-          delivered_to: [conversationId],
-          expireTimer: 0,
-          recipients: [conversationId],
-          sent_to: [conversationId],
-          synced: true,
-        });
+        return Object.assign({},
+          commonProperties,
+          {
+            delivered: 1,
+            delivered_to: [conversationId],
+            expireTimer: 0,
+            recipients: [conversationId],
+            sent_to: [conversationId],
+            synced: true,
+          }
+        );
       default:
         throw new TypeError(`Unknown message type: '${type}'`);
     }

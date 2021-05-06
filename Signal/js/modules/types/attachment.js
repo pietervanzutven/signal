@@ -6,15 +6,15 @@
 
   const is = require('@sindresorhus/is');
 
-  const AttachmentTS = require('../../../ts/types/Attachment');
-  const GoogleChrome = require('../../../ts/util/GoogleChrome');
-  const MIME = require('../../../ts/types/MIME');
-  const { toLogFormat } = require('./errors');
   const {
     arrayBufferToBlob,
     blobToArrayBuffer,
     dataURLToBlob,
   } = require('blob-util');
+  const AttachmentTS = require('../../../ts/types/Attachment');
+  const GoogleChrome = require('../../../ts/util/GoogleChrome');
+  const MIME = require('../../../ts/types/MIME');
+  const { toLogFormat } = require('./errors');
   const { autoOrientImage } = require('../auto_orient_image');
   const {
     migrateDataToFileSystem,
@@ -79,10 +79,13 @@
     // retain it but due to reports of data loss, we don’t want to overburden IndexedDB
     // by potentially doubling stored image data.
     // See: https://github.com/signalapp/Signal-Desktop/issues/1589
-    const newAttachment = Object.assign({}, attachment, {
-      data: newDataArrayBuffer,
-      size: newDataArrayBuffer.byteLength,
-    });
+    const newAttachment = Object.assign({},
+      attachment,
+      {
+        data: newDataArrayBuffer,
+        size: newDataArrayBuffer.byteLength,
+      }
+    );
 
     // `digest` is no longer valid for auto-oriented image data, so we discard it:
     delete newAttachment.digest;
@@ -109,9 +112,7 @@
       INVALID_CHARACTERS_PATTERN,
       UNICODE_REPLACEMENT_CHARACTER
     );
-    const newAttachment = Object.assign({}, attachment, {
-      fileName: normalizedFilename,
-    });
+    const newAttachment = Object.assign({}, attachment, { fileName: normalizedFilename });
 
     return newAttachment;
   };

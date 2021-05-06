@@ -15,9 +15,7 @@
 /* eslint-disable more/no-then */
 
 // eslint-disable-next-line func-names
-(function () {
-  'use strict';
-
+(function() {
   window.Whisper = window.Whisper || {};
 
   const {
@@ -159,42 +157,50 @@
           type: 'unsupportedMessage',
           data: this.getPropsForUnsupportedMessage(),
         };
-      } else if (this.isMessageHistoryUnsynced()) {
+      }
+      if (this.isMessageHistoryUnsynced()) {
         return {
           type: 'linkNotification',
           data: null,
         };
-      } else if (this.isExpirationTimerUpdate()) {
+      }
+      if (this.isExpirationTimerUpdate()) {
         return {
           type: 'timerNotification',
           data: this.getPropsForTimerNotification(),
         };
-      } else if (this.isKeyChange()) {
+      }
+      if (this.isKeyChange()) {
         return {
           type: 'safetyNumberNotification',
           data: this.getPropsForSafetyNumberNotification(),
         };
-      } else if (this.isVerifiedChange()) {
+      }
+      if (this.isVerifiedChange()) {
         return {
           type: 'verificationNotification',
           data: this.getPropsForVerificationNotification(),
         };
-      } else if (this.isGroupUpdate()) {
+      }
+      if (this.isGroupUpdate()) {
         return {
           type: 'groupNotification',
           data: this.getPropsForGroupNotification(),
         };
-      } else if (this.isEndSession()) {
+      }
+      if (this.isEndSession()) {
         return {
           type: 'resetSessionNotification',
           data: this.getPropsForResetSessionNotification(),
         };
-      } else if (this.isCallHistory()) {
+      }
+      if (this.isCallHistory()) {
         return {
           type: 'callHistory',
           data: this.getPropsForCallHistory(),
         };
-      } else if (this.isProfileChange()) {
+      }
+      if (this.isProfileChange()) {
         return {
           type: 'profileChange',
           data: this.getPropsForProfileChange(),
@@ -431,7 +437,8 @@
             type: 'fromSync',
           }
         );
-      } else if (sourceId && sourceId === ourId) {
+      }
+      if (sourceId && sourceId === ourId) {
         return Object.assign({},
           basicProps,
           {
@@ -897,14 +904,15 @@
       const thumbnailWithObjectUrl =
         !path && !objectUrl
           ? null
-          : Object.assign({}, attachment.thumbnail || {}, {
-              objectUrl: path || objectUrl,
-            });
+          : Object.assign({}, (attachment.thumbnail || {}), { objectUrl: path || objectUrl });
 
-      return Object.assign({}, attachment, {
-        isVoiceMessage: Signal.Types.Attachment.isVoiceMessage(attachment),
-        thumbnail: thumbnailWithObjectUrl,
-      });
+      return Object.assign({},
+        attachment,
+        {
+          isVoiceMessage: Signal.Types.Attachment.isVoiceMessage(attachment),
+          thumbnail: thumbnailWithObjectUrl,
+        }
+      );
     },
 
     getNotificationData() /* : { text: string, emoji?: string } */ {
@@ -938,7 +946,8 @@
             text: i18n('message--getDescription--disappearing-photo'),
             emoji: '📷',
           };
-        } else if (Attachment.isVideo(attachments)) {
+        }
+        if (Attachment.isVideo(attachments)) {
           return {
             text: i18n('message--getDescription--disappearing-video'),
             emoji: '🎥',
@@ -956,7 +965,8 @@
 
         if (groupUpdate.left === 'You') {
           return { text: i18n('youLeftTheGroup') };
-        } else if (groupUpdate.left) {
+        }
+        if (groupUpdate.left) {
           return {
             text: i18n('leftTheGroup', [
               this.getNameForNumber(groupUpdate.left),
@@ -1037,22 +1047,26 @@
             text: body || i18n('message--getNotificationText--gif'),
             emoji: '🎡',
           };
-        } else if (Attachment.isImage(attachments)) {
+        }
+        if (Attachment.isImage(attachments)) {
           return {
             text: body || i18n('message--getNotificationText--photo'),
             emoji: '📷',
           };
-        } else if (Attachment.isVideo(attachments)) {
+        }
+        if (Attachment.isVideo(attachments)) {
           return {
             text: body || i18n('message--getNotificationText--video'),
             emoji: '🎥',
           };
-        } else if (Attachment.isVoiceMessage(attachment)) {
+        }
+        if (Attachment.isVoiceMessage(attachment)) {
           return {
             text: body || i18n('message--getNotificationText--voice-message'),
             emoji: '🎤',
           };
-        } else if (Attachment.isAudio(attachments)) {
+        }
+        if (Attachment.isAudio(attachments)) {
           return {
             text: body || i18n('message--getNotificationText--audio-message'),
             emoji: '🔈',
@@ -2405,14 +2419,16 @@
 
             confirm();
             return;
-          } else if (isUpdate) {
+          }
+          if (isUpdate) {
             window.log.warn(
               `handleDataMessage: Received update transcript, but no existing entry for message ${message.idForLogging()}. Dropping.`
             );
 
             confirm();
             return;
-          } else if (existingMessage) {
+          }
+          if (existingMessage) {
             window.log.warn(
               `handleDataMessage: Received duplicate transcript for message ${message.idForLogging()}, but it was not an update transcript. Dropping.`
             );

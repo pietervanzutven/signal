@@ -9,8 +9,6 @@
 
 // eslint-disable-next-line func-names
 (function() {
-  'use strict';
-
   window.Whisper = window.Whisper || {};
   const { Settings } = Signal.Types;
 
@@ -28,176 +26,178 @@
   //   Signal's notifications are dismissed.
   // [0]: https://github.com/electron/electron/issues/15364
   // [1]: https://github.com/electron/electron/issues/21646
-  Whisper.Notifications = {
-    ...Backbone.Events,
+  Whisper.Notifications = Object.assign({},
+    Backbone.Events,
+    {
 
-    isEnabled: false,
+      isEnabled: false,
 
-    // This is either a standard `Notification` or null.
-    lastNotification: null,
+      // This is either a standard `Notification` or null.
+      lastNotification: null,
 
-    // This is either null or an object of this shape:
-    //
-    //     {
-    //       conversationId: string;
-    //       messageId: string;
-    //       senderTitle: string;
-    //       message: string;
-    //       notificationIconUrl: string | void;
-    //       isExpiringMessage: boolean;
-    //       reaction: {
-    //         emoji: string;
-    //       };
-    //     }
-    notificationData: null,
+      // This is either null or an object of this shape:
+      //
+      //     {
+      //       conversationId: string;
+      //       messageId: string;
+      //       senderTitle: string;
+      //       message: string;
+      //       notificationIconUrl: string | void;
+      //       isExpiringMessage: boolean;
+      //       reaction: {
+      //         emoji: string;
+      //       };
+      //     }
+      notificationData: null,
 
-    add(notificationData) {
-      this.notificationData = notificationData;
-      this.update();
-    },
-
-    removeBy({ conversationId, messageId }) {
-      const shouldClear =
-        Boolean(this.notificationData) &&
-        ((conversationId &&
-          this.notificationData.conversationId === conversationId) ||
-          (messageId && this.notificationData.messageId === messageId));
-      if (shouldClear) {
-        this.clear();
+      add(notificationData) {
+        this.notificationData = notificationData;
         this.update();
-      }
-    },
+      },
 
-    fastUpdate() {
-      if (this.lastNotification) {
-        this.lastNotification.close();
-        this.lastNotification = null;
-      }
+      removeBy({ conversationId, messageId }) {
+        const shouldClear =
+          Boolean(this.notificationData) &&
+          ((conversationId &&
+            this.notificationData.conversationId === conversationId) ||
+            (messageId && this.notificationData.messageId === messageId));
+        if (shouldClear) {
+          this.clear();
+          this.update();
+        }
+      },
 
-      const { isEnabled } = this;
-      const isAppFocused = window.isActive();
-      const isAudioNotificationEnabled =
-        storage.get('audio-notification') || false;
-      const isAudioNotificationSupported = Settings.isAudioNotificationSupported();
-      const userSetting = this.getUserSetting();
-
-      const status = Signal.Notifications.getStatus({
-        isAppFocused,
-        isAudioNotificationEnabled,
-        isAudioNotificationSupported,
-        isEnabled,
-        hasNotifications: Boolean(this.notificationData),
-        userSetting,
-      });
-
-      if (status.type !== 'ok') {
-        if (status.shouldClearNotifications) {
-          this.notificationData = null;
+      fastUpdate() {
+        if (this.lastNotification) {
+          this.lastNotification.close();
+          this.lastNotification = null;
         }
 
-        return;
-      }
+        const { isEnabled } = this;
+        const isAppFocused = window.isActive();
+        const isAudioNotificationEnabled =
+          storage.get('audio-notification') || false;
+        const isAudioNotificationSupported = Settings.isAudioNotificationSupported();
+        const userSetting = this.getUserSetting();
 
-      let notificationTitle;
-      let notificationMessage;
-      let notificationIconUrl;
+        const status = Signal.Notifications.getStatus({
+          isAppFocused,
+          isAudioNotificationEnabled,
+          isAudioNotificationSupported,
+          isEnabled,
+          hasNotifications: Boolean(this.notificationData),
+          userSetting,
+        });
 
-      const {
-        conversationId,
-        messageId,
-        senderTitle,
-        message,
-        isExpiringMessage,
-        reaction,
-      } = this.notificationData;
+        if (status.type !== 'ok') {
+          if (status.shouldClearNotifications) {
+            this.notificationData = null;
+          }
 
-      if (
-        userSetting === SettingNames.NAME_ONLY ||
-        userSetting === SettingNames.NAME_AND_MESSAGE
-      ) {
-        notificationTitle = senderTitle;
-        ({ notificationIconUrl } = this.notificationData);
+          return;
+        }
 
-        const shouldHideExpiringMessageBody =
-          isExpiringMessage && Signal.OS.isMacOS();
-        if (shouldHideExpiringMessageBody) {
-          notificationMessage = i18n('newMessage');
-        } else if (userSetting === SettingNames.NAME_ONLY) {
-          if (reaction) {
-            notificationMessage = i18n('notificationReaction', {
+        let notificationTitle;
+        let notificationMessage;
+        let notificationIconUrl;
+
+        const {
+          conversationId,
+          messageId,
+          senderTitle,
+          message,
+          isExpiringMessage,
+          reaction,
+        } = this.notificationData;
+
+        if (
+          userSetting === SettingNames.NAME_ONLY ||
+          userSetting === SettingNames.NAME_AND_MESSAGE
+        ) {
+          notificationTitle = senderTitle;
+          ({ notificationIconUrl } = this.notificationData);
+
+          const shouldHideExpiringMessageBody =
+            isExpiringMessage && Signal.OS.isMacOS();
+          if (shouldHideExpiringMessageBody) {
+            notificationMessage = i18n('newMessage');
+          } else if (userSetting === SettingNames.NAME_ONLY) {
+            if (reaction) {
+              notificationMessage = i18n('notificationReaction', {
+                sender: senderTitle,
+                emoji: reaction.emoji,
+              });
+            } else {
+              notificationMessage = i18n('newMessage');
+            }
+          } else if (reaction) {
+            notificationMessage = i18n('notificationReactionMessage', {
               sender: senderTitle,
               emoji: reaction.emoji,
+              message,
             });
           } else {
-            notificationMessage = i18n('newMessage');
+            notificationMessage = message;
           }
-        } else if (reaction) {
-          notificationMessage = i18n('notificationReactionMessage', {
-            sender: senderTitle,
-            emoji: reaction.emoji,
-            message,
-          });
         } else {
-          notificationMessage = message;
+          if (userSetting !== SettingNames.NO_NAME_OR_MESSAGE) {
+            window.log.error(
+              `Error: Unknown user notification setting: '${userSetting}'`
+            );
+          }
+          notificationTitle = 'Signal';
+          notificationMessage = i18n('newMessage');
         }
-      } else {
-        if (userSetting !== SettingNames.NO_NAME_OR_MESSAGE) {
-          window.log.error(
-            `Error: Unknown user notification setting: '${userSetting}'`
-          );
+
+        const shouldDrawAttention = storage.get(
+          'notification-draw-attention',
+          true
+        );
+        if (shouldDrawAttention) {
+          drawAttention();
         }
-        notificationTitle = 'Signal';
-        notificationMessage = i18n('newMessage');
-      }
 
-      const shouldDrawAttention = storage.get(
-        'notification-draw-attention',
-        true
-      );
-      if (shouldDrawAttention) {
-        drawAttention();
-      }
+        this.lastNotification = window.Signal.Services.notify({
+          platform: window.platform,
+          title: notificationTitle,
+          icon: notificationIconUrl,
+          message: notificationMessage,
+          silent: !status.shouldPlayNotificationSound,
+          onNotificationClick: () => {
+            this.trigger('click', conversationId, messageId);
+          },
+        });
+      },
 
-      this.lastNotification = window.Signal.Services.notify({
-        platform: window.platform,
-        title: notificationTitle,
-        icon: notificationIconUrl,
-        message: notificationMessage,
-        silent: !status.shouldPlayNotificationSound,
-        onNotificationClick: () => {
-          this.trigger('click', conversationId, messageId);
-        },
-      });
-    },
-
-    getUserSetting() {
-      return (
-        storage.get('notification-setting') || SettingNames.NAME_AND_MESSAGE
-      );
-    },
-    clear() {
-      window.log.info('Removing notification');
-      this.notificationData = null;
-      this.update();
-    },
-    // We don't usually call this, but when the process is shutting down, we should at
-    //   least try to remove the notification immediately instead of waiting for the
-    //   normal debounce.
-    fastClear() {
-      this.notificationData = null;
-      this.fastUpdate();
-    },
-    enable() {
-      const needUpdate = !this.isEnabled;
-      this.isEnabled = true;
-      if (needUpdate) {
+      getUserSetting() {
+        return (
+          storage.get('notification-setting') || SettingNames.NAME_AND_MESSAGE
+        );
+      },
+      clear() {
+        window.log.info('Removing notification');
+        this.notificationData = null;
         this.update();
-      }
-    },
-    disable() {
-      this.isEnabled = false;
-    },
-  };
+      },
+      // We don't usually call this, but when the process is shutting down, we should at
+      //   least try to remove the notification immediately instead of waiting for the
+      //   normal debounce.
+      fastClear() {
+        this.notificationData = null;
+        this.fastUpdate();
+      },
+      enable() {
+        const needUpdate = !this.isEnabled;
+        this.isEnabled = true;
+        if (needUpdate) {
+          this.update();
+        }
+      },
+      disable() {
+        this.isEnabled = false;
+      },
+    }
+  );
 
   // Testing indicated that trying to create/destroy notifications too quickly
   //   resulted in notifications that stuck around forever, requiring the user

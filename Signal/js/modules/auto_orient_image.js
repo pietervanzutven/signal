@@ -3,7 +3,7 @@
 
   const exports = window.auto_orient_image = {};
 
-  const loadImage = window.blueimp_load_image;
+  const loadImage = require('blueimp-load-image');
 
   const DEFAULT_JPEG_QUALITY = 0.85;
 

@@ -231,12 +231,10 @@ require(exports => {
             if (matchingId.length > 0) {
                 return matchingId[0].deviceId;
             }
-            else if (nonInfrared.length > 0) {
+            if (nonInfrared.length > 0) {
                 return nonInfrared[0].deviceId;
             }
-            else {
-                return undefined;
-            }
+            return undefined;
         }
         setPreferredMicrophone(device) {
             window.log.info('MediaDevice: setPreferredMicrophone', device);
@@ -312,13 +310,9 @@ require(exports => {
                 if (isVideoCall) {
                     return this.requestCameraPermissions();
                 }
-                else {
-                    return true;
-                }
+                return true;
             }
-            else {
-                return false;
-            }
+            return false;
         }
         async handleOutgoingSignaling(remoteUserId, message) {
             const conversation = window.ConversationController.get(remoteUserId);

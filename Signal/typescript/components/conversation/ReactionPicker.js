@@ -17,10 +17,10 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const React = __importStar(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const Emoji_1 = window.ts.components.emoji.Emoji;
-    const lib_1 = window.ts.components.emoji.lib;
+    const React = __importStar(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const Emoji_1 = require("../emoji/Emoji");
+    const lib_1 = require("../emoji/lib");
     const hooks_1 = require("../../util/hooks");
     const emojis = ['❤️', '👍', '👎', '😂', '😮', '😢'];
     exports.ReactionPicker = React.forwardRef(({ i18n, selected, onClose, onPick, renderEmojiPicker, style }, ref) => {

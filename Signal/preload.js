@@ -315,7 +315,7 @@
 
     // We pull these dependencies in now, from here, because they have Node.js dependencies
 
-    require_logging();
+    require('./js/logging');
 
     if (config.proxyUrl) {
       window.log.info('Using provided proxy url');

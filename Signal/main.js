@@ -276,7 +276,7 @@ if (OS === 'win32') {
 
 async function createWindow() {
   const { screen } = electron;
-  const windowOptions = Object.assign(
+  const windowOptions = Object.assign({},
     {
       show: !startInTray, // allow to start minimised in tray
       width: DEFAULT_WIDTH,
@@ -289,8 +289,8 @@ async function createWindow() {
           ? '#ffffff' // Tests should always be rendered on a white background
           : '#3a76f0',
       webPreferences: {
-        uwpIntegration: false,
-        uwpIntegrationInWorker: false,
+        nodeIntegration: false,
+        nodeIntegrationInWorker: false,
         contextIsolation: false,
         preload: path.join(__dirname, 'preload.js'),
         nativeWindowOpen: true,
@@ -299,7 +299,7 @@ async function createWindow() {
       },
       icon: windowIcon,
     },
-    _.pick(windowConfig, ['autoHideMenuBar', 'width', 'height', 'x', 'y'])
+    _.pick(windowConfig, ['autoHideMenuBar', 'width', 'height', 'x', 'y']),
   );
 
   if (!_.isNumber(windowOptions.width) || windowOptions.width < MIN_WIDTH) {
@@ -797,6 +797,7 @@ async function showDebugLogWindow() {
 
 let permissionsPopupWindow;
 function showPermissionsPopupWindow(forCalling, forCamera) {
+  // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
     if (permissionsPopupWindow) {
       permissionsPopupWindow.show();
