@@ -849,7 +849,7 @@ require(exports => {
         }
         // modifyMemberAccess?: GroupChangeClass.Actions.ModifyMembersAccessControlAction;
         if (actions.modifyMemberAccess) {
-            result.accessControl = Object.assign(Object.assign({}, result.accessControl), { attributes: actions.modifyMemberAccess.membersAccess || ACCESS_ENUM.MEMBER });
+            result.accessControl = Object.assign(Object.assign({}, result.accessControl), { members: actions.modifyMemberAccess.membersAccess || ACCESS_ENUM.MEMBER });
         }
         const ourConversationId = window.ConversationController.getOurConversationId();
         if (ourConversationId) {

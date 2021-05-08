@@ -932,13 +932,14 @@
             ev.sender = envelope.source;
             ev.senderUuid = envelope.sourceUuid;
             ev.senderDevice = envelope.sourceDevice;
+            const groupIdBuffer = groupId ? groupId.toArrayBuffer() : null;
             ev.typing = {
                 typingMessage,
                 timestamp: timestamp ? timestamp.toNumber() : Date.now(),
-                groupId: groupId && groupId.buffer.byteLength < 45
+                groupId: groupIdBuffer && groupIdBuffer.byteLength <= 16
                     ? groupId.toString('binary')
                     : null,
-                groupV2Id: groupId && groupId.buffer.byteLength >= 45
+                groupV2Id: groupIdBuffer && groupIdBuffer.byteLength > 16
                     ? groupId.toString('base64')
                     : null,
                 started: action === window.textsecure.protobuf.TypingMessage.Action.STARTED,
