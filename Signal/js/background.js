@@ -1615,6 +1615,19 @@
         removeGv2Listener();
       }
     );
+
+    window.Signal.RemoteConfig.onChange(
+      'desktop.storage',
+      async ({ enabled }) => {
+        if (!enabled) {
+          await window.storage.remove('storageKey');
+          return;
+        }
+
+        await window.storage.remove('manifestVersion');
+        await window.textsecure.messaging.sendRequestKeySyncMessage();
+      }
+    );
   }
 
   window.getSyncRequest = () =>
