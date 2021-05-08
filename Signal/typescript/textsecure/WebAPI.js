@@ -644,7 +644,7 @@
                 return _ajax({
                     call: 'registerCapabilities',
                     httpType: 'PUT',
-                    jsonData: { capabilities },
+                    jsonData: capabilities,
                 });
             }
             function getProfileUrl(identifier, profileKeyVersion, profileKeyCredentialRequest) {
