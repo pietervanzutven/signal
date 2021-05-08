@@ -97,7 +97,7 @@ require(exports => {
         });
     }
     exports.waitThenMaybeUpdateGroup = waitThenMaybeUpdateGroup;
-    async function maybeUpdateGroup({ conversation, groupChangeBase64, newRevision, timestamp, dropInitialJoinMessage, }) {
+    async function maybeUpdateGroup({ conversation, dropInitialJoinMessage, groupChangeBase64, newRevision, receivedAt, sentAt, }) {
         const logId = conversation.idForLogging();
         try {
             // Ensure we have the credentials we need before attempting GroupsV2 operations
@@ -112,14 +112,14 @@ require(exports => {
             conversation.set(newAttributes);
             // Ensure that all generated message are ordered properly. Before the provided timestamp
             //   so update messages appear before the initiating message, or after now().
-            let syntheticTimestamp = timestamp
-                ? timestamp - (groupChangeMessages.length + 1)
+            let syntheticTimestamp = receivedAt
+                ? receivedAt - (groupChangeMessages.length + 1)
                 : Date.now();
             // Save all synthetic messages describing group changes
             const changeMessagesToSave = groupChangeMessages.map(changeMessage => {
                 // We do this to preserve the order of the timeline
                 syntheticTimestamp += 1;
-                return Object.assign(Object.assign({}, changeMessage), { conversationId: conversation.id, received_at: syntheticTimestamp });
+                return Object.assign(Object.assign({}, changeMessage), { conversationId: conversation.id, received_at: syntheticTimestamp, sent_at: sentAt });
             });
             if (changeMessagesToSave.length > 0) {
                 await window.Signal.Data.saveMessages(changeMessagesToSave, {
