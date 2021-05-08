@@ -388,6 +388,7 @@ require(exports => {
     // Exported functions
     async function runStorageServiceSyncJob() {
         if (!RemoteConfig_1.isEnabled('desktop.storage')) {
+            window.log.info('storageService.runStorageServiceSyncJob: Not starting desktop.storage is falsey');
             return;
         }
         if (!window.storage.get('storageKey')) {
@@ -440,6 +441,11 @@ require(exports => {
     exports.eraseAllStorageServiceState = eraseAllStorageServiceState;
     async function nondebouncedStorageServiceUploadJob() {
         if (!RemoteConfig_1.isEnabled('desktop.storage')) {
+            window.log.info('storageService.storageServiceUploadJob: Not starting desktop.storage is falsey');
+            return;
+        }
+        if (!RemoteConfig_1.isEnabled('desktop.storageWrite')) {
+            window.log.info('storageService.storageServiceUploadJob: Not starting desktop.storageWrite is falsey');
             return;
         }
         if (!window.textsecure.messaging) {
