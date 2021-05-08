@@ -5,7 +5,7 @@
   window.types.attachment = window.types.attachment || {};
   const exports = window.types.attachment.migrate_data_to_file_system = {};
 
-  const { isArrayBuffer, isFunction, isUndefined, omit } = window.lodash;
+  const { isArrayBuffer, isFunction, isUndefined, omit } = require('lodash');
 
   // type Context :: {
   //   writeNewAttachmentData :: ArrayBuffer -> Promise (IO Path)
@@ -39,9 +39,7 @@
 
     const path = await writeNewAttachmentData(data);
 
-    const attachmentWithoutData = omit(Object.assign({}, attachment, { path }), [
-      'data',
-    ]);
+    const attachmentWithoutData = omit(Object.assign({}, attachment, { path }), ['data']);
     return attachmentWithoutData;
   };
 })();

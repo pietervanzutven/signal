@@ -78,7 +78,7 @@
         updateConversation,
         updateConversations,
         removeConversation,
-        eraseStorageIdFromConversations,
+        eraseStorageServiceStateFromConversations,
         getAllConversations,
         getAllConversationIds,
         getAllPrivateConversations,
@@ -563,8 +563,8 @@
     async function _removeConversations(ids) {
         await channels.removeConversation(ids);
     }
-    async function eraseStorageIdFromConversations() {
-        await channels.eraseStorageIdFromConversations();
+    async function eraseStorageServiceStateFromConversations() {
+        await channels.eraseStorageServiceStateFromConversations();
     }
     async function getAllConversations({ ConversationCollection, }) {
         const conversations = await channels.getAllConversations();

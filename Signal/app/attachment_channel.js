@@ -3,9 +3,9 @@
 
   window.app = window.app || {};
 
-  const electron = window.electron;
-  const Attachments = window.app.attachments;
-  const rimraf = window.rimraf;
+  const electron = require('electron');
+  const rimraf = require('rimraf');
+  const Attachments = require('./attachments');
 
   const { ipcMain } = electron;
 

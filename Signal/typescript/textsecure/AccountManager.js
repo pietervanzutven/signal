@@ -388,6 +388,9 @@
                 store.clearSessionStore(),
             ]);
         }
+        async getGroupCredentials(startDay, endDay) {
+            return this.server.getGroupCredentials(startDay, endDay);
+        }
         // Takes the same object returned by generateKeys
         async confirmKeys(keys) {
             const store = window.textsecure.storage.protocol;

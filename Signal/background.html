@@ -500,6 +500,7 @@
   <script type='text/javascript' src='node_modules/p-queue/priority-queue.js'></script>
   <script type='text/javascript' src='node_modules/p-queue/index.js'></script>
   <script type='text/javascript' src='node_modules/p-map/index.js'></script>
+  <script type='text/javascript' src='node_modules/p-props/index.js'></script>
   <script type='text/javascript' src='node_modules/fuse.js/fuse.js'></script>
   <script type='text/javascript' src='node_modules/immutable/immutable.js'></script>
   <script type='text/javascript' src='node_modules/draft-js/Draft.js'></script>
@@ -563,6 +564,12 @@
   <script type='text/javascript' src='node_modules/ringrtc/index.js'></script>
   <script type='text/javascript' src='node_modules/react-tooltip-lite/react-tooltip-lite.min.js'></script>
   <script type='text/javascript' src='node_modules/stacktrace/stacktrace.js'></script>
+  <script type='text/javascript' src='node_modules/curve25519-n/index.js'></script>
+  <script type='text/javascript' src='node_modules/node-forge/forge.all.min.js'></script>
+  <script type='text/javascript' src='node_modules/crypto-browserify/index.js'></script>
+  <script type='text/javascript' src='node_modules/crypto/index.js'></script>
+  <script type='text/javascript' src='node_modules/es6-symbol/index.js'></script>
+  <script type='text/javascript' src='node_modules/array-index/index.js'></script>
   
   <script type='text/javascript' src='js/modules/auto_orient_image.js'></script>
   <script type='text/javascript' src='js/modules/types/schema_version.js'></script>
@@ -584,6 +591,7 @@
   <script type='text/javascript' src='typescript/util/getInitials.js'></script>
   <script type='text/javascript' src='typescript/util/getMuteOptions.js'></script>
   <script type='text/javascript' src='typescript/util/getStringForProfileChange.js'></script>
+  <script type='text/javascript' src='typescript/util/getUserAgent.js'></script>
   <script type='text/javascript' src='typescript/util/GoogleChrome.js'></script>
   <script type='text/javascript' src='typescript/util/hasExpired.js'></script>
   <script type='text/javascript' src='typescript/util/hooks.js'></script>
@@ -594,6 +602,7 @@
   <script type='text/javascript' src='typescript/util/makeLookup.js'></script>
   <script type='text/javascript' src='typescript/util/migrateColor.js'></script>
   <script type='text/javascript' src='typescript/util/missingCaseError.js'></script>
+  <script type='text/javascript' src='typescript/util/parseRemoteClientExpiration.js'></script>
   <script type='text/javascript' src='typescript/util/registration.js'></script>
   <script type='text/javascript' src='typescript/util/safetyNumber.js'></script>
   <script type='text/javascript' src='typescript/util/saveURLAsFile.js'></script>
@@ -650,7 +659,10 @@
   <script type='text/javascript' src='typescript/services/updateListener.js'></script>
   <script type='text/javascript' src='typescript/services/bounce.js'></script>
   <script type='text/javascript' src='typescript/services/calling.js'></script>
+  <script type='text/javascript' src='typescript/services/groupCredentialFetcher.js'></script>
   <script type='text/javascript' src='typescript/services/notify.js'></script>
+  <script type='text/javascript' src='typescript/services/storage.js'></script>
+  <script type='text/javascript' src='typescript/services/storageRecordOps.js'></script>
   <script type='text/javascript' src='typescript/components/_util.js'></script>
   <script type='text/javascript' src='typescript/components/Avatar.js'></script>
   <script type='text/javascript' src='typescript/components/AvatarPopup.js'></script>
@@ -732,6 +744,7 @@
   <script type='text/javascript' src='typescript/components/conversation/TimelineItem.js'></script>
   <script type='text/javascript' src='typescript/components/conversation/TimelineLoadingRow.js'></script>
   <script type='text/javascript' src='typescript/components/conversation/_contactUtil.js'></script>
+  <script type='text/javascript' src='typescript/components/conversation/GroupV2Change.js'></script>
   <script type='text/javascript' src='typescript/components/CaptionEditor.js'></script>
   <script type='text/javascript' src='typescript/components/CallManager.js'></script>
   <script type='text/javascript' src='typescript/components/CallScreen.js'></script>
@@ -750,6 +763,8 @@
   <script type='text/javascript' src='typescript/backbone/views/index.js'></script>
   <script type='text/javascript' src='typescript/backbone/index.js'></script>
   <script type='text/javascript' src='typescript/notifications/getStatus.js'></script>
+  <script type='text/javascript' src='typescript/groupChange.js'></script>
+  <script type='text/javascript' src='typescript/groups.js'></script>
 
   <script type='text/javascript' src='app/attachments.js'></script>
   <script type='text/javascript' src='app/logging.js'></script>
@@ -796,6 +811,7 @@
   <script type='text/javascript' src='typescript/state/ducks/user.js'></script>
   <script type='text/javascript' src='typescript/state/actions.js'></script>
   <script type='text/javascript' src='typescript/state/reducer.js'></script>
+  <script type='text/javascript' src='typescript/state/types.js'></script>
   <script type='text/javascript' src='typescript/state/createStore.js'></script>
   <script type='text/javascript' src='typescript/state/selectors/user.js'></script>
   <script type='text/javascript' src='typescript/state/selectors/conversations.js'></script>
@@ -805,6 +821,7 @@
   <script type='text/javascript' src='typescript/state/selectors/stickers.js'></script>
   <script type='text/javascript' src='typescript/state/smart/CallingDeviceSelection.js'></script>
   <script type='text/javascript' src='typescript/state/smart/CallManager.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/ContactName.js'></script>
   <script type='text/javascript' src='typescript/state/smart/CompositionArea.js'></script>
   <script type='text/javascript' src='typescript/state/smart/ExpiredBuildDialog.js'></script>
   <script type='text/javascript' src='typescript/state/smart/HeroRow.js'></script>
@@ -853,6 +870,8 @@
   
   <script type='text/javascript' src='js/modules/signal.js'></script>
   
+  <script type='text/javascript' src='libtextsecure/libsignal-protocol.js'></script>
+
   <script type='text/javascript' src='preload_utils.js'></script>
   <script type='text/javascript' src='preload.js'></script>
   <script type='text/javascript' src='js/modules/debuglogs.js'></script>
@@ -861,7 +880,6 @@
   <script type='text/javascript' src='js/database.js'></script>
   <script type='text/javascript' src='js/storage.js'></script>
   <script type='text/javascript' src='js/signal_protocol_store.js'></script>
-  <script type='text/javascript' src='libtextsecure/libsignal-protocol.js'></script>
   <script type='text/javascript' src='libtextsecure/protocol_wrapper.js'></script>
   <script type='text/javascript' src='libtextsecure/storage/user.js'></script>
   <script type='text/javascript' src='libtextsecure/storage/unprocessed.js'></script>

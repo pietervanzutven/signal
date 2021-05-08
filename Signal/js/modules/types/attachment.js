@@ -4,21 +4,21 @@
   window.types = window.types || {};
   const exports = window.types.attachment = window.types.attachment || {};
 
-  const is = window.sindresorhus.is;
+  const is = require('@sindresorhus/is');
 
-  const AttachmentTS = window.ts.types.Attachment;
-  const GoogleChrome = require('../../../ts/util/GoogleChrome');
-  const MIME = window.ts.types.MIME;
-  const { toLogFormat } = window.types.errors;
   const {
     arrayBufferToBlob,
     blobToArrayBuffer,
     dataURLToBlob,
-  } = window.blob_util;
-  const { autoOrientImage } = window.auto_orient_image;
+  } = require('blob-util');
+  const AttachmentTS = require('../../../ts/types/Attachment');
+  const GoogleChrome = require('../../../ts/util/GoogleChrome');
+  const MIME = require('../../../ts/types/MIME');
+  const { toLogFormat } = require('./errors');
+  const { autoOrientImage } = require('../auto_orient_image');
   const {
     migrateDataToFileSystem,
-  } = window.types.attachment.migrate_data_to_file_system;
+  } = require('./attachment/migrate_data_to_file_system');
 
   // // Incoming message attachment fields
   // {
@@ -79,10 +79,13 @@
     // retain it but due to reports of data loss, we don’t want to overburden IndexedDB
     // by potentially doubling stored image data.
     // See: https://github.com/signalapp/Signal-Desktop/issues/1589
-    const newAttachment = Object.assign({}, attachment, {
-      data: newDataArrayBuffer,
-      size: newDataArrayBuffer.byteLength,
-    });
+    const newAttachment = Object.assign({},
+      attachment,
+      {
+        data: newDataArrayBuffer,
+        size: newDataArrayBuffer.byteLength,
+      }
+    );
 
     // `digest` is no longer valid for auto-oriented image data, so we discard it:
     delete newAttachment.digest;
@@ -109,9 +112,7 @@
       INVALID_CHARACTERS_PATTERN,
       UNICODE_REPLACEMENT_CHARACTER
     );
-    const newAttachment = Object.assign({}, attachment, {
-      fileName: normalizedFilename,
-    });
+    const newAttachment = Object.assign({}, attachment, { fileName: normalizedFilename });
 
     return newAttachment;
   };
@@ -219,6 +220,9 @@
     };
   };
 
+  exports.isImage = AttachmentTS.isImage;
+  exports.isVideo = AttachmentTS.isVideo;
+  exports.isAudio = AttachmentTS.isAudio;
   exports.isVoiceMessage = AttachmentTS.isVoiceMessage;
   exports.save = AttachmentTS.save;
 

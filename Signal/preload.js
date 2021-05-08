@@ -22,6 +22,8 @@
     window.PROTO_ROOT = '/protos';
     const config = window.app.config || {};
 
+    window.GV2 = false;
+
     let title = config.name;
     if (config.environment !== 'production') {
       title += ` - ${config.environment}`;
@@ -35,7 +37,15 @@
     window.getEnvironment = () => config.environment;
     window.getAppInstance = () => config.appInstance;
     window.getVersion = () => config.version;
-    window.getExpiration = () => config.buildExpiration;
+    window.getExpiration = () => {
+      const remoteBuildExpiration = window.storage.get('remoteBuildExpiration');
+      if (remoteBuildExpiration) {
+        return remoteBuildExpiration < config.buildExpiration
+          ? remoteBuildExpiration
+          : config.buildExpiration;
+      }
+      return config.buildExpiration;
+    };
     window.getUWPVersion = () => config.uwp_version;
     window.getHostName = () => config.hostname;
     window.getServerTrustRoot = () => config.serverTrustRoot;
@@ -315,7 +325,7 @@
 
     // We pull these dependencies in now, from here, because they have Node.js dependencies
 
-    require_logging();
+    require('./js/logging');
 
     if (config.proxyUrl) {
       window.log.info('Using provided proxy url');
@@ -326,6 +336,9 @@
     window.WebAPI = window.textsecure.WebAPI.initialize({
       url: config.serverUrl,
       storageUrl: config.storageUrl,
+      directoryUrl: config.directoryUrl,
+      directoryEnclaveId: config.directoryEnclaveId,
+      directoryTrustAnchor: config.directoryTrustAnchor,
       cdnUrlObject: {
         '0': config.cdnUrl0,
         '2': config.cdnUrl2,
@@ -363,12 +376,14 @@
       paths.forEach(path => {
         const val = _.get(obj, path);
         if (val) {
-          if (!window.isValidGuid(val)) {
+          if (!val || !window.isValidGuid(val)) {
             window.log.warn(
               `Normalizing invalid uuid: ${val} at path ${path} in context "${context}"`
             );
           }
-          _.set(obj, path, val.toLowerCase());
+          if (val && val.toLowerCase) {
+            _.set(obj, path, val.toLowerCase());
+          }
         }
       });
     };
@@ -483,8 +498,8 @@
       Ed25519Verify: wrapWithPromise(externalCurve.Ed25519Verify),
     };
     window.libsignal = window.libsignal || {};
-    window.libsignal.externalCurve = curve ? externalCurve : null;
-    window.libsignal.externalCurveAsync = curve ? externalCurveAsync : null;
+    window.libsignal.externalCurve = externalCurve;
+    window.libsignal.externalCurveAsync = externalCurveAsync;
 
     // Pulling these in separately since they access filesystem, electron
     window.Signal.Backup = require('./js/modules/backup');

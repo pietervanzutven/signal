@@ -70,7 +70,7 @@
         updateConversation,
         updateConversations,
         removeConversation,
-        eraseStorageIdFromConversations,
+        eraseStorageServiceStateFromConversations,
         getAllConversations,
         getAllConversationIds,
         getAllPrivateConversations,
@@ -1585,7 +1585,13 @@
         return row['count(*)'];
     }
     async function saveConversation(data, instance = getInstance()) {
-        const { active_at, e164, groupId, id, members, name, profileFamilyName, profileName, type, uuid, } = data;
+        const { active_at, e164, groupId, id, members, membersV2, name, profileFamilyName, profileName, type, uuid, } = data;
+        // prettier-ignore
+        const membersList = membersV2
+            ? membersV2.map((item) => item.conversationId).join(' ')
+            : members
+                ? members.join(' ')
+                : null;
         await instance.run(`INSERT INTO conversations (
     id,
     json,
@@ -1624,7 +1630,7 @@
             $groupId: groupId,
             $active_at: active_at,
             $type: type,
-            $members: members ? members.join(' ') : null,
+            $members: membersList,
             $name: name,
             $profileName: profileName,
             $profileFamilyName: profileFamilyName,
@@ -1648,7 +1654,13 @@
     saveConversations.needsSerial = true;
     async function updateConversation(data) {
         const db = getInstance();
-        const { id, active_at, type, members, name, profileName, profileFamilyName, e164, uuid, } = data;
+        const { id, active_at, type, members, membersV2, name, profileName, profileFamilyName, e164, uuid, } = data;
+        // prettier-ignore
+        const membersList = membersV2
+            ? membersV2.map((item) => item.conversationId).join(' ')
+            : members
+                ? members.join(' ')
+                : null;
         await db.run(`UPDATE conversations SET
       json = $json,
 
@@ -1669,7 +1681,7 @@
             $uuid: uuid,
             $active_at: active_at,
             $type: type,
-            $members: members ? members.join(' ') : null,
+            $members: membersList,
             $name: name,
             $profileName: profileName,
             $profileFamilyName: profileFamilyName,
@@ -1713,10 +1725,10 @@
         }
         return jsonToObject(row.json);
     }
-    async function eraseStorageIdFromConversations() {
+    async function eraseStorageServiceStateFromConversations() {
         const db = getInstance();
         await db.run(`UPDATE conversations SET
-      json = json_remove(json, '$.storageID');
+      json = json_remove(json, '$.storageID', '$.needsStorageServiceSync', '$.unknownFields');
     `);
     }
     async function getAllConversations() {

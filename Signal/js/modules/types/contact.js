@@ -4,11 +4,11 @@
   window.types = window.types || {};
   const exports = window.types.contact = {};
 
-  const { omit, compact, map } = window.lodash;
+  const { omit, compact, map } = require('lodash');
 
-  const { toLogFormat } = window.types.errors;
-  const { SignalService } = window.ts.protobuf;
-  const { parse: parsePhoneNumber } = window.ts.types.PhoneNumber;
+  const { toLogFormat } = require('./errors');
+  const { SignalService } = require('../../../ts/protobuf');
+  const { parse: parsePhoneNumber } = require('../../../ts/types/PhoneNumber');
 
   const DEFAULT_PHONE_TYPE = SignalService.DataMessage.Contact.Phone.Type.HOME;
   const DEFAULT_EMAIL_TYPE = SignalService.DataMessage.Contact.Email.Type.HOME;
@@ -27,11 +27,17 @@
 
     const contactWithUpdatedAvatar =
       avatar && avatar.avatar
-        ? Object.assign({}, contactShallowCopy, {
-          avatar: Object.assign({}, avatar, {
-            avatar: await upgradeAttachment(avatar.avatar, context),
-          }),
-        })
+        ? Object.assign({},
+          contactShallowCopy,
+          {
+            avatar: Object.assign({},
+              avatar,
+              {
+                avatar: await upgradeAttachment(avatar.avatar, context),
+              }
+            ),
+          }
+        )
         : omit(contactShallowCopy, ['avatar']);
 
     // eliminates empty numbers, emails, and addresses; adds type if not provided
@@ -56,13 +62,12 @@
     const boundParsePhone = phoneNumber =>
       parsePhoneItem(phoneNumber, { regionCode });
 
-    return Object.assign(
-      {},
+    return Object.assign({},
       omit(contact, ['avatar', 'number', 'email', 'address']),
       parseAvatar(contact.avatar),
       createArrayKey('number', compact(map(contact.number, boundParsePhone))),
       createArrayKey('email', compact(map(contact.email, parseEmailItem))),
-      createArrayKey('address', compact(map(contact.address, parseAddress)))
+      createArrayKey('address', compact(map(contact.address, parseAddress))),
     );
   }
 
@@ -100,10 +105,13 @@
       return null;
     }
 
-    return Object.assign({}, item, {
-      type: item.type || DEFAULT_PHONE_TYPE,
-      value: parsePhoneNumber(item.value, { regionCode }),
-    });
+    return Object.assign({},
+      item,
+      {
+        type: item.type || DEFAULT_PHONE_TYPE,
+        value: parsePhoneNumber(item.value, { regionCode }),
+      }
+    );
   }
 
   function parseEmailItem(item) {
@@ -111,9 +119,7 @@
       return null;
     }
 
-    return Object.assign({}, item, {
-      type: item.type || DEFAULT_EMAIL_TYPE,
-    });
+    return Object.assign({}, item, { type: item.type || DEFAULT_EMAIL_TYPE });
   }
 
   function parseAddress(address) {
@@ -133,9 +139,7 @@
       return null;
     }
 
-    return Object.assign({}, address, {
-      type: address.type || DEFAULT_ADDRESS_TYPE,
-    });
+    return Object.assign({}, address, { type: address.type || DEFAULT_ADDRESS_TYPE });
   }
 
   function parseAvatar(avatar) {
@@ -144,9 +148,7 @@
     }
 
     return {
-      avatar: Object.assign({}, avatar, {
-        isProfile: avatar.isProfile || false,
-      }),
+      avatar: Object.assign({}, avatar, { isProfile: avatar.isProfile || false }),
     };
   }
 

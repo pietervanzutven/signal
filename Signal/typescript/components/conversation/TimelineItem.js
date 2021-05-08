@@ -19,11 +19,12 @@
     const SafetyNumberNotification_1 = require("./SafetyNumberNotification");
     const VerificationNotification_1 = require("./VerificationNotification");
     const GroupNotification_1 = require("./GroupNotification");
+    const GroupV2Change_1 = require("./GroupV2Change");
     const ResetSessionNotification_1 = require("./ResetSessionNotification");
     const ProfileChangeNotification_1 = require("./ProfileChangeNotification");
     class TimelineItem extends react_1.default.PureComponent {
         render() {
-            const { conversationId, id, isSelected, item, i18n, selectMessage, } = this.props;
+            const { conversationId, id, isSelected, item, i18n, renderContact, selectMessage, } = this.props;
             if (!item) {
                 // tslint:disable-next-line:no-console
                 console.warn(`TimelineItem: item ${id} provided was falsey`);
@@ -56,6 +57,9 @@
             else if (item.type === 'groupNotification') {
                 notification = (react_1.default.createElement(GroupNotification_1.GroupNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));
             }
+            else if (item.type === 'groupV2Change') {
+                notification = (react_1.default.createElement(GroupV2Change_1.GroupV2Change, Object.assign({ renderContact: renderContact }, item.data, { i18n: i18n })));
+            }
             else if (item.type === 'resetSessionNotification') {
                 notification = (react_1.default.createElement(ResetSessionNotification_1.ResetSessionNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));
             }
@@ -63,7 +67,12 @@
                 notification = (react_1.default.createElement(ProfileChangeNotification_1.ProfileChangeNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));
             }
             else {
-                throw new Error('TimelineItem: Unknown type!');
+                // Weird, yes, but the idea is to get a compile error when we aren't comprehensive
+                //   with our if/else checks above, but also log out the type we don't understand if
+                //   we encounter it at runtime.
+                const unknownItem = item;
+                const asItem = unknownItem;
+                throw new Error(`TimelineItem: Unknown type: ${asItem.type}`);
             }
             return (react_1.default.createElement(InlineNotificationWrapper_1.InlineNotificationWrapper, { id: id, conversationId: conversationId, isSelected: isSelected, selectMessage: selectMessage }, notification));
         }

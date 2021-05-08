@@ -6,10 +6,10 @@
   window.types = window.types || {};
   const exports = window.types.visual_attachment = {};
 
-  const loadImage = window.blueimp_load_image;
-  const { toLogFormat } = window.types.errors;
-  const dataURLToBlobSync = window.blueimp_canvas_to_blob;
-  const { blobToArrayBuffer } = window.blob_util;
+  const loadImage = require('blueimp-load-image');
+  const dataURLToBlobSync = require('blueimp-canvas-to-blob');
+  const { blobToArrayBuffer } = require('blob-util');
+  const { toLogFormat } = require('./errors');
   const {
     arrayBufferToObjectURL,
   } = require('../../../ts/util/arrayBufferToObjectURL');

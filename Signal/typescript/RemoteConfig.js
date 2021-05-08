@@ -35,24 +35,28 @@ require(exports => {
         // The old configuration is not set as the initial value in reduce because
         // flags may have been deleted
         const oldConfig = config;
-        config = newConfig.reduce((previous, { name, enabled }) => {
+        config = newConfig.reduce((acc, { name, enabled, value }) => {
             const previouslyEnabled = lodash_1.get(oldConfig, [name, 'enabled'], false);
+            const previousValue = lodash_1.get(oldConfig, [name, 'value'], undefined);
             // If a flag was previously not enabled and is now enabled, record the time it was enabled
             const enabledAt = previouslyEnabled && enabled ? now : lodash_1.get(oldConfig, [name, 'enabledAt']);
-            const value = {
+            const configValue = {
                 name: name,
                 enabled,
                 enabledAt,
+                value,
             };
+            const hasChanged = previouslyEnabled !== enabled || previousValue !== configValue.value;
             // If enablement changes at all, notify listeners
             const currentListeners = listeners[name] || [];
-            if (previouslyEnabled !== enabled) {
+            if (hasChanged) {
+                window.log.info(`Remote Config: Flag ${name} has changed`);
                 currentListeners.forEach(listener => {
-                    listener(value);
+                    listener(configValue);
                 });
             }
             // Return new configuration object
-            return Object.assign(Object.assign({}, previous), { [name]: value });
+            return Object.assign(Object.assign({}, acc), { [name]: configValue });
         }, {});
         window.storage.put('remoteConfig', config);
     };

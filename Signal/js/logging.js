@@ -1,16 +1,13 @@
-/* eslint-env node */
+require(exports => {
+  /* eslint-env node */
 
-/* eslint strict: ['error', 'never'] */
-/* eslint-disable no-console */
+  /* eslint-disable no-console */
 
-function require_logging() {
-  'use strict';
+  const electron = require('electron');
+  const _ = require('lodash');
 
-  const electron = window.electron;
-  const _ = window.lodash;
-
-  const debuglogs = window.debuglogs;
-  const Privacy = window.privacy;
+  const debuglogs = require('./modules/debuglogs');
+  const Privacy = require('./modules/privacy');
   const { createBatcher } = require('../ts/util/batcher');
 
   const ipc = electron.ipcRenderer;
@@ -150,4 +147,4 @@ function require_logging() {
       `Top-level unhandled promise rejection: ${rejectionEvent.reason}`
     );
   });
-}
+});

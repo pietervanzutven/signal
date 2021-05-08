@@ -6,12 +6,23 @@
     window.ts.state.selectors = window.ts.state.selectors || {};
     const exports = window.ts.state.smart.TimelineItem = {};
 
+    var __importDefault = (this && this.__importDefault) || function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_redux_1 = window.react_redux;
-    const actions_1 = window.ts.state.actions;
-    const TimelineItem_1 = window.ts.components.conversation.TimelineItem;
-    const user_1 = window.ts.state.selectors.user;
-    const conversations_1 = window.ts.state.selectors.conversations;
+    const react_1 = __importDefault(require("react"));
+    const react_redux_1 = require("react-redux");
+    const actions_1 = require("../actions");
+    const TimelineItem_1 = require("../../components/conversation/TimelineItem");
+    const user_1 = require("../selectors/user");
+    const conversations_1 = require("../selectors/conversations");
+    const ContactName_1 = require("./ContactName");
+    // Workaround: A react component's required properties are filtering up through connect()
+    //   https://github.com/DefinitelyTyped/DefinitelyTyped/issues/31363
+    const FilteredSmartContactName = ContactName_1.SmartContactName;
+    function renderContact(conversationId) {
+        return react_1.default.createElement(FilteredSmartContactName, { conversationId: conversationId });
+    }
     const mapStateToProps = (state, props) => {
         const { id, conversationId } = props;
         const messageSelector = conversations_1.getMessageSelector(state);
@@ -23,6 +34,7 @@
             id,
             conversationId,
             isSelected,
+            renderContact,
             i18n: user_1.getIntl(state),
         };
     };
