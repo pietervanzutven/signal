@@ -31,14 +31,6 @@ require(exports => {
             }, ms);
         });
     }
-    function createWriteOperation(storageManifest, newItems, deleteKeys, clearAll = false) {
-        const writeOperation = new window.textsecure.protobuf.WriteOperation();
-        writeOperation.manifest = storageManifest;
-        writeOperation.insertItem = newItems;
-        writeOperation.deleteKey = deleteKeys;
-        writeOperation.clearAll = clearAll;
-        return writeOperation;
-    }
     async function encryptRecord(storageID, storageRecord) {
         const storageItem = new window.textsecure.protobuf.StorageItem();
         const storageKeyBuffer = storageID
@@ -54,6 +46,13 @@ require(exports => {
     }
     function generateStorageID() {
         return Crypto_1.default.getRandomBytes(16);
+    }
+    function isGroupV1(conversation) {
+        const groupID = conversation.get('groupId');
+        if (!groupID) {
+            return false;
+        }
+        return Crypto_2.fromEncodedBinaryToArrayBuffer(groupID).byteLength === 16;
     }
     /* tslint:disable-next-line max-func-body-length */
     async function generateManifest(version, isNewManifest = false) {
@@ -86,19 +85,29 @@ require(exports => {
                 storageRecord.groupV2 = await storageRecordOps_1.toGroupV2Record(conversation);
                 identifier.type = ITEM_TYPE.GROUPV2;
             }
-            else {
+            else if (isGroupV1(conversation)) {
                 storageRecord = new window.textsecure.protobuf.StorageRecord();
                 // eslint-disable-next-line no-await-in-loop
                 storageRecord.groupV1 = await storageRecordOps_1.toGroupV1Record(conversation);
                 identifier.type = ITEM_TYPE.GROUPV1;
+            }
+            else {
+                window.log.info('storageService.generateManifest: unknown conversation', conversation.debugID());
             }
             if (storageRecord) {
                 const isNewItem = isNewManifest || Boolean(conversation.get('needsStorageServiceSync'));
                 const storageID = isNewItem
                     ? Crypto_2.arrayBufferToBase64(generateStorageID())
                     : conversation.get('storageID');
-                // eslint-disable-next-line no-await-in-loop
-                const storageItem = await encryptRecord(storageID, storageRecord);
+                let storageItem;
+                try {
+                    // eslint-disable-next-line no-await-in-loop
+                    storageItem = await encryptRecord(storageID, storageRecord);
+                }
+                catch (err) {
+                    window.log.error(`storageService.generateManifest: encrypt record failed: ${err && err.stack ? err.stack : String(err)}`);
+                    throw err;
+                }
                 identifier.raw = storageItem.key;
                 // When a client needs to update a given record it should create it
                 // under a new key and delete the existing key.
@@ -126,6 +135,52 @@ require(exports => {
             identifier.raw = Crypto_2.base64ToArrayBuffer(record.storageID);
             manifestRecordKeys.add(identifier);
         });
+        // Validate before writing
+        const rawDuplicates = new Set();
+        const typeRawDuplicates = new Set();
+        let hasAccountType = false;
+        manifestRecordKeys.forEach(identifier => {
+            // Ensure there are no duplicate StorageIdentifiers in your manifest
+            //   This can be broken down into two parts:
+            //     There are no duplicate type+raw pairs
+            //     There are no duplicate raw bytes
+            const storageID = Crypto_2.arrayBufferToBase64(identifier.raw);
+            const typeAndRaw = `${identifier.type}+${storageID}`;
+            if (rawDuplicates.has(identifier.raw) ||
+                typeRawDuplicates.has(typeAndRaw)) {
+                window.log.info('storageService.generateManifest: removing duplicate identifier from manifest', storageID);
+                manifestRecordKeys.delete(identifier);
+            }
+            rawDuplicates.add(identifier.raw);
+            typeRawDuplicates.add(typeAndRaw);
+            // Ensure all deletes are not present in the manifest
+            const hasDeleteKey = deleteKeys.find(key => Crypto_2.arrayBufferToBase64(key) === storageID);
+            if (hasDeleteKey) {
+                window.log.info('storageService.generateManifest: removing key which has been deleted', storageID);
+                manifestRecordKeys.delete(identifier);
+            }
+            // Ensure that there is *exactly* one Account type in the manifest
+            if (identifier.type === ITEM_TYPE.ACCOUNT) {
+                if (hasAccountType) {
+                    window.log.info('storageService.generateManifest: removing duplicate account', storageID);
+                    manifestRecordKeys.delete(identifier);
+                }
+                hasAccountType = true;
+            }
+        });
+        rawDuplicates.clear();
+        typeRawDuplicates.clear();
+        const storageKeyDuplicates = new Set();
+        newItems.forEach(storageItem => {
+            // Ensure there are no duplicate StorageIdentifiers in your list of inserts
+            const storageID = storageItem.key;
+            if (storageKeyDuplicates.has(storageID)) {
+                window.log.info('storageService.generateManifest: removing duplicate identifier from inserts', storageID);
+                newItems.delete(storageItem);
+            }
+            storageKeyDuplicates.add(storageID);
+        });
+        storageKeyDuplicates.clear();
         const manifestRecord = new window.textsecure.protobuf.ManifestRecord();
         manifestRecord.version = version;
         manifestRecord.keys = Array.from(manifestRecordKeys);
@@ -150,7 +205,10 @@ require(exports => {
         const credentials = window.storage.get('storageCredentials');
         try {
             window.log.info(`storageService.uploadManifest: inserting ${newItems.size} items, deleting ${deleteKeys.length} keys`);
-            const writeOperation = createWriteOperation(storageManifest, Array.from(newItems), deleteKeys);
+            const writeOperation = new window.textsecure.protobuf.WriteOperation();
+            writeOperation.manifest = storageManifest;
+            writeOperation.insertItem = Array.from(newItems);
+            writeOperation.deleteKey = deleteKeys;
             window.log.info('storageService.uploadManifest: uploading...');
             await window.textsecure.messaging.modifyStorageRecords(writeOperation.toArrayBuffer(), {
                 credentials,
