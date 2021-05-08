@@ -114,7 +114,7 @@
             }));
         }
         renderMenu(triggerId) {
-            const { i18n, isAccepted, isMe, type, isArchived, leftGroup, muteExpirationLabel, onDeleteMessages, onResetSession, onSetDisappearingMessages, onSetMuteNotifications, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onMoveToInbox, timerOptions, } = this.props;
+            const { disableTimerChanges, i18n, isAccepted, isMe, type, isArchived, muteExpirationLabel, onDeleteMessages, onResetSession, onSetDisappearingMessages, onSetMuteNotifications, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onMoveToInbox, timerOptions, } = this.props;
             const muteOptions = [];
             if (muteExpirationLabel) {
                 muteOptions.push(...[
@@ -134,11 +134,11 @@
             const muteTitle = i18n('muteNotificationsTitle');
             const isGroup = type === 'group';
             return (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
-                !leftGroup && isAccepted ? (react_1.default.createElement(react_contextmenu_1.SubMenu, { title: disappearingTitle }, (timerOptions || []).map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                disableTimerChanges ? null : (react_1.default.createElement(react_contextmenu_1.SubMenu, { title: disappearingTitle }, (timerOptions || []).map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     key: item.value, onClick: () => {
                         onSetDisappearingMessages(item.value);
                     }
-                }, item.name))))) : null,
+                }, item.name))))),
                 react_1.default.createElement(react_contextmenu_1.SubMenu, { title: muteTitle }, muteOptions.map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     key: item.name, disabled: item.disabled, onClick: () => {
                         onSetMuteNotifications(item.value);

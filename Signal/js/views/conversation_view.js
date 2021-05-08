@@ -13,7 +13,7 @@
 */
 
 // eslint-disable-next-line func-names
-(function() {
+(function () {
   const FIVE_MINUTES = 1000 * 60 * 5;
 
   window.Whisper = window.Whisper || {};
@@ -215,6 +215,9 @@
   Whisper.MaxAttachmentsToast = Whisper.ToastView.extend({
     template: i18n('maximumAttachments'),
   });
+  Whisper.TimerConflictToast = Whisper.ToastView.extend({
+    template: i18n('GroupV2--timerConflict'),
+  });
 
   Whisper.ConversationLoadingScreen = Whisper.View.extend({
     templateName: 'conversation-loading-screen',
@@ -311,6 +314,13 @@
           this.model.updateSharedGroups.bind(this.model),
           FIVE_MINUTES
         );
+      this.model.throttledFetchLatestGroupV2Data =
+        this.model.throttledFetchLatestGroupV2Data ||
+        _.throttle(
+          this.model.fetchLatestGroupV2Data.bind(this.model),
+          FIVE_MINUTES
+        );
+
       this.debouncedMaybeGrabLinkPreview = _.debounce(
         this.maybeGrabLinkPreview.bind(this),
         200
@@ -386,8 +396,13 @@
           {
             leftGroup: this.model.get('left'),
 
-            expirationSettingName,
+            disableTimerChanges:
+              this.model.get('left') ||
+              !this.model.getAccepted() ||
+              !this.model.canChangeTimer(),
             showBackButton: Boolean(this.panels && this.panels.length),
+
+            expirationSettingName,
             timerOptions: Whisper.ExpirationTimerOptions.map(item => ({
               name: item.getName(),
               value: item.get('seconds'),
@@ -414,24 +429,24 @@
               const conversation = this.model;
               const isVideoCall = false;
 
-            if (await this.isCallSafe()) {
-              await window.Signal.Services.calling.startOutgoingCall(
-                conversation,
-                isVideoCall
-              );
-            }
+              if (await this.isCallSafe()) {
+                await window.Signal.Services.calling.startOutgoingCall(
+                  conversation,
+                  isVideoCall
+                );
+              }
             },
 
             onOutgoingVideoCallInConversation: async () => {
               const conversation = this.model;
               const isVideoCall = true;
 
-            if (await this.isCallSafe()) {
-              await window.Signal.Services.calling.startOutgoingCall(
-                conversation,
-                isVideoCall
-              );
-            }
+              if (await this.isCallSafe()) {
+                await window.Signal.Services.calling.startOutgoingCall(
+                  conversation,
+                  isVideoCall
+                );
+              }
             },
 
             onShowSafetyNumber: () => {
@@ -1844,6 +1859,8 @@
         this.setQuoteMessage(quotedMessageId);
       }
 
+      this.model.throttledFetchLatestGroupV2Data();
+
       const statusPromise = this.model.throttledGetProfiles();
       // eslint-disable-next-line more/no-then
       this.statusFetch = statusPromise.then(() =>
@@ -2069,7 +2086,18 @@
     async showMembers(e, providedMembers, options = {}) {
       _.defaults(options, { needVerify: false });
 
-      const model = providedMembers || this.model.contactCollection;
+      let model = providedMembers || this.model.contactCollection;
+
+      if (!providedMembers && this.model.get('groupVersion') === 2) {
+        model = new Whisper.GroupConversationCollection(
+          this.model.get('membersV2').map(({ conversationId, role }) => ({
+            conversation: ConversationController.get(conversationId),
+            isAdmin:
+              role === window.textsecure.protobuf.Member.Role.ADMINISTRATOR,
+          }))
+        );
+      }
+
       const view = new Whisper.GroupMemberList({
         model,
         // we pass this in to allow nested panels
@@ -2537,11 +2565,17 @@
       this.model.endSession();
     },
 
-    setDisappearingMessages(seconds) {
-      if (seconds > 0) {
-        this.model.updateExpirationTimer(seconds);
-      } else {
-        this.model.updateExpirationTimer(null);
+    async setDisappearingMessages(seconds) {
+      try {
+        if (seconds > 0) {
+          await this.model.updateExpirationTimer(seconds);
+        } else {
+          await this.model.updateExpirationTimer(null);
+        }
+      } catch (error) {
+        if (error.code === 409) {
+          this.showToast(Whisper.TimerConflictToast);
+        }
       }
     },
 
@@ -2607,8 +2641,8 @@
     async sendReactionMessage(messageId, reaction) {
       const messageModel = messageId
         ? await getMessageById(messageId, {
-            Message: Whisper.Message,
-          })
+          Message: Whisper.Message,
+        })
         : null;
 
       try {
@@ -2679,8 +2713,8 @@
     async setQuoteMessage(messageId) {
       const model = messageId
         ? await getMessageById(messageId, {
-            Message: Whisper.Message,
-          })
+          Message: Whisper.Message,
+        })
         : null;
 
       if (model && !model.canReply()) {

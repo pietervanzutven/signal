@@ -1,4 +1,4 @@
-/* global crypto, window */
+/* global window */
 
 (function () {
   'use strict';
@@ -9,12 +9,8 @@
   const {
     arrayBufferToBase64,
     base64ToArrayBuffer,
-  } = window.ts.Crypto;
-
-  async function computeHash(arraybuffer) {
-    const hash = await crypto.subtle.digest({ name: 'SHA-512' }, arraybuffer);
-    return arrayBufferToBase64(hash);
-  }
+    computeHash,
+  } = require('../../../ts/Crypto');
 
   function buildAvatarUpdater({ field }) {
     return async (conversation, data, options = {}) => {

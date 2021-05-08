@@ -21,6 +21,7 @@
     const Crypto_1 = __importDefault(require("./Crypto"));
     const ContactsParser_1 = require("./ContactsParser");
     const Errors_1 = require("./Errors");
+    const groups_1 = require("../groups");
     const RETRY_TIMEOUT = 2 * 60 * 1000;
     class MessageReceiverInner extends EventTarget_1.default {
         constructor(oldUsername, username, password, signalingKey, options) {
@@ -261,6 +262,9 @@
             };
             promise.then(update, update);
             return promise;
+        }
+        hasEmptied() {
+            return Boolean(this.isEmptied);
         }
         onEmpty() {
             const emitEmpty = () => {
@@ -721,11 +725,6 @@
             if (!msg) {
                 throw new Error('MessageReceiver.handleSentMessage: message was falsey!');
             }
-            if (msg.groupV2) {
-                window.log.warn('MessageReceiver.handleSentMessage: Dropping GroupsV2 message');
-                this.removeFromCache(envelope);
-                return;
-            }
             let p = Promise.resolve();
             // eslint-disable-next-line no-bitwise
             if (msg.flags &&
@@ -737,14 +736,16 @@
                 p = this.handleEndSession(identifier);
             }
             return p.then(async () => this.processDecrypted(envelope, msg).then(message => {
-                const groupId = message.group && message.group.id;
+                // prettier-ignore
+                const groupId = this.getGroupId(message);
                 const isBlocked = this.isGroupBlocked(groupId);
                 const { source, sourceUuid } = envelope;
                 const ourE164 = window.textsecure.storage.user.getNumber();
                 const ourUuid = window.textsecure.storage.user.getUuid();
                 const isMe = (source && ourE164 && source === ourE164) ||
                     (sourceUuid && ourUuid && sourceUuid === ourUuid);
-                const isLeavingGroup = Boolean(message.group &&
+                const isLeavingGroup = Boolean(!message.groupV2 &&
+                    message.group &&
                     message.group.type ===
                     window.textsecure.protobuf.GroupContext.Type.QUIT);
                 if (groupId && isBlocked && !(isMe && isLeavingGroup)) {
@@ -778,11 +779,12 @@
             if (!destination) {
                 throw new Error('MessageReceiver.handleDataMessage: source and sourceUuid were falsey');
             }
-            if (msg.groupV2) {
-                window.log.warn('MessageReceiver.handleDataMessage: Dropping GroupsV2 message');
+            if (!window.GV2 && msg.groupV2) {
                 this.removeFromCache(envelope);
+                window.log.info('MessageReceiver.handleDataMessage: dropping GroupV2 message');
                 return;
             }
+            this.deriveGroupsV2Data(msg);
             if (msg.flags &&
                 msg.flags & window.textsecure.protobuf.DataMessage.Flags.END_SESSION) {
                 p = this.handleEndSession(destination);
@@ -800,14 +802,16 @@
                 return this.dispatchAndWait(ev);
             }
             return p.then(async () => this.processDecrypted(envelope, msg).then(message => {
-                const groupId = message.group && message.group.id;
+                // prettier-ignore
+                const groupId = this.getGroupId(message);
                 const isBlocked = this.isGroupBlocked(groupId);
                 const { source, sourceUuid } = envelope;
                 const ourE164 = window.textsecure.storage.user.getNumber();
                 const ourUuid = window.textsecure.storage.user.getUuid();
                 const isMe = (source && ourE164 && source === ourE164) ||
                     (sourceUuid && ourUuid && sourceUuid === ourUuid);
-                const isLeavingGroup = Boolean(message.group &&
+                const isLeavingGroup = Boolean(!message.groupV2 &&
+                    message.group &&
                     message.group.type ===
                     window.textsecure.protobuf.GroupContext.Type.QUIT);
                 if (groupId && isBlocked && !(isMe && isLeavingGroup)) {
@@ -924,27 +928,73 @@
                     return null;
                 }
             }
+            const { groupId, timestamp, action } = typingMessage;
             ev.sender = envelope.source;
             ev.senderUuid = envelope.sourceUuid;
             ev.senderDevice = envelope.sourceDevice;
             ev.typing = {
                 typingMessage,
-                timestamp: typingMessage.timestamp
-                    ? typingMessage.timestamp.toNumber()
-                    : Date.now(),
-                groupId: typingMessage.groupId
-                    ? typingMessage.groupId.toString('binary')
+                timestamp: timestamp ? timestamp.toNumber() : Date.now(),
+                groupId: groupId && groupId.buffer.byteLength < 45
+                    ? groupId.toString('binary')
                     : null,
-                started: typingMessage.action ===
-                    window.textsecure.protobuf.TypingMessage.Action.STARTED,
-                stopped: typingMessage.action ===
-                    window.textsecure.protobuf.TypingMessage.Action.STOPPED,
+                groupV2Id: groupId && groupId.buffer.byteLength >= 45
+                    ? groupId.toString('base64')
+                    : null,
+                started: action === window.textsecure.protobuf.TypingMessage.Action.STARTED,
+                stopped: action === window.textsecure.protobuf.TypingMessage.Action.STOPPED,
             };
             return this.dispatchEvent(ev);
         }
         handleNullMessage(envelope) {
             window.log.info('null message from', this.getEnvelopeId(envelope));
             this.removeFromCache(envelope);
+        }
+        deriveGroupsV2Data(message) {
+            const { groupV2 } = message;
+            if (!groupV2) {
+                return;
+            }
+            if (!lodash_1.isNumber(groupV2.revision)) {
+                throw new Error('deriveGroupsV2Data: revision was not a number');
+            }
+            if (!groupV2.masterKey) {
+                throw new Error('deriveGroupsV2Data: had falsey masterKey');
+            }
+            const toBase64 = MessageReceiverInner.arrayBufferToStringBase64;
+            const masterKey = groupV2.masterKey.toArrayBuffer();
+            const length = masterKey.byteLength;
+            if (length !== groups_1.MASTER_KEY_LENGTH) {
+                throw new Error(`deriveGroupsV2Data: masterKey had length ${length}, expected ${groups_1.MASTER_KEY_LENGTH}`);
+            }
+            const fields = groups_1.deriveGroupFields(masterKey);
+            groupV2.masterKey = toBase64(masterKey);
+            groupV2.secretParams = toBase64(fields.secretParams);
+            groupV2.publicParams = toBase64(fields.publicParams);
+            groupV2.id = toBase64(fields.id);
+            if (groupV2.groupChange) {
+                groupV2.groupChange = groupV2.groupChange.toString('base64');
+            }
+        }
+        getGroupId(message) {
+            if (message.groupV2) {
+                return message.groupV2.id;
+            }
+            if (message.group) {
+                return message.group.id.toString('binary');
+            }
+            return null;
+        }
+        getDestination(sentMessage) {
+            if (sentMessage.message && sentMessage.message.groupV2) {
+                return `groupv2(${sentMessage.message.groupV2.id})`;
+            }
+            else if (sentMessage.message && sentMessage.message.group) {
+                return `group(${sentMessage.message.group.id.toBinary()})`;
+            }
+            else {
+                return sentMessage.destination || sentMessage.destinationUuid;
+            }
         }
         // tslint:disable-next-line cyclomatic-complexity
         async handleSyncMessage(envelope, syncMessage) {
@@ -969,10 +1019,13 @@
                 if (!sentMessage || !sentMessage.message) {
                     throw new Error('MessageReceiver.handleSyncMessage: sync sent message was missing message');
                 }
-                const to = sentMessage.message.group
-                    ? `group(${sentMessage.message.group.id.toBinary()})`
-                    : sentMessage.destination || sentMessage.destinationUuid;
-                window.log.info('sent message to', to, sentMessage.timestamp.toNumber(), 'from', this.getEnvelopeId(envelope));
+                if (!window.GV2 && sentMessage.message.groupV2) {
+                    this.removeFromCache(envelope);
+                    window.log.info('MessageReceiver.handleSyncMessage: dropping GroupV2 message');
+                    return;
+                }
+                this.deriveGroupsV2Data(sentMessage.message);
+                window.log.info('sent message to', this.getDestination(sentMessage), sentMessage.timestamp.toNumber(), 'from', this.getEnvelopeId(envelope));
                 return this.handleSentMessage(envelope, sentMessage);
             }
             else if (syncMessage.contacts) {
@@ -1356,6 +1409,12 @@
                     del.targetSentTimestamp = del.targetSentTimestamp.toNumber();
                 }
             }
+            const { reaction } = decrypted;
+            if (reaction) {
+                if (reaction.targetTimestamp) {
+                    reaction.targetTimestamp = reaction.targetTimestamp.toNumber();
+                }
+            }
             return Promise.resolve(decrypted);
             /* eslint-enable no-bitwise, no-param-reassign */
         }
@@ -1368,10 +1427,11 @@
         constructor(oldUsername, username, password, signalingKey, options) {
             const inner = new MessageReceiverInner(oldUsername, username, password, signalingKey, options);
             this.addEventListener = inner.addEventListener.bind(inner);
-            this.removeEventListener = inner.removeEventListener.bind(inner);
-            this.getStatus = inner.getStatus.bind(inner);
             this.close = inner.close.bind(inner);
             this.downloadAttachment = inner.downloadAttachment.bind(inner);
+            this.getStatus = inner.getStatus.bind(inner);
+            this.hasEmptied = inner.hasEmptied.bind(inner);
+            this.removeEventListener = inner.removeEventListener.bind(inner);
             this.stopProcessing = inner.stopProcessing.bind(inner);
             this.unregisterBatchers = inner.unregisterBatchers.bind(inner);
             inner.connect();

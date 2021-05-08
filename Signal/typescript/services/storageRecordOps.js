@@ -5,9 +5,10 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     /* tslint:disable no-backbone-get-set-outside-model */
-    const lodash_1 = __importDefault(require("lodash"));
+    const lodash_1 = require("lodash");
     const Crypto_1 = require("../Crypto");
     const Client_1 = __importDefault(require("../sql/Client"));
+    const groups_1 = require("../groups");
     const { updateConversation } = Client_1.default;
     function toRecordVerified(verified) {
         const VERIFIED_ENUM = window.textsecure.storage.protocol.VerifiedStatus;
@@ -96,6 +97,19 @@ require(exports => {
         return groupV1Record;
     }
     exports.toGroupV1Record = toGroupV1Record;
+    async function toGroupV2Record(conversation) {
+        const groupV2Record = new window.textsecure.protobuf.GroupV2Record();
+        const masterKey = conversation.get('masterKey');
+        if (masterKey !== undefined) {
+            groupV2Record.masterKey = Crypto_1.base64ToArrayBuffer(masterKey);
+        }
+        groupV2Record.blocked = conversation.isBlocked();
+        groupV2Record.whitelisted = Boolean(conversation.get('profileSharing'));
+        groupV2Record.archived = Boolean(conversation.get('isArchived'));
+        applyUnknownFields(groupV2Record, conversation);
+        return groupV2Record;
+    }
+    exports.toGroupV2Record = toGroupV2Record;
     function applyMessageRequestState(record, conversation) {
         if (record.blocked) {
             conversation.applyMessageRequestResponse(conversation.messageRequestEnum.BLOCK, { fromSync: true, viaStorageServiceSync: true });
@@ -116,7 +130,7 @@ require(exports => {
     }
     function doesRecordHavePendingChanges(mergedRecord, serviceRecord, conversation) {
         const shouldSync = Boolean(conversation.get('needsStorageServiceSync'));
-        const hasConflict = !lodash_1.default.isEqual(mergedRecord, serviceRecord);
+        const hasConflict = !lodash_1.isEqual(mergedRecord, serviceRecord);
         if (shouldSync && !hasConflict) {
             conversation.set({ needsStorageServiceSync: false });
         }
@@ -149,6 +163,57 @@ require(exports => {
         return hasPendingChanges;
     }
     exports.mergeGroupV1Record = mergeGroupV1Record;
+    async function mergeGroupV2Record(storageID, groupV2Record) {
+        window.log.info(`storageService.mergeGroupV2Record: merging ${storageID}`);
+        if (!groupV2Record.masterKey) {
+            window.log.info(`storageService.mergeGroupV2Record: no master key for ${storageID}`);
+            return false;
+        }
+        const masterKeyBuffer = groupV2Record.masterKey.toArrayBuffer();
+        const groupFields = groups_1.deriveGroupFields(masterKeyBuffer);
+        const groupId = Crypto_1.arrayBufferToBase64(groupFields.id);
+        const masterKey = Crypto_1.arrayBufferToBase64(masterKeyBuffer);
+        const secretParams = Crypto_1.arrayBufferToBase64(groupFields.secretParams);
+        const publicParams = Crypto_1.arrayBufferToBase64(groupFields.publicParams);
+        const now = Date.now();
+        const conversationId = window.ConversationController.ensureGroup(groupId, {
+            // We want this conversation to show in the left pane when we first learn about it
+            active_at: now,
+            timestamp: now,
+            // Basic GroupV2 data
+            groupVersion: 2,
+            masterKey,
+            secretParams,
+            publicParams,
+        });
+        const conversation = window.ConversationController.get(conversationId);
+        if (!conversation) {
+            throw new Error(`storageService.mergeGroupV2Record: No conversation for groupv2(${groupId})`);
+        }
+        conversation.maybeRepairGroupV2({
+            masterKey,
+            secretParams,
+            publicParams,
+        });
+        conversation.set({
+            isArchived: Boolean(groupV2Record.archived),
+            storageID,
+        });
+        applyMessageRequestState(groupV2Record, conversation);
+        addUnknownFields(groupV2Record, conversation);
+        const hasPendingChanges = doesRecordHavePendingChanges(await toGroupV2Record(conversation), groupV2Record, conversation);
+        updateConversation(conversation.attributes);
+        const isFirstSync = !lodash_1.isNumber(window.storage.get('manifestVersion'));
+        const dropInitialJoinMessage = isFirstSync;
+        // tslint:disable-next-line no-floating-promises
+        groups_1.waitThenMaybeUpdateGroup({
+            conversation,
+            dropInitialJoinMessage,
+        });
+        window.log.info(`storageService.mergeGroupV2Record: merged ${storageID}`);
+        return hasPendingChanges;
+    }
+    exports.mergeGroupV2Record = mergeGroupV2Record;
     async function mergeContactRecord(storageID, contactRecord) {
         window.log.info(`storageService.mergeContactRecord: merging ${storageID}`);
         window.normalizeUuids(contactRecord, ['serviceUuid'], 'storageService.mergeContactRecord');

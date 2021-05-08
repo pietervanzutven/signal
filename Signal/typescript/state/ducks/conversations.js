@@ -481,14 +481,24 @@
             // Removing it from our caches
             const messageIds = lodash_1.without(existingConversation.messageIds, id);
             const heightChangeMessageIds = lodash_1.without(existingConversation.heightChangeMessageIds, id);
+            let metrics;
+            if (messageIds.length === 0) {
+                metrics = {
+                    totalUnread: 0,
+                };
+            }
+            else {
+                metrics = Object.assign(Object.assign({}, existingConversation.metrics), {
+                    oldest,
+                    newest
+                });
+            }
             return Object.assign(Object.assign({}, state), {
                 messagesLookup: lodash_1.omit(messagesLookup, id), messagesByConversation: {
                     [conversationId]: Object.assign(Object.assign({}, existingConversation), {
                         messageIds,
-                        heightChangeMessageIds, metrics: Object.assign(Object.assign({}, existingConversation.metrics), {
-                            oldest,
-                            newest
-                        })
+                        heightChangeMessageIds,
+                        metrics
                     }),
                 }
             });

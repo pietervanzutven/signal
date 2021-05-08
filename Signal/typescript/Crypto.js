@@ -67,6 +67,11 @@
         return concatenateBytes(part1, part2);
     }
     exports.deriveStickerPackKey = deriveStickerPackKey;
+    async function computeHash(data) {
+        const hash = await crypto.subtle.digest({ name: 'SHA-512' }, data);
+        return arrayBufferToBase64(hash);
+    }
+    exports.computeHash = computeHash;
     // High-level Operations
     async function encryptDeviceName(deviceName, identityPublic) {
         const plaintext = bytesFromString(deviceName);

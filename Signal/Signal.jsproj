@@ -223,6 +223,7 @@
     <Content Include="js\signal_protocol_store.js" />
     <Content Include="js\storage.js" />
     <Content Include="js\views\safety_number_change_dialog_view.js" />
+    <Content Include="node_modules\array-index\index.js" />
     <Content Include="node_modules\blurhash\base83.js" />
     <Content Include="node_modules\blurhash\decode.js" />
     <Content Include="node_modules\blurhash\encode.js" />
@@ -232,6 +233,7 @@
     <Content Include="node_modules\crypto-browserify\index.js" />
     <Content Include="node_modules\crypto\index.js" />
     <Content Include="node_modules\curve25519-n\index.js" />
+    <Content Include="node_modules\es6-symbol\index.js" />
     <Content Include="node_modules\inherits\index.js" />
     <Content Include="node_modules\lodash\assignIn.js" />
     <Content Include="node_modules\lodash\clone.js" />
@@ -258,9 +260,11 @@
     <Content Include="node_modules\react-blurhash\BlurhashCanvas.js" />
     <Content Include="node_modules\react-blurhash\index.js" />
     <Content Include="node_modules\react-tooltip-lite\react-tooltip-lite.min.js" />
+    <Content Include="node_modules\ref-array-napi\index.js" />
     <Content Include="node_modules\ringrtc\index.js" />
     <Content Include="node_modules\util\index.js" />
     <Content Include="node_modules\util\support\isBuffer.js" />
+    <Content Include="protos\Groups.proto" />
     <Content Include="protos\SignalStorage.proto" />
     <Content Include="sounds\navigation-cancel.ogg" />
     <Content Include="sounds\ringtone_minimal.ogg" />
@@ -3621,7 +3625,6 @@
     <Content Include="node_modules\redux-promise-middleware\index.js" />
     <Content Include="node_modules\redux-promise-middleware\isPromise.js" />
     <Content Include="node_modules\redux\redux.js" />
-    <Content Include="node_modules\ref-array-napi\index.js" />
     <Content Include="node_modules\ref-napi\index.js" />
     <Content Include="node_modules\reselect\reselect.js" />
     <Content Include="node_modules\rimraf\index.js" />
@@ -3727,6 +3730,7 @@
     <Content Include="typescript\components\conversation\Emojify.js" />
     <Content Include="typescript\components\conversation\ExpireTimer.js" />
     <Content Include="typescript\components\conversation\GroupNotification.js" />
+    <Content Include="typescript\components\conversation\GroupV2Change.js" />
     <Content Include="typescript\components\conversation\Image.js" />
     <Content Include="typescript\components\conversation\ImageGrid.js" />
     <Content Include="typescript\components\conversation\InlineNotificationWrapper.js" />
@@ -3802,12 +3806,15 @@
     <Content Include="typescript\components\_util.js" />
     <Content Include="typescript\ConversationController.js" />
     <Content Include="typescript\Crypto.js" />
+    <Content Include="typescript\groupChange.js" />
+    <Content Include="typescript\groups.js" />
     <Content Include="typescript\notifications\getStatus.js" />
     <Content Include="typescript\OS.js" />
     <Content Include="typescript\protobuf\protobuf.js" />
     <Content Include="typescript\RemoteConfig.js" />
     <Content Include="typescript\services\bounce.js" />
     <Content Include="typescript\services\calling.js" />
+    <Content Include="typescript\services\groupCredentialFetcher.js" />
     <Content Include="typescript\services\networkObserver.js" />
     <Content Include="typescript\services\notify.js" />
     <Content Include="typescript\services\storage.js" />
@@ -3856,6 +3863,7 @@
     <Content Include="typescript\state\smart\CallingDeviceSelection.js" />
     <Content Include="typescript\state\smart\CallManager.js" />
     <Content Include="typescript\state\smart\CompositionArea.js" />
+    <Content Include="typescript\state\smart\ContactName.js" />
     <Content Include="typescript\state\smart\EmojiPicker.js" />
     <Content Include="typescript\state\smart\ExpiredBuildDialog.js" />
     <Content Include="typescript\state\smart\HeroRow.js" />

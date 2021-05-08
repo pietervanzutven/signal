@@ -8,6 +8,7 @@
     // tslint:disable no-default-export
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = require("lodash");
+    const RemoteConfig_1 = require("../RemoteConfig");
     const Errors_1 = require("./Errors");
     const PhoneNumber_1 = require("../types/PhoneNumber");
     class OutgoingMessage {
@@ -357,30 +358,32 @@
         async sendToIdentifier(providedIdentifier) {
             let identifier = providedIdentifier;
             try {
-                if (window.isValidGuid(identifier)) {
-                    // We're good!
-                }
-                else if (PhoneNumber_1.isValidNumber(identifier)) {
-                    if (!window.textsecure.messaging) {
-                        throw new Error('sendToIdentifier: window.textsecure.messaging is not available!');
+                if (RemoteConfig_1.isEnabled('desktop.cds')) {
+                    if (window.isValidGuid(identifier)) {
+                        // We're good!
                     }
-                    const lookup = await window.textsecure.messaging.getUuidsForE164s([
-                        identifier,
-                    ]);
-                    const uuid = lookup[identifier];
-                    if (uuid) {
-                        this.discoveredIdentifierPairs.push({
-                            uuid,
-                            e164: identifier,
-                        });
-                        identifier = uuid;
+                    else if (PhoneNumber_1.isValidNumber(identifier)) {
+                        if (!window.textsecure.messaging) {
+                            throw new Error('sendToIdentifier: window.textsecure.messaging is not available!');
+                        }
+                        const lookup = await window.textsecure.messaging.getUuidsForE164s([
+                            identifier,
+                        ]);
+                        const uuid = lookup[identifier];
+                        if (uuid) {
+                            this.discoveredIdentifierPairs.push({
+                                uuid,
+                                e164: identifier,
+                            });
+                            identifier = uuid;
+                        }
+                        else {
+                            throw new Errors_1.UnregisteredUserError(identifier, new Error('User is not registered'));
+                        }
                     }
                     else {
-                        throw new Errors_1.UnregisteredUserError(identifier, new Error('User is not registered'));
+                        throw new Error(`sendToIdentifier: identifier ${identifier} was neither a UUID or E164`);
                     }
-                }
-                else {
-                    throw new Error(`sendToIdentifier: identifier ${identifier} was neither a UUID or E164`);
                 }
                 const updateDevices = await this.getStaleDeviceIdsForIdentifier(identifier);
                 await this.getKeysForIdentifier(identifier, updateDevices);

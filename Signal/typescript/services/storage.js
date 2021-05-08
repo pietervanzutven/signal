@@ -62,6 +62,12 @@ require(exports => {
                 storageRecord.contact = await storageRecordOps_1.toContactRecord(conversation);
                 identifier.type = ITEM_TYPE.CONTACT;
             }
+            else if ((conversation.get('groupVersion') || 0) > 1) {
+                storageRecord = new window.textsecure.protobuf.StorageRecord();
+                // eslint-disable-next-line no-await-in-loop
+                storageRecord.groupV1 = await storageRecordOps_1.toGroupV2Record(conversation);
+                identifier.type = ITEM_TYPE.GROUPV2;
+            }
             else {
                 storageRecord = new window.textsecure.protobuf.StorageRecord();
                 // eslint-disable-next-line no-await-in-loop
@@ -220,7 +226,7 @@ require(exports => {
                 await createNewManifest();
                 return;
             }
-            else if (err.code === 204) {
+            if (err.code === 204) {
                 // noNewerManifest we're ok
                 return;
             }
@@ -241,6 +247,11 @@ require(exports => {
             }
             else if (itemType === ITEM_TYPE.GROUPV1 && storageRecord.groupV1) {
                 hasConflict = await storageRecordOps_1.mergeGroupV1Record(storageID, storageRecord.groupV1);
+            }
+            else if (window.GV2 &&
+                itemType === ITEM_TYPE.GROUPV2 &&
+                storageRecord.groupV2) {
+                hasConflict = await storageRecordOps_1.mergeGroupV2Record(storageID, storageRecord.groupV2);
             }
             else if (itemType === ITEM_TYPE.ACCOUNT && storageRecord.account) {
                 hasConflict = await storageRecordOps_1.mergeAccountRecord(storageID, storageRecord.account);
@@ -339,9 +350,7 @@ require(exports => {
                 window.log.info('storageService.processManifest: Conflict found, uploading changes');
                 return true;
             }
-            else {
-                consecutiveConflicts = 0;
-            }
+            consecutiveConflicts = 0;
         }
         catch (err) {
             window.log.error(`storageService.processManifest: failed! ${err && err.stack ? err.stack : String(err)}`);

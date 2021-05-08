@@ -47,6 +47,7 @@ require(exports => {
             // If enablement changes at all, notify listeners
             const currentListeners = listeners[name] || [];
             if (previouslyEnabled !== enabled) {
+                window.log.info(`Remote Config: Flag ${name} has been enabled`);
                 currentListeners.forEach(listener => {
                     listener(value);
                 });
