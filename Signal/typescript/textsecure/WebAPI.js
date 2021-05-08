@@ -20,6 +20,7 @@
     const is_1 = __importDefault(require("@sindresorhus/is"));
     const stickers_1 = require("../../js/modules/stickers");
     const Crypto_1 = require("../Crypto");
+    const getUserAgent_1 = require("../util/getUserAgent");
     const p_queue_1 = __importDefault(require("p-queue"));
     const uuid_1 = require("uuid");
     let sgxConstantCache = null;
@@ -177,7 +178,7 @@
         }
         return true;
     }
-    function _createSocket(url, { certificateAuthority, proxyUrl, }) {
+    function _createSocket(url, { certificateAuthority, proxyUrl, version, }) {
         let requestOptions;
         if (proxyUrl) {
             requestOptions = {
@@ -190,7 +191,10 @@
                 ca: certificateAuthority,
             };
         }
-        return new websocket_1.w3cwebsocket(url, undefined, undefined, undefined, requestOptions, {
+        const headers = {
+            'User-Agent': getUserAgent_1.getUserAgent(version),
+        };
+        return new websocket_1.w3cwebsocket(url, undefined, undefined, headers, requestOptions, {
             maxReceivedFrameSize: 0x210000,
         });
     }
@@ -234,7 +238,7 @@
             const fetchOptions = {
                 method: options.type,
                 body: options.data,
-                headers: Object.assign({ 'User-Agent': `Signal Desktop ${options.version}`, 'X-Signal-Agent': 'OWD' }, options.headers),
+                headers: Object.assign({ 'User-Agent': getUserAgent_1.getUserAgent(options.version), 'X-Signal-Agent': 'OWD' }, options.headers),
                 redirect: options.redirect,
                 agent,
                 // We patched node-fetch to add the ca param; its type definitions don't have it
@@ -272,6 +276,12 @@
             node_fetch_1.default(url, fetchOptions)
                 // tslint:disable-next-line max-func-body-length
                 .then(async (response) => {
+                    // Build expired!
+                    if (response.status === 499) {
+                        window.log.error('Error: build expired');
+                        window.storage.put('remoteBuildExpiration', Date.now());
+                        window.reduxActions.expiration.hydrateExpirationStatus(true);
+                    }
                     let resultPromise;
                     if ((options.responseType === 'json' ||
                         options.responseType === 'jsonwithdetails') &&
@@ -1208,7 +1218,7 @@
                 const login = encodeURIComponent(username);
                 const pass = encodeURIComponent(password);
                 const clientVersion = encodeURIComponent(version);
-                return _createSocket(`${fixedScheme}/v1/websocket/?login=${login}&password=${pass}&agent=OWD&version=${clientVersion}`, { certificateAuthority, proxyUrl });
+                return _createSocket(`${fixedScheme}/v1/websocket/?login=${login}&password=${pass}&agent=OWD&version=${clientVersion}`, { certificateAuthority, proxyUrl, version });
             }
             function getProvisioningSocket() {
                 window.log.info('opening provisioning socket', url);
@@ -1217,7 +1227,7 @@
                     // tslint:disable-next-line no-http-string
                     .replace('http://', 'ws://');
                 const clientVersion = encodeURIComponent(version);
-                return _createSocket(`${fixedScheme}/v1/websocket/provisioning/?agent=OWD&version=${clientVersion}`, { certificateAuthority, proxyUrl });
+                return _createSocket(`${fixedScheme}/v1/websocket/provisioning/?agent=OWD&version=${clientVersion}`, { certificateAuthority, proxyUrl, version });
             }
             async function getDirectoryAuth() {
                 return _ajax({

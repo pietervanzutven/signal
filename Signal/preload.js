@@ -37,7 +37,15 @@
     window.getEnvironment = () => config.environment;
     window.getAppInstance = () => config.appInstance;
     window.getVersion = () => config.version;
-    window.getExpiration = () => config.buildExpiration;
+    window.getExpiration = () => {
+      const remoteBuildExpiration = window.storage.get('remoteBuildExpiration');
+      if (remoteBuildExpiration) {
+        return remoteBuildExpiration < config.buildExpiration
+          ? remoteBuildExpiration
+          : config.buildExpiration;
+      }
+      return config.buildExpiration;
+    };
     window.getUWPVersion = () => config.uwp_version;
     window.getHostName = () => config.hostname;
     window.getServerTrustRoot = () => config.serverTrustRoot;

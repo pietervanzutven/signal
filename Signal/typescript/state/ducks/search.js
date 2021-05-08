@@ -10,11 +10,11 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = window.lodash;
-    const PhoneNumber_1 = window.ts.types.PhoneNumber;
-    const events_1 = window.ts.shims.events;
+    const lodash_1 = require("lodash");
+    const PhoneNumber_1 = require("../../types/PhoneNumber");
+    const events_1 = require("../../shims/events");
     const cleanSearchTerm_1 = require("../../util/cleanSearchTerm");
-    const Client_1 = __importDefault(window.ts.sql.Client);
+    const Client_1 = __importDefault(require("../../sql/Client"));
     const makeLookup_1 = require("../../util/makeLookup");
     const { searchConversations: dataSearchConversations, searchMessages: dataSearchMessages, searchMessagesInConversation, } = Client_1.default;
     // Action Creators

@@ -29,6 +29,8 @@ require(exports => {
     exports.getSafetyNumberPlaceholder = safetyNumber_1.getPlaceholder;
     const getStringForProfileChange_1 = require("./getStringForProfileChange");
     exports.getStringForProfileChange = getStringForProfileChange_1.getStringForProfileChange;
+    const getUserAgent_1 = require("./getUserAgent");
+    exports.getUserAgent = getUserAgent_1.getUserAgent;
     const hasExpired_1 = require("./hasExpired");
     exports.hasExpired = hasExpired_1.hasExpired;
     const isFileDangerous_1 = require("./isFileDangerous");
@@ -39,6 +41,8 @@ require(exports => {
     exports.migrateColor = migrateColor_1.migrateColor;
     const missingCaseError_1 = require("./missingCaseError");
     exports.missingCaseError = missingCaseError_1.missingCaseError;
+    const parseRemoteClientExpiration_1 = require("./parseRemoteClientExpiration");
+    exports.parseRemoteClientExpiration = parseRemoteClientExpiration_1.parseRemoteClientExpiration;
     const zkgroup = __importStar(require("./zkgroup"));
     exports.zkgroup = zkgroup;
 });

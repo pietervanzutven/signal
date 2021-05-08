@@ -3882,6 +3882,7 @@
     <Content Include="typescript\state\smart\TimelineLoadingRow.js" />
     <Content Include="typescript\state\smart\TypingBubble.js" />
     <Content Include="typescript\state\smart\UpdateDialog.js" />
+    <Content Include="typescript\state\types.js" />
     <Content Include="typescript\textsecure\AccountManager.js" />
     <Content Include="typescript\textsecure\ContactsParser.js" />
     <Content Include="typescript\textsecure\Crypto.js" />
@@ -3929,6 +3930,7 @@
     <Content Include="typescript\util\getInitials.js" />
     <Content Include="typescript\util\getMuteOptions.js" />
     <Content Include="typescript\util\getStringForProfileChange.js" />
+    <Content Include="typescript\util\getUserAgent.js" />
     <Content Include="typescript\util\GoogleChrome.js" />
     <Content Include="typescript\util\hasExpired.js" />
     <Content Include="typescript\util\hooks.js" />
@@ -3940,6 +3942,7 @@
     <Content Include="typescript\util\makeLookup.js" />
     <Content Include="typescript\util\migrateColor.js" />
     <Content Include="typescript\util\missingCaseError.js" />
+    <Content Include="typescript\util\parseRemoteClientExpiration.js" />
     <Content Include="typescript\util\registration.js" />
     <Content Include="typescript\util\safetyNumber.js" />
     <Content Include="typescript\util\saveURLAsFile.js" />
