@@ -140,7 +140,7 @@
             }
             if (this.quote) {
                 const { QuotedAttachment } = window.textsecure.protobuf.DataMessage.Quote;
-                const { Quote } = window.textsecure.protobuf.DataMessage;
+                const { BodyRange, Quote } = window.textsecure.protobuf.DataMessage;
                 proto.quote = new Quote();
                 const { quote } = proto;
                 quote.id = this.quote.id;
@@ -154,6 +154,14 @@
                         quotedAttachment.thumbnail = attachment.attachmentPointer;
                     }
                     return quotedAttachment;
+                });
+                const bodyRanges = this.quote.bodyRanges || [];
+                quote.bodyRanges = bodyRanges.map(range => {
+                    const bodyRange = new BodyRange();
+                    bodyRange.start = range.start;
+                    bodyRange.length = range.length;
+                    bodyRange.mentionUuid = range.mentionUuid;
+                    return bodyRange;
                 });
             }
             if (this.expireTimer) {

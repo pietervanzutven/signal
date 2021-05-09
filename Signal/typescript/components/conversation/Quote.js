@@ -140,10 +140,10 @@
             return null;
         }
         renderText() {
-            const { i18n, text, attachment, isIncoming } = this.props;
+            const { bodyRanges, i18n, text, attachment, isIncoming, openConversation, } = this.props;
             if (text) {
                 return (react_1.default.createElement("div", { dir: "auto", className: classnames_1.default('module-quote__primary__text', isIncoming ? 'module-quote__primary__text--incoming' : null) },
-                    react_1.default.createElement(MessageBody_1.MessageBody, { text: text, disableLinks: true, i18n: i18n })));
+                    react_1.default.createElement(MessageBody_1.MessageBody, { disableLinks: true, text: text, i18n: i18n, bodyRanges: bodyRanges, openConversation: openConversation })));
             }
             if (!attachment) {
                 return null;

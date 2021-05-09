@@ -5544,6 +5544,29 @@ img.emoji.jumbo {
 .module-message-body__highlight {
   font-weight: bold; }
 
+.module-message-body__at-mention {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  padding-left: 4px;
+  padding-right: 4px; }
+  .module-message-body__at-mention:focus {
+    border: solid 1px #000000;
+    outline: none; }
+
+.ios-theme .module-message-body__at-mention--incoming {
+  background-color: #c6c6c6; }
+  .dark-theme .ios-theme .module-message-body__at-mention--incoming {
+    background-color: #5e5e5e; }
+
+.module-message-body__at-mention--outgoing {
+  background-color: #c6c6c6; }
+  .dark-theme .module-message-body__at-mention--outgoing {
+    background-color: #5e5e5e; }
+  .ios-theme .module-message-body__at-mention--outgoing {
+    background-color: #1851b4; }
+
 .module-search-results {
   outline: none;
   overflow: hidden;

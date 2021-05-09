@@ -3720,6 +3720,7 @@
     <Content Include="typescript\components\ContactListItem.js" />
     <Content Include="typescript\components\ConversationListItem.js" />
     <Content Include="typescript\components\conversation\AddNewLines.js" />
+    <Content Include="typescript\components\conversation\AtMentionify.js" />
     <Content Include="typescript\components\conversation\AttachmentList.js" />
     <Content Include="typescript\components\conversation\CallingNotification.js" />
     <Content Include="typescript\components\conversation\ContactDetail.js" />

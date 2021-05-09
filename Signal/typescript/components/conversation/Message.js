@@ -591,7 +591,7 @@
                             dateMoment && (react_1.default.createElement("time", { className: "module-message__link-preview__date", dateTime: dateMoment.toISOString() }, dateMoment.format('ll'))))))));
         }
         renderQuote() {
-            const { conversationType, authorColor, direction, disableScroll, i18n, quote, scrollToQuotedMessage, } = this.props;
+            const { conversationType, authorColor, direction, disableScroll, i18n, openConversation, quote, scrollToQuotedMessage, } = this.props;
             if (!quote) {
                 return null;
             }
@@ -606,7 +606,7 @@
                         sentAt: quote.sentAt,
                     });
                 };
-            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: clickHandler, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quoteColor, authorTitle: quote.authorTitle, referencedMessageNotFound: referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
+            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: clickHandler, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quoteColor, authorTitle: quote.authorTitle, bodyRanges: quote.bodyRanges, openConversation: openConversation, referencedMessageNotFound: referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
         }
         renderEmbeddedContact() {
             const { collapseMetadata, contact, conversationType, direction, i18n, showContactDetail, text, } = this.props;
@@ -648,7 +648,7 @@
                 react_1.default.createElement(Avatar_1.Avatar, { avatarPath: authorAvatarPath, color: authorColor, conversationType: "direct", i18n: i18n, name: authorName, phoneNumber: authorPhoneNumber, profileName: authorProfileName, title: authorTitle, size: 28 })));
         }
         renderText() {
-            const { deletedForEveryone, direction, i18n, status, text, textPending, } = this.props;
+            const { bodyRanges, deletedForEveryone, direction, i18n, openConversation, status, text, textPending, } = this.props;
             const contents = deletedForEveryone
                 ? i18n('message--deletedForEveryone')
                 : direction === 'incoming' && status === 'error'
@@ -662,7 +662,7 @@
                     ? 'module-message__text--error'
                     : null)
             },
-                react_1.default.createElement(MessageBody_1.MessageBody, { text: contents || '', i18n: i18n, textPending: textPending })));
+                react_1.default.createElement(MessageBody_1.MessageBody, { bodyRanges: bodyRanges, direction: direction, i18n: i18n, openConversation: openConversation, text: contents || '', textPending: textPending })));
         }
         renderError(isCorrectSide) {
             const { status, direction } = this.props;
