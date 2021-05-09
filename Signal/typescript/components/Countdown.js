@@ -9,7 +9,7 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
+    const react_1 = __importDefault(require("react"));
     const CIRCUMFERENCE = 11.013 * 2 * Math.PI;
     class Countdown extends react_1.default.Component {
         constructor(props) {

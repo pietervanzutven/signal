@@ -25,10 +25,10 @@
     const MessageRequestActions_1 = require("./conversation/MessageRequestActions");
     const lib_1 = require("./stickers/lib");
     const emptyElement = (el) => {
-        // tslint:disable-next-line no-inner-html
+        // Necessary to deal with Backbone views
+        // eslint-disable-next-line no-param-reassign
         el.innerHTML = '';
     };
-    // tslint:disable-next-line max-func-body-length cyclomatic-complexity
     exports.CompositionArea = ({ i18n, attachmentListEl, micCellEl, onChooseAttachment,
         // CompositionInput
         onSubmit, compositionApi, onEditorSizeChange, onEditorStateChange, onTextTooLong, startingText, clearQuotedMessage, getQuotedMessage,
@@ -69,6 +69,8 @@
         // A ref to grab a slot where backbone can insert link previews and attachments
         const attSlotRef = React.useRef(null);
         if (compositionApi) {
+            // Using a React.MutableRefObject, so we need to reassign this prop.
+            // eslint-disable-next-line no-param-reassign
             compositionApi.current = {
                 isDirty: () => dirty,
                 focusInput,
@@ -124,9 +126,9 @@
         })) : null;
         const attButton = (React.createElement("div", { className: "module-composition-area__button-cell" },
             React.createElement("div", { className: "choose-file" },
-                React.createElement("button", { className: "paperclip thumbnail", onClick: onChooseAttachment }))));
+                React.createElement("button", { type: "button", className: "paperclip thumbnail", onClick: onChooseAttachment, "aria-label": i18n('CompositionArea--attach-file') }))));
         const sendButtonFragment = (React.createElement("div", { className: classnames_1.default('module-composition-area__button-cell', large ? 'module-composition-area__button-cell--large-right' : null) },
-            React.createElement("button", { className: "module-composition-area__send-button", onClick: handleForceSend })));
+            React.createElement("button", { type: "button", className: "module-composition-area__send-button", onClick: handleForceSend, "aria-label": i18n('sendMessageToContact') })));
         const stickerButtonPlacement = large ? 'top-start' : 'top-end';
         const stickerButtonFragment = withStickers ? (React.createElement("div", { className: "module-composition-area__button-cell" },
             React.createElement(StickerButton_1.StickerButton, { i18n: i18n, knownPacks: knownPacks, receivedPacks: receivedPacks, installedPack: installedPack, installedPacks: installedPacks, blessedPacks: blessedPacks, recentStickers: recentStickers, clearInstalledStickerPack: clearInstalledStickerPack, onClickAddPack: onClickAddPack, onPickSticker: onPickSticker, clearShowIntroduction: clearShowIntroduction, showPickerHint: showPickerHint, clearShowPickerHint: clearShowPickerHint, position: stickerButtonPlacement }))) : null;
@@ -156,11 +158,11 @@
         return (React.createElement("div", { className: "module-composition-area" },
             React.createElement("div", { className: "module-composition-area__toggle-large" },
                 React.createElement("button", {
-                    className: classnames_1.default('module-composition-area__toggle-large__button', large
+                    type: "button", className: classnames_1.default('module-composition-area__toggle-large__button', large
                         ? 'module-composition-area__toggle-large__button--large-active'
                         : null),
                     // This prevents the user from tabbing here
-                    tabIndex: -1, onClick: handleToggleLarge
+                    tabIndex: -1, onClick: handleToggleLarge, "aria-label": i18n('CompositionArea--expand')
                 })),
             React.createElement("div", { className: classnames_1.default('module-composition-area__row', 'module-composition-area__row--column'), ref: attSlotRef }),
             React.createElement("div", { className: classnames_1.default('module-composition-area__row', large ? 'module-composition-area__row--padded' : null) },

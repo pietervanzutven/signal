@@ -178,7 +178,7 @@
         return (React.createElement("div", { className: "module-shortcut-guide" },
             React.createElement("div", { className: "module-shortcut-guide__header" },
                 React.createElement("div", { className: "module-shortcut-guide__header-text" }, i18n('Keyboard--header')),
-                React.createElement("button", { className: "module-shortcut-guide__header-close", onClick: close, title: i18n('close-popup') })),
+                React.createElement("button", { "aria-label": i18n('close-popup'), className: "module-shortcut-guide__header-close", onClick: close, title: i18n('close-popup'), type: "button" })),
             React.createElement("div", { className: "module-shortcut-guide__scroll-container", ref: focusRef, tabIndex: -1 },
                 React.createElement("div", { className: "module-shortcut-guide__section-container" },
                     React.createElement("div", { className: "module-shortcut-guide__section" },
@@ -201,9 +201,9 @@
                         React.createElement("div", { className: "module-shortcut-guide__section-list" }, CALLING_SHORTCUTS.map((shortcut, index) => renderShortcut(shortcut, index, isMacOS, i18n))))))));
     };
     function renderShortcut(shortcut, index, isMacOS, i18n) {
-        return (React.createElement("div", { key: index, className: "module-shortcut-guide__shortcut", tabIndex: 0 },
+        return (React.createElement("div", { key: index, className: "module-shortcut-guide__shortcut" },
             React.createElement("div", { className: "module-shortcut-guide__shortcut__description" }, i18n(shortcut.description)),
-            React.createElement("div", { className: "module-shortcut-guide__shortcut__key-container" }, shortcut.keys.map((keys, outerIndex) => (React.createElement("div", { key: outerIndex, className: "module-shortcut-guide__shortcut__key-inner-container" }, keys.map((key, mapIndex) => {
+            React.createElement("div", { className: "module-shortcut-guide__shortcut__key-container" }, shortcut.keys.map(keys => (React.createElement("div", { key: `${shortcut.description}--${keys.map(k => k).join('-')}`, className: "module-shortcut-guide__shortcut__key-inner-container" }, keys.map(key => {
                 let label = key;
                 let isSquare = true;
                 if (key === 'commandOrCtrl' && isMacOS) {
@@ -242,7 +242,7 @@
                     isSquare = false;
                 }
                 return (React.createElement("span", {
-                    key: mapIndex, className: classnames_1.default('module-shortcut-guide__shortcut__key', isSquare
+                    key: `shortcut__key--${key}`, className: classnames_1.default('module-shortcut-guide__shortcut__key', isSquare
                         ? 'module-shortcut-guide__shortcut__key--square'
                         : null)
                 }, label));

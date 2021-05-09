@@ -43,7 +43,7 @@
         renderAvatar() {
             const { from, i18n, to } = this.props;
             const isNoteToSelf = from.isMe && to.isMe;
-            return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, color: from.color, conversationType: "direct", i18n: i18n, name: name, noteToSelf: isNoteToSelf, phoneNumber: from.phoneNumber, profileName: from.profileName, title: from.title, size: 52 }));
+            return (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, color: from.color, conversationType: "direct", i18n: i18n, name: from.name, noteToSelf: isNoteToSelf, phoneNumber: from.phoneNumber, profileName: from.profileName, title: from.title, size: 52 }));
         }
         render() {
             const { from, i18n, id, isSelected, conversationId, openConversationInternal, sentAt, snippet, to, } = this.props;
@@ -55,7 +55,7 @@
                     if (openConversationInternal) {
                         openConversationInternal(conversationId, id);
                     }
-                }, className: classnames_1.default('module-message-search-result', isSelected ? 'module-message-search-result--is-selected' : null), "data-id": id
+                }, className: classnames_1.default('module-message-search-result', isSelected ? 'module-message-search-result--is-selected' : null), "data-id": id, type: "button"
             },
                 this.renderAvatar(),
                 react_1.default.createElement("div", { className: "module-message-search-result__text" },

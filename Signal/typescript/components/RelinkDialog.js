@@ -9,7 +9,7 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
+    const react_1 = __importDefault(require("react"));
     exports.RelinkDialog = ({ i18n, isRegistrationDone, relinkDevice, }) => {
         if (isRegistrationDone) {
             return null;
@@ -19,6 +19,6 @@
                 react_1.default.createElement("h3", null, i18n('unlinked')),
                 react_1.default.createElement("span", null, i18n('unlinkedWarning'))),
             react_1.default.createElement("div", { className: "module-left-pane-dialog__actions" },
-                react_1.default.createElement("button", { onClick: relinkDevice }, i18n('relink')))));
+                react_1.default.createElement("button", { onClick: relinkDevice, type: "button" }, i18n('relink')))));
     };
 })();

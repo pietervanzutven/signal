@@ -5,7 +5,6 @@
     window.ts.components = window.ts.components || {};
     const exports = window.ts.components.Lightbox = {};
 
-    // tslint:disable:react-a11y-anchors
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -17,11 +16,11 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const is_1 = __importDefault(window.sindresorhus.is);
+const react_1 = __importDefault(require("react"));
+const classnames_1 = __importDefault(require("classnames"));
+const is_1 = __importDefault(require("@sindresorhus/is"));
     const GoogleChrome = __importStar(require("../util/GoogleChrome"));
-    const MIME = __importStar(window.ts.types.MIME);
+const MIME = __importStar(require("../types/MIME"));
     const formatDuration_1 = require("../util/formatDuration");
     const Colors = {
         ICON_SECONDARY: '#b9b9b9',
@@ -46,6 +45,14 @@
             bottom: 0,
             backgroundColor: 'rgba(0, 0, 0, 0.9)',
         },
+    buttonContainer: {
+        backgroundColor: 'transparent',
+        border: 'none',
+        display: 'flex',
+        flexDirection: 'column',
+        outline: 'none',
+        padding: 0,
+    },
         mainContainer: {
             display: 'flex',
             flexDirection: 'row',
@@ -129,7 +136,7 @@
             paddingRight: '18px',
         },
     };
-    const IconButton = ({ onClick, style, type }) => {
+const IconButton = ({ i18n, onClick, style, type }) => {
         const clickHandler = (event) => {
             event.preventDefault();
             if (!onClick) {
@@ -137,21 +144,22 @@
             }
             onClick();
         };
-        return (react_1.default.createElement("button", { onClick: clickHandler, className: classnames_1.default('iconButton', type), style: style }));
+    return (react_1.default.createElement("button", { onClick: clickHandler, className: classnames_1.default('iconButton', type), style: style, "aria-label": i18n(type), type: "button" }));
     };
     const IconButtonPlaceholder = () => (react_1.default.createElement("div", { style: styles.iconButtonPlaceholder }));
-    const Icon = ({ onClick, url, }) => (react_1.default.createElement("button", { style: Object.assign(Object.assign(Object.assign({}, styles.object), colorSVG(url, Colors.ICON_SECONDARY)), { maxWidth: 200 }), onClick: onClick }));
+const Icon = ({ i18n, onClick, url, }) => (react_1.default.createElement("button", { style: Object.assign(Object.assign(Object.assign({}, styles.object), colorSVG(url, Colors.ICON_SECONDARY)), { maxWidth: 200 }), onClick: onClick, "aria-label": i18n('unsupportedAttachment'), type: "button" }));
     class Lightbox extends react_1.default.Component {
         constructor() {
             super(...arguments);
             this.containerRef = react_1.default.createRef();
             this.videoRef = react_1.default.createRef();
             this.focusRef = react_1.default.createRef();
-            this.state = {};
+        this.previousFocus = null;
             this.renderObject = ({ objectURL, contentType, i18n, isViewOnce, }) => {
                 const isImageTypeSupported = GoogleChrome.isImageTypeSupported(contentType);
                 if (isImageTypeSupported) {
-                    return (react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), style: styles.object, src: objectURL, onClick: this.onObjectClick }));
+                return (react_1.default.createElement("button", { type: "button", style: styles.buttonContainer, onClick: this.onObjectClick },
+                    react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), style: styles.object, src: objectURL })));
                 }
                 const isVideoTypeSupported = GoogleChrome.isVideoTypeSupported(contentType);
                 if (isVideoTypeSupported) {
@@ -162,13 +170,12 @@
                 const isUnsupportedVideoType = !isVideoTypeSupported && MIME.isVideo(contentType);
                 if (isUnsupportedImageType || isUnsupportedVideoType) {
                     const iconUrl = isUnsupportedVideoType
-                        ? 'images/video.svg'
+                    ? 'images/movie.svg'
                         : 'images/image.svg';
-                    return react_1.default.createElement(Icon, { url: iconUrl, onClick: this.onObjectClick });
+                return react_1.default.createElement(Icon, { i18n: i18n, url: iconUrl, onClick: this.onObjectClick });
                 }
-                // tslint:disable-next-line no-console
-                console.log('Lightbox: Unexpected content type', { contentType });
-                return react_1.default.createElement(Icon, { onClick: this.onObjectClick, url: "images/file.svg" });
+            window.log.info('Lightbox: Unexpected content type', { contentType });
+            return (react_1.default.createElement(Icon, { i18n: i18n, onClick: this.onObjectClick, url: "images/file.svg" }));
             };
             this.onClose = () => {
                 const { close } = this.props;
@@ -217,6 +224,13 @@
                 }
                 this.onClose();
             };
+        this.onContainerKeyUp = (event) => {
+            if ((this.containerRef && event.target !== this.containerRef.current) ||
+                event.keyCode !== 27) {
+                return;
+            }
+            this.onClose();
+        };
             this.onObjectClick = (event) => {
                 event.stopPropagation();
                 this.onClose();
@@ -254,11 +268,11 @@
         }
         getVideo() {
             if (!this.videoRef) {
-                return;
+            return null;
             }
             const { current } = this.videoRef;
             if (!current) {
-                return;
+            return null;
             }
             return current;
         }
@@ -268,7 +282,6 @@
                 return;
             }
             if (video.paused) {
-                // tslint:disable-next-line no-floating-promises
                 video.play();
             }
             else {
@@ -278,7 +291,7 @@
         render() {
             const { caption, contentType, i18n, isViewOnce, objectURL, onNext, onPrevious, onSave, } = this.props;
             const { videoTime } = this.state;
-            return (react_1.default.createElement("div", { className: "module-lightbox", style: styles.container, onClick: this.onContainerClick, ref: this.containerRef, role: "dialog" },
+        return (react_1.default.createElement("div", { className: "module-lightbox", style: styles.container, onClick: this.onContainerClick, onKeyUp: this.onContainerKeyUp, ref: this.containerRef, role: "presentation" },
                 react_1.default.createElement("div", { style: styles.mainContainer, tabIndex: -1, ref: this.focusRef },
                     react_1.default.createElement("div", { style: styles.controlsOffsetPlaceholder }),
                     react_1.default.createElement("div", { style: styles.objectContainer },
@@ -287,12 +300,12 @@
                             : null,
                         caption ? react_1.default.createElement("div", { style: styles.caption }, caption) : null),
                     react_1.default.createElement("div", { style: styles.controls },
-                        react_1.default.createElement(IconButton, { type: "close", onClick: this.onClose }),
-                        onSave ? (react_1.default.createElement(IconButton, { type: "save", onClick: onSave, style: styles.saveButton })) : null)),
+                    react_1.default.createElement(IconButton, { i18n: i18n, type: "close", onClick: this.onClose }),
+                    onSave ? (react_1.default.createElement(IconButton, { i18n: i18n, type: "save", onClick: onSave, style: styles.saveButton })) : null)),
                 isViewOnce && videoTime && is_1.default.number(videoTime) ? (react_1.default.createElement("div", { style: styles.navigationContainer },
                     react_1.default.createElement("div", { style: styles.timestampPill }, formatDuration_1.formatDuration(videoTime)))) : (react_1.default.createElement("div", { style: styles.navigationContainer },
-                        onPrevious ? (react_1.default.createElement(IconButton, { type: "previous", onClick: onPrevious })) : (react_1.default.createElement(IconButtonPlaceholder, null)),
-                        onNext ? (react_1.default.createElement(IconButton, { type: "next", onClick: onNext })) : (react_1.default.createElement(IconButtonPlaceholder, null))))));
+                onPrevious ? (react_1.default.createElement(IconButton, { i18n: i18n, type: "previous", onClick: onPrevious })) : (react_1.default.createElement(IconButtonPlaceholder, null)),
+                onNext ? (react_1.default.createElement(IconButton, { i18n: i18n, type: "next", onClick: onNext })) : (react_1.default.createElement(IconButtonPlaceholder, null))))));
         }
     }
     exports.Lightbox = Lightbox;

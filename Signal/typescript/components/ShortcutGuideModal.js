@@ -13,26 +13,24 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const React = __importStar(window.react);
-    const react_dom_1 = window.react_dom;
-    const ShortcutGuide_1 = window.ts.components.ShortcutGuide;
-    exports.ShortcutGuideModal = React.memo(
-        // tslint:disable-next-line max-func-body-length
-        (props) => {
-            const { i18n, close, hasInstalledStickers, platform } = props;
-            const [root, setRoot] = React.useState(null);
-            React.useEffect(() => {
-                const div = document.createElement('div');
-                document.body.appendChild(div);
-                setRoot(div);
-                return () => {
-                    document.body.removeChild(div);
-                };
-            }, []);
-            return root
-                ? react_dom_1.createPortal(React.createElement("div", { className: "module-shortcut-guide-modal" },
-                    React.createElement("div", { className: "module-shortcut-guide-container" },
-                        React.createElement(ShortcutGuide_1.ShortcutGuide, { hasInstalledStickers: hasInstalledStickers, platform: platform, close: close, i18n: i18n }))), root)
-                : null;
-        });
+    const React = __importStar(require("react"));
+    const react_dom_1 = require("react-dom");
+    const ShortcutGuide_1 = require("./ShortcutGuide");
+    exports.ShortcutGuideModal = React.memo((props) => {
+        const { i18n, close, hasInstalledStickers, platform } = props;
+        const [root, setRoot] = React.useState(null);
+        React.useEffect(() => {
+            const div = document.createElement('div');
+            document.body.appendChild(div);
+            setRoot(div);
+            return () => {
+                document.body.removeChild(div);
+            };
+        }, []);
+        return root
+            ? react_dom_1.createPortal(React.createElement("div", { className: "module-shortcut-guide-modal" },
+                React.createElement("div", { className: "module-shortcut-guide-container" },
+                    React.createElement(ShortcutGuide_1.ShortcutGuide, { hasInstalledStickers: hasInstalledStickers, platform: platform, close: close, i18n: i18n }))), root)
+            : null;
+    });
 })();

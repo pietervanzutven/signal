@@ -9,11 +9,8 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * @prettier
-     */
-    const react_1 = __importDefault(window.react);
-    const Lightbox_1 = window.ts.components.Lightbox;
+    const react_1 = __importDefault(require("react"));
+    const Lightbox_1 = require("./Lightbox");
     class LightboxGallery extends react_1.default.Component {
         constructor(props) {
             super(props);
@@ -38,7 +35,7 @@
                 onSave({ attachment, message, index });
             };
             this.state = {
-                selectedIndex: this.props.selectedIndex,
+                selectedIndex: props.selectedIndex,
             };
         }
         render() {
@@ -49,15 +46,15 @@
             const lastIndex = media.length - 1;
             const onPrevious = selectedIndex > firstIndex ? this.handlePrevious : undefined;
             const onNext = selectedIndex < lastIndex ? this.handleNext : undefined;
-            const objectURL = selectedMedia.objectURL || 'images/alert-outline.svg';
+            const objectURL = selectedMedia.objectURL || 'images/full-screen-flow/alert-outline.svg';
             const { attachment } = selectedMedia;
             const saveCallback = onSave ? this.handleSave : undefined;
             const captionCallback = attachment ? attachment.caption : undefined;
             return (react_1.default.createElement(Lightbox_1.Lightbox, { caption: captionCallback, close: close, contentType: selectedMedia.contentType, i18n: i18n, isViewOnce: false, objectURL: objectURL, onNext: onNext, onPrevious: onPrevious, onSave: saveCallback }));
         }
     }
+    exports.LightboxGallery = LightboxGallery;
     LightboxGallery.defaultProps = {
         selectedIndex: 0,
     };
-    exports.LightboxGallery = LightboxGallery;
 })();

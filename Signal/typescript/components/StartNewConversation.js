@@ -14,7 +14,7 @@
     class StartNewConversation extends react_1.default.PureComponent {
         render() {
             const { phoneNumber, i18n, onClick } = this.props;
-            return (react_1.default.createElement("button", { className: "module-start-new-conversation", onClick: onClick },
+            return (react_1.default.createElement("button", { type: "button", className: "module-start-new-conversation", onClick: onClick },
                 react_1.default.createElement(Avatar_1.Avatar, { color: "grey", conversationType: "direct", i18n: i18n, title: phoneNumber, size: 52 }),
                 react_1.default.createElement("div", { className: "module-start-new-conversation__content" },
                     react_1.default.createElement("div", { className: "module-start-new-conversation__number" }, phoneNumber),

@@ -266,6 +266,7 @@
     <Content Include="protos\Groups.proto" />
     <Content Include="protos\SignalStorage.proto" />
     <Content Include="sounds\navigation-cancel.ogg" />
+    <Content Include="sounds\notification.ogg" />
     <Content Include="sounds\ringtone_minimal.ogg" />
     <Content Include="js\util_worker.js" />
     <Content Include="js\views\about_view.js" />

@@ -35,8 +35,7 @@
             return state;
         }
         handleImageError() {
-            // tslint:disable-next-line no-console
-            console.log('Avatar: Image failed to load; failing over to placeholder');
+            window.log.info('Avatar: Image failed to load; failing over to placeholder');
             this.setState({
                 imageBroken: true,
             });
@@ -70,7 +69,7 @@
             }
             let contents;
             if (onClick) {
-                contents = (React.createElement("button", { className: "module-avatar-button", onClick: onClick }, hasImage ? this.renderImage() : this.renderNoImage()));
+                contents = (React.createElement("button", { type: "button", className: "module-avatar-button", onClick: onClick }, hasImage ? this.renderImage() : this.renderNoImage()));
             }
             else {
                 contents = hasImage ? this.renderImage() : this.renderNoImage();
