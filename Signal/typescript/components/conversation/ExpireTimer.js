@@ -10,8 +10,8 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
     const timer_1 = require("../../util/timer");
     class ExpireTimer extends react_1.default.Component {
         constructor(props) {
@@ -24,6 +24,8 @@
             const updateFrequency = Math.max(increment, 500);
             const update = () => {
                 this.setState({
+                    // Used to trigger renders
+                    // eslint-disable-next-line react/no-unused-state
                     lastUpdated: Date.now(),
                 });
             };

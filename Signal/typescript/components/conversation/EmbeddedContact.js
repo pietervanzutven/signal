@@ -10,16 +10,16 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const _contactUtil_1 = window.ts.components.conversation._contactUtil;
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const _contactUtil_1 = require("./_contactUtil");
     class EmbeddedContact extends react_1.default.Component {
         render() {
             const { contact, i18n, isIncoming, onClick, tabIndex, withContentAbove, withContentBelow, } = this.props;
             const module = 'embedded-contact';
             const direction = isIncoming ? 'incoming' : 'outgoing';
             return (react_1.default.createElement("button", {
-                className: classnames_1.default('module-embedded-contact', `module-embedded-contact--${direction}`, withContentAbove
+                type: "button", className: classnames_1.default('module-embedded-contact', `module-embedded-contact--${direction}`, withContentAbove
                     ? 'module-embedded-contact--with-content-above'
                     : null, withContentBelow
                     ? 'module-embedded-contact--with-content-below'

@@ -11,9 +11,9 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const DocumentListItem_1 = window.ts.components.conversation.media_gallery.DocumentListItem;
-    const MediaGridItem_1 = window.ts.components.conversation.media_gallery.MediaGridItem;
+    const react_1 = __importDefault(require("react"));
+    const DocumentListItem_1 = require("./DocumentListItem");
+    const MediaGridItem_1 = require("./MediaGridItem");
     const missingCaseError_1 = require("../../../util/missingCaseError");
     class AttachmentSection extends react_1.default.Component {
         constructor() {

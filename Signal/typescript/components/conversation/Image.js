@@ -10,10 +10,10 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
     const react_blurhash_1 = require("react-blurhash");
-    const Spinner_1 = window.ts.components.Spinner;
+    const Spinner_1 = require("../Spinner");
     class Image extends react_1.default.Component {
         constructor() {
             super(...arguments);
@@ -49,13 +49,16 @@
             const { pending } = attachment || { pending: true };
             return Boolean(onClick && !pending && url);
         }
-        // tslint:disable-next-line max-func-body-length cyclomatic-complexity
         render() {
             const { alt, attachment, blurHash, bottomOverlay, closeButton, curveBottomLeft, curveBottomRight, curveTopLeft, curveTopRight, darkOverlay, height = 0, i18n, noBackground, noBorder, onClickClose, onError, overlayText, playIconOverlay, smallCurveTopLeft, softCorners, tabIndex, url, width = 0, } = this.props;
             const { caption, pending } = attachment || { caption: null, pending: true };
             const canClick = this.canClick();
             const overlayClassName = classnames_1.default('module-image__border-overlay', noBorder ? null : 'module-image__border-overlay--with-border', canClick ? 'module-image__border-overlay--with-click-handler' : null, curveTopLeft ? 'module-image--curved-top-left' : null, curveTopRight ? 'module-image--curved-top-right' : null, curveBottomLeft ? 'module-image--curved-bottom-left' : null, curveBottomRight ? 'module-image--curved-bottom-right' : null, smallCurveTopLeft ? 'module-image--small-curved-top-left' : null, softCorners ? 'module-image--soft-corners' : null, darkOverlay ? 'module-image__border-overlay--dark' : null);
-            const overlay = canClick ? (react_1.default.createElement("button", { className: overlayClassName, onClick: this.handleClick, onKeyDown: this.handleKeyDown, tabIndex: tabIndex })) : null;
+            const overlay = canClick ? (
+                // Not sure what this button does.
+                // eslint-disable-next-line jsx-a11y/control-has-associated-label
+                react_1.default.createElement("button", { type: "button", className: overlayClassName, onClick: this.handleClick, onKeyDown: this.handleKeyDown, tabIndex: tabIndex })) : null;
+            /* eslint-disable no-nested-ternary */
             return (react_1.default.createElement("div", { className: classnames_1.default('module-image', !noBackground ? 'module-image--with-background' : null, curveBottomLeft ? 'module-image--curved-bottom-left' : null, curveBottomRight ? 'module-image--curved-bottom-right' : null, curveTopLeft ? 'module-image--curved-top-left' : null, curveTopRight ? 'module-image--curved-top-right' : null, smallCurveTopLeft ? 'module-image--small-curved-top-left' : null, softCorners ? 'module-image--soft-corners' : null) },
                 pending ? (react_1.default.createElement("div", {
                     className: "module-image__loading-placeholder", style: {
@@ -73,14 +76,15 @@
                 overlayText ? (react_1.default.createElement("div", { className: "module-image__text-container", style: { lineHeight: `${height}px` } }, overlayText)) : null,
                 overlay,
                 closeButton ? (react_1.default.createElement("button", {
-                    onClick: (e) => {
+                    type: "button", onClick: (e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         if (onClickClose) {
                             onClickClose(attachment);
                         }
-                    }, className: "module-image__close-button", title: i18n('remove-attachment')
+                    }, className: "module-image__close-button", title: i18n('remove-attachment'), "aria-label": i18n('remove-attachment')
                 })) : null));
+            /* eslint-enable no-nested-ternary */
         }
     }
     exports.Image = Image;

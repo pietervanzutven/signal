@@ -11,8 +11,8 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const moment_1 = __importDefault(window.moment);
-    const lodash_1 = window.lodash;
+    const moment_1 = __importDefault(require("moment"));
+    const lodash_1 = require("lodash");
     exports.groupMediaItemsByDate = (timestamp, mediaItems) => {
         const referenceDateTime = moment_1.default.utc(timestamp);
         const sortedMediaItem = lodash_1.sortBy(mediaItems, mediaItem => {
@@ -44,11 +44,13 @@
             case 'yesterday':
             case 'thisWeek':
             case 'thisMonth':
+                // eslint-disable-next-line consistent-return
                 return {
                     type: firstMediaItemWithSection.type,
                     mediaItems,
                 };
             case 'yearMonth':
+                // eslint-disable-next-line consistent-return
                 return {
                     type: firstMediaItemWithSection.type,
                     year: firstMediaItemWithSection.year,
@@ -60,6 +62,7 @@
                 // error TS2345: Argument of type 'any' is not assignable to parameter
                 // of type 'never'.
                 // return missingCaseError(firstMediaItemWithSection.type);
+                // eslint-disable-next-line no-useless-return
                 return;
         }
     };

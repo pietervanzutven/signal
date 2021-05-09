@@ -11,11 +11,10 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const moment_1 = __importDefault(window.moment);
-    // tslint:disable-next-line:match-default-export-name
-    const filesize_1 = __importDefault(window.filesize);
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const moment_1 = __importDefault(require("moment"));
+    const filesize_1 = __importDefault(require("filesize"));
     class DocumentListItem extends react_1.default.Component {
         render() {
             const { shouldShowSeparator } = this.props;
@@ -26,8 +25,8 @@
             }, this.renderContent()));
         }
         renderContent() {
-            const { fileName, fileSize, timestamp } = this.props;
-            return (react_1.default.createElement("button", { className: "module-document-list-item__content", onClick: this.props.onClick },
+            const { fileName, fileSize, onClick, timestamp } = this.props;
+            return (react_1.default.createElement("button", { type: "button", className: "module-document-list-item__content", onClick: onClick },
                 react_1.default.createElement("div", { className: "module-document-list-item__icon" }),
                 react_1.default.createElement("div", { className: "module-document-list-item__metadata" },
                     react_1.default.createElement("span", { className: "module-document-list-item__file-name" }, fileName),
@@ -35,8 +34,8 @@
                 react_1.default.createElement("div", { className: "module-document-list-item__date" }, moment_1.default(timestamp).format('ddd, MMM D, Y'))));
         }
     }
+    exports.DocumentListItem = DocumentListItem;
     DocumentListItem.defaultProps = {
         shouldShowSeparator: true,
     };
-    exports.DocumentListItem = DocumentListItem;
 })();

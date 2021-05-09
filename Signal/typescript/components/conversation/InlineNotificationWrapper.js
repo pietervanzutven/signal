@@ -10,7 +10,7 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
+    const react_1 = __importDefault(require("react"));
     class InlineNotificationWrapper extends react_1.default.Component {
         constructor() {
             super(...arguments);
@@ -22,6 +22,7 @@
                 }
             };
             this.handleFocus = () => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 if (window.getInteractionMode() === 'keyboard') {
                     this.setSelected();
@@ -41,13 +42,18 @@
             }
         }
         componentDidUpdate(prevProps) {
-            if (!prevProps.isSelected && this.props.isSelected) {
+            const { isSelected } = this.props;
+            if (!prevProps.isSelected && isSelected) {
                 this.setFocus();
             }
         }
         render() {
             const { children } = this.props;
-            return (react_1.default.createElement("div", { className: "module-inline-notification-wrapper", tabIndex: 0, ref: this.focusRef, onFocus: this.handleFocus }, children));
+            return (react_1.default.createElement("div", {
+                className: "module-inline-notification-wrapper",
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+                tabIndex: 0, ref: this.focusRef, onFocus: this.handleFocus
+            }, children));
         }
     }
     exports.InlineNotificationWrapper = InlineNotificationWrapper;

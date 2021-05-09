@@ -11,8 +11,8 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
     const GoogleChrome_1 = require("../../../util/GoogleChrome");
     class MediaGridItem extends react_1.default.Component {
         constructor(props) {
@@ -23,8 +23,7 @@
             this.onImageErrorBound = this.onImageError.bind(this);
         }
         onImageError() {
-            // tslint:disable-next-line no-console
-            console.log('MediaGridItem: Image failed to load; failing over to placeholder');
+            window.log.info('MediaGridItem: Image failed to load; failing over to placeholder');
             this.setState({
                 imageBroken: true,
             });
@@ -42,7 +41,7 @@
                 }
                 return (react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), className: "module-media-grid-item__image", src: mediaItem.thumbnailObjectUrl, onError: this.onImageErrorBound }));
             }
-            else if (contentType && GoogleChrome_1.isVideoTypeSupported(contentType)) {
+            if (contentType && GoogleChrome_1.isVideoTypeSupported(contentType)) {
                 if (imageBroken || !mediaItem.thumbnailObjectUrl) {
                     return (react_1.default.createElement("div", { className: classnames_1.default('module-media-grid-item__icon', 'module-media-grid-item__icon-video') }));
                 }
@@ -54,7 +53,8 @@
             return (react_1.default.createElement("div", { className: classnames_1.default('module-media-grid-item__icon', 'module-media-grid-item__icon-generic') }));
         }
         render() {
-            return (react_1.default.createElement("button", { className: "module-media-grid-item", onClick: this.props.onClick }, this.renderContent()));
+            const { onClick } = this.props;
+            return (react_1.default.createElement("button", { type: "button", className: "module-media-grid-item", onClick: onClick }, this.renderContent()));
         }
     }
     exports.MediaGridItem = MediaGridItem;

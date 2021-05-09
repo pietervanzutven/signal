@@ -6,7 +6,6 @@
     window.ts.components.conversation = window.ts.components.conversation || {};
     const exports = window.ts.components.conversation.Quote = {};
 
-    // tslint:disable:react-this-binding-issue
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -20,8 +19,8 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
     const classnames_1 = __importDefault(require("classnames"));
-    const MIME = __importStar(require("../../../ts/types/MIME"));
-    const GoogleChrome = __importStar(require("../../../ts/util/GoogleChrome"));
+    const MIME = __importStar(require("../../types/MIME"));
+    const GoogleChrome = __importStar(require("../../util/GoogleChrome"));
     const MessageBody_1 = require("./MessageBody");
     const ContactName_1 = require("./ContactName");
     function validateQuote(quote) {
@@ -37,7 +36,7 @@
         if (thumbnail && thumbnail.objectUrl) {
             return thumbnail.objectUrl;
         }
-        return;
+        return undefined;
     }
     function getTypeLabel({ i18n, contentType, isVoiceMessage, }) {
         if (GoogleChrome.isVideoTypeSupported(contentType)) {
@@ -49,17 +48,11 @@
         if (MIME.isAudio(contentType) && isVoiceMessage) {
             return i18n('voiceMessage');
         }
-        if (MIME.isAudio(contentType)) {
-            return i18n('audio');
-        }
-        return;
+        return MIME.isAudio(contentType) ? i18n('audio') : undefined;
     }
     class Quote extends react_1.default.Component {
-        constructor() {
-            super(...arguments);
-            this.state = {
-                imageBroken: false,
-            };
+        constructor(props) {
+            super(props);
             this.handleKeyDown = (event) => {
                 const { onClick } = this.props;
                 // This is important to ensure that using this quote to navigate to the referenced
@@ -79,11 +72,13 @@
                 }
             };
             this.handleImageError = () => {
-                // tslint:disable-next-line no-console
-                console.log('Message: Image failed to load; failing over to placeholder');
+                window.console.info('Message: Image failed to load; failing over to placeholder');
                 this.setState({
                     imageBroken: true,
                 });
+            };
+            this.state = {
+                imageBroken: false,
             };
         }
         renderImage(url, i18n, icon) {
@@ -94,6 +89,7 @@
                 react_1.default.createElement("img", { src: url, alt: i18n('quoteThumbnailAlt'), onError: this.handleImageError }),
                 iconElement));
         }
+        // eslint-disable-next-line class-methods-use-this
         renderIcon(icon) {
             return (react_1.default.createElement("div", { className: "module-quote__icon-container" },
                 react_1.default.createElement("div", { className: "module-quote__icon-container__inner" },
@@ -103,7 +99,7 @@
         renderGenericFile() {
             const { attachment, isIncoming } = this.props;
             if (!attachment) {
-                return;
+                return null;
             }
             const { fileName, contentType } = attachment;
             const isGenericFile = !GoogleChrome.isVideoTypeSupported(contentType) &&
@@ -156,7 +152,7 @@
             return null;
         }
         renderClose() {
-            const { onClose } = this.props;
+            const { i18n, onClose } = this.props;
             if (!onClose) {
                 return null;
             }
@@ -177,7 +173,7 @@
                 react_1.default.createElement("div", {
                     tabIndex: 0,
                     // We can't be a button because the overall quote is a button; can't nest them
-                    role: "button", className: "module-quote__close-button", onKeyDown: keyDownHandler, onClick: clickHandler
+                    role: "button", className: "module-quote__close-button", "aria-label": i18n('close'), onKeyDown: keyDownHandler, onClick: clickHandler
                 })));
         }
         renderAuthor() {
@@ -208,7 +204,7 @@
             }
             return (react_1.default.createElement("div", { className: classnames_1.default('module-quote-container', withContentAbove ? 'module-quote-container--with-content-above' : null) },
                 react_1.default.createElement("button", {
-                    onClick: this.handleClick, onKeyDown: this.handleKeyDown, className: classnames_1.default('module-quote', isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing', isIncoming
+                    type: "button", onClick: this.handleClick, onKeyDown: this.handleKeyDown, className: classnames_1.default('module-quote', isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing', isIncoming
                         ? `module-quote--incoming-${authorColor}`
                         : `module-quote--outgoing-${authorColor}`, !onClick ? 'module-quote--no-click' : null, withContentAbove ? 'module-quote--with-content-above' : null, referencedMessageNotFound
                         ? 'module-quote--with-reference-warning'

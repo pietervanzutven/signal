@@ -29,8 +29,8 @@
             }
         }
         renderBackButton() {
-            const { onGoBack, showBackButton } = this.props;
-            return (react_1.default.createElement("button", { onClick: onGoBack, className: classnames_1.default('module-conversation-header__back-icon', showBackButton ? 'module-conversation-header__back-icon--show' : null), disabled: !showBackButton }));
+            const { i18n, onGoBack, showBackButton } = this.props;
+            return (react_1.default.createElement("button", { type: "button", onClick: onGoBack, className: classnames_1.default('module-conversation-header__back-icon', showBackButton ? 'module-conversation-header__back-icon--show' : null), disabled: !showBackButton, "aria-label": i18n('goBack') }));
         }
         renderTitle() {
             const { name, phoneNumber, title, type, i18n, isMe, profileName, isVerified, } = this.props;
@@ -69,48 +69,49 @@
                 react_1.default.createElement("div", { className: "module-conversation-header__expiration__setting" }, expirationSettingName)));
         }
         renderMoreButton(triggerId) {
-            const { showBackButton } = this.props;
+            const { i18n, showBackButton } = this.props;
             return (react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, { id: triggerId, ref: this.menuTriggerRef },
                 react_1.default.createElement("button", {
-                    onClick: this.showMenuBound, className: classnames_1.default('module-conversation-header__more-button', showBackButton
+                    type: "button", onClick: this.showMenuBound, className: classnames_1.default('module-conversation-header__more-button', showBackButton
                         ? null
-                        : 'module-conversation-header__more-button--show'), disabled: showBackButton
+                        : 'module-conversation-header__more-button--show'), disabled: showBackButton, "aria-label": i18n('moreInfo')
                 })));
         }
         renderSearchButton() {
-            const { onSearchInConversation, showBackButton } = this.props;
+            const { i18n, onSearchInConversation, showBackButton } = this.props;
             return (react_1.default.createElement("button", {
-                onClick: onSearchInConversation, className: classnames_1.default('module-conversation-header__search-button', showBackButton
+                type: "button", onClick: onSearchInConversation, className: classnames_1.default('module-conversation-header__search-button', showBackButton
                     ? null
-                    : 'module-conversation-header__search-button--show'), disabled: showBackButton
+                    : 'module-conversation-header__search-button--show'), disabled: showBackButton, "aria-label": i18n('search')
             }));
         }
         renderOutgoingAudioCallButton() {
             if (!window.CALLING) {
                 return null;
             }
-            if (this.props.type === 'group' || this.props.isMe) {
+            const { i18n, isMe, onOutgoingAudioCallInConversation, showBackButton, type, } = this.props;
+            if (type === 'group' || isMe) {
                 return null;
             }
-            const { onOutgoingAudioCallInConversation, showBackButton } = this.props;
             return (react_1.default.createElement("button", {
-                onClick: onOutgoingAudioCallInConversation, className: classnames_1.default('module-conversation-header__audio-calling-button', showBackButton
+                type: "button", onClick: onOutgoingAudioCallInConversation, className: classnames_1.default('module-conversation-header__audio-calling-button', showBackButton
                     ? null
-                    : 'module-conversation-header__audio-calling-button--show'), disabled: showBackButton
+                    : 'module-conversation-header__audio-calling-button--show'), disabled: showBackButton, "aria-label": i18n('makeOutgoingCall')
             }));
         }
         renderOutgoingVideoCallButton() {
             if (!window.CALLING) {
                 return null;
             }
-            if (this.props.type === 'group' || this.props.isMe) {
+            const { i18n, isMe, type } = this.props;
+            if (type === 'group' || isMe) {
                 return null;
             }
             const { onOutgoingVideoCallInConversation, showBackButton } = this.props;
             return (react_1.default.createElement("button", {
-                onClick: onOutgoingVideoCallInConversation, className: classnames_1.default('module-conversation-header__video-calling-button', showBackButton
+                type: "button", onClick: onOutgoingVideoCallInConversation, className: classnames_1.default('module-conversation-header__video-calling-button', showBackButton
                     ? null
-                    : 'module-conversation-header__video-calling-button--show'), disabled: showBackButton
+                    : 'module-conversation-header__video-calling-button--show'), disabled: showBackButton, "aria-label": i18n('makeOutgoingVideoCall')
             }));
         }
         renderMenu(triggerId) {
@@ -130,7 +131,9 @@
                 ]);
             }
             muteOptions.push(...getMuteOptions_1.getMuteOptions(i18n));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const disappearingTitle = i18n('disappearingMessages');
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const muteTitle = i18n('muteNotificationsTitle');
             const isGroup = type === 'group';
             return (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },

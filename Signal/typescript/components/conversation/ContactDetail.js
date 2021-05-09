@@ -10,10 +10,10 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const Contact_1 = window.ts.types.Contact;
+    const react_1 = __importDefault(require("react"));
+    const Contact_1 = require("../../types/Contact");
     const missingCaseError_1 = require("../../util/missingCaseError");
-    const _contactUtil_1 = window.ts.components.conversation._contactUtil;
+    const _contactUtil_1 = require("./_contactUtil");
     function getLabelForEmail(method, i18n) {
         switch (method.type) {
             case Contact_1.ContactFormType.CUSTOM:
@@ -55,6 +55,7 @@
         }
     }
     class ContactDetail extends react_1.default.Component {
+        // eslint-disable-next-line class-methods-use-this
         renderSendMessage({ hasSignalAccount, i18n, onSendMessage, }) {
             if (!hasSignalAccount) {
                 return null;
@@ -65,14 +66,15 @@
                 e.stopPropagation();
                 onSendMessage();
             };
-            return (react_1.default.createElement("button", { className: "module-contact-detail__send-message", onClick: onClick },
+            return (react_1.default.createElement("button", { type: "button", className: "module-contact-detail__send-message", onClick: onClick },
                 react_1.default.createElement("div", { className: "module-contact-detail__send-message__inner" },
                     react_1.default.createElement("div", { className: "module-contact-detail__send-message__bubble-icon" }),
                     i18n('sendMessageToContact'))));
         }
+        // eslint-disable-next-line class-methods-use-this
         renderEmail(items, i18n) {
             if (!items || items.length === 0) {
-                return;
+                return undefined;
             }
             return items.map((item) => {
                 return (react_1.default.createElement("div", { key: item.value, className: "module-contact-detail__additional-contact" },
@@ -80,9 +82,10 @@
                     item.value));
             });
         }
+        // eslint-disable-next-line class-methods-use-this
         renderPhone(items, i18n) {
             if (!items || items.length === 0) {
-                return;
+                return undefined;
             }
             return items.map((item) => {
                 return (react_1.default.createElement("div", { key: item.value, className: "module-contact-detail__additional-contact" },
@@ -90,12 +93,14 @@
                     item.value));
             });
         }
+        // eslint-disable-next-line class-methods-use-this
         renderAddressLine(value) {
             if (!value) {
-                return;
+                return undefined;
             }
             return react_1.default.createElement("div", null, value);
         }
+        // eslint-disable-next-line class-methods-use-this
         renderPOBox(poBox, i18n) {
             if (!poBox) {
                 return null;
@@ -105,6 +110,7 @@
                 " ",
                 poBox));
         }
+        // eslint-disable-next-line class-methods-use-this
         renderAddressLineTwo(address) {
             if (address.city || address.region || address.postcode) {
                 return (react_1.default.createElement("div", null,
@@ -118,16 +124,18 @@
         }
         renderAddresses(addresses, i18n) {
             if (!addresses || addresses.length === 0) {
-                return;
+                return undefined;
             }
             return addresses.map((address, index) => {
-                return (react_1.default.createElement("div", { key: index, className: "module-contact-detail__additional-contact" },
-                    react_1.default.createElement("div", { className: "module-contact-detail__additional-contact__type" }, getLabelForAddress(address, i18n)),
-                    this.renderAddressLine(address.street),
-                    this.renderPOBox(address.pobox, i18n),
-                    this.renderAddressLine(address.neighborhood),
-                    this.renderAddressLineTwo(address),
-                    this.renderAddressLine(address.country)));
+                return (
+                    // eslint-disable-next-line react/no-array-index-key
+                    react_1.default.createElement("div", { key: index, className: "module-contact-detail__additional-contact" },
+                        react_1.default.createElement("div", { className: "module-contact-detail__additional-contact__type" }, getLabelForAddress(address, i18n)),
+                        this.renderAddressLine(address.street),
+                        this.renderPOBox(address.pobox, i18n),
+                        this.renderAddressLine(address.neighborhood),
+                        this.renderAddressLineTwo(address),
+                        this.renderAddressLine(address.country)));
             });
         }
         render() {

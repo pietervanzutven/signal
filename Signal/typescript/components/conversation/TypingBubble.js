@@ -18,7 +18,7 @@
         renderAvatar() {
             const { avatarPath, color, name, phoneNumber, profileName, title, conversationType, i18n, } = this.props;
             if (conversationType !== 'group') {
-                return;
+                return null;
             }
             return (react_1.default.createElement("div", { className: "module-message__author-avatar" },
                 react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, size: 28 })));

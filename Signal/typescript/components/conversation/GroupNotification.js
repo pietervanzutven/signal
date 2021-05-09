@@ -37,6 +37,7 @@
                     if (!contacts || !contacts.length) {
                         throw new Error('Group update is missing contacts');
                     }
+                    // eslint-disable-next-line no-case-declarations
                     const otherPeopleNotifMsg = otherPeople.length === 1
                         ? 'joinedTheGroup'
                         : 'multipleJoinedTheGroup';
@@ -51,9 +52,11 @@
                     if (!contacts || !contacts.length) {
                         throw new Error('Group update is missing contacts');
                     }
+                    // eslint-disable-next-line no-case-declarations
                     const leftKey = contacts.length > 1 ? 'multipleLeftTheGroup' : 'leftTheGroup';
                     return (react_1.default.createElement(Intl_1.Intl, { i18n: i18n, id: leftKey, components: [otherPeopleWithCommas] }));
                 case 'general':
+                    // eslint-disable-next-line consistent-return
                     return;
                 default:
                     throw missingCaseError_1.missingCaseError(type);
@@ -70,7 +73,9 @@
                 isLeftOnly ? null : (react_1.default.createElement(react_1.default.Fragment, null,
                     fromLabel,
                     react_1.default.createElement("br", null))),
-                (changes || []).map((change, index) => (react_1.default.createElement("div", { key: index, className: "module-group-notification__change" }, this.renderChange(change, from))))));
+                (changes || []).map((change, i) => (
+                    // eslint-disable-next-line react/no-array-index-key
+                    react_1.default.createElement("div", { key: i, className: "module-group-notification__change" }, this.renderChange(change, from))))));
         }
     }
     exports.GroupNotification = GroupNotification;

@@ -25,7 +25,10 @@ require(exports => {
                 renderContact,
                 renderString: renderStringToIntl,
                 RoleEnum,
-            }).map((item, index) => (React.createElement("div", { key: index }, item)))));
+            }).map((item, index) => (
+                // Difficult to find a unique key for this type
+                // eslint-disable-next-line react/no-array-index-key
+                React.createElement("div", { key: index }, item)))));
     }
     exports.GroupV2Change = GroupV2Change;
 });

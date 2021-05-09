@@ -32,9 +32,10 @@
             this.offsetFromBottom = 0;
             this.resizeFlag = false;
             this.listRef = react_1.default.createRef();
+            this.loadCountdownTimeout = null;
             this.getList = () => {
                 if (!this.listRef) {
-                    return;
+                    return null;
                 }
                 const { current } = this.listRef;
                 return current;
@@ -44,13 +45,18 @@
                 if (!list) {
                     return;
                 }
+                // eslint-disable-next-line consistent-return
                 return list.Grid;
             };
             this.getScrollContainer = () => {
+                // We're using an internal variable (_scrollingContainer)) here,
+                // so cannot rely on the public type.
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const grid = this.getGrid();
                 if (!grid) {
                     return;
                 }
+                // eslint-disable-next-line consistent-return
                 return grid._scrollingContainer;
             };
             this.scrollToRow = (row) => {
@@ -79,12 +85,17 @@
                 const { clientHeight, scrollHeight, scrollTop } = scrollContainer;
                 const newOffsetFromBottom = Math.max(0, scrollHeight - clientHeight - scrollTop);
                 const delta = newOffsetFromBottom - this.offsetFromBottom;
-                grid.scrollToPosition({ scrollTop: scrollContainer.scrollTop + delta });
+                // TODO: DESKTOP-687
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                grid.scrollToPosition({
+                    scrollTop: scrollContainer.scrollTop + delta,
+                });
             };
             this.resize = (row) => {
                 this.offsetFromBottom = undefined;
                 this.resizeFlag = false;
                 if (lodash_1.isNumber(row) && row > 0) {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     this.cellSizeCache.clearPlus(row, 0);
                 }
@@ -115,7 +126,6 @@
                 this.updateScrollMetrics(data);
                 this.updateWithVisibleRows();
             };
-            // tslint:disable-next-line member-ordering
             this.updateScrollMetrics = lodash_1.debounce((data) => {
                 const { clientHeight, clientWidth, scrollHeight, scrollTop } = data;
                 if (clientHeight <= 0 || scrollHeight <= 0) {
@@ -143,9 +153,13 @@
                 if (lodash_1.isNumber(loadCountdownStart)) {
                     this.loadCountdownTimeout = setTimeout(this.loadOlderMessages, exports.LOAD_COUNTDOWN);
                 }
+                // Variable collision
+                // eslint-disable-next-line react/destructuring-assignment
                 if (loadCountdownStart !== this.props.loadCountdownStart) {
                     setLoadCountdownStart(id, loadCountdownStart);
                 }
+                // Variable collision
+                // eslint-disable-next-line react/destructuring-assignment
                 if (isNearBottom !== this.props.isNearBottom) {
                     setIsNearBottom(id, isNearBottom);
                 }
@@ -177,6 +191,7 @@
                     const child = children[i];
                     const { id, offsetTop, offsetHeight } = child;
                     if (!id) {
+                        // eslint-disable-next-line no-continue
                         continue;
                     }
                     const bottom = offsetTop + offsetHeight;
@@ -191,6 +206,7 @@
                     const child = children[i];
                     const { offsetTop, id } = child;
                     if (!id) {
+                        // eslint-disable-next-line no-continue
                         continue;
                     }
                     if (offsetTop + AT_TOP_THRESHOLD >= visibleTop) {
@@ -201,7 +217,6 @@
                 }
                 this.visibleRows = { newest, oldest };
             };
-            // tslint:disable-next-line member-ordering cyclomatic-complexity
             this.updateWithVisibleRows = lodash_1.debounce(() => {
                 const { unreadCount, haveNewest, isLoadingMessages, items, loadNewerMessages, markMessageRead, } = this.props;
                 if (!items || items.length < 1) {
@@ -424,7 +439,6 @@
                     this.scrollDown(true);
                     event.preventDefault();
                     event.stopPropagation();
-                    return;
                 }
             };
             const { scrollToIndex } = this.props;
@@ -482,6 +496,7 @@
             if (index < 0 || index >= items.length) {
                 return;
             }
+            // eslint-disable-next-line consistent-return
             return index;
         }
         getLastSeenIndicatorRow(props) {
@@ -489,6 +504,7 @@
             if (!lodash_1.isNumber(oldestUnreadIndex)) {
                 return;
             }
+            // eslint-disable-next-line consistent-return
             return this.fromItemIndexToRow(oldestUnreadIndex) - 1;
         }
         getTypingBubbleRow() {
@@ -497,18 +513,20 @@
                 return;
             }
             const last = items.length - 1;
+            // eslint-disable-next-line consistent-return
             return this.fromItemIndexToRow(last) + 1;
         }
         componentDidMount() {
             this.updateWithVisibleRows();
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             window.registerForActive(this.updateWithVisibleRows);
         }
         componentWillUnmount() {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             window.unregisterForActive(this.updateWithVisibleRows);
         }
-        // tslint:disable-next-line cyclomatic-complexity max-func-body-length
         componentDidUpdate(prevProps) {
             const { id, clearChangedMessages, items, messageHeightChangeIndex, oldestUnreadIndex, resetCounter, scrollToIndex, typingContact, } = this.props;
             // There are a number of situations which can necessitate that we forget about row
@@ -524,6 +542,8 @@
                     this.resize();
                 }
                 const oneTimeScrollRow = this.getLastSeenIndicatorRow();
+                // TODO: DESKTOP-688
+                // eslint-disable-next-line react/no-did-update-set-state
                 this.setState({
                     oneTimeScrollRow,
                     atBottom: true,
@@ -537,7 +557,8 @@
                 prevProps.items &&
                 prevProps.items.length > 0 &&
                 items !== prevProps.items) {
-                if (this.state.atTop) {
+                const { atTop } = this.state;
+                if (atTop) {
                     const oldFirstIndex = 0;
                     const oldFirstId = prevProps.items[oldFirstIndex];
                     const newFirstIndex = items.findIndex(item => item === oldFirstId);
@@ -550,6 +571,8 @@
                     if (delta > 0) {
                         // We're loading more new messages at the top; we want to stay at the top
                         this.resize();
+                        // TODO: DESKTOP-688
+                        // eslint-disable-next-line react/no-did-update-set-state
                         this.setState({ oneTimeScrollRow: newRow });
                         return;
                     }
@@ -614,7 +637,7 @@
             if (!items || rowCount === 0) {
                 return null;
             }
-            return (react_1.default.createElement("div", { className: "module-timeline", role: "group", tabIndex: -1, onBlur: this.handleBlur, onKeyDown: this.handleKeyDown },
+            return (react_1.default.createElement("div", { className: "module-timeline", role: "presentation", tabIndex: -1, onBlur: this.handleBlur, onKeyDown: this.handleKeyDown },
                 react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => {
                     if (this.mostRecentWidth && this.mostRecentWidth !== width) {
                         this.resizeFlag = true;
@@ -626,7 +649,11 @@
                     }
                     this.mostRecentWidth = width;
                     this.mostRecentHeight = height;
-                    return (react_1.default.createElement(react_virtualized_1.List, { deferredMeasurementCache: this.cellSizeCache, height: height, onScroll: this.onScroll, overscanRowCount: 10, ref: this.listRef, rowCount: rowCount, rowHeight: this.cellSizeCache.rowHeight, rowRenderer: this.rowRenderer, scrollToAlignment: "start", scrollToIndex: scrollToIndex, tabIndex: -1, width: width }));
+                    return (react_1.default.createElement(react_virtualized_1.List, {
+                        deferredMeasurementCache: this.cellSizeCache, height: height,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        onScroll: this.onScroll, overscanRowCount: 10, ref: this.listRef, rowCount: rowCount, rowHeight: this.cellSizeCache.rowHeight, rowRenderer: this.rowRenderer, scrollToAlignment: "start", scrollToIndex: scrollToIndex, tabIndex: -1, width: width
+                    }));
                 }),
                 shouldShowScrollDownButton ? (react_1.default.createElement(ScrollDownButton_1.ScrollDownButton, { conversationId: id, withNewMessages: areUnreadBelowCurrentPosition, scrollDown: this.onClickScrollDownButton, i18n: i18n })) : null));
         }

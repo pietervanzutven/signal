@@ -12,13 +12,9 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
     const Emojify_1 = require("./Emojify");
-    class ContactName extends react_1.default.Component {
-        render() {
-            const { module, title } = this.props;
-            const prefix = module ? module : 'module-contact-name';
-            return (react_1.default.createElement("span", { className: prefix, dir: "auto" },
-                react_1.default.createElement(Emojify_1.Emojify, { text: title || '' })));
-        }
-    }
-    exports.ContactName = ContactName;
+    exports.ContactName = ({ module, title }) => {
+        const prefix = module || 'module-contact-name';
+        return (react_1.default.createElement("span", { className: prefix, dir: "auto" },
+            react_1.default.createElement(Emojify_1.Emojify, { text: title || '' })));
+    };
 })();

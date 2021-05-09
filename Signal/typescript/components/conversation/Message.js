@@ -22,6 +22,7 @@
     const classnames_1 = __importDefault(require("classnames"));
     const react_measure_1 = __importDefault(require("react-measure"));
     const lodash_1 = require("lodash");
+    const react_contextmenu_1 = require("react-contextmenu");
     const react_popper_1 = require("react-popper");
     const moment_1 = __importDefault(require("moment"));
     const Avatar_1 = require("../Avatar");
@@ -37,11 +38,10 @@
     const ReactionViewer_1 = require("./ReactionViewer");
     const ReactionPicker_1 = require("./ReactionPicker");
     const Emoji_1 = require("../emoji/Emoji");
-    const Attachment_1 = require("../../../ts/types/Attachment");
+    const Attachment_1 = require("../../types/Attachment");
     const timer_1 = require("../../util/timer");
     const isFileDangerous_1 = require("../../util/isFileDangerous");
     const _util_1 = require("../_util");
-    const react_contextmenu_1 = require("react-contextmenu");
     // Same as MIN_WIDTH in ImageGrid.tsx
     const MINIMUM_LINK_PREVIEW_IMAGE_WIDTH = 200;
     const MINIMUM_LINK_PREVIEW_DATE = new Date(1990, 0, 1).valueOf();
@@ -81,8 +81,7 @@
             };
             this.handleImageError = () => {
                 const { id } = this.props;
-                // tslint:disable-next-line no-console
-                console.log(`Message ${id}: Image failed to load; failing over to placeholder`);
+                window.log.info(`Message ${id}: Image failed to load; failing over to placeholder`);
                 this.setState({
                     imageBroken: true,
                 });
@@ -159,7 +158,6 @@
                     }
                 }
             };
-            // tslint:disable-next-line cyclomatic-complexity max-func-body-length
             this.handleOpen = (event) => {
                 const { attachments, contact, displayTapToViewMessage, direction, id, isTapToView, isTapToViewExpired, openConversation, showContactDetail, showVisualAttachment, showExpiredIncomingTapToViewToast, showExpiredOutgoingTapToViewToast, } = this.props;
                 const { imageBroken } = this.state;
@@ -210,11 +208,9 @@
                     event.preventDefault();
                     event.stopPropagation();
                     if (this.audioRef.current.paused) {
-                        // tslint:disable-next-line no-floating-promises
                         this.audioRef.current.play();
                     }
                     else {
-                        // tslint:disable-next-line no-floating-promises
                         this.audioRef.current.pause();
                     }
                 }
@@ -333,14 +329,15 @@
             this.wideMl.removeEventListener('change', this.handleWideMlChange);
         }
         componentDidUpdate(prevProps) {
+            const { isSelected } = this.props;
             this.startSelectedTimer();
-            if (!prevProps.isSelected && this.props.isSelected) {
+            if (!prevProps.isSelected && isSelected) {
                 this.setFocus();
             }
             this.checkExpired();
         }
         startSelectedTimer() {
-            const { interactionMode } = this.props;
+            const { clearSelectedMessage, interactionMode } = this.props;
             const { isSelected } = this.state;
             if (interactionMode === 'keyboard' || !isSelected) {
                 return;
@@ -349,7 +346,7 @@
                 this.selectedTimeout = setTimeout(() => {
                     this.selectedTimeout = undefined;
                     this.setState({ isSelected: false });
-                    this.props.clearSelectedMessage();
+                    clearSelectedMessage();
                 }, SELECTED_TIMEOUT);
             }
         }
@@ -389,7 +386,7 @@
                         'module-message__metadata__date--with-image-no-caption': withImageNoCaption,
                     })
                 }, isError ? (i18n('sendFailed')) : (react_1.default.createElement("button", {
-                    className: "module-message__metadata__tapable", onClick: (event) => {
+                    type: "button", className: "module-message__metadata__tapable", onClick: (event) => {
                         event.stopPropagation();
                         event.preventDefault();
                         showMessageDetail(id);
@@ -399,7 +396,6 @@
             const metadataDirection = isSticker ? undefined : direction;
             return (react_1.default.createElement(Timestamp_1.Timestamp, { i18n: i18n, timestamp: timestamp, extended: true, direction: metadataDirection, withImageNoCaption: withImageNoCaption, withSticker: isSticker, withTapToViewExpired: isTapToViewExpired, module: "module-message__metadata__date" }));
         }
-        // tslint:disable-next-line cyclomatic-complexity
         renderMetadata() {
             const { collapseMetadata, direction, expirationLength, expirationTimestamp, isSticker, isTapToViewExpired, reactions, status, text, textPending, } = this.props;
             if (collapseMetadata) {
@@ -434,7 +430,7 @@
         renderAuthor() {
             const { authorTitle, authorName, authorPhoneNumber, authorProfileName, collapseMetadata, conversationType, direction, i18n, isSticker, isTapToView, isTapToViewExpired, } = this.props;
             if (collapseMetadata) {
-                return;
+                return null;
             }
             if (direction !== 'incoming' ||
                 conversationType !== 'group' ||
@@ -450,7 +446,6 @@
             return (react_1.default.createElement("div", { className: moduleName },
                 react_1.default.createElement(ContactName_1.ContactName, { title: authorTitle, phoneNumber: authorPhoneNumber, name: authorName, profileName: authorProfileName, module: moduleName, i18n: i18n })));
         }
-        // tslint:disable-next-line max-func-body-length cyclomatic-complexity
         renderAttachment() {
             const { attachments, collapseMetadata, conversationType, direction, i18n, id, quote, showVisualAttachment, isSticker, text, } = this.props;
             const { imageBroken } = this.state;
@@ -486,7 +481,7 @@
                         }
                     })));
             }
-            else if (!firstAttachment.pending && Attachment_1.isAudio(attachments)) {
+            if (!firstAttachment.pending && Attachment_1.isAudio(attachments)) {
                 return (react_1.default.createElement("audio", {
                     ref: this.audioRef, controls: true, className: classnames_1.default('module-message__audio-attachment', withContentBelow
                         ? 'module-message__audio-attachment--with-content-below'
@@ -496,39 +491,36 @@
                 },
                     react_1.default.createElement("source", { src: firstAttachment.url })));
             }
-            else {
-                const { pending, fileName, fileSize, contentType } = firstAttachment;
-                const extension = Attachment_1.getExtensionForDisplay({ contentType, fileName });
-                const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
-                return (react_1.default.createElement("button", {
-                    className: classnames_1.default('module-message__generic-attachment', withContentBelow
-                        ? 'module-message__generic-attachment--with-content-below'
-                        : null, withContentAbove
-                        ? 'module-message__generic-attachment--with-content-above'
-                        : null, !firstAttachment.url
-                        ? 'module-message__generic-attachment--not-active'
-                        : null),
-                    // There's only ever one of these, so we don't want users to tab into it
-                    tabIndex: -1, onClick: (event) => {
-                        event.stopPropagation();
-                        event.preventDefault();
-                        if (!firstAttachment.url) {
-                            return;
-                        }
-                        this.openGenericAttachment();
+            const { pending, fileName, fileSize, contentType } = firstAttachment;
+            const extension = Attachment_1.getExtensionForDisplay({ contentType, fileName });
+            const isDangerous = isFileDangerous_1.isFileDangerous(fileName || '');
+            return (react_1.default.createElement("button", {
+                type: "button", className: classnames_1.default('module-message__generic-attachment', withContentBelow
+                    ? 'module-message__generic-attachment--with-content-below'
+                    : null, withContentAbove
+                    ? 'module-message__generic-attachment--with-content-above'
+                    : null, !firstAttachment.url
+                    ? 'module-message__generic-attachment--not-active'
+                    : null),
+                // There's only ever one of these, so we don't want users to tab into it
+                tabIndex: -1, onClick: (event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    if (!firstAttachment.url) {
+                        return;
                     }
-                },
-                    pending ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__spinner-container" },
-                        react_1.default.createElement(Spinner_1.Spinner, { svgSize: "small", size: "24px", direction: direction }))) : (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-container" },
-                            react_1.default.createElement("div", { className: "module-message__generic-attachment__icon" }, extension ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon__extension" }, extension)) : null),
-                            isDangerous ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous-container" },
-                                react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous" }))) : null)),
-                    react_1.default.createElement("div", { className: "module-message__generic-attachment__text" },
-                        react_1.default.createElement("div", { className: classnames_1.default('module-message__generic-attachment__file-name', `module-message__generic-attachment__file-name--${direction}`) }, fileName),
-                        react_1.default.createElement("div", { className: classnames_1.default('module-message__generic-attachment__file-size', `module-message__generic-attachment__file-size--${direction}`) }, fileSize))));
-            }
+                    this.openGenericAttachment();
+                }
+            },
+                pending ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__spinner-container" },
+                    react_1.default.createElement(Spinner_1.Spinner, { svgSize: "small", size: "24px", direction: direction }))) : (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-container" },
+                        react_1.default.createElement("div", { className: "module-message__generic-attachment__icon" }, extension ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon__extension" }, extension)) : null),
+                        isDangerous ? (react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous-container" },
+                            react_1.default.createElement("div", { className: "module-message__generic-attachment__icon-dangerous" }))) : null)),
+                react_1.default.createElement("div", { className: "module-message__generic-attachment__text" },
+                    react_1.default.createElement("div", { className: classnames_1.default('module-message__generic-attachment__file-name', `module-message__generic-attachment__file-name--${direction}`) }, fileName),
+                    react_1.default.createElement("div", { className: classnames_1.default('module-message__generic-attachment__file-size', `module-message__generic-attachment__file-size--${direction}`) }, fileSize))));
         }
-        // tslint:disable-next-line cyclomatic-complexity max-func-body-length
         renderPreview() {
             const { attachments, conversationType, direction, i18n, openLink, previews, quote, } = this.props;
             // Attachments take precedence over Link Previews
@@ -557,7 +549,7 @@
                 first.date < maximumLinkPreviewDate;
             const dateMoment = isDateValid ? moment_1.default(first.date) : null;
             return (react_1.default.createElement("button", {
-                className: classnames_1.default('module-message__link-preview', `module-message__link-preview--${direction}`, withContentAbove
+                type: "button", className: classnames_1.default('module-message__link-preview', `module-message__link-preview--${direction}`, withContentAbove
                     ? 'module-message__link-preview--with-content-above'
                     : null), onKeyDown: (event) => {
                         if (event.key === 'Enter' || event.key === 'Space') {
@@ -630,7 +622,7 @@
                 return null;
             }
             return (react_1.default.createElement("button", {
-                onClick: () => {
+                type: "button", onClick: () => {
                     if (contact.signalAccount) {
                         openConversation(contact.signalAccount);
                     }
@@ -644,11 +636,13 @@
                 direction === 'outgoing') {
                 return;
             }
+            // eslint-disable-next-line consistent-return
             return (react_1.default.createElement("div", { className: "module-message__author-avatar" },
                 react_1.default.createElement(Avatar_1.Avatar, { avatarPath: authorAvatarPath, color: authorColor, conversationType: "direct", i18n: i18n, name: authorName, phoneNumber: authorPhoneNumber, profileName: authorProfileName, title: authorTitle, size: 28 })));
         }
         renderText() {
             const { bodyRanges, deletedForEveryone, direction, i18n, openConversation, status, text, textPending, } = this.props;
+            // eslint-disable-next-line no-nested-ternary
             const contents = deletedForEveryone
                 ? i18n('message--deletedForEveryone')
                 : direction === 'incoming' && status === 'error'
@@ -673,9 +667,7 @@
                 react_1.default.createElement("div", { className: classnames_1.default('module-message__error', `module-message__error--${direction}`) })));
         }
         renderMenu(isCorrectSide, triggerId) {
-            const { attachments,
-                // tslint:disable-next-line max-func-body-length
-                canReply, direction, disableMenu, i18n, id, isSticker, isTapToView, renderEmojiPicker, replyToMessage, } = this.props;
+            const { attachments, canReply, direction, disableMenu, i18n, id, isSticker, isTapToView, reactToMessage, renderEmojiPicker, replyToMessage, selectedReaction, } = this.props;
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
@@ -686,43 +678,57 @@
                 !multipleAttachments &&
                 !isTapToView &&
                 firstAttachment &&
-                !firstAttachment.pending ? (react_1.default.createElement("div", {
-                    onClick: this.openGenericAttachment,
-                    // This a menu meant for mouse use only
-                    role: "button", className: classnames_1.default('module-message__buttons__download', `module-message__buttons__download--${direction}`)
-                })) : null;
+                !firstAttachment.pending ? (
+                // This a menu meant for mouse use only
+                // eslint-disable-next-line max-len
+                // eslint-disable-next-line jsx-a11y/interactive-supports-focus, jsx-a11y/click-events-have-key-events
+                react_1.default.createElement("div", { onClick: this.openGenericAttachment, role: "button", "aria-label": i18n('downloadAttachment'), className: classnames_1.default('module-message__buttons__download', `module-message__buttons__download--${direction}`) })) : null;
             const reactButton = (react_1.default.createElement(react_popper_1.Reference, null, ({ ref: popperRef }) => {
                 // Only attach the popper reference to the reaction button if it is
                 // visible in the page (it is hidden when the page is narrow)
                 const maybePopperRef = isWide ? popperRef : undefined;
-                return (react_1.default.createElement("div", {
-                    ref: maybePopperRef, onClick: (event) => {
+                return (
+                    // This a menu meant for mouse use only
+                    // eslint-disable-next-line max-len
+                    // eslint-disable-next-line jsx-a11y/interactive-supports-focus, jsx-a11y/click-events-have-key-events
+                    react_1.default.createElement("div", {
+                        ref: maybePopperRef, onClick: (event) => {
+                            event.stopPropagation();
+                            event.preventDefault();
+                            this.toggleReactionPicker();
+                        }, role: "button", className: "module-message__buttons__react", "aria-label": i18n('reactToMessage')
+                    }));
+            }));
+            const replyButton = (
+                // This a menu meant for mouse use only
+                // eslint-disable-next-line max-len
+                // eslint-disable-next-line jsx-a11y/interactive-supports-focus, jsx-a11y/click-events-have-key-events
+                react_1.default.createElement("div", {
+                    onClick: (event) => {
                         event.stopPropagation();
                         event.preventDefault();
-                        this.toggleReactionPicker();
-                    }, role: "button", className: "module-message__buttons__react"
+                        replyToMessage(id);
+                    },
+                    // This a menu meant for mouse use only
+                    role: "button", "aria-label": i18n('replyToMessage'), className: classnames_1.default('module-message__buttons__reply', `module-message__buttons__download--${direction}`)
                 }));
-            }));
-            const replyButton = (react_1.default.createElement("div", {
-                onClick: (event) => {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    replyToMessage(id);
-                },
-                // This a menu meant for mouse use only
-                role: "button", className: classnames_1.default('module-message__buttons__reply', `module-message__buttons__download--${direction}`)
-            }));
+            // This a menu meant for mouse use only
+            /* eslint-disable jsx-a11y/interactive-supports-focus */
+            /* eslint-disable jsx-a11y/click-events-have-key-events */
             const menuButton = (react_1.default.createElement(react_popper_1.Reference, null, ({ ref: popperRef }) => {
                 // Only attach the popper reference to the collapsed menu button if
                 // the reaction button is not visible in the page (it is hidden when
                 // the page is narrow)
                 const maybePopperRef = !isWide ? popperRef : undefined;
-                return (react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, { id: triggerId, ref: this.captureMenuTrigger },
-                    react_1.default.createElement("div", {
-                        // This a menu meant for mouse use only
-                        ref: maybePopperRef, role: "button", onClick: this.showMenu, className: classnames_1.default('module-message__buttons__menu', `module-message__buttons__download--${direction}`)
-                    })));
+                return (react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, {
+                    id: triggerId,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    ref: this.captureMenuTrigger
+                },
+                    react_1.default.createElement("div", { ref: maybePopperRef, role: "button", onClick: this.showMenu, "aria-label": i18n('messageContextMenuButton'), className: classnames_1.default('module-message__buttons__menu', `module-message__buttons__download--${direction}`) })));
             }));
+            /* eslint-enable jsx-a11y/interactive-supports-focus */
+            /* eslint-enable jsx-a11y/click-events-have-key-events */
             return (react_1.default.createElement(react_popper_1.Manager, null,
                 react_1.default.createElement("div", { className: classnames_1.default('module-message__buttons', `module-message__buttons--${direction}`) },
                     canReply ? reactButton : null,
@@ -730,17 +736,18 @@
                     canReply ? replyButton : null,
                     menuButton),
                 reactionPickerRoot &&
-                react_dom_1.createPortal(react_1.default.createElement(react_popper_1.Popper, { placement: "top" }, ({ ref, style }) => (react_1.default.createElement(ReactionPicker_1.ReactionPicker, {
-                    i18n: i18n, ref: ref, style: style, selected: this.props.selectedReaction, onClose: this.toggleReactionPicker, onPick: emoji => {
-                        this.toggleReactionPicker(true);
-                        this.props.reactToMessage(id, {
-                            emoji,
-                            remove: emoji === this.props.selectedReaction,
-                        });
-                    }, renderEmojiPicker: renderEmojiPicker
-                }))), reactionPickerRoot)));
+                react_dom_1.createPortal(
+                    // eslint-disable-next-line consistent-return
+                    react_1.default.createElement(react_popper_1.Popper, { placement: "top" }, ({ ref, style }) => (react_1.default.createElement(ReactionPicker_1.ReactionPicker, {
+                        i18n: i18n, ref: ref, style: style, selected: selectedReaction, onClose: this.toggleReactionPicker, onPick: emoji => {
+                            this.toggleReactionPicker(true);
+                            reactToMessage(id, {
+                                emoji,
+                                remove: emoji === selectedReaction,
+                            });
+                        }, renderEmojiPicker: renderEmojiPicker
+                    }))), reactionPickerRoot)));
         }
-        // tslint:disable-next-line max-func-body-length
         renderContextMenu(triggerId) {
             const { attachments, canReply, deleteMessage, direction, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, } = this.props;
             const showRetry = status === 'error' && direction === 'outgoing';
@@ -819,7 +826,7 @@
             if (previews && previews.length) {
                 const first = previews[0];
                 if (!first || !first.image) {
-                    return;
+                    return undefined;
                 }
                 const { width } = first.image;
                 if (!first.isStickerPack &&
@@ -833,8 +840,10 @@
                     }
                 }
             }
-            return;
+            return undefined;
         }
+        // Messy return here.
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         isShowingImage() {
             const { isTapToView, attachments, previews } = this.props;
             const { imageBroken } = this.state;
@@ -885,6 +894,7 @@
             if (isDownloadPending) {
                 return;
             }
+            // eslint-disable-next-line consistent-return, no-nested-ternary
             return isTapToViewError
                 ? i18n('incomingError')
                 : direction === 'outgoing'
@@ -913,7 +923,6 @@
                         : null)
                 }, this.renderTapToViewText())));
         }
-        // tslint:disable-next-line max-func-body-length
         renderReactions(outgoing) {
             const { reactions, i18n } = this.props;
             if (!reactions || (reactions && reactions.length === 0)) {
@@ -961,6 +970,8 @@
                     const isMore = isLast && someNotRendered;
                     const isMoreWithMe = isMore && notRenderedIsMe;
                     return (react_1.default.createElement("button", {
+                        type: "button",
+                        // eslint-disable-next-line react/no-array-index-key
                         key: `${re.emoji}-${i}`, className: classnames_1.default('module-message__reactions__reaction', re.count > 1
                             ? 'module-message__reactions__reaction--with-count'
                             : null, outgoing
@@ -1013,7 +1024,6 @@
                 this.renderMetadata(),
                 this.renderSendMessageButton()));
         }
-        // tslint:disable-next-line: cyclomatic-complexity
         renderContainer() {
             const { authorColor, deletedForEveryone, direction, isSticker, isTapToView, isTapToViewExpired, isTapToViewError, reactions, } = this.props;
             const { isSelected } = this.state;
@@ -1047,7 +1057,6 @@
                 this.renderContents(),
                 this.renderAvatar()))));
         }
-        // tslint:disable-next-line cyclomatic-complexity
         render() {
             const { authorPhoneNumber, attachments, conversationType, direction, id, isSticker, timestamp, } = this.props;
             const { expired, expiring, imageBroken, isSelected } = this.state;
