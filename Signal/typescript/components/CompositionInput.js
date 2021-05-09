@@ -16,17 +16,17 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const React = __importStar(window.react);
-    const react_dom_1 = window.react_dom;
-    const draft_js_1 = window.draft_js;
-    const react_measure_1 = __importDefault(window.react_measure);
-    const react_popper_1 = window.react_popper;
-    const lodash_1 = window.lodash;
-    const classnames_1 = __importDefault(window.classnames);
-    const emoji_regex_1 = __importDefault(window.emoji_regex);
-    const Emoji_1 = window.ts.components.emoji.Emoji;
-    const lib_1 = window.ts.components.emoji.lib;
-    const _util_1 = window.ts.components._util;
+    const React = __importStar(require("react"));
+    const react_dom_1 = require("react-dom");
+    const draft_js_1 = require("draft-js");
+    const react_measure_1 = __importDefault(require("react-measure"));
+    const react_popper_1 = require("react-popper");
+    const lodash_1 = require("lodash");
+    const classnames_1 = __importDefault(require("classnames"));
+    const emoji_regex_1 = __importDefault(require("emoji-regex"));
+    const Emoji_1 = require("./emoji/Emoji");
+    const lib_1 = require("./emoji/lib");
+    const _util_1 = require("./_util");
     const MAX_LENGTH = 64 * 1024;
     const colonsRegex = /(?:^|\s):[a-z0-9-_+]+:?/gi;
     const triggerEmojiRegex = /^(?:[-+]\d|[a-z]{2})/i;
@@ -422,7 +422,7 @@
                     e.preventDefault();
                     return 'enter-emoji';
                 }
-                if (e.key === 'Enter' && !e.shiftKey) {
+                if (e.key === 'Enter' && !e.shiftKey && !e.altKey) {
                     if (large && !(controlKey || commandKey)) {
                         return draft_js_1.getDefaultKeyBinding(e);
                     }
