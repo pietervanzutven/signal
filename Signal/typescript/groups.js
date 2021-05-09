@@ -1,12 +1,11 @@
 require(exports => {
     "use strict";
-    /* tslint:disable no-dynamic-delete no-unnecessary-local-variable */
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = require("lodash");
+    const uuid_1 = require("uuid");
     const groupCredentialFetcher_1 = require("./services/groupCredentialFetcher");
     const zkgroup_1 = require("./util/zkgroup");
     const Crypto_1 = require("./Crypto");
-    const uuid_1 = require("uuid");
     const message_1 = require("../js/modules/types/message");
     if (!lodash_1.isNumber(message_1.CURRENT_SCHEMA_VERSION)) {
         throw new Error('groups.ts: Unable to capture max message schema from js/modules/types/message');
@@ -110,8 +109,9 @@ require(exports => {
                 dropInitialJoinMessage,
             });
             conversation.set(newAttributes);
-            // Ensure that all generated message are ordered properly. Before the provided timestamp
-            //   so update messages appear before the initiating message, or after now().
+            // Ensure that all generated messages are ordered properly.
+            // Before the provided timestamp so update messages appear before the
+            //   initiating message, or after now().
             let syntheticTimestamp = receivedAt
                 ? receivedAt - (groupChangeMessages.length + 1)
                 : Date.now();
@@ -135,7 +135,6 @@ require(exports => {
             members.forEach(member => {
                 const contact = window.ConversationController.get(member.uuid);
                 if (member.profileKey && contact && !contact.get('profileKey')) {
-                    // tslint:disable-next-line no-floating-promises
                     contact.setProfileKey(member.profileKey);
                 }
             });
@@ -223,8 +222,8 @@ require(exports => {
                     const result = await getCurrentGroupState(Object.assign(Object.assign({}, stateOptions), { authCredentialBase64: groupCredentials.tomorrow.credential }));
                     return result;
                 }
-                catch (error) {
-                    if (error.code === GROUP_ACCESS_DENIED_CODE) {
+                catch (subError) {
+                    if (subError.code === GROUP_ACCESS_DENIED_CODE) {
                         return generateLeftGroupChanges(group);
                     }
                 }
@@ -255,9 +254,7 @@ require(exports => {
                 window.log.info(`updateGroupViaLogs/${logId}: Credential for today failed, failing over to tomorrow...`);
                 return getGroupDelta(Object.assign(Object.assign({}, deltaOptions), { authCredentialBase64: groupCredentials.tomorrow.credential }));
             }
-            else {
-                throw error;
-            }
+            throw error;
         }
     }
     function generateBasicMessage() {
@@ -322,6 +319,7 @@ require(exports => {
         let response;
         const changes = [];
         do {
+            // eslint-disable-next-line no-await-in-loop
             response = await sender.getGroupLog(revisionToFetch, options);
             changes.push(response.changes);
             if (response.end) {
@@ -344,6 +342,7 @@ require(exports => {
         for (let i = 0; i < imax; i += 1) {
             const { groupChanges } = changes[i];
             if (!groupChanges) {
+                // eslint-disable-next-line no-continue
                 continue;
             }
             const jmax = groupChanges.length;
@@ -351,6 +350,7 @@ require(exports => {
                 const changeState = groupChanges[j];
                 const { groupChange } = changeState;
                 if (!groupChange) {
+                    // eslint-disable-next-line no-continue
                     continue;
                 }
                 try {
@@ -461,7 +461,6 @@ require(exports => {
         };
     }
     exports.getCurrentGroupState = getCurrentGroupState;
-    // tslint:disable-next-line max-func-body-length cyclomatic-complexity
     function extractDiffs({ current, dropInitialJoinMessage, old, sourceConversationId, }) {
         var _a, _b;
         const logId = idForLogging(old);
@@ -655,7 +654,6 @@ require(exports => {
             uuid: member.userId,
         }));
     }
-    // tslint:disable-next-line cyclomatic-complexity max-func-body-length
     async function applyGroupChange({ group, actions, }) {
         const logId = idForLogging(group);
         const ACCESS_ENUM = window.textsecure.protobuf.AccessControl.AccessRequired;
@@ -671,7 +669,7 @@ require(exports => {
         // version?: number;
         result.revision = version;
         // addMembers?: Array<GroupChangeClass.Actions.AddMemberAction>;
-        (actions.addMembers || []).map(addMember => {
+        (actions.addMembers || []).forEach(addMember => {
             const { added } = addMember;
             if (!added) {
                 throw new Error('applyGroupChange: addMember.added is missing');
@@ -729,7 +727,8 @@ require(exports => {
                 throw new Error('applyGroupChange: modifyMemberRole tried to modify nonexistent member');
             }
         });
-        // modifyMemberProfileKeys?: Array<GroupChangeClass.Actions.ModifyMemberProfileKeyAction>;
+        // modifyMemberProfileKeys?:
+        // Array<GroupChangeClass.Actions.ModifyMemberProfileKeyAction>;
         (actions.modifyMemberProfileKeys || []).forEach(modifyMemberProfileKey => {
             const { profileKey, uuid } = modifyMemberProfileKey;
             if (!profileKey || !uuid) {
@@ -812,7 +811,7 @@ require(exports => {
         });
         // modifyTitle?: GroupChangeClass.Actions.ModifyTitleAction;
         if (actions.modifyTitle) {
-            const title = actions.modifyTitle.title;
+            const { title } = actions.modifyTitle;
             if (title && title.content === 'title') {
                 result.name = title.title;
             }
@@ -823,10 +822,11 @@ require(exports => {
         }
         // modifyAvatar?: GroupChangeClass.Actions.ModifyAvatarAction;
         if (actions.modifyAvatar) {
-            const avatar = actions.modifyAvatar.avatar;
+            const { avatar } = actions.modifyAvatar;
             await applyNewAvatar(avatar, result, logId);
         }
-        // modifyDisappearingMessagesTimer?: GroupChangeClass.Actions.ModifyDisappearingMessagesTimerAction;
+        // modifyDisappearingMessagesTimer?:
+        // GroupChangeClass.Actions.ModifyDisappearingMessagesTimerAction;
         if (actions.modifyDisappearingMessagesTimer) {
             const disappearingMessagesTimer = actions.modifyDisappearingMessagesTimer.timer;
             if (disappearingMessagesTimer &&
@@ -843,7 +843,8 @@ require(exports => {
             members: ACCESS_ENUM.MEMBER,
             attributes: ACCESS_ENUM.MEMBER,
         };
-        // modifyAttributesAccess?: GroupChangeClass.Actions.ModifyAttributesAccessControlAction;
+        // modifyAttributesAccess?:
+        // GroupChangeClass.Actions.ModifyAttributesAccessControlAction;
         if (actions.modifyAttributesAccess) {
             result.accessControl = Object.assign(Object.assign({}, result.accessControl), { attributes: actions.modifyAttributesAccess.attributesAccess || ACCESS_ENUM.MEMBER });
         }
@@ -863,6 +864,8 @@ require(exports => {
             newProfileKeys,
         };
     }
+    // Ovewriting result.avatar as part of functionality
+    /* eslint-disable no-param-reassign */
     async function applyNewAvatar(newAvatar, result, logId) {
         try {
             // Avatar has been dropped
@@ -910,7 +913,7 @@ require(exports => {
             result.avatar = undefined;
         }
     }
-    // tslint:disable-next-line cyclomatic-complexity max-func-body-length
+    /* eslint-enable no-param-reassign */
     async function applyGroupState(group, groupState) {
         const logId = idForLogging(group);
         const ACCESS_ENUM = window.textsecure.protobuf.AccessControl.AccessRequired;
@@ -920,7 +923,7 @@ require(exports => {
         result.revision = version;
         // title
         // Note: During decryption, title becomes a GroupAttributeBlob
-        const title = groupState.title;
+        const { title } = groupState;
         if (title && title.content === 'title') {
             result.name = title.title;
         }
@@ -931,7 +934,7 @@ require(exports => {
         await applyNewAvatar(groupState.avatar, result, logId);
         // disappearingMessagesTimer
         // Note: during decryption, disappearingMessageTimer becomes a GroupAttributeBlob
-        const disappearingMessagesTimer = groupState.disappearingMessagesTimer;
+        const { disappearingMessagesTimer } = groupState;
         if (disappearingMessagesTimer &&
             disappearingMessagesTimer.content === 'disappearingMessagesDuration') {
             result.expireTimer = disappearingMessagesTimer.disappearingMessagesDuration;
@@ -1014,9 +1017,9 @@ require(exports => {
     function hasData(data) {
         return data && data.limit > 0;
     }
-    // tslint:disable-next-line max-func-body-length cyclomatic-complexity
-    function decryptGroupChange(actions, groupSecretParams, logId) {
+    function decryptGroupChange(_actions, groupSecretParams, logId) {
         const clientZkGroupCipher = zkgroup_1.getClientZkGroupCipher(groupSecretParams);
+        const actions = _actions;
         if (hasData(actions.sourceUuid)) {
             try {
                 actions.sourceUuid = zkgroup_1.decryptUuid(clientZkGroupCipher, actions.sourceUuid.toArrayBuffer());
@@ -1035,7 +1038,8 @@ require(exports => {
             throw new Error('decryptGroupChange: Missing sourceUuid');
         }
         // addMembers?: Array<GroupChangeClass.Actions.AddMemberAction>;
-        actions.addMembers = lodash_1.compact((actions.addMembers || []).map(addMember => {
+        actions.addMembers = lodash_1.compact((actions.addMembers || []).map(_addMember => {
+            const addMember = _addMember;
             if (addMember.added) {
                 const decrypted = decryptMember(clientZkGroupCipher, addMember.added, logId);
                 if (!decrypted) {
@@ -1044,12 +1048,11 @@ require(exports => {
                 addMember.added = decrypted;
                 return addMember;
             }
-            else {
-                throw new Error('decryptGroupChange: AddMember was missing added field!');
-            }
+            throw new Error('decryptGroupChange: AddMember was missing added field!');
         }));
         // deleteMembers?: Array<GroupChangeClass.Actions.DeleteMemberAction>;
-        actions.deleteMembers = lodash_1.compact((actions.deleteMembers || []).map(deleteMember => {
+        actions.deleteMembers = lodash_1.compact((actions.deleteMembers || []).map(_deleteMember => {
+            const deleteMember = _deleteMember;
             if (hasData(deleteMember.deletedUserId)) {
                 try {
                     deleteMember.deletedUserId = zkgroup_1.decryptUuid(clientZkGroupCipher, deleteMember.deletedUserId.toArrayBuffer());
@@ -1070,7 +1073,8 @@ require(exports => {
             return deleteMember;
         }));
         // modifyMemberRoles?: Array<GroupChangeClass.Actions.ModifyMemberRoleAction>;
-        actions.modifyMemberRoles = lodash_1.compact((actions.modifyMemberRoles || []).map(modifyMember => {
+        actions.modifyMemberRoles = lodash_1.compact((actions.modifyMemberRoles || []).map(_modifyMember => {
+            const modifyMember = _modifyMember;
             if (hasData(modifyMember.userId)) {
                 try {
                     modifyMember.userId = zkgroup_1.decryptUuid(clientZkGroupCipher, modifyMember.userId.toArrayBuffer());
@@ -1093,8 +1097,10 @@ require(exports => {
             }
             return modifyMember;
         }));
-        // modifyMemberProfileKeys?: Array<GroupChangeClass.Actions.ModifyMemberProfileKeyAction>;
-        actions.modifyMemberProfileKeys = lodash_1.compact((actions.modifyMemberProfileKeys || []).map(modifyMemberProfileKey => {
+        // modifyMemberProfileKeys?:
+        // Array<GroupChangeClass.Actions.ModifyMemberProfileKeyAction>;
+        actions.modifyMemberProfileKeys = lodash_1.compact((actions.modifyMemberProfileKeys || []).map(_modifyMemberProfileKey => {
+            const modifyMemberProfileKey = _modifyMemberProfileKey;
             if (hasData(modifyMemberProfileKey.presentation)) {
                 const { profileKey, uuid } = zkgroup_1.decryptProfileKeyCredentialPresentation(clientZkGroupCipher, modifyMemberProfileKey.presentation.toArrayBuffer());
                 modifyMemberProfileKey.profileKey = profileKey;
@@ -1117,7 +1123,8 @@ require(exports => {
             return modifyMemberProfileKey;
         }));
         // addPendingMembers?: Array<GroupChangeClass.Actions.AddPendingMemberAction>;
-        actions.addPendingMembers = lodash_1.compact((actions.addPendingMembers || []).map(addPendingMember => {
+        actions.addPendingMembers = lodash_1.compact((actions.addPendingMembers || []).map(_addPendingMember => {
+            const addPendingMember = _addPendingMember;
             if (addPendingMember.added) {
                 const decrypted = decryptPendingMember(clientZkGroupCipher, addPendingMember.added, logId);
                 if (!decrypted) {
@@ -1126,12 +1133,11 @@ require(exports => {
                 addPendingMember.added = decrypted;
                 return addPendingMember;
             }
-            else {
-                throw new Error('decryptGroupChange: addPendingMember was missing added field!');
-            }
+            throw new Error('decryptGroupChange: addPendingMember was missing added field!');
         }));
         // deletePendingMembers?: Array<GroupChangeClass.Actions.DeletePendingMemberAction>;
-        actions.deletePendingMembers = lodash_1.compact((actions.deletePendingMembers || []).map(deletePendingMember => {
+        actions.deletePendingMembers = lodash_1.compact((actions.deletePendingMembers || []).map(_deletePendingMember => {
+            const deletePendingMember = _deletePendingMember;
             if (hasData(deletePendingMember.deletedUserId)) {
                 try {
                     deletePendingMember.deletedUserId = zkgroup_1.decryptUuid(clientZkGroupCipher, deletePendingMember.deletedUserId.toArrayBuffer());
@@ -1152,7 +1158,8 @@ require(exports => {
             return deletePendingMember;
         }));
         // promotePendingMembers?: Array<GroupChangeClass.Actions.PromotePendingMemberAction>;
-        actions.promotePendingMembers = lodash_1.compact((actions.promotePendingMembers || []).map(promotePendingMember => {
+        actions.promotePendingMembers = lodash_1.compact((actions.promotePendingMembers || []).map(_promotePendingMember => {
+            const promotePendingMember = _promotePendingMember;
             if (hasData(promotePendingMember.presentation)) {
                 const { profileKey, uuid } = zkgroup_1.decryptProfileKeyCredentialPresentation(clientZkGroupCipher, promotePendingMember.presentation.toArrayBuffer());
                 promotePendingMember.profileKey = profileKey;
@@ -1188,7 +1195,8 @@ require(exports => {
         }
         // modifyAvatar?: GroupChangeClass.Actions.ModifyAvatarAction;
         // Note: decryption happens during application of the change, on download of the avatar
-        // modifyDisappearingMessagesTimer?: GroupChangeClass.Actions.ModifyDisappearingMessagesTimerAction;
+        // modifyDisappearingMessagesTimer?:
+        // GroupChangeClass.Actions.ModifyDisappearingMessagesTimerAction;
         if (actions.modifyDisappearingMessagesTimer &&
             hasData(actions.modifyDisappearingMessagesTimer.timer)) {
             try {
@@ -1202,7 +1210,8 @@ require(exports => {
         else if (actions.modifyDisappearingMessagesTimer) {
             actions.modifyDisappearingMessagesTimer.timer = undefined;
         }
-        // modifyAttributesAccess?: GroupChangeClass.Actions.ModifyAttributesAccessControlAction;
+        // modifyAttributesAccess?:
+        // GroupChangeClass.Actions.ModifyAttributesAccessControlAction;
         if (actions.modifyAttributesAccess &&
             !isValidAccess(actions.modifyAttributesAccess.attributesAccess)) {
             throw new Error('decryptGroupChange: modifyAttributesAccess.attributesAccess was not a valid role');
@@ -1214,9 +1223,9 @@ require(exports => {
         }
         return actions;
     }
-    // tslint:disable-next-line max-func-body-length
-    function decryptGroupState(groupState, groupSecretParams, logId) {
+    function decryptGroupState(_groupState, groupSecretParams, logId) {
         const clientZkGroupCipher = zkgroup_1.getClientZkGroupCipher(groupSecretParams);
+        const groupState = _groupState;
         // title
         if (hasData(groupState.title)) {
             try {
@@ -1268,7 +1277,8 @@ require(exports => {
         }
         return groupState;
     }
-    function decryptMember(clientZkGroupCipher, member, logId) {
+    function decryptMember(clientZkGroupCipher, _member, logId) {
+        const member = _member;
         // userId
         if (hasData(member.userId)) {
             try {
@@ -1303,8 +1313,8 @@ require(exports => {
         }
         return member;
     }
-    // tslint:disable-next-line max-func-body-length cyclomatic-complexity
-    function decryptPendingMember(clientZkGroupCipher, member, logId) {
+    function decryptPendingMember(clientZkGroupCipher, _member, logId) {
+        const member = _member;
         // addedByUserId
         if (hasData(member.addedByUserId)) {
             try {

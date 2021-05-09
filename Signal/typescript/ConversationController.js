@@ -4,9 +4,9 @@ require(exports => {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const MAX_MESSAGE_BODY_LENGTH = 64 * 1024;
     const lodash_1 = require("lodash");
     const Client_1 = __importDefault(require("./sql/Client"));
+    const MAX_MESSAGE_BODY_LENGTH = 64 * 1024;
     const { getAllConversations, getAllGroupsInvolvingId, getMessagesBySentAt, migrateConversationMessages, removeConversation, saveConversation, updateConversation, } = Client_1.default;
     // We have to run this in background.js, after all backbone models and collections on
     //   Whisper.* have been created. Once those are in typescript we can use more reasonable
@@ -109,13 +109,13 @@ require(exports => {
             return conversation;
         }
         async getOrCreateAndWait(id, type, additionalInitialProps = {}) {
-            return this._initialPromise.then(async () => {
-                const conversation = this.getOrCreate(id, type, additionalInitialProps);
-                if (conversation) {
-                    return conversation.initialPromise.then(() => conversation);
-                }
-                return Promise.reject(new Error('getOrCreateAndWait: did not get conversation'));
-            });
+            await this._initialPromise;
+            const conversation = this.getOrCreate(id, type, additionalInitialProps);
+            if (conversation) {
+                await conversation.initialPromise;
+                return conversation;
+            }
+            throw new Error('getOrCreateAndWait: did not get conversation');
         }
         getConversationId(address) {
             if (!address) {
@@ -169,7 +169,7 @@ require(exports => {
                 return newConvo.get('id');
                 // 2. Handle match on only E164
             }
-            else if (convoE164 && !convoUuid) {
+            if (convoE164 && !convoUuid) {
                 const haveUuid = Boolean(normalizedUuid);
                 window.log.info(`ensureContactIds: e164-only match found (have UUID: ${haveUuid})`);
                 // If we are only searching based on e164 anyway, then return the first result
@@ -200,7 +200,7 @@ require(exports => {
                 return newConvo.get('id');
                 // 3. Handle match on only UUID
             }
-            else if (!convoE164 && convoUuid) {
+            if (!convoE164 && convoUuid) {
                 window.log.info(`ensureContactIds: UUID-only match found (have e164: ${Boolean(e164)})`);
                 if (e164 && highTrust) {
                     convoUuid.updateE164(e164);
@@ -233,6 +233,8 @@ require(exports => {
                 // Conflict: If e164 match has no UUID, we merge. We prefer the UUID match.
                 // Note: no await here, we want to keep this function synchronous
                 convoUuid.updateE164(e164);
+                // `then` is used to trigger async updates, not affecting return value
+                // eslint-disable-next-line more/no-then
                 this.combineContacts(convoUuid, convoE164)
                     .then(() => {
                         // If the old conversation was currently displayed, we load the new one
@@ -375,7 +377,7 @@ require(exports => {
          * conversation the message belongs to OR null if a conversation isn't
          * found.
          */
-        async getConversationForTargetMessage(targetFromId, targetTimestamp) {
+        static async getConversationForTargetMessage(targetFromId, targetTimestamp) {
             const messages = await getMessagesBySentAt(targetTimestamp, {
                 MessageCollection: window.Whisper.MessageCollection,
             });
