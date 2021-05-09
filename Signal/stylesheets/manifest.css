@@ -586,15 +586,12 @@ a {
 .debug-log .result {
   text-align: center; }
   .debug-log .result .input-group {
-    display: inline-block;
-    width: 100%;
-    max-width: 500px; }
+    display: inline-flex; }
   .debug-log .result .copy {
-    float: left;
-    display: inline-block;
-    width: 100px;
     height: 36px;
-    padding: 7px 30px;
+    text-align: center;
+    line-height: 36px;
+    padding: 0 30px;
     color: unset;
     text-decoration: none;
     cursor: pointer;
@@ -611,9 +608,8 @@ a {
         background: #b9b9b9; }
   .debug-log .result .link {
     border-radius: 5px 0 0 5px;
-    float: left;
-    width: calc(100% - 100px);
-    max-width: 400px;
+    flex-grow: 1;
+    min-width: 400px;
     height: 36px;
     padding: 0 10px;
     outline-offset: -4px;
