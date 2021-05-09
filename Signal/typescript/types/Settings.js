@@ -15,7 +15,23 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     const OS = __importStar(require("../OS"));
     const MIN_WINDOWS_VERSION = '8.0.0';
-    exports.isAudioNotificationSupported = () => OS.isWindows(MIN_WINDOWS_VERSION) || OS.isMacOS();
+    var AudioNotificationSupport;
+    (function (AudioNotificationSupport) {
+        AudioNotificationSupport[AudioNotificationSupport["None"] = 0] = "None";
+        AudioNotificationSupport[AudioNotificationSupport["Native"] = 1] = "Native";
+        AudioNotificationSupport[AudioNotificationSupport["Custom"] = 2] = "Custom";
+    })(AudioNotificationSupport = exports.AudioNotificationSupport || (exports.AudioNotificationSupport = {}));
+    function getAudioNotificationSupport() {
+        if (OS.isWindows(MIN_WINDOWS_VERSION) || OS.isMacOS()) {
+            return AudioNotificationSupport.Native;
+        }
+        else if (OS.isLinux()) {
+            return AudioNotificationSupport.Custom;
+        }
+        return AudioNotificationSupport.None;
+    }
+    exports.getAudioNotificationSupport = getAudioNotificationSupport;
+    exports.isAudioNotificationSupported = () => getAudioNotificationSupport() !== AudioNotificationSupport.None;
     // Using `Notification::tag` has a bug on Windows 7:
     // https://github.com/electron/electron/issues/11189
     exports.isNotificationGroupingSupported = () => !OS.isWindows() || OS.isWindows(MIN_WINDOWS_VERSION);
