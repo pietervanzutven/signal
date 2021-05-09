@@ -173,7 +173,6 @@
     <Content Include="js\expiring_tap_to_view_messages.js" />
     <Content Include="js\keychange_listener.js" />
     <Content Include="js\libphonenumber-util.js" />
-    <Content Include="js\libsignal-protocol-worker.js" />
     <Content Include="js\loading_start.js" />
     <Content Include="js\logging.js" />
     <Content Include="js\message_controller.js" />

@@ -68,7 +68,7 @@
     }
     exports.deriveStickerPackKey = deriveStickerPackKey;
     async function computeHash(data) {
-        const hash = await crypto.subtle.digest({ name: 'SHA-512' }, data);
+        const hash = await window.crypto.subtle.digest({ name: 'SHA-512' }, data);
         return arrayBufferToBase64(hash);
     }
     exports.computeHash = computeHash;
