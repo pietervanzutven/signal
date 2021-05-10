@@ -989,7 +989,7 @@
                     proxyUrl, timeout: 0, type: 'POST', version
                 }));
                 // Upload stickers
-                const queue = new p_queue_1.default({ concurrency: 3 });
+                const queue = new p_queue_1.default({ concurrency: 3, timeout: 1000 * 60 * 2 });
                 await Promise.all(stickers.map(async (sticker, index) => {
                     const stickerParams = makePutParams(sticker, encryptedStickers[index]);
                     await queue.add(async () => _outerAjax(`${cdnUrlObject['0']}/`, Object.assign(Object.assign({}, stickerParams), {

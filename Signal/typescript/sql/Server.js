@@ -1032,7 +1032,11 @@
         console.log('updateToSchemaVersion20: starting...');
         await instance.run('BEGIN TRANSACTION;');
         try {
-            const migrationJobQueue = new p_queue_1.default({ concurrency: 10 });
+            const migrationJobQueue = new p_queue_1.default({
+                concurrency: 10,
+                timeout: 1000 * 60 * 5,
+                throwOnTimeout: true,
+            });
             // The triggers on the messages table slow down this migration
             // significantly, so we drop them and recreate them later.
             // Drop triggers

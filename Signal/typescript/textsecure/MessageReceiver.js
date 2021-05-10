@@ -42,9 +42,9 @@
             this.number_id = oldUsername ? Helpers_1.default.unencodeNumber(oldUsername)[0] : null;
             this.uuid_id = username ? Helpers_1.default.unencodeNumber(username)[0] : null;
             this.deviceId = parseInt(Helpers_1.default.unencodeNumber(username || oldUsername)[1], 10);
-            this.incomingQueue = new p_queue_1.default({ concurrency: 1 });
-            this.pendingQueue = new p_queue_1.default({ concurrency: 1 });
-            this.appQueue = new p_queue_1.default({ concurrency: 1 });
+            this.incomingQueue = new p_queue_1.default({ concurrency: 1, timeout: 1000 * 60 * 2 });
+            this.pendingQueue = new p_queue_1.default({ concurrency: 1, timeout: 1000 * 60 * 2 });
+            this.appQueue = new p_queue_1.default({ concurrency: 1, timeout: 1000 * 60 * 2 });
             this.cacheAddBatcher = batcher_1.createBatcher({
                 wait: 200,
                 maxSize: 30,

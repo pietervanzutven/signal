@@ -17,7 +17,7 @@ require(exports => {
         let batcher;
         let timeout;
         let items = [];
-        const queue = new p_queue_1.default({ concurrency: 1 });
+        const queue = new p_queue_1.default({ concurrency: 1, timeout: 1000 * 60 * 2 });
         function _kickBatchOff() {
             const itemsRef = items;
             items = [];
