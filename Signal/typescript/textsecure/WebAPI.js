@@ -714,7 +714,7 @@
                 const { accessKey } = options;
                 const jsonData = {
                     capabilities: {
-                        gv2: true,
+                        'gv2-2': true,
                     },
                     fetchesMessages: true,
                     name: deviceName ? deviceName : undefined,
