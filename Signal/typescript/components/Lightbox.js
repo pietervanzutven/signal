@@ -73,7 +73,7 @@
         },
         object: {
             flexGrow: 1,
-            flexShrink: 0,
+            flexShrink: 1,
             maxWidth: '100%',
             maxHeight: '100%',
             objectFit: 'contain',
