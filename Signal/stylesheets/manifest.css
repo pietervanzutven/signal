@@ -5550,9 +5550,10 @@ img.emoji.jumbo {
   cursor: pointer;
   display: inline-block;
   padding-left: 4px;
-  padding-right: 4px; }
+  padding-right: 4px;
+  border: 1px solid transparent; }
   .module-message-body__at-mention:focus {
-    border: solid 1px #000000;
+    border: 1px solid #000000;
     outline: none; }
 
 .ios-theme .module-message-body__at-mention--incoming {
