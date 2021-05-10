@@ -3118,6 +3118,9 @@
         return;
       }
 
+      window.log.info(
+        `storageService[captureChange] marking ${this.debugID()} as needing sync`
+      );
       this.set({ needsStorageServiceSync: true });
 
       this.queueJob(() => {
