@@ -16,11 +16,11 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const is_1 = __importDefault(window.sindresorhus.is);
-    const moment_1 = __importDefault(window.moment);
-    const lodash_1 = window.lodash;
-    const MIME = __importStar(window.ts.types.MIME);
-    const protobuf_1 = window.ts.protobuf;
+    const is_1 = __importDefault(require("@sindresorhus/is"));
+    const moment_1 = __importDefault(require("moment"));
+    const lodash_1 = require("lodash");
+    const MIME = __importStar(require("./MIME"));
+    const protobuf_1 = require("../protobuf");
     const GoogleChrome_1 = require("../util/GoogleChrome");
     const MAX_WIDTH = 300;
     const MAX_HEIGHT = MAX_WIDTH * 1.5;
@@ -36,13 +36,13 @@
             }
         }
         if (!contentType) {
-            return;
+            return undefined;
         }
         const slash = contentType.indexOf('/');
         if (slash >= 0) {
             return contentType.slice(slash + 1);
         }
-        return;
+        return undefined;
     }
     exports.getExtensionForDisplay = getExtensionForDisplay;
     function isAudio(attachments) {
@@ -203,7 +203,7 @@
     exports.isVoiceMessage = (attachment) => {
         const flag = protobuf_1.SignalService.AttachmentPointer.Flags.VOICE_MESSAGE;
         const hasFlag =
-            // tslint:disable-next-line no-bitwise
+            // eslint-disable-next-line no-bitwise
             !is_1.default.undefined(attachment.flags) && (attachment.flags & flag) === flag;
         if (hasFlag) {
             return true;
@@ -248,7 +248,7 @@
     };
     exports.getFileExtension = (attachment) => {
         if (!attachment.contentType) {
-            return;
+            return undefined;
         }
         switch (attachment.contentType) {
             case 'video/quicktime':

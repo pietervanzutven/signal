@@ -7,6 +7,7 @@
     const exports = window.ts.state.ducks.conversations = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
+    /* eslint-disable camelcase */
     const lodash_1 = require("lodash");
     const events_1 = require("../../shims/events");
     // Action Creators
@@ -289,8 +290,7 @@
             const { payload } = action;
             const { id, data } = payload;
             const { conversationLookup } = state;
-            let showArchived = state.showArchived;
-            let selectedConversation = state.selectedConversation;
+            let { showArchived, selectedConversation } = state;
             const existing = conversationLookup[id];
             // In the change case we only modify the lookup if we already had that conversation
             if (!existing) {
@@ -538,7 +538,8 @@
                     return state;
                 }
             }
-            // Update oldest and newest if we receive older/newer messages (or duplicated timestamps!)
+            // Update oldest and newest if we receive older/newer
+            // messages (or duplicated timestamps!)
             if (first && oldest && first.received_at <= oldest.received_at) {
                 oldest = lodash_1.pick(first, ['id', 'received_at']);
             }

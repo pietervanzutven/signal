@@ -1,16 +1,12 @@
 require(exports => {
     "use strict";
-
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const p_queue_1 = __importDefault(window.p_queue);
-    // @ts-ignore
+    const p_queue_1 = __importDefault(require("p-queue"));
     window.batchers = [];
-    // @ts-ignore
     window.waitForAllBatchers = async () => {
-        // @ts-ignore
         await Promise.all(window.batchers.map(item => item.flushAndWait()));
     };
     async function sleep(ms) {
@@ -52,16 +48,17 @@ require(exports => {
         async function onIdle() {
             while (anyPending()) {
                 if (queue.size > 0 || queue.pending > 0) {
+                    // eslint-disable-next-line no-await-in-loop
                     await queue.onIdle();
                 }
                 if (items.length > 0) {
+                    // eslint-disable-next-line no-await-in-loop
                     await sleep(options.wait * 2);
                 }
             }
         }
         function unregister() {
-            // @ts-ignore
-            window.batchers = window.batchers.filter((item) => item !== batcher);
+            window.batchers = window.batchers.filter(item => item !== batcher);
         }
         async function flushAndWait() {
             if (timeout) {
@@ -80,7 +77,6 @@ require(exports => {
             flushAndWait,
             unregister,
         };
-        // @ts-ignore
         window.batchers.push(batcher);
         return batcher;
     }

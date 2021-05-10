@@ -1,6 +1,5 @@
 require(exports => {
     "use strict";
-
     Object.defineProperty(exports, "__esModule", { value: true });
     // `missingCaseError` is useful for compile-time checking that all `case`s in
     // a `switch` statement have been handled, e.g.
@@ -22,6 +21,4 @@ require(exports => {
     // handled by our `switch` / `case` statement which is useful for code
     // maintenance and system evolution.
     exports.missingCaseError = (x) => new TypeError(`Unhandled case: ${x}`);
-
-    return exports;
 });

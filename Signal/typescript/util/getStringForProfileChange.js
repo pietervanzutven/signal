@@ -14,9 +14,7 @@ require(exports => {
                     newProfile: change.newName,
                 });
         }
-        else {
-            throw new Error('TimelineItem: Unknown type!');
-        }
+        throw new Error('TimelineItem: Unknown type!');
     }
     exports.getStringForProfileChange = getStringForProfileChange;
 });

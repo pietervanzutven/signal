@@ -14,9 +14,9 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const Dialogs_1 = window.ts.types.Dialogs;
-    const updateIpc = __importStar(window.ts.shims.updateIpc);
-    const events_1 = window.ts.shims.events;
+    const Dialogs_1 = require("../../types/Dialogs");
+    const updateIpc = __importStar(require("../../shims/updateIpc"));
+    const events_1 = require("../../shims/events");
     // Actions
     const ACK_RENDER = 'updates/ACK_RENDER';
     const DISMISS_DIALOG = 'updates/DISMISS_DIALOG';

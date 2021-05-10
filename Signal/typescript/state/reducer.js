@@ -31,6 +31,6 @@
         updates: updates_1.reducer,
         user: user_1.reducer,
     };
-    // @ts-ignore: AnyAction breaks strong type checking inside reducers
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exports.reducer = redux_1.combineReducers(exports.reducers);
 })();

@@ -5,7 +5,7 @@ require(exports => {
         if (value instanceof URL) {
             return value;
         }
-        else if (typeof value === 'string') {
+        if (typeof value === 'string') {
             try {
                 return new URL(value);
             }

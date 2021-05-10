@@ -131,7 +131,7 @@
         const max = searchResults.length;
         for (let i = 0; i < max; i += 1) {
             const conversation = searchResults[i];
-            if (conversation.type === 'private' && !Boolean(conversation.lastMessage)) {
+            if (conversation.type === 'private' && !conversation.lastMessage) {
                 contacts.push(conversation.id);
             }
             else {

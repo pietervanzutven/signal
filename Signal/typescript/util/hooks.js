@@ -1,6 +1,5 @@
 require(exports => {
-    'use strict';
-
+    "use strict";
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
@@ -9,9 +8,9 @@ require(exports => {
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const React = __importStar(window.react);
-    const redux_1 = window.redux;
-    const react_redux_1 = window.react_redux;
+    const React = __importStar(require("react"));
+    const redux_1 = require("redux");
+    const react_redux_1 = require("react-redux");
     // Restore focus on teardown
     exports.useRestoreFocus = (
         // The ref for the element to receive initial focus
@@ -20,7 +19,7 @@ require(exports => {
         root = true) => {
         React.useEffect(() => {
             if (!root) {
-                return;
+                return undefined;
             }
             const lastFocused = document.activeElement;
             if (focusRef.current) {
@@ -41,6 +40,6 @@ require(exports => {
         const dispatch = react_redux_1.useDispatch();
         return React.useMemo(() => {
             return redux_1.bindActionCreators(actions, dispatch);
-        }, [dispatch]);
+        }, [actions, dispatch]);
     };
 });

@@ -1,6 +1,5 @@
 require(exports => {
     "use strict";
-
     Object.defineProperty(exports, "__esModule", { value: true });
     function cleanSearchTerm(searchTerm) {
         const lowercase = searchTerm.toLowerCase();

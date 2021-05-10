@@ -7,7 +7,7 @@
     const exports = window.ts.state.ducks.network = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const events_1 = window.ts.shims.events;
+    const events_1 = require("../../shims/events");
     // Actions
     const CHECK_NETWORK_STATUS = 'network/CHECK_NETWORK_STATUS';
     const CLOSE_CONNECTING_GRACE_PERIOD = 'network/CLOSE_CONNECTING_GRACE_PERIOD';

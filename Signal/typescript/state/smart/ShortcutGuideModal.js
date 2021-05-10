@@ -7,12 +7,12 @@
     const exports = window.ts.state.smart.ShortcutGuideModal = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_redux_1 = window.react_redux;
-    const actions_1 = window.ts.state.actions;
-    const ShortcutGuideModal_1 = window.ts.components.ShortcutGuideModal;
-    const lib_1 = window.ts.components.stickers.lib;
-    const user_1 = window.ts.state.selectors.user;
-    const stickers_1 = window.ts.state.selectors.stickers;
+    const react_redux_1 = require("react-redux");
+    const actions_1 = require("../actions");
+    const ShortcutGuideModal_1 = require("../../components/ShortcutGuideModal");
+    const lib_1 = require("../../components/stickers/lib");
+    const user_1 = require("../selectors/user");
+    const stickers_1 = require("../selectors/stickers");
     const mapStateToProps = (state, props) => {
         const { close } = props;
         const blessedPacks = stickers_1.getBlessedStickerPacks(state);

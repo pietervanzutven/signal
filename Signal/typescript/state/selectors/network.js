@@ -7,7 +7,7 @@
     const exports = window.ts.state.selectors.network = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const reselect_1 = window.reselect;
+    const reselect_1 = require("reselect");
     const registration_1 = require("../../util/registration");
     const getNetwork = (state) => state.network;
     exports.hasNetworkDialog = reselect_1.createSelector(getNetwork, registration_1.isDone, ({ isOnline, socketStatus, withinConnectingGracePeriod }, isRegistrationDone) => isRegistrationDone &&

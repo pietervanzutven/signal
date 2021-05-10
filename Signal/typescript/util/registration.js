@@ -2,7 +2,6 @@ require(exports => {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function markEverDone() {
-        // @ts-ignore
         window.storage.put('chromiumRegistrationDoneEver', '');
     }
     exports.markEverDone = markEverDone;

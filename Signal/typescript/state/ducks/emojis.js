@@ -10,8 +10,8 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = window.lodash;
-    const Client_1 = __importDefault(window.ts.sql.Client);
+    const lodash_1 = require("lodash");
+    const Client_1 = __importDefault(require("../../sql/Client"));
     const hooks_1 = require("../../util/hooks");
     const { updateEmojiUsage } = Client_1.default;
     // Action Creators

@@ -7,11 +7,11 @@
     const exports = window.ts.state.smart.NetworkStatus = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_redux_1 = window.react_redux;
-    const actions_1 = window.ts.state.actions;
-    const NetworkStatus_1 = window.ts.components.NetworkStatus;
-    const user_1 = window.ts.state.selectors.user;
-    const network_1 = window.ts.state.selectors.network;
+    const react_redux_1 = require("react-redux");
+    const actions_1 = require("../actions");
+    const NetworkStatus_1 = require("../../components/NetworkStatus");
+    const user_1 = require("../selectors/user");
+    const network_1 = require("../selectors/network");
     const mapStateToProps = (state) => {
         return Object.assign(Object.assign({}, state.network), { hasNetworkDialog: network_1.hasNetworkDialog(state), i18n: user_1.getIntl(state) });
     };

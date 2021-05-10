@@ -13,7 +13,7 @@ require(exports => {
     const ContactName_1 = require("../../components/conversation/ContactName");
     const user_1 = require("../selectors/user");
     const conversations_1 = require("../selectors/conversations");
-    exports.SmartContactName = (props) => {
+    exports.SmartContactName = props => {
         const { conversationId } = props;
         const i18n = react_redux_1.useSelector(user_1.getIntl);
         const getConversation = react_redux_1.useSelector(conversations_1.getConversationSelector);

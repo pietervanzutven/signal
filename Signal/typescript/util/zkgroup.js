@@ -4,10 +4,9 @@ require(exports => {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
     }
     Object.defineProperty(exports, "__esModule", { value: true });
-    __export(require("zkgroup"));
     const zkgroup_1 = require("zkgroup");
     const Crypto_1 = require("../Crypto");
-    // Simple utility functions
+    __export(require("zkgroup"));
     function arrayBufferToCompatArray(arrayBuffer) {
         const buffer = Buffer.from(arrayBuffer);
         return new zkgroup_1.FFICompatArray(buffer);

@@ -10,27 +10,29 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const react_redux_1 = window.react_redux;
-    const actions_1 = window.ts.state.actions;
-    const LeftPane_1 = window.ts.components.LeftPane;
-    const search_1 = window.ts.state.selectors.search;
-    const user_1 = window.ts.state.selectors.user;
-    const conversations_1 = window.ts.state.selectors.conversations;
-    const ExpiredBuildDialog_1 = window.ts.state.smart.ExpiredBuildDialog;
-    const MainHeader_1 = window.ts.state.smart.MainHeader;
-    const MessageSearchResult_1 = window.ts.state.smart.MessageSearchResult;
-    const NetworkStatus_1 = window.ts.state.smart.NetworkStatus;
-    const RelinkDialog_1 = window.ts.state.smart.RelinkDialog;
-    const UpdateDialog_1 = window.ts.state.smart.UpdateDialog;
+    const react_1 = __importDefault(require("react"));
+    const react_redux_1 = require("react-redux");
+    const actions_1 = require("../actions");
+    const LeftPane_1 = require("../../components/LeftPane");
+    const search_1 = require("../selectors/search");
+    const user_1 = require("../selectors/user");
+    const conversations_1 = require("../selectors/conversations");
+    const ExpiredBuildDialog_1 = require("./ExpiredBuildDialog");
+    const MainHeader_1 = require("./MainHeader");
+    const MessageSearchResult_1 = require("./MessageSearchResult");
+    const NetworkStatus_1 = require("./NetworkStatus");
+    const RelinkDialog_1 = require("./RelinkDialog");
+    const UpdateDialog_1 = require("./UpdateDialog");
     // Workaround: A react component's required properties are filtering up through connect()
     //   https://github.com/DefinitelyTyped/DefinitelyTyped/issues/31363
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const FilteredSmartMainHeader = MainHeader_1.SmartMainHeader;
     const FilteredSmartMessageSearchResult = MessageSearchResult_1.SmartMessageSearchResult;
     const FilteredSmartNetworkStatus = NetworkStatus_1.SmartNetworkStatus;
     const FilteredSmartUpdateDialog = UpdateDialog_1.SmartUpdateDialog;
     const FilteredSmartExpiredBuildDialog = ExpiredBuildDialog_1.SmartExpiredBuildDialog;
     const FilteredSmartRelinkDialog = RelinkDialog_1.SmartRelinkDialog;
+    /* eslint-enable @typescript-eslint/no-explicit-any */
     function renderExpiredBuildDialog() {
         return react_1.default.createElement(FilteredSmartExpiredBuildDialog, null);
     }

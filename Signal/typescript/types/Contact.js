@@ -6,7 +6,7 @@
     const exports = window.ts.types.Contact = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const PhoneNumber_1 = window.ts.types.PhoneNumber;
+    const PhoneNumber_1 = require("./PhoneNumber");
     var ContactFormType;
     (function (ContactFormType) {
         ContactFormType[ContactFormType["HOME"] = 1] = "HOME";
@@ -28,8 +28,8 @@
                 avatar = undefined;
             }
             else {
-                avatar = Object.assign({}, avatar, {
-                    avatar: Object.assign({}, avatar.avatar, {
+                avatar = Object.assign(Object.assign({}, avatar), {
+                    avatar: Object.assign(Object.assign({}, avatar.avatar), {
                         path: avatar.avatar.path
                             ? getAbsoluteAttachmentPath(avatar.avatar.path)
                             : undefined
@@ -37,10 +37,10 @@
                 });
             }
         }
-        return Object.assign({}, contact, {
+        return Object.assign(Object.assign({}, contact), {
             signalAccount,
             avatar, number: contact.number &&
-                contact.number.map(item => (Object.assign({}, item, {
+                contact.number.map(item => (Object.assign(Object.assign({}, item), {
                     value: PhoneNumber_1.format(item.value, {
                         ourRegionCode: regionCode,
                     })

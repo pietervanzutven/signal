@@ -78,7 +78,7 @@
                 // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
                 react_1.default.createElement("div", { className: "module-message-detail", tabIndex: 0, ref: this.focusRef },
                     react_1.default.createElement("div", { className: "module-message-detail__message-container" },
-                        react_1.default.createElement(Message_1.Message, Object.assign({ i18n: i18n }, message))),
+                        react_1.default.createElement(Message_1.Message, Object.assign({}, message, { i18n: i18n }))),
                     react_1.default.createElement("table", { className: "module-message-detail__info" },
                         react_1.default.createElement("tbody", null,
                             (errors || []).map(error => (react_1.default.createElement("tr", { key: _keyForError(error) },

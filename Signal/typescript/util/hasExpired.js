@@ -1,6 +1,5 @@
 require(exports => {
     "use strict";
-
     Object.defineProperty(exports, "__esModule", { value: true });
     const env = window.getEnvironment();
     const NINETY_ONE_DAYS = 86400 * 91 * 1000;
@@ -24,7 +23,7 @@ require(exports => {
         if (env === 'production') {
             return Date.now() > buildExpiration && tooFarIntoFuture;
         }
-        return buildExpiration && Date.now() > buildExpiration;
+        return buildExpiration !== 0 && Date.now() > buildExpiration;
     }
     exports.hasExpired = hasExpired;
 });

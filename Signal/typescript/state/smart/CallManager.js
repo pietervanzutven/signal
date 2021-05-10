@@ -12,7 +12,9 @@ require(exports => {
     const CallingDeviceSelection_1 = require("./CallingDeviceSelection");
     // Workaround: A react component's required properties are filtering up through connect()
     //   https://github.com/DefinitelyTyped/DefinitelyTyped/issues/31363
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const FilteredCallingDeviceSelection = CallingDeviceSelection_1.SmartCallingDeviceSelection;
+    /* eslint-enable @typescript-eslint/no-explicit-any */
     function renderDeviceSelection() {
         return react_1.default.createElement(FilteredCallingDeviceSelection, null);
     }

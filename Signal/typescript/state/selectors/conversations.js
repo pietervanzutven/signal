@@ -24,7 +24,7 @@
     });
     exports.getSelectedMessage = reselect_1.createSelector(exports.getConversations, (state) => {
         if (!state.selectedMessage) {
-            return;
+            return undefined;
         }
         return {
             id: state.selectedMessage,
@@ -77,17 +77,16 @@
         const max = values.length;
         for (let i = 0; i < max; i += 1) {
             let conversation = values[i];
-            if (!conversation.activeAt) {
-                continue;
-            }
-            if (selectedConversation === conversation.id) {
-                conversation = Object.assign(Object.assign({}, conversation), { isSelected: true });
-            }
-            if (conversation.isArchived) {
-                archivedConversations.push(conversation);
-            }
-            else {
-                conversations.push(conversation);
+            if (conversation.activeAt) {
+                if (selectedConversation === conversation.id) {
+                    conversation = Object.assign(Object.assign({}, conversation), { isSelected: true });
+                }
+                if (conversation.isArchived) {
+                    archivedConversations.push(conversation);
+                }
+                else {
+                    conversations.push(conversation);
+                }
             }
         }
         conversations.sort(comparator);
@@ -121,7 +120,7 @@
         return (id) => {
             const conversation = lookup[id];
             if (!conversation) {
-                return;
+                return undefined;
             }
             return selector(conversation);
         };
@@ -132,17 +131,7 @@
     //   2) other places still rely on that prop-gen code - need to put these under Roots:
     //     - quote compose
     //     - message details
-    function _messageSelector(message,
-        // @ts-ignore
-        ourNumber,
-        // @ts-ignore
-        regionCode, interactionMode,
-        // @ts-ignore
-        conversation,
-        // @ts-ignore
-        author,
-        // @ts-ignore
-        quoted, selectedMessageId, selectedMessageCounter) {
+    function _messageSelector(message, _ourNumber, _regionCode, interactionMode, _conversation, _author, _quoted, selectedMessageId, selectedMessageCounter) {
         // Note: We don't use all of those parameters here, but the shim we call does.
         //   We want to call this function again if any of those parameters change.
         const props = Whisper_1.getBubbleProps(message);
@@ -161,7 +150,7 @@
         return (id) => {
             const message = messageLookup[id];
             if (!message) {
-                return;
+                return undefined;
             }
             const { conversationId, source, type, quote } = message;
             const conversation = conversationSelector(conversationId);
@@ -229,7 +218,7 @@
         return (id) => {
             const conversation = messagesByConversation[id];
             if (!conversation) {
-                return;
+                return undefined;
             }
             return conversationMessagesSelector(conversation);
         };

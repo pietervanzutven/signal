@@ -7,10 +7,10 @@
     const exports = window.ts.state.smart.ExpiredBuildDialog = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_redux_1 = window.react_redux;
-    const actions_1 = window.ts.state.actions;
-    const ExpiredBuildDialog_1 = window.ts.components.ExpiredBuildDialog;
-    const user_1 = window.ts.state.selectors.user;
+    const react_redux_1 = require("react-redux");
+    const actions_1 = require("../actions");
+    const ExpiredBuildDialog_1 = require("../../components/ExpiredBuildDialog");
+    const user_1 = require("../selectors/user");
     const mapStateToProps = (state) => {
         return {
             hasExpired: state.expiration.hasExpired,

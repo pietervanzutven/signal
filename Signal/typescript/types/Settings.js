@@ -25,7 +25,7 @@
         if (OS.isWindows(MIN_WINDOWS_VERSION) || OS.isMacOS()) {
             return AudioNotificationSupport.Native;
         }
-        else if (OS.isLinux()) {
+        if (OS.isLinux()) {
             return AudioNotificationSupport.Custom;
         }
         return AudioNotificationSupport.None;

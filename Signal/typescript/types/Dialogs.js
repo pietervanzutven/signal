@@ -5,6 +5,7 @@
     window.ts.types = window.ts.types || {};
     const exports = window.ts.types.Dialogs = {};
 
+    /* eslint-disable camelcase */
     Object.defineProperty(exports, "__esModule", { value: true });
     var Dialogs;
     (function (Dialogs) {

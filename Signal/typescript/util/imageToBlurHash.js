@@ -22,7 +22,6 @@ require(exports => {
                 }
                 const error = new Error('imageToBlurHash: Failed to place image on canvas');
                 reject(error);
-                return;
             },
                 // Calculating the blurhash on large images is a long-running and
                 // synchronous operation, so here we ensure the images are a reasonable
