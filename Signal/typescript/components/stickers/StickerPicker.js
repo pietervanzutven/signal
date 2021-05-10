@@ -17,16 +17,14 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /* tslint:disable:max-func-body-length */
-    /* tslint:disable:cyclomatic-complexity */
-    const React = __importStar(window.react);
-    const classnames_1 = __importDefault(window.classnames);
+    const React = __importStar(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
     const hooks_1 = require("../../util/hooks");
     function useTabs(tabs, initialTab = tabs[0]) {
         const [tab, setTab] = React.useState(initialTab);
         const handlers = React.useMemo(() => tabs.map(t => () => {
             setTab(t);
-        }), tabs);
+        }), [tabs]);
         return [tab, handlers];
     }
     const PACKS_PAGE_SIZE = 7;
@@ -47,9 +45,11 @@
     }
     exports.StickerPicker = React.memo(React.forwardRef(({ i18n, packs, recentStickers, onClose, onClickAddPack, onPickSticker, showPickerHint, style, }, ref) => {
         const focusRef = React.useRef(null);
-        const tabIds = React.useMemo(() => ['recents', ...packs.map(({ id }) => id)], packs);
+        const tabIds = React.useMemo(() => ['recents', ...packs.map(({ id }) => id)], [packs]);
         const [currentTab, [recentsHandler, ...packsHandlers]] = useTabs(tabIds,
-            // If there are no recent stickers, default to the first sticker pack, unless there are no sticker packs.
+            // If there are no recent stickers,
+            // default to the first sticker pack,
+            // unless there are no sticker packs.
             tabIds[recentStickers.length > 0 ? 0 : Math.min(1, tabIds.length)]);
         const selectedPack = packs.find(({ id }) => id === currentTab);
         const { stickers = recentStickers, title: packTitle = 'Recent Stickers', } = selectedPack || {};
@@ -73,7 +73,6 @@
                     event.stopPropagation();
                     event.preventDefault();
                     onClose();
-                    return;
                 }
             };
             document.addEventListener('keydown', handler);
@@ -107,24 +106,24 @@
                         }
                     },
                         hasPacks ? (React.createElement("button", {
-                            onClick: recentsHandler, className: classnames_1.default({
+                            type: "button", onClick: recentsHandler, className: classnames_1.default({
                                 'module-sticker-picker__header__button': true,
                                 'module-sticker-picker__header__button--recents': true,
                                 'module-sticker-picker__header__button--selected': currentTab === 'recents',
-                            })
+                            }), "aria-label": i18n('stickers--StickerPicker--Recents')
                         })) : null,
                         packs.map((pack, i) => (React.createElement("button", {
-                            key: pack.id, onClick: packsHandlers[i], className: classnames_1.default('module-sticker-picker__header__button', {
+                            type: "button", key: pack.id, onClick: packsHandlers[i], className: classnames_1.default('module-sticker-picker__header__button', {
                                 'module-sticker-picker__header__button--selected': currentTab === pack.id,
                                 'module-sticker-picker__header__button--error': pack.status === 'error',
                             })
                         }, pack.cover ? (React.createElement("img", { className: "module-sticker-picker__header__button__image", src: pack.cover.url, alt: pack.title, title: pack.title })) : (React.createElement("div", { className: "module-sticker-picker__header__button__image-placeholder" })))))),
-                    !isUsingKeyboard && packsPage > 0 ? (React.createElement("button", { className: classnames_1.default('module-sticker-picker__header__button', 'module-sticker-picker__header__button--prev-page'), onClick: onClickPrevPackPage })) : null,
-                    !isUsingKeyboard && !isLastPacksPage(packsPage, packs.length) ? (React.createElement("button", { className: classnames_1.default('module-sticker-picker__header__button', 'module-sticker-picker__header__button--next-page'), onClick: onClickNextPackPage })) : null),
+                    !isUsingKeyboard && packsPage > 0 ? (React.createElement("button", { type: "button", className: classnames_1.default('module-sticker-picker__header__button', 'module-sticker-picker__header__button--prev-page'), onClick: onClickPrevPackPage, "aria-label": i18n('stickers--StickerPicker--PrevPage') })) : null,
+                    !isUsingKeyboard && !isLastPacksPage(packsPage, packs.length) ? (React.createElement("button", { type: "button", className: classnames_1.default('module-sticker-picker__header__button', 'module-sticker-picker__header__button--next-page'), onClick: onClickNextPackPage, "aria-label": i18n('stickers--StickerPicker--NextPage') })) : null),
                 React.createElement("button", {
-                    ref: addPackRef, className: classnames_1.default('module-sticker-picker__header__button', 'module-sticker-picker__header__button--add-pack', {
+                    type: "button", ref: addPackRef, className: classnames_1.default('module-sticker-picker__header__button', 'module-sticker-picker__header__button--add-pack', {
                         'module-sticker-picker__header__button--hint': showPickerHint,
-                    }), onClick: onClickAddPack
+                    }), onClick: onClickAddPack, "aria-label": i18n('stickers--StickerPicker--AddPack')
                 })),
             React.createElement("div", {
                 className: classnames_1.default('module-sticker-picker__body', {
@@ -156,11 +155,14 @@
                 },
                     stickers.map(({ packId, id, url }, index) => {
                         const maybeFocusRef = index === 0 ? focusRef : undefined;
-                        return (React.createElement("button", { ref: maybeFocusRef, key: `${packId}-${id}`, className: "module-sticker-picker__body__cell", onClick: () => onPickSticker(packId, id) },
+                        return (React.createElement("button", { type: "button", ref: maybeFocusRef, key: `${packId}-${id}`, className: "module-sticker-picker__body__cell", onClick: () => onPickSticker(packId, id) },
                             React.createElement("img", { className: "module-sticker-picker__body__cell__image", src: url, alt: packTitle })));
                     }),
                     Array(pendingCount)
                         .fill(0)
-                        .map((_, i) => (React.createElement("div", { key: i, className: "module-sticker-picker__body__cell__placeholder", role: "presentation" }))))) : null)));
+                        .map((_, i) => (React.createElement("div", {
+                            // eslint-disable-next-line react/no-array-index-key
+                            key: i, className: "module-sticker-picker__body__cell__placeholder", role: "presentation"
+                        }))))) : null)));
     }));
 })();
