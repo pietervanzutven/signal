@@ -23,6 +23,7 @@
     const GoogleChrome = __importStar(require("../../util/GoogleChrome"));
     const MessageBody_1 = require("./MessageBody");
     const ContactName_1 = require("./ContactName");
+    const getTextWithMentions_1 = require("../../util/getTextWithMentions");
     function validateQuote(quote) {
         if (quote.text) {
             return true;
@@ -136,10 +137,13 @@
             return null;
         }
         renderText() {
-            const { bodyRanges, i18n, text, attachment, isIncoming, openConversation, } = this.props;
+            const { bodyRanges, i18n, text, attachment, isIncoming } = this.props;
             if (text) {
+                const quoteText = bodyRanges
+                    ? getTextWithMentions_1.getTextWithMentions(bodyRanges, text)
+                    : text;
                 return (react_1.default.createElement("div", { dir: "auto", className: classnames_1.default('module-quote__primary__text', isIncoming ? 'module-quote__primary__text--incoming' : null) },
-                    react_1.default.createElement(MessageBody_1.MessageBody, { disableLinks: true, text: text, i18n: i18n, bodyRanges: bodyRanges, openConversation: openConversation })));
+                    react_1.default.createElement(MessageBody_1.MessageBody, { disableLinks: true, text: quoteText, i18n: i18n })));
             }
             if (!attachment) {
                 return null;

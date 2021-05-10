@@ -3931,6 +3931,7 @@
     <Content Include="typescript\util\getInitials.js" />
     <Content Include="typescript\util\getMuteOptions.js" />
     <Content Include="typescript\util\getStringForProfileChange.js" />
+    <Content Include="typescript\util\getTextWithMentions.js" />
     <Content Include="typescript\util\getUserAgent.js" />
     <Content Include="typescript\util\GoogleChrome.js" />
     <Content Include="typescript\util\hasExpired.js" />

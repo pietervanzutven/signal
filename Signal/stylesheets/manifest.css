@@ -5558,8 +5558,9 @@ img.emoji.jumbo {
 
 .ios-theme .module-message-body__at-mention--incoming {
   background-color: #c6c6c6; }
-  .dark-theme .ios-theme .module-message-body__at-mention--incoming {
-    background-color: #5e5e5e; }
+
+.dark-theme.ios-theme .module-message-body__at-mention--incoming {
+  background-color: #5e5e5e; }
 
 .module-message-body__at-mention--outgoing {
   background-color: #c6c6c6; }

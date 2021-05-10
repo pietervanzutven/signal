@@ -583,7 +583,7 @@
                             dateMoment && (react_1.default.createElement("time", { className: "module-message__link-preview__date", dateTime: dateMoment.toISOString() }, dateMoment.format('ll'))))))));
         }
         renderQuote() {
-            const { conversationType, authorColor, direction, disableScroll, i18n, openConversation, quote, scrollToQuotedMessage, } = this.props;
+            const { conversationType, authorColor, direction, disableScroll, i18n, quote, scrollToQuotedMessage, } = this.props;
             if (!quote) {
                 return null;
             }
@@ -598,7 +598,7 @@
                         sentAt: quote.sentAt,
                     });
                 };
-            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: clickHandler, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quoteColor, authorTitle: quote.authorTitle, bodyRanges: quote.bodyRanges, openConversation: openConversation, referencedMessageNotFound: referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
+            return (react_1.default.createElement(Quote_1.Quote, { i18n: i18n, onClick: clickHandler, text: quote.text, attachment: quote.attachment, isIncoming: direction === 'incoming', authorPhoneNumber: quote.authorPhoneNumber, authorProfileName: quote.authorProfileName, authorName: quote.authorName, authorColor: quoteColor, authorTitle: quote.authorTitle, bodyRanges: quote.bodyRanges, referencedMessageNotFound: referencedMessageNotFound, isFromMe: quote.isFromMe, withContentAbove: withContentAbove }));
         }
         renderEmbeddedContact() {
             const { collapseMetadata, contact, conversationType, direction, i18n, showContactDetail, text, } = this.props;
