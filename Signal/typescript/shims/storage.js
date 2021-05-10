@@ -6,6 +6,9 @@
     const exports = window.ts.shims.storage = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
+    // Matching window.storage.put API
+    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
     function put(key, value) {
         window.storage.put(key, value);
     }

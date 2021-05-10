@@ -32,7 +32,7 @@
   }
 
   // We load config after we've made our modifications to UWP_ENV
-  const config = window.require_config();
+  const config = require('config');
 
   config.environment = environment;
   config.enableHttp = process.env.SIGNAL_ENABLE_HTTP;

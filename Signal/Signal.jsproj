@@ -312,7 +312,7 @@
     <Content Include="node_modules\blueimp-load-image\load-image-scale.js" />
     <Content Include="node_modules\blueimp-load-image\load-image.js" />
     <Content Include="node_modules\classnames\index.js" />
-    <Content Include="node_modules\config\config.js" />
+    <Content Include="node_modules\config\index.js" />
     <Content Include="node_modules\core\buffer.js" />
     <Content Include="node_modules\core\electron.js" />
     <Content Include="node_modules\core\events.js" />
