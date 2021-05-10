@@ -38,7 +38,8 @@ require(exports => {
         config = newConfig.reduce((acc, { name, enabled, value }) => {
             const previouslyEnabled = lodash_1.get(oldConfig, [name, 'enabled'], false);
             const previousValue = lodash_1.get(oldConfig, [name, 'value'], undefined);
-            // If a flag was previously not enabled and is now enabled, record the time it was enabled
+            // If a flag was previously not enabled and is now enabled,
+            // record the time it was enabled
             const enabledAt = previouslyEnabled && enabled ? now : lodash_1.get(oldConfig, [name, 'enabledAt']);
             const configValue = {
                 name: name,

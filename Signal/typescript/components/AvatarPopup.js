@@ -34,10 +34,10 @@
                     React.createElement("div", { className: "module-avatar-popup__profile__name" }, profileName || title),
                     shouldShowNumber ? (React.createElement("div", { className: "module-avatar-popup__profile__number" }, phoneNumber)) : null)),
             React.createElement("hr", { className: "module-avatar-popup__divider" }),
-            React.createElement("button", { ref: focusRef, className: "module-avatar-popup__item", onClick: onViewPreferences },
+            React.createElement("button", { type: "button", ref: focusRef, className: "module-avatar-popup__item", onClick: onViewPreferences },
                 React.createElement("div", { className: classnames_1.default('module-avatar-popup__item__icon', 'module-avatar-popup__item__icon-settings') }),
                 React.createElement("div", { className: "module-avatar-popup__item__text" }, i18n('mainMenuSettings'))),
-            React.createElement("button", { className: "module-avatar-popup__item", onClick: onViewArchive },
+            React.createElement("button", { type: "button", className: "module-avatar-popup__item", onClick: onViewArchive },
                 React.createElement("div", { className: classnames_1.default('module-avatar-popup__item__icon', 'module-avatar-popup__item__icon-archive') }),
                 React.createElement("div", { className: "module-avatar-popup__item__text" }, i18n('avatarMenuViewArchive')))));
     };

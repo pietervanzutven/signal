@@ -13,27 +13,23 @@
     const react_1 = __importDefault(require("react"));
     const ContactName_1 = require("./ContactName");
     const Intl_1 = require("../Intl");
-    class SafetyNumberNotification extends react_1.default.Component {
-        render() {
-            const { contact, isGroup, i18n, showIdentity } = this.props;
-            const changeKey = isGroup
-                ? 'safetyNumberChangedGroup'
-                : 'safetyNumberChanged';
-            return (react_1.default.createElement("div", { className: "module-safety-number-notification" },
-                react_1.default.createElement("div", { className: "module-safety-number-notification__icon" }),
-                react_1.default.createElement("div", { className: "module-safety-number-notification__text" },
-                    react_1.default.createElement(Intl_1.Intl, {
-                        id: changeKey, components: [
-                            react_1.default.createElement("span", { key: "external-1", className: "module-safety-number-notification__contact" },
-                                react_1.default.createElement(ContactName_1.ContactName, { name: contact.name, profileName: contact.profileName, phoneNumber: contact.phoneNumber, title: contact.title, module: "module-safety-number-notification__contact", i18n: i18n })),
-                        ], i18n: i18n
-                    })),
-                react_1.default.createElement("button", {
-                    onClick: () => {
-                        showIdentity(contact.id);
-                    }, className: "module-safety-number-notification__button"
-                }, i18n('verifyNewNumber'))));
-        }
-    }
-    exports.SafetyNumberNotification = SafetyNumberNotification;
+    exports.SafetyNumberNotification = ({ contact, isGroup, i18n, showIdentity, }) => {
+        const changeKey = isGroup
+            ? 'safetyNumberChangedGroup'
+            : 'safetyNumberChanged';
+        return (react_1.default.createElement("div", { className: "module-safety-number-notification" },
+            react_1.default.createElement("div", { className: "module-safety-number-notification__icon" }),
+            react_1.default.createElement("div", { className: "module-safety-number-notification__text" },
+                react_1.default.createElement(Intl_1.Intl, {
+                    id: changeKey, components: [
+                        react_1.default.createElement("span", { key: "external-1", className: "module-safety-number-notification__contact" },
+                            react_1.default.createElement(ContactName_1.ContactName, { name: contact.name, profileName: contact.profileName, phoneNumber: contact.phoneNumber, title: contact.title, module: "module-safety-number-notification__contact", i18n: i18n })),
+                    ], i18n: i18n
+                })),
+            react_1.default.createElement("button", {
+                type: "button", onClick: () => {
+                    showIdentity(contact.id);
+                }, className: "module-safety-number-notification__button"
+            }, i18n('verifyNewNumber'))));
+    };
 })();

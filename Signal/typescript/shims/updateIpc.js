@@ -6,7 +6,7 @@
     const exports = window.ts.shims.updateIpc = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const electron_1 = window.electron;
+    const electron_1 = require("electron");
     function startUpdate() {
         electron_1.ipcRenderer.send('start-update');
     }

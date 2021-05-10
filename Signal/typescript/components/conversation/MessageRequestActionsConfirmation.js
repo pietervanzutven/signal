@@ -19,69 +19,62 @@ require(exports => {
         MessageRequestState[MessageRequestState["unblocking"] = 2] = "unblocking";
         MessageRequestState[MessageRequestState["default"] = 3] = "default";
     })(MessageRequestState = exports.MessageRequestState || (exports.MessageRequestState = {}));
-    // tslint:disable-next-line: max-func-body-length
     exports.MessageRequestActionsConfirmation = ({ conversationType, i18n, name, onBlock, onBlockAndDelete, onChangeState, onDelete, onUnblock, phoneNumber, profileName, state, title, }) => {
         if (state === MessageRequestState.blocking) {
-            return (
-                // tslint:disable-next-line: use-simple-attributes
-                React.createElement(ConfirmationModal_1.ConfirmationModal, {
-                    i18n: i18n, onClose: () => {
-                        onChangeState(MessageRequestState.default);
-                    }, title: React.createElement(Intl_1.Intl, {
-                        i18n: i18n, id: `MessageRequests--block-${conversationType}-confirm-title`, components: [
-                            React.createElement(ContactName_1.ContactName, { key: "name", name: name, profileName: profileName, phoneNumber: phoneNumber, title: title, i18n: i18n }),
-                        ]
-                    }), actions: [
-                        {
-                            text: i18n('MessageRequests--block'),
-                            action: onBlock,
-                            style: 'negative',
-                        },
-                        {
-                            text: i18n('MessageRequests--block-and-delete'),
-                            action: onBlockAndDelete,
-                            style: 'negative',
-                        },
+            return (React.createElement(ConfirmationModal_1.ConfirmationModal, {
+                i18n: i18n, onClose: () => {
+                    onChangeState(MessageRequestState.default);
+                }, title: React.createElement(Intl_1.Intl, {
+                    i18n: i18n, id: `MessageRequests--block-${conversationType}-confirm-title`, components: [
+                        React.createElement(ContactName_1.ContactName, { key: "name", name: name, profileName: profileName, phoneNumber: phoneNumber, title: title, i18n: i18n }),
                     ]
-                }, i18n(`MessageRequests--block-${conversationType}-confirm-body`)));
+                }), actions: [
+                    {
+                        text: i18n('MessageRequests--block'),
+                        action: onBlock,
+                        style: 'negative',
+                    },
+                    {
+                        text: i18n('MessageRequests--block-and-delete'),
+                        action: onBlockAndDelete,
+                        style: 'negative',
+                    },
+                ]
+            }, i18n(`MessageRequests--block-${conversationType}-confirm-body`)));
         }
         if (state === MessageRequestState.unblocking) {
-            return (
-                // tslint:disable-next-line: use-simple-attributes
-                React.createElement(ConfirmationModal_1.ConfirmationModal, {
-                    i18n: i18n, onClose: () => {
-                        onChangeState(MessageRequestState.default);
-                    }, title: React.createElement(Intl_1.Intl, {
-                        i18n: i18n, id: 'MessageRequests--unblock-confirm-title', components: [
-                            React.createElement(ContactName_1.ContactName, { key: "name", name: name, profileName: profileName, phoneNumber: phoneNumber, title: title, i18n: i18n }),
-                        ]
-                    }), actions: [
-                        {
-                            text: i18n('MessageRequests--unblock'),
-                            action: onUnblock,
-                            style: 'affirmative',
-                        },
+            return (React.createElement(ConfirmationModal_1.ConfirmationModal, {
+                i18n: i18n, onClose: () => {
+                    onChangeState(MessageRequestState.default);
+                }, title: React.createElement(Intl_1.Intl, {
+                    i18n: i18n, id: "MessageRequests--unblock-confirm-title", components: [
+                        React.createElement(ContactName_1.ContactName, { key: "name", name: name, profileName: profileName, phoneNumber: phoneNumber, title: title, i18n: i18n }),
                     ]
-                }, i18n(`MessageRequests--unblock-${conversationType}-confirm-body`)));
+                }), actions: [
+                    {
+                        text: i18n('MessageRequests--unblock'),
+                        action: onUnblock,
+                        style: 'affirmative',
+                    },
+                ]
+            }, i18n(`MessageRequests--unblock-${conversationType}-confirm-body`)));
         }
         if (state === MessageRequestState.deleting) {
-            return (
-                // tslint:disable-next-line: use-simple-attributes
-                React.createElement(ConfirmationModal_1.ConfirmationModal, {
-                    i18n: i18n, onClose: () => {
-                        onChangeState(MessageRequestState.default);
-                    }, title: React.createElement(Intl_1.Intl, {
-                        i18n: i18n, id: `MessageRequests--delete-${conversationType}-confirm-title`, components: [
-                            React.createElement(ContactName_1.ContactName, { key: "name", name: name, profileName: profileName, phoneNumber: phoneNumber, title: title, i18n: i18n }),
-                        ]
-                    }), actions: [
-                        {
-                            text: i18n(`MessageRequests--delete-${conversationType}`),
-                            action: onDelete,
-                            style: 'negative',
-                        },
+            return (React.createElement(ConfirmationModal_1.ConfirmationModal, {
+                i18n: i18n, onClose: () => {
+                    onChangeState(MessageRequestState.default);
+                }, title: React.createElement(Intl_1.Intl, {
+                    i18n: i18n, id: `MessageRequests--delete-${conversationType}-confirm-title`, components: [
+                        React.createElement(ContactName_1.ContactName, { key: "name", name: name, profileName: profileName, phoneNumber: phoneNumber, title: title, i18n: i18n }),
                     ]
-                }, i18n(`MessageRequests--delete-${conversationType}-confirm-body`)));
+                }), actions: [
+                    {
+                        text: i18n(`MessageRequests--delete-${conversationType}`),
+                        action: onDelete,
+                        style: 'negative',
+                    },
+                ]
+            }, i18n(`MessageRequests--delete-${conversationType}-confirm-body`)));
         }
         return null;
     };

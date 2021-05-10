@@ -11,12 +11,12 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const classnames_1 = __importDefault(window.classnames);
-    const moment_1 = __importDefault(window.moment);
-    const AttachmentSection_1 = window.ts.components.conversation.media_gallery.AttachmentSection;
-    const EmptyState_1 = window.ts.components.conversation.media_gallery.EmptyState;
-    const groupMediaItemsByDate_1 = window.ts.components.conversation.media_gallery.groupMediaItemsByDate;
+    const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
+    const moment_1 = __importDefault(require("moment"));
+    const AttachmentSection_1 = require("./AttachmentSection");
+    const EmptyState_1 = require("./EmptyState");
+    const groupMediaItemsByDate_1 = require("./groupMediaItemsByDate");
     const missingCaseError_1 = require("../../../util/missingCaseError");
     const MONTH_FORMAT = 'MMMM YYYY';
     const Tab = ({ isSelected, label, onSelect, type, }) => {
@@ -25,17 +25,20 @@
                 onSelect({ type });
             }
             : undefined;
-        return (react_1.default.createElement("div", { className: classnames_1.default('module-media-gallery__tab', isSelected ? 'module-media-gallery__tab--active' : null), onClick: handleClick, role: "tab", tabIndex: 0 }, label));
+        return (
+            // Has key events handled elsewhere
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+            react_1.default.createElement("div", { className: classnames_1.default('module-media-gallery__tab', isSelected ? 'module-media-gallery__tab--active' : null), onClick: handleClick, role: "tab", tabIndex: 0 }, label));
     };
     class MediaGallery extends react_1.default.Component {
-        constructor() {
-            super(...arguments);
+        constructor(props) {
+            super(props);
             this.focusRef = react_1.default.createRef();
-            this.state = {
-                selectedTab: 'media',
-            };
             this.handleTabSelect = (event) => {
                 this.setState({ selectedTab: event.type });
+            };
+            this.state = {
+                selectedTab: 'media',
             };
         }
         componentDidMount() {

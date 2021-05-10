@@ -7,7 +7,7 @@
     const exports = window.ts.state.selectors.user = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const reselect_1 = window.reselect;
+    const reselect_1 = require("reselect");
     exports.getUser = (state) => state.user;
     exports.getItems = (state) => state.items;
     exports.getUserNumber = reselect_1.createSelector(exports.getUser, (state) => state.ourNumber);

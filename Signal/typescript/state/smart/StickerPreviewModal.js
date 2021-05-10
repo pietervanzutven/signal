@@ -7,11 +7,11 @@
     const exports = window.ts.state.smart.StickerPreviewModal = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_redux_1 = window.react_redux;
-    const actions_1 = window.ts.state.actions;
-    const StickerPreviewModal_1 = window.ts.components.stickers.StickerPreviewModal;
-    const user_1 = window.ts.state.selectors.user;
-    const stickers_1 = window.ts.state.selectors.stickers;
+    const react_redux_1 = require("react-redux");
+    const actions_1 = require("../actions");
+    const StickerPreviewModal_1 = require("../../components/stickers/StickerPreviewModal");
+    const user_1 = require("../selectors/user");
+    const stickers_1 = require("../selectors/stickers");
     const mapStateToProps = (state, props) => {
         const { packId } = props;
         const stickersPath = user_1.getStickersPath(state);
@@ -19,7 +19,7 @@
         const packs = stickers_1.getPacks(state);
         const blessedPacks = stickers_1.getBlessedPacks(state);
         const pack = packs[packId];
-        return Object.assign({}, props, {
+        return Object.assign(Object.assign({}, props), {
             pack: pack
                 ? stickers_1.translatePackFromDB(pack, packs, blessedPacks, stickersPath, tempPath)
                 : undefined, i18n: user_1.getIntl(state)

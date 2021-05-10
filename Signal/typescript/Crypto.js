@@ -12,15 +12,8 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const p_props_1 = __importDefault(require("p-props"));
-    // Yep, we're doing some bitwise stuff in an encryption-related file
-    // tslint:disable no-bitwise
-    // We want some extra variables to make the decrption algorithm easier to understand
-    // tslint:disable no-unnecessary-local-variable
-    // Seems that tslint doesn't understand that crypto.subtle.importKey does return a Promise
-    // tslint:disable await-promise
     function typedArrayToArrayBuffer(typedArray) {
         const { buffer, byteOffset, byteLength } = typedArray;
-        // tslint:disable-next-line no-unnecessary-type-assertion
         return buffer.slice(byteOffset, byteLength + byteOffset);
     }
     exports.typedArrayToArrayBuffer = typedArrayToArrayBuffer;
@@ -68,7 +61,7 @@
     }
     exports.deriveStickerPackKey = deriveStickerPackKey;
     async function computeHash(data) {
-        const hash = await crypto.subtle.digest({ name: 'SHA-512' }, data);
+        const hash = await window.crypto.subtle.digest({ name: 'SHA-512' }, data);
         return arrayBufferToBase64(hash);
     }
     exports.computeHash = computeHash;
@@ -173,7 +166,7 @@
         const nonce = getRandomBytes(NONCE_LENGTH);
         const cipherKey = await hmacSha256(key, nonce);
         const macKey = await hmacSha256(key, cipherKey);
-        const cipherText = await _encrypt_aes256_CBC_PKCSPadding(cipherKey, iv, plaintext);
+        const cipherText = await _encryptAes256CbcPkcsPadding(cipherKey, iv, plaintext);
         const mac = getFirstBytes(await hmacSha256(macKey, cipherText), MAC_LENGTH);
         return concatenateBytes(nonce, cipherText, mac);
     }
@@ -189,7 +182,7 @@
         if (!constantTimeEqual(theirMac, ourMac)) {
             throw new Error('decryptSymmetric: Failed to decrypt; MAC verification failed');
         }
-        return _decrypt_aes256_CBC_PKCSPadding(cipherKey, iv, cipherText);
+        return _decryptAes256CbcPkcsPadding(cipherKey, iv, cipherText);
     }
     exports.decryptSymmetric = decryptSymmetric;
     function constantTimeEqual(left, right) {
@@ -218,26 +211,36 @@
         return window.crypto.subtle.sign(algorithm, cryptoKey, plaintext);
     }
     exports.hmacSha256 = hmacSha256;
-    async function _encrypt_aes256_CBC_PKCSPadding(key, iv, plaintext) {
+    async function _encryptAes256CbcPkcsPadding(key, iv, plaintext) {
         const algorithm = {
             name: 'AES-CBC',
             iv,
         };
         const extractable = false;
-        const cryptoKey = await window.crypto.subtle.importKey('raw', key, algorithm, extractable, ['encrypt']);
+        const cryptoKey = await window.crypto.subtle.importKey('raw', key,
+            // `algorithm` appears to be an instance of AesCbcParams,
+            // which is not in the param's types, so we need to pass as `any`.
+            // TODO: just pass the string "AES-CBC", per the docs?
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            algorithm, extractable, ['encrypt']);
         return window.crypto.subtle.encrypt(algorithm, cryptoKey, plaintext);
     }
-    exports._encrypt_aes256_CBC_PKCSPadding = _encrypt_aes256_CBC_PKCSPadding;
-    async function _decrypt_aes256_CBC_PKCSPadding(key, iv, plaintext) {
+    exports._encryptAes256CbcPkcsPadding = _encryptAes256CbcPkcsPadding;
+    async function _decryptAes256CbcPkcsPadding(key, iv, plaintext) {
         const algorithm = {
             name: 'AES-CBC',
             iv,
         };
         const extractable = false;
-        const cryptoKey = await window.crypto.subtle.importKey('raw', key, algorithm, extractable, ['decrypt']);
+        const cryptoKey = await window.crypto.subtle.importKey('raw', key,
+            // `algorithm` appears to be an instance of AesCbcParams,
+            // which is not in the param's types, so we need to pass as `any`.
+            // TODO: just pass the string "AES-CBC", per the docs?
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            algorithm, extractable, ['decrypt']);
         return window.crypto.subtle.decrypt(algorithm, cryptoKey, plaintext);
     }
-    exports._decrypt_aes256_CBC_PKCSPadding = _decrypt_aes256_CBC_PKCSPadding;
+    exports._decryptAes256CbcPkcsPadding = _decryptAes256CbcPkcsPadding;
     async function encryptAesCtr(key, plaintext, counter) {
         const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
         const ptBits = window.sjcl.codec.arrayBuffer.toBits(plaintext);
@@ -318,10 +321,12 @@
     }
     exports.getZeroes = getZeroes;
     function highBitsToInt(byte) {
+        // eslint-disable-next-line no-bitwise
         return (byte & 0xff) >> 4;
     }
     exports.highBitsToInt = highBitsToInt;
     function intsToByteHighAndLow(highValue, lowValue) {
+        // eslint-disable-next-line no-bitwise
         return ((highValue << 4) | lowValue) & 0xff;
     }
     exports.intsToByteHighAndLow = intsToByteHighAndLow;

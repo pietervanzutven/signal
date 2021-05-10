@@ -7,11 +7,11 @@
     const exports = window.ts.state.smart.LastSeenIndicator = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_redux_1 = window.react_redux;
-    const actions_1 = window.ts.state.actions;
-    const LastSeenIndicator_1 = window.ts.components.conversation.LastSeenIndicator;
-    const user_1 = window.ts.state.selectors.user;
-    const conversations_1 = window.ts.state.selectors.conversations;
+    const react_redux_1 = require("react-redux");
+    const actions_1 = require("../actions");
+    const LastSeenIndicator_1 = require("../../components/conversation/LastSeenIndicator");
+    const user_1 = require("../selectors/user");
+    const conversations_1 = require("../selectors/conversations");
     const mapStateToProps = (state, props) => {
         const { id } = props;
         const conversation = conversations_1.getConversationMessagesSelector(state)(id);

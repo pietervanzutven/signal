@@ -9,8 +9,8 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const libphonenumberInstance_1 = require("../util/libphonenumberInstance");
     const memoizee_1 = __importDefault(require("memoizee"));
+    const libphonenumberInstance_1 = require("../util/libphonenumberInstance");
     function _format(phoneNumber, options) {
         try {
             const { ourRegionCode } = options;
@@ -58,10 +58,10 @@
             if (libphonenumberInstance_1.instance.isValidNumber(parsedNumber)) {
                 return libphonenumberInstance_1.instance.format(parsedNumber, libphonenumberInstance_1.PhoneNumberFormat.E164);
             }
-            return;
+            return undefined;
         }
         catch (error) {
-            return;
+            return undefined;
         }
     }
     exports.normalize = normalize;

@@ -346,7 +346,7 @@ require(exports => {
             }
         }
         catch (err) {
-            window.log.error(`storageService.mergeRecord: merging record failed ${storageID}`);
+            window.log.error('storageService.mergeRecord: merging record failed', storageID, err && err.stack ? err.stack : String(err));
         }
         return {
             hasConflict,
@@ -415,9 +415,11 @@ require(exports => {
             };
         }, { concurrency: 50 });
         try {
+            window.log.info(`storageService.processManifest: Attempting to merge ${decryptedStorageItems.length} records`);
             const mergedRecords = await p_map_1.default(decryptedStorageItems, mergeRecord, {
                 concurrency: 5,
             });
+            window.log.info(`storageService.processManifest: Merged ${mergedRecords.length} records`);
             const unknownRecords = new Map();
             unknownRecordsArray.forEach((record) => {
                 unknownRecords.set(record.storageID, record);
@@ -458,7 +460,7 @@ require(exports => {
             const manifest = await fetchManifest(localManifestVersion);
             // Guarding against no manifests being returned, everything should be ok
             if (!manifest) {
-                window.log.info('storageService.runStorageServiceSyncJob: no manifest, returning early');
+                window.log.info('storageService.runStorageServiceSyncJob: no new manifest');
                 return;
             }
             const version = manifest.version.toNumber();

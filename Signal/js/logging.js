@@ -143,8 +143,9 @@ require(exports => {
   };
 
   window.addEventListener('unhandledrejection', rejectionEvent => {
-    window.log.error(
-      `Top-level unhandled promise rejection: ${rejectionEvent.reason}`
-    );
+    const error = rejectionEvent.reason;
+    const errorString =
+      error && error.stack ? error.stack : JSON.stringify(error);
+    window.log.error(`Top-level unhandled promise rejection: ${errorString}`);
   });
 });

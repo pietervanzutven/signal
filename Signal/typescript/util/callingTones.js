@@ -4,10 +4,14 @@ require(exports => {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const Sound_1 = require("./Sound");
     const p_queue_1 = __importDefault(require("p-queue"));
-    const ringtoneEventQueue = new p_queue_1.default({ concurrency: 1 });
+    const Sound_1 = require("./Sound");
+    const ringtoneEventQueue = new p_queue_1.default({
+        concurrency: 1,
+        timeout: 1000 * 60 * 2,
+    });
     class CallingTones {
+        // eslint-disable-next-line class-methods-use-this
         async playEndCall() {
             const canPlayTone = await window.getCallRingtoneNotification();
             if (!canPlayTone) {

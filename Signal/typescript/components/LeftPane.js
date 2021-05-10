@@ -9,13 +9,13 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_measure_1 = __importDefault(window.react_measure);
-    const react_1 = __importDefault(window.react);
-    const react_virtualized_1 = window.react_virtualized;
-    const lodash_1 = window.lodash;
-    const ConversationListItem_1 = window.ts.components.ConversationListItem;
-    const SearchResults_1 = window.ts.components.SearchResults;
-    const _util_1 = window.ts.components._util;
+    const react_measure_1 = __importDefault(require("react-measure"));
+    const react_1 = __importDefault(require("react"));
+    const react_virtualized_1 = require("react-virtualized");
+    const lodash_1 = require("lodash");
+    const ConversationListItem_1 = require("./ConversationListItem");
+    const SearchResults_1 = require("./SearchResults");
+    const _util_1 = require("./_util");
     class LeftPane extends react_1.default.Component {
         constructor() {
             super(...arguments);
@@ -42,7 +42,7 @@
                 if (!archivedConversations || !archivedConversations.length) {
                     throw new Error('renderArchivedButton: Tried to render without archivedConversations');
                 }
-                return (react_1.default.createElement("button", { key: key, className: "module-left-pane__archived-button", style: style, onClick: showArchivedConversations },
+                return (react_1.default.createElement("button", { key: key, className: "module-left-pane__archived-button", style: style, onClick: showArchivedConversations, type: "button" },
                     i18n('archivedConversations'),
                     ' ',
                     react_1.default.createElement("span", { className: "module-left-pane__archived-button__archived-count" }, archivedConversations.length)));
@@ -64,7 +64,6 @@
                     this.setFocusToLastNeeded = true;
                     event.preventDefault();
                     event.stopPropagation();
-                    return;
                 }
             };
             this.handleFocus = () => {
@@ -77,7 +76,6 @@
                     const scrollingContainer = this.getScrollContainer();
                     if (selectedConversationId && scrollingContainer) {
                         const escapedId = _util_1.cleanId(selectedConversationId).replace(/["\\]/g, '\\$&');
-                        // tslint:disable-next-line no-unnecessary-type-assertion
                         const target = scrollingContainer.querySelector(`.module-conversation-list-item[data-id="${escapedId}"]`);
                         if (target && target.focus) {
                             target.focus();
@@ -95,27 +93,27 @@
             };
             this.getScrollContainer = () => {
                 if (!this.listRef || !this.listRef.current) {
-                    return;
+                    return null;
                 }
                 const list = this.listRef.current;
-                if (!list.Grid || !list.Grid._scrollingContainer) {
-                    return;
+                // TODO: DESKTOP-689
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const grid = list.Grid;
+                if (!grid || !grid._scrollingContainer) {
+                    return null;
                 }
-                return list.Grid._scrollingContainer;
+                return grid._scrollingContainer;
             };
             this.setFocusToFirst = () => {
                 const scrollContainer = this.getScrollContainer();
                 if (!scrollContainer) {
                     return;
                 }
-                // tslint:disable-next-line no-unnecessary-type-assertion
                 const item = scrollContainer.querySelector('.module-conversation-list-item');
                 if (item && item.focus) {
                     item.focus();
-                    return;
                 }
             };
-            // tslint:disable-next-line member-ordering
             this.onScroll = lodash_1.debounce(() => {
                 if (this.setFocusToFirstNeeded) {
                     this.setFocusToFirstNeeded = false;
@@ -127,19 +125,16 @@
                     if (!scrollContainer) {
                         return;
                     }
-                    // tslint:disable-next-line no-unnecessary-type-assertion
                     const button = scrollContainer.querySelector('.module-left-pane__archived-button');
                     if (button && button.focus) {
                         button.focus();
                         return;
                     }
-                    // tslint:disable-next-line no-unnecessary-type-assertion
                     const items = scrollContainer.querySelectorAll('.module-conversation-list-item');
                     if (items && items.length > 0) {
                         const last = items[items.length - 1];
                         if (last && last.focus) {
                             last.focus();
-                            return;
                         }
                     }
                 }
@@ -171,19 +166,20 @@
                 // Note: conversations is not a known prop for List, but it is required to ensure that
                 //   it re-renders when our conversation data changes. Otherwise it would just render
                 //   on startup and scroll.
-                return (react_1.default.createElement("div", { "aria-live": "polite", className: "module-left-pane__list", key: listKey, onFocus: this.handleFocus, onKeyDown: this.handleKeyDown, ref: this.containerRef, role: "group", tabIndex: -1 },
+                return (react_1.default.createElement("div", { "aria-live": "polite", className: "module-left-pane__list", key: listKey, onFocus: this.handleFocus, onKeyDown: this.handleKeyDown, ref: this.containerRef, role: "presentation", tabIndex: -1 },
                     react_1.default.createElement(react_virtualized_1.List, { className: "module-left-pane__virtual-list", conversations: conversations, height: height || 0, onScroll: this.onScroll, ref: this.listRef, rowCount: length, rowHeight: 68, rowRenderer: this.renderRow, tabIndex: -1, width: width || 0 })));
             };
             this.renderArchivedHeader = () => {
                 const { i18n, showInbox } = this.props;
                 return (react_1.default.createElement("div", { className: "module-left-pane__archive-header" },
-                    react_1.default.createElement("button", { onClick: showInbox, className: "module-left-pane__to-inbox-button", title: i18n('backToInbox') }),
+                    react_1.default.createElement("button", { onClick: showInbox, className: "module-left-pane__to-inbox-button", title: i18n('backToInbox'), "aria-label": i18n('backToInbox'), type: "button" }),
                     react_1.default.createElement("div", { className: "module-left-pane__archive-header-text" }, i18n('archivedConversations'))));
             };
         }
         render() {
             const { i18n, renderExpiredBuildDialog, renderMainHeader, renderNetworkStatus, renderRelinkDialog, renderUpdateDialog, showArchived, } = this.props;
-            /* tslint:disable no-non-null-assertion */
+            // Relying on 3rd party code for contentRect.bounds
+            /* eslint-disable @typescript-eslint/no-non-null-assertion */
             return (react_1.default.createElement("div", { className: "module-left-pane" },
                 react_1.default.createElement("div", { className: "module-left-pane__header" }, showArchived ? this.renderArchivedHeader() : renderMainHeader()),
                 renderExpiredBuildDialog(),

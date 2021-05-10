@@ -25,7 +25,7 @@
             const shouldShowIcon = Boolean(name);
             const showNumber = Boolean(isMe || name || profileName);
             const showVerified = !isMe && isVerified;
-            return (react_1.default.createElement("button", { onClick: onClick, className: classnames_1.default('module-contact-list-item', onClick ? 'module-contact-list-item--with-click-handler' : null) },
+            return (react_1.default.createElement("button", { onClick: onClick, className: classnames_1.default('module-contact-list-item', onClick ? 'module-contact-list-item--with-click-handler' : null), type: "button" },
                 this.renderAvatar(),
                 react_1.default.createElement("div", { className: "module-contact-list-item__text" },
                     react_1.default.createElement("div", { className: "module-contact-list-item__left" },

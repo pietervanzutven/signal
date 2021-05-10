@@ -36,7 +36,7 @@
     const makeImagePath = (src) => {
         return `${ROOT_PATH}node_modules/emoji-datasource-apple/img/apple/64/${src}`;
     };
-    const imageQueue = new p_queue_1.default({ concurrency: 10 });
+    const imageQueue = new p_queue_1.default({ concurrency: 10, timeout: 1000 * 60 * 2 });
     const images = new Set();
     exports.preloadImages = async () => {
         // Preload images
@@ -49,8 +49,7 @@
             // tslint:disable-next-line  no-string-based-set-timeout
             setTimeout(reject, 5000);
         });
-        // eslint-disable-next-line no-console
-        console.log('Preloading emoji images');
+        window.log.info('Preloading emoji images');
         const start = Date.now();
         data.forEach(emoji => {
             // tslint:disable-next-line no-floating-promises promise-function-async
@@ -64,8 +63,7 @@
         });
         await imageQueue.onEmpty();
         const end = Date.now();
-        // eslint-disable-next-line no-console
-        console.log(`Done preloading emoji images in ${end - start}ms`);
+        window.log.info(`Done preloading emoji images in ${end - start}ms`);
     };
     const dataByShortName = lodash_1.keyBy(data, 'short_name');
     const imageByEmoji = {};

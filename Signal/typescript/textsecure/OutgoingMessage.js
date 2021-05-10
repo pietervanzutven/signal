@@ -366,19 +366,24 @@
                         if (!window.textsecure.messaging) {
                             throw new Error('sendToIdentifier: window.textsecure.messaging is not available!');
                         }
-                        const lookup = await window.textsecure.messaging.getUuidsForE164s([
-                            identifier,
-                        ]);
-                        const uuid = lookup[identifier];
-                        if (uuid) {
-                            this.discoveredIdentifierPairs.push({
-                                uuid,
-                                e164: identifier,
-                            });
-                            identifier = uuid;
+                        try {
+                            const lookup = await window.textsecure.messaging.getUuidsForE164s([
+                                identifier,
+                            ]);
+                            const uuid = lookup[identifier];
+                            if (uuid) {
+                                this.discoveredIdentifierPairs.push({
+                                    uuid,
+                                    e164: identifier,
+                                });
+                                identifier = uuid;
+                            }
+                            else {
+                                throw new Errors_1.UnregisteredUserError(identifier, new Error('User is not registered'));
+                            }
                         }
-                        else {
-                            throw new Errors_1.UnregisteredUserError(identifier, new Error('User is not registered'));
+                        catch (error) {
+                            window.log.error(`sentToIdentifier: Failed to fetch UUID for identifier ${identifier}`, error && error.stack ? error.stack : error);
                         }
                     }
                     else {

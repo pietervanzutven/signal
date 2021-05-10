@@ -7,18 +7,18 @@
     const exports = window.ts.state.selectors.stickers = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const path_1 = window.path;
-    const lodash_1 = window.lodash;
-    const reselect_1 = window.reselect;
-    const user_1 = window.ts.state.selectors.user;
+    const path_1 = require("path");
+    const lodash_1 = require("lodash");
+    const reselect_1 = require("reselect");
+    const user_1 = require("./user");
     const getSticker = (packs, packId, stickerId, stickerPath, tempPath) => {
         const pack = packs[packId];
         if (!pack) {
-            return;
+            return undefined;
         }
         const sticker = pack.stickers[stickerId];
         if (!sticker) {
-            return;
+            return undefined;
         }
         const isEphemeral = pack.status === 'ephemeral';
         return translateStickerFromDB(sticker, stickerPath, tempPath, isEphemeral);
@@ -40,7 +40,7 @@
         //   We don't want to show cover-only images when previewing or picking from a pack.
         const filteredStickers = lodash_1.reject(lodash_1.values(stickers), sticker => sticker.isCoverOnly);
         const translatedStickers = lodash_1.map(filteredStickers, sticker => translateStickerFromDB(sticker, stickersPath, tempPath, isEphemeral));
-        return Object.assign({}, pack, { isBlessed: Boolean(blessedPacks[id]), cover: getSticker(packs, id, coverStickerId, stickersPath, tempPath), stickers: lodash_1.sortBy(translatedStickers, sticker => sticker.id) });
+        return Object.assign(Object.assign({}, pack), { isBlessed: Boolean(blessedPacks[id]), cover: getSticker(packs, id, coverStickerId, stickersPath, tempPath), stickers: lodash_1.sortBy(translatedStickers, sticker => sticker.id) });
     };
     const filterAndTransformPacks = (packs, packFilter, packSort, blessedPacks, stickersPath, tempPath) => {
         const list = lodash_1.filter(packs, packFilter);

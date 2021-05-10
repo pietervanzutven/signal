@@ -1,11 +1,10 @@
 require(exports => {
     "use strict";
-
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const moment_1 = __importDefault(window.moment);
+    const moment_1 = __importDefault(require("moment"));
     // Only applies in the english locales, but it ensures that the format
     //   is what we want.
     function replaceSuffix(time) {
@@ -40,16 +39,16 @@ require(exports => {
         if (diff.years() >= 1 || !isYear(timestamp)) {
             return replaceSuffix(timestamp.format(formats.y));
         }
-        else if (diff.months() >= 1 || diff.days() > 6) {
+        if (diff.months() >= 1 || diff.days() > 6) {
             return replaceSuffix(timestamp.format(formats.M));
         }
-        else if (diff.days() >= 1 || !isToday(timestamp)) {
+        if (diff.days() >= 1 || !isToday(timestamp)) {
             return replaceSuffix(timestamp.format(formats.d));
         }
-        else if (diff.hours() >= 1) {
+        if (diff.hours() >= 1) {
             return i18n('hoursAgo', [String(diff.hours())]);
         }
-        else if (diff.minutes() >= 1) {
+        if (diff.minutes() >= 1) {
             return i18n('minutesAgo', [String(diff.minutes())]);
         }
         return i18n('justNow');

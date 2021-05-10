@@ -26,8 +26,7 @@
         render() {
             const { conversationId, id, isSelected, item, i18n, renderContact, selectMessage, } = this.props;
             if (!item) {
-                // tslint:disable-next-line:no-console
-                console.warn(`TimelineItem: item ${id} provided was falsey`);
+                window.log.warn(`TimelineItem: item ${id} provided was falsey`);
                 return null;
             }
             if (item.type === 'message') {

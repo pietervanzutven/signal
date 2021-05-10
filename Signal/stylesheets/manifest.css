@@ -586,15 +586,12 @@ a {
 .debug-log .result {
   text-align: center; }
   .debug-log .result .input-group {
-    display: inline-block;
-    width: 100%;
-    max-width: 500px; }
+    display: inline-flex; }
   .debug-log .result .copy {
-    float: left;
-    display: inline-block;
-    width: 100px;
     height: 36px;
-    padding: 7px 30px;
+    text-align: center;
+    line-height: 36px;
+    padding: 0 30px;
     color: unset;
     text-decoration: none;
     cursor: pointer;
@@ -611,9 +608,8 @@ a {
         background: #b9b9b9; }
   .debug-log .result .link {
     border-radius: 5px 0 0 5px;
-    float: left;
-    width: calc(100% - 100px);
-    max-width: 400px;
+    flex-grow: 1;
+    min-width: 400px;
     height: 36px;
     padding: 0 10px;
     outline-offset: -4px;
@@ -5547,6 +5543,31 @@ img.emoji.jumbo {
 
 .module-message-body__highlight {
   font-weight: bold; }
+
+.module-message-body__at-mention {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  padding-left: 4px;
+  padding-right: 4px;
+  border: 1px solid transparent; }
+  .module-message-body__at-mention:focus {
+    border: 1px solid #000000;
+    outline: none; }
+
+.ios-theme .module-message-body__at-mention--incoming {
+  background-color: #c6c6c6; }
+
+.dark-theme.ios-theme .module-message-body__at-mention--incoming {
+  background-color: #5e5e5e; }
+
+.module-message-body__at-mention--outgoing {
+  background-color: #c6c6c6; }
+  .dark-theme .module-message-body__at-mention--outgoing {
+    background-color: #5e5e5e; }
+  .ios-theme .module-message-body__at-mention--outgoing {
+    background-color: #1851b4; }
 
 .module-search-results {
   outline: none;

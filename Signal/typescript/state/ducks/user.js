@@ -7,7 +7,7 @@
     const exports = window.ts.state.ducks.user = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const events_1 = window.ts.shims.events;
+    const events_1 = require("../../shims/events");
     // Action Creators
     exports.actions = {
         userChanged,

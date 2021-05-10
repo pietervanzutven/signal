@@ -10,12 +10,14 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = window.lodash;
-    const memoizee_1 = __importDefault(window.memoizee);
+    const lodash_1 = require("lodash");
+    const memoizee_1 = __importDefault(require("memoizee"));
     function cleanId(id) {
         return id.replace(/[^\u0020-\u007e\u00a0-\u00ff]/g, '_');
     }
     exports.cleanId = cleanId;
+    // Memoizee makes this difficult.
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     exports.createRefMerger = () => memoizee_1.default((...refs) => {
         return (t) => {
             refs.forEach(r => {
@@ -23,7 +25,8 @@
                     r(t);
                 }
                 else if (r) {
-                    // @ts-ignore: React's typings for ref objects is annoying
+                    // Using a MutableRefObject as intended
+                    // eslint-disable-next-line no-param-reassign
                     r.current = t;
                 }
             });

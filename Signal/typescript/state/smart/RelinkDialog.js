@@ -7,10 +7,10 @@
     const exports = window.ts.state.smart.RelinkDialog = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_redux_1 = window.react_redux;
-    const actions_1 = window.ts.state.actions;
-    const RelinkDialog_1 = window.ts.components.RelinkDialog;
-    const user_1 = window.ts.state.selectors.user;
+    const react_redux_1 = require("react-redux");
+    const actions_1 = require("../actions");
+    const RelinkDialog_1 = require("../../components/RelinkDialog");
+    const user_1 = require("../selectors/user");
     const registration_1 = require("../../util/registration");
     const mapStateToProps = (state) => {
         return {

@@ -173,7 +173,6 @@
     <Content Include="js\expiring_tap_to_view_messages.js" />
     <Content Include="js\keychange_listener.js" />
     <Content Include="js\libphonenumber-util.js" />
-    <Content Include="js\libsignal-protocol-worker.js" />
     <Content Include="js\loading_start.js" />
     <Content Include="js\logging.js" />
     <Content Include="js\message_controller.js" />
@@ -267,6 +266,7 @@
     <Content Include="protos\Groups.proto" />
     <Content Include="protos\SignalStorage.proto" />
     <Content Include="sounds\navigation-cancel.ogg" />
+    <Content Include="sounds\notification.ogg" />
     <Content Include="sounds\ringtone_minimal.ogg" />
     <Content Include="js\util_worker.js" />
     <Content Include="js\views\about_view.js" />
@@ -312,7 +312,7 @@
     <Content Include="node_modules\blueimp-load-image\load-image-scale.js" />
     <Content Include="node_modules\blueimp-load-image\load-image.js" />
     <Content Include="node_modules\classnames\index.js" />
-    <Content Include="node_modules\config\config.js" />
+    <Content Include="node_modules\config\index.js" />
     <Content Include="node_modules\core\buffer.js" />
     <Content Include="node_modules\core\electron.js" />
     <Content Include="node_modules\core\events.js" />
@@ -3720,6 +3720,7 @@
     <Content Include="typescript\components\ContactListItem.js" />
     <Content Include="typescript\components\ConversationListItem.js" />
     <Content Include="typescript\components\conversation\AddNewLines.js" />
+    <Content Include="typescript\components\conversation\AtMentionify.js" />
     <Content Include="typescript\components\conversation\AttachmentList.js" />
     <Content Include="typescript\components\conversation\CallingNotification.js" />
     <Content Include="typescript\components\conversation\ContactDetail.js" />
@@ -3930,6 +3931,7 @@
     <Content Include="typescript\util\getInitials.js" />
     <Content Include="typescript\util\getMuteOptions.js" />
     <Content Include="typescript\util\getStringForProfileChange.js" />
+    <Content Include="typescript\util\getTextWithMentions.js" />
     <Content Include="typescript\util\getUserAgent.js" />
     <Content Include="typescript\util\GoogleChrome.js" />
     <Content Include="typescript\util\hasExpired.js" />
@@ -3951,6 +3953,7 @@
     <Content Include="typescript\util\storageService.js" />
     <Content Include="typescript\util\timer.js" />
     <Content Include="typescript\util\waitBatcher.js" />
+    <Content Include="typescript\util\windowsZoneIdentifier.js" />
     <Content Include="typescript\util\zkgroup.js" />
     <Content Include="_locales\ar\messages.json" />
     <Content Include="_locales\bg\messages.json" />

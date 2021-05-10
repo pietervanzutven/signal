@@ -3,11 +3,11 @@
 
   window.app = window.app || {};
 
-  const electron = window.electron;
-  const Queue = window.p_queue.default;
-  const sql = window.ts.sql.Server.default;
-  const { remove: removeUserConfig } = window.app.user_config;
-  const { remove: removeEphemeralConfig } = window.app.ephemeral_config;
+  const electron = require('electron');
+  const Queue = require('p-queue').default;
+  const sql = require('../ts/sql/Server').default;
+  const { remove: removeUserConfig } = require('./user_config');
+  const { remove: removeEphemeralConfig } = require('./ephemeral_config');
 
   const { ipcMain } = electron;
 
@@ -24,11 +24,11 @@
   let multipleQueue = null;
 
   function makeNewSingleQueue() {
-    singleQueue = new Queue({ concurrency: 1 });
+    singleQueue = new Queue({ concurrency: 1, timeout: 1000 * 60 * 2 });
     return singleQueue;
   }
   function makeNewMultipleQueue() {
-    multipleQueue = new Queue({ concurrency: 10 });
+    multipleQueue = new Queue({ concurrency: 10, timeout: 1000 * 60 * 2 });
     return multipleQueue;
   }
 

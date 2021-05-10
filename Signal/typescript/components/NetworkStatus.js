@@ -9,7 +9,7 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(window.react);
+    const react_1 = __importDefault(require("react"));
     const FIVE_SECONDS = 5 * 1000;
     function renderDialog({ title, subtext, renderActionableButton, }) {
         return (react_1.default.createElement("div", { className: "module-left-pane-dialog module-left-pane-dialog--warning" },
@@ -18,12 +18,12 @@ const react_1 = __importDefault(window.react);
                 react_1.default.createElement("span", null, subtext)),
             renderActionableButton && renderActionableButton()));
     }
-exports.NetworkStatus = ({ hasNetworkDialog, i18n, isOnline, socketStatus, manualReconnect, }) => {
-        if (!hasNetworkDialog) {
-            return null;
-        }
+    exports.NetworkStatus = ({ hasNetworkDialog, i18n, isOnline, socketStatus, manualReconnect, }) => {
         const [isConnecting, setIsConnecting] = react_1.default.useState(false);
         react_1.default.useEffect(() => {
+            if (!hasNetworkDialog) {
+                return () => null;
+            }
             let timeout;
             if (isConnecting) {
                 timeout = setTimeout(() => {
@@ -35,20 +35,23 @@ exports.NetworkStatus = ({ hasNetworkDialog, i18n, isOnline, socketStatus, manua
                     clearTimeout(timeout);
                 }
             };
-        }, [isConnecting, setIsConnecting]);
+        }, [hasNetworkDialog, isConnecting, setIsConnecting]);
+        if (!hasNetworkDialog) {
+            return null;
+        }
         const reconnect = () => {
             setIsConnecting(true);
             manualReconnect();
         };
         const manualReconnectButton = () => (react_1.default.createElement("div", { className: "module-left-pane-dialog__actions" },
-            react_1.default.createElement("button", { onClick: reconnect }, i18n('connect'))));
-    if (isConnecting) {
+            react_1.default.createElement("button", { onClick: reconnect, type: "button" }, i18n('connect'))));
+        if (isConnecting) {
             return renderDialog({
                 subtext: i18n('connectingHangOn'),
                 title: i18n('connecting'),
             });
         }
-        else if (!isOnline) {
+        if (!isOnline) {
             return renderDialog({
                 renderActionableButton: manualReconnectButton,
                 subtext: i18n('checkNetworkConnection'),

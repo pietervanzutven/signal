@@ -7,13 +7,13 @@
     const exports = window.ts.state.smart.TimelineLoadingRow = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_redux_1 = window.react_redux;
-    const actions_1 = window.ts.state.actions;
-    const lodash_1 = window.lodash;
-    const TimelineLoadingRow_1 = window.ts.components.conversation.TimelineLoadingRow;
-    const Timeline_1 = window.ts.components.conversation.Timeline;
-    const user_1 = window.ts.state.selectors.user;
-    const conversations_1 = window.ts.state.selectors.conversations;
+    const lodash_1 = require("lodash");
+    const react_redux_1 = require("react-redux");
+    const actions_1 = require("../actions");
+    const TimelineLoadingRow_1 = require("../../components/conversation/TimelineLoadingRow");
+    const Timeline_1 = require("../../components/conversation/Timeline");
+    const user_1 = require("../selectors/user");
+    const conversations_1 = require("../selectors/conversations");
     const mapStateToProps = (state, props) => {
         const { id } = props;
         const conversation = conversations_1.getConversationMessagesSelector(state)(id);
@@ -21,11 +21,16 @@
             throw new Error(`Did not find conversation ${id} in state!`);
         }
         const { isLoadingMessages, loadCountdownStart } = conversation;
-        const loadingState = isLoadingMessages
-            ? 'loading'
-            : lodash_1.isNumber(loadCountdownStart)
-                ? 'countdown'
-                : 'idle';
+        let loadingState;
+        if (isLoadingMessages) {
+            loadingState = 'loading';
+        }
+        else if (lodash_1.isNumber(loadCountdownStart)) {
+            loadingState = 'countdown';
+        }
+        else {
+            loadingState = 'idle';
+        }
         const duration = loadingState === 'countdown' ? Timeline_1.LOAD_COUNTDOWN : undefined;
         const expiresAt = loadingState === 'countdown' && loadCountdownStart
             ? loadCountdownStart + Timeline_1.LOAD_COUNTDOWN

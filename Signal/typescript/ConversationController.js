@@ -4,9 +4,9 @@ require(exports => {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const MAX_MESSAGE_BODY_LENGTH = 64 * 1024;
     const lodash_1 = require("lodash");
     const Client_1 = __importDefault(require("./sql/Client"));
+    const MAX_MESSAGE_BODY_LENGTH = 64 * 1024;
     const { getAllConversations, getAllGroupsInvolvingId, getMessagesBySentAt, migrateConversationMessages, removeConversation, saveConversation, updateConversation, } = Client_1.default;
     // We have to run this in background.js, after all backbone models and collections on
     //   Whisper.* have been created. Once those are in typescript we can use more reasonable
@@ -19,7 +19,9 @@ require(exports => {
             initialize() {
                 this.listenTo(conversations, 'add change:active_at', this.addActive);
                 this.listenTo(conversations, 'reset', () => this.reset([]));
-                this.on('add remove change:unreadCount', lodash_1.debounce(this.updateUnreadCount.bind(this), 1000));
+                const debouncedUpdateUnreadCount = lodash_1.debounce(this.updateUnreadCount.bind(this), 1000);
+                this.on('add remove change:unreadCount', debouncedUpdateUnreadCount);
+                window.Whisper.events.on('updateUnreadCount', debouncedUpdateUnreadCount);
             },
             addActive(model) {
                 if (model.get('active_at')) {
@@ -30,7 +32,8 @@ require(exports => {
                 }
             },
             updateUnreadCount() {
-                const newUnreadCount = lodash_1.reduce(this.map((m) => m.get('unreadCount')), (item, memo) => (item || 0) + memo, 0);
+                const canCountMutedConversations = window.storage.get('badge-count-muted-conversations');
+                const newUnreadCount = lodash_1.reduce(this.map((m) => !canCountMutedConversations && m.isMuted() ? 0 : m.get('unreadCount')), (item, memo) => (item || 0) + memo, 0);
                 window.storage.put('unreadCount', newUnreadCount);
                 if (newUnreadCount > 0) {
                     window.setBadgeCount(newUnreadCount);
@@ -109,13 +112,13 @@ require(exports => {
             return conversation;
         }
         async getOrCreateAndWait(id, type, additionalInitialProps = {}) {
-            return this._initialPromise.then(async () => {
-                const conversation = this.getOrCreate(id, type, additionalInitialProps);
-                if (conversation) {
-                    return conversation.initialPromise.then(() => conversation);
-                }
-                return Promise.reject(new Error('getOrCreateAndWait: did not get conversation'));
-            });
+            await this._initialPromise;
+            const conversation = this.getOrCreate(id, type, additionalInitialProps);
+            if (conversation) {
+                await conversation.initialPromise;
+                return conversation;
+            }
+            throw new Error('getOrCreateAndWait: did not get conversation');
         }
         getConversationId(address) {
             if (!address) {
@@ -169,7 +172,7 @@ require(exports => {
                 return newConvo.get('id');
                 // 2. Handle match on only E164
             }
-            else if (convoE164 && !convoUuid) {
+            if (convoE164 && !convoUuid) {
                 const haveUuid = Boolean(normalizedUuid);
                 window.log.info(`ensureContactIds: e164-only match found (have UUID: ${haveUuid})`);
                 // If we are only searching based on e164 anyway, then return the first result
@@ -200,7 +203,7 @@ require(exports => {
                 return newConvo.get('id');
                 // 3. Handle match on only UUID
             }
-            else if (!convoE164 && convoUuid) {
+            if (!convoE164 && convoUuid) {
                 window.log.info(`ensureContactIds: UUID-only match found (have e164: ${Boolean(e164)})`);
                 if (e164 && highTrust) {
                     convoUuid.updateE164(e164);
@@ -233,6 +236,8 @@ require(exports => {
                 // Conflict: If e164 match has no UUID, we merge. We prefer the UUID match.
                 // Note: no await here, we want to keep this function synchronous
                 convoUuid.updateE164(e164);
+                // `then` is used to trigger async updates, not affecting return value
+                // eslint-disable-next-line more/no-then
                 this.combineContacts(convoUuid, convoE164)
                     .then(() => {
                         // If the old conversation was currently displayed, we load the new one
@@ -375,6 +380,7 @@ require(exports => {
          * conversation the message belongs to OR null if a conversation isn't
          * found.
          */
+        // eslint-disable-next-line class-methods-use-this
         async getConversationForTargetMessage(targetFromId, targetTimestamp) {
             const messages = await getMessagesBySentAt(targetTimestamp, {
                 MessageCollection: window.Whisper.MessageCollection,
@@ -433,21 +439,26 @@ require(exports => {
                     this._conversations.add(collection.models);
                     this._initialFetchComplete = true;
                     await Promise.all(this._conversations.map(async (conversation) => {
-                        // This call is important to allow Conversation models not to generate their
-                        //   cached props on initial construction if we're in the middle of the load
-                        //   from the database. Then we come back to the models when it is safe and
-                        //   generate those props.
-                        conversation.generateProps();
-                        if (!conversation.get('lastMessage')) {
-                            await conversation.updateLastMessage();
+                        try {
+                            // This call is important to allow Conversation models not to generate their
+                            //   cached props on initial construction if we're in the middle of the load
+                            //   from the database. Then we come back to the models when it is safe and
+                            //   generate those props.
+                            conversation.generateProps();
+                            if (!conversation.get('lastMessage')) {
+                                await conversation.updateLastMessage();
+                            }
+                            // In case a too-large draft was saved to the database
+                            const draft = conversation.get('draft');
+                            if (draft && draft.length > MAX_MESSAGE_BODY_LENGTH) {
+                                conversation.set({
+                                    draft: draft.slice(0, MAX_MESSAGE_BODY_LENGTH),
+                                });
+                                updateConversation(conversation.attributes);
+                            }
                         }
-                        // In case a too-large draft was saved to the database
-                        const draft = conversation.get('draft');
-                        if (draft && draft.length > MAX_MESSAGE_BODY_LENGTH) {
-                            conversation.set({
-                                draft: draft.slice(0, MAX_MESSAGE_BODY_LENGTH),
-                            });
-                            updateConversation(conversation.attributes);
+                        catch (error) {
+                            window.log.error('ConversationController.load/map: Failed to prepare a conversation', error && error.stack ? error.stack : error);
                         }
                     }));
                     window.log.info('ConversationController: done with initial fetch');

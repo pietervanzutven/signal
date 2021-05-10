@@ -19,7 +19,9 @@
     const ContactName_1 = require("./ContactName");
     // Workaround: A react component's required properties are filtering up through connect()
     //   https://github.com/DefinitelyTyped/DefinitelyTyped/issues/31363
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const FilteredSmartContactName = ContactName_1.SmartContactName;
+    /* eslint-enable @typescript-eslint/no-explicit-any */
     function renderContact(conversationId) {
         return react_1.default.createElement(FilteredSmartContactName, { conversationId: conversationId });
     }

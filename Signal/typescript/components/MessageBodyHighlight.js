@@ -9,10 +9,10 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const MessageBody_1 = window.ts.components.conversation.MessageBody;
-    const Emojify_1 = window.ts.components.conversation.Emojify;
-    const AddNewLines_1 = window.ts.components.conversation.AddNewLines;
+    const react_1 = __importDefault(require("react"));
+    const MessageBody_1 = require("./conversation/MessageBody");
+    const Emojify_1 = require("./conversation/Emojify");
+    const AddNewLines_1 = require("./conversation/AddNewLines");
     const renderNewLines = ({ text, key }) => (react_1.default.createElement(AddNewLines_1.AddNewLines, { key: key, text: text }));
     const renderEmoji = ({ text, key, sizeClass, renderNonEmoji, }) => (react_1.default.createElement(Emojify_1.Emojify, { key: key, text: text, sizeClass: sizeClass, renderNonEmoji: renderNonEmoji }));
     class MessageBodyHighlight extends react_1.default.Component {
@@ -30,31 +30,33 @@
             while (match) {
                 if (last < match.index) {
                     const beforeText = text.slice(last, match.index);
+                    count += 1;
                     results.push(renderEmoji({
                         text: beforeText,
                         sizeClass,
-                        key: count++,
+                        key: count,
                         i18n,
                         renderNonEmoji: renderNewLines,
                     }));
                 }
                 const [, toHighlight] = match;
-                results.push(react_1.default.createElement("span", { className: "module-message-body__highlight", key: count++ }, renderEmoji({
+                count += 2;
+                results.push(react_1.default.createElement("span", { className: "module-message-body__highlight", key: count - 1 }, renderEmoji({
                     text: toHighlight,
                     sizeClass,
-                    key: count++,
+                    key: count,
                     i18n,
                     renderNonEmoji: renderNewLines,
                 })));
-                // @ts-ignore
                 last = FIND_BEGIN_END.lastIndex;
                 match = FIND_BEGIN_END.exec(text);
             }
             if (last < text.length) {
+                count += 1;
                 results.push(renderEmoji({
                     text: text.slice(last),
                     sizeClass,
-                    key: count++,
+                    key: count,
                     i18n,
                     renderNonEmoji: renderNewLines,
                 }));

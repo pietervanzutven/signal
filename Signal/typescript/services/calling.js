@@ -6,6 +6,7 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const ringrtc_1 = require("ringrtc");
+    // ts-ignore
     const is_1 = __importDefault(require("@sindresorhus/is"));
     var ringrtc_2 = require("ringrtc");
     exports.CallState = ringrtc_2.CallState;
@@ -258,14 +259,27 @@ require(exports => {
                 window.log.info('Incoming calls are disabled, ignoring call offer.');
                 return;
             }
-            const remoteUserId = envelope.source || envelope.sourceUuid;
+            const remoteUserId = envelope.sourceUuid || envelope.source;
             const remoteDeviceId = this.parseDeviceId(envelope.sourceDevice);
             if (!remoteUserId || !remoteDeviceId || !this.localDeviceId) {
                 window.log.error('Missing identifier, ignoring call message.');
                 return;
             }
+            const senderIdentityRecord = window.textsecure.storage.protocol.getIdentityRecord(remoteUserId);
+            if (!senderIdentityRecord) {
+                window.log.error('Missing sender identity record; ignoring call message.');
+                return;
+            }
+            const senderIdentityKey = senderIdentityRecord.publicKey.slice(1); // Ignore the type header, it is not used.
+            const receiverIdentityRecord = window.textsecure.storage.protocol.getIdentityRecord(window.textsecure.storage.user.getUuid() ||
+                window.textsecure.storage.user.getNumber());
+            if (!receiverIdentityRecord) {
+                window.log.error('Missing receiver identity record; ignoring call message.');
+                return;
+            }
+            const receiverIdentityKey = receiverIdentityRecord.publicKey.slice(1); // Ignore the type header, it is not used.
             const messageAgeSec = envelope.messageAgeSec ? envelope.messageAgeSec : 0;
-            ringrtc_1.RingRTC.handleCallingMessage(remoteUserId, remoteDeviceId, this.localDeviceId, messageAgeSec, callingMessage);
+            ringrtc_1.RingRTC.handleCallingMessage(remoteUserId, remoteDeviceId, this.localDeviceId, messageAgeSec, callingMessage, senderIdentityKey, receiverIdentityKey);
         }
         async selectPreferredDevices(settings) {
             if ((!this.lastMediaDeviceSettings && settings.selectedCamera) ||

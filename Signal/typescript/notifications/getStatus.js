@@ -6,7 +6,7 @@
     const exports = window.ts.notifications;
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.getStatus = ({ isAppFocused, isAudioNotificationEnabled, isAudioNotificationSupported, isEnabled, hasNotifications, userSetting, }) => {
+    exports.getStatus = ({ isAppFocused, isAudioNotificationEnabled, isEnabled, hasNotifications, userSetting, }) => {
         const type = (() => {
             if (!isEnabled) {
                 return 'disabled';
@@ -22,13 +22,10 @@
             }
             return 'ok';
         })();
-        const shouldPlayNotificationSound = isAudioNotificationSupported && isAudioNotificationEnabled;
-        const shouldShowNotifications = type === 'ok';
-        const shouldClearNotifications = type === 'appIsFocused';
         return {
-            shouldClearNotifications,
-            shouldPlayNotificationSound,
-            shouldShowNotifications,
+            shouldClearNotifications: type === 'appIsFocused',
+            shouldPlayNotificationSound: isAudioNotificationEnabled,
+            shouldShowNotifications: type === 'ok',
             type,
         };
     };

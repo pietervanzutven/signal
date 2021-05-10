@@ -10,12 +10,12 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(window.react);
-    const lib_1 = window.ts.components.emoji.lib;
-    const Emojify_1 = window.ts.components.conversation.Emojify;
-    const AddNewLines_1 = window.ts.components.conversation.AddNewLines;
-    const Linkify_1 = window.ts.components.conversation.Linkify;
-    const renderNewLines = ({ text: textWithNewLines, key, }) => react_1.default.createElement(AddNewLines_1.AddNewLines, { key: key, text: textWithNewLines });
+    const react_1 = __importDefault(require("react"));
+    const lib_1 = require("../emoji/lib");
+    const AtMentionify_1 = require("./AtMentionify");
+    const Emojify_1 = require("./Emojify");
+    const AddNewLines_1 = require("./AddNewLines");
+    const Linkify_1 = require("./Linkify");
     const renderEmoji = ({ text, key, sizeClass, renderNonEmoji, }) => (react_1.default.createElement(Emojify_1.Emojify, { key: key, text: text, sizeClass: sizeClass, renderNonEmoji: renderNonEmoji }));
     /**
      * This component makes it very easy to use all three of our message formatting
@@ -24,6 +24,13 @@
      * them for you.
      */
     class MessageBody extends react_1.default.Component {
+        constructor() {
+            super(...arguments);
+            this.renderNewLines = ({ text: textWithNewLines, key, }) => {
+                const { bodyRanges, direction, openConversation } = this.props;
+                return (react_1.default.createElement(AddNewLines_1.AddNewLines, { key: key, text: textWithNewLines, renderNonNewLine: ({ text }) => (react_1.default.createElement(AtMentionify_1.AtMentionify, { direction: direction, text: text, bodyRanges: bodyRanges, openConversation: openConversation })) }));
+            };
+        }
         addDownloading(jsx) {
             const { i18n, textPending } = this.props;
             return (react_1.default.createElement("span", null,
@@ -33,16 +40,16 @@
                     i18n('downloading'))) : null));
         }
         render() {
-            const { text, textPending, disableJumbomoji, disableLinks, i18n, } = this.props;
+            const { bodyRanges, text, textPending, disableJumbomoji, disableLinks, i18n, } = this.props;
             const sizeClass = disableJumbomoji ? undefined : lib_1.getSizeClass(text);
-            const textWithPending = textPending ? `${text}...` : text;
+            const textWithPending = AtMentionify_1.AtMentionify.preprocessMentions(textPending ? `${text}...` : text, bodyRanges);
             if (disableLinks) {
                 return this.addDownloading(renderEmoji({
                     i18n,
                     text: textWithPending,
                     sizeClass,
                     key: 0,
-                    renderNonEmoji: renderNewLines,
+                    renderNonEmoji: this.renderNewLines,
                 }));
             }
             return this.addDownloading(react_1.default.createElement(Linkify_1.Linkify, {
@@ -52,7 +59,7 @@
                         text: nonLinkText,
                         sizeClass,
                         key,
-                        renderNonEmoji: renderNewLines,
+                        renderNonEmoji: this.renderNewLines,
                     });
                 }
             }));

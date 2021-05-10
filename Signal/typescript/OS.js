@@ -8,9 +8,9 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const is_1 = __importDefault(window.sindresorhus.is);
-    const os_1 = __importDefault(window.os);
-    const semver_1 = __importDefault(window.semver);
+    const is_1 = __importDefault(require("@sindresorhus/is"));
+    const os_1 = __importDefault(require("os"));
+    const semver_1 = __importDefault(require("semver"));
     exports.isMacOS = () => process.platform === 'darwin';
     exports.isLinux = () => process.platform === 'linux';
     exports.isWindows = (minVersion) => {

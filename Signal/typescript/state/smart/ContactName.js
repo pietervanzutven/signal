@@ -13,14 +13,13 @@ require(exports => {
     const ContactName_1 = require("../../components/conversation/ContactName");
     const user_1 = require("../selectors/user");
     const conversations_1 = require("../selectors/conversations");
-    exports.SmartContactName = (props) => {
+    exports.SmartContactName = props => {
         const { conversationId } = props;
         const i18n = react_redux_1.useSelector(user_1.getIntl);
         const getConversation = react_redux_1.useSelector(conversations_1.getConversationSelector);
-        const conversation = getConversation(conversationId);
-        if (!conversation) {
-            throw new Error(`Conversation id ${conversationId} not found!`);
-        }
+        const conversation = getConversation(conversationId) || {
+            title: i18n('unknownContact'),
+        };
         return React.createElement(ContactName_1.ContactName, Object.assign({ i18n: i18n }, conversation));
     };
 });

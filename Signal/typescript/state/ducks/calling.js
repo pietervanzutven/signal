@@ -87,7 +87,6 @@ require(exports => {
         }
         const { title, isVideoCall } = callDetails;
         notify_1.notify({
-            platform: window.platform,
             title,
             icon: isVideoCall
                 ? 'images/icons/v2/video-solid-24.svg'

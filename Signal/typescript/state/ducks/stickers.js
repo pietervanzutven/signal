@@ -10,12 +10,20 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = window.lodash;
-    const Client_1 = __importDefault(window.ts.sql.Client);
-    const stickers_1 = window.stickers;
-    const textsecure_1 = window.ts.shims.textsecure;
-    const events_1 = window.ts.shims.events;
+    const lodash_1 = require("lodash");
+    const Client_1 = __importDefault(require("../../sql/Client"));
+    const stickers_1 = require("../../../js/modules/stickers");
+    const textsecure_1 = require("../../shims/textsecure");
+    const events_1 = require("../../shims/events");
     const { getRecentStickers, updateStickerLastUsed, updateStickerPackStatus, } = Client_1.default;
+    exports.StickerPackStatuses = [
+        'known',
+        'ephemeral',
+        'downloaded',
+        'installed',
+        'pending',
+        'error',
+    ];
     // Action Creators
     exports.actions = {
         downloadStickerPack,
@@ -159,6 +167,9 @@
     // tslint:disable-next-line max-func-body-length
     function reducer(state = getEmptyState(), action) {
         if (action.type === 'stickers/STICKER_PACK_ADDED') {
+            // ts complains due to `stickers: {}` being overridden by the payload
+            // but without full confidence that that's the case, `any` and ignore
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const { payload } = action;
             const newPack = Object.assign({ stickers: {} }, payload);
             return Object.assign(Object.assign({}, state), { packs: Object.assign(Object.assign({}, state.packs), { [payload.id]: newPack }) });

@@ -49,7 +49,7 @@
             emojis.map((emoji, index) => {
                 const maybeFocusRef = index === 0 ? focusRef : undefined;
                 return (React.createElement("button", {
-                    key: emoji, ref: maybeFocusRef, tabIndex: 0, className: classnames_1.default('module-reaction-picker__emoji-btn', emoji === selected
+                    type: "button", key: emoji, ref: maybeFocusRef, tabIndex: 0, className: classnames_1.default('module-reaction-picker__emoji-btn', emoji === selected
                         ? 'module-reaction-picker__emoji-btn--selected'
                         : null), onClick: e => {
                             e.stopPropagation();
@@ -60,7 +60,7 @@
                         React.createElement(Emoji_1.Emoji, { size: 48, emoji: emoji }))));
             }),
             React.createElement("button", {
-                className: classnames_1.default('module-reaction-picker__emoji-btn', otherSelected
+                type: "button", className: classnames_1.default('module-reaction-picker__emoji-btn', otherSelected
                     ? 'module-reaction-picker__emoji-btn--selected'
                     : 'module-reaction-picker__emoji-btn--more'), onClick: e => {
                         e.stopPropagation();

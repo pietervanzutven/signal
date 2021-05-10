@@ -1,8 +1,7 @@
 require(exports => {
     "use strict";
-
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = window.lodash;
+    const lodash_1 = require("lodash");
     function getIncrement(length) {
         if (length < 0) {
             return 1000;
@@ -18,7 +17,7 @@ require(exports => {
         if (delta > length) {
             return '60';
         }
-        const bucket = Math.round(delta / length * 12);
+        const bucket = Math.round((delta / length) * 12);
         return lodash_1.padStart(String(bucket * 5), 2, '0');
     }
     exports.getTimerBucket = getTimerBucket;

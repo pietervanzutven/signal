@@ -14,45 +14,29 @@ require(exports => {
                 if (wasVideoCall) {
                     return i18n('declinedIncomingVideoCall');
                 }
-                else {
-                    return i18n('declinedIncomingAudioCall');
-                }
+                return i18n('declinedIncomingAudioCall');
             }
-            else if (wasAccepted) {
+            if (wasAccepted) {
                 if (wasVideoCall) {
                     return i18n('acceptedIncomingVideoCall');
                 }
-                else {
-                    return i18n('acceptedIncomingAudioCall');
-                }
+                return i18n('acceptedIncomingAudioCall');
             }
-            else {
-                if (wasVideoCall) {
-                    return i18n('missedIncomingVideoCall');
-                }
-                else {
-                    return i18n('missedIncomingAudioCall');
-                }
+            if (wasVideoCall) {
+                return i18n('missedIncomingVideoCall');
             }
+            return i18n('missedIncomingAudioCall');
         }
-        else {
-            if (wasAccepted) {
-                if (wasVideoCall) {
-                    return i18n('acceptedOutgoingVideoCall');
-                }
-                else {
-                    return i18n('acceptedOutgoingAudioCall');
-                }
+        if (wasAccepted) {
+            if (wasVideoCall) {
+                return i18n('acceptedOutgoingVideoCall');
             }
-            else {
-                if (wasVideoCall) {
-                    return i18n('missedOrDeclinedOutgoingVideoCall');
-                }
-                else {
-                    return i18n('missedOrDeclinedOutgoingAudioCall');
-                }
-            }
+            return i18n('acceptedOutgoingAudioCall');
         }
+        if (wasVideoCall) {
+            return i18n('missedOrDeclinedOutgoingVideoCall');
+        }
+        return i18n('missedOrDeclinedOutgoingAudioCall');
     }
     exports.getCallingNotificationText = getCallingNotificationText;
     exports.CallingNotification = (props) => {

@@ -8,17 +8,20 @@ require(exports => {
     const safetyNumber_1 = require("../util/safetyNumber");
     const Intl_1 = require("./Intl");
     exports.SafetyNumberViewer = ({ contact, generateSafetyNumber, i18n, onClose, safetyNumber, safetyNumberChanged, toggleVerified, verificationDisabled, }) => {
+        react_1.default.useEffect(() => {
+            if (!contact) {
+                return;
+            }
+            generateSafetyNumber(contact);
+        }, [contact, generateSafetyNumber, safetyNumber]);
         if (!contact) {
             return null;
         }
-        react_1.default.useEffect(() => {
-            generateSafetyNumber(contact);
-        }, [safetyNumber]);
         const showNumber = Boolean(contact.name || contact.profileName);
         const numberFragment = showNumber ? ` · ${contact.phoneNumber}` : '';
         const name = `${contact.title}${numberFragment}`;
         const boldName = (react_1.default.createElement("span", { className: "module-safety-number__bold-name" }, name));
-        const isVerified = contact.isVerified;
+        const { isVerified } = contact;
         const verifiedStatusKey = isVerified ? 'isVerified' : 'isNotVerified';
         const safetyNumberChangedKey = safetyNumberChanged
             ? 'changedRightAfterVerify'
@@ -26,7 +29,7 @@ require(exports => {
         const verifyButtonText = isVerified ? i18n('unverify') : i18n('verify');
         return (react_1.default.createElement("div", { className: "module-safety-number" },
             onClose && (react_1.default.createElement("div", { className: "module-safety-number__close-button" },
-                react_1.default.createElement("button", { onClick: onClose, tabIndex: 0 },
+                react_1.default.createElement("button", { onClick: onClose, tabIndex: 0, type: "button" },
                     react_1.default.createElement("span", null)))),
             react_1.default.createElement("div", { className: "module-safety-number__verification-label" },
                 react_1.default.createElement(Intl_1.Intl, {
@@ -44,7 +47,7 @@ require(exports => {
                 react_1.default.createElement("button", {
                     className: "module-safety-number__button--verify", disabled: verificationDisabled, onClick: () => {
                         toggleVerified(contact);
-                    }, tabIndex: 0
+                    }, tabIndex: 0, type: "button"
                 }, verifyButtonText))));
     };
 });

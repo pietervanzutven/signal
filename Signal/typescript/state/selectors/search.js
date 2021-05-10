@@ -10,12 +10,12 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const memoizee_1 = __importDefault(window.memoizee);
-    const reselect_1 = window.reselect;
-    const Whisper_1 = window.ts.shims.Whisper;
+    const memoizee_1 = __importDefault(require("memoizee"));
+    const reselect_1 = require("reselect");
+    const Whisper_1 = require("../../shims/Whisper");
     const libphonenumberInstance_1 = require("../../util/libphonenumberInstance");
-    const user_1 = window.ts.state.selectors.user;
-    const conversations_1 = window.ts.state.selectors.conversations;
+    const user_1 = require("./user");
+    const conversations_1 = require("./conversations");
     exports.getSearch = (state) => state.search;
     exports.getQuery = reselect_1.createSelector(exports.getSearch, (state) => state.query);
     exports.getSelectedMessage = reselect_1.createSelector(exports.getSearch, (state) => state.selectedMessage);
@@ -134,22 +134,14 @@
             items,
             messagesLoading,
             noResults,
-            regionCode: regionCode,
+            regionCode,
             searchConversationName,
             searchTerm: state.query,
             selectedConversationId,
             selectedMessageId,
         };
     });
-    function _messageSearchResultSelector(message,
-        // @ts-ignore
-        ourNumber,
-        // @ts-ignore
-        regionCode,
-        // @ts-ignore
-        sender,
-        // @ts-ignore
-        recipient, searchConversationId, selectedMessageId) {
+    function _messageSearchResultSelector(message, _ourNumber, _regionCode, _sender, _recipient, searchConversationId, selectedMessageId) {
         // Note: We don't use all of those parameters here, but the shim we call does.
         //   We want to call this function again if any of those parameters change.
         return Object.assign(Object.assign({}, Whisper_1.getSearchResultsProps(message)), { isSelected: message.id === selectedMessageId, isSearchingInConversation: Boolean(searchConversationId) });
@@ -164,7 +156,7 @@
         return (id) => {
             const message = messageSearchResultLookup[id];
             if (!message) {
-                return;
+                return undefined;
             }
             const { conversationId, source, type } = message;
             let sender;

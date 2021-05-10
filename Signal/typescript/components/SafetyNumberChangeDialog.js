@@ -18,7 +18,7 @@ require(exports => {
             if (cancelButtonRef && cancelButtonRef.current) {
                 cancelButtonRef.current.focus();
             }
-        }, [contacts]);
+        }, [cancelButtonRef, contacts]);
         return (React.createElement(React.Fragment, null,
             React.createElement("h1", { className: "module-sfn-dialog__title" }, i18n('safetyNumberChanges')),
             React.createElement("div", { className: "module-sfn-dialog__message" }, i18n('changedVerificationWarning')),
@@ -36,12 +36,12 @@ require(exports => {
                     React.createElement("button", {
                         className: "module-sfn-dialog__contact--view", onClick: () => {
                             onView(contact);
-                        }, tabIndex: 0
+                        }, tabIndex: 0, type: "button"
                     }, i18n('view'))));
             })),
             React.createElement("div", { className: "module-sfn-dialog__actions" },
-                React.createElement("button", { className: "module-sfn-dialog__actions--cancel", onClick: onCancel, ref: cancelButtonRef, tabIndex: 0 }, i18n('cancel')),
-                React.createElement("button", { className: "module-sfn-dialog__actions--confirm", onClick: onConfirm, tabIndex: 0 }, confirmText || i18n('sendMessageToContact')))));
+                React.createElement("button", { className: "module-sfn-dialog__actions--cancel", onClick: onCancel, ref: cancelButtonRef, tabIndex: 0, type: "button" }, i18n('cancel')),
+                React.createElement("button", { className: "module-sfn-dialog__actions--confirm", onClick: onConfirm, tabIndex: 0, type: "button" }, confirmText || i18n('sendMessageToContact')))));
     };
     exports.SafetyNumberChangeDialog = (props) => {
         const { i18n, onCancel, renderSafetyNumber } = props;

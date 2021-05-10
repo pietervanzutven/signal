@@ -1,16 +1,12 @@
 require(exports => {
     "use strict";
-
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const p_queue_1 = __importDefault(window.p_queue);
-    // @ts-ignore
+    const p_queue_1 = __importDefault(require("p-queue"));
     window.waitBatchers = [];
-    // @ts-ignore
     window.waitForAllWaitBatchers = async () => {
-        // @ts-ignore
         await Promise.all(window.waitBatchers.map(item => item.onIdle()));
     };
     async function sleep(ms) {
@@ -21,7 +17,7 @@ require(exports => {
         let waitBatcher;
         let timeout;
         let items = [];
-        const queue = new p_queue_1.default({ concurrency: 1 });
+        const queue = new p_queue_1.default({ concurrency: 1, timeout: 1000 * 60 * 2 });
         function _kickBatchOff() {
             const itemsRef = items;
             items = [];
@@ -30,12 +26,16 @@ require(exports => {
                 try {
                     await options.processBatch(itemsRef.map(item => item.item));
                     itemsRef.forEach(item => {
-                        item.resolve();
+                        if (item.resolve) {
+                            item.resolve();
+                        }
                     });
                 }
                 catch (error) {
                     itemsRef.forEach(item => {
-                        item.reject(error);
+                        if (item.reject) {
+                            item.reject(error);
+                        }
                     });
                 }
             });
@@ -43,12 +43,10 @@ require(exports => {
         function _makeExplodedPromise() {
             let resolve;
             let reject;
-            // tslint:disable-next-line:promise-must-complete
             const promise = new Promise((resolveParam, rejectParam) => {
                 resolve = resolveParam;
                 reject = rejectParam;
             });
-            // @ts-ignore
             return { promise, resolve, reject };
         }
         async function add(item) {
@@ -79,16 +77,17 @@ require(exports => {
         async function onIdle() {
             while (anyPending()) {
                 if (queue.size > 0 || queue.pending > 0) {
+                    // eslint-disable-next-line no-await-in-loop
                     await queue.onIdle();
                 }
                 if (items.length > 0) {
+                    // eslint-disable-next-line no-await-in-loop
                     await sleep(options.wait * 2);
                 }
             }
         }
         function unregister() {
-            // @ts-ignore
-            window.waitBatchers = window.waitBatchers.filter((item) => item !== waitBatcher);
+            window.waitBatchers = window.waitBatchers.filter(item => item !== waitBatcher);
         }
         waitBatcher = {
             add,
@@ -96,7 +95,6 @@ require(exports => {
             onIdle,
             unregister,
         };
-        // @ts-ignore
         window.waitBatchers.push(waitBatcher);
         return waitBatcher;
     }

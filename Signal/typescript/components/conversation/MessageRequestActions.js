@@ -16,7 +16,6 @@ require(exports => {
     const ContactName_1 = require("./ContactName");
     const MessageRequestActionsConfirmation_1 = require("./MessageRequestActionsConfirmation");
     const Intl_1 = require("../Intl");
-    // tslint:disable-next-line max-func-body-length
     exports.MessageRequestActions = ({ conversationType, firstName, i18n, isBlocked, name, onAccept, onBlock, onBlockAndDelete, onDelete, onUnblock, phoneNumber, profileName, title, }) => {
         const [mrState, setMrState] = React.useState(MessageRequestActionsConfirmation_1.MessageRequestState.default);
         return (React.createElement(React.Fragment, null,
@@ -31,19 +30,19 @@ require(exports => {
                     })),
                 React.createElement("div", { className: "module-message-request-actions__buttons" },
                     React.createElement("button", {
-                        onClick: () => {
+                        type: "button", onClick: () => {
                             setMrState(MessageRequestActionsConfirmation_1.MessageRequestState.deleting);
                         }, tabIndex: 0, className: classnames_1.default('module-message-request-actions__buttons__button', 'module-message-request-actions__buttons__button--deny')
                     }, i18n('MessageRequests--delete')),
                     isBlocked ? (React.createElement("button", {
-                        onClick: () => {
+                        type: "button", onClick: () => {
                             setMrState(MessageRequestActionsConfirmation_1.MessageRequestState.unblocking);
                         }, tabIndex: 0, className: classnames_1.default('module-message-request-actions__buttons__button', 'module-message-request-actions__buttons__button--accept')
                     }, i18n('MessageRequests--unblock'))) : (React.createElement("button", {
-                        onClick: () => {
+                        type: "button", onClick: () => {
                             setMrState(MessageRequestActionsConfirmation_1.MessageRequestState.blocking);
                         }, tabIndex: 0, className: classnames_1.default('module-message-request-actions__buttons__button', 'module-message-request-actions__buttons__button--deny')
                     }, i18n('MessageRequests--block'))),
-                    !isBlocked ? (React.createElement("button", { onClick: onAccept, tabIndex: 0, className: classnames_1.default('module-message-request-actions__buttons__button', 'module-message-request-actions__buttons__button--accept') }, i18n('MessageRequests--accept'))) : null))));
+                    !isBlocked ? (React.createElement("button", { type: "button", onClick: onAccept, tabIndex: 0, className: classnames_1.default('module-message-request-actions__buttons__button', 'module-message-request-actions__buttons__button--accept') }, i18n('MessageRequests--accept'))) : null))));
     };
 });

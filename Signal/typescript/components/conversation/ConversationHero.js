@@ -23,8 +23,11 @@ require(exports => {
         if (conversationType === 'direct' &&
             sharedGroupNames &&
             sharedGroupNames.length > 0) {
-            const firstThreeGroups = lodash_1.take(sharedGroupNames, 3).map((group, i) => (React.createElement("strong", { key: i, className: nameClassName },
-                React.createElement(Emojify_1.Emojify, { text: group }))));
+            const firstThreeGroups = lodash_1.take(sharedGroupNames, 3).map((group, i) => (
+                // We cannot guarantee uniqueness of group names
+                // eslint-disable-next-line react/no-array-index-key
+                React.createElement("strong", { key: i, className: nameClassName },
+                    React.createElement(Emojify_1.Emojify, { text: group }))));
             if (sharedGroupNames.length > 3) {
                 const remainingCount = sharedGroupNames.length - 3;
                 return (React.createElement("div", { className: className },
@@ -37,7 +40,7 @@ require(exports => {
                         }
                     })));
             }
-            else if (firstThreeGroups.length === 3) {
+            if (firstThreeGroups.length === 3) {
                 return (React.createElement("div", { className: className },
                     React.createElement(Intl_1.Intl, {
                         i18n: i18n, id: "ConversationHero--membership-3", components: {
@@ -47,7 +50,7 @@ require(exports => {
                         }
                     })));
             }
-            else if (firstThreeGroups.length >= 2) {
+            if (firstThreeGroups.length >= 2) {
                 return (React.createElement("div", { className: className },
                     React.createElement(Intl_1.Intl, {
                         i18n: i18n, id: "ConversationHero--membership-2", components: {
@@ -56,7 +59,7 @@ require(exports => {
                         }
                     })));
             }
-            else if (firstThreeGroups.length >= 1) {
+            if (firstThreeGroups.length >= 1) {
                 return (React.createElement("div", { className: className },
                     React.createElement(Intl_1.Intl, {
                         i18n: i18n, id: "ConversationHero--membership-1", components: {
@@ -69,6 +72,8 @@ require(exports => {
     };
     exports.ConversationHero = ({ i18n, avatarPath, color, conversationType, isMe, membersCount, sharedGroupNames = [], name, phoneNumber, profileName, title, onHeightChange, updateSharedGroups, }) => {
         const firstRenderRef = React.useRef(true);
+        // TODO: DESKTOP-686
+        /* eslint-disable react-hooks/exhaustive-deps */
         React.useEffect(() => {
             // If any of the depenencies for this hook change then the height of this
             // component may have changed. The cleanup function notifies listeners of
@@ -95,7 +100,9 @@ require(exports => {
             `pn-${profileName}`,
             sharedGroupNames.map(g => `g-${g}`).join(' '),
         ]);
+        /* eslint-enable react-hooks/exhaustive-deps */
         const phoneNumberOnly = Boolean(!name && !profileName && conversationType === 'direct');
+        /* eslint-disable no-nested-ternary */
         return (React.createElement("div", { className: "module-conversation-hero" },
             React.createElement(Avatar_1.Avatar, { i18n: i18n, color: color, noteToSelf: isMe, avatarPath: avatarPath, conversationType: conversationType, name: name, profileName: profileName, title: title, size: 112, className: "module-conversation-hero__avatar" }),
             React.createElement("h1", { className: "module-conversation-hero__profile-name" }, isMe ? (i18n('noteToSelf')) : (React.createElement(ContactName_1.ContactName, { title: title, name: name, profileName: profileName, phoneNumber: phoneNumber, i18n: i18n }))),
@@ -107,5 +114,6 @@ require(exports => {
                         ? null
                         : phoneNumber)) : null,
             renderMembershipRow({ isMe, sharedGroupNames, conversationType, i18n })));
+        /* eslint-enable no-nested-ternary */
     };
 });

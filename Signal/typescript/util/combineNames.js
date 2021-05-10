@@ -1,8 +1,8 @@
 require(exports => {
     "use strict";
-
-    // We don't include unicode-12.1.0 because it's over 100MB in size
+    /* eslint-disable camelcase */
     Object.defineProperty(exports, "__esModule", { value: true });
+    // We don't include unicode-12.1.0 because it's over 100MB in size
     // From https://github.com/mathiasbynens/unicode-12.1.0/tree/master/Block
     // tslint:disable variable-name
     const CJK_Compatibility = /[\u3300-\u33FF]/;
@@ -46,6 +46,7 @@ require(exports => {
     }
     exports.combineNames = combineNames;
     function isAllCKJV(name) {
+        // eslint-disable-next-line no-restricted-syntax
         for (const codePoint of name) {
             if (!isCKJV(codePoint)) {
                 return false;
@@ -53,7 +54,6 @@ require(exports => {
         }
         return true;
     }
-    // tslint:disable-next-line cyclomatic-complexity
     function isCKJV(codePoint) {
         if (codePoint === ' ') {
             return true;
@@ -83,6 +83,5 @@ require(exports => {
             Hangul_Jamo_Extended_B.test(codePoint) ||
             Hangul_Syllables.test(codePoint) ||
             isIdeographic.test(codePoint));
-
     }
 });

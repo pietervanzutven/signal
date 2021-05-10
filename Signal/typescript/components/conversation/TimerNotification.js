@@ -41,7 +41,7 @@
                         ? i18n('disappearingMessagesDisabledByMember')
                         : i18n('timerSetByMember', [timespan]);
                 default:
-                    console.warn('TimerNotification: unsupported type provided:', type);
+                    window.log.warn('TimerNotification: unsupported type provided:', type);
                     return null;
             }
         }

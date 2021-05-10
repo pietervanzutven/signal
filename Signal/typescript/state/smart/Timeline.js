@@ -36,6 +36,7 @@
     const EmojiPicker_1 = require("./EmojiPicker");
     // Workaround: A react component's required properties are filtering up through connect()
     //   https://github.com/DefinitelyTyped/DefinitelyTyped/issues/31363
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const FilteredSmartTimelineItem = TimelineItem_1.SmartTimelineItem;
     const FilteredSmartTypingBubble = TypingBubble_1.SmartTypingBubble;
     const FilteredSmartLastSeenIndicator = LastSeenIndicator_1.SmartLastSeenIndicator;
@@ -73,5 +74,6 @@
         }), actions);
     };
     const smart = react_redux_1.connect(mapStateToProps, actions_1.mapDispatchToProps);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exports.SmartTimeline = smart(Timeline_1.Timeline);
 })();

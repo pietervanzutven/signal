@@ -37,88 +37,90 @@
                 React.createElement("img", { className: "module-sticker-manager__preview-modal__container__sticker-grid__cell__image", src: url, alt: pack.title })))),
             lodash_1.range(pack.stickerCount - pack.stickers.length).map(i => (React.createElement("div", { key: `placeholder-${i}`, className: classnames_1.default('module-sticker-manager__preview-modal__container__sticker-grid__cell', 'module-sticker-manager__preview-modal__container__sticker-grid__cell--placeholder') })))));
     }
-    exports.StickerPreviewModal = React.memo(
-        // tslint:disable-next-line max-func-body-length
-        (props) => {
-            const { onClose, pack, i18n, downloadStickerPack, installStickerPack, uninstallStickerPack, } = props;
-            const focusRef = React.useRef(null);
-            const [root, setRoot] = React.useState(null);
-            const [confirmingUninstall, setConfirmingUninstall] = React.useState(false);
-            // Restore focus on teardown
-            hooks_1.useRestoreFocus(focusRef, root);
-            React.useEffect(() => {
-                const div = document.createElement('div');
-                document.body.appendChild(div);
-                setRoot(div);
-                return () => {
-                    document.body.removeChild(div);
-                };
-            }, []);
-            React.useEffect(() => {
-                if (pack && pack.status === 'known') {
-                    downloadStickerPack(pack.id, pack.key);
-                }
-                if (pack &&
-                    pack.status === 'error' &&
-                    (pack.attemptedStatus === 'downloaded' ||
-                        pack.attemptedStatus === 'installed')) {
-                    downloadStickerPack(pack.id, pack.key, {
-                        finalStatus: pack.attemptedStatus,
-                    });
-                }
-            }, []);
-            const isInstalled = Boolean(pack && pack.status === 'installed');
-            const handleToggleInstall = React.useCallback(() => {
-                if (!pack) {
-                    return;
-                }
-                if (isInstalled) {
-                    setConfirmingUninstall(true);
-                }
-                else if (pack.status === 'ephemeral') {
-                    downloadStickerPack(pack.id, pack.key, { finalStatus: 'installed' });
+    exports.StickerPreviewModal = React.memo((props) => {
+        const { onClose, pack, i18n, downloadStickerPack, installStickerPack, uninstallStickerPack, } = props;
+        const focusRef = React.useRef(null);
+        const [root, setRoot] = React.useState(null);
+        const [confirmingUninstall, setConfirmingUninstall] = React.useState(false);
+        // Restore focus on teardown
+        hooks_1.useRestoreFocus(focusRef, root);
+        React.useEffect(() => {
+            const div = document.createElement('div');
+            document.body.appendChild(div);
+            setRoot(div);
+            return () => {
+                document.body.removeChild(div);
+            };
+        }, []);
+        React.useEffect(() => {
+            if (pack && pack.status === 'known') {
+                downloadStickerPack(pack.id, pack.key);
+            }
+            if (pack &&
+                pack.status === 'error' &&
+                (pack.attemptedStatus === 'downloaded' ||
+                    pack.attemptedStatus === 'installed')) {
+                downloadStickerPack(pack.id, pack.key, {
+                    finalStatus: pack.attemptedStatus,
+                });
+            }
+            // We only want to attempt downloads on initial load
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
+        const isInstalled = Boolean(pack && pack.status === 'installed');
+        const handleToggleInstall = React.useCallback(() => {
+            if (!pack) {
+                return;
+            }
+            if (isInstalled) {
+                setConfirmingUninstall(true);
+            }
+            else if (pack.status === 'ephemeral') {
+                downloadStickerPack(pack.id, pack.key, { finalStatus: 'installed' });
+                onClose();
+            }
+            else {
+                installStickerPack(pack.id, pack.key);
+                onClose();
+            }
+        }, [
+            downloadStickerPack,
+            installStickerPack,
+            isInstalled,
+            onClose,
+            pack,
+            setConfirmingUninstall,
+        ]);
+        const handleUninstall = React.useCallback(() => {
+            if (!pack) {
+                return;
+            }
+            uninstallStickerPack(pack.id, pack.key);
+            setConfirmingUninstall(false);
+            // onClose is called by the confirmation modal
+        }, [uninstallStickerPack, setConfirmingUninstall, pack]);
+        React.useEffect(() => {
+            const handler = ({ key }) => {
+                if (key === 'Escape') {
                     onClose();
                 }
-                else {
-                    installStickerPack(pack.id, pack.key);
-                    onClose();
-                }
-            }, [
-                isInstalled,
-                pack,
-                setConfirmingUninstall,
-                installStickerPack,
-                onClose,
-            ]);
-            const handleUninstall = React.useCallback(() => {
-                if (!pack) {
-                    return;
-                }
-                uninstallStickerPack(pack.id, pack.key);
-                setConfirmingUninstall(false);
-                // onClose is called by the confirmation modal
-            }, [uninstallStickerPack, setConfirmingUninstall, pack]);
-            React.useEffect(() => {
-                const handler = ({ key }) => {
-                    if (key === 'Escape') {
-                        onClose();
-                    }
-                };
-                document.addEventListener('keydown', handler);
-                return () => {
-                    document.removeEventListener('keydown', handler);
-                };
-            }, [onClose]);
-            const handleClickToClose = React.useCallback((e) => {
-                if (e.target === e.currentTarget) {
-                    onClose();
-                }
-            }, [onClose]);
-            return root
-                ? react_dom_1.createPortal(React.createElement("div", {
-                    // Not really a button. Just a background which can be clicked to close modal
-                    role: "button", className: "module-sticker-manager__preview-modal__overlay", onClick: handleClickToClose
-                }, confirmingUninstall ? (React.createElement(ConfirmationDialog_1.ConfirmationDialog, {
+            };
+            document.addEventListener('keydown', handler);
+            return () => {
+                document.removeEventListener('keydown', handler);
+            };
+        }, [onClose]);
+        const handleClickToClose = React.useCallback((e) => {
+            if (e.target === e.currentTarget) {
+                onClose();
+            }
+        }, [onClose]);
+        return root
+            ? react_dom_1.createPortal(
+                // Not really a button. Just a background which can be clicked to close modal
+                // eslint-disable-next-line max-len
+                // eslint-disable-next-line jsx-a11y/interactive-supports-focus, jsx-a11y/click-events-have-key-events
+                React.createElement("div", { role: "button", className: "module-sticker-manager__preview-modal__overlay", onClick: handleClickToClose }, confirmingUninstall ? (React.createElement(ConfirmationDialog_1.ConfirmationDialog, {
                     i18n: i18n, onClose: onClose, actions: [
                         {
                             style: 'negative',
@@ -129,7 +131,7 @@
                 }, i18n('stickers--StickerManager--UninstallWarning'))) : (React.createElement("div", { className: "module-sticker-manager__preview-modal__container" },
                     React.createElement("header", { className: "module-sticker-manager__preview-modal__container__header" },
                         React.createElement("h2", { className: "module-sticker-manager__preview-modal__container__header__text" }, i18n('stickers--StickerPreview--Title')),
-                        React.createElement("button", { onClick: onClose, className: "module-sticker-manager__preview-modal__container__header__close-button" })),
+                        React.createElement("button", { type: "button", onClick: onClose, className: "module-sticker-manager__preview-modal__container__header__close-button", "aria-label": i18n('close') })),
                     renderBody(props),
                     pack && pack.status !== 'error' ? (React.createElement("div", { className: "module-sticker-manager__preview-modal__container__meta-overlay" },
                         React.createElement("div", { className: "module-sticker-manager__preview-modal__container__meta-overlay__info" },
@@ -138,6 +140,6 @@
                                 pack.isBlessed ? (React.createElement("span", { className: "module-sticker-manager__preview-modal__container__meta-overlay__info__blessed-icon" })) : null),
                             React.createElement("h4", { className: "module-sticker-manager__preview-modal__container__meta-overlay__info__author" }, pack.author)),
                         React.createElement("div", { className: "module-sticker-manager__preview-modal__container__meta-overlay__install" }, pack.status === 'pending' ? (React.createElement(Spinner_1.Spinner, { svgSize: "small", size: "14px" })) : (React.createElement(StickerPackInstallButton_1.StickerPackInstallButton, { ref: focusRef, installed: isInstalled, i18n: i18n, onClick: handleToggleInstall, blue: true }))))) : null))), root)
-                : null;
-        });
+            : null;
+    });
 })();

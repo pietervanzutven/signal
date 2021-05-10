@@ -1,6 +1,5 @@
 require(exports => {
     "use strict";
-
     Object.defineProperty(exports, "__esModule", { value: true });
     // See: https://en.wikipedia.org/wiki/Comparison_of_web_browsers#Image_format_support
     const SUPPORTED_IMAGE_MIME_TYPES = {

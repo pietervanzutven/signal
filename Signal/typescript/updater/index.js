@@ -6,9 +6,9 @@
     const exports = window.ts.updater.index = {};
 
     Object.defineProperty(exports, "__esModule", { value: true });
-    const config_1 = require_config();
-    const macos_1 = window.ts.updater.macos;
-    const windows_1 = window.ts.updater.windows;
+    const config_1 = require("config");
+    const macos_1 = require("./macos");
+    const windows_1 = require("./windows");
     let initialized = false;
     async function start(getMainWindow, locale, logger) {
         const { platform } = process;

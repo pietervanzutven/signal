@@ -55,7 +55,6 @@
                     document.body.removeChild(popperRoot);
                 }
             };
-            // tslint:disable-next-line member-ordering
             this.search = lodash_1.debounce((searchTerm) => {
                 const { i18n, ourConversationId, ourNumber, ourUuid, regionCode, searchDiscussions, searchMessages, searchConversationId, } = this.props;
                 if (searchDiscussions && !searchConversationId) {
@@ -139,13 +138,11 @@
             };
             this.setFocus = () => {
                 if (this.inputRef.current) {
-                    // @ts-ignore
                     this.inputRef.current.focus();
                 }
             };
             this.setSelected = () => {
                 if (this.inputRef.current) {
-                    // @ts-ignore
                     this.inputRef.current.select();
                 }
             };
@@ -175,7 +172,6 @@
                 document.body.removeChild(popperRoot);
             }
         }
-        // tslint:disable-next-line:max-func-body-length
         render() {
             const { avatarPath, color, i18n, name, phoneNumber, profileName, title, searchConversationId, searchConversationName, searchTerm, showArchivedConversations, } = this.props;
             const { showingAvatarPopup, popperRoot } = this.state;
@@ -197,10 +193,10 @@
                         }))), popperRoot)
                         : null),
                 react_1.default.createElement("div", { className: "module-main-header__search" },
-                    searchConversationId ? (react_1.default.createElement("button", { className: "module-main-header__search__in-conversation-pill", onClick: this.clearSearch, tabIndex: -1 },
+                    searchConversationId ? (react_1.default.createElement("button", { className: "module-main-header__search__in-conversation-pill", onClick: this.clearSearch, tabIndex: -1, type: "button", "aria-label": i18n('clearSearch') },
                         react_1.default.createElement("div", { className: "module-main-header__search__in-conversation-pill__avatar-container" },
                             react_1.default.createElement("div", { className: "module-main-header__search__in-conversation-pill__avatar" })),
-                        react_1.default.createElement("div", { className: "module-main-header__search__in-conversation-pill__x-button" }))) : (react_1.default.createElement("button", { className: "module-main-header__search__icon", onClick: this.setFocus, tabIndex: -1 })),
+                        react_1.default.createElement("div", { className: "module-main-header__search__in-conversation-pill__x-button" }))) : (react_1.default.createElement("button", { className: "module-main-header__search__icon", onClick: this.setFocus, tabIndex: -1, type: "button", "aria-label": i18n('search') })),
                     react_1.default.createElement("input", {
                         type: "text", ref: this.inputRef, className: classnames_1.default('module-main-header__search__input', searchTerm
                             ? 'module-main-header__search__input--with-text'
@@ -208,7 +204,7 @@
                             ? 'module-main-header__search__input--in-conversation'
                             : null), placeholder: placeholder, dir: "auto", onKeyDown: this.handleKeyDown, value: searchTerm, onChange: this.updateSearch
                     }),
-                    searchTerm ? (react_1.default.createElement("button", { tabIndex: -1, className: "module-main-header__search__cancel-icon", onClick: this.handleXButton })) : null)));
+                    searchTerm ? (react_1.default.createElement("button", { tabIndex: -1, className: "module-main-header__search__cancel-icon", onClick: this.handleXButton, type: "button", "aria-label": i18n('cancel') })) : null)));
         }
     }
     exports.MainHeader = MainHeader;

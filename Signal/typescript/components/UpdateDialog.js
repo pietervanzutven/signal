@@ -45,14 +45,14 @@
                             }, i18n: i18n, id: "readOnlyVolume"
                         }))),
                 react_1.default.createElement("div", { className: "module-left-pane-dialog__actions" },
-                    react_1.default.createElement("button", { onClick: dismissDialog }, i18n('ok')))));
+                    react_1.default.createElement("button", { type: "button", onClick: dismissDialog }, i18n('ok')))));
         }
         return (react_1.default.createElement("div", { className: "module-left-pane-dialog" },
             react_1.default.createElement("div", { className: "module-left-pane-dialog__message" },
                 react_1.default.createElement("h3", null, i18n('autoUpdateNewVersionTitle')),
                 react_1.default.createElement("span", null, i18n('autoUpdateNewVersionMessage'))),
             react_1.default.createElement("div", { className: "module-left-pane-dialog__actions" },
-                !didSnooze && (react_1.default.createElement("button", { className: "module-left-pane-dialog__button--no-border", onClick: snoozeUpdate }, i18n('autoUpdateLaterButtonLabel'))),
-                react_1.default.createElement("button", { onClick: startUpdate }, i18n('autoUpdateRestartButtonLabel')))));
+                !didSnooze && (react_1.default.createElement("button", { type: "button", className: "module-left-pane-dialog__button--no-border", onClick: snoozeUpdate }, i18n('autoUpdateLaterButtonLabel'))),
+                react_1.default.createElement("button", { type: "button", onClick: startUpdate }, i18n('autoUpdateRestartButtonLabel')))));
     };
 })();
