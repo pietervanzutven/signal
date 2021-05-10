@@ -3125,8 +3125,14 @@
       });
     },
 
+    isMuted() {
+      return (
+        this.get('muteExpiresAt') && Date.now() < this.get('muteExpiresAt')
+      );
+    },
+
     async notify(message, reaction) {
-      if (this.get('muteExpiresAt') && Date.now() < this.get('muteExpiresAt')) {
+      if (this.isMuted()) {
         return;
       }
 

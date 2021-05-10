@@ -19,7 +19,9 @@ require(exports => {
             initialize() {
                 this.listenTo(conversations, 'add change:active_at', this.addActive);
                 this.listenTo(conversations, 'reset', () => this.reset([]));
-                this.on('add remove change:unreadCount', lodash_1.debounce(this.updateUnreadCount.bind(this), 1000));
+                const debouncedUpdateUnreadCount = lodash_1.debounce(this.updateUnreadCount.bind(this), 1000);
+                this.on('add remove change:unreadCount', debouncedUpdateUnreadCount);
+                window.Whisper.events.on('updateUnreadCount', debouncedUpdateUnreadCount);
             },
             addActive(model) {
                 if (model.get('active_at')) {
@@ -30,7 +32,8 @@ require(exports => {
                 }
             },
             updateUnreadCount() {
-                const newUnreadCount = lodash_1.reduce(this.map((m) => m.get('unreadCount')), (item, memo) => (item || 0) + memo, 0);
+                const canCountMutedConversations = window.storage.get('badge-count-muted-conversations');
+                const newUnreadCount = lodash_1.reduce(this.map((m) => !canCountMutedConversations && m.isMuted() ? 0 : m.get('unreadCount')), (item, memo) => (item || 0) + memo, 0);
                 window.storage.put('unreadCount', newUnreadCount);
                 if (newUnreadCount > 0) {
                     window.setBadgeCount(newUnreadCount);
