@@ -380,7 +380,8 @@ require(exports => {
          * conversation the message belongs to OR null if a conversation isn't
          * found.
          */
-        static async getConversationForTargetMessage(targetFromId, targetTimestamp) {
+        // eslint-disable-next-line class-methods-use-this
+        async getConversationForTargetMessage(targetFromId, targetTimestamp) {
             const messages = await getMessagesBySentAt(targetTimestamp, {
                 MessageCollection: window.Whisper.MessageCollection,
             });
