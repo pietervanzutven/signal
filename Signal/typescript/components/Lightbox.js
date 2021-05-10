@@ -51,6 +51,7 @@
             display: 'flex',
             flexDirection: 'column',
             outline: 'none',
+            width: '100%',
             padding: 0,
         },
         mainContainer: {
@@ -74,6 +75,18 @@
         object: {
             flexGrow: 1,
             flexShrink: 1,
+            maxWidth: '100%',
+            maxHeight: '100%',
+            objectFit: 'contain',
+            outline: 'none',
+        },
+        img: {
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 'auto',
+            height: 'auto',
             maxWidth: '100%',
             maxHeight: '100%',
             objectFit: 'contain',
@@ -159,7 +172,7 @@
                 const isImageTypeSupported = GoogleChrome.isImageTypeSupported(contentType);
                 if (isImageTypeSupported) {
                     return (react_1.default.createElement("button", { type: "button", style: styles.buttonContainer, onClick: this.onObjectClick },
-                        react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), style: styles.object, src: objectURL })));
+                        react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), style: styles.img, src: objectURL })));
                 }
                 const isVideoTypeSupported = GoogleChrome.isVideoTypeSupported(contentType);
                 if (isVideoTypeSupported) {
