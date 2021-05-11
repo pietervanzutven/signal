@@ -7,7 +7,7 @@
 
   const exports = window.metadata;
 
-  const CiphertextMessage = window.metadata.CiphertextMessage;
+  const CiphertextMessage = require('./CiphertextMessage');
   const {
     bytesFromString,
     concatenateBytes,
@@ -22,7 +22,7 @@
     intsToByteHighAndLow,
     splitBytes,
     trimBytes,
-  } = window.ts.Crypto;
+  } = require('../../../ts/Crypto');
 
   const REVOKED_CERTIFICATES = [];
 
@@ -522,7 +522,7 @@
       const signalProtocolStore = this.storage;
 
       const sender = new libsignal.SignalProtocolAddress(
-        message.senderCertificate.sender || message.senderCertificate.senderUuid,
+        message.senderCertificate.senderUuid || message.senderCertificate.sender,
         message.senderCertificate.senderDevice
       );
 
