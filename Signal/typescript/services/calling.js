@@ -40,6 +40,7 @@ require(exports => {
             ringrtc_1.RingRTC.handleLogMessage = this.handleLogMessage.bind(this);
         }
         async startOutgoingCall(conversation, isVideoCall) {
+            window.log.info('CallingClass.startOutgoingCall()');
             if (!this.uxActions) {
                 window.log.error('Missing uxActions, new call not allowed.');
                 return;
@@ -54,12 +55,14 @@ require(exports => {
                 window.log.info('Permissions were denied, new call not allowed.');
                 return;
             }
+            window.log.info('CallingClass.startOutgoingCall(): Getting call settings');
             const callSettings = await this.getCallSettings(conversation);
             // Check state after awaiting to debounce call button.
             if (ringrtc_1.RingRTC.call && ringrtc_1.RingRTC.call.state !== ringrtc_1.CallState.Ended) {
                 window.log.info('Call already in progress, new call not allowed.');
                 return;
             }
+            window.log.info('CallingClass.startOutgoingCall(): Starting in RingRTC');
             // We could make this faster by getting the call object
             // from the RingRTC before we lookup the ICE servers.
             const call = ringrtc_1.RingRTC.startOutgoingCall(remoteUserId, isVideoCall, this.localDeviceId, callSettings);
@@ -72,6 +75,7 @@ require(exports => {
             });
         }
         async accept(callId, asVideoCall) {
+            window.log.info('CallingClass.accept()');
             const haveMediaPermissions = await this.requestPermissions(asVideoCall);
             if (haveMediaPermissions) {
                 await this.startDeviceReselectionTimer();
@@ -85,9 +89,11 @@ require(exports => {
             }
         }
         decline(callId) {
+            window.log.info('CallingClass.decline()');
             ringrtc_1.RingRTC.decline(callId);
         }
         hangup(callId) {
+            window.log.info('CallingClass.hangup()');
             ringrtc_1.RingRTC.hangup(callId);
         }
         setOutgoingAudio(callId, enabled) {
@@ -253,6 +259,7 @@ require(exports => {
             await this.videoCapturer.setPreferredDevice(device);
         }
         async handleCallingMessage(envelope, callingMessage) {
+            window.log.info('CallingClass.handleCallingMessage()');
             const enableIncomingCalls = await window.getIncomingCallNotification();
             if (callingMessage.offer && !enableIncomingCalls) {
                 // Drop offers silently if incoming call notifications are disabled.
@@ -279,6 +286,7 @@ require(exports => {
             }
             const receiverIdentityKey = receiverIdentityRecord.publicKey.slice(1); // Ignore the type header, it is not used.
             const messageAgeSec = envelope.messageAgeSec ? envelope.messageAgeSec : 0;
+            window.log.info('CallingClass.handleCallingMessage(): Handling in RingRTC');
             ringrtc_1.RingRTC.handleCallingMessage(remoteUserId, remoteDeviceId, this.localDeviceId, messageAgeSec, callingMessage, senderIdentityKey, receiverIdentityKey);
         }
         async selectPreferredDevices(settings) {
@@ -354,6 +362,7 @@ require(exports => {
         }
         // If we return null here, we hang up the call.
         async handleIncomingCall(call) {
+            window.log.info('CallingClass.handleIncomingCall()');
             if (!this.uxActions || !this.localDeviceId) {
                 window.log.error('Missing required objects, ignoring incoming call.');
                 return null;
@@ -385,6 +394,7 @@ require(exports => {
                 this.uxActions.incomingCall({
                     callDetails: this.getUxCallDetails(conversation, call),
                 });
+                window.log.info('CallingClass.handleIncomingCall(): Proceeding');
                 return await this.getCallSettings(conversation);
             }
             catch (err) {
