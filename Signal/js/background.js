@@ -1911,9 +1911,9 @@
       }
     }
 
-    const hasRegisteredGV22Support = 'hasRegisteredGV22Support';
+    const hasRegisteredGV23Support = 'hasRegisteredGV23Support';
     if (
-      !storage.get(hasRegisteredGV22Support) &&
+      !storage.get(hasRegisteredGV23Support) &&
       textsecure.storage.user.getUuid()
     ) {
       const server = WebAPI.connect({
@@ -1921,8 +1921,8 @@
         password: PASSWORD,
       });
       try {
-        await server.registerCapabilities({ 'gv2-2': true });
-        storage.put(hasRegisteredGV22Support, true);
+        await server.registerCapabilities({ 'gv2-3': true });
+        storage.put(hasRegisteredGV23Support, true);
       } catch (error) {
         window.log.error(
           'Error: Unable to register support for GV2.',
