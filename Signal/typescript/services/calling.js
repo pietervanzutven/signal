@@ -486,6 +486,9 @@ require(exports => {
             };
         }
         getUxCallDetails(conversation, call) {
+            // Does not meet CallDetailsType interface requirements
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             return Object.assign(Object.assign({}, conversation.cachedProps), { callId: call.callId, isIncoming: call.isIncoming, isVideoCall: call.isVideoCall });
         }
         addCallHistoryForEndedCall(conversation, call, acceptedTimeParam) {

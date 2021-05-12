@@ -331,7 +331,10 @@ require(exports => {
             });
             if (!current.get('profileKey') && obsolete.get('profileKey')) {
                 window.log.warn('combineContacts: Copying profile key from old to new contact');
-                await current.setProfileKey(obsolete.get('profileKey'));
+                const profileKey = obsolete.get('profileKey');
+                if (profileKey) {
+                    await current.setProfileKey(profileKey);
+                }
             }
             window.log.warn('combineContacts: Delete all sessions tied to old conversationId');
             const deviceIds = await window.textsecure.storage.protocol.getDeviceIds(obsoleteId);

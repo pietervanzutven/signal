@@ -13,4 +13,5 @@
     const localeMessages = ipcRenderer.sendSync('locale-data');
 
     window.i18n = i18n.setup(locale, localeMessages);
+    window.Backbone = window.top.Backbone;
 })();

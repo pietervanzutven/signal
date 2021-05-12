@@ -607,7 +607,7 @@
     async function getMessageCount(conversationId) {
         return channels.getMessageCount(conversationId);
     }
-    async function saveMessage(data, { forceSave, Message, }) {
+    async function saveMessage(data, { forceSave, Message }) {
         const id = await channels.saveMessage(_cleanData(data), { forceSave });
         Message.updateTimers();
         return id;

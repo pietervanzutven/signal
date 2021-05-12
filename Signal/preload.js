@@ -415,6 +415,7 @@
     window.ReactDOM = require('react-dom');
     window.moment = require('moment');
     window.PQueue = require('p-queue').default;
+    window.Backbone = require('backbone');
 
     const Signal = require('./js/modules/signal');
     const i18n = require('./js/modules/i18n');
@@ -442,6 +443,10 @@
       getRegionCode: () => window.storage.get('regionCode'),
       logger: window.log,
     });
+
+    // these need access to window.Signal:
+    require('./ts/models/messages');
+    require('./ts/models/conversations');
 
     function wrapWithPromise(fn) {
       return (...args) => Promise.resolve(fn(...args));

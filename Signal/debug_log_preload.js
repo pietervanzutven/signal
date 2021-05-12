@@ -23,4 +23,5 @@
     window.log = window.top.log;
 
     window.closeDebugLog = () => ipcRenderer.send('close-debug-log');
+    window.Backbone = window.top.Backbone;
 })();

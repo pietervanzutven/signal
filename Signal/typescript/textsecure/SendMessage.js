@@ -569,9 +569,9 @@
             if (!recipientId && !groupId) {
                 throw new Error('Need to provide either recipientId or groupId!');
             }
-            const recipients = groupId
+            const recipients = (groupId
                 ? lodash_1.without(groupMembers, myNumber, myUuid)
-                : [recipientId];
+                : [recipientId]);
             const groupIdBuffer = groupId
                 ? Crypto_2.fromEncodedBinaryToArrayBuffer(groupId)
                 : null;
