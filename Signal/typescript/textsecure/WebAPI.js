@@ -460,6 +460,9 @@
         if (!is_1.default.string(contentProxyUrl)) {
             throw new Error('WebAPI.initialize: Invalid contentProxyUrl');
         }
+        if (proxyUrl && !is_1.default.string(proxyUrl)) {
+            throw new Error('WebAPI.initialize: Invalid proxyUrl');
+        }
         if (!is_1.default.string(version)) {
             throw new Error('WebAPI.initialize: Invalid version');
         }
