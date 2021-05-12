@@ -10,10 +10,15 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable @typescript-eslint/ban-types */
+    /* eslint-disable more/no-then */
+    /* eslint-disable class-methods-use-this */
+    /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+    const p_queue_1 = __importDefault(require("p-queue"));
     const EventTarget_1 = __importDefault(require("./EventTarget"));
     const MessageReceiver_1 = __importDefault(require("./MessageReceiver"));
     const Helpers_1 = __importDefault(require("./Helpers"));
-    const p_queue_1 = __importDefault(require("p-queue"));
     const ProvisioningCipher_1 = __importDefault(require("./ProvisioningCipher"));
     const WebsocketResources_1 = __importDefault(require("./WebsocketResources"));
     const ARCHIVE_AGE = 7 * 24 * 60 * 60 * 1000;
@@ -204,6 +209,7 @@
                     window.log.warn('rotateSignedPreKey: 3+ confirmed keys, most recent is less than a day old. Cancelling rotation.');
                     return;
                 }
+                // eslint-disable-next-line consistent-return
                 return store
                     .getIdentityKeyPair()
                     .then(async (identityKey) => window.libsignal.KeyHelper.generateSignedPreKey(identityKey, signedKeyId), () => {

@@ -5,7 +5,8 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.StringView = {};
 
-    // tslint:disable binary-expression-operand-order no-bitwise no-default-export
+    /* eslint-disable no-bitwise */
+    /* eslint-disable no-nested-ternary */
     Object.defineProperty(exports, "__esModule", { value: true });
     const StringView = {
         /*

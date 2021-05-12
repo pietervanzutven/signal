@@ -18,7 +18,7 @@
                         ''} task did not complete in time. Calling stack: ${errorForStack.stack}`;
                     window.log.error(message);
                     reject(new Error(message));
-                    return;
+                    return undefined;
                 }
                 return null;
             }, timeout);
@@ -38,13 +38,11 @@
                 clearTimer();
                 complete = true;
                 resolve(result);
-                return;
             };
             const failure = (error) => {
                 clearTimer();
                 complete = true;
                 reject(error);
-                return;
             };
             let promise;
             try {
@@ -58,8 +56,9 @@
                 clearTimer();
                 complete = true;
                 resolve(promise);
-                return;
+                return undefined;
             }
+            // eslint-disable-next-line more/no-then
             return promise.then(success, failure);
         });
     }

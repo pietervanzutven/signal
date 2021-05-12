@@ -5,12 +5,12 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.Storage = {};
 
-    // tslint:disable no-default-export
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const Helpers_1 = __importDefault(window.ts.textsecure.Helpers);
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    const Helpers_1 = __importDefault(require("./Helpers"));
     // Default implmentation working with localStorage
     const localStorageImpl = {
         put(key, value) {

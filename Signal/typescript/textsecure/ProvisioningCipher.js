@@ -5,7 +5,8 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.ProvisioningCipher = {};
 
-    // tslint:disable no-default-export
+    /* eslint-disable more/no-then */
+    /* eslint-disable max-classes-per-file */
     Object.defineProperty(exports, "__esModule", { value: true });
     class ProvisioningCipherInner {
         async decrypt(provisionEnvelope) {

@@ -5,7 +5,8 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.Errors = {};
 
-    // tslint:disable max-classes-per-file
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable max-classes-per-file */
     Object.defineProperty(exports, "__esModule", { value: true });
     function appendStack(newError, originalError) {
         // eslint-disable-next-line no-param-reassign
@@ -73,7 +74,7 @@
                 name: 'SendMessageNetworkError',
                 message: httpError.message,
             });
-            this.identifier = identifier.split('.')[0];
+            [this.identifier] = identifier.split('.');
             this.code = httpError.code;
             appendStack(this, httpError);
         }
@@ -101,7 +102,7 @@
     exports.MessageError = MessageError;
     class UnregisteredUserError extends Error {
         constructor(identifier, httpError) {
-            const message = httpError.message;
+            const { message } = httpError;
             super(message);
             this.message = message;
             this.name = 'UnregisteredUserError';

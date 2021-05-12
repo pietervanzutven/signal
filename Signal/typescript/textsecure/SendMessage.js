@@ -5,7 +5,12 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.SendMessage = {};
 
-    // tslint:disable no-bitwise no-default-export
+    /* eslint-disable no-nested-ternary */
+    /* eslint-disable class-methods-use-this */
+    /* eslint-disable more/no-then */
+    /* eslint-disable no-bitwise */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable max-classes-per-file */
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -300,7 +305,7 @@
             const makePointer = this.makeAttachmentPointer.bind(this);
             const { quote } = message;
             if (!quote || !quote.attachments || quote.attachments.length === 0) {
-                return Promise.resolve();
+                return;
             }
             await Promise.all(quote.attachments.map((attachment) => {
                 if (!attachment.thumbnail) {
@@ -358,7 +363,6 @@
                         return;
                     }
                     resolve(result);
-                    return;
                 };
                 this.sendMessageProto(timestamp, identifiers, messageProto, callback, silent, options);
             });

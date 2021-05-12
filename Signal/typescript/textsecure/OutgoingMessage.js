@@ -5,7 +5,12 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.OutgoingMessage = {};
 
-    // tslint:disable no-default-export
+    /* eslint-disable guard-for-in */
+    /* eslint-disable no-restricted-syntax */
+    /* eslint-disable class-methods-use-this */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable more/no-then */
+    /* eslint-disable no-param-reassign */
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = require("lodash");
     const RemoteConfig_1 = require("../RemoteConfig");
@@ -33,7 +38,7 @@
             this.failoverIdentifiers = [];
             this.unidentifiedDeliveries = [];
             this.discoveredIdentifierPairs = [];
-            const { sendMetadata, senderCertificate, online } = options || {};
+            const { sendMetadata, senderCertificate, online } = options;
             this.sendMetadata = sendMetadata;
             this.senderCertificate = senderCertificate;
             this.online = online;
@@ -52,10 +57,8 @@
         }
         registerError(identifier, reason, error) {
             if (!error || (error.name === 'HTTPError' && error.code !== 404)) {
-                // tslint:disable-next-line no-parameter-reassignment
                 error = new Errors_1.OutgoingMessageError(identifier, this.message.toArrayBuffer(), this.timestamp, error);
             }
-            // eslint-disable-next-line no-param-reassign
             error.reason = reason;
             this.errors[this.errors.length] = error;
             this.numberCompleted();
@@ -66,7 +69,7 @@
                 .then(async (deviceIds) => {
                     if (deviceIds.length === 0) {
                         this.registerError(identifier, 'Got empty device list when loading device keys', undefined);
-                        return;
+                        return undefined;
                     }
                     return this.doSendMessage(identifier, deviceIds, recurse);
                 });
@@ -236,17 +239,15 @@
                         content: window.Signal.Crypto.arrayBufferToBase64(ciphertext),
                     };
                 }
-                else {
-                    const sessionCipher = new window.libsignal.SessionCipher(window.textsecure.storage.protocol, address, options);
-                    ciphers[address.getDeviceId()] = sessionCipher;
-                    const ciphertext = await sessionCipher.encrypt(plaintext);
-                    return {
-                        type: ciphertext.type,
-                        destinationDeviceId: address.getDeviceId(),
-                        destinationRegistrationId: ciphertext.registrationId,
-                        content: btoa(ciphertext.body),
-                    };
-                }
+                const sessionCipher = new window.libsignal.SessionCipher(window.textsecure.storage.protocol, address, options);
+                ciphers[address.getDeviceId()] = sessionCipher;
+                const ciphertext = await sessionCipher.encrypt(plaintext);
+                return {
+                    type: ciphertext.type,
+                    destinationDeviceId: address.getDeviceId(),
+                    destinationRegistrationId: ciphertext.registrationId,
+                    content: btoa(ciphertext.body),
+                };
             }))
                 .then(async (jsonData) => {
                     if (sealedSender) {
@@ -281,7 +282,7 @@
                         (error.code === 410 || error.code === 409)) {
                         if (!recurse) {
                             this.registerError(identifier, 'Hit retry limit attempting to reload device list', error);
-                            return;
+                            return undefined;
                         }
                         let p = Promise.resolve();
                         if (error.code === 409) {
@@ -300,7 +301,7 @@
                                 this.reloadDevicesAndSend(identifier, error.code === 409));
                         });
                     }
-                    else if (error.message === 'Identity key changed') {
+                    if (error.message === 'Identity key changed') {
                         // eslint-disable-next-line no-param-reassign
                         error.timestamp = this.timestamp;
                         // eslint-disable-next-line no-param-reassign
@@ -323,6 +324,7 @@
                         });
                     }
                     this.registerError(identifier, 'Failed to create or send message', error);
+                    return undefined;
                 });
         }
         async getStaleDeviceIdsForIdentifier(identifier) {
@@ -346,7 +348,6 @@
         }
         async removeDeviceIdsForIdentifier(identifier, deviceIdsToRemove) {
             let promise = Promise.resolve();
-            // tslint:disable-next-line forin no-for-in no-for-in-array
             for (const j in deviceIdsToRemove) {
                 promise = promise.then(async () => {
                     const encodedAddress = `${identifier}.${deviceIdsToRemove[j]}`;

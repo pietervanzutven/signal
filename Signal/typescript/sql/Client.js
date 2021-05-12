@@ -7,6 +7,13 @@
 
     // tslint:disable no-default-export no-unnecessary-local-variable
     Object.defineProperty(exports, "__esModule", { value: true });
+    /* eslint-disable no-await-in-loop */
+    /* eslint-disable camelcase */
+    /* eslint-disable no-param-reassign */
+    /* eslint-disable no-continue */
+    /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable @typescript-eslint/ban-types */
     const electron_1 = require("electron");
     const lodash_1 = require("lodash");
     const Crypto_1 = require("../Crypto");
@@ -227,7 +234,6 @@
                     return;
                 }
                 resolve();
-                return;
             };
         });
         await _shutdownPromise;
@@ -684,7 +690,7 @@
         if (result) {
             return new Message(result);
         }
-        return;
+        return undefined;
     }
     async function getLastConversationPreview(conversationId, options) {
         const { Message } = options;
@@ -692,7 +698,7 @@
         if (result) {
             return new Message(result);
         }
-        return;
+        return undefined;
     }
     async function getMessageMetricsForConversation(conversationId) {
         const result = await channels.getMessageMetricsForConversation(conversationId);
@@ -881,7 +887,6 @@
                     return;
                 }
                 resolve();
-                return;
             });
             setTimeout(() => {
                 reject(new Error(`callChannel call to ${name} timed out`));

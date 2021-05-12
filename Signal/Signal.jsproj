@@ -3900,6 +3900,7 @@
     <Content Include="typescript\textsecure\SyncRequest.js" />
     <Content Include="typescript\textsecure\TaskWithTimeout.js" />
     <Content Include="typescript\textsecure\WebAPI.js" />
+    <Content Include="typescript\textsecure\WebSocket.js" />
     <Content Include="typescript\textsecure\WebsocketResources.js" />
     <Content Include="typescript\types\Attachment.js" />
     <Content Include="typescript\types\Calling.js" />

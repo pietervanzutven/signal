@@ -5,13 +5,17 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.SyncRequest = {};
 
+    /* eslint-disable more/no-then */
+    /* eslint-disable @typescript-eslint/ban-types */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable max-classes-per-file */
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const EventTarget_1 = __importDefault(window.ts.textsecure.EventTarget);
-    const MessageReceiver_1 = __importDefault(window.ts.textsecure.MessageReceiver);
-    const SendMessage_1 = __importDefault(window.ts.textsecure.SendMessage);
+    const EventTarget_1 = __importDefault(require("./EventTarget"));
+    const MessageReceiver_1 = __importDefault(require("./MessageReceiver"));
+    const SendMessage_1 = __importDefault(require("./SendMessage"));
     class SyncRequestInner extends EventTarget_1.default {
         constructor(sender, receiver) {
             super();
@@ -29,7 +33,6 @@
                 syncMessage: true,
             });
             window.log.info('SyncRequest created. Sending config sync request...');
-            // tslint:disable
             wrap(sender.sendRequestConfigurationSyncMessage(sendOptions));
             window.log.info('SyncRequest now sending block sync request...');
             wrap(sender.sendRequestBlockSyncMessage(sendOptions));
