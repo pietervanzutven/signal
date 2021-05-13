@@ -143,7 +143,6 @@ require(exports => {
          *
      * highTrust = uuid/e164 pairing came from CDS, the server, or your own device
          */
-        // tslint:disable-next-line cyclomatic-complexity max-func-body-length
         ensureContactIds({ e164, uuid, highTrust, }) {
             // Check for at least one parameter being provided. This is necessary
             // because this path can be called on startup to resolve our own ID before

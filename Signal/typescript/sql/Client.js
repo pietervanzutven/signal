@@ -5,7 +5,6 @@
     window.ts.sql = window.ts.sql || {};
     const exports = window.ts.sql.Client = {};
 
-    // tslint:disable no-default-export no-unnecessary-local-variable
     Object.defineProperty(exports, "__esModule", { value: true });
     /* eslint-disable no-await-in-loop */
     /* eslint-disable camelcase */
@@ -192,11 +191,9 @@
             }
             if (lodash_1.isFunction(value)) {
                 // To prepare for Electron v9 IPC, we need to take functions off of any object
-                // tslint:disable-next-line no-dynamic-delete
                 delete data[key];
             }
             else if (lodash_1.isFunction(value.toNumber)) {
-                // tslint:disable-next-line no-dynamic-delete
                 data[key] = value.toNumber();
             }
             else if (Array.isArray(value)) {
@@ -256,8 +253,7 @@
     function _updateJob(id, data) {
         const { resolve, reject } = data;
         const { fnName, start } = _jobs[id];
-        _jobs[id] = Object.assign(Object.assign(Object.assign({}, _jobs[id]), data), {
-            resolve: (value) => {
+    _jobs[id] = Object.assign(Object.assign(Object.assign({}, _jobs[id]), data), { resolve: (value) => {
                 _removeJob(id);
                 const end = Date.now();
                 const delta = end - start;
@@ -274,15 +270,13 @@
                     window.restart();
                 }
                 return reject(error);
-            }
-        });
+        } });
     }
     function _removeJob(id) {
         if (_DEBUG) {
             _jobs[id].complete = true;
             return;
         }
-        // tslint:disable-next-line no-dynamic-delete
         delete _jobs[id];
         if (_shutdownCallback) {
             const keys = Object.keys(_jobs);

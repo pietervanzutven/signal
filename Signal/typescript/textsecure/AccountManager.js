@@ -110,7 +110,6 @@
                     .then(async () => registrationDone({ number }));
             }));
         }
-        // tslint:disable-next-line max-func-body-length
         async registerSecondDevice(setProvisioningUrl, confirmNumber, progressCallback) {
             const createAccount = this.createAccount.bind(this);
             const clearSessionsAndPreKeys = this.clearSessionsAndPreKeys.bind(this);
@@ -249,9 +248,7 @@
                             e.code &&
                             e.code >= 400 &&
                             e.code <= 599) {
-                            const rejections =
-                                // tslint:disable-next-line restrict-plus-operands
-                                1 + window.textsecure.storage.get('signedKeyRotationRejected', 0);
+                            const rejections = 1 + window.textsecure.storage.get('signedKeyRotationRejected', 0);
                             await window.textsecure.storage.put('signedKeyRotationRejected', rejections);
                             window.log.error('Signed key rotation rejected count:', rejections);
                         }
@@ -308,7 +305,6 @@
                 }));
             });
         }
-        // tslint:disable max-func-body-length
         async createAccount(number, verificationCode, identityKeyPair, profileKey, deviceName, userAgent, readReceipts, options = {}) {
             const { accessKey } = options;
             let password = btoa(Helpers_1.default.getString(window.libsignal.crypto.getRandomBytes(16)));

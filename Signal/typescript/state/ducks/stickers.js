@@ -62,7 +62,6 @@
     function downloadStickerPack(packId, packKey, options) {
         const { finalStatus } = options || { finalStatus: undefined };
         // We're just kicking this off, since it will generate more redux events
-        // tslint:disable-next-line:no-floating-promises
         stickers_1.downloadStickerPack(packId, packKey, { finalStatus });
         return {
             type: 'NOOP',
@@ -164,7 +163,6 @@
             blessedPacks: {},
         };
     }
-    // tslint:disable-next-line max-func-body-length
     function reducer(state = getEmptyState(), action) {
         if (action.type === 'stickers/STICKER_PACK_ADDED') {
             // ts complains due to `stickers: {}` being overridden by the payload

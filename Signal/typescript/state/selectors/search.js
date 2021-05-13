@@ -34,9 +34,7 @@
         conversations_1.getConversationLookup,
         conversations_1.getSelectedConversation,
         exports.getSelectedMessage,
-    ], (state, regionCode, userAgent, lookup, selectedConversationId, selectedMessageId
-        // tslint:disable-next-line max-func-body-length
-    ) => {
+    ], (state, regionCode, userAgent, lookup, selectedConversationId, selectedMessageId) => {
         const { contacts, conversations, discussionsLoading, messageIds, messagesLoading, searchConversationName, } = state;
         const showStartNewConversation = Boolean(state.normalizedPhoneNumber && !lookup[state.normalizedPhoneNumber]);
         const haveConversations = conversations && conversations.length;

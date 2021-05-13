@@ -67,7 +67,6 @@
                 processBatch: this.cacheRemoveBatch.bind(this),
             });
             if (options.retryCached) {
-                // tslint:disable-next-line no-floating-promises
                 this.pendingQueue.add(async () => this.queueAllCached());
             }
         }
@@ -149,7 +148,6 @@
             window.log.error('websocket error');
         }
         async dispatchAndWait(event) {
-            // tslint:disable-next-line no-floating-promises
             this.appQueue.add(async () => Promise.all(this.dispatchEvent(event)));
             return Promise.resolve();
         }
@@ -182,7 +180,6 @@
                 window.log.info('got request', request.verb, request.path);
                 request.respond(200, 'OK');
                 if (request.verb === 'PUT' && request.path === '/api/v1/queue/empty') {
-                    // tslint:disable-next-line no-floating-promises
                     this.incomingQueue.add(() => {
                         this.onEmpty();
                     });
@@ -233,7 +230,6 @@
                     await this.dispatchAndWait(ev);
                 }
             };
-            // tslint:disable-next-line no-floating-promises
             this.incomingQueue.add(job);
         }
         calculateMessageAge(headers, serverTimestamp) {
@@ -281,11 +277,9 @@
             const waitForPendingQueue = async () => {
                 window.log.info("MessageReceiver: finished processing messages after 'empty', now waiting for application");
                 // We don't await here because we don't want this to gate future message processing
-                // tslint:disable-next-line no-floating-promises
                 this.appQueue.add(emitEmpty);
             };
             const waitForIncomingQueue = () => {
-                // tslint:disable-next-line no-floating-promises
                 this.addToQueue(waitForPendingQueue);
                 // Note: this.count is used in addToQueue
                 // Resetting count so everything from the websocket after this starts at zero
@@ -293,10 +287,8 @@
             };
             const waitForCacheAddBatcher = async () => {
                 await this.cacheAddBatcher.onIdle();
-                // tslint:disable-next-line no-floating-promises
                 this.incomingQueue.add(waitForIncomingQueue);
             };
-            // tslint:disable-next-line no-floating-promises
             waitForCacheAddBatcher();
         }
         async drain() {
@@ -353,11 +345,9 @@
                     else {
                         throw new Error('Cached decrypted value was not a string!');
                     }
-                    // tslint:disable-next-line no-floating-promises
                     this.queueDecryptedEnvelope(envelope, payloadPlaintext);
                 }
                 else {
-                    // tslint:disable-next-line no-floating-promises
                     this.queueEnvelope(envelope);
                 }
             }
@@ -388,7 +378,6 @@
             if (this.isEmptied) {
                 this.clearRetryTimeout();
                 this.retryCachedTimeout = setTimeout(() => {
-                    // tslint:disable-next-line no-floating-promises
                     this.pendingQueue.add(async () => this.queueAllCached());
                 }, RETRY_TIMEOUT);
             }
@@ -426,7 +415,6 @@
                 await window.textsecure.storage.unprocessed.batchAdd(dataArray);
                 items.forEach(item => {
                     item.request.respond(200, 'OK');
-                    // tslint:disable-next-line no-floating-promises
                     this.queueEnvelope(item.envelope);
                 });
                 this.maybeScheduleRetryTimeout();
@@ -551,7 +539,6 @@
             return -1;
         }
         async onDeliveryReceipt(envelope) {
-            // tslint:disable-next-line promise-must-complete
             return new Promise((resolve, reject) => {
                 const ev = new Event('delivery');
                 ev.confirm = this.removeFromCache.bind(this, envelope);
@@ -580,7 +567,6 @@
             }
             return plaintext;
         }
-        // tslint:disable-next-line max-func-body-length
         async decrypt(envelope, ciphertext) {
             const { serverTrustRoot } = this;
             let promise;
@@ -998,7 +984,6 @@
             }
             return sentMessage.destination || sentMessage.destinationUuid;
         }
-        // tslint:disable-next-line cyclomatic-complexity
         async handleSyncMessage(envelope, syncMessage) {
             const unidentified = syncMessage.sent
                 ? syncMessage.sent.unidentifiedStatus || []
@@ -1170,7 +1155,6 @@
             this.removeFromCache(envelope);
             // Note: we do not return here because we don't want to block the next message on
             //   this attachment download and a lot of processing of that attachment.
-            // tslint:disable-next-line no-floating-promises
             this.handleAttachment(blob).then(async (attachmentPointer) => {
                 const results = [];
                 const contactBuffer = new ContactsParser_1.ContactBuffer(attachmentPointer.data);
@@ -1198,7 +1182,6 @@
             }
             // Note: we do not return here because we don't want to block the next message on
             //   this attachment download and a lot of processing of that attachment.
-            // tslint:disable-next-line no-floating-promises
             this.handleAttachment(blob).then(async (attachmentPointer) => {
                 const groupBuffer = new ContactsParser_1.GroupBuffer(attachmentPointer.data);
                 let groupDetails = groupBuffer.next();
@@ -1296,7 +1279,6 @@
                 return sessionCipher.deleteAllSessionsForDevice();
             }));
         }
-        // tslint:disable-next-line max-func-body-length cyclomatic-complexity
         async processDecrypted(envelope, decrypted) {
             /* eslint-disable no-bitwise, no-param-reassign */
             const FLAGS = window.textsecure.protobuf.DataMessage.Flags;

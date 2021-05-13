@@ -13,7 +13,6 @@ require(exports => {
         return Math.floor(Date.now() / DAY);
     }
     async function sleep(ms) {
-        // tslint:disable-next-line no-string-based-set-timeout
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     let started = false;

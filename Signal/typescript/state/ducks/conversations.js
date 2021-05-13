@@ -225,7 +225,6 @@
             showArchived: false,
         };
     }
-    // tslint:disable-next-line cyclomatic-complexity
     function hasMessageHeightChanged(message, previous) {
         const messageAttachments = message.attachments || [];
         const previousAttachments = previous.attachments || [];
@@ -278,7 +277,6 @@
         }
         return false;
     }
-    // tslint:disable-next-line cyclomatic-complexity max-func-body-length
     function reducer(state = getEmptyState(), action) {
         if (action.type === 'CONVERSATION_ADDED') {
             const { payload } = action;

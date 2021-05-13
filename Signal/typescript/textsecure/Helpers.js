@@ -9,7 +9,6 @@
     /* eslint-disable no-restricted-syntax */
     /* eslint-disable no-proto */
     /* eslint-disable @typescript-eslint/no-explicit-any */
-    // tslint:disable no-default-export
     Object.defineProperty(exports, "__esModule", { value: true });
     let ByteBuffer;
     const arrayBuffer = new ArrayBuffer(0);

@@ -4,7 +4,6 @@ require(exports => {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /* tslint:disable no-backbone-get-set-outside-model */
     const lodash_1 = require("lodash");
     const Crypto_1 = require("../Crypto");
     const Client_1 = __importDefault(require("../sql/Client"));
@@ -239,7 +238,6 @@ require(exports => {
         updateConversation(conversation.attributes);
         const isFirstSync = !lodash_1.isNumber(window.storage.get('manifestVersion'));
         const dropInitialJoinMessage = isFirstSync;
-        // tslint:disable-next-line no-floating-promises
         groups_1.waitThenMaybeUpdateGroup({
             conversation,
             dropInitialJoinMessage,

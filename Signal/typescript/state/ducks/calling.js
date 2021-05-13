@@ -25,7 +25,6 @@ require(exports => {
     const TOGGLE_SETTINGS = 'calling/TOGGLE_SETTINGS';
     // Action Creators
     function acceptCall(payload) {
-        // tslint:disable-next-line no-floating-promises
         (async () => {
             try {
                 await calling_1.calling.accept(payload.callId, payload.asVideoCall);
@@ -119,7 +118,6 @@ require(exports => {
         };
     }
     function outgoingCall(payload) {
-        // tslint:disable-next-line no-floating-promises
         callingTones_1.callingTones.playRingtone();
         return {
             type: OUTGOING_CALL,
@@ -210,7 +208,6 @@ require(exports => {
             settingsDialogOpen: false,
         };
     }
-    // tslint:disable-next-line max-func-body-length
     function reducer(state = getEmptyState(), action) {
         if (action.type === ACCEPT_CALL) {
             return Object.assign(Object.assign({}, state), { hasLocalAudio: true, hasLocalVideo: action.payload.asVideoCall });

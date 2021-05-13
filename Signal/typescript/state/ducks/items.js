@@ -46,7 +46,6 @@
         };
     }
     function removeItem(key) {
-        // tslint:disable-next-line no-floating-promises
         storageShim.remove(key);
         return {
             type: 'items/REMOVE',

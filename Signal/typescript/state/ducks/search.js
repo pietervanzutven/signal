@@ -166,7 +166,6 @@
             messagesLoading: false,
         };
     }
-    // tslint:disable-next-line cyclomatic-complexity max-func-body-length
     function reducer(state = getEmptyState(), action) {
         if (action.type === 'SHOW_ARCHIVED_CONVERSATIONS') {
             return getEmptyState();

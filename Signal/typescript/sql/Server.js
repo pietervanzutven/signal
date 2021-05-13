@@ -12,7 +12,6 @@
     /* eslint-disable no-restricted-syntax */
     /* eslint-disable no-console */
     /* eslint-disable @typescript-eslint/no-explicit-any */
-    // tslint:disable no-console no-default-export no-unnecessary-local-variable
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -1030,7 +1029,6 @@
             throw error;
         }
     }
-    // tslint:disable-next-line max-func-body-length
     async function updateToSchemaVersion20(currentVersion, instance) {
         if (currentVersion >= 20) {
             return;
@@ -1104,7 +1102,6 @@
             }
             const groupConverations = await instance.all("SELECT * FROM conversations WHERE type = 'group';");
             // Update group conversations, point members at new conversation ids
-            // tslint:disable-next-line no-floating-promises
             migrationJobQueue.addAll(groupConverations.map(groupRow => async () => {
                 const members = groupRow.members.split(/\s?\+/).filter(Boolean);
                 const newMembers = [];
@@ -1262,7 +1259,6 @@
     let globalInstance;
     let databaseFilePath;
     let indexedDBPath;
-    // tslint:disable-next-line max-func-body-length
     async function initialize({ configDir, key, messages, }) {
         if (globalInstance) {
             throw new Error('Cannot initialize more than once!');
@@ -1835,7 +1831,6 @@
         }
         return row['count(*)'];
     }
-    // tslint:disable-next-line max-func-body-length
     async function saveMessage(data, { forceSave } = {}) {
         const db = getInstance();
         const { body, conversationId, expires_at, hasAttachments, hasFileAttachments, hasVisualMediaAttachments, id, isErased, isViewOnce, received_at, schemaVersion, sent_at, source, sourceUuid, sourceDevice, type, unread, expireTimer, expirationStartTimestamp, } = data;
@@ -2900,7 +2895,6 @@
             lodash_1.forEach(messages, message => {
                 const externalFiles = getExternalFilesForMessage(message);
                 lodash_1.forEach(externalFiles, file => {
-                    // tslint:disable-next-line no-dynamic-delete
                     delete lookup[file];
                 });
             });
@@ -2931,7 +2925,6 @@
             lodash_1.forEach(conversations, conversation => {
                 const externalFiles = getExternalFilesForConversation(conversation);
                 lodash_1.forEach(externalFiles, file => {
-                    // tslint:disable-next-line no-dynamic-delete
                     delete lookup[file];
                 });
             });
@@ -2964,7 +2957,6 @@
             });
             const files = lodash_1.map(rows, row => row.path);
             lodash_1.forEach(files, file => {
-                // tslint:disable-next-line no-dynamic-delete
                 delete lookup[file];
             });
             const lastSticker = lodash_1.last(rows);
@@ -3000,7 +2992,6 @@
             lodash_1.forEach(conversations, conversation => {
                 const externalFiles = getExternalDraftFilesForConversation(conversation);
                 lodash_1.forEach(externalFiles, file => {
-                    // tslint:disable-next-line no-dynamic-delete
                     delete lookup[file];
                 });
             });

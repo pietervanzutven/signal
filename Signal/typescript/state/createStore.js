@@ -22,7 +22,6 @@
         group: console.group,
         groupEnd: console.groupEnd,
         warn: console.warn,
-        // tslint:disable-next-line no-console
         error: console.error,
     };
     const logger = redux_logger_1.createLogger({

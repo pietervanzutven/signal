@@ -93,7 +93,6 @@
         }
     }
     class WebSocketResource extends EventTarget_1.default {
-        // tslint:disable-next-line max-func-body-length
         constructor(socket, opts = {}) {
             super();
             let { handleRequest } = opts;

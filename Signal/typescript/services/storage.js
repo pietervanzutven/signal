@@ -54,7 +54,6 @@ require(exports => {
         }
         return Crypto_2.fromEncodedBinaryToArrayBuffer(groupID).byteLength === 16;
     }
-    /* tslint:disable-next-line max-func-body-length */
     async function generateManifest(version, isNewManifest = false) {
         window.log.info(`storageService.generateManifest: generating manifest for version ${version}. Is new? ${isNewManifest}`);
         const ITEM_TYPE = window.textsecure.protobuf.ManifestRecord.Identifier.Type;
@@ -355,7 +354,6 @@ require(exports => {
             storageID,
         };
     }
-    /* tslint:disable-next-line max-func-body-length */
     async function processManifest(manifest) {
         const storageKeyBase64 = window.storage.get('storageKey');
         const storageKey = Crypto_2.base64ToArrayBuffer(storageKeyBase64);

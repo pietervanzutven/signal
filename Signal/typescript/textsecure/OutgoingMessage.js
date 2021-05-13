@@ -74,7 +74,6 @@
                     return this.doSendMessage(identifier, deviceIds, recurse);
                 });
         }
-        // tslint:disable-next-line max-func-body-length
         async getKeysForIdentifier(identifier, updateDevices) {
             const handleResult = async (response) => Promise.all(response.devices.map(async (device) => {
                 if (updateDevices === undefined ||
@@ -196,7 +195,6 @@
             }
             return this.plaintext;
         }
-        // tslint:disable-next-line max-func-body-length
         async doSendMessage(identifier, deviceIds, recurse) {
             const ciphers = {};
             const plaintext = this.getPlaintext();
@@ -214,7 +212,6 @@
             const ourUuid = window.textsecure.storage.user.getUuid();
             const ourDeviceId = window.textsecure.storage.user.getDeviceId();
             if ((identifier === ourNumber || identifier === ourUuid) && !sealedSender) {
-                // tslint:disable-next-line no-parameter-reassignment
                 deviceIds = lodash_1.reject(deviceIds, deviceId =>
                     // because we store our own device ID as a string at least sometimes
                     deviceId === ourDeviceId ||

@@ -76,7 +76,6 @@
         }
         extend(source) {
             const target = this;
-            // tslint:disable-next-line forin no-for-in no-default-export
             for (const prop in source) {
                 target[prop] = source[prop];
             }

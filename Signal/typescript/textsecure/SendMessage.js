@@ -34,7 +34,6 @@
         return res;
     }
     class Message {
-        // tslint:disable cyclomatic-complexity
         constructor(options) {
             this.attachments = options.attachments || [];
             this.body = options.body;
@@ -351,7 +350,6 @@
             }
             const outgoing = new OutgoingMessage_1.default(this.server, timestamp, recipients, messageProto, silent, callback, options);
             recipients.forEach(identifier => {
-                // tslint:disable-next-line no-floating-promises
                 this.queueJobForIdentifier(identifier, async () => outgoing.sendToIdentifier(identifier));
             });
         }
