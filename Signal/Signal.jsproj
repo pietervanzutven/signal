@@ -226,7 +226,6 @@
     <Content Include="node_modules\blurhash\error.js" />
     <Content Include="node_modules\blurhash\index.js" />
     <Content Include="node_modules\blurhash\utils.js" />
-    <Content Include="node_modules\core\net.js" />
     <Content Include="node_modules\crypto-browserify\index.js" />
     <Content Include="node_modules\crypto\index.js" />
     <Content Include="node_modules\curve25519-n\index.js" />
