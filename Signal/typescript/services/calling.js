@@ -285,6 +285,23 @@ require(exports => {
                 return;
             }
             const receiverIdentityKey = receiverIdentityRecord.publicKey.slice(1); // Ignore the type header, it is not used.
+            const conversation = window.ConversationController.get(remoteUserId);
+            if (!conversation) {
+                window.log.error('Missing conversation; ignoring call message.');
+                return;
+            }
+            if (callingMessage.offer && !conversation.getAccepted()) {
+                window.log.info('Conversation was not approved by user; rejecting call message.');
+                const hangup = new ringrtc_1.HangupMessage();
+                hangup.callId = callingMessage.offer.callId;
+                hangup.deviceId = remoteDeviceId;
+                hangup.type = ringrtc_1.HangupType.NeedPermission;
+                const message = new ringrtc_1.CallingMessage();
+                message.legacyHangup = hangup;
+                await this.handleOutgoingSignaling(remoteUserId, message);
+                this.addCallHistoryForFailedIncomingCall(conversation, callingMessage.offer.type === ringrtc_1.OfferType.VideoCall);
+                return;
+            }
             const messageAgeSec = envelope.messageAgeSec ? envelope.messageAgeSec : 0;
             window.log.info('CallingClass.handleCallingMessage(): Handling in RingRTC');
             ringrtc_1.RingRTC.handleCallingMessage(remoteUserId, remoteDeviceId, this.localDeviceId, messageAgeSec, callingMessage, senderIdentityKey, receiverIdentityKey);
@@ -380,14 +397,7 @@ require(exports => {
                 if (verifiedEnum ===
                     window.textsecure.storage.protocol.VerifiedStatus.UNVERIFIED) {
                     window.log.info(`Peer is not trusted, ignoring incoming call for conversation: ${conversation.idForLogging()}`);
-                    this.addCallHistoryForFailedIncomingCall(conversation, call);
-                    return null;
-                }
-                // Simple Call Requests: Ensure that the conversation is accepted.
-                // If not, do not allow the call.
-                if (!conversation.getAccepted()) {
-                    window.log.info(`Messaging is not accepted, ignoring incoming call for conversation: ${conversation.idForLogging()}`);
-                    this.addCallHistoryForFailedIncomingCall(conversation, call);
+                    this.addCallHistoryForFailedIncomingCall(conversation, call.isVideoCall);
                     return null;
                 }
                 this.attachToCall(conversation, call);
@@ -399,7 +409,7 @@ require(exports => {
             }
             catch (err) {
                 window.log.error(`Ignoring incoming call: ${err.stack}`);
-                this.addCallHistoryForFailedIncomingCall(conversation, call);
+                this.addCallHistoryForFailedIncomingCall(conversation, call.isVideoCall);
                 return null;
             }
         }
@@ -515,10 +525,10 @@ require(exports => {
             };
             conversation.addCallHistory(callHistoryDetails);
         }
-        addCallHistoryForFailedIncomingCall(conversation, call) {
+        addCallHistoryForFailedIncomingCall(conversation, wasVideoCall) {
             const callHistoryDetails = {
                 wasIncoming: true,
-                wasVideoCall: call.isVideoCall,
+                wasVideoCall,
                 // Since the user didn't decline, make sure it shows up as a missed call instead
                 wasDeclined: false,
                 acceptedTime: undefined,
