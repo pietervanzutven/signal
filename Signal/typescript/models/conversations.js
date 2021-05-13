@@ -445,9 +445,18 @@ require(exports => {
         // For incoming messages, they might arrive while we're in the middle of a bulk fetch
         //   from the database. We'll wait until that is done to process this newly-arrived
         //   message.
-        async addIncomingMessage(message) {
-            await this.inProgressFetch;
-            this.addSingleMessage(message);
+        addIncomingMessage(message) {
+            if (!this.incomingMessageQueue) {
+                this.incomingMessageQueue = new window.PQueue({
+                    concurrency: 1,
+                    timeout: 1000 * 60 * 2,
+                });
+            }
+            // We use a queue here to ensure messages are added to the UI in the order received
+            this.incomingMessageQueue.add(async () => {
+                await this.inProgressFetch;
+                this.addSingleMessage(message);
+            });
         }
         format() {
             return this.cachedProps;
