@@ -1459,7 +1459,7 @@ require(exports => {
             });
         }
         async handleMessageSendResult(failoverIdentifiers, unidentifiedDeliveries, discoveredIdentifierPairs) {
-            discoveredIdentifierPairs.forEach(item => {
+            (discoveredIdentifierPairs || []).forEach(item => {
                 const { uuid, e164 } = item;
                 window.ConversationController.ensureContactIds({
                     uuid,
