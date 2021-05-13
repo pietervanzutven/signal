@@ -11,6 +11,7 @@ require(exports => {
     const PLACEHOLDER_CONTACT = {
         title: window.i18n('unknownContact'),
     };
+    const THREE_HOURS = 3 * 60 * 60 * 1000;
     window.AccountCache = Object.create(null);
     window.AccountJobs = Object.create(null);
     window.doesAccountCheckJobExist = number => Boolean(window.AccountJobs[number]);
@@ -225,6 +226,8 @@ require(exports => {
                         this.trigger('download-new-version');
                     }, deleteMessage: (messageId) => {
                         this.trigger('delete', messageId);
+                    }, deleteMessageForEveryone: (messageId) => {
+                        this.trigger('delete-for-everyone', messageId);
                     }, showVisualAttachment: (options) => {
                         this.trigger('show-visual-attachment', options);
                     }, displayTapToViewMessage: (messageId) => {
@@ -490,6 +493,7 @@ require(exports => {
                 status: this.getMessagePropStatus(),
                 contact: this.getPropsForEmbeddedContact(),
                 canReply: this.canReply(),
+                canDeleteForEveryone: this.canDeleteForEveryone(),
                 authorTitle: contact.title,
                 authorColor,
                 authorName: contact.name,
@@ -1333,7 +1337,7 @@ require(exports => {
             if (recipients.length === 1 &&
                 (recipients[0] === this.OUR_NUMBER || recipients[0] === this.OUR_UUID)) {
                 const [identifier] = recipients;
-                const dataMessage = await window.textsecure.messaging.getMessageProto(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('sent_at'), this.get('expireTimer'), profileKey);
+                const dataMessage = await window.textsecure.messaging.getMessageProto(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('deletedForEveryoneTimestamp'), this.get('sent_at'), this.get('expireTimer'), profileKey);
                 return this.sendSyncMessageOnly(dataMessage);
             }
             let promise;
@@ -1375,6 +1379,21 @@ require(exports => {
                 e.name === 'SendMessageNetworkError' ||
                 e.name === 'SignedPreKeyRotationError' ||
                 e.name === 'OutgoingIdentityKeyError');
+        }
+        canDeleteForEveryone() {
+            // is someone else's message
+            if (this.isIncoming()) {
+                return false;
+            }
+            // has already been deleted for everyone
+            if (this.get('deletedForEveryone')) {
+                return false;
+            }
+            // is too old to delete
+            if (Date.now() - this.get('sent_at') > THREE_HOURS) {
+                return false;
+            }
+            return true;
         }
         canReply() {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -1425,7 +1444,7 @@ require(exports => {
                 return this.sendSyncMessageOnly(dataMessage);
             }
             const { wrap, sendOptions } = window.ConversationController.prepareForSend(identifier);
-            const promise = window.textsecure.messaging.sendMessageToIdentifier(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('sent_at'), this.get('expireTimer'), profileKey, sendOptions);
+            const promise = window.textsecure.messaging.sendMessageToIdentifier(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('deletedForEveryoneTimestamp'), this.get('sent_at'), this.get('expireTimer'), profileKey, sendOptions);
             return this.send(wrap(promise));
         }
         removeOutgoingErrors(incomingIdentifier) {

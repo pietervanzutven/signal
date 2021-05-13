@@ -49,6 +49,7 @@
             this.sticker = options.sticker;
             this.reaction = options.reaction;
             this.timestamp = options.timestamp;
+            this.deletedForEveryoneTimestamp = options.deletedForEveryoneTimestamp;
             if (!(this.recipients instanceof Array)) {
                 throw new Error('Invalid recipient list');
             }
@@ -182,6 +183,11 @@
             }
             if (this.profileKey) {
                 proto.profileKey = this.profileKey;
+            }
+            if (this.deletedForEveryoneTimestamp) {
+                proto.delete = {
+                    targetSentTimestamp: this.deletedForEveryoneTimestamp,
+                };
             }
             this.dataMessage = proto;
             return proto;
@@ -784,7 +790,7 @@
                 this.sendMessageProto(timestamp, providedIdentifiers, proto, callback, silent, options);
             });
         }
-        async getMessageProto(destination, body, attachments, quote, preview, sticker, reaction, timestamp, expireTimer, profileKey, flags) {
+        async getMessageProto(destination, body, attachments, quote, preview, sticker, reaction, deletedForEveryoneTimestamp, timestamp, expireTimer, profileKey, flags) {
             const attributes = {
                 recipients: [destination],
                 destination,
@@ -795,6 +801,7 @@
                 preview,
                 sticker,
                 reaction,
+                deletedForEveryoneTimestamp,
                 expireTimer,
                 profileKey,
                 flags,
@@ -811,7 +818,7 @@
             ]);
             return message.toArrayBuffer();
         }
-        async sendMessageToIdentifier(identifier, messageText, attachments, quote, preview, sticker, reaction, timestamp, expireTimer, profileKey, options) {
+        async sendMessageToIdentifier(identifier, messageText, attachments, quote, preview, sticker, reaction, deletedForEveryoneTimestamp, timestamp, expireTimer, profileKey, options) {
             return this.sendMessage({
                 recipients: [identifier],
                 body: messageText,
@@ -821,6 +828,7 @@
                 preview,
                 sticker,
                 reaction,
+                deletedForEveryoneTimestamp,
                 expireTimer,
                 profileKey,
             }, options);
@@ -862,7 +870,7 @@
             const sendSyncPromise = this.sendSyncMessage(buffer, timestamp, e164, uuid, null, [], [], false, options).catch(logError('resetSession/sendSync error:'));
             return Promise.all([sendToContactPromise, sendSyncPromise]);
         }
-        async sendMessageToGroup({ attachments, expireTimer, groupV2, groupV1, messageText, preview, profileKey, quote, reaction, sticker, timestamp, }, options) {
+        async sendMessageToGroup({ attachments, expireTimer, groupV2, groupV1, messageText, preview, profileKey, quote, reaction, sticker, deletedForEveryoneTimestamp, timestamp, }, options) {
             if (!groupV1 && !groupV2) {
                 throw new Error('sendMessageToGroup: Neither group1 nor groupv2 information provided!');
             }
@@ -893,6 +901,7 @@
                 reaction,
                 expireTimer,
                 profileKey,
+                deletedForEveryoneTimestamp,
                 groupV2,
                 group: groupV1
                     ? {

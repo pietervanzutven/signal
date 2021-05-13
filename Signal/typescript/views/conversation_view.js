@@ -220,6 +220,7 @@ Whisper.ConversationView = Whisper.View.extend({
         this.listenTo(this.model.messageCollection, 'show-identity', this.showSafetyNumber);
         this.listenTo(this.model.messageCollection, 'force-send', this.forceSend);
         this.listenTo(this.model.messageCollection, 'delete', this.deleteMessage);
+        this.listenTo(this.model.messageCollection, 'delete-for-everyone', this.deleteMessageForEveryone);
         this.listenTo(this.model.messageCollection, 'show-visual-attachment', this.showLightbox);
         this.listenTo(this.model.messageCollection, 'display-tap-to-view-message', this.displayTapToViewMessage);
         this.listenTo(this.model.messageCollection, 'navigate-to', this.navigateTo);
@@ -400,6 +401,9 @@ Whisper.ConversationView = Whisper.View.extend({
         const deleteMessage = (messageId) => {
             this.deleteMessage(messageId);
         };
+        const deleteMessageForEveryone = (messageId) => {
+            this.deleteMessageForEveryone(messageId);
+        };
         const showMessageDetail = (messageId) => {
             this.showMessageDetail(messageId);
         };
@@ -533,6 +537,7 @@ Whisper.ConversationView = Whisper.View.extend({
             JSX: window.Signal.State.Roots.createTimeline(window.reduxStore, {
                 id,
                 deleteMessage,
+                deleteMessageForEveryone,
                 displayTapToViewMessage,
                 downloadAttachment,
                 downloadNewVersion,
@@ -1728,6 +1733,22 @@ Whisper.ConversationView = Whisper.View.extend({
                 else {
                     this.model.decrementMessageCount();
                 }
+                this.resetPanel();
+            },
+        });
+        this.$el.prepend(dialog.el);
+        dialog.focusCancel();
+    },
+    deleteMessageForEveryone(messageId) {
+        const message = this.model.messageCollection.get(messageId);
+        if (!message) {
+            throw new Error(`deleteMessageForEveryone: Did not find message for id ${messageId}`);
+        }
+        const dialog = new Whisper.ConfirmationDialogView({
+            message: window.i18n('deleteForEveryoneWarning'),
+            okText: window.i18n('delete'),
+            resolve: async () => {
+                await this.model.sendDeleteForEveryoneMessage(message.get('sent_at'));
                 this.resetPanel();
             },
         });

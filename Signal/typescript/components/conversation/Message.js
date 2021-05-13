@@ -46,6 +46,7 @@
     const MINIMUM_LINK_PREVIEW_IMAGE_WIDTH = 200;
     const STICKER_SIZE = 200;
     const SELECTED_TIMEOUT = 1000;
+    const THREE_HOURS = 3 * 60 * 60 * 1000;
     exports.MessageStatuses = [
         'delivered',
         'error',
@@ -271,6 +272,7 @@
                 }
                 this.handleOpen(event);
             };
+            const { canDeleteForEveryone } = props;
             this.wideMl = window.matchMedia('(min-width: 926px)');
             this.wideMl.addEventListener('change', this.handleWideMlChange);
             this.state = {
@@ -283,6 +285,7 @@
                 reactionPickerRoot: null,
                 isWide: this.wideMl.matches,
                 containerWidth: 0,
+                canDeleteForEveryone,
             };
         }
         static getDerivedStateFromProps(props, state) {
@@ -297,6 +300,7 @@
         }
         componentDidMount() {
             this.startSelectedTimer();
+            this.startDeleteForEveryoneTimer();
             const { isSelected } = this.props;
             if (isSelected) {
                 this.setFocus();
@@ -322,17 +326,23 @@
             if (this.expiredTimeout) {
                 clearTimeout(this.expiredTimeout);
             }
+            if (this.deleteForEveryoneTimeout) {
+                clearTimeout(this.deleteForEveryoneTimeout);
+            }
             this.toggleReactionViewer(true);
             this.toggleReactionPicker(true);
             this.wideMl.removeEventListener('change', this.handleWideMlChange);
         }
         componentDidUpdate(prevProps) {
-            const { isSelected } = this.props;
+            const { canDeleteForEveryone, isSelected } = this.props;
             this.startSelectedTimer();
             if (!prevProps.isSelected && isSelected) {
                 this.setFocus();
             }
             this.checkExpired();
+            if (canDeleteForEveryone !== prevProps.canDeleteForEveryone) {
+                this.startDeleteForEveryoneTimer();
+            }
         }
         startSelectedTimer() {
             const { clearSelectedMessage, interactionMode } = this.props;
@@ -346,6 +356,25 @@
                     this.setState({ isSelected: false });
                     clearSelectedMessage();
                 }, SELECTED_TIMEOUT);
+            }
+        }
+        startDeleteForEveryoneTimer() {
+            if (this.deleteForEveryoneTimeout) {
+                clearTimeout(this.deleteForEveryoneTimeout);
+            }
+            const { canDeleteForEveryone } = this.props;
+            if (!canDeleteForEveryone) {
+                return;
+            }
+            const { timestamp } = this.props;
+            const timeToDeletion = timestamp - Date.now() + THREE_HOURS;
+            if (timeToDeletion <= 0) {
+                this.setState({ canDeleteForEveryone: false });
+            }
+            else {
+                this.deleteForEveryoneTimeout = setTimeout(() => {
+                    this.setState({ canDeleteForEveryone: false });
+                }, timeToDeletion);
             }
         }
         checkExpired() {
@@ -741,7 +770,8 @@
                     }))), reactionPickerRoot)));
         }
         renderContextMenu(triggerId) {
-            const { attachments, canReply, deleteMessage, direction, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, } = this.props;
+            const { attachments, canReply, deleteMessage, deleteMessageForEveryone, direction, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, } = this.props;
+            const { canDeleteForEveryone } = this.state;
             const showRetry = status === 'error' && direction === 'outgoing';
             const multipleAttachments = attachments && attachments.length > 1;
             const menu = (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
@@ -799,7 +829,16 @@
                         event.preventDefault();
                         deleteMessage(id);
                     }
-                }, i18n('deleteMessage'))));
+                }, i18n('deleteMessage')),
+                canDeleteForEveryone ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                    attributes: {
+                        className: 'module-message__context__delete-message-for-everyone',
+                    }, onClick: (event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        deleteMessageForEveryone(id);
+                    }
+                }, i18n('deleteMessageForEveryone'))) : null));
             return react_dom_1.default.createPortal(menu, document.body);
         }
         getWidth() {
