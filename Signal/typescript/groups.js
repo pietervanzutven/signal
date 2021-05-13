@@ -507,7 +507,7 @@ require(exports => {
             const oldMember = oldMemberLookup[conversationId];
             if (!oldMember) {
                 const pendingMember = oldPendingMemberLookup[conversationId];
-                if (pendingMember && pendingMember.addedByUserId) {
+                if (pendingMember) {
                     details.push({
                         type: 'member-add-from-invite',
                         conversationId,
