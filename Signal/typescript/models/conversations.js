@@ -1,6 +1,8 @@
 require(exports => {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    const sniffImageMimeType_1 = require("../util/sniffImageMimeType");
+    const MIME_1 = require("../types/MIME");
     /* eslint-disable more/no-then */
     window.Whisper = window.Whisper || {};
     const SEALED_SENDER = {
@@ -1247,6 +1249,21 @@ require(exports => {
             const { key } = packData;
             const { path, width, height } = stickerData;
             const arrayBuffer = await readStickerData(path);
+            // We need this content type to be an image so we can display an `<img>` instead of a
+            //   `<video>` or an error, but it's not critical that we get the full type correct.
+            //   In other words, it's probably fine if we say that a GIF is `image/png`, but it's
+            //   but it's bad if we say it's `video/mp4` or `text/plain`. We do our best to sniff
+            //   the MIME type here, but it's okay if we have to use a possibly-incorrect
+            //   fallback.
+            let contentType;
+            const sniffedMimeType = sniffImageMimeType_1.sniffImageMimeType(arrayBuffer);
+            if (sniffedMimeType) {
+                contentType = sniffedMimeType;
+            }
+            else {
+                window.log.warn('Unable to sniff sticker MIME type; falling back to WebP');
+                contentType = MIME_1.IMAGE_WEBP;
+            }
             const sticker = {
                 packId,
                 stickerId,
@@ -1254,7 +1271,7 @@ require(exports => {
                 data: {
                     size: arrayBuffer.byteLength,
                     data: arrayBuffer,
-                    contentType: 'image/webp',
+                    contentType,
                     width,
                     height,
                 },
