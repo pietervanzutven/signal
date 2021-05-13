@@ -650,7 +650,7 @@ require(exports => {
             return [];
         }
         return groupState.members.map((member) => ({
-            profileKey: member.profileKey,
+            profileKey: Crypto_1.arrayBufferToBase64(member.profileKey),
             uuid: member.userId,
         }));
     }

@@ -3943,6 +3943,7 @@
     <Content Include="typescript\util\index.js" />
     <Content Include="typescript\util\isFileDangerous.js" />
     <Content Include="typescript\util\isPathInside.js" />
+    <Content Include="typescript\util\JobQueue.js" />
     <Content Include="typescript\util\libphonenumberInstance.js" />
     <Content Include="typescript\util\makeLookup.js" />
     <Content Include="typescript\util\migrateColor.js" />

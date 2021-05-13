@@ -127,8 +127,8 @@
   const { notify } = require('../../ts/services/notify');
   const { calling } = require('../../ts/services/calling');
   const {
+    enableStorageService,
     eraseAllStorageServiceState,
-    handleUnknownRecords,
     runStorageServiceSyncJob,
     storageServiceUploadJob,
   } = require('../../ts/services/storage');
@@ -341,8 +341,8 @@
 
     const Services = {
       calling,
+      enableStorageService,
       eraseAllStorageServiceState,
-      handleUnknownRecords,
       initializeGroupCredentialFetcher,
       initializeNetworkObserver,
       initializeUpdateListener,

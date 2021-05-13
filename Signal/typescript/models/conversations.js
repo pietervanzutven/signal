@@ -3,6 +3,7 @@ require(exports => {
     Object.defineProperty(exports, "__esModule", { value: true });
     const sniffImageMimeType_1 = require("../util/sniffImageMimeType");
     const MIME_1 = require("../types/MIME");
+    const Crypto_1 = require("../Crypto");
     /* eslint-disable more/no-then */
     window.Whisper = window.Whisper || {};
     const SEALED_SENDER = {
@@ -15,7 +16,6 @@ require(exports => {
     const { Contact, Message } = window.Signal.Types;
     const { deleteAttachmentData, doesAttachmentExist, getAbsoluteAttachmentPath, loadAttachmentData, readStickerData, upgradeMessageSchema, writeNewAttachmentData, } = window.Signal.Migrations;
     const { addStickerPackReference } = window.Signal.Data;
-    const { arrayBufferToBase64, base64ToArrayBuffer, deriveAccessKey, getRandomBytes, stringFromBytes, verifyAccessKey, } = window.Signal.Crypto;
     const COLORS = [
         'red',
         'deep_orange',
@@ -132,6 +132,13 @@ require(exports => {
             const uuid = this.get('uuid');
             return ((e164 && e164 === this.ourNumber) ||
                 (uuid && uuid === this.ourUuid));
+        }
+        isGroupV1() {
+            const groupID = this.get('groupId');
+            if (!groupID) {
+                return false;
+            }
+            return Crypto_1.fromEncodedBinaryToArrayBuffer(groupID).byteLength === 16;
         }
         isEverUnregistered() {
             return Boolean(this.get('discoveredUnregisteredAt'));
@@ -1634,7 +1641,7 @@ require(exports => {
             // If we've never fetched user's profile, we default to what we have
             if (sealedSender === SEALED_SENDER.UNKNOWN) {
                 const info = {
-                    accessKey: accessKey || arrayBufferToBase64(getRandomBytes(16)),
+                    accessKey: accessKey || Crypto_1.arrayBufferToBase64(Crypto_1.getRandomBytes(16)),
                     // Indicates that a client is capable of receiving uuid-only messages.
                     // Not used yet.
                     uuidCapable,
@@ -1647,7 +1654,7 @@ require(exports => {
             const info = {
                 accessKey: accessKey && sealedSender === SEALED_SENDER.ENABLED
                     ? accessKey
-                    : arrayBufferToBase64(getRandomBytes(16)),
+                    : Crypto_1.arrayBufferToBase64(Crypto_1.getRandomBytes(16)),
                 // Indicates that a client is capable of receiving uuid-only messages.
                 // Not used yet.
                 uuidCapable,
@@ -2098,7 +2105,7 @@ require(exports => {
                         profileKeyCredentialRequest: profileKeyCredentialRequestHex,
                     });
                 }
-                const identityKey = base64ToArrayBuffer(profile.identityKey);
+                const identityKey = Crypto_1.base64ToArrayBuffer(profile.identityKey);
                 const changed = await window.textsecure.storage.protocol.saveIdentity(`${identifier}.1`, identityKey, false);
                 if (changed) {
                     // save identity will close all sessions except for .1, so we
@@ -2117,7 +2124,7 @@ require(exports => {
                     });
                 }
                 else if (accessKey && profile.unidentifiedAccess) {
-                    const haveCorrectKey = await verifyAccessKey(base64ToArrayBuffer(accessKey), base64ToArrayBuffer(profile.unidentifiedAccess));
+                    const haveCorrectKey = await Crypto_1.verifyAccessKey(Crypto_1.base64ToArrayBuffer(accessKey), Crypto_1.base64ToArrayBuffer(profile.unidentifiedAccess));
                     if (haveCorrectKey) {
                         window.log.info(`Setting sealedSender to ENABLED for conversation ${c.idForLogging()}`);
                         c.set({
@@ -2184,12 +2191,12 @@ require(exports => {
                 return;
             }
             // decode
-            const keyBuffer = base64ToArrayBuffer(key);
+            const keyBuffer = Crypto_1.base64ToArrayBuffer(key);
             // decrypt
             const { given, family } = await window.textsecure.crypto.decryptProfileName(encryptedName, keyBuffer);
             // encode
-            const profileName = given ? stringFromBytes(given) : undefined;
-            const profileFamilyName = family ? stringFromBytes(family) : undefined;
+            const profileName = given ? Crypto_1.stringFromBytes(given) : undefined;
+            const profileFamilyName = family ? Crypto_1.stringFromBytes(family) : undefined;
             // set then check for changes
             const oldName = this.getProfileName();
             const hadPreviousName = Boolean(oldName);
@@ -2221,7 +2228,7 @@ require(exports => {
             if (!key) {
                 return;
             }
-            const keyBuffer = base64ToArrayBuffer(key);
+            const keyBuffer = Crypto_1.base64ToArrayBuffer(key);
             // decrypt
             const decrypted = await window.textsecure.crypto.decryptProfile(avatar, keyBuffer);
             // update the conversation avatar only if hash differs
@@ -2245,7 +2252,8 @@ require(exports => {
                     accessKey: null,
                     sealedSender: SEALED_SENDER.UNKNOWN,
                 });
-                if (!viaStorageServiceSync) {
+                if (!viaStorageServiceSync &&
+                    profileKey !== this.get('storageProfileKey')) {
                     this.captureChange();
                 }
                 await Promise.all([
@@ -2254,6 +2262,11 @@ require(exports => {
                 ]);
                 window.Signal.Data.updateConversation(this.attributes, {
                     Conversation: window.Whisper.Conversation,
+                });
+            }
+            if (viaStorageServiceSync) {
+                this.set({
+                    storageProfileKey: profileKey,
                 });
             }
         }
@@ -2286,9 +2299,9 @@ require(exports => {
             if (this.get('accessKey')) {
                 return;
             }
-            const profileKeyBuffer = base64ToArrayBuffer(profileKey);
-            const accessKeyBuffer = await deriveAccessKey(profileKeyBuffer);
-            const accessKey = arrayBufferToBase64(accessKeyBuffer);
+            const profileKeyBuffer = Crypto_1.base64ToArrayBuffer(profileKey);
+            const accessKeyBuffer = await Crypto_1.deriveAccessKey(profileKeyBuffer);
+            const accessKey = Crypto_1.arrayBufferToBase64(accessKeyBuffer);
             this.set({ accessKey });
         }
         async deriveProfileKeyVersionIfNeeded() {
