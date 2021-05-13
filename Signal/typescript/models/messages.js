@@ -1074,7 +1074,7 @@ require(exports => {
             catch (error) {
                 window.log.error(`Error erasing data for message ${this.idForLogging()}:`, error && error.stack ? error.stack : error);
             }
-            this.set(Object.assign({ isErased: true, body: '', attachments: [], quote: null, contact: [], sticker: null, preview: [] }, additionalProperties));
+            this.set(Object.assign({ isErased: true, body: '', bodyRanges: undefined, attachments: [], quote: null, contact: [], sticker: null, preview: [] }, additionalProperties));
             this.trigger('content-changed');
             if (shouldPersist) {
                 await window.Signal.Data.saveMessage(this.attributes, {
