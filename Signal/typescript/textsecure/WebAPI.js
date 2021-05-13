@@ -15,6 +15,13 @@
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
+    var __importStar = (this && this.__importStar) || function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+        result["default"] = mod;
+        return result;
+    };
     Object.defineProperty(exports, "__esModule", { value: true });
     const node_fetch_1 = __importDefault(require("node-fetch"));
     const proxy_agent_1 = __importDefault(require("proxy-agent"));
@@ -29,6 +36,7 @@
     const getUserAgent_1 = require("../util/getUserAgent");
     const stickers_1 = require("../../js/modules/stickers");
     const Crypto_1 = require("../Crypto");
+    const linkPreviewFetch = __importStar(require("../linkPreviews/linkPreviewFetch"));
     const WebSocket_1 = require("./WebSocket");
     let sgxConstantCache = null;
     function makeLong(value) {
@@ -498,6 +506,8 @@
                 getStorageManifest,
                 getStorageRecords,
                 getUuidsForE164s,
+                fetchLinkPreviewMetadata,
+                fetchLinkPreviewImage,
                 makeProxiedRequest,
                 modifyGroup,
                 modifyStorageRecords,
@@ -1032,6 +1042,12 @@
                     characters += String.fromCharCode(Crypto_1.getRandomValue(65, 122));
                 }
                 return characters;
+            }
+            async function fetchLinkPreviewMetadata(href, abortSignal) {
+                return linkPreviewFetch.fetchLinkPreviewMetadata(node_fetch_1.default, href, abortSignal);
+            }
+            async function fetchLinkPreviewImage(href, abortSignal) {
+                return linkPreviewFetch.fetchLinkPreviewImage(node_fetch_1.default, href, abortSignal);
             }
             async function makeProxiedRequest(targetUrl, options = {}) {
                 const { returnArrayBuffer, start, end } = options;

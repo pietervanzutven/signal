@@ -5360,7 +5360,7 @@ img.emoji.jumbo {
   position: relative;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: stretch;
   min-height: 65px; }
 
 .module-staged-link-preview--is-loading {
@@ -5378,6 +5378,8 @@ img.emoji.jumbo {
   margin-right: 8px; }
 
 .module-staged-link-preview__content {
+  display: flex;
+  flex-direction: column;
   margin-right: 20px; }
 
 .module-staged-link-preview__title {
@@ -5389,18 +5391,46 @@ img.emoji.jumbo {
   color: #1b1b1b;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical; }
   .dark-theme .module-staged-link-preview__title {
     color: #e9e9e9; }
+
+.module-staged-link-preview__description {
+  font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 21px;
+  letter-spacing: -0.14px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical; }
+
+.module-staged-link-preview__footer {
+  font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: -0.03px;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  color: #5e5e5e; }
+  .dark-theme .module-staged-link-preview__footer {
+    color: #b9b9b9; }
+  .module-staged-link-preview__footer > *:not(:first-child) {
+    display: flex; }
+    .module-staged-link-preview__footer > *:not(:first-child):before {
+      content: '•';
+      font-size: 50%;
+      margin-left: 0.2rem;
+      margin-right: 0.2rem; }
 
 .module-staged-link-preview__location {
   font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
   font-size: 13px;
   line-height: 18px;
   letter-spacing: -0.03px;
-  margin-top: 4px;
-  text-transform: uppercase;
+  text-transform: lowercase;
   color: #5e5e5e; }
   .dark-theme .module-staged-link-preview__location {
     color: #b9b9b9; }

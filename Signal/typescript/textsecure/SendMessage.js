@@ -138,6 +138,8 @@
                     const item = new window.textsecure.protobuf.DataMessage.Preview();
                     item.title = preview.title;
                     item.url = preview.url;
+                    item.description = preview.description || null;
+                    item.date = preview.date || null;
                     item.image = preview.image || null;
                     return item;
                 });
@@ -958,6 +960,12 @@
                 profileKey,
                 flags: window.textsecure.protobuf.DataMessage.Flags.EXPIRATION_TIMER_UPDATE,
             }, options);
+        }
+        async fetchLinkPreviewMetadata(href, abortSignal) {
+            return this.server.fetchLinkPreviewMetadata(href, abortSignal);
+        }
+        async fetchLinkPreviewImage(href, abortSignal) {
+            return this.server.fetchLinkPreviewImage(href, abortSignal);
         }
         async makeProxiedRequest(url, options) {
             return this.server.makeProxiedRequest(url, options);

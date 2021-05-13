@@ -24,7 +24,6 @@
     const lodash_1 = require("lodash");
     const react_contextmenu_1 = require("react-contextmenu");
     const react_popper_1 = require("react-popper");
-    const moment_1 = __importDefault(require("moment"));
     const Avatar_1 = require("../Avatar");
     const Spinner_1 = require("../Spinner");
     const MessageBody_1 = require("./MessageBody");
@@ -38,16 +37,15 @@
     const ReactionViewer_1 = require("./ReactionViewer");
     const ReactionPicker_1 = require("./ReactionPicker");
     const Emoji_1 = require("../emoji/Emoji");
+    const LinkPreviewDate_1 = require("./LinkPreviewDate");
     const Attachment_1 = require("../../types/Attachment");
     const timer_1 = require("../../util/timer");
     const isFileDangerous_1 = require("../../util/isFileDangerous");
     const _util_1 = require("../_util");
     // Same as MIN_WIDTH in ImageGrid.tsx
     const MINIMUM_LINK_PREVIEW_IMAGE_WIDTH = 200;
-    const MINIMUM_LINK_PREVIEW_DATE = new Date(1990, 0, 1).valueOf();
     const STICKER_SIZE = 200;
     const SELECTED_TIMEOUT = 1000;
-    const ONE_DAY = 24 * 60 * 60 * 1000;
     exports.MessageStatuses = [
         'delivered',
         'error',
@@ -541,13 +539,7 @@
             const isFullSizeImage = !first.isStickerPack &&
                 width &&
                 width >= MINIMUM_LINK_PREVIEW_IMAGE_WIDTH;
-            // Don't show old dates or dates too far in the future. This is predicated on the
-            //   idea that showing an invalid dates is worse than hiding valid ones.
-            const maximumLinkPreviewDate = Date.now() + ONE_DAY;
-            const isDateValid = typeof first.date === 'number' &&
-                first.date > MINIMUM_LINK_PREVIEW_DATE &&
-                first.date < maximumLinkPreviewDate;
-            const dateMoment = isDateValid ? moment_1.default(first.date) : null;
+            const linkPreviewDate = first.date || null;
             return (react_1.default.createElement("button", {
                 type: "button", className: classnames_1.default('module-message__link-preview', `module-message__link-preview--${direction}`, withContentAbove
                     ? 'module-message__link-preview--with-content-above'
@@ -580,7 +572,7 @@
                         first.description && (react_1.default.createElement("div", { className: "module-message__link-preview__description" }, first.description)),
                         react_1.default.createElement("div", { className: "module-message__link-preview__footer" },
                             react_1.default.createElement("div", { className: "module-message__link-preview__location" }, first.domain),
-                            dateMoment && (react_1.default.createElement("time", { className: "module-message__link-preview__date", dateTime: dateMoment.toISOString() }, dateMoment.format('ll'))))))));
+                            react_1.default.createElement(LinkPreviewDate_1.LinkPreviewDate, { date: linkPreviewDate, className: "module-message__link-preview__date" }))))));
         }
         renderQuote() {
             const { conversationType, authorColor, direction, disableScroll, i18n, quote, scrollToQuotedMessage, } = this.props;

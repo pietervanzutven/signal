@@ -1,6 +1,6 @@
 "use strict";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 const FIVE_MINUTES = 1000 * 60 * 5;
+const LINK_PREVIEW_TIMEOUT = 60 * 1000;
 window.Whisper = window.Whisper || {};
 const { Whisper } = window;
 const { Message, MIME, VisualAttachment } = window.Signal.Types;
@@ -228,13 +228,13 @@ Whisper.ConversationView = Whisper.View.extend({
         );
         this.model.throttledGetProfiles =
             this.model.throttledGetProfiles ||
-            _.throttle(this.model.getProfiles.bind(this.model), FIVE_MINUTES);
+                _.throttle(this.model.getProfiles.bind(this.model), FIVE_MINUTES);
         this.model.throttledUpdateSharedGroups =
             this.model.throttledUpdateSharedGroups ||
-            _.throttle(this.model.updateSharedGroups.bind(this.model), FIVE_MINUTES);
+                _.throttle(this.model.updateSharedGroups.bind(this.model), FIVE_MINUTES);
         this.model.throttledFetchLatestGroupV2Data =
             this.model.throttledFetchLatestGroupV2Data ||
-            _.throttle(this.model.fetchLatestGroupV2Data.bind(this.model), FIVE_MINUTES);
+                _.throttle(this.model.fetchLatestGroupV2Data.bind(this.model), FIVE_MINUTES);
         this.debouncedMaybeGrabLinkPreview = _.debounce(this.maybeGrabLinkPreview.bind(this), 200);
         this.debouncedSaveDraft = _.debounce(this.saveDraft.bind(this), 200);
         this.render();
@@ -254,6 +254,7 @@ Whisper.ConversationView = Whisper.View.extend({
         this.setupHeader();
         this.setupTimeline();
         this.setupCompositionArea({ attachmentListEl: attachmentListEl[0] });
+        this.linkPreviewAbortController = null;
     },
     events: {
         'click .composition-area-placeholder': 'onClickPlaceholder',
@@ -285,19 +286,18 @@ Whisper.ConversationView = Whisper.View.extend({
             const expirationSettingName = expireTimer
                 ? Whisper.ExpirationTimerOptions.getName(expireTimer || 0)
                 : null;
-            return Object.assign(Object.assign({}, this.model.cachedProps), {
-                leftGroup: this.model.get('left'), disableTimerChanges: this.model.get('left') ||
+            return Object.assign(Object.assign({}, this.model.cachedProps), { leftGroup: this.model.get('left'), disableTimerChanges: this.model.get('left') ||
                     !this.model.getAccepted() ||
                     !this.model.canChangeTimer(), showBackButton: Boolean(this.panels && this.panels.length), expirationSettingName, timerOptions: Whisper.ExpirationTimerOptions.map((item) => ({
-                        name: item.getName(),
-                        value: item.get('seconds'),
-                    })), muteExpirationLabel: this.getMuteExpirationLabel(), onSetDisappearingMessages: (seconds) => this.setDisappearingMessages(seconds), onDeleteMessages: () => this.destroyMessages(), onResetSession: () => this.endSession(), onSearchInConversation: () => {
-                        const { searchInConversation } = window.reduxActions.search;
-                        const name = this.model.isMe()
-                            ? window.i18n('noteToSelf')
-                            : this.model.getTitle();
-                        searchInConversation(this.model.id, name);
-                    }, onSetMuteNotifications: (ms) => this.setMuteNotifications(ms),
+                    name: item.getName(),
+                    value: item.get('seconds'),
+                })), muteExpirationLabel: this.getMuteExpirationLabel(), onSetDisappearingMessages: (seconds) => this.setDisappearingMessages(seconds), onDeleteMessages: () => this.destroyMessages(), onResetSession: () => this.endSession(), onSearchInConversation: () => {
+                    const { searchInConversation } = window.reduxActions.search;
+                    const name = this.model.isMe()
+                        ? window.i18n('noteToSelf')
+                        : this.model.getTitle();
+                    searchInConversation(this.model.id, name);
+                }, onSetMuteNotifications: (ms) => this.setMuteNotifications(ms), 
                 // These are view only and don't update the Conversation model, so they
                 //   need a manual update call.
                 onOutgoingAudioCallInConversation: async () => {
@@ -340,8 +340,7 @@ Whisper.ConversationView = Whisper.View.extend({
                 }, onMoveToInbox: () => {
                     this.model.setArchived(false);
                     Whisper.ToastView.show(Whisper.ConversationUnarchivedToast, document.body);
-                }
-            });
+                } });
         };
         this.titleView = new Whisper.ReactWrapperView({
             className: 'title-wrapper',
@@ -851,11 +850,9 @@ Whisper.ConversationView = Whisper.View.extend({
         const draftAttachments = this.model.get('draftAttachments') || [];
         return {
             // In conversation model/redux
-            attachments: draftAttachments.map((attachment) => (Object.assign(Object.assign({}, attachment), {
-                url: attachment.screenshotPath
+            attachments: draftAttachments.map((attachment) => (Object.assign(Object.assign({}, attachment), { url: attachment.screenshotPath
                     ? getAbsoluteDraftPath(attachment.screenshotPath)
-                    : getAbsoluteDraftPath(attachment.path)
-            }))),
+                    : getAbsoluteDraftPath(attachment.path) }))),
             // Passed in from ConversationView
             onAddAttachment: this.onChooseAttachment.bind(this),
             onClickAttachment: this.onClickAttachment.bind(this),
@@ -875,13 +872,13 @@ Whisper.ConversationView = Whisper.View.extend({
                 draftAttachments: this.model
                     .get('draftAttachments')
                     .map((item) => {
-                        if ((item.path && item.path === attachment.path) ||
-                            (item.screenshotPath &&
-                                item.screenshotPath === attachment.screenshotPath)) {
-                            return Object.assign(Object.assign({}, attachment), { caption });
-                        }
-                        return item;
-                    }),
+                    if ((item.path && item.path === attachment.path) ||
+                        (item.screenshotPath &&
+                            item.screenshotPath === attachment.screenshotPath)) {
+                        return Object.assign(Object.assign({}, attachment), { caption });
+                    }
+                    return item;
+                }),
                 draftChanged: true,
             });
             this.captionEditorView.remove();
@@ -1404,12 +1401,12 @@ Whisper.ConversationView = Whisper.View.extend({
         this.model.throttledFetchLatestGroupV2Data();
         const statusPromise = this.model.throttledGetProfiles();
         // eslint-disable-next-line more/no-then
-        this.statusFetch = statusPromise.then(() =>
-            // eslint-disable-next-line more/no-then
-            this.model.updateVerified().then(() => {
-                this.onVerifiedChange();
-                this.statusFetch = null;
-            }));
+        this.statusFetch = statusPromise.then(() => 
+        // eslint-disable-next-line more/no-then
+        this.model.updateVerified().then(() => {
+            this.onVerifiedChange();
+            this.statusFetch = null;
+        }));
     },
     async retrySend(messageId) {
         const message = this.model.messageCollection.get(messageId);
@@ -1453,32 +1450,32 @@ Whisper.ConversationView = Whisper.View.extend({
                 return (attachments || [])
                     .filter((attachment) => attachment.thumbnail && !attachment.pending && !attachment.error)
                     .map((attachment, index) => {
-                        const { thumbnail } = attachment;
-                        return {
-                            objectURL: getAbsoluteAttachmentPath(attachment.path),
-                            thumbnailObjectUrl: thumbnail
-                                ? getAbsoluteAttachmentPath(thumbnail.path)
-                                : null,
-                            contentType: attachment.contentType,
-                            index,
-                            attachment,
-                            message,
-                        };
-                    });
+                    const { thumbnail } = attachment;
+                    return {
+                        objectURL: getAbsoluteAttachmentPath(attachment.path),
+                        thumbnailObjectUrl: thumbnail
+                            ? getAbsoluteAttachmentPath(thumbnail.path)
+                            : null,
+                        contentType: attachment.contentType,
+                        index,
+                        attachment,
+                        message,
+                    };
+                });
             }));
             // Unlike visual media, only one non-image attachment is supported
             const documents = rawDocuments
                 .filter(message => Boolean(message.attachments && message.attachments.length))
                 .map(message => {
-                    const attachments = message.attachments || [];
-                    const attachment = attachments[0];
-                    return {
-                        contentType: attachment.contentType,
-                        index: 0,
-                        attachment,
-                        message,
-                    };
-                });
+                const attachments = message.attachments || [];
+                const attachment = attachments[0];
+                return {
+                    contentType: attachment.contentType,
+                    index: 0,
+                    attachment,
+                    message,
+                };
+            });
             const saveAttachment = async ({ attachment, message } = {}) => {
                 const timestamp = message.sent_at;
                 const fullPath = await window.Signal.Types.Attachment.save({
@@ -1773,13 +1770,13 @@ Whisper.ConversationView = Whisper.View.extend({
         const media = attachments
             .filter((item) => item.thumbnail && !item.pending && !item.error)
             .map((item, index) => ({
-                objectURL: getAbsoluteAttachmentPath(item.path),
-                path: item.path,
-                contentType: item.contentType,
-                index,
-                message,
-                attachment: item,
-            }));
+            objectURL: getAbsoluteAttachmentPath(item.path),
+            path: item.path,
+            contentType: item.contentType,
+            index,
+            message,
+            attachment: item,
+        }));
         if (media.length === 1) {
             const props = {
                 objectURL: getAbsoluteAttachmentPath(path),
@@ -2119,13 +2116,11 @@ Whisper.ConversationView = Whisper.View.extend({
             className: 'quote-wrapper',
             Component: window.Signal.Components.Quote,
             elCallback: (el) => this.$(this.compositionApi.current.attSlotRef.current).prepend(el),
-            props: Object.assign(Object.assign({}, props), {
-                withContentAbove: true, onClose: () => {
+            props: Object.assign(Object.assign({}, props), { withContentAbove: true, onClose: () => {
                     // This can't be the normal 'onClose' because that is always run when this
                     //   view is removed from the DOM, and would clear the draft quote.
                     this.setQuoteMessage(null);
-                }
-            }),
+                } }),
         });
     },
     async sendMessage(message = '', options = {}) {
@@ -2247,13 +2242,12 @@ Whisper.ConversationView = Whisper.View.extend({
         }
         this.currentlyMatchedLink = null;
         this.excludedPreviewUrls = this.excludedPreviewUrls || [];
-        const link = links.find(item => window.Signal.LinkPreviews.isLinkInWhitelist(item) &&
+        const link = links.find(item => window.Signal.LinkPreviews.isLinkSafeToPreview(item) &&
             !this.excludedPreviewUrls.includes(item));
         if (!link) {
             this.removeLinkPreview();
             return;
         }
-        this.currentlyMatchedLink = link;
         this.addLinkPreview(link);
     },
     resetLinkPreview() {
@@ -2262,58 +2256,17 @@ Whisper.ConversationView = Whisper.View.extend({
         this.removeLinkPreview();
     },
     removeLinkPreview() {
+        var _a;
         (this.preview || []).forEach((item) => {
             if (item.url) {
                 URL.revokeObjectURL(item.url);
             }
         });
         this.preview = null;
-        this.previewLoading = null;
-        this.currentlyMatchedLink = false;
+        this.currentlyMatchedLink = null;
+        (_a = this.linkPreviewAbortController) === null || _a === void 0 ? void 0 : _a.abort();
+        this.linkPreviewAbortController = null;
         this.renderLinkPreview();
-    },
-    async makeChunkedRequest(url) {
-        const PARALLELISM = 3;
-        const first = await window.textsecure.messaging.makeProxiedRequest(url, {
-            start: 0,
-            end: window.Signal.Crypto.getRandomValue(1023, 2047),
-            returnArrayBuffer: true,
-        });
-        const { totalSize, result } = first;
-        const initialOffset = result.data.byteLength;
-        const firstChunk = Object.assign({ start: 0, end: initialOffset }, result);
-        const chunks = await window.Signal.LinkPreviews.getChunkPattern(totalSize, initialOffset);
-        let results = [];
-        const jobs = chunks.map((chunk) => async () => {
-            const { start, end } = chunk;
-            const jobResult = await window.textsecure.messaging.makeProxiedRequest(url, {
-                start,
-                end,
-                returnArrayBuffer: true,
-            });
-            return Object.assign(Object.assign({}, chunk), jobResult.result);
-        });
-        while (jobs.length > 0) {
-            const activeJobs = [];
-            for (let i = 0, max = PARALLELISM; i < max; i += 1) {
-                if (!jobs.length) {
-                    break;
-                }
-                const job = jobs.shift();
-                activeJobs.push(job());
-            }
-            // eslint-disable-next-line no-await-in-loop
-            results = results.concat(await Promise.all(activeJobs));
-        }
-        if (!results.length) {
-            throw new Error('No responses received');
-        }
-        const { contentType } = results[0];
-        const data = window.Signal.LinkPreviews.assembleChunks([firstChunk].concat(results));
-        return {
-            contentType,
-            data,
-        };
     },
     async getStickerPackPreview(url) {
         const isPackDownloaded = (pack) => pack && (pack.status === 'downloaded' || pack.status === 'installed');
@@ -2361,85 +2314,101 @@ Whisper.ConversationView = Whisper.View.extend({
             }
         }
     },
-    async getPreview(url) {
+    async getPreview(url, abortSignal) {
         if (window.Signal.LinkPreviews.isStickerPack(url)) {
             return this.getStickerPackPreview(url);
         }
-        let html;
-        try {
-            html = await window.textsecure.messaging.makeProxiedRequest(url);
+        // This is already checked elsewhere, but we want to be extra-careful.
+        if (!window.Signal.LinkPreviews.isLinkSafeToPreview(url)) {
+            return null;
         }
-        catch (error) {
-            if (error.code >= 300) {
-                return null;
-            }
+        const linkPreviewMetadata = await window.textsecure.messaging.fetchLinkPreviewMetadata(url, abortSignal);
+        if (!linkPreviewMetadata) {
+            return null;
         }
-        const title = window.Signal.LinkPreviews.getTitleMetaTag(html);
-        const imageUrl = window.Signal.LinkPreviews.getImageMetaTag(html);
+        const { title, imageHref, description, date } = linkPreviewMetadata;
         let image;
-        let objectUrl;
-        try {
-            if (imageUrl) {
-                if (!window.Signal.LinkPreviews.isMediaLinkInWhitelist(imageUrl)) {
-                    const primaryDomain = window.Signal.LinkPreviews.getDomain(url);
-                    const imageDomain = window.Signal.LinkPreviews.getDomain(imageUrl);
-                    throw new Error(`imageUrl for domain ${primaryDomain} did not match media whitelist. Domain: ${imageDomain}`);
+        if (!abortSignal.aborted &&
+            imageHref &&
+            window.Signal.LinkPreviews.isLinkSafeToPreview(imageHref)) {
+            let objectUrl;
+            try {
+                const fullSizeImage = await window.textsecure.messaging.fetchLinkPreviewImage(imageHref, abortSignal);
+                if (!fullSizeImage) {
+                    throw new Error('Failed to fetch link preview image');
                 }
-                const chunked = await this.makeChunkedRequest(imageUrl);
                 // Ensure that this file is either small enough or is resized to meet our
                 //   requirements for attachments
                 const withBlob = await this.autoScale({
-                    contentType: chunked.contentType,
-                    file: new Blob([chunked.data], {
-                        type: chunked.contentType,
+                    contentType: fullSizeImage.contentType,
+                    file: new Blob([fullSizeImage.data], {
+                        type: fullSizeImage.contentType,
                     }),
                 });
                 const data = await this.arrayBufferFromFile(withBlob.file);
                 objectUrl = URL.createObjectURL(withBlob.file);
-                const dimensions = await window.Signal.Types.VisualAttachment.getImageDimensions({
+                const dimensions = await VisualAttachment.getImageDimensions({
                     objectUrl,
                     logger: window.log,
                 });
                 image = Object.assign(Object.assign({ data, size: data.byteLength }, dimensions), { contentType: withBlob.file.type });
             }
-        }
-        catch (error) {
-            // We still want to show the preview if we failed to get an image
-            window.log.error('getPreview failed to get image for link preview:', error.message);
-        }
-        finally {
-            if (objectUrl) {
-                URL.revokeObjectURL(objectUrl);
+            catch (error) {
+                // We still want to show the preview if we failed to get an image
+                window.log.error('getPreview failed to get image for link preview:', error.message);
+            }
+            finally {
+                if (objectUrl) {
+                    URL.revokeObjectURL(objectUrl);
+                }
             }
         }
         return {
             title,
             url,
             image,
+            description,
+            date,
         };
     },
     async addLinkPreview(url) {
+        if (this.currentlyMatchedLink === url) {
+            window.log.warn('addLinkPreview should not be called with the same URL like this');
+            return;
+        }
         (this.preview || []).forEach((item) => {
             if (item.url) {
                 URL.revokeObjectURL(item.url);
             }
         });
         this.preview = null;
+        // Cancel other in-flight link preview requests.
+        if (this.linkPreviewAbortController) {
+            window.log.info('addLinkPreview: canceling another in-flight link preview request');
+            this.linkPreviewAbortController.abort();
+        }
+        const thisRequestAbortController = new AbortController();
+        this.linkPreviewAbortController = thisRequestAbortController;
+        const timeout = setTimeout(() => {
+            thisRequestAbortController.abort();
+        }, LINK_PREVIEW_TIMEOUT);
         this.currentlyMatchedLink = url;
-        this.previewLoading = this.getPreview(url);
-        const promise = this.previewLoading;
         this.renderLinkPreview();
         try {
-            const result = await promise;
-            if (url !== this.currentlyMatchedLink ||
-                promise !== this.previewLoading) {
-                // another request was started, or this was canceled
-                return;
-            }
-            // If we couldn't pull down the initial URL
+            const result = await this.getPreview(url, thisRequestAbortController.signal);
             if (!result) {
-                this.excludedPreviewUrls.push(url);
-                this.removeLinkPreview();
+                window.log.info('addLinkPreview: failed to load preview (not necessarily a problem)');
+                // This helps us disambiguate between two kinds of failure:
+                //
+                // 1. We failed to fetch the preview because of (1) a network failure (2) an
+                //    invalid response (3) a timeout
+                // 2. We failed to fetch the preview because we aborted the request because the
+                //    user changed the link (e.g., by continuing to type the URL)
+                const failedToFetch = this.currentlyMatchedLink === url;
+                if (failedToFetch) {
+                    this.excludedPreviewUrls.push(url);
+                    this.removeLinkPreview();
+                }
                 return;
             }
             if (result.image) {
@@ -2461,6 +2430,9 @@ Whisper.ConversationView = Whisper.View.extend({
             this.disableLinkPreviews = true;
             this.removeLinkPreview();
         }
+        finally {
+            clearTimeout(timeout);
+        }
     },
     renderLinkPreview() {
         if (this.previewView) {
@@ -2471,12 +2443,10 @@ Whisper.ConversationView = Whisper.View.extend({
             return;
         }
         const first = (this.preview && this.preview[0]) || null;
-        const props = Object.assign(Object.assign({}, first), {
-            domain: first && window.Signal.LinkPreviews.getDomain(first.url), isLoaded: Boolean(first), onClose: () => {
+        const props = Object.assign(Object.assign({}, first), { domain: first && window.Signal.LinkPreviews.getDomain(first.url), isLoaded: Boolean(first), onClose: () => {
                 this.disableLinkPreviews = true;
                 this.removeLinkPreview();
-            }
-        });
+            } });
         this.previewView = new Whisper.ReactWrapperView({
             className: 'preview-wrapper',
             Component: window.Signal.Components.StagedLinkPreview,
