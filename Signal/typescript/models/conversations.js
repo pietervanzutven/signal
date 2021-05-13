@@ -1287,7 +1287,6 @@ require(exports => {
             window.Whisper.Reactions.onReaction(reactionModel);
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const destination = this.getSendTarget();
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const recipients = this.getRecipients();
             let profileKey;
             if (this.get('profileSharing')) {
