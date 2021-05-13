@@ -412,9 +412,11 @@ require(exports => {
                 storageRecord,
             };
         }, { concurrency: 50 });
+        // Merge Account records last
+        const sortedStorageItems = [].concat(...lodash_1.default.partition(decryptedStorageItems, storageRecord => storageRecord.storageRecord.account === undefined));
         try {
-            window.log.info(`storageService.processManifest: Attempting to merge ${decryptedStorageItems.length} records`);
-            const mergedRecords = await p_map_1.default(decryptedStorageItems, mergeRecord, {
+            window.log.info(`storageService.processManifest: Attempting to merge ${sortedStorageItems.length} records`);
+            const mergedRecords = await p_map_1.default(sortedStorageItems, mergeRecord, {
                 concurrency: 5,
             });
             window.log.info(`storageService.processManifest: Merged ${mergedRecords.length} records`);

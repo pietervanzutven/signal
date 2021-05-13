@@ -6231,6 +6231,18 @@ img.emoji.jumbo {
   .dark-theme .module-left-pane__archive-header {
     border-bottom: 1px solid #3b3b3b; }
 
+.module-left-pane__header-row {
+  font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 21px;
+  letter-spacing: -0.14px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  padding-left: 16px; }
+  .dark-theme .module-left-pane__header-row {
+    color: #e9e9e9; }
+
 .module-left-pane__to-inbox-button {
   background: none;
   color: inherit;

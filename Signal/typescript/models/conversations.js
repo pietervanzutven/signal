@@ -506,6 +506,7 @@ require(exports => {
                 isArchived: this.get('isArchived'),
                 isBlocked: this.isBlocked(),
                 isMe: this.isMe(),
+                isPinned: this.get('isPinned'),
                 isVerified: this.isVerified(),
                 lastMessage: {
                     status: this.get('lastMessageStatus'),
@@ -520,6 +521,7 @@ require(exports => {
                 muteExpiresAt: this.get('muteExpiresAt'),
                 name: this.get('name'),
                 phoneNumber: this.getNumber(),
+                pinIndex: this.get('pinIndex'),
                 profileName: this.getProfileName(),
                 sharedGroupNames: this.get('sharedGroupNames'),
                 shouldShowDraft,

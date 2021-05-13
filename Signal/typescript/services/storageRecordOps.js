@@ -290,7 +290,7 @@ require(exports => {
     }
     exports.mergeContactRecord = mergeContactRecord;
     async function mergeAccountRecord(storageID, accountRecord) {
-        const { avatarUrl, linkPreviews, noteToSelfArchived, profileKey, readReceipts, sealedSenderIndicators, typingIndicators, } = accountRecord;
+        const { avatarUrl, linkPreviews, noteToSelfArchived, pinnedConversations: remotelyPinnedConversationClasses, profileKey, readReceipts, sealedSenderIndicators, typingIndicators, } = accountRecord;
         window.storage.put('read-receipt-setting', readReceipts);
         if (typeof sealedSenderIndicators === 'boolean') {
             window.storage.put('sealedSenderIndicators', sealedSenderIndicators);
@@ -303,6 +303,66 @@ require(exports => {
         }
         if (profileKey) {
             window.storage.put('profileKey', profileKey.toArrayBuffer());
+        }
+        if (remotelyPinnedConversationClasses) {
+            const locallyPinnedConversations = window.ConversationController._conversations.filter(conversation => Boolean(conversation.get('isPinned')));
+            const remotelyPinnedConversationPromises = remotelyPinnedConversationClasses.map(async (pinnedConversation) => {
+                let conversationId;
+                let conversationType = 'private';
+                switch (pinnedConversation.identifier) {
+                    case 'contact': {
+                        if (!pinnedConversation.contact) {
+                            throw new Error('mergeAccountRecord: no contact found');
+                        }
+                        conversationId = window.ConversationController.ensureContactIds(pinnedConversation.contact);
+                        conversationType = 'private';
+                        break;
+                    }
+                    case 'legacyGroupId': {
+                        if (!pinnedConversation.legacyGroupId) {
+                            throw new Error('mergeAccountRecord: no legacyGroupId found');
+                        }
+                        conversationId = pinnedConversation.legacyGroupId.toBinary();
+                        conversationType = 'group';
+                        break;
+                    }
+                    case 'groupMasterKey': {
+                        if (!pinnedConversation.groupMasterKey) {
+                            throw new Error('mergeAccountRecord: no groupMasterKey found');
+                        }
+                        const masterKeyBuffer = pinnedConversation.groupMasterKey.toArrayBuffer();
+                        const groupFields = groups_1.deriveGroupFields(masterKeyBuffer);
+                        const groupId = Crypto_1.arrayBufferToBase64(groupFields.id);
+                        conversationId = groupId;
+                        conversationType = 'group';
+                        break;
+                    }
+                    default: {
+                        window.log.error('mergeAccountRecord: Invalid identifier received');
+                    }
+                }
+                if (!conversationId) {
+                    window.log.error(`mergeAccountRecord: missing conversation id. looking based on ${pinnedConversation.identifier}`);
+                    return undefined;
+                }
+                if (conversationType === 'private') {
+                    return window.ConversationController.getOrCreateAndWait(conversationId, conversationType);
+                }
+                return window.ConversationController.get(conversationId);
+            });
+            const remotelyPinnedConversations = (await Promise.all(remotelyPinnedConversationPromises)).filter((conversation) => conversation !== undefined);
+            const remotelyPinnedConversationIds = remotelyPinnedConversations.map(({ id }) => id);
+            const conversationsToUnpin = locallyPinnedConversations.filter(({ id }) => !remotelyPinnedConversationIds.includes(id));
+            window.log.info(`mergeAccountRecord: unpinning ${conversationsToUnpin.length} conversations`);
+            window.log.info(`mergeAccountRecord: pinning ${conversationsToUnpin.length} conversations`);
+            conversationsToUnpin.forEach(conversation => {
+                conversation.set({ isPinned: false, pinIndex: undefined });
+                updateConversation(conversation.attributes);
+            });
+            remotelyPinnedConversations.forEach((conversation, index) => {
+                conversation.set({ isPinned: true, pinIndex: index });
+                updateConversation(conversation.attributes);
+            });
         }
         const ourID = window.ConversationController.getOurConversationId();
         if (!ourID) {
