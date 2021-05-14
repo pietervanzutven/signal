@@ -22,6 +22,9 @@ require(exports => {
                 const debouncedUpdateUnreadCount = lodash_1.debounce(this.updateUnreadCount.bind(this), 1000);
                 this.on('add remove change:unreadCount', debouncedUpdateUnreadCount);
                 window.Whisper.events.on('updateUnreadCount', debouncedUpdateUnreadCount);
+                this.on('add', (model) => {
+                    this.initMuteExpirationTimer(model);
+                });
             },
             addActive(model) {
                 if (model.get('active_at')) {
@@ -29,6 +32,19 @@ require(exports => {
                 }
                 else {
                     this.remove(model);
+                }
+            },
+            // If the conversation is muted we set a timeout so when the mute expires
+            // we can reset the mute state on the model. If the mute has already expired
+            // then we reset the state right away.
+            initMuteExpirationTimer(model) {
+                if (model.isMuted()) {
+                    window.Signal.Services.onTimeout(model.get('muteExpiresAt'), () => {
+                        model.set({ muteExpiresAt: undefined });
+                    }, model.getMuteTimeoutId());
+                }
+                else if (model.get('muteExpiresAt')) {
+                    model.set({ muteExpiresAt: undefined });
                 }
             },
             updateUnreadCount() {

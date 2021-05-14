@@ -2487,8 +2487,11 @@ require(exports => {
             });
         }
         isMuted() {
-            return (this.get('muteExpiresAt') &&
+            return (Boolean(this.get('muteExpiresAt')) &&
                 Date.now() < this.get('muteExpiresAt'));
+        }
+        getMuteTimeoutId() {
+            return `mute(${this.get('id')})`;
         }
         async notify(message, reaction) {
             if (this.isMuted()) {
