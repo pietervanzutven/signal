@@ -6,10 +6,11 @@ require(exports => {
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
     const CallingPip_1 = require("./CallingPip");
+    const CallNeedPermissionScreen_1 = require("./CallNeedPermissionScreen");
     const CallScreen_1 = require("./CallScreen");
     const IncomingCallBar_1 = require("./IncomingCallBar");
     const Calling_1 = require("../types/Calling");
-    exports.CallManager = ({ acceptCall, callDetails, callState, declineCall, hangUp, hasLocalAudio, hasLocalVideo, hasRemoteVideo, i18n, pip, renderDeviceSelection, setLocalAudio, setLocalPreview, setLocalVideo, setRendererCanvas, settingsDialogOpen, togglePip, toggleSettings, }) => {
+    exports.CallManager = ({ acceptCall, callDetails, callState, callEndedReason, closeNeedPermissionScreen, declineCall, hangUp, hasLocalAudio, hasLocalVideo, hasRemoteVideo, i18n, pip, renderDeviceSelection, setLocalAudio, setLocalPreview, setLocalVideo, setRendererCanvas, settingsDialogOpen, togglePip, toggleSettings, }) => {
         if (!callDetails || !callState) {
             return null;
         }
@@ -17,6 +18,13 @@ require(exports => {
         const outgoing = !incoming;
         const ongoing = callState === Calling_1.CallState.Accepted || callState === Calling_1.CallState.Reconnecting;
         const ringing = callState === Calling_1.CallState.Ringing;
+        const ended = callState === Calling_1.CallState.Ended;
+        if (ended) {
+            if (callEndedReason === Calling_1.CallEndedReason.RemoteHangupNeedPermission) {
+                return (react_1.default.createElement(CallNeedPermissionScreen_1.CallNeedPermissionScreen, { close: closeNeedPermissionScreen, callDetails: callDetails, i18n: i18n }));
+            }
+            return null;
+        }
         if (outgoing || ongoing) {
             if (pip) {
                 return (react_1.default.createElement(CallingPip_1.CallingPip, { callDetails: callDetails, hangUp: hangUp, hasLocalVideo: hasLocalVideo, hasRemoteVideo: hasRemoteVideo, i18n: i18n, setLocalPreview: setLocalPreview, setRendererCanvas: setRendererCanvas, togglePip: togglePip }));
@@ -28,7 +36,7 @@ require(exports => {
         if (incoming && ringing) {
             return (react_1.default.createElement(IncomingCallBar_1.IncomingCallBar, { acceptCall: acceptCall, callDetails: callDetails, declineCall: declineCall, i18n: i18n }));
         }
-        // Ended || (Incoming && Prering)
+        // Incoming && Prering
         return null;
     };
 });

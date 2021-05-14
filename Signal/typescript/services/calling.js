@@ -439,6 +439,7 @@ require(exports => {
                 uxActions.callStateChange({
                     callState: call.state,
                     callDetails: this.getUxCallDetails(conversation, call),
+                    callEndedReason: call.endedReason,
                 });
             };
             // eslint-disable-next-line no-param-reassign
