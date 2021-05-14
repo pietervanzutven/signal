@@ -9,6 +9,10 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const MIME_1 = require("../types/MIME");
+    const MAX_REQUEST_COUNT_WITH_REDIRECTS = 20;
+    // Lifted from the `fetch` spec [here][0].
+    // [0]: https://fetch.spec.whatwg.org/#redirect-status
+    const REDIRECT_STATUSES = new Set([301, 302, 303, 307, 308]);
     const MAX_CONTENT_TYPE_LENGTH_TO_PARSE = 100;
     // Though we'll accept HTML of any Content-Length (including no specified length), we
     //   will only load some of the HTML. So we might start loading a 99 gigabyte HTML page
@@ -34,6 +38,50 @@ require(exports => {
     const MIN_DATE = 0;
     const MAX_DATE = new Date(3000, 0, 1).valueOf();
     const emptyContentType = { type: null, charset: null };
+    // This throws non-helpful errors because (1) it logs (2) it will be immediately caught.
+    async function fetchWithRedirects(fetchFn, href, options) {
+        var _a;
+        const urlsSeen = new Set();
+        let nextHrefToLoad = href;
+        for (let i = 0; i < MAX_REQUEST_COUNT_WITH_REDIRECTS; i += 1) {
+            if (urlsSeen.has(nextHrefToLoad)) {
+                window.log.warn('fetchWithRedirects: found a redirect loop');
+                throw new Error('redirect loop');
+            }
+            urlsSeen.add(nextHrefToLoad);
+            // This `await` is deliberatly inside of a loop.
+            // eslint-disable-next-line no-await-in-loop
+            const response = await fetchFn(nextHrefToLoad, Object.assign(Object.assign({}, options), { redirect: 'manual' }));
+            if (!REDIRECT_STATUSES.has(response.status)) {
+                return response;
+            }
+            const location = response.headers.get('location');
+            if (!location) {
+                window.log.warn('fetchWithRedirects: got a redirect status code but no Location header; bailing');
+                throw new Error('no location with redirect');
+            }
+            const newUrl = maybeParseUrl(location, nextHrefToLoad);
+            if (((_a = newUrl) === null || _a === void 0 ? void 0 : _a.protocol) !== 'https:') {
+                window.log.warn('fetchWithRedirects: got a redirect status code and an invalid Location header');
+                throw new Error('invalid location');
+            }
+            nextHrefToLoad = newUrl.href;
+        }
+        window.log.warn('fetchWithRedirects: too many redirects');
+        throw new Error('too many redirects');
+    }
+    function maybeParseUrl(href, base) {
+        let result;
+        try {
+            result = new URL(href, base);
+        }
+        catch (err) {
+            return null;
+        }
+        // We never need the hash
+        result.hash = '';
+        return result;
+    }
     /**
      * Parses a Content-Type header value. Refer to [RFC 2045][0] for details (though this is
      * a simplified version for link previews.
@@ -222,18 +270,8 @@ require(exports => {
                 'icon',
                 'apple-touch-icon',
             ]);
-        let imageHref;
-        if (rawImageHref) {
-            try {
-                imageHref = new URL(rawImageHref, href).href;
-            }
-            catch (err) {
-                imageHref = null;
-            }
-        }
-        else {
-            imageHref = null;
-        }
+        const imageUrl = rawImageHref ? maybeParseUrl(rawImageHref, href) : null;
+        const imageHref = imageUrl ? imageUrl.href : null;
         let date = null;
         const rawDate = getOpenGraphContent(document, [
             'og:published_time',
@@ -274,12 +312,11 @@ require(exports => {
     async function fetchLinkPreviewMetadata(fetchFn, href, abortSignal) {
         let response;
         try {
-            response = await fetchFn(href, {
+            response = await fetchWithRedirects(fetchFn, href, {
                 headers: {
                     Accept: 'text/html,application/xhtml+xml',
                     'User-Agent': 'WhatsApp',
                 },
-                redirect: 'follow',
                 signal: abortSignal,
             });
         }
@@ -341,12 +378,11 @@ require(exports => {
     async function fetchLinkPreviewImage(fetchFn, href, abortSignal) {
         let response;
         try {
-            response = await fetchFn(href, {
+            response = await fetchWithRedirects(fetchFn, href, {
                 headers: {
                     'User-Agent': 'WhatsApp',
                 },
                 size: MAX_IMAGE_CONTENT_LENGTH,
-                redirect: 'follow',
                 signal: abortSignal,
             });
         }
