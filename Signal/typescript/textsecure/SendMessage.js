@@ -769,11 +769,12 @@
             const identifiers = providedIdentifiers.filter(id => id !== myE164 && id !== myUuid);
             if (identifiers.length === 0) {
                 return Promise.resolve({
-                    successfulIdentifiers: [],
-                    failoverIdentifiers: [],
-                    errors: [],
-                    unidentifiedDeliveries: [],
                     dataMessage: proto.toArrayBuffer(),
+                    discoveredIdentifierPairs: [],
+                    errors: [],
+                    failoverIdentifiers: [],
+                    successfulIdentifiers: [],
+                    unidentifiedDeliveries: [],
                 });
             }
             return new Promise((resolve, reject) => {
@@ -933,6 +934,13 @@
         }
         async modifyGroup(changes, options) {
             return this.server.modifyGroup(changes, options);
+        }
+        async leaveGroup(groupId, groupIdentifiers, options) {
+            const proto = new window.textsecure.protobuf.DataMessage();
+            proto.group = new window.textsecure.protobuf.GroupContext();
+            proto.group.id = stringToArrayBuffer(groupId);
+            proto.group.type = window.textsecure.protobuf.GroupContext.Type.QUIT;
+            return this.sendGroupProto(groupIdentifiers, proto, Date.now(), options);
         }
         async sendExpirationTimerUpdateToGroup(groupId, groupIdentifiers, expireTimer, timestamp, profileKey, options) {
             const myNumber = window.textsecure.storage.user.getNumber();

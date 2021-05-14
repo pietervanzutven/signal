@@ -1944,6 +1944,29 @@ require(exports => {
                         this.get('e164'), now, options)));
             }
         }
+        async leaveGroup() {
+            const now = Date.now();
+            if (this.get('type') === 'group') {
+                const groupIdentifiers = this.getRecipients();
+                this.set({ left: true });
+                window.Signal.Data.updateConversation(this.attributes);
+                const model = new Whisper.Message({
+                    group_update: { left: 'You' },
+                    conversationId: this.id,
+                    type: 'outgoing',
+                    sent_at: now,
+                    received_at: now,
+                });
+                const id = await window.Signal.Data.saveMessage(model.attributes, {
+                    Message: Whisper.Message,
+                });
+                model.set({ id });
+                const message = window.MessageController.register(model.id, model);
+                this.addSingleMessage(message);
+                const options = this.getSendOptions();
+                message.send(this.wrapSend(window.textsecure.messaging.leaveGroup(this.id, groupIdentifiers, options)));
+            }
+        }
         async markRead(newestUnreadDate, providedOptions) {
             const options = providedOptions || {};
             window._.defaults(options, { sendReadReceipts: true });
