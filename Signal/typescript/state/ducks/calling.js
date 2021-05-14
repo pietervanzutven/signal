@@ -22,6 +22,7 @@ require(exports => {
     const SET_LOCAL_AUDIO = 'calling/SET_LOCAL_AUDIO';
     const SET_LOCAL_VIDEO = 'calling/SET_LOCAL_VIDEO';
     const SET_LOCAL_VIDEO_FULFILLED = 'calling/SET_LOCAL_VIDEO_FULFILLED';
+    const TOGGLE_PIP = 'calling/TOGGLE_PIP';
     const TOGGLE_SETTINGS = 'calling/TOGGLE_SETTINGS';
     // Action Creators
     function acceptCall(payload) {
@@ -163,6 +164,11 @@ require(exports => {
             payload: doSetLocalVideo(payload),
         };
     }
+    function togglePip() {
+        return {
+            type: TOGGLE_PIP,
+        };
+    }
     function toggleSettings() {
         return {
             type: TOGGLE_SETTINGS,
@@ -189,6 +195,7 @@ require(exports => {
         setRendererCanvas,
         setLocalAudio,
         setLocalVideo,
+        togglePip,
         toggleSettings,
     };
     // Reducer
@@ -202,6 +209,7 @@ require(exports => {
             hasLocalAudio: false,
             hasLocalVideo: false,
             hasRemoteVideo: false,
+            pip: false,
             selectedCamera: undefined,
             selectedMicrophone: undefined,
             selectedSpeaker: undefined,
@@ -263,6 +271,9 @@ require(exports => {
         }
         if (action.type === TOGGLE_SETTINGS) {
             return Object.assign(Object.assign({}, state), { settingsDialogOpen: !state.settingsDialogOpen });
+        }
+        if (action.type === TOGGLE_PIP) {
+            return Object.assign(Object.assign({}, state), { pip: !state.pip });
         }
         return state;
     }

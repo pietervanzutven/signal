@@ -3707,6 +3707,7 @@
     <Content Include="typescript\components\Avatar.js" />
     <Content Include="typescript\components\AvatarPopup.js" />
     <Content Include="typescript\components\CallingDeviceSelection.js" />
+    <Content Include="typescript\components\CallingPip.js" />
     <Content Include="typescript\components\CallManager.js" />
     <Content Include="typescript\components\CallScreen.js" />
     <Content Include="typescript\components\CaptionEditor.js" />

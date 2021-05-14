@@ -945,6 +945,9 @@ img.emoji.jumbo {
   .conversation.placeholder h3 {
     font-size: large; }
 
+.call-manager-wrapper {
+  position: relative; }
+
 @keyframes panel--in {
   from {
     transform: translateX(500px);
@@ -6204,12 +6207,92 @@ img.emoji.jumbo {
 .module-ongoing-call__settings {
   position: absolute;
   top: 25px;
-  right: 25px; }
+  right: 65px; }
   .module-ongoing-call__settings--button {
     background: url("data:image/svg+xml;utf8,<svg id='Source' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><title>settings-solid-16</title><path d='M14.55,6.68l-1.1-.6a.49.49,0,0,1-.24-.58l.36-1.2A1.51,1.51,0,0,0,11.7,2.43l-1.2.36a.49.49,0,0,1-.58-.24l-.6-1.1a1.5,1.5,0,0,0-2.64,0l-.6,1.1a.49.49,0,0,1-.58.24L4.3,2.43A1.51,1.51,0,0,0,2.43,4.3l.36,1.2a.49.49,0,0,1-.24.58l-1.1.6a1.5,1.5,0,0,0,0,2.64l1.1.6a.49.49,0,0,1,.24.58l-.36,1.2A1.51,1.51,0,0,0,4.3,13.57l1.2-.36a.49.49,0,0,1,.58.24l.6,1.1a1.5,1.5,0,0,0,2.64,0l.6-1.1a.49.49,0,0,1,.58-.24l1.2.36a1.51,1.51,0,0,0,1.87-1.87l-.36-1.2a.49.49,0,0,1,.24-.58l1.1-.6A1.5,1.5,0,0,0,14.55,6.68ZM8,12a4,4,0,1,1,4-4A4,4,0,0,1,8,12Z' fill='%23FFFFFF'/></svg>") no-repeat center;
     background-size: 100%;
     height: 22px;
     width: 22px; }
+
+.module-ongoing-call__pip {
+  position: absolute;
+  top: 25px;
+  right: 25px; }
+  .module-ongoing-call__pip--button {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>collapse-24</title><polygon points='15.38 9.68 21.53 3.53 20.47 2.47 14.32 8.62 14.5 7.52 14.5 3 13 3 13 11 21 11 21 9.5 16.48 9.5 15.38 9.68'/><polygon points='3 13 3 14.5 7.52 14.5 8.62 14.32 2.47 20.47 3.53 21.53 9.68 15.38 9.5 16.48 9.5 21 11 21 11 13 3 13' fill='%23FFFFFF'/></svg>") no-repeat center;
+    background-size: 100%;
+    height: 22px;
+    width: 22px; }
+
+.module-calling-pip {
+  backface-visibility: hidden;
+  background-color: #121212;
+  border-radius: 4px;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.05), 0px 8px 20px rgba(0, 0, 0, 0.3);
+  cursor: grab;
+  height: 158px;
+  position: absolute;
+  width: 120px;
+  z-index: 2; }
+  .module-calling-pip__video--remote {
+    align-items: center;
+    background-color: #121212;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    height: 120px;
+    justify-content: center;
+    position: relative;
+    width: 100%; }
+  .module-calling-pip__video--local {
+    bottom: 38px;
+    height: 32px;
+    position: absolute;
+    right: 4px;
+    width: 32px; }
+  .module-calling-pip__video--background {
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 4px 4px 0 0;
+    height: 100%;
+    position: absolute;
+    width: 100%; }
+  .module-calling-pip__video--blur {
+    backdrop-filter: blur(7px);
+    backface-visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 4px 4px 0 0;
+    height: 100%;
+    position: absolute;
+    width: 100%; }
+  .module-calling-pip__video--avatar img {
+    -webkit-user-drag: none;
+    -webkit-user-select: none; }
+  .module-calling-pip__actions {
+    align-items: center;
+    background-color: #f6f6f6;
+    border-radius: 0 0 4px 4px;
+    display: flex;
+    flex-direction: row;
+    height: 38px;
+    justify-content: space-around; }
+    .dark-theme .module-calling-pip__actions {
+      background-color: #4a4a4a; }
+  .module-calling-pip__button--hangup {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><title>phone-down-28</title><path d='M26.92,14c-.17-1-.73-2.64-3.62-4A22.94,22.94,0,0,0,4.7,10c-2.89,1.39-3.45,3-3.62,4a4.92,4.92,0,0,0,.23,2.61A2.2,2.2,0,0,0,3.79,18.1l4.12-.73a2.18,2.18,0,0,0,1.82-2.22c0-.56,0-.93-.06-1.4a1.12,1.12,0,0,1,.9-1.21,23.65,23.65,0,0,1,6.86,0,1.12,1.12,0,0,1,.9,1.21c0,.47,0,.84-.06,1.4a2.18,2.18,0,0,0,1.82,2.22l4.12.73a2.2,2.2,0,0,0,2.48-1.49A4.92,4.92,0,0,0,26.92,14Z' fill='%233B3B3B'/></svg>") no-repeat center;
+    background-size: 100%;
+    height: 28px;
+    width: 28px; }
+    .dark-theme .module-calling-pip__button--hangup {
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><title>phone-down-28</title><path d='M26.92,14c-.17-1-.73-2.64-3.62-4A22.94,22.94,0,0,0,4.7,10c-2.89,1.39-3.45,3-3.62,4a4.92,4.92,0,0,0,.23,2.61A2.2,2.2,0,0,0,3.79,18.1l4.12-.73a2.18,2.18,0,0,0,1.82-2.22c0-.56,0-.93-.06-1.4a1.12,1.12,0,0,1,.9-1.21,23.65,23.65,0,0,1,6.86,0,1.12,1.12,0,0,1,.9,1.21c0,.47,0,.84-.06,1.4a2.18,2.18,0,0,0,1.82,2.22l4.12.73a2.2,2.2,0,0,0,2.48-1.49A4.92,4.92,0,0,0,26.92,14Z' fill='%23DEDEDE'/></svg>") no-repeat center;
+      background-size: 100%; }
+  .module-calling-pip__button--pip {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>expand-24</title><polygon points='14 2 14 3.5 18.52 3.5 19.62 3.32 13.47 9.47 14.53 10.53 20.68 4.38 20.5 5.48 20.5 10 22 10 22 2 14 2'/><polygon points='4.38 20.68 10.53 14.53 9.47 13.47 3.32 19.62 3.5 18.52 3.5 14 2 14 2 22 10 22 10 20.5 5.48 20.5 4.38 20.68' fill='%233B3B3B'/></svg>") no-repeat center;
+    background-size: 100%;
+    height: 24px;
+    width: 24px; }
+    .dark-theme .module-calling-pip__button--pip {
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>expand-24</title><polygon points='14 2 14 3.5 18.52 3.5 19.62 3.32 13.47 9.47 14.53 10.53 20.68 4.38 20.5 5.48 20.5 10 22 10 22 2 14 2'/><polygon points='4.38 20.68 10.53 14.53 9.47 13.47 3.32 19.62 3.5 18.52 3.5 14 2 14 2 22 10 22 10 20.5 5.48 20.5 4.38 20.68' fill='%23DEDEDE'/></svg>") no-repeat center;
+      background-size: 100%; }
 
 .module-left-pane {
   display: inline-flex;
