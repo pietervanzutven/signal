@@ -273,7 +273,6 @@
                 }
                 this.handleOpen(event);
             };
-            const { canDeleteForEveryone } = props;
             this.wideMl = window.matchMedia('(min-width: 926px)');
             this.wideMl.addEventListener('change', this.handleWideMlChange);
             this.state = {
@@ -286,18 +285,19 @@
                 reactionPickerRoot: null,
                 isWide: this.wideMl.matches,
                 containerWidth: 0,
-                canDeleteForEveryone,
+                canDeleteForEveryone: props.canDeleteForEveryone,
             };
         }
         static getDerivedStateFromProps(props, state) {
+            const newState = Object.assign(Object.assign({}, state), { canDeleteForEveryone: props.canDeleteForEveryone && state.canDeleteForEveryone });
             if (!props.isSelected) {
-                return Object.assign(Object.assign({}, state), { isSelected: false, prevSelectedCounter: 0 });
+                return Object.assign(Object.assign({}, newState), { isSelected: false, prevSelectedCounter: 0 });
             }
             if (props.isSelected &&
                 props.isSelectedCounter !== state.prevSelectedCounter) {
-                return Object.assign(Object.assign({}, state), { isSelected: props.isSelected, prevSelectedCounter: props.isSelectedCounter });
+                return Object.assign(Object.assign({}, newState), { isSelected: props.isSelected, prevSelectedCounter: props.isSelectedCounter });
             }
-            return state;
+            return newState;
         }
         componentDidMount() {
             this.startSelectedTimer();
