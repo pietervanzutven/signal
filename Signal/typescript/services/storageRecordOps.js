@@ -37,7 +37,7 @@ require(exports => {
     }
     function applyUnknownFields(record, conversation) {
         if (conversation.get('storageUnknownFields')) {
-            window.log.info(`storageService.applyUnknownFields: Applying unknown fields for ${conversation.get('id')}`);
+            window.log.info('storageService.applyUnknownFields: Applying unknown fields for', conversation.get('id'));
             // eslint-disable-next-line no-param-reassign
             record.__unknownFields = Crypto_1.base64ToArrayBuffer(conversation.get('storageUnknownFields'));
         }
@@ -395,7 +395,7 @@ require(exports => {
                     }
                 }
                 if (!conversationId) {
-                    window.log.error(`mergeAccountRecord: missing conversation id. looking based on ${pinnedConversation.identifier}`);
+                    window.log.error('mergeAccountRecord: missing conversation id. looking based on', pinnedConversation.identifier);
                     return undefined;
                 }
                 if (conversationType === 'private') {

@@ -109,7 +109,7 @@ require(exports => {
                     storageItem = await encryptRecord(storageID, storageRecord);
                 }
                 catch (err) {
-                    window.log.error(`storageService.generateManifest: encrypt record failed: ${err && err.stack ? err.stack : String(err)}`);
+                    window.log.error('storageService.generateManifest: encrypt record failed:', err && err.stack ? err.stack : String(err));
                     throw err;
                 }
                 identifier.raw = storageItem.key;
@@ -162,7 +162,7 @@ require(exports => {
             const typeAndRaw = `${identifier.type}+${storageID}`;
             if (rawDuplicates.has(identifier.raw) ||
                 typeRawDuplicates.has(typeAndRaw)) {
-                window.log.info('storageService.generateManifest: removing duplicate identifier from manifest', storageID);
+                window.log.info('storageService.generateManifest: removing duplicate identifier from manifest', identifier.type);
                 manifestRecordKeys.delete(identifier);
             }
             rawDuplicates.add(identifier.raw);
@@ -170,13 +170,13 @@ require(exports => {
             // Ensure all deletes are not present in the manifest
             const hasDeleteKey = deleteKeys.find(key => Crypto_2.arrayBufferToBase64(key) === storageID);
             if (hasDeleteKey) {
-                window.log.info('storageService.generateManifest: removing key which has been deleted', storageID);
+                window.log.info('storageService.generateManifest: removing key which has been deleted', identifier.type);
                 manifestRecordKeys.delete(identifier);
             }
             // Ensure that there is *exactly* one Account type in the manifest
             if (identifier.type === ITEM_TYPE.ACCOUNT) {
                 if (hasAccountType) {
-                    window.log.info('storageService.generateManifest: removing duplicate account', storageID);
+                    window.log.info('storageService.generateManifest: removing duplicate account');
                     manifestRecordKeys.delete(identifier);
                 }
                 hasAccountType = true;
@@ -242,7 +242,7 @@ require(exports => {
             });
         }
         catch (err) {
-            window.log.error(`storageService.uploadManifest: failed! ${err && err.stack ? err.stack : String(err)}`);
+            window.log.error('storageService.uploadManifest: failed!', err && err.stack ? err.stack : String(err));
             if (err.code === 409) {
                 if (consecutiveConflicts > 3) {
                     window.log.error('storageService.uploadManifest: Exceeded maximum consecutive conflicts');
@@ -323,7 +323,7 @@ require(exports => {
             }
         }
         catch (err) {
-            window.log.error(`storageService.fetchManifest: failed! ${err && err.stack ? err.stack : String(err)}`);
+            window.log.error('storageService.fetchManifest: failed!', err && err.stack ? err.stack : String(err));
             if (err.code === 404) {
                 await createNewManifest();
                 return;
@@ -359,12 +359,12 @@ require(exports => {
             }
             else {
                 isUnsupported = true;
-                window.log.info(`storageService.mergeRecord: Unknown record: ${itemType}::${storageID}`);
+                window.log.info('storageService.mergeRecord: Unknown record:', itemType);
             }
         }
         catch (err) {
             hasError = true;
-            window.log.error('storageService.mergeRecord: merging record failed', storageID, err && err.stack ? err.stack : String(err));
+            window.log.error('storageService.mergeRecord: merging record failed', err && err.stack ? err.stack : String(err));
         }
         return {
             hasConflict,
@@ -400,7 +400,9 @@ require(exports => {
         recordsWithErrors.forEach((record) => {
             localKeys.push(record.storageID);
         });
-        window.log.info(`storageService.processManifest: localKeys.length ${localKeys.length}`);
+        window.log.info('storageService.processManifest: local keys:', localKeys.length);
+        window.log.info('storageService.processManifest: incl. unknown records:', unknownRecordsArray.length);
+        window.log.info('storageService.processManifest: incl. records with errors:', recordsWithErrors.length);
         const remoteKeys = Array.from(remoteKeysTypeMap.keys());
         const remoteOnlySet = new Set();
         remoteKeys.forEach((key) => {
@@ -409,7 +411,7 @@ require(exports => {
             }
         });
         const remoteOnly = Array.from(remoteOnlySet);
-        window.log.info(`storageService.processManifest: remoteOnly.length ${remoteOnly.length}`);
+        window.log.info('storageService.processManifest: remote keys', remoteOnly.length);
         const readOperation = new window.textsecure.protobuf.ReadOperation();
         readOperation.readKey = remoteOnly.map(Crypto_2.base64ToArrayBuffer);
         const credentials = window.storage.get('storageCredentials');
@@ -497,7 +499,7 @@ require(exports => {
                 window.getConversations().forEach((conversation) => {
                     const storageID = conversation.get('storageID');
                     if (storageID && !remoteOnlySet.has(storageID)) {
-                        window.log.info('storageService.processManifest: conversation was not included in remote force push, clearing storageID', conversation.debugID(), storageID);
+                        window.log.info('storageService.processManifest: clearing storageID', conversation.debugID());
                         conversation.unset('storageID');
                     }
                 });
@@ -520,7 +522,7 @@ require(exports => {
             consecutiveConflicts = 0;
         }
         catch (err) {
-            window.log.error(`storageService.processManifest: failed! ${err && err.stack ? err.stack : String(err)}`);
+            window.log.error('storageService.processManifest: failed!', err && err.stack ? err.stack : String(err));
         }
         return false;
     }
@@ -550,7 +552,7 @@ require(exports => {
             }
         }
         catch (err) {
-            window.log.error(`storageService.sync: error processing manifest ${err && err.stack ? err.stack : String(err)}`);
+            window.log.error('storageService.sync: error processing manifest', err && err.stack ? err.stack : String(err));
             // When we're told to backoff, backoff to the max which should be
             // ~5 minutes. If this job was running inside a queue it'll probably time
             // out.
