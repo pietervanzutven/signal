@@ -768,11 +768,6 @@
             if (!destination) {
                 throw new Error('MessageReceiver.handleDataMessage: source and sourceUuid were falsey');
             }
-            if (!window.GV2 && msg.groupV2) {
-                this.removeFromCache(envelope);
-                window.log.info('MessageReceiver.handleDataMessage: dropping GroupV2 message');
-                return undefined;
-            }
             this.deriveGroupsV2Data(msg);
             if (msg.flags &&
                 msg.flags & window.textsecure.protobuf.DataMessage.Flags.END_SESSION) {
@@ -1005,11 +1000,6 @@
                 const sentMessage = syncMessage.sent;
                 if (!sentMessage || !sentMessage.message) {
                     throw new Error('MessageReceiver.handleSyncMessage: sync sent message was missing message');
-                }
-                if (!window.GV2 && sentMessage.message.groupV2) {
-                    this.removeFromCache(envelope);
-                    window.log.info('MessageReceiver.handleSyncMessage: dropping GroupV2 message');
-                    return undefined;
                 }
                 this.deriveGroupsV2Data(sentMessage.message);
                 window.log.info('sent message to', this.getDestination(sentMessage), sentMessage.timestamp.toNumber(), 'from', this.getEnvelopeId(envelope));

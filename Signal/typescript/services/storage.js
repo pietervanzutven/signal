@@ -351,9 +351,7 @@ require(exports => {
             else if (itemType === ITEM_TYPE.GROUPV1 && storageRecord.groupV1) {
                 hasConflict = await storageRecordOps_1.mergeGroupV1Record(storageID, storageRecord.groupV1);
             }
-            else if (window.GV2 &&
-                itemType === ITEM_TYPE.GROUPV2 &&
-                storageRecord.groupV2) {
+            else if (itemType === ITEM_TYPE.GROUPV2 && storageRecord.groupV2) {
                 hasConflict = await storageRecordOps_1.mergeGroupV2Record(storageID, storageRecord.groupV2);
             }
             else if (itemType === ITEM_TYPE.ACCOUNT && storageRecord.account) {

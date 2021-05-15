@@ -86,9 +86,6 @@
             }));
         }
         renderOutgoingAudioCallButton() {
-            if (!window.CALLING) {
-                return null;
-            }
             const { i18n, isMe, onOutgoingAudioCallInConversation, showBackButton, type, } = this.props;
             if (type === 'group' || isMe) {
                 return null;
@@ -100,9 +97,6 @@
             }));
         }
         renderOutgoingVideoCallButton() {
-            if (!window.CALLING) {
-                return null;
-            }
             const { i18n, isMe, type } = this.props;
             if (type === 'group' || isMe) {
                 return null;
