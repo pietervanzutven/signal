@@ -66,9 +66,8 @@
                 maxSize: 30,
                 processBatch: this.cacheRemoveBatch.bind(this),
             });
-            if (options.retryCached) {
-                this.pendingQueue.add(async () => this.queueAllCached());
-            }
+            // We always process our cache before any websocket message
+            this.pendingQueue.add(async () => this.queueAllCached());
         }
         connect() {
             if (this.calledClose) {

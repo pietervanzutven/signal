@@ -1303,15 +1303,14 @@
             }
         }
         connectCount += 1;
-        const options = {
-            retryCached: connectCount === 1,
-            serverTrustRoot: window.getServerTrustRoot(),
-        };
         window.Whisper.deliveryReceiptQueue.pause(); // avoid flood of delivery receipts until we catch up
         window.Whisper.Notifications.disable(); // avoid notification flood until empty
         // initialize the socket and start listening for messages
         window.log.info('Initializing socket and listening for messages');
-        messageReceiver = new window.textsecure.MessageReceiver(OLD_USERNAME, USERNAME, PASSWORD, mySignalingKey, options);
+        const messageReceiverOptions = {
+            serverTrustRoot: window.getServerTrustRoot(),
+        };
+        messageReceiver = new window.textsecure.MessageReceiver(OLD_USERNAME, USERNAME, PASSWORD, mySignalingKey, messageReceiverOptions);
         window.textsecure.messageReceiver = messageReceiver;
         window.Signal.Services.initializeGroupCredentialFetcher();
         preMessageReceiverStatus = null;
@@ -1555,6 +1554,11 @@
     }
     window.Whisper.events.on('manualConnect', manualConnect);
     function manualConnect() {
+        if (isSocketOnline()) {
+            window.log.info('manualConnect: already online; not connecting again');
+            return;
+        }
+        window.log.info('manualConnect: calling connect()');
         connect();
     }
     function onConfiguration(ev) {
