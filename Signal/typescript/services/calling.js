@@ -571,28 +571,26 @@ require(exports => {
             if (call.endedReason === ringrtc_1.CallEndedReason.AcceptedOnAnotherDevice) {
                 acceptedTime = Date.now();
             }
-            const callHistoryDetails = {
+            conversation.addCallHistory({
                 wasIncoming: call.isIncoming,
                 wasVideoCall: call.isVideoCall,
                 wasDeclined,
                 acceptedTime,
                 endedTime: Date.now(),
-            };
-            conversation.addCallHistory(callHistoryDetails);
+            });
         }
         addCallHistoryForFailedIncomingCall(conversation, wasVideoCall) {
-            const callHistoryDetails = {
+            conversation.addCallHistory({
                 wasIncoming: true,
                 wasVideoCall,
                 // Since the user didn't decline, make sure it shows up as a missed call instead
                 wasDeclined: false,
                 acceptedTime: undefined,
                 endedTime: Date.now(),
-            };
-            conversation.addCallHistory(callHistoryDetails);
+            });
         }
         addCallHistoryForAutoEndedIncomingCall(conversation, _reason) {
-            const callHistoryDetails = {
+            conversation.addCallHistory({
                 wasIncoming: true,
                 // We don't actually know, but it doesn't seem that important in this case,
                 // but we could maybe plumb this info through RingRTC
@@ -601,8 +599,7 @@ require(exports => {
                 wasDeclined: false,
                 acceptedTime: undefined,
                 endedTime: Date.now(),
-            };
-            conversation.addCallHistory(callHistoryDetails);
+            });
         }
     }
     exports.CallingClass = CallingClass;
