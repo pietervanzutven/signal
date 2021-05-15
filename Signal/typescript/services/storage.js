@@ -57,7 +57,7 @@ require(exports => {
         return Crypto_1.default.getRandomBytes(16);
     }
     async function generateManifest(version, isNewManifest = false) {
-        window.log.info(`storageService.generateManifest: generating manifest for version ${version}. Is new? ${isNewManifest}`);
+        window.log.info('storageService.generateManifest: generating manifest', version, isNewManifest);
         const ITEM_TYPE = window.textsecure.protobuf.ManifestRecord.Identifier.Type;
         const conversationsToUpdate = [];
         const deleteKeys = [];
@@ -129,21 +129,18 @@ require(exports => {
                 manifestRecordKeys.add(identifier);
             }
         }
-        const unknownRecordsArray = window.storage.get('storage-service-unknown-records') || [];
-        window.log.info(`storageService.generateManifest: adding ${unknownRecordsArray.length} unknown records`);
+        const unknownRecordsArray = (window.storage.get('storage-service-unknown-records') || []).filter((record) => !validRecordTypes.has(record.itemType));
+        window.log.info('storageService.generateManifest: adding unknown records:', unknownRecordsArray.length);
         // When updating the manifest, ensure all "unknown" keys are added to the
         // new manifest, so we don't inadvertently delete something we don't understand
         unknownRecordsArray.forEach((record) => {
-            if (validRecordTypes.has(record.itemType)) {
-                return;
-            }
             const identifier = new window.textsecure.protobuf.ManifestRecord.Identifier();
             identifier.type = record.itemType;
             identifier.raw = Crypto_2.base64ToArrayBuffer(record.storageID);
             manifestRecordKeys.add(identifier);
         });
         const recordsWithErrors = window.storage.get('storage-service-error-records') || [];
-        window.log.info(`storageService.generateManifest: adding ${recordsWithErrors.length} records that had errors in the previous merge`);
+        window.log.info('storageService.generateManifest: adding records that had errors in the previous merge', recordsWithErrors.length);
         // These records failed to merge in the previous fetchManifest, but we still
         // need to include them so that the manifest is complete
         recordsWithErrors.forEach((record) => {
@@ -225,7 +222,7 @@ require(exports => {
         }
         const credentials = window.storage.get('storageCredentials');
         try {
-            window.log.info(`storageService.uploadManifest: inserting ${newItems.size} items, deleting ${deleteKeys.length} keys`);
+            window.log.info('storageService.uploadManifest: keys inserting, deleting:', newItems.size, deleteKeys.length);
             const writeOperation = new window.textsecure.protobuf.WriteOperation();
             writeOperation.manifest = storageManifest;
             writeOperation.insertItem = Array.from(newItems);
@@ -234,7 +231,7 @@ require(exports => {
             await window.textsecure.messaging.modifyStorageRecords(writeOperation.toArrayBuffer(), {
                 credentials,
             });
-            window.log.info(`storageService.uploadManifest: upload done, updating ${conversationsToUpdate.length} conversation(s) with new storageIDs`);
+            window.log.info('storageService.uploadManifest: upload done, updating conversation(s) with new storageIDs:', conversationsToUpdate.length);
             // update conversations with the new storageID
             conversationsToUpdate.forEach(({ conversation, storageID }) => {
                 conversation.set({
@@ -400,6 +397,11 @@ require(exports => {
                 localKeys.push(record.storageID);
             }
         });
+        const recordsWithErrors = window.storage.get('storage-service-error-records') || [];
+        // Do not fetch any records that we failed to merge in the previous fetch
+        recordsWithErrors.forEach((record) => {
+            localKeys.push(record.storageID);
+        });
         window.log.info(`storageService.processManifest: localKeys.length ${localKeys.length}`);
         const remoteKeys = Array.from(remoteKeysTypeMap.keys());
         const remoteOnlySet = new Set();
@@ -458,7 +460,7 @@ require(exports => {
             unknownRecordsArray.forEach((record) => {
                 unknownRecords.set(record.storageID, record);
             });
-            const recordsWithErrors = [];
+            const newRecordsWithErrors = [];
             let hasConflict = false;
             mergedRecords.forEach((mergedRecord) => {
                 if (mergedRecord.isUnsupported) {
@@ -468,7 +470,7 @@ require(exports => {
                     });
                 }
                 else if (mergedRecord.hasError) {
-                    recordsWithErrors.push({
+                    newRecordsWithErrors.push({
                         itemType: mergedRecord.itemType,
                         storageID: mergedRecord.storageID,
                     });
@@ -477,10 +479,13 @@ require(exports => {
             });
             // Filter out all the unknown records we're already supporting
             const newUnknownRecords = Array.from(unknownRecords.values()).filter((record) => !validRecordTypes.has(record.itemType));
-            window.log.info(`storageService.processManifest: Found ${newUnknownRecords.length} unknown records`);
+            window.log.info('storageService.processManifest: Unknown records found:', newUnknownRecords.length);
             window.storage.put('storage-service-unknown-records', newUnknownRecords);
-            window.log.info(`storageService.processManifest: Found ${recordsWithErrors.length} records with errors`);
-            window.storage.put('storage-service-error-records', recordsWithErrors);
+            window.log.info('storageService.processManifest: Records with errors:', newRecordsWithErrors.length);
+            // Refresh the list of records that had errors with every push, that way
+            // this list doesn't grow unbounded and we keep the list of storage keys
+            // fresh.
+            window.storage.put('storage-service-error-records', newRecordsWithErrors);
             const now = Date.now();
             // if the remote only keys are larger or equal to our local keys then it
             // was likely a forced push of storage service. We keep track of these

@@ -23,10 +23,16 @@ require(exports => {
     }
     function addUnknownFields(record, conversation) {
         if (record.__unknownFields) {
-            window.log.info(`storageService.addUnknownFields: Unknown fields found for ${conversation.get('id')}`);
+            window.log.info('storageService.addUnknownFields: Unknown fields found for', conversation.debugID());
             conversation.set({
                 storageUnknownFields: Crypto_1.arrayBufferToBase64(record.__unknownFields),
             });
+        }
+        else if (conversation.get('storageUnknownFields')) {
+            // If the record doesn't have unknown fields attached but we have them
+            // saved locally then we need to clear it out
+            window.log.info('storageService.addUnknownFields: Clearing unknown fields for', conversation.debugID());
+            conversation.unset('storageUnknownFields');
         }
     }
     function applyUnknownFields(record, conversation) {
