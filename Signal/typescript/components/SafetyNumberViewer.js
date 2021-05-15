@@ -17,8 +17,12 @@ require(exports => {
         if (!contact) {
             return null;
         }
+        if (!contact.phoneNumber) {
+            return (react_1.default.createElement("div", { className: "module-safety-number" },
+                react_1.default.createElement("div", { className: "module-safety-number__verify-container" }, i18n('cannotGenerateSafetyNumber'))));
+        }
         const showNumber = Boolean(contact.name || contact.profileName);
-        const numberFragment = showNumber ? ` · ${contact.phoneNumber}` : '';
+        const numberFragment = showNumber && contact.phoneNumber ? ` · ${contact.phoneNumber}` : '';
         const name = `${contact.title}${numberFragment}`;
         const boldName = (react_1.default.createElement("span", { className: "module-safety-number__bold-name" }, name));
         const { isVerified } = contact;
