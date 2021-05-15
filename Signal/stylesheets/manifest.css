@@ -3601,7 +3601,7 @@ img.emoji.jumbo {
     background-color: #121212; }
 
 .module-conversation-header__back-icon {
-  display: none;
+  display: inline-block;
   margin-left: -10px;
   margin-right: -2px;
   width: 24px;
