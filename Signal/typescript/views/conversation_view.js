@@ -288,7 +288,7 @@ Whisper.ConversationView = Whisper.View.extend({
     },
     setPin(value) {
         if (value) {
-            if (window.storage.get('pinnedConversationIds', []).length >= 4) {
+            if (window.storage.get('pinnedConversationIds').length >= 4) {
                 this.showToast(Whisper.PinnedConversationsFullToast);
                 return;
             }
@@ -1589,7 +1589,7 @@ Whisper.ConversationView = Whisper.View.extend({
     async showMembers(_e, providedMembers, options = {}) {
         window._.defaults(options, { needVerify: false });
         let model = providedMembers || this.model.contactCollection;
-        if (!providedMembers && this.model.get('groupVersion') === 2) {
+        if (!providedMembers && this.model.isGroupV2()) {
             model = new Whisper.GroupConversationCollection(this.model.get('membersV2').map(({ conversationId, role }) => ({
                 conversation: window.ConversationController.get(conversationId),
                 isAdmin: role === window.textsecure.protobuf.Member.Role.ADMINISTRATOR,

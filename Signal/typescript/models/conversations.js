@@ -47,8 +47,7 @@ require(exports => {
                 const e164 = this.get('e164');
                 return `${uuid || e164} (${this.id})`;
             }
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            if (this.get('groupVersion') > 1) {
+            if (this.isGroupV2()) {
                 return `groupv2(${this.get('groupId')})`;
             }
             const groupId = this.get('groupId');
@@ -139,6 +138,9 @@ require(exports => {
                 return false;
             }
             return Crypto_1.fromEncodedBinaryToArrayBuffer(groupID).byteLength === 16;
+        }
+        isGroupV2() {
+            return (this.get('groupVersion') || 0) === 2;
         }
         isEverUnregistered() {
             return Boolean(this.get('discoveredUnregisteredAt'));
@@ -309,7 +311,7 @@ require(exports => {
             }
         }
         async fetchLatestGroupV2Data() {
-            if (this.get('groupVersion') !== 2) {
+            if (!this.isGroupV2()) {
                 return;
             }
             await window.Signal.Groups.waitThenMaybeUpdateGroup({
@@ -329,7 +331,7 @@ require(exports => {
             window.Signal.Data.updateConversation(this.attributes);
         }
         getGroupV2Info(groupChange) {
-            if (this.isPrivate() || this.get('groupVersion') !== 2) {
+            if (this.isPrivate() || !this.isGroupV2()) {
                 return undefined;
             }
             return {
@@ -1782,7 +1784,7 @@ require(exports => {
             message.send(promise);
         }
         async updateExpirationTimer(providedExpireTimer, providedSource, receivedAt, options = {}) {
-            if (this.get('groupVersion') === 2) {
+            if (this.isGroupV2()) {
                 if (providedSource || receivedAt) {
                     throw new Error('updateExpirationTimer: GroupV2 timers are not updated this way');
                 }
@@ -2443,7 +2445,7 @@ require(exports => {
             if (this.isPrivate()) {
                 return true;
             }
-            if (this.get('groupVersion') !== 2) {
+            if (!this.isGroupV2()) {
                 return true;
             }
             const accessControlEnum = window.textsecure.protobuf.AccessControl.AccessRequired;
