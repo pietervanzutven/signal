@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.selectors = window.ts.state.selectors || {};
-    const exports = window.ts.state.smart.TimelineLoadingRow = {};
-
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = require("lodash");
     const react_redux_1 = require("react-redux");
@@ -44,4 +38,4 @@
     };
     const smart = react_redux_1.connect(mapStateToProps, actions_1.mapDispatchToProps);
     exports.SmartTimelineLoadingRow = smart(TimelineLoadingRow_1.TimelineLoadingRow);
-})();
+});

@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.selectors = window.ts.state.selectors || {};
-    const exports = window.ts.state.selectors.search = {};
-
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -170,4 +164,4 @@
             return messageSearchResultSelector(message, ourNumber, regionCode, sender, recipient, searchConversationId, selectedMessage);
         };
     });
-})();
+});

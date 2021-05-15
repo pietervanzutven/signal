@@ -246,6 +246,7 @@
     <Content Include="node_modules\lodash\size.js" />
     <Content Include="node_modules\lodash\some.js" />
     <Content Include="node_modules\lodash\throttle.js" />
+    <Content Include="node_modules\lodash\union.js" />
     <Content Include="node_modules\lodash\_baseGet.js" />
     <Content Include="node_modules\lodash\_toPath.js" />
     <Content Include="node_modules\node-forge\forge.all.min.js" />
@@ -3878,6 +3879,7 @@
     <Content Include="typescript\state\smart\MainHeader.js" />
     <Content Include="typescript\state\smart\MessageSearchResult.js" />
     <Content Include="typescript\state\smart\NetworkStatus.js" />
+    <Content Include="typescript\state\smart\ReactionPicker.js" />
     <Content Include="typescript\state\smart\RelinkDialog.js" />
     <Content Include="typescript\state\smart\SafetyNumberViewer.js" />
     <Content Include="typescript\state\smart\ShortcutGuideModal.js" />

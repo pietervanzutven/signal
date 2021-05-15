@@ -35,13 +35,14 @@
     const Quote_1 = require("./Quote");
     const EmbeddedContact_1 = require("./EmbeddedContact");
     const ReactionViewer_1 = require("./ReactionViewer");
-    const ReactionPicker_1 = require("./ReactionPicker");
     const Emoji_1 = require("../emoji/Emoji");
     const LinkPreviewDate_1 = require("./LinkPreviewDate");
     const Attachment_1 = require("../../types/Attachment");
     const timer_1 = require("../../util/timer");
     const isFileDangerous_1 = require("../../util/isFileDangerous");
     const _util_1 = require("../_util");
+    const lib_1 = require("../emoji/lib");
+    const ReactionPicker_1 = require("../../state/smart/ReactionPicker");
     // Same as MIN_WIDTH in ImageGrid.tsx
     const MINIMUM_LINK_PREVIEW_IMAGE_WIDTH = 200;
     const STICKER_SIZE = 200;
@@ -759,8 +760,8 @@
                 reactionPickerRoot &&
                 react_dom_1.createPortal(
                     // eslint-disable-next-line consistent-return
-                    react_1.default.createElement(react_popper_1.Popper, { placement: "top" }, ({ ref, style }) => (react_1.default.createElement(ReactionPicker_1.ReactionPicker, {
-                        i18n: i18n, ref: ref, style: style, selected: selectedReaction, onClose: this.toggleReactionPicker, onPick: emoji => {
+                    react_1.default.createElement(react_popper_1.Popper, { placement: "top" }, ({ ref, style }) => (react_1.default.createElement(ReactionPicker_1.SmartReactionPicker, {
+                        ref: ref, style: style, selected: selectedReaction, onClose: this.toggleReactionPicker, onPick: emoji => {
                             this.toggleReactionPicker(true);
                             reactToMessage(id, {
                                 emoji,
@@ -959,10 +960,11 @@
             if (!reactions || (reactions && reactions.length === 0)) {
                 return null;
             }
+            const reactionsWithEmojiData = reactions.map(reaction => (Object.assign(Object.assign({}, reaction), lib_1.emojiToData(reaction.emoji))));
             // Group by emoji and order each group by timestamp descending
-            const grouped = Object.values(lodash_1.groupBy(reactions, 'emoji')).map(res => lodash_1.orderBy(res, ['timestamp'], ['desc']));
+            const groupedAndSortedReactions = Object.values(lodash_1.groupBy(reactionsWithEmojiData, 'short_name')).map(groupedReactions => lodash_1.orderBy(groupedReactions, [reaction => reaction.from.isMe, 'timestamp'], ['desc', 'desc']));
             // Order groups by length and subsequently by most recent reaction
-            const ordered = lodash_1.orderBy(grouped, ['length', ([{ timestamp }]) => timestamp], ['desc', 'desc']);
+            const ordered = lodash_1.orderBy(groupedAndSortedReactions, ['length', ([{ timestamp }]) => timestamp], ['desc', 'desc']);
             // Take the first three groups for rendering
             const toRender = lodash_1.take(ordered, 3).map(res => ({
                 emoji: res[0].emoji,

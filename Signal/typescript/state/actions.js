@@ -1,10 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    const exports = window.ts.state.actions = {};
-
     Object.defineProperty(exports, "__esModule", { value: true });
     const calling_1 = require("./ducks/calling");
     const conversations_1 = require("./ducks/conversations");
@@ -18,4 +13,4 @@
     const updates_1 = require("./ducks/updates");
     const user_1 = require("./ducks/user");
     exports.mapDispatchToProps = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, calling_1.actions), conversations_1.actions), emojis_1.actions), expiration_1.actions), items_1.actions), network_1.actions), safetyNumber_1.actions), search_1.actions), stickers_1.actions), updates_1.actions), user_1.actions);
-})();
+});

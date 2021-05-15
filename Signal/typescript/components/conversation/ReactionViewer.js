@@ -35,11 +35,48 @@
     const Avatar_1 = require("../Avatar");
     const Emoji_1 = require("../emoji/Emoji");
     const hooks_1 = require("../../util/hooks");
-    const emojisOrder = ['❤️', '👍', '👎', '😂', '😮', '😢', '😡'];
+    const lib_1 = require("../emoji/lib");
+    const DEFAULT_EMOJI_ORDER = [
+        'heart',
+        '+1',
+        '-1',
+        'joy',
+        'open_mouth',
+        'cry',
+        'rage',
+    ];
     exports.ReactionViewer = React.forwardRef((_a, ref) => {
         var { i18n, reactions, onClose, pickedReaction } = _a, rest = __rest(_a, ["i18n", "reactions", "onClose", "pickedReaction"]);
-        const grouped = lodash_1.mapValues(lodash_1.groupBy(reactions, 'emoji'), res => lodash_1.orderBy(res, ['timestamp'], ['desc']));
-        const [selected, setSelected] = React.useState(pickedReaction || 'all');
+        const reactionsWithEmojiData = React.useMemo(() => reactions
+            .map(reaction => {
+                const emojiData = lib_1.emojiToData(reaction.emoji);
+                if (!emojiData) {
+                    return undefined;
+                }
+                return Object.assign(Object.assign({}, reaction), emojiData);
+            })
+            .filter((reactionWithEmojiData) => Boolean(reactionWithEmojiData)), [reactions]);
+        const groupedAndSortedReactions = React.useMemo(() => lodash_1.mapValues(Object.assign({ all: reactionsWithEmojiData }, lodash_1.groupBy(reactionsWithEmojiData, 'short_name')), groupedReactions => lodash_1.orderBy(groupedReactions, ['timestamp'], ['desc'])), [reactionsWithEmojiData]);
+        const reactionCategories = React.useMemo(() => [
+            {
+                id: 'all',
+                index: 0,
+                count: reactionsWithEmojiData.length,
+            },
+            ...Object.entries(groupedAndSortedReactions)
+                .filter(([key]) => key !== 'all')
+                .map(([, [{ short_name: id, emoji }, ...otherReactions]]) => {
+                    return {
+                        id,
+                        index: DEFAULT_EMOJI_ORDER.includes(id)
+                            ? DEFAULT_EMOJI_ORDER.indexOf(id)
+                            : Infinity,
+                        emoji,
+                        count: otherReactions.length + 1,
+                    };
+                }),
+        ].sort((a, b) => a.index - b.index), [reactionsWithEmojiData, groupedAndSortedReactions]);
+        const [selectedReactionCategory, setSelectedReactionCategory,] = React.useState(pickedReaction || 'all');
         const focusRef = React.useRef(null);
         // Handle escape key
         React.useEffect(() => {
@@ -55,60 +92,43 @@
         }, [onClose]);
         // Focus first button and restore focus on unmount
         hooks_1.useRestoreFocus(focusRef);
-        // Create sorted reaction categories, supporting reaction types we don't
-        // explicitly know about yet
-        const renderedEmojis = React.useMemo(() => {
-            const emojiSet = new Set();
-            reactions.forEach(re => emojiSet.add(re.emoji));
-            const arr = lodash_1.sortBy(Array.from(emojiSet), emoji => {
-                const idx = emojisOrder.indexOf(emoji);
-                if (idx > -1) {
-                    return idx;
-                }
-                return Infinity;
-            });
-            return ['all', ...arr];
-        }, [reactions]);
-        const allSorted = React.useMemo(() => {
-            return lodash_1.orderBy(reactions, ['timestamp'], ['desc']);
-        }, [reactions]);
         // If we have previously selected a reaction type that is no longer present
         // (removed on another device, for instance) we should select another
         // reaction type
         React.useEffect(() => {
-            if (!grouped[selected]) {
-                const toSelect = renderedEmojis[0];
-                if (toSelect) {
-                    setSelected(toSelect);
+            if (!reactionCategories.find(({ id }) => id === selectedReactionCategory)) {
+                if (reactionsWithEmojiData.length > 0) {
+                    setSelectedReactionCategory('all');
                 }
                 else if (onClose) {
-                    // We have nothing to render!
                     onClose();
                 }
             }
-        }, [grouped, onClose, renderedEmojis, selected, setSelected]);
-        const selectedReactions = grouped[selected] || allSorted;
+        }, [
+            reactionCategories,
+            onClose,
+            reactionsWithEmojiData,
+            selectedReactionCategory,
+        ]);
+        const selectedReactions = groupedAndSortedReactions[selectedReactionCategory] || [];
         return (React.createElement("div", Object.assign({}, rest, { ref: ref, className: "module-reaction-viewer" }),
-            React.createElement("header", { className: "module-reaction-viewer__header" }, renderedEmojis
-                .filter(e => e === 'all' || Boolean(grouped[e]))
-                .map((cat, index) => {
-                    const re = grouped[cat] || reactions;
-                    const maybeFocusRef = index === 0 ? focusRef : undefined;
-                    const isAll = cat === 'all';
-                    return (React.createElement("button", {
-                        type: "button", key: cat, ref: maybeFocusRef, className: classnames_1.default('module-reaction-viewer__header__button', selected === cat
-                            ? 'module-reaction-viewer__header__button--selected'
-                            : null), onClick: event => {
-                                event.stopPropagation();
-                                setSelected(cat);
-                            }
-                    }, isAll ? (React.createElement("span", { className: "module-reaction-viewer__header__button__all" },
-                        i18n('ReactionsViewer--all'),
-                        "\u2009\u00B7\u2009",
-                        re.length)) : (React.createElement(React.Fragment, null,
-                            React.createElement(Emoji_1.Emoji, { size: 18, emoji: cat }),
-                            React.createElement("span", { className: "module-reaction-viewer__header__button__count" }, re.length)))));
-                })),
+            React.createElement("header", { className: "module-reaction-viewer__header" }, reactionCategories.map(({ id, emoji, count }, index) => {
+                const isAll = index === 0;
+                const maybeFocusRef = isAll ? focusRef : undefined;
+                return (React.createElement("button", {
+                    type: "button", key: id, ref: maybeFocusRef, className: classnames_1.default('module-reaction-viewer__header__button', selectedReactionCategory === id
+                        ? 'module-reaction-viewer__header__button--selected'
+                        : null), onClick: event => {
+                            event.stopPropagation();
+                            setSelectedReactionCategory(id);
+                        }
+                }, isAll ? (React.createElement("span", { className: "module-reaction-viewer__header__button__all" },
+                    i18n('ReactionsViewer--all'),
+                    "\u2009\u00B7\u2009",
+                    count)) : (React.createElement(React.Fragment, null,
+                        React.createElement(Emoji_1.Emoji, { size: 18, emoji: emoji }),
+                        React.createElement("span", { className: "module-reaction-viewer__header__button__count" }, count)))));
+            })),
             React.createElement("main", { className: "module-reaction-viewer__body" }, selectedReactions.map(({ from, emoji }) => (React.createElement("div", { key: `${from.id}-${emoji}`, className: "module-reaction-viewer__body__row" },
                 React.createElement("div", { className: "module-reaction-viewer__body__row__avatar" },
                     React.createElement(Avatar_1.Avatar, { avatarPath: from.avatarPath, conversationType: "direct", size: 32, color: from.color, name: from.name, profileName: from.profileName, phoneNumber: from.phoneNumber, title: from.title, i18n: i18n })),

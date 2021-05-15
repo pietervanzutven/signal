@@ -1,10 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    const exports = window.ts.state.reducer = {};
-
     Object.defineProperty(exports, "__esModule", { value: true });
     const redux_1 = require("redux");
     const calling_1 = require("./ducks/calling");
@@ -33,4 +28,4 @@
     };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exports.reducer = redux_1.combineReducers(exports.reducers);
-})();
+});

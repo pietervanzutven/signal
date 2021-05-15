@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.smart = window.ts.state.smart || {};
-    const exports = window.ts.state.smart.CompositionArea = {};
-
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_redux_1 = require("react-redux");
     const reselect_1 = require("reselect");
@@ -54,4 +48,4 @@
     const smart = react_redux_1.connect(mapStateToProps, dispatchPropsMap);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exports.SmartCompositionArea = smart(CompositionArea_1.CompositionArea);
-})();
+});

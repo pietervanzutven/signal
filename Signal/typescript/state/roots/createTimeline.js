@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.roots = window.ts.state.roots || {};
-    const exports = window.ts.state.roots.createTimeline = {};
-
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -20,4 +14,4 @@
     /* eslint-disable @typescript-eslint/no-explicit-any */
     exports.createTimeline = (store, props) => (react_1.default.createElement(react_redux_1.Provider, { store: store },
         react_1.default.createElement(FilteredTimeline, Object.assign({}, props))));
-})();
+});

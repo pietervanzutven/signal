@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.selectors = window.ts.state.selectors || {};
-    const exports = window.ts.state.selectors.user = {};
-
     Object.defineProperty(exports, "__esModule", { value: true });
     const reselect_1 = require("reselect");
     exports.getUser = (state) => state.user;
@@ -21,4 +15,4 @@
     exports.getStickersPath = reselect_1.createSelector(exports.getUser, (state) => state.stickersPath);
     exports.getPlatform = reselect_1.createSelector(exports.getUser, (state) => state.platform);
     exports.getTempPath = reselect_1.createSelector(exports.getUser, (state) => state.tempPath);
-})();
+});

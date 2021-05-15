@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.selectors = window.ts.state.selectors || {};
-    const exports = window.ts.state.selectors.network = {};
-
     Object.defineProperty(exports, "__esModule", { value: true });
     const reselect_1 = require("reselect");
     const registration_1 = require("../../util/registration");
@@ -15,4 +9,4 @@
             (socketStatus === WebSocket.CONNECTING && !withinConnectingGracePeriod) ||
             socketStatus === WebSocket.CLOSED ||
             socketStatus === WebSocket.CLOSING));
-})();
+});

@@ -409,6 +409,7 @@
   <script type='text/javascript' src='node_modules/lodash/sortBy.js'></script>
   <script type='text/javascript' src='node_modules/lodash/take.js'></script>
   <script type='text/javascript' src='node_modules/lodash/throttle.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/union.js'></script>
   <script type='text/javascript' src='node_modules/lodash/uniq.js'></script>
   <script type='text/javascript' src='node_modules/lodash/uniqBy.js'></script>
   <script type='text/javascript' src='node_modules/lodash/values.js'></script>
@@ -571,6 +572,60 @@
   <script type='text/javascript' src='node_modules/es6-symbol/index.js'></script>
   <script type='text/javascript' src='node_modules/array-index/index.js'></script>
   
+  <script type='text/javascript' src='typescript/state/ducks/calling.js'></script>
+  <script type='text/javascript' src='typescript/state/ducks/conversations.js'></script>
+  <script type='text/javascript' src='typescript/state/ducks/emojis.js'></script>
+  <script type='text/javascript' src='typescript/state/ducks/expiration.js'></script>
+  <script type='text/javascript' src='typescript/state/ducks/items.js'></script>
+  <script type='text/javascript' src='typescript/state/ducks/network.js'></script>
+  <script type='text/javascript' src='typescript/state/ducks/noop.js'></script>
+  <script type='text/javascript' src='typescript/state/ducks/safetyNumber.js'></script>
+  <script type='text/javascript' src='typescript/state/ducks/search.js'></script>
+  <script type='text/javascript' src='typescript/state/ducks/stickers.js'></script>
+  <script type='text/javascript' src='typescript/state/ducks/updates.js'></script>
+  <script type='text/javascript' src='typescript/state/ducks/user.js'></script>
+  <script type='text/javascript' src='typescript/state/actions.js'></script>
+  <script type='text/javascript' src='typescript/state/reducer.js'></script>
+  <script type='text/javascript' src='typescript/state/types.js'></script>
+  <script type='text/javascript' src='typescript/state/createStore.js'></script>
+  <script type='text/javascript' src='typescript/state/selectors/user.js'></script>
+  <script type='text/javascript' src='typescript/state/selectors/conversations.js'></script>
+  <script type='text/javascript' src='typescript/state/selectors/network.js'></script>
+  <script type='text/javascript' src='typescript/state/selectors/safetyNumber.js'></script>
+  <script type='text/javascript' src='typescript/state/selectors/search.js'></script>
+  <script type='text/javascript' src='typescript/state/selectors/stickers.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/CallingDeviceSelection.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/CallManager.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/ContactName.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/CompositionArea.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/ExpiredBuildDialog.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/HeroRow.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/MainHeader.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/MessageSearchResult.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/NetworkStatus.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/ReactionPicker.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/RelinkDialog.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/UpdateDialog.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/LastSeenIndicator.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/LeftPane.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/SafetyNumberViewer.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/ShortcutGuideModal.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/StickerManager.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/StickerPreviewModal.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/TypingBubble.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/EmojiPicker.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/TimelineItem.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/TimelineLoadingRow.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/Timeline.js'></script>
+  <script type='text/javascript' src='typescript/state/roots/createCallManager.js'></script>
+  <script type='text/javascript' src='typescript/state/roots/createCompositionArea.js'></script>
+  <script type='text/javascript' src='typescript/state/roots/createLeftPane.js'></script>
+  <script type='text/javascript' src='typescript/state/roots/createSafetyNumberViewer.js'></script>
+  <script type='text/javascript' src='typescript/state/roots/createShortcutGuideModal.js'></script>
+  <script type='text/javascript' src='typescript/state/roots/createStickerManager.js'></script>
+  <script type='text/javascript' src='typescript/state/roots/createStickerPreviewModal.js'></script>
+  <script type='text/javascript' src='typescript/state/roots/createTimeline.js'></script>
+
   <script type='text/javascript' src='js/modules/auto_orient_image.js'></script>
   <script type='text/javascript' src='js/modules/types/schema_version.js'></script>
   <script type='text/javascript' src='typescript/protobuf/protobuf.js'></script>
@@ -809,59 +864,6 @@
   <script type='text/javascript' src='js/modules/attachment_downloads.js'></script>
   <script type='text/javascript' src='js/modules/stickers.js'></script>
   <script type='text/javascript' src='js/logging.js'></script>
-
-  <script type='text/javascript' src='typescript/state/ducks/calling.js'></script>
-  <script type='text/javascript' src='typescript/state/ducks/conversations.js'></script>
-  <script type='text/javascript' src='typescript/state/ducks/emojis.js'></script>
-  <script type='text/javascript' src='typescript/state/ducks/expiration.js'></script>
-  <script type='text/javascript' src='typescript/state/ducks/items.js'></script>
-  <script type='text/javascript' src='typescript/state/ducks/network.js'></script>
-  <script type='text/javascript' src='typescript/state/ducks/noop.js'></script>
-  <script type='text/javascript' src='typescript/state/ducks/safetyNumber.js'></script>
-  <script type='text/javascript' src='typescript/state/ducks/search.js'></script>
-  <script type='text/javascript' src='typescript/state/ducks/stickers.js'></script>
-  <script type='text/javascript' src='typescript/state/ducks/updates.js'></script>
-  <script type='text/javascript' src='typescript/state/ducks/user.js'></script>
-  <script type='text/javascript' src='typescript/state/actions.js'></script>
-  <script type='text/javascript' src='typescript/state/reducer.js'></script>
-  <script type='text/javascript' src='typescript/state/types.js'></script>
-  <script type='text/javascript' src='typescript/state/createStore.js'></script>
-  <script type='text/javascript' src='typescript/state/selectors/user.js'></script>
-  <script type='text/javascript' src='typescript/state/selectors/conversations.js'></script>
-  <script type='text/javascript' src='typescript/state/selectors/network.js'></script>
-  <script type='text/javascript' src='typescript/state/selectors/safetyNumber.js'></script>
-  <script type='text/javascript' src='typescript/state/selectors/search.js'></script>
-  <script type='text/javascript' src='typescript/state/selectors/stickers.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/CallingDeviceSelection.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/CallManager.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/ContactName.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/CompositionArea.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/ExpiredBuildDialog.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/HeroRow.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/MainHeader.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/MessageSearchResult.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/NetworkStatus.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/RelinkDialog.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/UpdateDialog.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/LastSeenIndicator.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/LeftPane.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/SafetyNumberViewer.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/ShortcutGuideModal.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/StickerManager.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/StickerPreviewModal.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/TypingBubble.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/EmojiPicker.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/TimelineItem.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/TimelineLoadingRow.js'></script>
-  <script type='text/javascript' src='typescript/state/smart/Timeline.js'></script>
-  <script type='text/javascript' src='typescript/state/roots/createCallManager.js'></script>
-  <script type='text/javascript' src='typescript/state/roots/createCompositionArea.js'></script>
-  <script type='text/javascript' src='typescript/state/roots/createLeftPane.js'></script>
-  <script type='text/javascript' src='typescript/state/roots/createSafetyNumberViewer.js'></script>
-  <script type='text/javascript' src='typescript/state/roots/createShortcutGuideModal.js'></script>
-  <script type='text/javascript' src='typescript/state/roots/createStickerManager.js'></script>
-  <script type='text/javascript' src='typescript/state/roots/createStickerPreviewModal.js'></script>
-  <script type='text/javascript' src='typescript/state/roots/createTimeline.js'></script>
   
   <script type='text/javascript' src='typescript/textsecure/ContactsParser.js'></script>
   <script type='text/javascript' src='typescript/textsecure/Crypto.js'></script>

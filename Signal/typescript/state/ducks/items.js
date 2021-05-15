@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.ducks = window.ts.state.ducks || {};
-    const exports = window.ts.state.ducks.items = {};
-
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
@@ -83,4 +77,4 @@
     // Selectors
     const selectRecentEmojis = reselect_1.createSelector(({ emojis }) => emojis.recents, recents => recents.filter(lib_1.isShortName));
     exports.useRecentEmojis = () => react_redux_1.useSelector(selectRecentEmojis);
-})();
+});

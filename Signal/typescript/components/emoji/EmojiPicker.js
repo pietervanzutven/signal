@@ -41,14 +41,14 @@
         'symbol',
         'flag',
     ];
-    exports.EmojiPicker = React.memo(React.forwardRef(({ i18n, doSend, onPickEmoji, skinTone = 0, disableSkinTones = false, onSetSkinTone, recentEmojis = [], style, onClose, }, ref) => {
+    exports.EmojiPicker = React.memo(React.forwardRef(({ i18n, doSend, onPickEmoji, skinTone = 0, onSetSkinTone, recentEmojis = [], style, onClose, }, ref) => {
         const focusRef = React.useRef(null);
         const [firstRecent] = React.useState(recentEmojis);
         const [selectedCategory, setSelectedCategory] = React.useState(categories[0]);
         const [searchMode, setSearchMode] = React.useState(false);
         const [searchText, setSearchText] = React.useState('');
         const [scrollToRow, setScrollToRow] = React.useState(0);
-        const [selectedTone, setSelectedTone] = React.useState(disableSkinTones ? 0 : skinTone);
+        const [selectedTone, setSelectedTone] = React.useState(skinTone);
         const handleToggleSearch = React.useCallback((e) => {
             e.stopPropagation();
             setSearchText('');
@@ -189,11 +189,11 @@
                 React.createElement(react_virtualized_1.AutoSizer, null, ({ width, height }) => (React.createElement(react_virtualized_1.Grid, { key: searchText, className: "module-emoji-picker__body", width: width, height: height, columnCount: COL_COUNT, columnWidth: 38, rowHeight: getRowHeight, rowCount: emojiGrid.length, cellRenderer: cellRenderer, scrollToRow: scrollToRow, scrollToAlignment: "start", onSectionRendered: onSectionRendered }))))) : (React.createElement("div", { className: classnames_1.default('module-emoji-picker__body', 'module-emoji-picker__body--empty') },
                     i18n('EmojiPicker--empty'),
                     React.createElement(Emoji_1.Emoji, { shortName: "slightly_frowning_face", size: 16, inline: true, style: { marginLeft: '4px' } }))),
-            !disableSkinTones ? (React.createElement("footer", { className: "module-emoji-picker__footer" }, [0, 1, 2, 3, 4, 5].map(tone => (React.createElement("button", {
+            React.createElement("footer", { className: "module-emoji-picker__footer" }, [0, 1, 2, 3, 4, 5].map(tone => (React.createElement("button", {
                 type: "button", key: tone, "data-tone": tone, onClick: handlePickTone, title: i18n('EmojiPicker--skin-tone', [`${tone}`]), className: classnames_1.default('module-emoji-picker__button', 'module-emoji-picker__button--footer', selectedTone === tone
                     ? 'module-emoji-picker__button--selected'
                     : null)
             },
-                React.createElement(Emoji_1.Emoji, { shortName: "hand", skinTone: tone, size: 20 })))))) : null));
+                React.createElement(Emoji_1.Emoji, { shortName: "hand", skinTone: tone, size: 20 })))))));
     }));
 })();

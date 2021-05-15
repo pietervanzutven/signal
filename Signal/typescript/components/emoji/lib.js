@@ -162,9 +162,19 @@
     }
     exports.convertShortName = convertShortName;
     function emojiToImage(emoji) {
+        if (!Object.prototype.hasOwnProperty.call(imageByEmoji, emoji)) {
+            return undefined;
+        }
         return imageByEmoji[emoji];
     }
     exports.emojiToImage = emojiToImage;
+    function emojiToData(emoji) {
+        if (!Object.prototype.hasOwnProperty.call(dataByEmoji, emoji)) {
+            return undefined;
+        }
+        return dataByEmoji[emoji];
+    }
+    exports.emojiToData = emojiToData;
     function getCountOfAllMatches(str, regex) {
         let match = regex.exec(str);
         let count = 0;

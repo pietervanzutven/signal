@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.ducks = window.ts.state.ducks || {};
-    const exports = window.ts.state.ducks.emojis = {};
-
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -43,4 +37,4 @@
         return state;
     }
     exports.reducer = reducer;
-})();
+});
