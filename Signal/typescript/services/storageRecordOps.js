@@ -359,6 +359,7 @@ require(exports => {
         }
         if (remotelyPinnedConversationClasses) {
             const locallyPinnedConversations = window.ConversationController._conversations.filter(conversation => Boolean(conversation.get('isPinned')));
+            window.log.info('storageService.mergeAccountRecord: Local pinned', locallyPinnedConversations.length);
             const remotelyPinnedConversationPromises = remotelyPinnedConversationClasses.map(async (pinnedConversation) => {
                 let conversationId;
                 let conversationType = 'private';
@@ -391,11 +392,11 @@ require(exports => {
                         break;
                     }
                     default: {
-                        window.log.error('mergeAccountRecord: Invalid identifier received');
+                        window.log.error('storageService.mergeAccountRecord: Invalid identifier received');
                     }
                 }
                 if (!conversationId) {
-                    window.log.error('mergeAccountRecord: missing conversation id. looking based on', pinnedConversation.identifier);
+                    window.log.error('storageService.mergeAccountRecord: missing conversation id. looking based on', pinnedConversation.identifier);
                     return undefined;
                 }
                 if (conversationType === 'private') {
@@ -406,8 +407,8 @@ require(exports => {
             const remotelyPinnedConversations = (await Promise.all(remotelyPinnedConversationPromises)).filter((conversation) => conversation !== undefined);
             const remotelyPinnedConversationIds = remotelyPinnedConversations.map(({ id }) => id);
             const conversationsToUnpin = locallyPinnedConversations.filter(({ id }) => !remotelyPinnedConversationIds.includes(id));
-            window.log.info(`mergeAccountRecord: unpinning ${conversationsToUnpin.length} conversations`);
-            window.log.info(`mergeAccountRecord: pinning ${conversationsToUnpin.length} conversations`);
+            window.log.info('storageService.mergeAccountRecord: unpinning', conversationsToUnpin.length);
+            window.log.info('storageService.mergeAccountRecord: pinning', remotelyPinnedConversations.length);
             conversationsToUnpin.forEach(conversation => {
                 conversation.set({ isPinned: false, pinIndex: undefined });
                 updateConversation(conversation.attributes);

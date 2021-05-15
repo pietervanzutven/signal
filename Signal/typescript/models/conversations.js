@@ -407,7 +407,7 @@ require(exports => {
                 blocked = true;
             }
             if (!viaStorageServiceSync && !isBlocked && blocked) {
-                this.captureChange();
+                this.captureChange('block');
             }
         }
         unblock({ viaStorageServiceSync = false } = {}) {
@@ -429,7 +429,7 @@ require(exports => {
                 unblocked = true;
             }
             if (!viaStorageServiceSync && isBlocked && unblocked) {
-                this.captureChange();
+                this.captureChange('unblock');
             }
             return unblocked;
         }
@@ -438,7 +438,7 @@ require(exports => {
             this.set({ profileSharing: true });
             const after = this.get('profileSharing');
             if (!viaStorageServiceSync && Boolean(before) !== Boolean(after)) {
-                this.captureChange();
+                this.captureChange('profileSharing');
             }
         }
         disableProfileSharing({ viaStorageServiceSync = false } = {}) {
@@ -446,7 +446,7 @@ require(exports => {
             this.set({ profileSharing: false });
             const after = this.get('profileSharing');
             if (!viaStorageServiceSync && Boolean(before) !== Boolean(after)) {
-                this.captureChange();
+                this.captureChange('profileSharing');
             }
         }
         hasDraft() {
@@ -1038,7 +1038,7 @@ require(exports => {
             if (!options.viaStorageServiceSync &&
                 !keyChange &&
                 beginningVerified !== verified) {
-                this.captureChange();
+                this.captureChange('verified');
             }
             // Three situations result in a verification notice in the conversation:
             //   1) The message came from an explicit verification in another client (not
@@ -2003,7 +2003,7 @@ require(exports => {
                 if (after) {
                     this.unpin();
                 }
-                this.captureChange();
+                this.captureChange('isArchived');
             }
         }
         async updateExpirationTimer(providedExpireTimer, providedSource, receivedAt, options = {}) {
@@ -2511,7 +2511,7 @@ require(exports => {
                 });
                 if (!viaStorageServiceSync &&
                     profileKey !== this.get('storageProfileKey')) {
-                    this.captureChange();
+                    this.captureChange('profileKey');
                 }
                 await Promise.all([
                     this.deriveAccessKeyIfNeeded(),
@@ -2709,12 +2709,12 @@ require(exports => {
         // [X] blocked
         // [X] whitelisted
         // [X] archived
-        captureChange() {
+        captureChange(property) {
             if (!window.Signal.RemoteConfig.isEnabled('desktop.storageWrite')) {
                 window.log.info('conversation.captureChange: Returning early; desktop.storageWrite is falsey');
                 return;
             }
-            window.log.info(`storageService[captureChange] marking ${this.debugID()} as needing sync`);
+            window.log.info('storageService[captureChange]', property, this.idForLogging());
             this.set({ needsStorageServiceSync: true });
             this.queueJob(() => {
                 Services.storageServiceUploadJob();
@@ -2824,6 +2824,7 @@ require(exports => {
             return;
         }
         pin() {
+            window.log.info('pinning', this.idForLogging());
             const pinnedConversationIds = new Set(window.storage.get('pinnedConversationIds', []));
             this.set('isPinned', true);
             this.set('pinIndex', pinnedConversationIds.size);
@@ -2835,6 +2836,7 @@ require(exports => {
             this.writePinnedConversations([...pinnedConversationIds]);
         }
         unpin() {
+            window.log.info('un-pinning', this.idForLogging());
             const pinnedConversationIds = new Set(window.storage.get('pinnedConversationIds', []));
             this.set('isPinned', false);
             this.set('pinIndex', undefined);
@@ -2847,7 +2849,7 @@ require(exports => {
             const myId = window.ConversationController.getOurConversationId();
             const me = window.ConversationController.get(myId);
             if (me) {
-                me.captureChange();
+                me.captureChange('pin');
             }
         }
     }
