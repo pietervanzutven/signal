@@ -13,19 +13,13 @@ require(exports => {
         constructor(props) {
             super(props);
             this.updateAcceptedTimer = () => {
-                const { acceptedTime } = this.state;
-                const { callState } = this.props;
-                if (acceptedTime) {
-                    this.setState({
-                        acceptedTime,
-                        acceptedDuration: Date.now() - acceptedTime,
-                    });
+                const { callDetails } = this.props;
+                if (!callDetails) {
+                    return;
                 }
-                else if (callState === Calling_1.CallState.Accepted ||
-                    callState === Calling_1.CallState.Reconnecting) {
+                if (callDetails.acceptedTime) {
                     this.setState({
-                        acceptedTime: Date.now(),
-                        acceptedDuration: 1,
+                        acceptedDuration: Date.now() - callDetails.acceptedTime,
                     });
                 }
             };
@@ -86,7 +80,6 @@ require(exports => {
                 setLocalVideo({ callId: callDetails.callId, enabled: !hasLocalVideo });
             };
             this.state = {
-                acceptedTime: null,
                 acceptedDuration: null,
                 showControls: true,
             };
