@@ -16,9 +16,9 @@ require(exports => {
     const MAX_CONTENT_TYPE_LENGTH_TO_PARSE = 100;
     // Though we'll accept HTML of any Content-Length (including no specified length), we
     //   will only load some of the HTML. So we might start loading a 99 gigabyte HTML page
-    //   but only parse the first 100 kilobytes. However, if the Content-Length is less than
+    //   but only parse the first 500 kilobytes. However, if the Content-Length is less than
     //   this, we won't waste space.
-    const MAX_HTML_BYTES_TO_LOAD = 100 * 1024;
+    const MAX_HTML_BYTES_TO_LOAD = 500 * 1024;
     // `<title>x` is 8 bytes. Nothing else (meta tags, etc) will even fit, so we can ignore
     //   it. This is mostly to protect us against empty response bodies.
     const MIN_HTML_CONTENT_LENGTH = 8;
@@ -208,10 +208,6 @@ require(exports => {
                     result = parseHtmlBytes(buffer.slice(0, bytesLoadedSoFar), httpCharset);
                     const hasLoadedMaxBytes = bytesLoadedSoFar >= maxHtmlBytesToLoad;
                     if (hasLoadedMaxBytes) {
-                        break;
-                    }
-                    const hasFinishedLoadingHead = result.body.innerHTML.length > 0;
-                    if (hasFinishedLoadingHead) {
                         break;
                     }
                 }
