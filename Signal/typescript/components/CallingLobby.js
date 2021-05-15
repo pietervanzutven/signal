@@ -7,7 +7,7 @@ require(exports => {
     const react_1 = __importDefault(require("react"));
     const CallingButton_1 = require("./CallingButton");
     const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
-    exports.CallingLobby = ({ callDetails, hasLocalAudio, hasLocalVideo, i18n, isGroupCall = false, onCallCanceled, onJoinCall, setLocalAudio, setLocalPreview, setLocalVideo, toggleParticipants, toggleSettings, }) => {
+    exports.CallingLobby = ({ availableCameras, callDetails, hasLocalAudio, hasLocalVideo, i18n, isGroupCall = false, onCallCanceled, onJoinCall, setLocalAudio, setLocalPreview, setLocalVideo, toggleParticipants, toggleSettings, }) => {
         const localVideoRef = react_1.default.useRef(null);
         const toggleAudio = react_1.default.useCallback(() => {
             if (!callDetails) {
@@ -48,9 +48,12 @@ require(exports => {
                 document.removeEventListener('keydown', handleKeyDown);
             };
         }, [toggleVideo, toggleAudio]);
+        // eslint-disable-next-line no-nested-ternary
         const videoButtonType = hasLocalVideo
             ? CallingButton_1.CallingButtonType.VIDEO_ON
-            : CallingButton_1.CallingButtonType.VIDEO_OFF;
+            : availableCameras.length === 0
+                ? CallingButton_1.CallingButtonType.VIDEO_DISABLED
+                : CallingButton_1.CallingButtonType.VIDEO_OFF;
         const audioButtonType = hasLocalAudio
             ? CallingButton_1.CallingButtonType.AUDIO_ON
             : CallingButton_1.CallingButtonType.AUDIO_OFF;
@@ -61,7 +64,7 @@ require(exports => {
                     isGroupCall ? (react_1.default.createElement("button", { type: "button", "aria-label": i18n('calling__participants'), className: "module-calling-tools__button module-calling-button__participants", onClick: toggleParticipants })) : null,
                     react_1.default.createElement("button", { type: "button", "aria-label": i18n('callingDeviceSelection__settings'), className: "module-calling-tools__button module-calling-button__settings", onClick: toggleSettings }))),
             react_1.default.createElement("div", { className: "module-calling-lobby__video" },
-                hasLocalVideo ? (react_1.default.createElement("video", { ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: callDetails.avatarPath, color: callDetails.color },
+                hasLocalVideo && availableCameras.length > 0 ? (react_1.default.createElement("video", { ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: callDetails.avatarPath, color: callDetails.color },
                     react_1.default.createElement("div", { className: "module-calling-lobby__video-off--icon" }),
                     react_1.default.createElement("span", { className: "module-calling-lobby__video-off--text" }, i18n('calling__your-video-is-off')))),
                 react_1.default.createElement("div", { className: "module-calling__buttons" },

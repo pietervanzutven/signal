@@ -11,7 +11,7 @@ require(exports => {
     const CallScreen_1 = require("./CallScreen");
     const IncomingCallBar_1 = require("./IncomingCallBar");
     const Calling_1 = require("../types/Calling");
-    exports.CallManager = ({ acceptCall, callDetails, callState, callEndedReason, cancelCall, closeNeedPermissionScreen, declineCall, hangUp, hasLocalAudio, hasLocalVideo, hasRemoteVideo, i18n, pip, renderDeviceSelection, setLocalAudio, setLocalPreview, setLocalVideo, setRendererCanvas, settingsDialogOpen, startCall, toggleParticipants, togglePip, toggleSettings, }) => {
+    exports.CallManager = ({ acceptCall, availableCameras, callDetails, callState, callEndedReason, cancelCall, closeNeedPermissionScreen, declineCall, hangUp, hasLocalAudio, hasLocalVideo, hasRemoteVideo, i18n, pip, renderDeviceSelection, setLocalAudio, setLocalPreview, setLocalVideo, setRendererCanvas, settingsDialogOpen, startCall, toggleParticipants, togglePip, toggleSettings, }) => {
         if (!callDetails) {
             return null;
         }
@@ -29,7 +29,7 @@ require(exports => {
         if (!callState) {
             return (react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement(CallingLobby_1.CallingLobby, {
-                    callDetails: callDetails, callState: callState, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, isGroupCall: false, onCallCanceled: cancelCall, onJoinCall: () => {
+                    availableCameras: availableCameras, callDetails: callDetails, callState: callState, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, isGroupCall: false, onCallCanceled: cancelCall, onJoinCall: () => {
                         startCall({ callDetails });
                     }, setLocalPreview: setLocalPreview, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, toggleParticipants: toggleParticipants, toggleSettings: toggleSettings
                 }),
