@@ -1490,7 +1490,6 @@ require(exports => {
                     let promises = [];
                     // If we successfully sent to a user, we can remove our unregistered flag.
                     result.successfulIdentifiers.forEach((identifier) => {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         const c = window.ConversationController.get(identifier);
                         if (c && c.isEverUnregistered()) {
                             c.setRegistered();
