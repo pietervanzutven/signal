@@ -127,8 +127,7 @@ require(exports => {
         isMe() {
             const e164 = this.get('e164');
             const uuid = this.get('uuid');
-            return ((e164 && e164 === this.ourNumber) ||
-                (uuid && uuid === this.ourUuid));
+            return Boolean((e164 && e164 === this.ourNumber) || (uuid && uuid === this.ourUuid));
         }
         isGroupV1() {
             const groupId = this.get('groupId');
