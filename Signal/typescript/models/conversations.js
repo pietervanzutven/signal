@@ -844,6 +844,8 @@ require(exports => {
             const messageRequestEnum = window.textsecure.protobuf.SyncMessage.MessageRequestResponse.Type;
             const isLocalAction = !fromSync && !viaStorageServiceSync;
             const ourConversationId = window.ConversationController.getOurConversationId();
+            const currentMessageRequestState = this.get('messageRequestResponseType');
+            const didResponseChange = response !== currentMessageRequestState;
             // Apply message request response locally
             this.set({
                 messageRequestResponseType: response,
@@ -852,7 +854,9 @@ require(exports => {
             if (response === messageRequestEnum.ACCEPT) {
                 this.unblock({ viaStorageServiceSync });
                 this.enableProfileSharing({ viaStorageServiceSync });
-                await this.handleReadAndDownloadAttachments({ isLocalAction });
+                if (didResponseChange) {
+                    await this.handleReadAndDownloadAttachments({ isLocalAction });
+                }
                 if (isLocalAction) {
                     if (this.isGroupV1() || this.isPrivate()) {
                         this.sendProfileKeyUpdate();

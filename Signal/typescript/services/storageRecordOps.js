@@ -284,12 +284,18 @@ require(exports => {
         addUnknownFields(groupV2Record, conversation);
         const hasPendingChanges = doesRecordHavePendingChanges(await toGroupV2Record(conversation), groupV2Record, conversation);
         updateConversation(conversation.attributes);
+        const isGroupNewToUs = !lodash_1.isNumber(conversation.get('revision'));
         const isFirstSync = !lodash_1.isNumber(window.storage.get('manifestVersion'));
         const dropInitialJoinMessage = isFirstSync;
-        groups_1.waitThenMaybeUpdateGroup({
-            conversation,
-            dropInitialJoinMessage,
-        });
+        // We don't need to update GroupV2 groups all the time. We fetch group state the first
+        //   time we hear about these groups, from then on we rely on incoming messages or
+        //   the user opening that conversation.
+        if (isGroupNewToUs) {
+            groups_1.waitThenMaybeUpdateGroup({
+                conversation,
+                dropInitialJoinMessage,
+            });
+        }
         return hasPendingChanges;
     }
     exports.mergeGroupV2Record = mergeGroupV2Record;
