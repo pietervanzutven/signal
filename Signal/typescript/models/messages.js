@@ -77,7 +77,8 @@ require(exports => {
             const contact = this.getPropsForEmbeddedContact();
             return Object.assign(Object.assign({}, this.attributes), {
                 // We need this in the reducer to detect if the message's height has changed
-            hasSignalAccount: contact ? Boolean(contact.signalAccount) : null });
+                hasSignalAccount: contact ? Boolean(contact.signalAccount) : null
+            });
         }
         isNormalBubble() {
             return (!this.isCallHistory() &&
@@ -207,8 +208,10 @@ require(exports => {
                 const isOutgoingKeyError = Boolean(_.find(errorsForContact, error => error.name === OUTGOING_KEY_ERROR));
                 const isUnidentifiedDelivery = window.storage.get('unidentifiedDeliveryIndicators') &&
                     this.isUnidentifiedDelivery(id, unidentifiedLookup);
-            return Object.assign(Object.assign({}, this.findAndFormatContact(id)), { status: this.getStatus(id), errors: errorsForContact, isOutgoingKeyError,
-                isUnidentifiedDelivery, onSendAnyway: () => this.trigger('force-send', { contactId: id, messageId: this.id }), onShowSafetyNumber: () => this.trigger('show-identity', id) });
+                return Object.assign(Object.assign({}, this.findAndFormatContact(id)), {
+                    status: this.getStatus(id), errors: errorsForContact, isOutgoingKeyError,
+                    isUnidentifiedDelivery, onSendAnyway: () => this.trigger('force-send', { contactId: id, messageId: this.id }), onShowSafetyNumber: () => this.trigger('show-identity', id)
+                });
             });
             // The prefix created here ensures that contacts with errors are listed
             //   first; otherwise it's alphabetical
@@ -216,7 +219,8 @@ require(exports => {
             return {
                 sentAt: this.get('sent_at'),
                 receivedAt: this.get('received_at'),
-            message: Object.assign(Object.assign({}, this.getPropsForMessage()), { disableMenu: true, disableScroll: true, 
+                message: Object.assign(Object.assign({}, this.getPropsForMessage()), {
+                    disableMenu: true, disableScroll: true,
                     // To ensure that group avatar doesn't show up
                     conversationType: 'direct', downloadNewVersion: () => {
                         this.trigger('download-new-version');
@@ -232,7 +236,8 @@ require(exports => {
                         this.trigger('navigate-to', url);
                     }, reactWith: (emoji) => {
                         this.trigger('react-with', emoji);
-                } }),
+                    }
+                }),
                 errors,
                 contacts: sortedContacts,
             };
@@ -320,8 +325,10 @@ require(exports => {
             });
             const ourId = window.ConversationController.getOurConversationId();
             const formattedContact = this.findAndFormatContact(sourceId);
-        const basicProps = Object.assign(Object.assign({}, formattedContact), { type: 'fromOther', timespan,
-            disabled });
+            const basicProps = Object.assign(Object.assign({}, formattedContact), {
+                type: 'fromOther', timespan,
+                disabled
+            });
             if (fromSync) {
                 return Object.assign(Object.assign({}, basicProps), { type: 'fromSync' });
             }
@@ -520,9 +527,11 @@ require(exports => {
                         uuid: range.mentionUuid,
                     });
                     const conversation = this.findContact(contactID);
-            return Object.assign(Object.assign({}, range), { conversationID: contactID, 
+                    return Object.assign(Object.assign({}, range), {
+                        conversationID: contactID,
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                replacementText: conversation.getTitle() });
+                        replacementText: conversation.getTitle()
+                    });
                 })
                 .sort((a, b) => b.start - a.start);
         }
@@ -626,12 +635,14 @@ require(exports => {
                 return null;
             }
             const { path, pending, flags, size, screenshot, thumbnail } = attachment;
-        return Object.assign(Object.assign({}, attachment), { fileSize: size ? window.filesize(size) : null, isVoiceMessage: flags &&
+            return Object.assign(Object.assign({}, attachment), {
+                fileSize: size ? window.filesize(size) : null, isVoiceMessage: flags &&
                     // eslint-disable-next-line no-bitwise
                     flags &
                     window.textsecure.protobuf.AttachmentPointer.Flags.VOICE_MESSAGE, pending, url: path ? getAbsoluteAttachmentPath(path) : null, screenshot: screenshot
                         ? Object.assign(Object.assign({}, screenshot), { url: getAbsoluteAttachmentPath(screenshot.path) }) : null, thumbnail: thumbnail
-                ? Object.assign(Object.assign({}, thumbnail), { url: getAbsoluteAttachmentPath(thumbnail.path) }) : null });
+                            ? Object.assign(Object.assign({}, thumbnail), { url: getAbsoluteAttachmentPath(thumbnail.path) }) : null
+            });
         }
         getPropsForPreview() {
             const previews = this.get('preview') || [];
@@ -988,6 +999,10 @@ require(exports => {
             }
         }
         isTapToView() {
+            // If a message is deleted for everyone, that overrides all other styling
+            if (this.get('deletedForEveryone')) {
+                return false;
+            }
             return Boolean(this.get('isViewOnce') || this.get('messageTimer'));
         }
         isValidTapToView() {
@@ -1053,10 +1068,9 @@ require(exports => {
             return Boolean(this.get('isErased'));
         }
         async eraseContents(additionalProperties = {}, shouldPersist = true) {
-            if (this.get('isErased')) {
-                return;
-            }
             window.log.info(`Erasing data for message ${this.idForLogging()}`);
+            // Note: There are cases where we want to re-erase a given message. For example, when
+            //   a viewed (or outgoing) View-Once message is deleted for everyone.
             try {
                 await this.deleteData();
             }
@@ -1193,7 +1207,7 @@ require(exports => {
             });
             errors = errors.concat(this.get('errors') || []);
             this.set({ errors });
-        if (!skipSave && !this.doNotSave) {
+            if (!skipSave && !this.doNotSave) {
                 await window.Signal.Data.saveMessage(this.attributes, {
                     Message: window.Whisper.Message,
                 });
@@ -1465,11 +1479,11 @@ require(exports => {
                         expirationStartTimestamp: Date.now(),
                         unidentifiedDeliveries: result.unidentifiedDeliveries,
                     });
-            if (!this.doNotSave) {
-                    await window.Signal.Data.saveMessage(this.attributes, {
-                        Message: window.Whisper.Message,
-                    });
-            }
+                    if (!this.doNotSave) {
+                        await window.Signal.Data.saveMessage(this.attributes, {
+                            Message: window.Whisper.Message,
+                        });
+                    }
                     this.trigger('sent', this);
                     this.sendSyncMessage();
                 })
@@ -1615,14 +1629,14 @@ require(exports => {
                             synced: true,
                             dataMessage: null,
                         });
-                // Return early, skip the save
-                if (this.doNotSave) {
-                    return result;
-                }
-                await window.Signal.Data.saveMessage(this.attributes, {
+                        // Return early, skip the save
+                        if (this.doNotSave) {
+                            return result;
+                        }
+                        await window.Signal.Data.saveMessage(this.attributes, {
                             Message: window.Whisper.Message,
-                });
-                return result;
+                        });
+                        return result;
                     });
             };
             this.syncPromise = this.syncPromise.then(next, next);
@@ -1666,11 +1680,13 @@ require(exports => {
                     return item;
                 }
                 count += 1;
-            return Object.assign(Object.assign({}, item), { image: await window.Signal.AttachmentDownloads.addJob(item.image, {
+                return Object.assign(Object.assign({}, item), {
+                    image: await window.Signal.AttachmentDownloads.addJob(item.image, {
                         messageId,
                         type: 'preview',
                         index,
-                }) });
+                    })
+                });
             }));
             const contactsToQueue = this.get('contact') || [];
             window.log.info(`Queueing ${contactsToQueue.length} contact attachment downloads for message ${this.idForLogging()}`);
@@ -1679,30 +1695,38 @@ require(exports => {
                     return item;
                 }
                 count += 1;
-            return Object.assign(Object.assign({}, item), { avatar: Object.assign(Object.assign({}, item.avatar), { avatar: await window.Signal.AttachmentDownloads.addJob(item.avatar.avatar, {
+                return Object.assign(Object.assign({}, item), {
+                    avatar: Object.assign(Object.assign({}, item.avatar), {
+                        avatar: await window.Signal.AttachmentDownloads.addJob(item.avatar.avatar, {
                             messageId,
                             type: 'contact',
                             index,
-                    }) }) });
+                        })
+                    })
+                });
             }));
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             let quote = this.get('quote');
             const quoteAttachmentsToQueue = quote && quote.attachments ? quote.attachments : [];
             window.log.info(`Queueing ${quoteAttachmentsToQueue.length} quote attachment downloads for message ${this.idForLogging()}`);
             if (quoteAttachmentsToQueue.length > 0) {
-            quote = Object.assign(Object.assign({}, quote), { attachments: await Promise.all((quote.attachments || []).map(async (item, index) => {
+                quote = Object.assign(Object.assign({}, quote), {
+                    attachments: await Promise.all((quote.attachments || []).map(async (item, index) => {
                         // If we already have a path, then we copied this image from the quoted
                         //    message and we don't need to download the attachment.
                         if (!item.thumbnail || item.thumbnail.path) {
                             return item;
                         }
                         count += 1;
-                    return Object.assign(Object.assign({}, item), { thumbnail: await window.Signal.AttachmentDownloads.addJob(item.thumbnail, {
+                        return Object.assign(Object.assign({}, item), {
+                            thumbnail: await window.Signal.AttachmentDownloads.addJob(item.thumbnail, {
                                 messageId,
                                 type: 'quote',
                                 index,
-                        }) });
-                })) });
+                            })
+                        });
+                    }))
+                });
             }
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             let sticker = this.get('sticker');
@@ -1735,8 +1759,10 @@ require(exports => {
                 else {
                     await addStickerPackReference(messageId, packId);
                 }
-            sticker = Object.assign(Object.assign({}, sticker), { packId,
-                data });
+                sticker = Object.assign(Object.assign({}, sticker), {
+                    packId,
+                    data
+                });
             }
             window.log.info(`Queued ${count} total attachment downloads for message ${this.idForLogging()}`);
             if (count > 0) {
