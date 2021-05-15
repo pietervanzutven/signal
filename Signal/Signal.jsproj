@@ -162,7 +162,6 @@
     <Content Include="images\x-shadow-16.svg" />
     <Content Include="js\about_start.js" />
     <Content Include="js\background_task.js" />
-    <Content Include="js\chromium.js" />
     <Content Include="js\components.js" />
     <Content Include="js\database.js" />
     <Content Include="js\debug_log_start.js" />

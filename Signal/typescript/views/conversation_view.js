@@ -252,9 +252,6 @@ Whisper.ConversationView = Whisper.View.extend({
             Component: window.Signal.Components.AttachmentList,
             props: this.getPropsForAttachmentList(),
         });
-        window.extension.windows.onClosed(() => {
-            this.unload('windows closed');
-        });
         this.setupHeader();
         this.setupTimeline();
         this.setupCompositionArea({ attachmentListEl: attachmentListEl[0] });
