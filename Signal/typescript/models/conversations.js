@@ -846,6 +846,7 @@ require(exports => {
             const ourConversationId = window.ConversationController.getOurConversationId();
             const currentMessageRequestState = this.get('messageRequestResponseType');
             const didResponseChange = response !== currentMessageRequestState;
+            const wasPreviouslyAccepted = this.getAccepted();
             // Apply message request response locally
             this.set({
                 messageRequestResponseType: response,
@@ -854,7 +855,9 @@ require(exports => {
             if (response === messageRequestEnum.ACCEPT) {
                 this.unblock({ viaStorageServiceSync });
                 this.enableProfileSharing({ viaStorageServiceSync });
-                if (didResponseChange) {
+                // We really don't want to call this if we don't have to. It can take a lot of time
+                //   to go through old messages to download attachments.
+                if (didResponseChange && !wasPreviouslyAccepted) {
                     await this.handleReadAndDownloadAttachments({ isLocalAction });
                 }
                 if (isLocalAction) {
@@ -950,8 +953,9 @@ require(exports => {
             }
         }
         async syncMessageRequestResponse(response) {
-            // Let this run, no await
-            this.applyMessageRequestResponse(response);
+            // In GroupsV2, this may modify the server. We only want to continue if those
+            //   server updates were successful.
+            await this.applyMessageRequestResponse(response);
             const { ourNumber, ourUuid } = this;
             const { wrap, sendOptions } = window.ConversationController.prepareForSend(
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
