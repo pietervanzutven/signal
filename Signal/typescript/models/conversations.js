@@ -2502,6 +2502,7 @@ require(exports => {
             if (this.get('profileKey') !== profileKey) {
                 window.log.info(`Setting sealedSender to UNKNOWN for conversation ${this.idForLogging()}`);
                 this.set({
+                    profileAvatar: undefined,
                     profileKey,
                     profileKeyVersion: undefined,
                     profileKeyCredential: null,
