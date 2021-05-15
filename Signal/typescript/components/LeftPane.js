@@ -24,12 +24,12 @@
         RowType[RowType["Header"] = 3] = "Header";
         RowType[RowType["PinnedConversation"] = 4] = "PinnedConversation";
         RowType[RowType["Undefined"] = 5] = "Undefined";
-    })(RowType || (RowType = {}));
+    })(RowType = exports.RowType || (exports.RowType = {}));
     var HeaderType;
     (function (HeaderType) {
         HeaderType[HeaderType["Pinned"] = 0] = "Pinned";
         HeaderType[HeaderType["Chats"] = 1] = "Chats";
-    })(HeaderType || (HeaderType = {}));
+    })(HeaderType = exports.HeaderType || (exports.HeaderType = {}));
     class LeftPane extends react_1.default.Component {
         constructor() {
             super(...arguments);
@@ -56,25 +56,33 @@
                 }
                 let conversationIndex = index;
                 if (pinnedConversations.length) {
-                    if (index === 0) {
-                        return {
-                            headerType: HeaderType.Pinned,
-                            type: RowType.Header,
-                        };
+                    if (conversations.length) {
+                        if (index === 0) {
+                            return {
+                                headerType: HeaderType.Pinned,
+                                type: RowType.Header,
+                            };
+                        }
+                        if (index <= pinnedConversations.length) {
+                            return {
+                                index: index - 1,
+                                type: RowType.PinnedConversation,
+                            };
+                        }
+                        if (index === pinnedConversations.length + 1) {
+                            return {
+                                headerType: HeaderType.Chats,
+                                type: RowType.Header,
+                            };
+                        }
+                        conversationIndex -= pinnedConversations.length + 2;
                     }
-                    if (index <= pinnedConversations.length) {
+                    else {
                         return {
-                            index: index - 1,
+                            index,
                             type: RowType.PinnedConversation,
                         };
                     }
-                    if (index === pinnedConversations.length + 1) {
-                        return {
-                            headerType: HeaderType.Chats,
-                            type: RowType.Header,
-                        };
-                    }
-                    conversationIndex -= pinnedConversations.length + 2;
                 }
                 if (conversationIndex === conversations.length) {
                     return {
@@ -245,9 +253,12 @@
                     return archivedConversations.length;
                 }
                 let { length } = conversations;
-                // includes two additional rows for pinned/chats headers
                 if (pinnedConversations.length) {
-                    length += pinnedConversations.length + 2;
+                    if (length) {
+                        // includes two additional rows for pinned/chats headers
+                        length += 2;
+                    }
+                    length += pinnedConversations.length;
                 }
                 // includes one additional row for 'archived conversations' button
                 if (archivedConversations.length) {
