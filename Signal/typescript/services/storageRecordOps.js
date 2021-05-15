@@ -146,13 +146,20 @@ require(exports => {
     }
     exports.toGroupV2Record = toGroupV2Record;
     function applyMessageRequestState(record, conversation) {
+        const messageRequestEnum = window.textsecure.protobuf.SyncMessage.MessageRequestResponse.Type;
         if (record.blocked) {
-            conversation.applyMessageRequestResponse(conversation.messageRequestEnum.BLOCK, { fromSync: true, viaStorageServiceSync: true });
+            conversation.applyMessageRequestResponse(messageRequestEnum.BLOCK, {
+                fromSync: true,
+                viaStorageServiceSync: true,
+            });
         }
         else if (record.whitelisted) {
             // unblocking is also handled by this function which is why the next
             // condition is part of the else-if and not separate
-            conversation.applyMessageRequestResponse(conversation.messageRequestEnum.ACCEPT, { fromSync: true, viaStorageServiceSync: true });
+            conversation.applyMessageRequestResponse(messageRequestEnum.ACCEPT, {
+                fromSync: true,
+                viaStorageServiceSync: true,
+            });
         }
         else if (!record.blocked) {
             // if the condition above failed the state could still be blocked=false
@@ -244,8 +251,9 @@ require(exports => {
         const publicParams = Crypto_1.arrayBufferToBase64(groupFields.publicParams);
         const now = Date.now();
         const conversationId = window.ConversationController.ensureGroup(groupId, {
-            // We want this conversation to show in the left pane when we first learn about it
-            active_at: now,
+            // Note: We don't set active_at, because we don't want the group to show until
+            //   we have information about it beyond these initial details.
+            //   see maybeUpdateGroup().
             timestamp: now,
             // Basic GroupV2 data
             groupVersion: 2,

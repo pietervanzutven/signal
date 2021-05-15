@@ -3777,6 +3777,7 @@
     <Content Include="typescript\components\emoji\EmojiButton.js" />
     <Content Include="typescript\components\emoji\EmojiPicker.js" />
     <Content Include="typescript\components\emoji\lib.js" />
+    <Content Include="typescript\components\ErrorModal.js" />
     <Content Include="typescript\components\ExpiredBuildDialog.js" />
     <Content Include="typescript\components\IncomingCallBar.js" />
     <Content Include="typescript\components\InContactsIcon.js" />
@@ -3788,6 +3789,8 @@
     <Content Include="typescript\components\MessageBodyHighlight.js" />
     <Content Include="typescript\components\MessageSearchResult.js" />
     <Content Include="typescript\components\NetworkStatus.js" />
+    <Content Include="typescript\components\ProgressDialog.js" />
+    <Content Include="typescript\components\ProgressModal.js" />
     <Content Include="typescript\components\RelinkDialog.js" />
     <Content Include="typescript\components\SafetyNumberChangeDialog.js" />
     <Content Include="typescript\components\SafetyNumberViewer.js" />

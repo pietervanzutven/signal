@@ -16,6 +16,7 @@
         'outgoing',
         'incoming',
         'on-background',
+        'on-progress-dialog',
     ];
     exports.Spinner = ({ size, svgSize, direction }) => (react_1.default.createElement("div", {
         className: classnames_1.default('module-spinner__container', `module-spinner__container--${svgSize}`, direction ? `module-spinner__container--${direction}` : null, direction ? `module-spinner__container--${svgSize}-${direction}` : null), style: {

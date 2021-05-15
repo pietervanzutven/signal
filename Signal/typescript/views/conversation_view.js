@@ -1,4 +1,5 @@
 "use strict";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const FIVE_MINUTES = 1000 * 60 * 5;
 const LINK_PREVIEW_TIMEOUT = 60 * 1000;
 window.Whisper = window.Whisper || {};
@@ -176,9 +177,6 @@ Whisper.CannotMixImageAndNonImageAttachmentsToast = Whisper.ToastView.extend({
 });
 Whisper.MaxAttachmentsToast = Whisper.ToastView.extend({
     template: window.i18n('maximumAttachments'),
-});
-Whisper.TimerConflictToast = Whisper.ToastView.extend({
-    template: window.i18n('GroupV2--timerConflict'),
 });
 Whisper.ConversationLoadingScreen = Whisper.View.extend({
     templateName: 'conversation-loading-screen',
@@ -391,11 +389,36 @@ Whisper.ConversationView = Whisper.View.extend({
             clearQuotedMessage: () => this.setQuoteMessage(null),
             micCellEl,
             attachmentListEl,
-            onAccept: this.model.syncMessageRequestResponse.bind(this.model, messageRequestEnum.ACCEPT),
-            onBlock: this.model.syncMessageRequestResponse.bind(this.model, messageRequestEnum.BLOCK),
-            onUnblock: this.model.syncMessageRequestResponse.bind(this.model, messageRequestEnum.ACCEPT),
-            onDelete: this.model.syncMessageRequestResponse.bind(this.model, messageRequestEnum.DELETE),
-            onBlockAndDelete: this.model.syncMessageRequestResponse.bind(this.model, messageRequestEnum.BLOCK_AND_DELETE),
+            onAccept: () => {
+                this.longRunningTaskWrapper({
+                    name: 'onAccept',
+                    task: this.model.syncMessageRequestResponse.bind(this.model, messageRequestEnum.ACCEPT),
+                });
+            },
+            onBlock: () => {
+                this.longRunningTaskWrapper({
+                    name: 'onBlock',
+                    task: this.model.syncMessageRequestResponse.bind(this.model, messageRequestEnum.BLOCK),
+                });
+            },
+            onUnblock: () => {
+                this.longRunningTaskWrapper({
+                    name: 'onUnblock',
+                    task: this.model.syncMessageRequestResponse.bind(this.model, messageRequestEnum.ACCEPT),
+                });
+            },
+            onDelete: () => {
+                this.longRunningTaskWrapper({
+                    name: 'onDelete',
+                    task: this.model.syncMessageRequestResponse.bind(this.model, messageRequestEnum.DELETE),
+                });
+            },
+            onBlockAndDelete: () => {
+                this.longRunningTaskWrapper({
+                    name: 'onBlockAndDelete',
+                    task: this.model.syncMessageRequestResponse.bind(this.model, messageRequestEnum.BLOCK_AND_DELETE),
+                });
+            },
         };
         this.compositionAreaView = new Whisper.ReactWrapperView({
             className: 'composition-area-wrapper',
@@ -403,6 +426,56 @@ Whisper.ConversationView = Whisper.View.extend({
         });
         // Finally, add it to the DOM
         this.$('.composition-area-placeholder').append(this.compositionAreaView.el);
+    },
+    async longRunningTaskWrapper({ name, task, }) {
+        const idLog = `${name}/${this.model.idForLogging()}`;
+        const ONE_SECOND = 1000;
+        let progressView;
+        let progressTimeout = setTimeout(() => {
+            window.log.info(`longRunningTaskWrapper/${idLog}: Creating spinner`);
+            // Note: this component uses a portal to render itself into the top-level DOM. No
+            //   need to attach it to the DOM here.
+            progressView = new Whisper.ReactWrapperView({
+                className: 'progress-modal-wrapper',
+                Component: window.Signal.Components.ProgressModal,
+            });
+        }, ONE_SECOND);
+        // Note: any task we put here needs to have its own safety valve; this function will
+        //   show a spinner until it's done
+        try {
+            window.log.info(`longRunningTaskWrapper/${idLog}: Starting task`);
+            await task();
+            window.log.info(`longRunningTaskWrapper/${idLog}: Task completed successfully`);
+            if (progressTimeout) {
+                clearTimeout(progressTimeout);
+                progressTimeout = undefined;
+            }
+            if (progressView) {
+                progressView.remove();
+                progressView = undefined;
+            }
+        }
+        catch (error) {
+            window.log.error(`longRunningTaskWrapper/${idLog}: Error!`, error && error.stack ? error.stack : error);
+            if (progressTimeout) {
+                clearTimeout(progressTimeout);
+                progressTimeout = undefined;
+            }
+            if (progressView) {
+                progressView.remove();
+                progressView = undefined;
+            }
+            window.log.info(`longRunningTaskWrapper/${idLog}: Showing error dialog`);
+            // Note: this component uses a portal to render itself into the top-level DOM. No
+            //   need to attach it to the DOM here.
+            const errorView = new Whisper.ReactWrapperView({
+                className: 'error-modal-wrapper',
+                Component: window.Signal.Components.ErrorModal,
+                props: {
+                    onClose: () => errorView.remove(),
+                },
+            });
+        }
     },
     setupTimeline() {
         const { id } = this.model;
@@ -1968,19 +2041,11 @@ Whisper.ConversationView = Whisper.View.extend({
         this.model.endSession();
     },
     async setDisappearingMessages(seconds) {
-        try {
-            if (seconds > 0) {
-                await this.model.updateExpirationTimer(seconds);
-            }
-            else {
-                await this.model.updateExpirationTimer(null);
-            }
-        }
-        catch (error) {
-            if (error.code === 409) {
-                this.showToast(Whisper.TimerConflictToast);
-            }
-        }
+        const valueToSet = seconds > 0 ? seconds : null;
+        await this.longRunningTaskWrapper({
+            name: 'updateExpirationTimer',
+            task: async () => this.model.updateExpirationTimer(valueToSet),
+        });
     },
     setMuteNotifications(ms) {
         const muteExpiresAt = ms > 0 ? Date.now() + ms : undefined;
