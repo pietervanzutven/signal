@@ -202,7 +202,13 @@ require(exports => {
             // If an error has a specific number it's associated with, we'll show it next to
             //   that contact. Otherwise, it will be a standalone entry.
             const errors = _.reject(allErrors, error => Boolean(error.identifier || error.number));
-            const errorsGroupedById = _.groupBy(allErrors, 'number');
+            const errorsGroupedById = _.groupBy(allErrors, error => {
+                const identifier = error.identifier || error.number;
+                if (!identifier) {
+                    return null;
+                }
+                return window.ConversationController.getConversationId(identifier);
+            });
             const finalContacts = (conversationIds || []).map(id => {
                 const errorsForContact = errorsGroupedById[id];
                 const isOutgoingKeyError = Boolean(_.find(errorsForContact, error => error.name === OUTGOING_KEY_ERROR));
@@ -1198,10 +1204,12 @@ require(exports => {
                 window.log.error('Message.saveErrors:', e && e.reason ? e.reason : null, e && e.stack ? e.stack : e);
             });
             errors = errors.map(e => {
-                if (e.constructor === Error ||
-                    e.constructor === TypeError ||
-                    e.constructor === ReferenceError) {
-                    return _.pick(e, 'name', 'message', 'code', 'number', 'reason');
+                // Note: in our environment, instanceof can be scary, so we have a backup check
+                //   (Node.js vs Browser context).
+                // We check instanceof second because typescript believes that anything that comes
+                //   through here must be an instance of Error, so e is 'never' after that check.
+                if ((e.message && e.stack) || e instanceof Error) {
+                    return _.pick(e, 'name', 'message', 'code', 'number', 'identifier', 'reason');
                 }
                 return e;
             });
