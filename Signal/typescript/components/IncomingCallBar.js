@@ -9,7 +9,7 @@ require(exports => {
     const Avatar_1 = require("./Avatar");
     const ContactName_1 = require("./conversation/ContactName");
     const CallButton = ({ classSuffix, onClick, tabIndex, tooltipContent, }) => {
-        return (react_1.default.createElement("button", { className: `module-incoming-call__icon module-incoming-call__button--${classSuffix}`, onClick: onClick, tabIndex: tabIndex, type: "button" },
+        return (react_1.default.createElement("button", { className: `module-incoming-call__button module-incoming-call__button--${classSuffix}`, onClick: onClick, tabIndex: tabIndex, type: "button" },
             react_1.default.createElement(react_tooltip_lite_1.default, { arrowSize: 6, content: tooltipContent, direction: "bottom", distance: 16, hoverDelay: 0 },
                 react_1.default.createElement("div", null))));
     };

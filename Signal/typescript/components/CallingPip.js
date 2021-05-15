@@ -6,20 +6,13 @@ require(exports => {
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
     const Avatar_1 = require("./Avatar");
+    const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
     function renderAvatar(callDetails, i18n) {
         const { avatarPath, color, name, phoneNumber, profileName, title, } = callDetails;
-        const backgroundStyle = avatarPath
-            ? {
-                backgroundImage: `url("${avatarPath}")`,
-            }
-            : {
-                backgroundColor: color,
-            };
         return (react_1.default.createElement("div", { className: "module-calling-pip__video--remote" },
-            react_1.default.createElement("div", { className: "module-calling-pip__video--background", style: backgroundStyle }),
-            react_1.default.createElement("div", { className: "module-calling-pip__video--blur" }),
-            react_1.default.createElement("div", { className: "module-calling-pip__video--avatar" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, size: 52 }))));
+            react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: avatarPath, color: color },
+                react_1.default.createElement("div", { className: "module-calling-pip__video--avatar" },
+                    react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, size: 52 })))));
     }
     const PIP_HEIGHT = 156;
     const PIP_WIDTH = 120;

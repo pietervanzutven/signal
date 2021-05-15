@@ -7,11 +7,12 @@ require(exports => {
     const react_1 = __importDefault(require("react"));
     const CallingPip_1 = require("./CallingPip");
     const CallNeedPermissionScreen_1 = require("./CallNeedPermissionScreen");
+    const CallingLobby_1 = require("./CallingLobby");
     const CallScreen_1 = require("./CallScreen");
     const IncomingCallBar_1 = require("./IncomingCallBar");
     const Calling_1 = require("../types/Calling");
-    exports.CallManager = ({ acceptCall, callDetails, callState, callEndedReason, closeNeedPermissionScreen, declineCall, hangUp, hasLocalAudio, hasLocalVideo, hasRemoteVideo, i18n, pip, renderDeviceSelection, setLocalAudio, setLocalPreview, setLocalVideo, setRendererCanvas, settingsDialogOpen, togglePip, toggleSettings, }) => {
-        if (!callDetails || !callState) {
+    exports.CallManager = ({ acceptCall, callDetails, callState, callEndedReason, cancelCall, closeNeedPermissionScreen, declineCall, hangUp, hasLocalAudio, hasLocalVideo, hasRemoteVideo, i18n, pip, renderDeviceSelection, setLocalAudio, setLocalPreview, setLocalVideo, setRendererCanvas, settingsDialogOpen, startCall, toggleParticipants, togglePip, toggleSettings, }) => {
+        if (!callDetails) {
             return null;
         }
         const incoming = callDetails.isIncoming;
@@ -24,6 +25,15 @@ require(exports => {
                 return (react_1.default.createElement(CallNeedPermissionScreen_1.CallNeedPermissionScreen, { close: closeNeedPermissionScreen, callDetails: callDetails, i18n: i18n }));
             }
             return null;
+        }
+        if (!callState) {
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement(CallingLobby_1.CallingLobby, {
+                    callDetails: callDetails, callState: callState, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, isGroupCall: false, onCallCanceled: cancelCall, onJoinCall: () => {
+                        startCall({ callDetails });
+                    }, setLocalPreview: setLocalPreview, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, toggleParticipants: toggleParticipants, toggleSettings: toggleSettings
+                }),
+                settingsDialogOpen && renderDeviceSelection()));
         }
         if (outgoing || ongoing) {
             if (pip) {

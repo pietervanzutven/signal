@@ -319,7 +319,7 @@ Whisper.ConversationView = Whisper.View.extend({
                     const isVideoCall = false;
                     if (await this.isCallSafe()) {
                         window.log.info('onOutgoingAudioCallInConversation: call is deemed "safe". Making call');
-                        await window.Signal.Services.calling.startOutgoingCall(conversation, isVideoCall);
+                        await window.Signal.Services.calling.startCallingLobby(conversation, isVideoCall);
                         window.log.info('onOutgoingAudioCallInConversation: started the call');
                     }
                     else {
@@ -331,7 +331,7 @@ Whisper.ConversationView = Whisper.View.extend({
                     const isVideoCall = true;
                     if (await this.isCallSafe()) {
                         window.log.info('onOutgoingVideoCallInConversation: call is deemed "safe". Making call');
-                        await window.Signal.Services.calling.startOutgoingCall(conversation, isVideoCall);
+                        await window.Signal.Services.calling.startCallingLobby(conversation, isVideoCall);
                         window.log.info('onOutgoingVideoCallInConversation: started the call');
                     }
                     else {

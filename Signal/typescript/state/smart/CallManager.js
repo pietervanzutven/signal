@@ -19,7 +19,8 @@ require(exports => {
         return react_1.default.createElement(FilteredCallingDeviceSelection, null);
     }
     const mapStateToProps = (state) => {
-        return Object.assign(Object.assign({}, state.calling), { i18n: user_1.getIntl(state), renderDeviceSelection });
+        const { calling } = state;
+        return Object.assign(Object.assign({}, calling), { i18n: user_1.getIntl(state), renderDeviceSelection });
     };
     const smart = react_redux_1.connect(mapStateToProps, actions_1.mapDispatchToProps);
     exports.SmartCallManager = smart(CallManager_1.CallManager);
