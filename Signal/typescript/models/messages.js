@@ -1962,10 +1962,13 @@ require(exports => {
                 // We drop incoming messages for v1 groups we already know about, which we're not
                 //   a part of, except for group updates. Because group v1 updates haven't been
                 //   applied by this point.
+                // Note: if we have no information about a group at all, we will accept those
+                //   messages. We detect that via a missing 'members' field.
                 if (type === 'incoming' &&
                     !conversation.isPrivate() &&
                     !isGroupV2 &&
                     !isV1GroupUpdate &&
+                    conversation.get('members') &&
                     (conversation.get('left') || !conversation.hasMember(ourConversationId))) {
                     window.log.warn(`Received message destined for group ${conversation.idForLogging()}, which we're not a part of. Dropping.`);
                     confirm();
