@@ -38,7 +38,7 @@
         // StickerButton
         knownPacks, receivedPacks, installedPack, installedPacks, blessedPacks, recentStickers, clearInstalledStickerPack, onClickAddPack, onPickSticker, clearShowIntroduction, showPickerHint, clearShowPickerHint,
         // Message Requests
-        acceptedMessageRequest, conversationType, groupVersion, isBlocked, isMissingMandatoryProfileSharing, messageRequestsEnabled, name, onAccept, onBlock, onBlockAndDelete, onDelete, onUnblock, phoneNumber, profileName, title, }) => {
+        acceptedMessageRequest, areWePending, conversationType, groupVersion, isBlocked, isMissingMandatoryProfileSharing, messageRequestsEnabled, name, onAccept, onBlock, onBlockAndDelete, onDelete, onUnblock, phoneNumber, profileName, title, }) => {
         const [disabled, setDisabled] = React.useState(false);
         const [showMic, setShowMic] = React.useState(!startingText);
         const [micActive, setMicActive] = React.useState(false);
@@ -153,7 +153,8 @@
                 document.removeEventListener('keydown', handler);
             };
         }, [setLarge]);
-        if (messageRequestsEnabled && (!acceptedMessageRequest || isBlocked)) {
+        if (messageRequestsEnabled &&
+            (!acceptedMessageRequest || isBlocked || areWePending)) {
             return (React.createElement(MessageRequestActions_1.MessageRequestActions, { i18n: i18n, conversationType: conversationType, isBlocked: isBlocked, onBlock: onBlock, onBlockAndDelete: onBlockAndDelete, onUnblock: onUnblock, onDelete: onDelete, onAccept: onAccept, name: name, profileName: profileName, phoneNumber: phoneNumber, title: title }));
         }
         // If no message request, but we haven't shared profile yet, we show profile-sharing UI
