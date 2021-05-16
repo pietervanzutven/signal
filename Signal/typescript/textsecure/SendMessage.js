@@ -768,7 +768,6 @@
             if (identifiers.length === 0) {
                 return Promise.resolve({
                     dataMessage: proto.toArrayBuffer(),
-                    discoveredIdentifierPairs: [],
                     errors: [],
                     failoverIdentifiers: [],
                     successfulIdentifiers: [],
@@ -916,7 +915,6 @@
                     errors: [],
                     unidentifiedDeliveries: [],
                     dataMessage: await this.getMessageProtoObj(attrs),
-                    discoveredIdentifierPairs: [],
                 });
             }
             return this.sendMessage(attrs, options);
@@ -962,7 +960,6 @@
                     errors: [],
                     unidentifiedDeliveries: [],
                     dataMessage: await this.getMessageProtoObj(attrs),
-                    discoveredIdentifierPairs: [],
                 });
             }
             return this.sendMessage(attrs, options);

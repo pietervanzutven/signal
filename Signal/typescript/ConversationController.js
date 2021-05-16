@@ -431,7 +431,13 @@ require(exports => {
             const groups = await getAllGroupsInvolvingId(conversationId, {
                 ConversationCollection: window.Whisper.ConversationCollection,
             });
-            return groups.map(group => this._conversations.add(group));
+            return groups.map(group => {
+                const existing = this.get(group.id);
+                if (existing) {
+                    return existing;
+                }
+                return this._conversations.add(group);
+            });
         }
         async loadPromise() {
             return this._initialPromise;

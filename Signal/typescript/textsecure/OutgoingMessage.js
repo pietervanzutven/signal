@@ -37,7 +37,6 @@
             this.successfulIdentifiers = [];
             this.failoverIdentifiers = [];
             this.unidentifiedDeliveries = [];
-            this.discoveredIdentifierPairs = [];
             const { sendMetadata, senderCertificate, online } = options;
             this.sendMetadata = sendMetadata;
             this.senderCertificate = senderCertificate;
@@ -51,7 +50,6 @@
                     failoverIdentifiers: this.failoverIdentifiers,
                     errors: this.errors,
                     unidentifiedDeliveries: this.unidentifiedDeliveries,
-                    discoveredIdentifierPairs: this.discoveredIdentifierPairs,
                 });
             }
         }
@@ -372,9 +370,10 @@
                             ]);
                             const uuid = lookup[identifier];
                             if (uuid) {
-                                this.discoveredIdentifierPairs.push({
+                                window.ConversationController.ensureContactIds({
                                     uuid,
                                     e164: identifier,
+                                    highTrust: true,
                                 });
                                 identifier = uuid;
                             }
