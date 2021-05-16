@@ -739,7 +739,6 @@ require(exports => {
                 muteExpiresAt: this.get('muteExpiresAt'),
                 name: this.get('name'),
                 phoneNumber: this.getNumber(),
-                pinIndex: this.get('pinIndex'),
                 profileName: this.getProfileName(),
                 sharedGroupNames: this.get('sharedGroupNames'),
                 shouldShowDraft,
@@ -2830,23 +2829,21 @@ require(exports => {
         pin() {
             window.log.info('pinning', this.idForLogging());
             const pinnedConversationIds = new Set(window.storage.get('pinnedConversationIds', []));
+            pinnedConversationIds.add(this.id);
+            this.writePinnedConversations([...pinnedConversationIds]);
             this.set('isPinned', true);
-            this.set('pinIndex', pinnedConversationIds.size);
             window.Signal.Data.updateConversation(this.attributes);
             if (this.get('isArchived')) {
                 this.setArchived(false);
             }
-            pinnedConversationIds.add(this.id);
-            this.writePinnedConversations([...pinnedConversationIds]);
         }
         unpin() {
             window.log.info('un-pinning', this.idForLogging());
             const pinnedConversationIds = new Set(window.storage.get('pinnedConversationIds', []));
-            this.set('isPinned', false);
-            this.set('pinIndex', undefined);
-            window.Signal.Data.updateConversation(this.attributes);
             pinnedConversationIds.delete(this.id);
             this.writePinnedConversations([...pinnedConversationIds]);
+            this.set('isPinned', false);
+            window.Signal.Data.updateConversation(this.attributes);
         }
         writePinnedConversations(pinnedConversationIds) {
             window.storage.put('pinnedConversationIds', pinnedConversationIds);

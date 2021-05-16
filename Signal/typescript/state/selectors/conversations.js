@@ -89,7 +89,8 @@ require(exports => {
         }
         conversations.sort(comparator);
         archivedConversations.sort(comparator);
-        pinnedConversations.sort((a, b) => (a.pinIndex || 0) - (b.pinIndex || 0));
+        const pinnedConversationIds = window.ConversationController.getPinnedConversationIds();
+        pinnedConversations.sort((a, b) => pinnedConversationIds.indexOf(a.id) - pinnedConversationIds.indexOf(b.id));
         return { conversations, archivedConversations, pinnedConversations };
     };
     exports.getLeftPaneLists = reselect_1.createSelector(exports.getConversationLookup, exports.getConversationComparator, exports.getSelectedConversation, exports._getLeftPaneLists);
