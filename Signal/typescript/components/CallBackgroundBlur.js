@@ -16,9 +16,8 @@ require(exports => {
             : {
                 className: classnames_1.default('module-calling__background', `module-background-color__${color || 'default'}`),
             };
-        return (react_1.default.createElement(react_1.default.Fragment, null,
-            react_1.default.createElement("div", Object.assign({ className: "module-calling__background" }, backgroundProps)),
-            react_1.default.createElement("div", { className: "module-calling__background--blur" }),
+        return (react_1.default.createElement("div", { className: "module-calling__background" },
+            react_1.default.createElement("div", Object.assign({ className: "module-calling__background--blur" }, backgroundProps)),
             children));
     };
 });

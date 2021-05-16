@@ -90,7 +90,7 @@ require(exports => {
         accountRecord.sealedSenderIndicators = Boolean(window.storage.get('sealedSenderIndicators'));
         accountRecord.typingIndicators = Boolean(window.storage.get('typingIndicators'));
         accountRecord.linkPreviews = Boolean(window.storage.get('linkPreviews'));
-        accountRecord.pinnedConversations = window.storage
+        const pinnedConversations = window.storage
             .get('pinnedConversationIds', [])
             .map(id => {
                 const pinnedConversation = window.ConversationController.get(id);
@@ -124,6 +124,8 @@ require(exports => {
                 return undefined;
             })
             .filter((pinnedConversationClass) => pinnedConversationClass !== undefined);
+        window.log.info(`toAccountRecord: sending ${pinnedConversations.length} pinned conversations`);
+        accountRecord.pinnedConversations = pinnedConversations;
         applyUnknownFields(accountRecord, conversation);
         return accountRecord;
     }
@@ -358,7 +360,17 @@ require(exports => {
             window.storage.put('profileKey', profileKey.toArrayBuffer());
         }
         if (remotelyPinnedConversationClasses) {
-            const locallyPinnedConversations = window.ConversationController._conversations.filter(conversation => Boolean(conversation.get('isPinned')));
+            const modelPinnedConversations = window
+                .getConversations()
+                .filter(conversation => Boolean(conversation.get('isPinned')));
+            const modelPinnedConversationIds = modelPinnedConversations.map(conversation => conversation.get('id'));
+            const missingStoragePinnedConversationIds = window.ConversationController.getPinnedConversationIds().filter(id => !modelPinnedConversationIds.includes(id));
+            if (missingStoragePinnedConversationIds.length !== 0) {
+                window.log.info('mergeAccountRecord: pinnedConversationIds in storage does not match pinned Conversation models');
+            }
+            const locallyPinnedConversations = modelPinnedConversations.concat(missingStoragePinnedConversationIds
+                .map(conversationId => window.ConversationController.get(conversationId))
+                .filter((conversation) => conversation !== undefined));
             window.log.info('storageService.mergeAccountRecord: Local pinned', locallyPinnedConversations.length);
             const remotelyPinnedConversationPromises = remotelyPinnedConversationClasses.map(async (pinnedConversation) => {
                 let conversationId;
@@ -410,11 +422,11 @@ require(exports => {
             window.log.info('storageService.mergeAccountRecord: unpinning', conversationsToUnpin.length);
             window.log.info('storageService.mergeAccountRecord: pinning', remotelyPinnedConversations.length);
             conversationsToUnpin.forEach(conversation => {
-                conversation.set({ isPinned: false, pinIndex: undefined });
+                conversation.set({ isPinned: false });
                 updateConversation(conversation.attributes);
             });
-            remotelyPinnedConversations.forEach((conversation, index) => {
-                conversation.set({ isPinned: true, pinIndex: index });
+            remotelyPinnedConversations.forEach(conversation => {
+                conversation.set({ isPinned: true });
                 updateConversation(conversation.attributes);
             });
             window.storage.put('pinnedConversationIds', remotelyPinnedConversationIds);
