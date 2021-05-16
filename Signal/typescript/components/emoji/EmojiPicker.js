@@ -63,6 +63,8 @@
             debounceSearchChange(e.currentTarget.value);
         }, [debounceSearchChange]);
         const handlePickTone = React.useCallback((e) => {
+            e.preventDefault();
+            e.stopPropagation();
             const { tone = '0' } = e.currentTarget.dataset;
             const parsedTone = parseInt(tone, 10);
             setSelectedTone(parsedTone);
