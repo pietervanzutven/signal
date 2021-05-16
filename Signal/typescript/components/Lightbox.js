@@ -194,7 +194,7 @@
                 var _a;
                 const { contentType } = this.props;
                 // These are the only image types supported by Electron's NativeImage
-                if (contentType !== "image/png" && contentType !== "image/jpg") {
+                if (contentType !== 'image/png' && contentType !== 'image/jpg') {
                     (_a = event) === null || _a === void 0 ? void 0 : _a.preventDefault();
                 }
             };
