@@ -969,12 +969,34 @@ require(exports => {
                 ourNumber || ourUuid, {
                 syncMessage: true,
             });
-            await wrap(window.textsecure.messaging.syncMessageRequestResponse({
-                threadE164: this.get('e164'),
-                threadUuid: this.get('uuid'),
-                groupId: this.get('groupId'),
-                type: response,
-            }, sendOptions));
+            const groupId = this.get('groupId');
+            let groupIdBuffer;
+            if (groupId && this.isGroupV1()) {
+                groupIdBuffer = Crypto_1.fromEncodedBinaryToArrayBuffer(groupId);
+            }
+            else if (groupId && this.isGroupV2()) {
+                groupIdBuffer = Crypto_1.base64ToArrayBuffer(groupId);
+            }
+            try {
+                await wrap(window.textsecure.messaging.syncMessageRequestResponse({
+                    threadE164: this.get('e164'),
+                    threadUuid: this.get('uuid'),
+                    groupId: groupIdBuffer,
+                    type: response,
+                }, sendOptions));
+            }
+            catch (result) {
+                if (result instanceof Error) {
+                    throw result;
+                }
+                else if (result && result.errors) {
+                    // We filter out unregistered user errors, because we ignore those in groups
+                    const wasThereARealError = window._.some(result.errors, error => error.name !== 'UnregisteredUserError');
+                    if (wasThereARealError) {
+                        throw result;
+                    }
+                }
+            }
         }
         onMessageError() {
             this.updateVerified();

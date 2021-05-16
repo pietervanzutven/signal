@@ -691,9 +691,7 @@
             const response = new window.textsecure.protobuf.SyncMessage.MessageRequestResponse();
             response.threadE164 = responseArgs.threadE164;
             response.threadUuid = responseArgs.threadUuid;
-            response.groupId = responseArgs.groupId
-                ? window.Signal.Crypto.fromEncodedBinaryToArrayBuffer(responseArgs.groupId)
-                : null;
+            response.groupId = responseArgs.groupId || null;
             response.type = responseArgs.type;
             syncMessage.messageRequestResponse = response;
             const contentMessage = new window.textsecure.protobuf.Content();
