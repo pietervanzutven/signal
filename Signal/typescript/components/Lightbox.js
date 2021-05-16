@@ -172,7 +172,7 @@
                 const isImageTypeSupported = GoogleChrome.isImageTypeSupported(contentType);
                 if (isImageTypeSupported) {
                     return (react_1.default.createElement("button", { type: "button", style: styles.buttonContainer, onClick: this.onObjectClick },
-                        react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), style: styles.img, src: objectURL })));
+                        react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), style: styles.img, src: objectURL, onContextMenu: this.onContextMenu })));
                 }
                 const isVideoTypeSupported = GoogleChrome.isVideoTypeSupported(contentType);
                 if (isVideoTypeSupported) {
@@ -189,6 +189,14 @@
                 }
                 window.log.info('Lightbox: Unexpected content type', { contentType });
                 return (react_1.default.createElement(Icon, { i18n: i18n, onClick: this.onObjectClick, url: "images/file.svg" }));
+            };
+            this.onContextMenu = (event) => {
+                var _a;
+                const { contentType } = this.props;
+                // These are the only image types supported by Electron's NativeImage
+                if (contentType !== "image/png" && contentType !== "image/jpg") {
+                    (_a = event) === null || _a === void 0 ? void 0 : _a.preventDefault();
+                }
             };
             this.onClose = () => {
                 const { close } = this.props;
