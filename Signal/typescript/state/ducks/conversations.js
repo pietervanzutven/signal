@@ -363,7 +363,7 @@ require(exports => {
             const resetCounter = existingConversation
                 ? existingConversation.resetCounter + 1
                 : 0;
-            const sorted = lodash_1.orderBy(messages, ['received_at'], ['ASC']);
+            const sorted = lodash_1.orderBy(messages, ['received_at', 'sent_at'], ['ASC', 'ASC']);
             const messageIds = sorted.map(message => message.id);
             const lookup = lodash_1.fromPairs(messages.map(message => [message.id, message]));
             let { newest, oldest } = metrics;
@@ -510,7 +510,7 @@ require(exports => {
             messages.forEach(message => {
                 lookup[message.id] = message;
             });
-            const sorted = lodash_1.orderBy(lodash_1.values(lookup), ['received_at'], ['ASC']);
+            const sorted = lodash_1.orderBy(lodash_1.values(lookup), ['received_at', 'sent_at'], ['ASC', 'ASC']);
             const messageIds = sorted.map(message => message.id);
             const first = sorted[0];
             const last = sorted[sorted.length - 1];

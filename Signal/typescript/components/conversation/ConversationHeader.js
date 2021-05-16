@@ -109,7 +109,7 @@
             }));
         }
         renderMenu(triggerId) {
-            const { disableTimerChanges, i18n, isAccepted, isMe, isPinned, type, isArchived, muteExpirationLabel, onDeleteMessages, onResetSession, onSetDisappearingMessages, onSetMuteNotifications, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onSetPin, onMoveToInbox, timerOptions, } = this.props;
+            const { disableTimerChanges, i18n, acceptedMessageRequest, isMe, isPinned, type, isArchived, muteExpirationLabel, onDeleteMessages, onResetSession, onSetDisappearingMessages, onSetMuteNotifications, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onSetPin, onMoveToInbox, timerOptions, } = this.props;
             const muteOptions = [];
             if (muteExpirationLabel) {
                 muteOptions.push(...[
@@ -144,7 +144,7 @@
                 react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowAllMedia }, i18n('viewRecentMedia')),
                 isGroup ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowGroupMembers }, i18n('showMembers'))) : null,
                 !isGroup && !isMe ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowSafetyNumber }, i18n('showSafetyNumber'))) : null,
-                !isGroup && isAccepted ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onResetSession }, i18n('resetSession'))) : null,
+                !isGroup && acceptedMessageRequest ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onResetSession }, i18n('resetSession'))) : null,
                 isArchived ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onMoveToInbox }, i18n('moveConversationToInbox'))) : (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onArchive }, i18n('archiveConversation'))),
                 isPinned ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: () => onSetPin(false) }, i18n('unpinConversation'))) : (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: () => onSetPin(true) }, i18n('pinConversation'))),
                 react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onDeleteMessages }, i18n('deleteMessages'))));

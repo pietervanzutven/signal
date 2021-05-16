@@ -4,7 +4,7 @@ require(exports => {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = __importDefault(require("lodash"));
+    const lodash_1 = require("lodash");
     const p_map_1 = __importDefault(require("p-map"));
     const Crypto_1 = __importDefault(require("../textsecure/Crypto"));
     const Client_1 = __importDefault(require("../sql/Client"));
@@ -449,7 +449,7 @@ require(exports => {
             };
         }, { concurrency: 5 });
         // Merge Account records last
-        const sortedStorageItems = [].concat(...lodash_1.default.partition(decryptedStorageItems, storageRecord => storageRecord.storageRecord.account === undefined));
+        const sortedStorageItems = [].concat(...lodash_1.partition(decryptedStorageItems, storageRecord => storageRecord.storageRecord.account === undefined));
         try {
             window.log.info(`storageService.processManifest: Attempting to merge ${sortedStorageItems.length} records`);
             const mergedRecords = await p_map_1.default(sortedStorageItems, mergeRecord, {
@@ -536,7 +536,13 @@ require(exports => {
         }
         window.log.info('storageService.sync: starting...');
         try {
-            const localManifestVersion = window.storage.get('manifestVersion') || 0;
+            // If we've previously interacted with strage service, update 'fetchComplete' record
+            const previousFetchComplete = window.storage.get('storageFetchComplete');
+            const manifestFromStorage = window.storage.get('manifestVersion');
+            if (!previousFetchComplete && lodash_1.isNumber(manifestFromStorage)) {
+                window.storage.put('storageFetchComplete', true);
+            }
+            const localManifestVersion = manifestFromStorage || 0;
             const manifest = await fetchManifest(localManifestVersion);
             // Guarding against no manifests being returned, everything should be ok
             if (!manifest) {
@@ -550,6 +556,8 @@ require(exports => {
             if (hasConflicts) {
                 await upload();
             }
+            // We now know that we've successfully completed a storage service fetch
+            window.storage.put('storageFetchComplete', true);
         }
         catch (err) {
             window.log.error('storageService.sync: error processing manifest', err && err.stack ? err.stack : String(err));
@@ -620,14 +628,14 @@ require(exports => {
         window.log.info('storageService.eraseAllStorageServiceState: complete');
     }
     exports.eraseAllStorageServiceState = eraseAllStorageServiceState;
-    exports.storageServiceUploadJob = lodash_1.default.debounce(() => {
+    exports.storageServiceUploadJob = lodash_1.debounce(() => {
         if (!storageServiceEnabled) {
             window.log.info('storageService.storageServiceUploadJob: called before enabled');
             return;
         }
         JobQueue_1.storageJobQueue(upload, `upload v${window.storage.get('manifestVersion')}`);
     }, 500);
-    exports.runStorageServiceSyncJob = lodash_1.default.debounce(() => {
+    exports.runStorageServiceSyncJob = lodash_1.debounce(() => {
         if (!storageServiceEnabled) {
             window.log.info('storageService.runStorageServiceSyncJob: called before enabled');
             return;

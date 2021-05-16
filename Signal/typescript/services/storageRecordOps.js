@@ -287,7 +287,7 @@ require(exports => {
         const hasPendingChanges = doesRecordHavePendingChanges(await toGroupV2Record(conversation), groupV2Record, conversation);
         updateConversation(conversation.attributes);
         const isGroupNewToUs = !lodash_1.isNumber(conversation.get('revision'));
-        const isFirstSync = !lodash_1.isNumber(window.storage.get('manifestVersion'));
+        const isFirstSync = !window.storage.get('storageFetchComplete');
         const dropInitialJoinMessage = isFirstSync;
         // We don't need to update GroupV2 groups all the time. We fetch group state the first
         //   time we hear about these groups, from then on we rely on incoming messages or

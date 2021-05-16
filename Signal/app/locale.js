@@ -4,10 +4,10 @@
   window.app = window.app || {};
   window.app.locale = {};
 
-  const path = window.path;
-  const fs = window.fs;
-  const _ = window.lodash;
-  const { setup } = window.i18n;
+  const path = require('path');
+  const fs = require('fs');
+  const _ = require('lodash');
+  const { setup } = require('../js/modules/i18n');
 
   function normalizeLocaleName(locale) {
     if (/^es-/.test(locale)) {

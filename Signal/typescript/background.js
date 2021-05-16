@@ -487,7 +487,7 @@
     function initializeRedux() {
         // Here we set up a full redux store with initial state for our LeftPane Root
         const convoCollection = window.getConversations();
-        const conversations = convoCollection.map(conversation => conversation.cachedProps);
+        const conversations = convoCollection.map(conversation => conversation.format());
         const ourNumber = window.textsecure.storage.user.getNumber();
         const ourUuid = window.textsecure.storage.user.getUuid();
         const ourConversationId = window.ConversationController.getOurConversationId();
@@ -540,12 +540,16 @@
             conversationRemoved(id);
         });
         convoCollection.on('add', conversation => {
-            const { id, cachedProps } = conversation || {};
-            conversationAdded(id, cachedProps);
+            if (!conversation) {
+                return;
+            }
+            conversationAdded(conversation.id, conversation.format());
         });
         convoCollection.on('change', conversation => {
-            const { id, cachedProps } = conversation || {};
-            conversationChanged(id, cachedProps);
+            if (!conversation) {
+                return;
+            }
+            conversationChanged(conversation.id, conversation.format());
         });
         convoCollection.on('reset', removeAllConversations);
         window.Whisper.events.on('messageExpired', messageExpired);
@@ -1393,21 +1397,6 @@
                 window.log.error('Error: Unable to register for unauthenticated delivery support.', error && error.stack ? error.stack : error);
             }
         }
-        const hasRegisteredGV23Support = 'hasRegisteredGV23Support';
-        if (!window.storage.get(hasRegisteredGV23Support) &&
-            window.textsecure.storage.user.getUuid()) {
-            const server = window.WebAPI.connect({
-                username: USERNAME || OLD_USERNAME,
-                password: PASSWORD,
-            });
-            try {
-                await server.registerCapabilities({ 'gv2-3': true });
-                window.storage.put(hasRegisteredGV23Support, true);
-            }
-            catch (error) {
-                window.log.error('Error: Unable to register support for GV2.', error && error.stack ? error.stack : error);
-            }
-        }
         const deviceId = window.textsecure.storage.user.getDeviceId();
         // If we didn't capture a UUID on registration, go get it from the server
         if (!window.textsecure.storage.user.getUuid()) {
@@ -1424,6 +1413,22 @@
             }
             catch (error) {
                 window.log.error('Error: Unable to retrieve UUID from service.', error && error.stack ? error.stack : error);
+            }
+        }
+        // We need to do this after fetching our UUID
+        const hasRegisteredGV23Support = 'hasRegisteredGV23Support';
+        if (!window.storage.get(hasRegisteredGV23Support) &&
+            window.textsecure.storage.user.getUuid()) {
+            const server = window.WebAPI.connect({
+                username: USERNAME || OLD_USERNAME,
+                password: PASSWORD,
+            });
+            try {
+                await server.registerCapabilities({ 'gv2-3': true });
+                window.storage.put(hasRegisteredGV23Support, true);
+            }
+            catch (error) {
+                window.log.error('Error: Unable to register support for GV2.', error && error.stack ? error.stack : error);
             }
         }
         if (firstRun === true && deviceId !== '1') {
@@ -1885,6 +1890,7 @@
         }
         const message = initIncomingMessage(data, messageDescriptor);
         if (data.message.reaction) {
+            window.normalizeUuids(data.message.reaction, ['targetAuthorUuid'], 'background::onMessageReceived');
             const { reaction } = data.message;
             window.log.info('Queuing incoming reaction for', reaction.targetTimestamp);
             const reactionModel = window.Whisper.Reactions.add({
@@ -2035,6 +2041,7 @@
         }
         const message = createSentMessage(data, messageDescriptor);
         if (data.message.reaction) {
+            window.normalizeUuids(data.message.reaction, ['targetAuthorUuid'], 'background::onSentMessage');
             const { reaction } = data.message;
             window.log.info('Queuing sent reaction for', reaction.targetTimestamp);
             const reactionModel = window.Whisper.Reactions.add({

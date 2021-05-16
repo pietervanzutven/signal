@@ -689,11 +689,9 @@
             }
             const syncMessage = this.createSyncMessage();
             const response = new window.textsecure.protobuf.SyncMessage.MessageRequestResponse();
-            response.threadE164 = responseArgs.threadE164;
-            response.threadUuid = responseArgs.threadUuid;
-            response.groupId = responseArgs.groupId
-                ? window.Signal.Crypto.fromEncodedBinaryToArrayBuffer(responseArgs.groupId)
-                : null;
+            response.threadE164 = responseArgs.threadE164 || null;
+            response.threadUuid = responseArgs.threadUuid || null;
+            response.groupId = responseArgs.groupId || null;
             response.type = responseArgs.type;
             syncMessage.messageRequestResponse = response;
             const contentMessage = new window.textsecure.protobuf.Content();
@@ -770,7 +768,6 @@
             if (identifiers.length === 0) {
                 return Promise.resolve({
                     dataMessage: proto.toArrayBuffer(),
-                    discoveredIdentifierPairs: [],
                     errors: [],
                     failoverIdentifiers: [],
                     successfulIdentifiers: [],
@@ -918,7 +915,6 @@
                     errors: [],
                     unidentifiedDeliveries: [],
                     dataMessage: await this.getMessageProtoObj(attrs),
-                    discoveredIdentifierPairs: [],
                 });
             }
             return this.sendMessage(attrs, options);
@@ -964,7 +960,6 @@
                     errors: [],
                     unidentifiedDeliveries: [],
                     dataMessage: await this.getMessageProtoObj(attrs),
-                    discoveredIdentifierPairs: [],
                 });
             }
             return this.sendMessage(attrs, options);

@@ -300,7 +300,8 @@ Whisper.ConversationView = Whisper.View.extend({
             const expirationSettingName = expireTimer
                 ? Whisper.ExpirationTimerOptions.getName(expireTimer || 0)
                 : null;
-            return Object.assign(Object.assign({}, this.model.cachedProps), { leftGroup: this.model.get('left'), disableTimerChanges: this.model.get('left') ||
+            return Object.assign(Object.assign({}, this.model.format()), { leftGroup: this.model.get('left'), disableTimerChanges: this.model.isMissingRequiredProfileSharing() ||
+                    this.model.get('left') ||
                     !this.model.getAccepted() ||
                     !this.model.canChangeTimer(), showBackButton: Boolean(this.panels && this.panels.length), expirationSettingName, timerOptions: Whisper.ExpirationTimerOptions.map((item) => ({
                     name: item.getName(),
@@ -428,7 +429,9 @@ Whisper.ConversationView = Whisper.View.extend({
     async longRunningTaskWrapper({ name, task, }) {
         const idLog = `${name}/${this.model.idForLogging()}`;
         const ONE_SECOND = 1000;
+        const TWO_SECONDS = 2000;
         let progressView;
+        let spinnerStart;
         let progressTimeout = setTimeout(() => {
             window.log.info(`longRunningTaskWrapper/${idLog}: Creating spinner`);
             // Note: this component uses a portal to render itself into the top-level DOM. No
@@ -437,7 +440,8 @@ Whisper.ConversationView = Whisper.View.extend({
                 className: 'progress-modal-wrapper',
                 Component: window.Signal.Components.ProgressModal,
             });
-        }, ONE_SECOND);
+            spinnerStart = Date.now();
+        }, TWO_SECONDS);
         // Note: any task we put here needs to have its own safety valve; this function will
         //   show a spinner until it's done
         try {
@@ -449,6 +453,11 @@ Whisper.ConversationView = Whisper.View.extend({
                 progressTimeout = undefined;
             }
             if (progressView) {
+                const now = Date.now();
+                if (spinnerStart && now - spinnerStart < ONE_SECOND) {
+                    window.log.info(`longRunningTaskWrapper/${idLog}: Spinner shown for less than second, showing for another second`);
+                    await window.Signal.Util.sleep(ONE_SECOND);
+                }
                 progressView.remove();
                 progressView = undefined;
             }
@@ -2133,6 +2142,10 @@ Whisper.ConversationView = Whisper.View.extend({
                 }
                 return;
             }
+            const mandatoryProfileSharingEnabled = window.Signal.RemoteConfig.isEnabled('desktop.mandatoryProfileSharing');
+            if (mandatoryProfileSharingEnabled && !this.model.get('profileSharing')) {
+                this.model.set({ profileSharing: true });
+            }
             const { packId, stickerId } = options;
             this.model.sendStickerMessage(packId, stickerId);
         }
@@ -2285,6 +2298,10 @@ Whisper.ConversationView = Whisper.View.extend({
         try {
             if (!message.length && !this.hasFiles() && !this.voiceNoteAttachment) {
                 return;
+            }
+            const mandatoryProfileSharingEnabled = window.Signal.RemoteConfig.isEnabled('desktop.mandatoryProfileSharing');
+            if (mandatoryProfileSharingEnabled && !this.model.get('profileSharing')) {
+                this.model.set({ profileSharing: true });
             }
             const attachments = await this.getFiles();
             const sendDelta = Date.now() - this.sendStart;

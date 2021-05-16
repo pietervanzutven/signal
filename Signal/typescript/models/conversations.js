@@ -117,12 +117,14 @@ require(exports => {
             this.unset('tokens');
             this.typingRefreshTimer = null;
             this.typingPauseTimer = null;
-            // Keep props ready
-            this.generateProps = () => {
-                this.cachedProps = this.getProps();
-            };
-            this.on('change', this.generateProps);
-            this.generateProps();
+            // We clear our cached props whenever we change so that the next call to format() will
+            //   result in refresh via a getProps() call. See format() below.
+            this.on('change', () => {
+                if (this.cachedProps) {
+                    this.oldCachedProps = this.cachedProps;
+                }
+                this.cachedProps = null;
+            });
         }
         isMe() {
             const e164 = this.get('e164');
@@ -146,7 +148,7 @@ require(exports => {
         }
         isMemberPending(conversationId) {
             if (!this.isGroupV2()) {
-                throw new Error(`isPendingMember: Called for non-GroupV2 conversation ${this.idForLogging()}`);
+                return false;
             }
             const pendingMembersV2 = this.get('pendingMembersV2');
             if (!pendingMembersV2 || !pendingMembersV2.length) {
@@ -679,16 +681,29 @@ require(exports => {
             });
         }
         format() {
+            if (this.cachedProps) {
+                return this.cachedProps;
+            }
+            const oldFormat = this.format;
+            // We don't want to crash or have an infinite loop if we loop back into this function
+            //   again. We'll log a warning and returned old cached props or throw an error.
+            this.format = () => {
+                const { stack } = new Error('for stack');
+                window.log.warn(`Conversation.format()/${this.idForLogging()} reentrant call! ${stack}`);
+                if (!this.oldCachedProps) {
+                    throw new Error(`Conversation.format()/${this.idForLogging()} reentrant call, no old cached props!`);
+                }
+                return this.oldCachedProps;
+            };
+            this.cachedProps = this.getProps();
+            this.format = oldFormat;
             return this.cachedProps;
         }
+        // Note: this should never be called directly. Use conversation.format() instead, which
+        //   maintains a cache, and protects against reentrant calls.
+        // Note: When writing code inside this function, do not call .format() on a conversation
+        //   unless you are sure that it's not this very same conversation.
         getProps() {
-            // This is to prevent race conditions on startup; Conversation models are created
-            //   but the full window.ConversationController.load() sequence isn't complete. So, we
-            //   don't cache props on create, but we do later when load() calls generateProps()
-            //   for us.
-            if (!window.ConversationController.isFetchComplete()) {
-                return null;
-            }
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const color = this.getColor();
             const typingValues = window._.values(this.contactTypingTimers || {});
@@ -706,6 +721,14 @@ require(exports => {
                 draftTimestamp >= timestamp);
             const inboxPosition = this.get('inbox_position');
             const messageRequestsEnabled = window.Signal.RemoteConfig.isEnabled('desktop.messageRequests');
+            const ourConversationId = window.ConversationController.getOurConversationId();
+            let groupVersion;
+            if (this.isGroupV1()) {
+                groupVersion = 1;
+            }
+            else if (this.isGroupV2()) {
+                groupVersion = 2;
+            }
             // TODO: DESKTOP-720
             /* eslint-disable @typescript-eslint/no-non-null-assertion */
             const result = {
@@ -714,17 +737,19 @@ require(exports => {
                 e164: this.get('e164'),
                 acceptedMessageRequest: this.getAccepted(),
                 activeAt: this.get('active_at'),
+                areWePending: Boolean(ourConversationId && this.isMemberPending(ourConversationId)),
                 avatarPath: this.getAvatarPath(),
                 color,
                 draftPreview,
                 draftText,
                 firstName: this.get('profileName'),
+                groupVersion,
                 inboxPosition,
-                isAccepted: this.getAccepted(),
                 isArchived: this.get('isArchived'),
                 isBlocked: this.isBlocked(),
                 isMe: this.isMe(),
                 isPinned: this.get('isPinned'),
+                isMissingMandatoryProfileSharing: this.isMissingRequiredProfileSharing(),
                 isVerified: this.isVerified(),
                 lastMessage: {
                     status: this.get('lastMessageStatus'),
@@ -745,9 +770,17 @@ require(exports => {
                 timestamp,
                 title: this.getTitle(),
                 type: (this.isPrivate() ? 'direct' : 'group'),
-                typingContact: typingContact ? typingContact.format() : null,
                 unreadCount: this.get('unreadCount') || 0,
             };
+            if (typingContact) {
+                // We don't want to call .format() on our own conversation
+                if (typingContact.id === this.id) {
+                    result.typingContact = result;
+                }
+                else {
+                    result.typingContact = typingContact.format();
+                }
+            }
             /* eslint-enable @typescript-eslint/no-non-null-assertion */
             return result;
         }
@@ -961,12 +994,34 @@ require(exports => {
                 ourNumber || ourUuid, {
                 syncMessage: true,
             });
-            await wrap(window.textsecure.messaging.syncMessageRequestResponse({
-                threadE164: this.get('e164'),
-                threadUuid: this.get('uuid'),
-                groupId: this.get('groupId'),
-                type: response,
-            }, sendOptions));
+            const groupId = this.get('groupId');
+            let groupIdBuffer;
+            if (groupId && this.isGroupV1()) {
+                groupIdBuffer = Crypto_1.fromEncodedBinaryToArrayBuffer(groupId);
+            }
+            else if (groupId && this.isGroupV2()) {
+                groupIdBuffer = Crypto_1.base64ToArrayBuffer(groupId);
+            }
+            try {
+                await wrap(window.textsecure.messaging.syncMessageRequestResponse({
+                    threadE164: this.get('e164'),
+                    threadUuid: this.get('uuid'),
+                    groupId: groupIdBuffer,
+                    type: response,
+                }, sendOptions));
+            }
+            catch (result) {
+                if (result instanceof Error) {
+                    throw result;
+                }
+                else if (result && result.errors) {
+                    // We filter out unregistered user errors, because we ignore those in groups
+                    const wasThereARealError = window._.some(result.errors, error => error.name !== 'UnregisteredUserError');
+                    if (wasThereARealError) {
+                        throw result;
+                    }
+                }
+            }
         }
         onMessageError() {
             this.updateVerified();
@@ -1200,6 +1255,17 @@ require(exports => {
         }
         getMessageRequestResponseType() {
             return this.get('messageRequestResponseType') || 0;
+        }
+        isMissingRequiredProfileSharing() {
+            const mandatoryProfileSharingEnabled = window.Signal.RemoteConfig.isEnabled('desktop.mandatoryProfileSharing');
+            if (!mandatoryProfileSharingEnabled) {
+                return false;
+            }
+            const hasNoMessages = (this.get('messageCount') || 0) === 0;
+            if (hasNoMessages) {
+                return false;
+            }
+            return !this.get('profileSharing');
         }
         /**
          * Determine if this conversation should be considered "accepted" in terms
@@ -1834,26 +1900,18 @@ require(exports => {
             return promise.then(async (result) => {
                 // success
                 if (result) {
-                    await this.handleMessageSendResult(result.failoverIdentifiers, result.unidentifiedDeliveries, result.discoveredIdentifierPairs);
+                    await this.handleMessageSendResult(result.failoverIdentifiers, result.unidentifiedDeliveries);
                 }
                 return result;
             }, async (result) => {
                 // failure
                 if (result) {
-                    await this.handleMessageSendResult(result.failoverIdentifiers, result.unidentifiedDeliveries, result.discoveredIdentifierPairs);
+                    await this.handleMessageSendResult(result.failoverIdentifiers, result.unidentifiedDeliveries);
                 }
                 throw result;
             });
         }
-        async handleMessageSendResult(failoverIdentifiers, unidentifiedDeliveries, discoveredIdentifierPairs) {
-            (discoveredIdentifierPairs || []).forEach(item => {
-                const { uuid, e164 } = item;
-                window.ConversationController.ensureContactIds({
-                    uuid,
-                    e164,
-                    highTrust: true,
-                });
-            });
+        async handleMessageSendResult(failoverIdentifiers, unidentifiedDeliveries) {
             await Promise.all((failoverIdentifiers || []).map(async (identifier) => {
                 const conversation = window.ConversationController.get(identifier);
                 if (conversation &&
@@ -1966,7 +2024,7 @@ require(exports => {
             if (!this.id) {
                 return;
             }
-        let [previewMessage, activityMessage] = await Promise.all([
+            let [previewMessage, activityMessage] = await Promise.all([
                 window.Signal.Data.getLastConversationPreview(this.id, {
                     Message: window.Whisper.Message,
                 }),
@@ -1974,15 +2032,15 @@ require(exports => {
                     Message: window.Whisper.Message,
                 }),
             ]);
-        // Register the message with MessageController so that if it already exists
-        // in memory we use that data instead of the data from the db which may
-        // be out of date.
-        if (previewMessage) {
-            previewMessage = window.MessageController.register(previewMessage.id, previewMessage);
-        }
-        if (activityMessage) {
-            activityMessage = window.MessageController.register(activityMessage.id, activityMessage);
-        }
+            // Register the message with MessageController so that if it already exists
+            // in memory we use that data instead of the data from the db which may
+            // be out of date.
+            if (previewMessage) {
+                previewMessage = window.MessageController.register(previewMessage.id, previewMessage);
+            }
+            if (activityMessage) {
+                activityMessage = window.MessageController.register(activityMessage.id, activityMessage);
+            }
             if (this.hasDraft() &&
                 this.get('draftTimestamp') &&
                 (!previewMessage ||
@@ -2001,7 +2059,7 @@ require(exports => {
                 lastMessageStatus: (previewMessage ? previewMessage.getMessagePropStatus() : null) || null,
                 timestamp,
                 lastMessageDeletedForEveryone: previewMessage
-                    ? previewMessage.deletedForEveryone
+                    ? previewMessage.get('deletedForEveryone')
                     : false,
             });
             window.Signal.Data.updateConversation(this.attributes);
@@ -2670,17 +2728,16 @@ require(exports => {
                 return 'signal-blue';
             }
             const { migrateColor } = Util;
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             return migrateColor(this.get('color'));
         }
         getAvatarPath() {
             const avatar = this.isMe()
                 ? this.get('profileAvatar') || this.get('avatar')
                 : this.get('avatar') || this.get('profileAvatar');
-            if (avatar && avatar.path) {
-                return getAbsoluteAttachmentPath(avatar.path);
+            if (!avatar || !avatar.path) {
+                return undefined;
             }
-            return null;
+            return getAbsoluteAttachmentPath(avatar.path);
         }
         canChangeTimer() {
             if (this.isPrivate()) {
@@ -2934,10 +2991,33 @@ require(exports => {
             this._byUuid = Object.create(null);
             this._byGroupId = Object.create(null);
         },
-        add(...models) {
-            const result = window.Backbone.Collection.prototype.add.apply(this, models);
-            this.generateLookups(Array.isArray(result) ? result.slice(0) : [result]);
-            return result;
+        add(data) {
+            let hydratedData;
+            // First, we need to ensure that the data we're working with is Conversation models
+            if (Array.isArray(data)) {
+                hydratedData = [];
+                for (let i = 0, max = data.length; i < max; i += 1) {
+                    const item = data[i];
+                    // We create a new model if it's not already a model
+                    if (!item.get) {
+                        hydratedData.push(new Whisper.Conversation(item));
+                    }
+                    else {
+                        hydratedData.push(item);
+                    }
+                }
+            }
+            else if (!data.get) {
+                hydratedData = new Whisper.Conversation(data);
+            }
+            else {
+                hydratedData = data;
+            }
+            // Next, we update our lookups first to prevent infinite loops on the 'add' event
+            this.generateLookups(Array.isArray(hydratedData) ? hydratedData : [hydratedData]);
+            // Lastly, we fire off the add events related to this change
+            window.Backbone.Collection.prototype.add.call(this, hydratedData);
+            return hydratedData;
         },
         /**
          * window.Backbone collections have a `_byId` field that `get` defers to. Here, we

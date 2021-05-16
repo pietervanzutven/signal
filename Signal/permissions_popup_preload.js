@@ -1,12 +1,10 @@
 /* global window */
 
 (function () {
-  'use strict';
-
-  const { ipcRenderer, remote } = window.top.electron;
-  const url = window.top.url;
-  const i18n = window.top.modules.i18n;
-  const { makeGetter, makeSetter } = window.top.preload_utils;
+  const { ipcRenderer, remote } = window.top.require('electron');
+  const url = window.top.require('url');
+  const i18n = window.top.require('./js/modules/i18n');
+  const { makeGetter, makeSetter } = window.top.require('./preload_utils');
 
   const { nativeTheme } = remote.require('electron');
 
@@ -34,7 +32,7 @@
     });
   };
 
-  window.top.log;
+  window.top.require('./js/logging');
 
   window.closePermissionsPopup = () =>
     ipcRenderer.send('close-permissions-popup');
@@ -43,5 +41,5 @@
   window.setMediaCameraPermissions = makeSetter('media-camera-permissions');
   window.getThemeSetting = makeGetter('theme-setting');
   window.setThemeSetting = makeSetter('theme-setting');
-  window.Backbone = window.top.Backbone;
+  window.Backbone = window.top.require('backbone');
 })();

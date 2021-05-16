@@ -5,13 +5,11 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const p_queue_1 = __importDefault(require("p-queue"));
+    const sleep_1 = require("./sleep");
     window.batchers = [];
     window.waitForAllBatchers = async () => {
         await Promise.all(window.batchers.map(item => item.flushAndWait()));
     };
-    async function sleep(ms) {
-        await new Promise(resolve => setTimeout(resolve, ms));
-    }
     function createBatcher(options) {
         let batcher;
         let timeout;
@@ -51,7 +49,7 @@ require(exports => {
                 }
                 if (items.length > 0) {
                     // eslint-disable-next-line no-await-in-loop
-                    await sleep(options.wait * 2);
+                    await sleep_1.sleep(options.wait * 2);
                 }
             }
         }

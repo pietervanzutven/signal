@@ -1,9 +1,5 @@
-/* eslint-env node, browser */
-
-(function () {
-  'use strict';
-
-  const exports = window.i18n = {};
+require(exports => {
+  /* eslint-env node, browser */
 
   // eslint-disable-next-line no-console
   const log = typeof window !== 'undefined' ? window.log : console;
@@ -82,4 +78,4 @@
 
     return getMessage;
   };
-})();
+});

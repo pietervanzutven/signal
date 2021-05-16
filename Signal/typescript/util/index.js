@@ -45,6 +45,8 @@ require(exports => {
     exports.missingCaseError = missingCaseError_1.missingCaseError;
     const parseRemoteClientExpiration_1 = require("./parseRemoteClientExpiration");
     exports.parseRemoteClientExpiration = parseRemoteClientExpiration_1.parseRemoteClientExpiration;
+    const sleep_1 = require("./sleep");
+    exports.sleep = sleep_1.sleep;
     const zkgroup = __importStar(require("./zkgroup"));
     exports.zkgroup = zkgroup;
 });

@@ -4214,6 +4214,8 @@ img.emoji.jumbo {
       line-height: 18px;
       letter-spacing: -0.03px;
       font-weight: bold; }
+    .module-message-request-actions__message__learn-more {
+      text-decoration: none; }
   .module-message-request-actions__buttons {
     display: flex;
     flex-direction: row;

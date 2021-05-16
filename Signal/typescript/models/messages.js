@@ -9,6 +9,8 @@ require(exports => {
     const { addStickerPackReference, getMessageBySender } = window.Signal.Data;
     const { bytesFromString } = window.Signal.Crypto;
     const PLACEHOLDER_CONTACT = {
+        id: 'placeholder-contact',
+        type: 'direct',
         title: window.i18n('unknownContact'),
     };
     const THREE_HOURS = 3 * 60 * 60 * 1000;
@@ -462,20 +464,22 @@ require(exports => {
                 .filter(attachment => !attachment.error)
                 .map(attachment => this.getPropsForAttachment(attachment));
         }
+        // Note: interactionMode is mixed in via selectors/conversations._messageSelector
         getPropsForMessage() {
             const sourceId = this.getContactId();
             const contact = this.findAndFormatContact(sourceId);
             const contactModel = this.findContact(sourceId);
-            const authorColor = contactModel ? contactModel.getColor() : null;
-            const authorAvatarPath = contactModel ? contactModel.getAvatarPath() : null;
+            const authorColor = contactModel ? contactModel.getColor() : undefined;
+            const authorAvatarPath = contactModel
+                ? contactModel.getAvatarPath()
+                : undefined;
             const expirationLength = this.get('expireTimer') * 1000;
             const expireTimerStart = this.get('expirationStartTimestamp');
             const expirationTimestamp = expirationLength && expireTimerStart
                 ? expireTimerStart + expirationLength
-                : null;
+                : undefined;
             const conversation = this.getConversation();
             const isGroup = conversation && !conversation.isPrivate();
-            const conversationAccepted = Boolean(conversation && conversation.getAccepted());
             const sticker = this.get('sticker');
             const isTapToView = this.isTapToView();
             const reactions = (this.get('reactions') || []).map(re => {
@@ -492,7 +496,6 @@ require(exports => {
                 textPending: this.get('bodyPending'),
                 id: this.id,
                 conversationId: this.get('conversationId'),
-                conversationAccepted,
                 isSticker: Boolean(sticker),
                 direction: this.isIncoming() ? 'incoming' : 'outgoing',
                 timestamp: this.get('sent_at'),
@@ -500,6 +503,7 @@ require(exports => {
                 contact: this.getPropsForEmbeddedContact(),
                 canReply: this.canReply(),
                 canDeleteForEveryone: this.canDeleteForEveryone(),
+                canDownload: this.canDownload(),
                 authorTitle: contact.title,
                 authorColor,
                 authorName: contact.name,
@@ -560,6 +564,8 @@ require(exports => {
                 ourRegionCode: regionCode,
             });
             return {
+                id: 'phone-only',
+                type: 'direct',
                 title: phoneNumber,
                 phoneNumber,
             };
@@ -574,7 +580,7 @@ require(exports => {
         // eslint-disable-next-line class-methods-use-this
         createNonBreakingLastSeparator(text) {
             if (!text) {
-                return null;
+                return undefined;
             }
             const nbsp = '\xa0';
             const regex = /(\S)( +)(\S+\s*)$/;
@@ -598,7 +604,7 @@ require(exports => {
                 return 'error';
             }
             if (!this.isOutgoing()) {
-                return null;
+                return undefined;
             }
             const readBy = this.get('read_by') || [];
             if (window.storage.get('read-receipt-setting') && readBy.length > 0) {
@@ -730,6 +736,11 @@ require(exports => {
             if (this.isUnsupportedMessage()) {
                 return {
                     text: window.i18n('message--getDescription--unsupported-message'),
+                };
+            }
+            if (this.get('deletedForEveryone')) {
+                return {
+                    text: window.i18n('message--deletedForEveryone'),
                 };
             }
             if (this.isProfileChange()) {
@@ -1159,10 +1170,11 @@ require(exports => {
             return this.OUR_NUMBER;
         }
         getSourceDevice() {
+            const sourceDevice = this.get('sourceDevice');
             if (this.isIncoming()) {
-                return this.get('sourceDevice');
+                return sourceDevice;
             }
-            return window.textsecure.storage.user.getDeviceId();
+            return sourceDevice || window.textsecure.storage.user.getDeviceId();
         }
         getSourceUuid() {
             if (this.isIncoming()) {
@@ -1355,7 +1367,7 @@ require(exports => {
             const options = conversation.getSendOptions();
             if (conversation.isPrivate()) {
                 const [identifier] = recipients;
-                promise = window.textsecure.messaging.sendMessageToIdentifier(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('sent_at'), this.get('expireTimer'), profileKey, options);
+                promise = window.textsecure.messaging.sendMessageToIdentifier(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('deletedForEveryoneTimestamp'), this.get('sent_at'), this.get('expireTimer'), profileKey, options);
             }
             else {
                 // Because this is a partial group send, we manually construct the request like
@@ -1406,29 +1418,42 @@ require(exports => {
             }
             return true;
         }
+        canDownload() {
+            const conversation = this.getConversation();
+            const isAccepted = Boolean(conversation && conversation.getAccepted());
+            if (this.isOutgoing()) {
+                return true;
+            }
+            return isAccepted;
+        }
         canReply() {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const isAccepted = this.getConversation().getAccepted();
+            var _a, _b;
+            const conversation = this.getConversation();
             const errors = this.get('errors');
             const isOutgoing = this.get('type') === 'outgoing';
             const numDelivered = this.get('delivered');
-            // Case 1: We cannot reply if we have accepted the message request
-            if (!isAccepted) {
+            // Case 1: If mandatory profile sharing is enabled, and we haven't shared yet, then
+            //   we can't reply.
+            if ((_a = conversation) === null || _a === void 0 ? void 0 : _a.isMissingRequiredProfileSharing()) {
                 return false;
             }
-            // Case 2: We cannot reply if this message is deleted for everyone
+            // Case 2: We cannot reply if we have accepted the message request
+            if (!((_b = conversation) === null || _b === void 0 ? void 0 : _b.getAccepted())) {
+                return false;
+            }
+            // Case 3: We cannot reply if this message is deleted for everyone
             if (this.get('deletedForEveryone')) {
                 return false;
             }
-            // Case 3: We can reply if this is outgoing and delievered to at least one recipient
+            // Case 4: We can reply if this is outgoing and delievered to at least one recipient
             if (isOutgoing && numDelivered > 0) {
                 return true;
             }
-            // Case 4: We can reply if there are no errors
+            // Case 5: We can reply if there are no errors
             if (!errors || (errors && errors.length === 0)) {
                 return true;
             }
-            // Case 5: default
+            // Case 6: default
             return false;
         }
         // Called when the user ran into an error with a specific user, wants to send to them
@@ -1495,14 +1520,21 @@ require(exports => {
                     this.trigger('sent', this);
                     this.sendSyncMessage();
                 })
-                .catch(result => {
+                .catch((result) => {
                     this.trigger('done');
-                    if (result.dataMessage) {
+                    if ('dataMessage' in result && result.dataMessage) {
                         this.set({ dataMessage: result.dataMessage });
                     }
                     let promises = [];
                     // If we successfully sent to a user, we can remove our unregistered flag.
-                    result.successfulIdentifiers.forEach((identifier) => {
+                    let successfulIdentifiers;
+                    if ('successfulIdentifiers' in result) {
+                        ({ successfulIdentifiers =[] } = result);
+                    }
+                    else {
+                        successfulIdentifiers = [];
+                    }
+                    successfulIdentifiers.forEach((identifier) => {
                         const c = window.ConversationController.get(identifier);
                         if (c && c.isEverUnregistered()) {
                             c.setRegistered();
@@ -1522,7 +1554,7 @@ require(exports => {
                         }
                     }
                     else {
-                        if (result.successfulIdentifiers.length > 0) {
+                        if (successfulIdentifiers.length > 0) {
                             const sentTo = this.get('sent_to') || [];
                             // If we just found out that we couldn't send to a user because they are no
                             //   longer registered, we will update our unregistered flag. In groups we
@@ -1556,7 +1588,7 @@ require(exports => {
                             });
                             promises.push(this.sendSyncMessage());
                         }
-                        else {
+                        else if (result.errors) {
                             this.saveErrors(result.errors);
                         }
                         promises = promises.concat(
@@ -2305,15 +2337,11 @@ require(exports => {
                     }
                     // Does this message have any pending, previously-received associated reactions?
                     const reactions = window.Whisper.Reactions.forMessage(message);
-                    reactions.forEach(reaction => {
-                        message.handleReaction(reaction, false);
-                    });
+                    await Promise.all(reactions.map(reaction => message.handleReaction(reaction, false)));
                     // Does this message have any pending, previously-received associated
                     // delete for everyone messages?
                     const deletes = window.Whisper.Deletes.forMessage(message);
-                    deletes.forEach(del => {
-                        window.Signal.Util.deleteForEveryone(message, del, false);
-                    });
+                    await Promise.all(deletes.map(del => window.Signal.Util.deleteForEveryone(message, del, false)));
                     await window.Signal.Data.saveMessage(message.attributes, {
                         Message: window.Whisper.Message,
                         forceSave: true,
