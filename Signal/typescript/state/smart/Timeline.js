@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.selectors = window.ts.state.selectors || {};
-    const exports = window.ts.state.smart.Timeline = {};
-
     var __rest = (this && this.__rest) || function (s, e) {
         var t = {};
         for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
@@ -46,7 +40,7 @@
         return (react_1.default.createElement(FilteredSmartTimelineItem, Object.assign({}, actionProps, { conversationId: conversationId, id: messageId, renderEmojiPicker: renderEmojiPicker })));
     }
     function renderEmojiPicker({ ref, onPickEmoji, onClose, style, }) {
-        return (react_1.default.createElement(EmojiPicker_1.SmartEmojiPicker, { ref: ref, onPickEmoji: onPickEmoji, onClose: onClose, style: style, disableSkinTones: true }));
+        return (react_1.default.createElement(EmojiPicker_1.SmartEmojiPicker, { ref: ref, onPickEmoji: onPickEmoji, onClose: onClose, style: style }));
     }
     function renderLastSeenIndicator(id) {
         return react_1.default.createElement(FilteredSmartLastSeenIndicator, { id: id });
@@ -76,4 +70,4 @@
     const smart = react_redux_1.connect(mapStateToProps, actions_1.mapDispatchToProps);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exports.SmartTimeline = smart(Timeline_1.Timeline);
-})();
+});

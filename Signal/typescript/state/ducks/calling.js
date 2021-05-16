@@ -1,6 +1,7 @@
 require(exports => {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    const ringrtc_1 = require("ringrtc");
     const notify_1 = require("../../services/notify");
     const calling_1 = require("../../services/calling");
     const Calling_1 = require("../../types/Calling");
@@ -9,10 +10,13 @@ require(exports => {
     const bounceAppIcon_1 = require("../../shims/bounceAppIcon");
     // Actions
     const ACCEPT_CALL = 'calling/ACCEPT_CALL';
+    const CANCEL_CALL = 'calling/CANCEL_CALL';
+    const SHOW_CALL_LOBBY = 'calling/SHOW_CALL_LOBBY';
     const CALL_STATE_CHANGE = 'calling/CALL_STATE_CHANGE';
     const CALL_STATE_CHANGE_FULFILLED = 'calling/CALL_STATE_CHANGE_FULFILLED';
     const CHANGE_IO_DEVICE = 'calling/CHANGE_IO_DEVICE';
     const CHANGE_IO_DEVICE_FULFILLED = 'calling/CHANGE_IO_DEVICE_FULFILLED';
+    const CLOSE_NEED_PERMISSION_SCREEN = 'calling/CLOSE_NEED_PERMISSION_SCREEN';
     const DECLINE_CALL = 'calling/DECLINE_CALL';
     const HANG_UP = 'calling/HANG_UP';
     const INCOMING_CALL = 'calling/INCOMING_CALL';
@@ -22,10 +26,12 @@ require(exports => {
     const SET_LOCAL_AUDIO = 'calling/SET_LOCAL_AUDIO';
     const SET_LOCAL_VIDEO = 'calling/SET_LOCAL_VIDEO';
     const SET_LOCAL_VIDEO_FULFILLED = 'calling/SET_LOCAL_VIDEO_FULFILLED';
+    const START_CALL = 'calling/START_CALL';
+    const TOGGLE_PARTICIPANTS = 'calling/TOGGLE_PARTICIPANTS';
+    const TOGGLE_PIP = 'calling/TOGGLE_PIP';
     const TOGGLE_SETTINGS = 'calling/TOGGLE_SETTINGS';
     // Action Creators
     function acceptCall(payload) {
-        // tslint:disable-next-line no-floating-promises
         (async () => {
             try {
                 await calling_1.calling.accept(payload.callId, payload.asVideoCall);
@@ -98,6 +104,18 @@ require(exports => {
             silent: false,
         });
     }
+    function closeNeedPermissionScreen() {
+        return {
+            type: CLOSE_NEED_PERMISSION_SCREEN,
+            payload: null,
+        };
+    }
+    function cancelCall() {
+        window.Signal.Services.calling.stopCallingLobby();
+        return {
+            type: CANCEL_CALL,
+        };
+    }
     function declineCall(payload) {
         calling_1.calling.decline(payload.callId);
         return {
@@ -119,7 +137,6 @@ require(exports => {
         };
     }
     function outgoingCall(payload) {
-        // tslint:disable-next-line no-floating-promises
         callingTones_1.callingTones.playRingtone();
         return {
             type: OUTGOING_CALL,
@@ -153,7 +170,9 @@ require(exports => {
         };
     }
     function setLocalAudio(payload) {
-        calling_1.calling.setOutgoingAudio(payload.callId, payload.enabled);
+        if (payload.callId) {
+            calling_1.calling.setOutgoingAudio(payload.callId, payload.enabled);
+        }
         return {
             type: SET_LOCAL_AUDIO,
             payload,
@@ -165,6 +184,29 @@ require(exports => {
             payload: doSetLocalVideo(payload),
         };
     }
+    function showCallLobby(payload) {
+        return {
+            type: SHOW_CALL_LOBBY,
+            payload,
+        };
+    }
+    function startCall(payload) {
+        const { callDetails } = payload;
+        window.Signal.Services.calling.startOutgoingCall(callDetails.id, callDetails.isVideoCall);
+        return {
+            type: START_CALL,
+        };
+    }
+    function toggleParticipants() {
+        return {
+            type: TOGGLE_PARTICIPANTS,
+        };
+    }
+    function togglePip() {
+        return {
+            type: TOGGLE_PIP,
+        };
+    }
     function toggleSettings() {
         return {
             type: TOGGLE_SETTINGS,
@@ -172,15 +214,25 @@ require(exports => {
     }
     async function doSetLocalVideo(payload) {
         if (await callingPermissions_1.requestCameraPermissions()) {
-            calling_1.calling.setOutgoingVideo(payload.callId, payload.enabled);
+            if (payload.callId) {
+                calling_1.calling.setOutgoingVideo(payload.callId, payload.enabled);
+            }
+            else if (payload.enabled) {
+                calling_1.calling.enableLocalCamera();
+            }
+            else {
+                calling_1.calling.disableLocalCamera();
+            }
             return payload;
         }
         return Object.assign(Object.assign({}, payload), { enabled: false });
     }
     exports.actions = {
         acceptCall,
+        cancelCall,
         callStateChange,
         changeIODevice,
+        closeNeedPermissionScreen,
         declineCall,
         hangUp,
         incomingCall,
@@ -191,6 +243,10 @@ require(exports => {
         setRendererCanvas,
         setLocalAudio,
         setLocalVideo,
+        showCallLobby,
+        startCall,
+        toggleParticipants,
+        togglePip,
         toggleSettings,
     };
     // Reducer
@@ -201,34 +257,49 @@ require(exports => {
             availableSpeakers: [],
             callDetails: undefined,
             callState: undefined,
+            callEndedReason: undefined,
             hasLocalAudio: false,
             hasLocalVideo: false,
             hasRemoteVideo: false,
+            participantsList: false,
+            pip: false,
             selectedCamera: undefined,
             selectedMicrophone: undefined,
             selectedSpeaker: undefined,
             settingsDialogOpen: false,
         };
     }
-    // tslint:disable-next-line max-func-body-length
     function reducer(state = getEmptyState(), action) {
+        if (action.type === SHOW_CALL_LOBBY) {
+            return Object.assign(Object.assign({}, state), { callDetails: action.payload.callDetails, callState: undefined, hasLocalAudio: true, hasLocalVideo: action.payload.callDetails.isVideoCall });
+        }
+        if (action.type === START_CALL) {
+            return Object.assign(Object.assign({}, state), { callState: Calling_1.CallState.Prering });
+        }
         if (action.type === ACCEPT_CALL) {
             return Object.assign(Object.assign({}, state), { hasLocalAudio: true, hasLocalVideo: action.payload.asVideoCall });
         }
-        if (action.type === DECLINE_CALL || action.type === HANG_UP) {
+        if (action.type === CANCEL_CALL ||
+            action.type === DECLINE_CALL ||
+            action.type === HANG_UP ||
+            action.type === CLOSE_NEED_PERMISSION_SCREEN) {
             return getEmptyState();
         }
         if (action.type === INCOMING_CALL) {
             return Object.assign(Object.assign({}, state), { callDetails: action.payload.callDetails, callState: Calling_1.CallState.Prering });
         }
         if (action.type === OUTGOING_CALL) {
-            return Object.assign(Object.assign({}, state), { callDetails: action.payload.callDetails, callState: Calling_1.CallState.Prering, hasLocalAudio: true, hasLocalVideo: action.payload.callDetails.isVideoCall });
+            return Object.assign(Object.assign({}, state), { callDetails: action.payload.callDetails, callState: Calling_1.CallState.Prering });
         }
         if (action.type === CALL_STATE_CHANGE_FULFILLED) {
-            if (action.payload.callState === Calling_1.CallState.Ended) {
+            // We want to keep the state around for ended calls if they resulted in a message
+            //   request so we can show the "needs permission" screen.
+            if (action.payload.callState === Calling_1.CallState.Ended &&
+                action.payload.callEndedReason !==
+                ringrtc_1.CallEndedReason.RemoteHangupNeedPermission) {
                 return getEmptyState();
             }
-            return Object.assign(Object.assign({}, state), { callState: action.payload.callState });
+            return Object.assign(Object.assign({}, state), { callState: action.payload.callState, callEndedReason: action.payload.callEndedReason });
         }
         if (action.type === REMOTE_VIDEO_CHANGE) {
             return Object.assign(Object.assign({}, state), { hasRemoteVideo: action.payload.remoteVideoEnabled });
@@ -266,6 +337,12 @@ require(exports => {
         }
         if (action.type === TOGGLE_SETTINGS) {
             return Object.assign(Object.assign({}, state), { settingsDialogOpen: !state.settingsDialogOpen });
+        }
+        if (action.type === TOGGLE_PARTICIPANTS) {
+            return Object.assign(Object.assign({}, state), { participantsList: !state.participantsList });
+        }
+        if (action.type === TOGGLE_PIP) {
+            return Object.assign(Object.assign({}, state), { pip: !state.pip });
         }
         return state;
     }

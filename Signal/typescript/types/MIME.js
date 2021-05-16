@@ -14,6 +14,8 @@
     exports.IMAGE_JPEG = 'image/jpeg';
     exports.IMAGE_PNG = 'image/png';
     exports.IMAGE_WEBP = 'image/webp';
+    exports.IMAGE_ICO = 'image/x-icon';
+    exports.IMAGE_BMP = 'image/bmp';
     exports.VIDEO_MP4 = 'video/mp4';
     exports.VIDEO_QUICKTIME = 'video/quicktime';
     exports.LONG_MESSAGE = 'text/x-signal-plain';

@@ -110,6 +110,14 @@ require(exports => {
         return compatArrayToArrayBuffer(presentation.serialize());
     }
     exports.getAuthCredentialPresentation = getAuthCredentialPresentation;
+    function createProfileKeyCredentialPresentation(clientZkProfileCipher, profileKeyCredentialBase64, groupSecretParamsBase64) {
+        const profileKeyCredentialArray = base64ToCompatArray(profileKeyCredentialBase64);
+        const profileKeyCredential = new zkgroup_1.ProfileKeyCredential(profileKeyCredentialArray);
+        const secretParams = new zkgroup_1.GroupSecretParams(base64ToCompatArray(groupSecretParamsBase64));
+        const presentation = clientZkProfileCipher.createProfileKeyCredentialPresentation(secretParams, profileKeyCredential);
+        return compatArrayToArrayBuffer(presentation.serialize());
+    }
+    exports.createProfileKeyCredentialPresentation = createProfileKeyCredentialPresentation;
     function getClientZkAuthOperations(serverPublicParamsBase64) {
         const serverPublicParams = new zkgroup_1.ServerPublicParams(base64ToCompatArray(serverPublicParamsBase64));
         return new zkgroup_1.ClientZkAuthOperations(serverPublicParams);

@@ -5,7 +5,11 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.EventTarget = {};
 
-    // tslint:disable no-default-export
+    /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable guard-for-in */
+    /* eslint-disable no-restricted-syntax */
+    /* eslint-disable @typescript-eslint/ban-types */
     Object.defineProperty(exports, "__esModule", { value: true });
     /*
      * Implements EventTarget
@@ -72,7 +76,6 @@
         }
         extend(source) {
             const target = this;
-            // tslint:disable-next-line forin no-for-in no-default-export
             for (const prop in source) {
                 target[prop] = source[prop];
             }

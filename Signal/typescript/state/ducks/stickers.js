@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.ducks = window.ts.state.ducks || {};
-    const exports = window.ts.state.ducks.stickers = {};
-
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -62,7 +56,6 @@
     function downloadStickerPack(packId, packKey, options) {
         const { finalStatus } = options || { finalStatus: undefined };
         // We're just kicking this off, since it will generate more redux events
-        // tslint:disable-next-line:no-floating-promises
         stickers_1.downloadStickerPack(packId, packKey, { finalStatus });
         return {
             type: 'NOOP',
@@ -164,7 +157,6 @@
             blessedPacks: {},
         };
     }
-    // tslint:disable-next-line max-func-body-length
     function reducer(state = getEmptyState(), action) {
         if (action.type === 'stickers/STICKER_PACK_ADDED') {
             // ts complains due to `stickers: {}` being overridden by the payload
@@ -224,4 +216,4 @@
         return state;
     }
     exports.reducer = reducer;
-})();
+});

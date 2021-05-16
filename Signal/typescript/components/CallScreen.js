@@ -7,29 +7,19 @@ require(exports => {
     const react_1 = __importDefault(require("react"));
     const classnames_1 = __importDefault(require("classnames"));
     const Avatar_1 = require("./Avatar");
+    const CallingButton_1 = require("./CallingButton");
     const Calling_1 = require("../types/Calling");
-    const CallingButton = ({ classNameSuffix, onClick, }) => {
-        const className = classnames_1.default('module-ongoing-call__icon', `module-ongoing-call__icon${classNameSuffix}`);
-        return (react_1.default.createElement("button", { className: className, onClick: onClick },
-            react_1.default.createElement("div", null)));
-    };
     class CallScreen extends react_1.default.Component {
         constructor(props) {
             super(props);
             this.updateAcceptedTimer = () => {
-                const { acceptedTime } = this.state;
-                const { callState } = this.props;
-                if (acceptedTime) {
-                    this.setState({
-                        acceptedTime,
-                        acceptedDuration: Date.now() - acceptedTime,
-                    });
+                const { callDetails } = this.props;
+                if (!callDetails) {
+                    return;
                 }
-                else if (callState === Calling_1.CallState.Accepted ||
-                    callState === Calling_1.CallState.Reconnecting) {
+                if (callDetails.acceptedTime) {
                     this.setState({
-                        acceptedTime: Date.now(),
-                        acceptedDuration: 1,
+                        acceptedDuration: Date.now() - callDetails.acceptedTime,
                     });
                 }
             };
@@ -39,11 +29,11 @@ require(exports => {
                     return;
                 }
                 let eventHandled = false;
-                if (event.key === 'V') {
+                if (event.shiftKey && (event.key === 'V' || event.key === 'v')) {
                     this.toggleVideo();
                     eventHandled = true;
                 }
-                else if (event.key === 'M') {
+                else if (event.shiftKey && (event.key === 'M' || event.key === 'm')) {
                     this.toggleAudio();
                     eventHandled = true;
                 }
@@ -54,7 +44,8 @@ require(exports => {
                 }
             };
             this.showControls = () => {
-                if (!this.state.showControls) {
+                const { showControls } = this.state;
+                if (!showControls) {
                     this.setState({
                         showControls: true,
                     });
@@ -89,7 +80,6 @@ require(exports => {
                 setLocalVideo({ callId: callDetails.callId, enabled: !hasLocalVideo });
             };
             this.state = {
-                acceptedTime: null,
                 acceptedDuration: null,
                 showControls: true,
             };
@@ -99,14 +89,16 @@ require(exports => {
             this.remoteVideoRef = react_1.default.createRef();
         }
         componentDidMount() {
+            const { setLocalPreview, setRendererCanvas } = this.props;
             // It's really jump with a value of 500ms.
             this.interval = setInterval(this.updateAcceptedTimer, 100);
             this.fadeControls();
             document.addEventListener('keydown', this.handleKeyDown);
-            this.props.setLocalPreview({ element: this.localVideoRef });
-            this.props.setRendererCanvas({ element: this.remoteVideoRef });
+            setLocalPreview({ element: this.localVideoRef });
+            setRendererCanvas({ element: this.remoteVideoRef });
         }
         componentWillUnmount() {
+            const { setLocalPreview, setRendererCanvas } = this.props;
             document.removeEventListener('keydown', this.handleKeyDown);
             if (this.interval) {
                 clearInterval(this.interval);
@@ -114,11 +106,11 @@ require(exports => {
             if (this.controlsFadeTimer) {
                 clearTimeout(this.controlsFadeTimer);
             }
-            this.props.setLocalPreview({ element: undefined });
-            this.props.setRendererCanvas({ element: undefined });
+            setLocalPreview({ element: undefined });
+            setRendererCanvas({ element: undefined });
         }
         render() {
-            const { callDetails, callState, hangUp, hasLocalAudio, hasLocalVideo, hasRemoteVideo, i18n, toggleSettings, } = this.props;
+            const { callDetails, callState, hangUp, hasLocalAudio, hasLocalVideo, hasRemoteVideo, i18n, togglePip, toggleSettings, } = this.props;
             const { showControls } = this.state;
             const isAudioOnly = !hasLocalVideo && !hasRemoteVideo;
             if (!callDetails || !callState) {
@@ -128,29 +120,30 @@ require(exports => {
                 'module-ongoing-call__controls--fadeIn': (showControls || isAudioOnly) && callState !== Calling_1.CallState.Accepted,
                 'module-ongoing-call__controls--fadeOut': !showControls && !isAudioOnly && callState === Calling_1.CallState.Accepted,
             });
-            const toggleAudioSuffix = hasLocalAudio
-                ? '--audio--enabled'
-                : '--audio--disabled';
-            const toggleVideoSuffix = hasLocalVideo
-                ? '--video--enabled'
-                : '--video--disabled';
-            return (react_1.default.createElement("div", { className: "module-ongoing-call", onMouseMove: this.showControls, role: "group" },
-                react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__header', controlsFadeClass) },
-                    react_1.default.createElement("div", { className: "module-ongoing-call__header-name" }, callDetails.title),
+            const videoButtonType = hasLocalVideo
+                ? CallingButton_1.CallingButtonType.VIDEO_ON
+                : CallingButton_1.CallingButtonType.VIDEO_OFF;
+            const audioButtonType = hasLocalAudio
+                ? CallingButton_1.CallingButtonType.AUDIO_ON
+                : CallingButton_1.CallingButtonType.AUDIO_OFF;
+            return (react_1.default.createElement("div", { className: "module-calling__container", onMouseMove: this.showControls, role: "group" },
+                react_1.default.createElement("div", { className: classnames_1.default('module-calling__header', 'module-ongoing-call__header', controlsFadeClass) },
+                    react_1.default.createElement("div", { className: "module-calling__header--header-name" }, callDetails.title),
                     this.renderMessage(callState),
-                    react_1.default.createElement("div", { className: "module-ongoing-call__settings" },
-                        react_1.default.createElement("button", { "aria-label": i18n('callingDeviceSelection__settings'), className: "module-ongoing-call__settings--button", onClick: toggleSettings }))),
+                    react_1.default.createElement("div", { className: "module-calling-tools" },
+                        react_1.default.createElement("button", { type: "button", "aria-label": i18n('callingDeviceSelection__settings'), className: "module-calling-tools__button module-calling-button__settings", onClick: toggleSettings }),
+                        react_1.default.createElement("button", { type: "button", "aria-label": i18n('calling__pip'), className: "module-calling-tools__button module-calling-button__pip", onClick: togglePip }))),
                 hasRemoteVideo
                     ? this.renderRemoteVideo()
                     : this.renderAvatar(callDetails),
                 hasLocalVideo ? this.renderLocalVideo() : null,
                 react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__actions', controlsFadeClass) },
-                    react_1.default.createElement(CallingButton, { classNameSuffix: toggleVideoSuffix, onClick: this.toggleVideo }),
-                    react_1.default.createElement(CallingButton, { classNameSuffix: toggleAudioSuffix, onClick: this.toggleAudio }),
-                    react_1.default.createElement(CallingButton, {
-                        classNameSuffix: "--hangup", onClick: () => {
+                    react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: videoButtonType, i18n: i18n, onClick: this.toggleVideo, tooltipDistance: 24 }),
+                    react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: audioButtonType, i18n: i18n, onClick: this.toggleAudio, tooltipDistance: 24 }),
+                    react_1.default.createElement(CallingButton_1.CallingButton, {
+                        buttonType: CallingButton_1.CallingButtonType.HANG_UP, i18n: i18n, onClick: () => {
                             hangUp({ callId: callDetails.callId });
-                        }
+                        }, tooltipDistance: 24
                     }))));
         }
         renderAvatar(callDetails) {
@@ -167,6 +160,7 @@ require(exports => {
         }
         renderMessage(callState) {
             const { i18n } = this.props;
+            const { acceptedDuration } = this.state;
             let message = null;
             if (callState === Calling_1.CallState.Prering) {
                 message = i18n('outgoingCallPrering');
@@ -177,17 +171,15 @@ require(exports => {
             else if (callState === Calling_1.CallState.Reconnecting) {
                 message = i18n('callReconnecting');
             }
-            else if (callState === Calling_1.CallState.Accepted &&
-                this.state.acceptedDuration) {
-                message = i18n('callDuration', [
-                    this.renderDuration(this.state.acceptedDuration),
-                ]);
+            else if (callState === Calling_1.CallState.Accepted && acceptedDuration) {
+                message = i18n('callDuration', [this.renderDuration(acceptedDuration)]);
             }
             if (!message) {
                 return null;
             }
             return react_1.default.createElement("div", { className: "module-ongoing-call__header-message" }, message);
         }
+        // eslint-disable-next-line class-methods-use-this
         renderDuration(ms) {
             const secs = Math.floor((ms / 1000) % 60)
                 .toString()

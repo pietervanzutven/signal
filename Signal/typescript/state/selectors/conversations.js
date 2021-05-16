@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.selectors = window.ts.state.selectors || {};
-    const exports = window.ts.state.selectors.conversations = {};
-
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -73,6 +67,7 @@
     exports._getLeftPaneLists = (lookup, comparator, selectedConversation) => {
         const conversations = [];
         const archivedConversations = [];
+        const pinnedConversations = [];
         const values = Object.values(lookup);
         const max = values.length;
         for (let i = 0; i < max; i += 1) {
@@ -84,6 +79,9 @@
                 if (conversation.isArchived) {
                     archivedConversations.push(conversation);
                 }
+                else if (conversation.isPinned) {
+                    pinnedConversations.push(conversation);
+                }
                 else {
                     conversations.push(conversation);
                 }
@@ -91,7 +89,8 @@
         }
         conversations.sort(comparator);
         archivedConversations.sort(comparator);
-        return { conversations, archivedConversations };
+        pinnedConversations.sort((a, b) => (a.pinIndex || 0) - (b.pinIndex || 0));
+        return { conversations, archivedConversations, pinnedConversations };
     };
     exports.getLeftPaneLists = reselect_1.createSelector(exports.getConversationLookup, exports.getConversationComparator, exports.getSelectedConversation, exports._getLeftPaneLists);
     exports.getMe = reselect_1.createSelector([exports.getConversationLookup, user_1.getUserConversationId], (lookup, ourConversationId) => {
@@ -223,4 +222,4 @@
             return conversationMessagesSelector(conversation);
         };
     });
-})();
+});

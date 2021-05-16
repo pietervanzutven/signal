@@ -22,6 +22,9 @@ require(exports => {
                 const debouncedUpdateUnreadCount = lodash_1.debounce(this.updateUnreadCount.bind(this), 1000);
                 this.on('add remove change:unreadCount', debouncedUpdateUnreadCount);
                 window.Whisper.events.on('updateUnreadCount', debouncedUpdateUnreadCount);
+                this.on('add', (model) => {
+                    this.initMuteExpirationTimer(model);
+                });
             },
             addActive(model) {
                 if (model.get('active_at')) {
@@ -29,6 +32,19 @@ require(exports => {
                 }
                 else {
                     this.remove(model);
+                }
+            },
+            // If the conversation is muted we set a timeout so when the mute expires
+            // we can reset the mute state on the model. If the mute has already expired
+            // then we reset the state right away.
+            initMuteExpirationTimer(model) {
+                if (model.isMuted()) {
+                    window.Signal.Services.onTimeout(model.get('muteExpiresAt'), () => {
+                        model.set({ muteExpiresAt: undefined });
+                    }, model.getMuteTimeoutId());
+                }
+                else if (model.get('muteExpiresAt')) {
+                    model.set({ muteExpiresAt: undefined });
                 }
             },
             updateUnreadCount() {
@@ -143,7 +159,6 @@ require(exports => {
          *
      * highTrust = uuid/e164 pairing came from CDS, the server, or your own device
          */
-        // tslint:disable-next-line cyclomatic-complexity max-func-body-length
         ensureContactIds({ e164, uuid, highTrust, }) {
             // Check for at least one parameter being provided. This is necessary
             // because this path can be called on startup to resolve our own ID before
@@ -331,7 +346,10 @@ require(exports => {
             });
             if (!current.get('profileKey') && obsolete.get('profileKey')) {
                 window.log.warn('combineContacts: Copying profile key from old to new contact');
-                await current.setProfileKey(obsolete.get('profileKey'));
+                const profileKey = obsolete.get('profileKey');
+                if (profileKey) {
+                    await current.setProfileKey(profileKey);
+                }
             }
             window.log.warn('combineContacts: Delete all sessions tied to old conversationId');
             const deviceIds = await window.textsecure.storage.protocol.getDeviceIds(obsoleteId);

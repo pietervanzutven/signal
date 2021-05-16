@@ -30,9 +30,7 @@
             // Smiley & Emotions category.
             emoji.category === 'People & Body'
                 ? Object.assign(Object.assign({}, emoji), { sort_order: emoji.sort_order + 1000 }) : emoji);
-    const ROOT_PATH = lodash_1.get(
-        // tslint:disable-next-line no-typeof-undefined
-        typeof window !== 'undefined' ? window : null, 'ROOT_PATH', '');
+    const ROOT_PATH = lodash_1.get(typeof window !== 'undefined' ? window : null, 'ROOT_PATH', '');
     const makeImagePath = (src) => {
         return `${ROOT_PATH}node_modules/emoji-datasource-apple/img/apple/64/${src}`;
     };
@@ -46,17 +44,14 @@
             img.onerror = reject;
             img.src = src;
             images.add(img);
-            // tslint:disable-next-line  no-string-based-set-timeout
             setTimeout(reject, 5000);
         });
         window.log.info('Preloading emoji images');
         const start = Date.now();
         data.forEach(emoji => {
-            // tslint:disable-next-line no-floating-promises promise-function-async
             imageQueue.add(() => preload(makeImagePath(emoji.image)));
             if (emoji.skin_variations) {
                 Object.values(emoji.skin_variations).forEach(variation => {
-                    // tslint:disable-next-line no-floating-promises promise-function-async
                     imageQueue.add(() => preload(makeImagePath(variation.image)));
                 });
             }
@@ -167,9 +162,19 @@
     }
     exports.convertShortName = convertShortName;
     function emojiToImage(emoji) {
+        if (!Object.prototype.hasOwnProperty.call(imageByEmoji, emoji)) {
+            return undefined;
+        }
         return imageByEmoji[emoji];
     }
     exports.emojiToImage = emojiToImage;
+    function emojiToData(emoji) {
+        if (!Object.prototype.hasOwnProperty.call(dataByEmoji, emoji)) {
+            return undefined;
+        }
+        return dataByEmoji[emoji];
+    }
+    exports.emojiToData = emojiToData;
     function getCountOfAllMatches(str, regex) {
         let match = regex.exec(str);
         let count = 0;

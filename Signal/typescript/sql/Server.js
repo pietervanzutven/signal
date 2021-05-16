@@ -5,7 +5,13 @@
     window.ts.sql = window.ts.sql || {};
     const exports = window.ts.sql.Server = {};
 
-    // tslint:disable no-console no-default-export no-unnecessary-local-variable
+    /* eslint-disable no-nested-ternary */
+    /* eslint-disable camelcase */
+    /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+    /* eslint-disable no-await-in-loop */
+    /* eslint-disable no-restricted-syntax */
+    /* eslint-disable no-console */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -16,12 +22,12 @@
     const p_queue_1 = __importDefault(require("p-queue"));
     const sqlcipher_1 = __importDefault(require("@journeyapps/sqlcipher"));
     const electron_1 = require("electron");
-    const privacy_1 = require("../../js/modules/privacy");
-    const user_config_1 = require("../../app/user_config");
-    const combineNames_1 = require("../util/combineNames");
     const pify_1 = __importDefault(require("pify"));
     const uuid_1 = require("uuid");
     const lodash_1 = require("lodash");
+    const privacy_1 = require("../../js/modules/privacy");
+    const user_config_1 = require("../../app/user_config");
+    const combineNames_1 = require("../util/combineNames");
     // Because we can't force this module to conform to an interface, we narrow our exports
     //   to this one default export, which does conform to the interface.
     // Note: In Javascript, you need to access the .default property when requiring it
@@ -159,7 +165,6 @@
                     return;
                 }
                 resolve(instance);
-                return;
             };
             instance = new sqlcipher_1.default.Database(filePath, callback);
         });
@@ -1024,7 +1029,6 @@
             throw error;
         }
     }
-    // tslint:disable-next-line max-func-body-length
     async function updateToSchemaVersion20(currentVersion, instance) {
         if (currentVersion >= 20) {
             return;
@@ -1098,7 +1102,6 @@
             }
             const groupConverations = await instance.all("SELECT * FROM conversations WHERE type = 'group';");
             // Update group conversations, point members at new conversation ids
-            // tslint:disable-next-line no-floating-promises
             migrationJobQueue.addAll(groupConverations.map(groupRow => async () => {
                 const members = groupRow.members.split(/\s?\+/).filter(Boolean);
                 const newMembers = [];
@@ -1256,7 +1259,6 @@
     let globalInstance;
     let databaseFilePath;
     let indexedDBPath;
-    // tslint:disable-next-line max-func-body-length
     async function initialize({ configDir, key, messages, }) {
         if (globalInstance) {
             throw new Error('Cannot initialize more than once!');
@@ -1732,7 +1734,7 @@
     async function eraseStorageServiceStateFromConversations() {
         const db = getInstance();
         await db.run(`UPDATE conversations SET
-      json = json_remove(json, '$.storageID', '$.needsStorageServiceSync', '$.unknownFields');
+      json = json_remove(json, '$.storageID', '$.needsStorageServiceSync', '$.unknownFields', '$.storageProfileKey');
     `);
     }
     async function getAllConversations() {
@@ -1829,7 +1831,6 @@
         }
         return row['count(*)'];
     }
-    // tslint:disable-next-line max-func-body-length
     async function saveMessage(data, { forceSave } = {}) {
         const db = getInstance();
         const { body, conversationId, expires_at, hasAttachments, hasFileAttachments, hasVisualMediaAttachments, id, isErased, isViewOnce, received_at, schemaVersion, sent_at, source, sourceUuid, sourceDevice, type, unread, expireTimer, expirationStartTimestamp, } = data;
@@ -2894,7 +2895,6 @@
             lodash_1.forEach(messages, message => {
                 const externalFiles = getExternalFilesForMessage(message);
                 lodash_1.forEach(externalFiles, file => {
-                    // tslint:disable-next-line no-dynamic-delete
                     delete lookup[file];
                 });
             });
@@ -2925,7 +2925,6 @@
             lodash_1.forEach(conversations, conversation => {
                 const externalFiles = getExternalFilesForConversation(conversation);
                 lodash_1.forEach(externalFiles, file => {
-                    // tslint:disable-next-line no-dynamic-delete
                     delete lookup[file];
                 });
             });
@@ -2958,7 +2957,6 @@
             });
             const files = lodash_1.map(rows, row => row.path);
             lodash_1.forEach(files, file => {
-                // tslint:disable-next-line no-dynamic-delete
                 delete lookup[file];
             });
             const lastSticker = lodash_1.last(rows);
@@ -2994,7 +2992,6 @@
             lodash_1.forEach(conversations, conversation => {
                 const externalFiles = getExternalDraftFilesForConversation(conversation);
                 lodash_1.forEach(externalFiles, file => {
-                    // tslint:disable-next-line no-dynamic-delete
                     delete lookup[file];
                 });
             });

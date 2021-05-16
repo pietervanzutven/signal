@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.roots = window.ts.state.roots || {};
-    const exports = window.ts.state.roots.createStickerPreviewModal = {};
-
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -20,4 +14,4 @@
     /* eslint-enable @typescript-eslint/no-explicit-any */
     exports.createStickerPreviewModal = (store, props) => (react_1.default.createElement(react_redux_1.Provider, { store: store },
         react_1.default.createElement(FilteredStickerPreviewModal, Object.assign({}, props))));
-})();
+});

@@ -520,7 +520,6 @@
     });
 
     return {
-      contentType: 'image/webp',
       path,
       width,
       height,

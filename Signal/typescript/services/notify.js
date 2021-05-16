@@ -29,7 +29,6 @@ require(exports => {
         notification.onclick = onNotificationClick;
         if (!silent && audioNotificationSupport === Settings_1.AudioNotificationSupport.Custom) {
             // We kick off the sound to be played. No neet to await it.
-            // tslint:disable-next-line no-floating-promises
             new Sound_1.Sound({ src: 'sounds/notification.ogg' }).play();
         }
         return notification;

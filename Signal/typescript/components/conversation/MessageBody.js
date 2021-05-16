@@ -28,7 +28,7 @@
             super(...arguments);
             this.renderNewLines = ({ text: textWithNewLines, key, }) => {
                 const { bodyRanges, direction, openConversation } = this.props;
-                return (react_1.default.createElement(AddNewLines_1.AddNewLines, { key: key, text: textWithNewLines, renderNonNewLine: ({ text }) => (react_1.default.createElement(AtMentionify_1.AtMentionify, { direction: direction, text: text, bodyRanges: bodyRanges, openConversation: openConversation })) }));
+                return (react_1.default.createElement(AddNewLines_1.AddNewLines, { key: key, text: textWithNewLines, renderNonNewLine: ({ text, key: innerKey }) => (react_1.default.createElement(AtMentionify_1.AtMentionify, { key: innerKey, direction: direction, text: text, bodyRanges: bodyRanges, openConversation: openConversation })) }));
             };
         }
         addDownloading(jsx) {

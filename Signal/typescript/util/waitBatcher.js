@@ -10,7 +10,6 @@ require(exports => {
         await Promise.all(window.waitBatchers.map(item => item.onIdle()));
     };
     async function sleep(ms) {
-        // tslint:disable-next-line:no-string-based-set-timeout
         await new Promise(resolve => setTimeout(resolve, ms));
     }
     function createWaitBatcher(options) {
@@ -21,7 +20,6 @@ require(exports => {
         function _kickBatchOff() {
             const itemsRef = items;
             items = [];
-            // tslint:disable-next-line:no-floating-promises
             queue.add(async () => {
                 try {
                     await options.processBatch(itemsRef.map(item => item.item));

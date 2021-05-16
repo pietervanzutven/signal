@@ -4,7 +4,6 @@ require(exports => {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    /* tslint:disable no-backbone-get-set-outside-model */
     const lodash_1 = require("lodash");
     const Crypto_1 = require("../Crypto");
     const Client_1 = __importDefault(require("../sql/Client"));
@@ -24,15 +23,21 @@ require(exports => {
     }
     function addUnknownFields(record, conversation) {
         if (record.__unknownFields) {
-            window.log.info(`storageService.addUnknownFields: Unknown fields found for ${conversation.get('id')}`);
+            window.log.info('storageService.addUnknownFields: Unknown fields found for', conversation.debugID());
             conversation.set({
                 storageUnknownFields: Crypto_1.arrayBufferToBase64(record.__unknownFields),
             });
         }
+        else if (conversation.get('storageUnknownFields')) {
+            // If the record doesn't have unknown fields attached but we have them
+            // saved locally then we need to clear it out
+            window.log.info('storageService.addUnknownFields: Clearing unknown fields for', conversation.debugID());
+            conversation.unset('storageUnknownFields');
+        }
     }
     function applyUnknownFields(record, conversation) {
         if (conversation.get('storageUnknownFields')) {
-            window.log.info(`storageService.applyUnknownFields: Applying unknown fields for ${conversation.get('id')}`);
+            window.log.info('storageService.applyUnknownFields: Applying unknown fields for', conversation.get('id'));
             // eslint-disable-next-line no-param-reassign
             record.__unknownFields = Crypto_1.base64ToArrayBuffer(conversation.get('storageUnknownFields'));
         }
@@ -85,6 +90,40 @@ require(exports => {
         accountRecord.sealedSenderIndicators = Boolean(window.storage.get('sealedSenderIndicators'));
         accountRecord.typingIndicators = Boolean(window.storage.get('typingIndicators'));
         accountRecord.linkPreviews = Boolean(window.storage.get('linkPreviews'));
+        accountRecord.pinnedConversations = window.storage
+            .get('pinnedConversationIds', [])
+            .map(id => {
+                const pinnedConversation = window.ConversationController.get(id);
+                if (pinnedConversation) {
+                    const pinnedConversationRecord = new window.textsecure.protobuf.AccountRecord.PinnedConversation();
+                    if (pinnedConversation.get('type') === 'private') {
+                        pinnedConversationRecord.identifier = 'contact';
+                        pinnedConversationRecord.contact = {
+                            uuid: pinnedConversation.get('uuid'),
+                            e164: pinnedConversation.get('e164'),
+                        };
+                    }
+                    else if (pinnedConversation.isGroupV1()) {
+                        pinnedConversationRecord.identifier = 'legacyGroupId';
+                        const groupId = pinnedConversation.get('groupId');
+                        if (!groupId) {
+                            throw new Error('toAccountRecord: trying to pin a v1 Group without groupId');
+                        }
+                        pinnedConversationRecord.legacyGroupId = Crypto_1.fromEncodedBinaryToArrayBuffer(groupId);
+                    }
+                    else if (pinnedConversation.isGroupV2()) {
+                        pinnedConversationRecord.identifier = 'groupMasterKey';
+                        const masterKey = pinnedConversation.get('masterKey');
+                        if (!masterKey) {
+                            throw new Error('toAccountRecord: trying to pin a v2 Group without masterKey');
+                        }
+                        pinnedConversationRecord.groupMasterKey = Crypto_1.base64ToArrayBuffer(masterKey);
+                    }
+                    return pinnedConversationRecord;
+                }
+                return undefined;
+            })
+            .filter((pinnedConversationClass) => pinnedConversationClass !== undefined);
         applyUnknownFields(accountRecord, conversation);
         return accountRecord;
     }
@@ -113,13 +152,20 @@ require(exports => {
     }
     exports.toGroupV2Record = toGroupV2Record;
     function applyMessageRequestState(record, conversation) {
+        const messageRequestEnum = window.textsecure.protobuf.SyncMessage.MessageRequestResponse.Type;
         if (record.blocked) {
-            conversation.applyMessageRequestResponse(conversation.messageRequestEnum.BLOCK, { fromSync: true, viaStorageServiceSync: true });
+            conversation.applyMessageRequestResponse(messageRequestEnum.BLOCK, {
+                fromSync: true,
+                viaStorageServiceSync: true,
+            });
         }
         else if (record.whitelisted) {
             // unblocking is also handled by this function which is why the next
             // condition is part of the else-if and not separate
-            conversation.applyMessageRequestResponse(conversation.messageRequestEnum.ACCEPT, { fromSync: true, viaStorageServiceSync: true });
+            conversation.applyMessageRequestResponse(messageRequestEnum.ACCEPT, {
+                fromSync: true,
+                viaStorageServiceSync: true,
+            });
         }
         else if (!record.blocked) {
             // if the condition above failed the state could still be blocked=false
@@ -175,8 +221,7 @@ require(exports => {
     }
     async function mergeGroupV1Record(storageID, groupV1Record) {
         if (!groupV1Record.id) {
-            window.log.info(`storageService.mergeGroupV1Record: no ID for ${storageID}`);
-            return false;
+            throw new Error(`No ID for ${storageID}`);
         }
         const groupId = groupV1Record.id.toBinary();
         // We do a get here because we don't get enough information from just this source to
@@ -184,8 +229,10 @@ require(exports => {
         //   record if we have one; otherwise we'll just drop this update.
         const conversation = window.ConversationController.get(groupId);
         if (!conversation) {
-            window.log.warn(`storageService.mergeGroupV1Record: No conversation for group(${groupId})`);
-            return false;
+            throw new Error(`No conversation for group(${groupId})`);
+        }
+        if (!conversation.isGroupV1()) {
+            throw new Error(`Record has group type mismatch ${conversation.debugID()}`);
         }
         conversation.set({
             isArchived: Boolean(groupV1Record.archived),
@@ -200,8 +247,7 @@ require(exports => {
     exports.mergeGroupV1Record = mergeGroupV1Record;
     async function mergeGroupV2Record(storageID, groupV2Record) {
         if (!groupV2Record.masterKey) {
-            window.log.info(`storageService.mergeGroupV2Record: no master key for ${storageID}`);
-            return false;
+            throw new Error(`No master key for ${storageID}`);
         }
         const masterKeyBuffer = groupV2Record.masterKey.toArrayBuffer();
         const groupFields = groups_1.deriveGroupFields(masterKeyBuffer);
@@ -211,8 +257,9 @@ require(exports => {
         const publicParams = Crypto_1.arrayBufferToBase64(groupFields.publicParams);
         const now = Date.now();
         const conversationId = window.ConversationController.ensureGroup(groupId, {
-            // We want this conversation to show in the left pane when we first learn about it
-            active_at: now,
+            // Note: We don't set active_at, because we don't want the group to show until
+            //   we have information about it beyond these initial details.
+            //   see maybeUpdateGroup().
             timestamp: now,
             // Basic GroupV2 data
             groupVersion: 2,
@@ -222,7 +269,7 @@ require(exports => {
         });
         const conversation = window.ConversationController.get(conversationId);
         if (!conversation) {
-            throw new Error(`storageService.mergeGroupV2Record: No conversation for groupv2(${groupId})`);
+            throw new Error(`No conversation for groupv2(${groupId})`);
         }
         conversation.maybeRepairGroupV2({
             masterKey,
@@ -237,13 +284,18 @@ require(exports => {
         addUnknownFields(groupV2Record, conversation);
         const hasPendingChanges = doesRecordHavePendingChanges(await toGroupV2Record(conversation), groupV2Record, conversation);
         updateConversation(conversation.attributes);
+        const isGroupNewToUs = !lodash_1.isNumber(conversation.get('revision'));
         const isFirstSync = !lodash_1.isNumber(window.storage.get('manifestVersion'));
         const dropInitialJoinMessage = isFirstSync;
-        // tslint:disable-next-line no-floating-promises
-        groups_1.waitThenMaybeUpdateGroup({
-            conversation,
-            dropInitialJoinMessage,
-        });
+        // We don't need to update GroupV2 groups all the time. We fetch group state the first
+        //   time we hear about these groups, from then on we rely on incoming messages or
+        //   the user opening that conversation.
+        if (isGroupNewToUs) {
+            groups_1.waitThenMaybeUpdateGroup({
+                conversation,
+                dropInitialJoinMessage,
+            });
+        }
         return hasPendingChanges;
     }
     exports.mergeGroupV2Record = mergeGroupV2Record;
@@ -257,8 +309,7 @@ require(exports => {
             highTrust: true,
         });
         if (!id) {
-            window.log.info(`storageService.mergeContactRecord: no ID for ${storageID}`);
-            return false;
+            throw new Error(`No ID for ${storageID}`);
         }
         const conversation = await window.ConversationController.getOrCreateAndWait(id, 'private');
         if (contactRecord.profileKey) {
@@ -292,7 +343,7 @@ require(exports => {
     }
     exports.mergeContactRecord = mergeContactRecord;
     async function mergeAccountRecord(storageID, accountRecord) {
-        const { avatarUrl, linkPreviews, noteToSelfArchived, profileKey, readReceipts, sealedSenderIndicators, typingIndicators, } = accountRecord;
+        const { avatarUrl, linkPreviews, noteToSelfArchived, pinnedConversations: remotelyPinnedConversationClasses, profileKey, readReceipts, sealedSenderIndicators, typingIndicators, } = accountRecord;
         window.storage.put('read-receipt-setting', readReceipts);
         if (typeof sealedSenderIndicators === 'boolean') {
             window.storage.put('sealedSenderIndicators', sealedSenderIndicators);
@@ -306,9 +357,71 @@ require(exports => {
         if (profileKey) {
             window.storage.put('profileKey', profileKey.toArrayBuffer());
         }
+        if (remotelyPinnedConversationClasses) {
+            const locallyPinnedConversations = window.ConversationController._conversations.filter(conversation => Boolean(conversation.get('isPinned')));
+            window.log.info('storageService.mergeAccountRecord: Local pinned', locallyPinnedConversations.length);
+            const remotelyPinnedConversationPromises = remotelyPinnedConversationClasses.map(async (pinnedConversation) => {
+                let conversationId;
+                let conversationType = 'private';
+                switch (pinnedConversation.identifier) {
+                    case 'contact': {
+                        if (!pinnedConversation.contact) {
+                            throw new Error('mergeAccountRecord: no contact found');
+                        }
+                        conversationId = window.ConversationController.ensureContactIds(pinnedConversation.contact);
+                        conversationType = 'private';
+                        break;
+                    }
+                    case 'legacyGroupId': {
+                        if (!pinnedConversation.legacyGroupId) {
+                            throw new Error('mergeAccountRecord: no legacyGroupId found');
+                        }
+                        conversationId = pinnedConversation.legacyGroupId.toBinary();
+                        conversationType = 'group';
+                        break;
+                    }
+                    case 'groupMasterKey': {
+                        if (!pinnedConversation.groupMasterKey) {
+                            throw new Error('mergeAccountRecord: no groupMasterKey found');
+                        }
+                        const masterKeyBuffer = pinnedConversation.groupMasterKey.toArrayBuffer();
+                        const groupFields = groups_1.deriveGroupFields(masterKeyBuffer);
+                        const groupId = Crypto_1.arrayBufferToBase64(groupFields.id);
+                        conversationId = groupId;
+                        conversationType = 'group';
+                        break;
+                    }
+                    default: {
+                        window.log.error('storageService.mergeAccountRecord: Invalid identifier received');
+                    }
+                }
+                if (!conversationId) {
+                    window.log.error('storageService.mergeAccountRecord: missing conversation id. looking based on', pinnedConversation.identifier);
+                    return undefined;
+                }
+                if (conversationType === 'private') {
+                    return window.ConversationController.getOrCreateAndWait(conversationId, conversationType);
+                }
+                return window.ConversationController.get(conversationId);
+            });
+            const remotelyPinnedConversations = (await Promise.all(remotelyPinnedConversationPromises)).filter((conversation) => conversation !== undefined);
+            const remotelyPinnedConversationIds = remotelyPinnedConversations.map(({ id }) => id);
+            const conversationsToUnpin = locallyPinnedConversations.filter(({ id }) => !remotelyPinnedConversationIds.includes(id));
+            window.log.info('storageService.mergeAccountRecord: unpinning', conversationsToUnpin.length);
+            window.log.info('storageService.mergeAccountRecord: pinning', remotelyPinnedConversations.length);
+            conversationsToUnpin.forEach(conversation => {
+                conversation.set({ isPinned: false, pinIndex: undefined });
+                updateConversation(conversation.attributes);
+            });
+            remotelyPinnedConversations.forEach((conversation, index) => {
+                conversation.set({ isPinned: true, pinIndex: index });
+                updateConversation(conversation.attributes);
+            });
+            window.storage.put('pinnedConversationIds', remotelyPinnedConversationIds);
+        }
         const ourID = window.ConversationController.getOurConversationId();
         if (!ourID) {
-            return false;
+            throw new Error('Could not find ourID');
         }
         const conversation = await window.ConversationController.getOrCreateAndWait(ourID, 'private');
         addUnknownFields(accountRecord, conversation);

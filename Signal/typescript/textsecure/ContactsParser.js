@@ -5,6 +5,8 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.ContactsParser = {};
 
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable max-classes-per-file */
     Object.defineProperty(exports, "__esModule", { value: true });
     class ProtoParser {
         constructor(arrayBuffer, protobuf) {

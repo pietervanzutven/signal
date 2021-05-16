@@ -1,10 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    const exports = window.ts.state.createStore = {};
-
     /* eslint-disable no-console */
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -22,7 +17,6 @@
         group: console.group,
         groupEnd: console.groupEnd,
         warn: console.warn,
-        // tslint:disable-next-line no-console
         error: console.error,
     };
     const logger = redux_logger_1.createLogger({
@@ -32,4 +26,4 @@
     const middlewareList = env === 'production' ? [redux_promise_middleware_1.default] : [redux_promise_middleware_1.default, logger];
     const enhancer = redux_1.applyMiddleware(...middlewareList);
     exports.createStore = (initialState) => redux_1.createStore(reducer_1.reducer, initialState, enhancer);
-})();
+});

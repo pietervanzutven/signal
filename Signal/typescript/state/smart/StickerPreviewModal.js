@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.smart = window.ts.state.smart || {};
-    const exports = window.ts.state.smart.StickerPreviewModal = {};
-
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_redux_1 = require("react-redux");
     const actions_1 = require("../actions");
@@ -27,4 +21,4 @@
     };
     const smart = react_redux_1.connect(mapStateToProps, actions_1.mapDispatchToProps);
     exports.SmartStickerPreviewModal = smart(StickerPreviewModal_1.StickerPreviewModal);
-})();
+});

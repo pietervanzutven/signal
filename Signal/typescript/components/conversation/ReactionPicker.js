@@ -22,8 +22,15 @@
     const Emoji_1 = require("../emoji/Emoji");
     const lib_1 = require("../emoji/lib");
     const hooks_1 = require("../../util/hooks");
-    const emojis = ['❤️', '👍', '👎', '😂', '😮', '😢'];
-    exports.ReactionPicker = React.forwardRef(({ i18n, selected, onClose, onPick, renderEmojiPicker, style }, ref) => {
+    const DEFAULT_EMOJI_LIST = [
+        'heart',
+        'thumbsup',
+        'thumbsdown',
+        'joy',
+        'open_mouth',
+        'cry',
+    ];
+    exports.ReactionPicker = React.forwardRef(({ i18n, selected, onClose, skinTone, onPick, renderEmojiPicker, style }, ref) => {
         const [pickingOther, setPickingOther] = React.useState(false);
         const focusRef = React.useRef(null);
         // Handle escape key
@@ -39,9 +46,10 @@
             };
         }, [onClose]);
         // Handle EmojiPicker::onPickEmoji
-        const onPickEmoji = React.useCallback(({ shortName, skinTone }) => {
-            onPick(lib_1.convertShortName(shortName, skinTone));
+        const onPickEmoji = React.useCallback(({ shortName, skinTone: pickedSkinTone }) => {
+            onPick(lib_1.convertShortName(shortName, pickedSkinTone));
         }, [onPick]);
+        const emojis = DEFAULT_EMOJI_LIST.map(shortName => lib_1.convertShortName(shortName, skinTone));
         // Focus first button and restore focus on unmount
         hooks_1.useRestoreFocus(focusRef);
         const otherSelected = selected && !emojis.includes(selected);

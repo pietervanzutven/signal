@@ -5,6 +5,10 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.WebsocketResources = {};
 
+    /* eslint-disable no-param-reassign */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable @typescript-eslint/ban-types */
+    /* eslint-disable max-classes-per-file */
     /*
      * WebSocket-Resources
      *
@@ -30,7 +34,7 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const EventTarget_1 = __importDefault(window.ts.textsecure.EventTarget);
+    const EventTarget_1 = __importDefault(require("./EventTarget"));
     class Request {
         constructor(options) {
             this.verb = options.verb || options.type;
@@ -89,7 +93,6 @@
         }
     }
     class WebSocketResource extends EventTarget_1.default {
-        // tslint:disable-next-line max-func-body-length
         constructor(socket, opts = {}) {
             super();
             let { handleRequest } = opts;
@@ -155,17 +158,10 @@
                     disconnect: opts.keepalive.disconnect,
                 });
                 const resetKeepAliveTimer = this.keepalive.reset.bind(this.keepalive);
-                // websocket type definitions don't include an addEventListener, but it's there. And
-                //   We can't use declaration merging on classes:
-                // https://www.typescriptlang.org/docs/handbook/declaration-merging.html#disallowed-merges)
-                // @ts-ignore
                 socket.addEventListener('open', resetKeepAliveTimer);
-                // @ts-ignore
                 socket.addEventListener('message', resetKeepAliveTimer);
-                // @ts-ignore
                 socket.addEventListener('close', this.keepalive.stop.bind(this.keepalive));
             }
-            // @ts-ignore
             socket.addEventListener('close', () => {
                 this.closed = true;
             });
@@ -178,8 +174,9 @@
                     this.keepalive.stop();
                 }
                 socket.close(code, reason);
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
-                socket.onmessage = null;
+                socket.onmessage = undefined;
                 // On linux the socket can wait a long time to emit its close event if we've
                 //   lost the internet connection. On the order of minutes. This speeds that
                 //   process up.

@@ -122,4 +122,5 @@
 
   window.log = window.top.log;
 
+  window.Backbone = window.top.Backbone;
 })();

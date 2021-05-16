@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.selectors = window.ts.state.selectors || {};
-    const exports = window.ts.state.selectors.stickers = {};
-
     Object.defineProperty(exports, "__esModule", { value: true });
     const path_1 = require("path");
     const lodash_1 = require("lodash");
@@ -75,4 +69,4 @@
     exports.getKnownStickerPacks = reselect_1.createSelector(exports.getPacks, exports.getBlessedPacks, user_1.getStickersPath, user_1.getTempPath, (packs, blessedPacks, stickersPath, tempPath) => {
         return filterAndTransformPacks(packs, pack => !blessedPacks[pack.id] && pack.status === 'known', pack => pack.createdAt, blessedPacks, stickersPath, tempPath);
     });
-})();
+});

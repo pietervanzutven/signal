@@ -24,7 +24,6 @@
     const lodash_1 = require("lodash");
     const react_contextmenu_1 = require("react-contextmenu");
     const react_popper_1 = require("react-popper");
-    const moment_1 = __importDefault(require("moment"));
     const Avatar_1 = require("../Avatar");
     const Spinner_1 = require("../Spinner");
     const MessageBody_1 = require("./MessageBody");
@@ -36,18 +35,19 @@
     const Quote_1 = require("./Quote");
     const EmbeddedContact_1 = require("./EmbeddedContact");
     const ReactionViewer_1 = require("./ReactionViewer");
-    const ReactionPicker_1 = require("./ReactionPicker");
     const Emoji_1 = require("../emoji/Emoji");
+    const LinkPreviewDate_1 = require("./LinkPreviewDate");
     const Attachment_1 = require("../../types/Attachment");
     const timer_1 = require("../../util/timer");
     const isFileDangerous_1 = require("../../util/isFileDangerous");
     const _util_1 = require("../_util");
+    const lib_1 = require("../emoji/lib");
+    const ReactionPicker_1 = require("../../state/smart/ReactionPicker");
     // Same as MIN_WIDTH in ImageGrid.tsx
     const MINIMUM_LINK_PREVIEW_IMAGE_WIDTH = 200;
-    const MINIMUM_LINK_PREVIEW_DATE = new Date(1990, 0, 1).valueOf();
     const STICKER_SIZE = 200;
     const SELECTED_TIMEOUT = 1000;
-    const ONE_DAY = 24 * 60 * 60 * 1000;
+    const THREE_HOURS = 3 * 60 * 60 * 1000;
     exports.MessageStatuses = [
         'delivered',
         'error',
@@ -285,20 +285,23 @@
                 reactionPickerRoot: null,
                 isWide: this.wideMl.matches,
                 containerWidth: 0,
+                canDeleteForEveryone: props.canDeleteForEveryone,
             };
         }
         static getDerivedStateFromProps(props, state) {
+            const newState = Object.assign(Object.assign({}, state), { canDeleteForEveryone: props.canDeleteForEveryone && state.canDeleteForEveryone });
             if (!props.isSelected) {
-                return Object.assign(Object.assign({}, state), { isSelected: false, prevSelectedCounter: 0 });
+                return Object.assign(Object.assign({}, newState), { isSelected: false, prevSelectedCounter: 0 });
             }
             if (props.isSelected &&
                 props.isSelectedCounter !== state.prevSelectedCounter) {
-                return Object.assign(Object.assign({}, state), { isSelected: props.isSelected, prevSelectedCounter: props.isSelectedCounter });
+                return Object.assign(Object.assign({}, newState), { isSelected: props.isSelected, prevSelectedCounter: props.isSelectedCounter });
             }
-            return state;
+            return newState;
         }
         componentDidMount() {
             this.startSelectedTimer();
+            this.startDeleteForEveryoneTimer();
             const { isSelected } = this.props;
             if (isSelected) {
                 this.setFocus();
@@ -324,17 +327,23 @@
             if (this.expiredTimeout) {
                 clearTimeout(this.expiredTimeout);
             }
+            if (this.deleteForEveryoneTimeout) {
+                clearTimeout(this.deleteForEveryoneTimeout);
+            }
             this.toggleReactionViewer(true);
             this.toggleReactionPicker(true);
             this.wideMl.removeEventListener('change', this.handleWideMlChange);
         }
         componentDidUpdate(prevProps) {
-            const { isSelected } = this.props;
+            const { canDeleteForEveryone, isSelected } = this.props;
             this.startSelectedTimer();
             if (!prevProps.isSelected && isSelected) {
                 this.setFocus();
             }
             this.checkExpired();
+            if (canDeleteForEveryone !== prevProps.canDeleteForEveryone) {
+                this.startDeleteForEveryoneTimer();
+            }
         }
         startSelectedTimer() {
             const { clearSelectedMessage, interactionMode } = this.props;
@@ -348,6 +357,25 @@
                     this.setState({ isSelected: false });
                     clearSelectedMessage();
                 }, SELECTED_TIMEOUT);
+            }
+        }
+        startDeleteForEveryoneTimer() {
+            if (this.deleteForEveryoneTimeout) {
+                clearTimeout(this.deleteForEveryoneTimeout);
+            }
+            const { canDeleteForEveryone } = this.props;
+            if (!canDeleteForEveryone) {
+                return;
+            }
+            const { timestamp } = this.props;
+            const timeToDeletion = timestamp - Date.now() + THREE_HOURS;
+            if (timeToDeletion <= 0) {
+                this.setState({ canDeleteForEveryone: false });
+            }
+            else {
+                this.deleteForEveryoneTimeout = setTimeout(() => {
+                    this.setState({ canDeleteForEveryone: false });
+                }, timeToDeletion);
             }
         }
         checkExpired() {
@@ -541,13 +569,7 @@
             const isFullSizeImage = !first.isStickerPack &&
                 width &&
                 width >= MINIMUM_LINK_PREVIEW_IMAGE_WIDTH;
-            // Don't show old dates or dates too far in the future. This is predicated on the
-            //   idea that showing an invalid dates is worse than hiding valid ones.
-            const maximumLinkPreviewDate = Date.now() + ONE_DAY;
-            const isDateValid = typeof first.date === 'number' &&
-                first.date > MINIMUM_LINK_PREVIEW_DATE &&
-                first.date < maximumLinkPreviewDate;
-            const dateMoment = isDateValid ? moment_1.default(first.date) : null;
+            const linkPreviewDate = first.date || null;
             return (react_1.default.createElement("button", {
                 type: "button", className: classnames_1.default('module-message__link-preview', `module-message__link-preview--${direction}`, withContentAbove
                     ? 'module-message__link-preview--with-content-above'
@@ -580,7 +602,7 @@
                         first.description && (react_1.default.createElement("div", { className: "module-message__link-preview__description" }, first.description)),
                         react_1.default.createElement("div", { className: "module-message__link-preview__footer" },
                             react_1.default.createElement("div", { className: "module-message__link-preview__location" }, first.domain),
-                            dateMoment && (react_1.default.createElement("time", { className: "module-message__link-preview__date", dateTime: dateMoment.toISOString() }, dateMoment.format('ll'))))))));
+                            react_1.default.createElement(LinkPreviewDate_1.LinkPreviewDate, { date: linkPreviewDate, className: "module-message__link-preview__date" }))))));
         }
         renderQuote() {
             const { conversationType, authorColor, direction, disableScroll, i18n, quote, scrollToQuotedMessage, } = this.props;
@@ -738,8 +760,8 @@
                 reactionPickerRoot &&
                 react_dom_1.createPortal(
                     // eslint-disable-next-line consistent-return
-                    react_1.default.createElement(react_popper_1.Popper, { placement: "top" }, ({ ref, style }) => (react_1.default.createElement(ReactionPicker_1.ReactionPicker, {
-                        i18n: i18n, ref: ref, style: style, selected: selectedReaction, onClose: this.toggleReactionPicker, onPick: emoji => {
+                    react_1.default.createElement(react_popper_1.Popper, { placement: "top" }, ({ ref, style }) => (react_1.default.createElement(ReactionPicker_1.SmartReactionPicker, {
+                        ref: ref, style: style, selected: selectedReaction, onClose: this.toggleReactionPicker, onPick: emoji => {
                             this.toggleReactionPicker(true);
                             reactToMessage(id, {
                                 emoji,
@@ -749,7 +771,8 @@
                     }))), reactionPickerRoot)));
         }
         renderContextMenu(triggerId) {
-            const { attachments, canReply, deleteMessage, direction, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, } = this.props;
+            const { attachments, canReply, deleteMessage, deleteMessageForEveryone, direction, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, } = this.props;
+            const { canDeleteForEveryone } = this.state;
             const showRetry = status === 'error' && direction === 'outgoing';
             const multipleAttachments = attachments && attachments.length > 1;
             const menu = (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
@@ -807,7 +830,16 @@
                         event.preventDefault();
                         deleteMessage(id);
                     }
-                }, i18n('deleteMessage'))));
+                }, i18n('deleteMessage')),
+                canDeleteForEveryone ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                    attributes: {
+                        className: 'module-message__context__delete-message-for-everyone',
+                    }, onClick: (event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        deleteMessageForEveryone(id);
+                    }
+                }, i18n('deleteMessageForEveryone'))) : null));
             return react_dom_1.default.createPortal(menu, document.body);
         }
         getWidth() {
@@ -928,10 +960,11 @@
             if (!reactions || (reactions && reactions.length === 0)) {
                 return null;
             }
+            const reactionsWithEmojiData = reactions.map(reaction => (Object.assign(Object.assign({}, reaction), lib_1.emojiToData(reaction.emoji))));
             // Group by emoji and order each group by timestamp descending
-            const grouped = Object.values(lodash_1.groupBy(reactions, 'emoji')).map(res => lodash_1.orderBy(res, ['timestamp'], ['desc']));
+            const groupedAndSortedReactions = Object.values(lodash_1.groupBy(reactionsWithEmojiData, 'short_name')).map(groupedReactions => lodash_1.orderBy(groupedReactions, [reaction => reaction.from.isMe, 'timestamp'], ['desc', 'desc']));
             // Order groups by length and subsequently by most recent reaction
-            const ordered = lodash_1.orderBy(grouped, ['length', ([{ timestamp }]) => timestamp], ['desc', 'desc']);
+            const ordered = lodash_1.orderBy(groupedAndSortedReactions, ['length', ([{ timestamp }]) => timestamp], ['desc', 'desc']);
             // Take the first three groups for rendering
             const toRender = lodash_1.take(ordered, 3).map(res => ({
                 emoji: res[0].emoji,

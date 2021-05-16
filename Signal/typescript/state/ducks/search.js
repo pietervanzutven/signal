@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.ducks = window.ts.state.ducks || {};
-    const exports = window.ts.state.ducks.search = {};
-
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -166,7 +160,6 @@
             messagesLoading: false,
         };
     }
-    // tslint:disable-next-line cyclomatic-complexity max-func-body-length
     function reducer(state = getEmptyState(), action) {
         if (action.type === 'SHOW_ARCHIVED_CONVERSATIONS') {
             return getEmptyState();
@@ -265,4 +258,4 @@
         return state;
     }
     exports.reducer = reducer;
-})();
+});

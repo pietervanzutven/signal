@@ -1,11 +1,5 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.state = window.ts.state || {};
-    window.ts.state.ducks = window.ts.state.ducks || {};
-    const exports = window.ts.state.ducks.conversations = {};
-
     Object.defineProperty(exports, "__esModule", { value: true });
     /* eslint-disable camelcase */
     const lodash_1 = require("lodash");
@@ -225,7 +219,6 @@
             showArchived: false,
         };
     }
-    // tslint:disable-next-line cyclomatic-complexity
     function hasMessageHeightChanged(message, previous) {
         const messageAttachments = message.attachments || [];
         const previousAttachments = previous.attachments || [];
@@ -278,7 +271,6 @@
         }
         return false;
     }
-    // tslint:disable-next-line cyclomatic-complexity max-func-body-length
     function reducer(state = getEmptyState(), action) {
         if (action.type === 'CONVERSATION_ADDED') {
             const { payload } = action;
@@ -622,4 +614,4 @@
         return state;
     }
     exports.reducer = reducer;
-})();
+});

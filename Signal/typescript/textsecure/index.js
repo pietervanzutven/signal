@@ -17,19 +17,19 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const EventTarget_1 = __importDefault(window.ts.textsecure.EventTarget);
-    const AccountManager_1 = __importDefault(window.ts.textsecure.AccountManager);
-    const MessageReceiver_1 = __importDefault(window.ts.textsecure.MessageReceiver);
-    const Helpers_1 = __importDefault(window.ts.textsecure.Helpers);
-    const Crypto_1 = __importDefault(window.ts.textsecure.Crypto);
-    const ContactsParser_1 = window.ts.textsecure.ContactsParser;
-    const TaskWithTimeout_1 = __importDefault(window.ts.textsecure.TaskWithTimeout);
-    const SyncRequest_1 = __importDefault(window.ts.textsecure.SyncRequest);
-    const SendMessage_1 = __importDefault(window.ts.textsecure.SendMessage);
-    const StringView_1 = __importDefault(window.ts.textsecure.StringView);
-    const Storage_1 = __importDefault(window.ts.textsecure.Storage);
-    const WebAPI = __importStar(window.ts.textsecure.WebAPI);
-    const WebsocketResources_1 = __importDefault(window.ts.textsecure.WebsocketResources);
+    const EventTarget_1 = __importDefault(require("./EventTarget"));
+    const AccountManager_1 = __importDefault(require("./AccountManager"));
+    const MessageReceiver_1 = __importDefault(require("./MessageReceiver"));
+    const Helpers_1 = __importDefault(require("./Helpers"));
+    const Crypto_1 = __importDefault(require("./Crypto"));
+    const ContactsParser_1 = require("./ContactsParser");
+    const TaskWithTimeout_1 = __importDefault(require("./TaskWithTimeout"));
+    const SyncRequest_1 = __importDefault(require("./SyncRequest"));
+    const SendMessage_1 = __importDefault(require("./SendMessage"));
+    const StringView_1 = __importDefault(require("./StringView"));
+    const Storage_1 = __importDefault(require("./Storage"));
+    const WebAPI = __importStar(require("./WebAPI"));
+    const WebsocketResources_1 = __importDefault(require("./WebsocketResources"));
     exports.textsecure = {
         createTaskWithTimeout: TaskWithTimeout_1.default,
         crypto: Crypto_1.default,

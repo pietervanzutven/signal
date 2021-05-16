@@ -5,7 +5,12 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.SendMessage = {};
 
-    // tslint:disable no-bitwise no-default-export
+    /* eslint-disable no-nested-ternary */
+    /* eslint-disable class-methods-use-this */
+    /* eslint-disable more/no-then */
+    /* eslint-disable no-bitwise */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable max-classes-per-file */
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -29,7 +34,6 @@
         return res;
     }
     class Message {
-        // tslint:disable cyclomatic-complexity
         constructor(options) {
             this.attachments = options.attachments || [];
             this.body = options.body;
@@ -45,6 +49,7 @@
             this.sticker = options.sticker;
             this.reaction = options.reaction;
             this.timestamp = options.timestamp;
+            this.deletedForEveryoneTimestamp = options.deletedForEveryoneTimestamp;
             if (!(this.recipients instanceof Array)) {
                 throw new Error('Invalid recipient list');
             }
@@ -134,6 +139,8 @@
                     const item = new window.textsecure.protobuf.DataMessage.Preview();
                     item.title = preview.title;
                     item.url = preview.url;
+                    item.description = preview.description || null;
+                    item.date = preview.date || null;
                     item.image = preview.image || null;
                     return item;
                 });
@@ -176,6 +183,11 @@
             }
             if (this.profileKey) {
                 proto.profileKey = this.profileKey;
+            }
+            if (this.deletedForEveryoneTimestamp) {
+                proto.delete = {
+                    targetSentTimestamp: this.deletedForEveryoneTimestamp,
+                };
             }
             this.dataMessage = proto;
             return proto;
@@ -300,7 +312,7 @@
             const makePointer = this.makeAttachmentPointer.bind(this);
             const { quote } = message;
             if (!quote || !quote.attachments || quote.attachments.length === 0) {
-                return Promise.resolve();
+                return;
             }
             await Promise.all(quote.attachments.map((attachment) => {
                 if (!attachment.thumbnail) {
@@ -346,7 +358,6 @@
             }
             const outgoing = new OutgoingMessage_1.default(this.server, timestamp, recipients, messageProto, silent, callback, options);
             recipients.forEach(identifier => {
-                // tslint:disable-next-line no-floating-promises
                 this.queueJobForIdentifier(identifier, async () => outgoing.sendToIdentifier(identifier));
             });
         }
@@ -358,7 +369,6 @@
                         return;
                     }
                     resolve(result);
-                    return;
                 };
                 this.sendMessageProto(timestamp, identifiers, messageProto, callback, silent, options);
             });
@@ -569,9 +579,9 @@
             if (!recipientId && !groupId) {
                 throw new Error('Need to provide either recipientId or groupId!');
             }
-            const recipients = groupId
+            const recipients = (groupId
                 ? lodash_1.without(groupMembers, myNumber, myUuid)
-                : [recipientId];
+                : [recipientId]);
             const groupIdBuffer = groupId
                 ? Crypto_2.fromEncodedBinaryToArrayBuffer(groupId)
                 : null;
@@ -759,11 +769,12 @@
             const identifiers = providedIdentifiers.filter(id => id !== myE164 && id !== myUuid);
             if (identifiers.length === 0) {
                 return Promise.resolve({
-                    successfulIdentifiers: [],
-                    failoverIdentifiers: [],
-                    errors: [],
-                    unidentifiedDeliveries: [],
                     dataMessage: proto.toArrayBuffer(),
+                    discoveredIdentifierPairs: [],
+                    errors: [],
+                    failoverIdentifiers: [],
+                    successfulIdentifiers: [],
+                    unidentifiedDeliveries: [],
                 });
             }
             return new Promise((resolve, reject) => {
@@ -780,7 +791,7 @@
                 this.sendMessageProto(timestamp, providedIdentifiers, proto, callback, silent, options);
             });
         }
-        async getMessageProto(destination, body, attachments, quote, preview, sticker, reaction, timestamp, expireTimer, profileKey, flags) {
+        async getMessageProto(destination, body, attachments, quote, preview, sticker, reaction, deletedForEveryoneTimestamp, timestamp, expireTimer, profileKey, flags) {
             const attributes = {
                 recipients: [destination],
                 destination,
@@ -791,6 +802,7 @@
                 preview,
                 sticker,
                 reaction,
+                deletedForEveryoneTimestamp,
                 expireTimer,
                 profileKey,
                 flags,
@@ -807,7 +819,7 @@
             ]);
             return message.toArrayBuffer();
         }
-        async sendMessageToIdentifier(identifier, messageText, attachments, quote, preview, sticker, reaction, timestamp, expireTimer, profileKey, options) {
+        async sendMessageToIdentifier(identifier, messageText, attachments, quote, preview, sticker, reaction, deletedForEveryoneTimestamp, timestamp, expireTimer, profileKey, options) {
             return this.sendMessage({
                 recipients: [identifier],
                 body: messageText,
@@ -817,6 +829,7 @@
                 preview,
                 sticker,
                 reaction,
+                deletedForEveryoneTimestamp,
                 expireTimer,
                 profileKey,
             }, options);
@@ -858,20 +871,28 @@
             const sendSyncPromise = this.sendSyncMessage(buffer, timestamp, e164, uuid, null, [], [], false, options).catch(logError('resetSession/sendSync error:'));
             return Promise.all([sendToContactPromise, sendSyncPromise]);
         }
-        async sendMessageToGroup({ attachments, expireTimer, groupV2, groupV1, messageText, preview, profileKey, quote, reaction, sticker, timestamp, }, options) {
+        async sendMessageToGroup({ attachments, expireTimer, groupV2, groupV1, messageText, preview, profileKey, quote, reaction, sticker, deletedForEveryoneTimestamp, timestamp, }, options) {
             if (!groupV1 && !groupV2) {
                 throw new Error('sendMessageToGroup: Neither group1 nor groupv2 information provided!');
             }
             const myE164 = window.textsecure.storage.user.getNumber();
-            const myUuid = window.textsecure.storage.user.getNumber();
+            const myUuid = window.textsecure.storage.user.getUuid();
             // prettier-ignore
             const recipients = groupV2
                 ? groupV2.members
                 : groupV1
                     ? groupV1.members
                     : [];
+            // We should always have a UUID but have this check just in case we don't.
+            let isNotMe;
+            if (myUuid) {
+                isNotMe = r => r !== myE164 && r !== myUuid;
+            }
+            else {
+                isNotMe = r => r !== myE164;
+            }
             const attrs = {
-                recipients: recipients.filter(r => r !== myE164 && r !== myUuid),
+                recipients: recipients.filter(isNotMe),
                 body: messageText,
                 timestamp,
                 attachments,
@@ -881,6 +902,7 @@
                 reaction,
                 expireTimer,
                 profileKey,
+                deletedForEveryoneTimestamp,
                 groupV2,
                 group: groupV1
                     ? {
@@ -912,6 +934,13 @@
         }
         async modifyGroup(changes, options) {
             return this.server.modifyGroup(changes, options);
+        }
+        async leaveGroup(groupId, groupIdentifiers, options) {
+            const proto = new window.textsecure.protobuf.DataMessage();
+            proto.group = new window.textsecure.protobuf.GroupContext();
+            proto.group.id = stringToArrayBuffer(groupId);
+            proto.group.type = window.textsecure.protobuf.GroupContext.Type.QUIT;
+            return this.sendGroupProto(groupIdentifiers, proto, Date.now(), options);
         }
         async sendExpirationTimerUpdateToGroup(groupId, groupIdentifiers, expireTimer, timestamp, profileKey, options) {
             const myNumber = window.textsecure.storage.user.getNumber();
@@ -948,6 +977,12 @@
                 profileKey,
                 flags: window.textsecure.protobuf.DataMessage.Flags.EXPIRATION_TIMER_UPDATE,
             }, options);
+        }
+        async fetchLinkPreviewMetadata(href, abortSignal) {
+            return this.server.fetchLinkPreviewMetadata(href, abortSignal);
+        }
+        async fetchLinkPreviewImage(href, abortSignal) {
+            return this.server.fetchLinkPreviewImage(href, abortSignal);
         }
         async makeProxiedRequest(url, options) {
             return this.server.makeProxiedRequest(url, options);

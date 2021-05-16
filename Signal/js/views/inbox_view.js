@@ -139,9 +139,6 @@
       click: 'onClick',
     },
     setupCallManagerUI() {
-      if (!window.CALLING) {
-        return;
-      }
       if (this.callManagerView) {
         return;
       }

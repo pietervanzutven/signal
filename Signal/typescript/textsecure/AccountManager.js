@@ -10,10 +10,15 @@
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable @typescript-eslint/ban-types */
+    /* eslint-disable more/no-then */
+    /* eslint-disable class-methods-use-this */
+    /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+    const p_queue_1 = __importDefault(require("p-queue"));
     const EventTarget_1 = __importDefault(require("./EventTarget"));
     const MessageReceiver_1 = __importDefault(require("./MessageReceiver"));
     const Helpers_1 = __importDefault(require("./Helpers"));
-    const p_queue_1 = __importDefault(require("p-queue"));
     const ProvisioningCipher_1 = __importDefault(require("./ProvisioningCipher"));
     const WebsocketResources_1 = __importDefault(require("./WebsocketResources"));
     const ARCHIVE_AGE = 7 * 24 * 60 * 60 * 1000;
@@ -105,7 +110,6 @@
                     .then(async () => registrationDone({ number }));
             }));
         }
-        // tslint:disable-next-line max-func-body-length
         async registerSecondDevice(setProvisioningUrl, confirmNumber, progressCallback) {
             const createAccount = this.createAccount.bind(this);
             const clearSessionsAndPreKeys = this.clearSessionsAndPreKeys.bind(this);
@@ -204,6 +208,7 @@
                     window.log.warn('rotateSignedPreKey: 3+ confirmed keys, most recent is less than a day old. Cancelling rotation.');
                     return;
                 }
+                // eslint-disable-next-line consistent-return
                 return store
                     .getIdentityKeyPair()
                     .then(async (identityKey) => window.libsignal.KeyHelper.generateSignedPreKey(identityKey, signedKeyId), () => {
@@ -243,9 +248,7 @@
                             e.code &&
                             e.code >= 400 &&
                             e.code <= 599) {
-                            const rejections =
-                                // tslint:disable-next-line restrict-plus-operands
-                                1 + window.textsecure.storage.get('signedKeyRotationRejected', 0);
+                            const rejections = 1 + window.textsecure.storage.get('signedKeyRotationRejected', 0);
                             await window.textsecure.storage.put('signedKeyRotationRejected', rejections);
                             window.log.error('Signed key rotation rejected count:', rejections);
                         }
@@ -302,7 +305,6 @@
                 }));
             });
         }
-        // tslint:disable max-func-body-length
         async createAccount(number, verificationCode, identityKeyPair, profileKey, deviceName, userAgent, readReceipts, options = {}) {
             const { accessKey } = options;
             let password = btoa(Helpers_1.default.getString(window.libsignal.crypto.getRandomBytes(16)));

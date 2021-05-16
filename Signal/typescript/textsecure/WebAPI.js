@@ -5,11 +5,24 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.WebAPI = {};
 
+    /* eslint-disable no-param-reassign */
+    /* eslint-disable more/no-then */
+    /* eslint-disable no-bitwise */
+    /* eslint-disable guard-for-in */
+    /* eslint-disable no-restricted-syntax */
+    /* eslint-disable no-nested-ternary */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
+    var __importStar = (this && this.__importStar) || function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+        result["default"] = mod;
+        return result;
+    };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const websocket_1 = require("websocket");
     const node_fetch_1 = __importDefault(require("node-fetch"));
     const proxy_agent_1 = __importDefault(require("proxy-agent"));
     const https_1 = require("https");
@@ -18,11 +31,13 @@
     const crypto_1 = require("crypto");
     const node_forge_1 = require("node-forge");
     const is_1 = __importDefault(require("@sindresorhus/is"));
-    const stickers_1 = require("../../js/modules/stickers");
-    const Crypto_1 = require("../Crypto");
-    const getUserAgent_1 = require("../util/getUserAgent");
     const p_queue_1 = __importDefault(require("p-queue"));
     const uuid_1 = require("uuid");
+    const getUserAgent_1 = require("../util/getUserAgent");
+    const stickers_1 = require("../../js/modules/stickers");
+    const Crypto_1 = require("../Crypto");
+    const linkPreviewFetch = __importStar(require("../linkPreviews/linkPreviewFetch"));
+    const WebSocket_1 = require("./WebSocket");
     let sgxConstantCache = null;
     function makeLong(value) {
         return window.dcodeIO.Long.fromString(value);
@@ -44,7 +59,6 @@
         };
         return sgxConstantCache;
     }
-    // tslint:disable no-bitwise
     function _btoa(str) {
         let buffer;
         if (str instanceof Buffer) {
@@ -95,25 +109,24 @@
         if (_getStringable(thing)) {
             return _getString(thing);
         }
-        else if (thing instanceof Array) {
+        if (thing instanceof Array) {
             const res = [];
             for (let i = 0; i < thing.length; i += 1) {
                 res[i] = _ensureStringed(thing[i]);
             }
             return res;
         }
-        else if (thing === Object(thing)) {
+        if (thing === Object(thing)) {
             const res = {};
-            // tslint:disable-next-line forin no-for-in
             for (const key in thing) {
                 res[key] = _ensureStringed(thing[key]);
             }
             return res;
         }
-        else if (thing === null) {
+        if (thing === null) {
             return null;
         }
-        else if (thing === undefined) {
+        if (thing === undefined) {
             return undefined;
         }
         throw new Error(`unsure of how to jsonify object of type ${typeof thing}`);
@@ -135,7 +148,6 @@
         let nOutIdx = 0;
         for (let nInIdx = 0; nInIdx < nInLen; nInIdx += 1) {
             nMod4 = nInIdx & 3;
-            // tslint:disable-next-line binary-expression-operand-order
             nUint24 |= _b64ToUint6(sB64Enc.charCodeAt(nInIdx)) << (18 - 6 * nMod4);
             if (nMod4 === 3 || nInLen - nInIdx === 1) {
                 for (nMod3 = 0; nMod3 < 3 && nOutIdx < nOutLen; nMod3 += 1, nOutIdx += 1) {
@@ -159,7 +171,6 @@
     }
     function _validateResponse(response, schema) {
         try {
-            // tslint:disable-next-line forin no-for-in
             for (const i in schema) {
                 switch (schema[i]) {
                     case 'object':
@@ -194,7 +205,7 @@
         const headers = {
             'User-Agent': getUserAgent_1.getUserAgent(version),
         };
-        return new websocket_1.w3cwebsocket(url, undefined, undefined, headers, requestOptions, {
+        return new WebSocket_1.WebSocket(url, undefined, undefined, headers, requestOptions, {
             maxReceivedFrameSize: 0x210000,
         });
     }
@@ -206,9 +217,7 @@
         }
         return null;
     }
-    // tslint:disable-next-line max-func-body-length
     async function _promiseAjax(providedUrl, options) {
-        // tslint:disable-next-line max-func-body-length
         return new Promise((resolve, reject) => {
             const url = providedUrl || `${options.host}/${options.path}`;
             const unauthLabel = options.unauthenticated ? ' (unauth)' : '';
@@ -241,8 +250,6 @@
                 headers: Object.assign({ 'User-Agent': getUserAgent_1.getUserAgent(options.version), 'X-Signal-Agent': 'OWD' }, options.headers),
                 redirect: options.redirect,
                 agent,
-                // We patched node-fetch to add the ca param; its type definitions don't have it
-                // @ts-ignore
                 ca: options.certificateAuthority,
                 timeout,
             };
@@ -274,12 +281,11 @@
                 fetchOptions.headers['Content-Type'] = options.contentType;
             }
             node_fetch_1.default(url, fetchOptions)
-                // tslint:disable-next-line max-func-body-length
                 .then(async (response) => {
                     // Build expired!
                     if (response.status === 499) {
                         window.log.error('Error: build expired');
-                        window.storage.put('remoteBuildExpiration', Date.now());
+                        await window.storage.put('remoteBuildExpiration', Date.now());
                         window.reduxActions.expiration.hydrateExpirationStatus(true);
                     }
                     let resultPromise;
@@ -295,14 +301,10 @@
                     else {
                         resultPromise = response.textConverted();
                     }
-                    // tslint:disable-next-line max-func-body-length
                     return resultPromise.then(result => {
                         if (options.responseType === 'arraybuffer' ||
                             options.responseType === 'arraybufferwithdetails') {
-                            // tslint:disable-next-line no-parameter-reassignment
-                            result = result.buffer.slice(result.byteOffset,
-                                // tslint:disable-next-line: restrict-plus-operands
-                                result.byteOffset + result.byteLength);
+                            result = result.buffer.slice(result.byteOffset, result.byteOffset + result.byteLength);
                         }
                         if (options.responseType === 'json' ||
                             options.responseType === 'jsonwithdetails') {
@@ -354,7 +356,6 @@
                             window.log.error(options.type, url, response.status, 'Error');
                         }
                         reject(makeHTTPError('promiseAjax: error response', response.status, result, options.stack));
-                        return;
                     });
                 })
                 .catch(e => {
@@ -428,7 +429,6 @@
         whoami: 'v1/accounts/whoami',
     };
     // We first set up the data that won't change during this session of the app
-    // tslint:disable-next-line max-func-body-length
     function initialize({ url, storageUrl, directoryEnclaveId, directoryTrustAnchor, directoryUrl, cdnUrlObject, certificateAuthority, contentProxyUrl, proxyUrl, version, }) {
         if (!is_1.default.string(url)) {
             throw new Error('WebAPI.initialize: Invalid server url');
@@ -460,6 +460,9 @@
         if (!is_1.default.string(contentProxyUrl)) {
             throw new Error('WebAPI.initialize: Invalid contentProxyUrl');
         }
+        if (proxyUrl && !is_1.default.string(proxyUrl)) {
+            throw new Error('WebAPI.initialize: Invalid proxyUrl');
+        }
         if (!is_1.default.string(version)) {
             throw new Error('WebAPI.initialize: Invalid version');
         }
@@ -471,7 +474,6 @@
         // Then we connect to the server with user-specific information. This is the only API
         //   exposed to the browser context, ensuring that it can't connect to arbitrary
         //   locations.
-        // tslint:disable-next-line max-func-body-length
         function connect({ username: initialUsername, password: initialPassword, }) {
             let username = initialUsername;
             let password = initialPassword;
@@ -504,6 +506,8 @@
                 getStorageManifest,
                 getStorageRecords,
                 getUuidsForE164s,
+                fetchLinkPreviewMetadata,
+                fetchLinkPreviewImage,
                 makeProxiedRequest,
                 modifyGroup,
                 modifyStorageRecords,
@@ -717,7 +721,7 @@
                         'gv2-3': true,
                     },
                     fetchesMessages: true,
-                    name: deviceName ? deviceName : undefined,
+                    name: deviceName || undefined,
                     registrationId,
                     supportsSms: false,
                     unidentifiedAccessKey: accessKey
@@ -1039,6 +1043,12 @@
                 }
                 return characters;
             }
+            async function fetchLinkPreviewMetadata(href, abortSignal) {
+                return linkPreviewFetch.fetchLinkPreviewMetadata(node_fetch_1.default, href, abortSignal);
+            }
+            async function fetchLinkPreviewImage(href, abortSignal) {
+                return linkPreviewFetch.fetchLinkPreviewImage(node_fetch_1.default, href, abortSignal);
+            }
             async function makeProxiedRequest(targetUrl, options = {}) {
                 const { returnArrayBuffer, start, end } = options;
                 const headers = {
@@ -1213,7 +1223,6 @@
                 window.log.info('opening message socket', url);
                 const fixedScheme = url
                     .replace('https://', 'wss://')
-                    // tslint:disable-next-line no-http-string
                     .replace('http://', 'ws://');
                 const login = encodeURIComponent(username);
                 const pass = encodeURIComponent(password);
@@ -1224,7 +1233,6 @@
                 window.log.info('opening provisioning socket', url);
                 const fixedScheme = url
                     .replace('https://', 'wss://')
-                    // tslint:disable-next-line no-http-string
                     .replace('http://', 'ws://');
                 const clientVersion = encodeURIComponent(version);
                 return _createSocket(`${fixedScheme}/v1/websocket/provisioning/?agent=OWD&version=${clientVersion}`, { certificateAuthority, proxyUrl, version });
@@ -1361,7 +1369,6 @@
                     throw new Error('Leaf cert C field had unexpected value');
                 }
             }
-            // tslint:disable-next-line max-func-body-length
             async function putRemoteAttestation(auth) {
                 const keyPair = await window.libsignal.externalCurveAsync.generateKeyPair();
                 const { privKey, pubKey } = keyPair;

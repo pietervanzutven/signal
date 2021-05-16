@@ -5,8 +5,14 @@
     window.ts.sql = window.ts.sql || {};
     const exports = window.ts.sql.Client = {};
 
-    // tslint:disable no-default-export no-unnecessary-local-variable
     Object.defineProperty(exports, "__esModule", { value: true });
+    /* eslint-disable no-await-in-loop */
+    /* eslint-disable camelcase */
+    /* eslint-disable no-param-reassign */
+    /* eslint-disable no-continue */
+    /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable @typescript-eslint/ban-types */
     const electron_1 = require("electron");
     const lodash_1 = require("lodash");
     const Crypto_1 = require("../Crypto");
@@ -185,11 +191,9 @@
             }
             if (lodash_1.isFunction(value)) {
                 // To prepare for Electron v9 IPC, we need to take functions off of any object
-                // tslint:disable-next-line no-dynamic-delete
                 delete data[key];
             }
             else if (lodash_1.isFunction(value.toNumber)) {
-                // tslint:disable-next-line no-dynamic-delete
                 data[key] = value.toNumber();
             }
             else if (Array.isArray(value)) {
@@ -227,7 +231,6 @@
                     return;
                 }
                 resolve();
-                return;
             };
         });
         await _shutdownPromise;
@@ -250,8 +253,7 @@
     function _updateJob(id, data) {
         const { resolve, reject } = data;
         const { fnName, start } = _jobs[id];
-        _jobs[id] = Object.assign(Object.assign(Object.assign({}, _jobs[id]), data), {
-            resolve: (value) => {
+    _jobs[id] = Object.assign(Object.assign(Object.assign({}, _jobs[id]), data), { resolve: (value) => {
                 _removeJob(id);
                 const end = Date.now();
                 const delta = end - start;
@@ -268,15 +270,13 @@
                     window.restart();
                 }
                 return reject(error);
-            }
-        });
+        } });
     }
     function _removeJob(id) {
         if (_DEBUG) {
             _jobs[id].complete = true;
             return;
         }
-        // tslint:disable-next-line no-dynamic-delete
         delete _jobs[id];
         if (_shutdownCallback) {
             const keys = Object.keys(_jobs);
@@ -607,7 +607,7 @@
     async function getMessageCount(conversationId) {
         return channels.getMessageCount(conversationId);
     }
-    async function saveMessage(data, { forceSave, Message, }) {
+    async function saveMessage(data, { forceSave, Message }) {
         const id = await channels.saveMessage(_cleanData(data), { forceSave });
         Message.updateTimers();
         return id;
@@ -684,7 +684,7 @@
         if (result) {
             return new Message(result);
         }
-        return;
+        return undefined;
     }
     async function getLastConversationPreview(conversationId, options) {
         const { Message } = options;
@@ -692,7 +692,7 @@
         if (result) {
             return new Message(result);
         }
-        return;
+        return undefined;
     }
     async function getMessageMetricsForConversation(conversationId) {
         const result = await channels.getMessageMetricsForConversation(conversationId);
@@ -881,7 +881,6 @@
                     return;
                 }
                 resolve();
-                return;
             });
             setTimeout(() => {
                 reject(new Error(`callChannel call to ${name} timed out`));

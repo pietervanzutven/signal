@@ -5,22 +5,28 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.MessageReceiver = {};
 
-    // tslint:disable no-bitwise no-default-export
+    /* eslint-disable @typescript-eslint/ban-types */
+    /* eslint-disable no-bitwise */
+    /* eslint-disable class-methods-use-this */
+    /* eslint-disable more/no-then */
+    /* eslint-disable camelcase */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable max-classes-per-file */
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = require("lodash");
-    const websocket_1 = require("websocket");
     const p_queue_1 = __importDefault(require("p-queue"));
     const uuid_1 = require("uuid");
-    const EventTarget_1 = __importDefault(require("./EventTarget"));
     const batcher_1 = require("../util/batcher");
+    const EventTarget_1 = __importDefault(require("./EventTarget"));
     const Helpers_1 = __importDefault(require("./Helpers"));
     const WebsocketResources_1 = __importDefault(require("./WebsocketResources"));
     const Crypto_1 = __importDefault(require("./Crypto"));
     const ContactsParser_1 = require("./ContactsParser");
     const Errors_1 = require("./Errors");
+    const WebSocket_1 = require("./WebSocket");
     const groups_1 = require("../groups");
     const RETRY_TIMEOUT = 2 * 60 * 1000;
     class MessageReceiverInner extends EventTarget_1.default {
@@ -60,10 +66,8 @@
                 maxSize: 30,
                 processBatch: this.cacheRemoveBatch.bind(this),
             });
-            if (options.retryCached) {
-                // tslint:disable-next-line no-floating-promises
-                this.pendingQueue.add(async () => this.queueAllCached());
-            }
+            // We always process our cache before any websocket message
+            this.pendingQueue.add(async () => this.queueAllCached());
         }
         connect() {
             if (this.calledClose) {
@@ -76,7 +80,7 @@
             }
             this.isEmptied = false;
             this.hasConnected = true;
-            if (this.socket && this.socket.readyState !== websocket_1.w3cwebsocket.CLOSED) {
+            if (this.socket && this.socket.readyState !== WebSocket_1.WebSocket.CLOSED) {
                 this.socket.close();
                 if (this.wsr) {
                     this.wsr.close();
@@ -113,12 +117,9 @@
         }
         shutdown() {
             if (this.socket) {
-                // @ts-ignore
-                this.socket.onclose = null;
-                // @ts-ignore
-                this.socket.onerror = null;
-                // @ts-ignore
-                this.socket.onopen = null;
+                delete this.socket.onclose;
+                delete this.socket.onerror;
+                delete this.socket.onopen;
                 this.socket = undefined;
             }
             if (this.wsr) {
@@ -146,7 +147,6 @@
             window.log.error('websocket error');
         }
         async dispatchAndWait(event) {
-            // tslint:disable-next-line no-floating-promises
             this.appQueue.add(async () => Promise.all(this.dispatchEvent(event)));
             return Promise.resolve();
         }
@@ -179,7 +179,6 @@
                 window.log.info('got request', request.verb, request.path);
                 request.respond(200, 'OK');
                 if (request.verb === 'PUT' && request.path === '/api/v1/queue/empty') {
-                    // tslint:disable-next-line no-floating-promises
                     this.incomingQueue.add(() => {
                         this.onEmpty();
                     });
@@ -230,7 +229,6 @@
                     await this.dispatchAndWait(ev);
                 }
             };
-            // tslint:disable-next-line no-floating-promises
             this.incomingQueue.add(job);
         }
         calculateMessageAge(headers, serverTimestamp) {
@@ -238,6 +236,7 @@
             if (serverTimestamp) {
                 // The 'X-Signal-Timestamp' is usually the last item, so start there.
                 let it = headers.length;
+                // eslint-disable-next-line no-plusplus
                 while (--it >= 0) {
                     const match = headers[it].match(/^X-Signal-Timestamp:\s*(\d+)\s*$/);
                     if (match && match.length === 2) {
@@ -277,11 +276,9 @@
             const waitForPendingQueue = async () => {
                 window.log.info("MessageReceiver: finished processing messages after 'empty', now waiting for application");
                 // We don't await here because we don't want this to gate future message processing
-                // tslint:disable-next-line no-floating-promises
                 this.appQueue.add(emitEmpty);
             };
             const waitForIncomingQueue = () => {
-                // tslint:disable-next-line no-floating-promises
                 this.addToQueue(waitForPendingQueue);
                 // Note: this.count is used in addToQueue
                 // Resetting count so everything from the websocket after this starts at zero
@@ -289,10 +286,8 @@
             };
             const waitForCacheAddBatcher = async () => {
                 await this.cacheAddBatcher.onIdle();
-                // tslint:disable-next-line no-floating-promises
                 this.incomingQueue.add(waitForIncomingQueue);
             };
-            // tslint:disable-next-line no-floating-promises
             waitForCacheAddBatcher();
         }
         async drain() {
@@ -349,11 +344,9 @@
                     else {
                         throw new Error('Cached decrypted value was not a string!');
                     }
-                    // tslint:disable-next-line no-floating-promises
                     this.queueDecryptedEnvelope(envelope, payloadPlaintext);
                 }
                 else {
-                    // tslint:disable-next-line no-floating-promises
                     this.queueEnvelope(envelope);
                 }
             }
@@ -384,7 +377,6 @@
             if (this.isEmptied) {
                 this.clearRetryTimeout();
                 this.retryCachedTimeout = setTimeout(() => {
-                    // tslint:disable-next-line no-floating-promises
                     this.pendingQueue.add(async () => this.queueAllCached());
                 }, RETRY_TIMEOUT);
             }
@@ -422,7 +414,6 @@
                 await window.textsecure.storage.unprocessed.batchAdd(dataArray);
                 items.forEach(item => {
                     item.request.respond(200, 'OK');
-                    // tslint:disable-next-line no-floating-promises
                     this.queueEnvelope(item.envelope);
                 });
                 this.maybeScheduleRetryTimeout();
@@ -514,7 +505,7 @@
                 await this.innerHandleContentMessage(envelope, plaintext);
                 return;
             }
-            else if (envelope.legacyMessage) {
+            if (envelope.legacyMessage) {
                 await this.innerHandleLegacyMessage(envelope, plaintext);
                 return;
             }
@@ -531,7 +522,7 @@
             if (envelope.content) {
                 return this.handleContentMessage(envelope);
             }
-            else if (envelope.legacyMessage) {
+            if (envelope.legacyMessage) {
                 return this.handleLegacyMessage(envelope);
             }
             this.removeFromCache(envelope);
@@ -541,13 +532,12 @@
             if (this.socket) {
                 return this.socket.readyState;
             }
-            else if (this.hasConnected) {
-                return websocket_1.w3cwebsocket.CLOSED;
+            if (this.hasConnected) {
+                return WebSocket_1.WebSocket.CLOSED;
             }
             return -1;
         }
         async onDeliveryReceipt(envelope) {
-            // tslint:disable-next-line promise-must-complete
             return new Promise((resolve, reject) => {
                 const ev = new Event('delivery');
                 ev.confirm = this.removeFromCache.bind(this, envelope);
@@ -576,13 +566,11 @@
             }
             return plaintext;
         }
-        // tslint:disable-next-line max-func-body-length
         async decrypt(envelope, ciphertext) {
             const { serverTrustRoot } = this;
-            let address;
             let promise;
             const identifier = envelope.sourceUuid || envelope.source;
-            address = new window.libsignal.SignalProtocolAddress(
+            const address = new window.libsignal.SignalProtocolAddress(
                 // Using source as opposed to sourceUuid allows us to get the existing
                 // session if we haven't yet harvested the incoming uuid
                 identifier, envelope.sourceDevice);
@@ -751,7 +739,7 @@
                 if (groupId && isBlocked && !(isMe && isLeavingGroup)) {
                     window.log.warn(`Message ${this.getEnvelopeId(envelope)} ignored; destined for blocked group`);
                     this.removeFromCache(envelope);
-                    return;
+                    return undefined;
                 }
                 const ev = new Event('sent');
                 ev.confirm = this.removeFromCache.bind(this, envelope);
@@ -778,11 +766,6 @@
             const destination = envelope.sourceUuid || envelope.source;
             if (!destination) {
                 throw new Error('MessageReceiver.handleDataMessage: source and sourceUuid were falsey');
-            }
-            if (!window.GV2 && msg.groupV2) {
-                this.removeFromCache(envelope);
-                window.log.info('MessageReceiver.handleDataMessage: dropping GroupV2 message');
-                return;
             }
             this.deriveGroupsV2Data(msg);
             if (msg.flags &&
@@ -817,7 +800,7 @@
                 if (groupId && isBlocked && !(isMe && isLeavingGroup)) {
                     window.log.warn(`Message ${this.getEnvelopeId(envelope)} ignored; destined for blocked group`);
                     this.removeFromCache(envelope);
-                    return;
+                    return undefined;
                 }
                 const ev = new Event('message');
                 ev.confirm = this.removeFromCache.bind(this, envelope);
@@ -860,20 +843,20 @@
             if (content.syncMessage) {
                 return this.handleSyncMessage(envelope, content.syncMessage);
             }
-            else if (content.dataMessage) {
+            if (content.dataMessage) {
                 return this.handleDataMessage(envelope, content.dataMessage);
             }
-            else if (content.nullMessage) {
+            if (content.nullMessage) {
                 this.handleNullMessage(envelope);
-                return;
+                return undefined;
             }
-            else if (content.callingMessage) {
+            if (content.callingMessage) {
                 return this.handleCallingMessage(envelope, content.callingMessage);
             }
-            else if (content.receiptMessage) {
+            if (content.receiptMessage) {
                 return this.handleReceiptMessage(envelope, content.receiptMessage);
             }
-            else if (content.typingMessage) {
+            if (content.typingMessage) {
                 return this.handleTypingMessage(envelope, content.typingMessage);
             }
             this.removeFromCache(envelope);
@@ -990,14 +973,11 @@
             if (sentMessage.message && sentMessage.message.groupV2) {
                 return `groupv2(${sentMessage.message.groupV2.id})`;
             }
-            else if (sentMessage.message && sentMessage.message.group) {
+            if (sentMessage.message && sentMessage.message.group) {
                 return `group(${sentMessage.message.group.id.toBinary()})`;
             }
-            else {
-                return sentMessage.destination || sentMessage.destinationUuid;
-            }
+            return sentMessage.destination || sentMessage.destinationUuid;
         }
-        // tslint:disable-next-line cyclomatic-complexity
         async handleSyncMessage(envelope, syncMessage) {
             const unidentified = syncMessage.sent
                 ? syncMessage.sent.unidentifiedStatus || []
@@ -1011,7 +991,7 @@
             if (!fromSelfSource && !fromSelfSourceUuid) {
                 throw new Error('Received sync message from another number');
             }
-            // tslint:disable-next-line triple-equals
+            // eslint-disable-next-line eqeqeq
             if (envelope.sourceDevice == this.deviceId) {
                 throw new Error('Received sync message from our own device');
             }
@@ -1020,55 +1000,50 @@
                 if (!sentMessage || !sentMessage.message) {
                     throw new Error('MessageReceiver.handleSyncMessage: sync sent message was missing message');
                 }
-                if (!window.GV2 && sentMessage.message.groupV2) {
-                    this.removeFromCache(envelope);
-                    window.log.info('MessageReceiver.handleSyncMessage: dropping GroupV2 message');
-                    return;
-                }
                 this.deriveGroupsV2Data(sentMessage.message);
                 window.log.info('sent message to', this.getDestination(sentMessage), sentMessage.timestamp.toNumber(), 'from', this.getEnvelopeId(envelope));
                 return this.handleSentMessage(envelope, sentMessage);
             }
-            else if (syncMessage.contacts) {
+            if (syncMessage.contacts) {
                 this.handleContacts(envelope, syncMessage.contacts);
-                return;
+                return undefined;
             }
-            else if (syncMessage.groups) {
+            if (syncMessage.groups) {
                 this.handleGroups(envelope, syncMessage.groups);
-                return;
+                return undefined;
             }
-            else if (syncMessage.blocked) {
+            if (syncMessage.blocked) {
                 return this.handleBlocked(envelope, syncMessage.blocked);
             }
-            else if (syncMessage.request) {
+            if (syncMessage.request) {
                 window.log.info('Got SyncMessage Request');
                 this.removeFromCache(envelope);
-                return;
+                return undefined;
             }
-            else if (syncMessage.read && syncMessage.read.length) {
+            if (syncMessage.read && syncMessage.read.length) {
                 window.log.info('read messages from', this.getEnvelopeId(envelope));
                 return this.handleRead(envelope, syncMessage.read);
             }
-            else if (syncMessage.verified) {
+            if (syncMessage.verified) {
                 return this.handleVerified(envelope, syncMessage.verified);
             }
-            else if (syncMessage.configuration) {
+            if (syncMessage.configuration) {
                 return this.handleConfiguration(envelope, syncMessage.configuration);
             }
-            else if (syncMessage.stickerPackOperation &&
+            if (syncMessage.stickerPackOperation &&
                 syncMessage.stickerPackOperation.length > 0) {
                 return this.handleStickerPackOperation(envelope, syncMessage.stickerPackOperation);
             }
-            else if (syncMessage.viewOnceOpen) {
+            if (syncMessage.viewOnceOpen) {
                 return this.handleViewOnceOpen(envelope, syncMessage.viewOnceOpen);
             }
-            else if (syncMessage.messageRequestResponse) {
+            if (syncMessage.messageRequestResponse) {
                 return this.handleMessageRequestResponse(envelope, syncMessage.messageRequestResponse);
             }
-            else if (syncMessage.fetchLatest) {
+            if (syncMessage.fetchLatest) {
                 return this.handleFetchLatest(envelope, syncMessage.fetchLatest);
             }
-            else if (syncMessage.keys) {
+            if (syncMessage.keys) {
                 return this.handleKeys(envelope, syncMessage.keys);
             }
             this.removeFromCache(envelope);
@@ -1111,7 +1086,7 @@
         async handleKeys(envelope, sync) {
             window.log.info('got keys sync message');
             if (!sync.storageService) {
-                return;
+                return undefined;
             }
             const ev = new Event('keys');
             ev.confirm = this.removeFromCache.bind(this, envelope);
@@ -1169,7 +1144,6 @@
             this.removeFromCache(envelope);
             // Note: we do not return here because we don't want to block the next message on
             //   this attachment download and a lot of processing of that attachment.
-            // tslint:disable-next-line no-floating-promises
             this.handleAttachment(blob).then(async (attachmentPointer) => {
                 const results = [];
                 const contactBuffer = new ContactsParser_1.ContactBuffer(attachmentPointer.data);
@@ -1197,7 +1171,6 @@
             }
             // Note: we do not return here because we don't want to block the next message on
             //   this attachment download and a lot of processing of that attachment.
-            // tslint:disable-next-line no-floating-promises
             this.handleAttachment(blob).then(async (attachmentPointer) => {
                 const groupBuffer = new ContactsParser_1.GroupBuffer(attachmentPointer.data);
                 let groupDetails = groupBuffer.next();
@@ -1230,7 +1203,6 @@
             window.log.info('Setting these groups as blocked:', groupIds.map(groupId => `group(${groupId})`));
             await window.textsecure.storage.put('blocked-groups', groupIds);
             this.removeFromCache(envelope);
-            return;
         }
         isBlocked(number) {
             return window.textsecure.storage.get('blocked', []).includes(number);
@@ -1296,7 +1268,6 @@
                 return sessionCipher.deleteAllSessionsForDevice();
             }));
         }
-        // tslint:disable-next-line max-func-body-length cyclomatic-complexity
         async processDecrypted(envelope, decrypted) {
             /* eslint-disable no-bitwise, no-param-reassign */
             const FLAGS = window.textsecure.protobuf.DataMessage.Flags;
@@ -1324,7 +1295,7 @@
                 decrypted.group = null;
                 return Promise.resolve(decrypted);
             }
-            else if (decrypted.flags & FLAGS.EXPIRATION_TIMER_UPDATE) {
+            if (decrypted.flags & FLAGS.EXPIRATION_TIMER_UPDATE) {
                 decrypted.body = null;
                 decrypted.attachments = [];
             }

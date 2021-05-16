@@ -39,8 +39,8 @@ require(exports => {
             ringrtc_1.RingRTC.handleAutoEndedIncomingCallRequest = this.handleAutoEndedIncomingCallRequest.bind(this);
             ringrtc_1.RingRTC.handleLogMessage = this.handleLogMessage.bind(this);
         }
-        async startOutgoingCall(conversation, isVideoCall) {
-            window.log.info('CallingClass.startOutgoingCall()');
+        async startCallingLobby(conversation, isVideoCall) {
+            window.log.info('CallingClass.startCallingLobby()');
             if (!this.uxActions) {
                 window.log.error('Missing uxActions, new call not allowed.');
                 return;
@@ -55,11 +55,58 @@ require(exports => {
                 window.log.info('Permissions were denied, new call not allowed.');
                 return;
             }
+            window.log.info('CallingClass.startCallingLobby(): Getting call settings');
+            // Check state after awaiting to debounce call button.
+            if (ringrtc_1.RingRTC.call && ringrtc_1.RingRTC.call.state !== ringrtc_1.CallState.Ended) {
+                window.log.info('Call already in progress, new call not allowed.');
+                return;
+            }
+            const conversationProps = conversation.cachedProps;
+            if (!conversationProps) {
+                window.log.error('CallingClass.startCallingLobby(): No conversation props?');
+                return;
+            }
+            window.log.info('CallingClass.startCallingLobby(): Starting lobby');
+            this.uxActions.showCallLobby({
+                callDetails: Object.assign(Object.assign({}, conversationProps), { callId: undefined, isIncoming: false, isVideoCall }),
+            });
+            await this.startDeviceReselectionTimer();
+            this.enableLocalCamera();
+        }
+        stopCallingLobby() {
+            this.disableLocalCamera();
+            this.stopDeviceReselectionTimer();
+            this.lastMediaDeviceSettings = undefined;
+        }
+        async startOutgoingCall(conversationId, isVideoCall) {
+            window.log.info('CallingClass.startCallingLobby()');
+            if (!this.uxActions) {
+                throw new Error('Redux actions not available');
+            }
+            const conversation = window.ConversationController.get(conversationId);
+            if (!conversation) {
+                window.log.error('Could not find conversation, cannot start call');
+                this.stopCallingLobby();
+                return;
+            }
+            const remoteUserId = this.getRemoteUserIdFromConversation(conversation);
+            if (!remoteUserId || !this.localDeviceId) {
+                window.log.error('Missing identifier, new call not allowed.');
+                this.stopCallingLobby();
+                return;
+            }
+            const haveMediaPermissions = await this.requestPermissions(isVideoCall);
+            if (!haveMediaPermissions) {
+                window.log.info('Permissions were denied, new call not allowed.');
+                this.stopCallingLobby();
+                return;
+            }
             window.log.info('CallingClass.startOutgoingCall(): Getting call settings');
             const callSettings = await this.getCallSettings(conversation);
             // Check state after awaiting to debounce call button.
             if (ringrtc_1.RingRTC.call && ringrtc_1.RingRTC.call.state !== ringrtc_1.CallState.Ended) {
                 window.log.info('Call already in progress, new call not allowed.');
+                this.stopCallingLobby();
                 return;
             }
             window.log.info('CallingClass.startOutgoingCall(): Starting in RingRTC');
@@ -71,7 +118,7 @@ require(exports => {
             ringrtc_1.RingRTC.setVideoRenderer(call.callId, this.videoRenderer);
             this.attachToCall(conversation, call);
             this.uxActions.outgoingCall({
-                callDetails: this.getUxCallDetails(conversation, call),
+                callDetails: this.getAcceptedCallDetails(conversation, call),
             });
         }
         async accept(callId, asVideoCall) {
@@ -253,6 +300,12 @@ require(exports => {
             window.storage.put('preferred-audio-output-device', device);
             ringrtc_1.RingRTC.setAudioOutput(device.index);
         }
+        enableLocalCamera() {
+            this.videoCapturer.enableCapture();
+        }
+        disableLocalCamera() {
+            this.videoCapturer.disable();
+        }
         async setPreferredCamera(device) {
             window.log.info('MediaDevice: setPreferredCamera', device);
             window.storage.put('preferred-video-input-device', device);
@@ -285,6 +338,23 @@ require(exports => {
                 return;
             }
             const receiverIdentityKey = receiverIdentityRecord.publicKey.slice(1); // Ignore the type header, it is not used.
+            const conversation = window.ConversationController.get(remoteUserId);
+            if (!conversation) {
+                window.log.error('Missing conversation; ignoring call message.');
+                return;
+            }
+            if (callingMessage.offer && !conversation.getAccepted()) {
+                window.log.info('Conversation was not approved by user; rejecting call message.');
+                const hangup = new ringrtc_1.HangupMessage();
+                hangup.callId = callingMessage.offer.callId;
+                hangup.deviceId = remoteDeviceId;
+                hangup.type = ringrtc_1.HangupType.NeedPermission;
+                const message = new ringrtc_1.CallingMessage();
+                message.legacyHangup = hangup;
+                await this.handleOutgoingSignaling(remoteUserId, message);
+                this.addCallHistoryForFailedIncomingCall(conversation, callingMessage.offer.type === ringrtc_1.OfferType.VideoCall);
+                return;
+            }
             const messageAgeSec = envelope.messageAgeSec ? envelope.messageAgeSec : 0;
             window.log.info('CallingClass.handleCallingMessage(): Handling in RingRTC');
             ringrtc_1.RingRTC.handleCallingMessage(remoteUserId, remoteDeviceId, this.localDeviceId, messageAgeSec, callingMessage, senderIdentityKey, receiverIdentityKey);
@@ -380,26 +450,19 @@ require(exports => {
                 if (verifiedEnum ===
                     window.textsecure.storage.protocol.VerifiedStatus.UNVERIFIED) {
                     window.log.info(`Peer is not trusted, ignoring incoming call for conversation: ${conversation.idForLogging()}`);
-                    this.addCallHistoryForFailedIncomingCall(conversation, call);
-                    return null;
-                }
-                // Simple Call Requests: Ensure that the conversation is accepted.
-                // If not, do not allow the call.
-                if (!conversation.getAccepted()) {
-                    window.log.info(`Messaging is not accepted, ignoring incoming call for conversation: ${conversation.idForLogging()}`);
-                    this.addCallHistoryForFailedIncomingCall(conversation, call);
+                    this.addCallHistoryForFailedIncomingCall(conversation, call.isVideoCall);
                     return null;
                 }
                 this.attachToCall(conversation, call);
                 this.uxActions.incomingCall({
-                    callDetails: this.getUxCallDetails(conversation, call),
+                    callDetails: this.getAcceptedCallDetails(conversation, call),
                 });
                 window.log.info('CallingClass.handleIncomingCall(): Proceeding');
                 return await this.getCallSettings(conversation);
             }
             catch (err) {
                 window.log.error(`Ignoring incoming call: ${err.stack}`);
-                this.addCallHistoryForFailedIncomingCall(conversation, call);
+                this.addCallHistoryForFailedIncomingCall(conversation, call.isVideoCall);
                 return null;
             }
         }
@@ -428,7 +491,8 @@ require(exports => {
                 }
                 uxActions.callStateChange({
                     callState: call.state,
-                    callDetails: this.getUxCallDetails(conversation, call),
+                    callDetails: this.getAcceptedCallDetails(conversation, call),
+                    callEndedReason: call.endedReason,
                 });
             };
             // eslint-disable-next-line no-param-reassign
@@ -485,8 +549,12 @@ require(exports => {
                 hideIp: shouldRelayCalls || isContactUnknown,
             };
         }
-        getUxCallDetails(conversation, call) {
-            return Object.assign(Object.assign({}, conversation.cachedProps), { callId: call.callId, isIncoming: call.isIncoming, isVideoCall: call.isVideoCall });
+        getAcceptedCallDetails(conversation, call) {
+            const conversationProps = conversation.cachedProps;
+            if (!conversationProps) {
+                throw new Error('getAcceptedCallDetails: No conversation props?');
+            }
+            return Object.assign(Object.assign({}, conversationProps), { acceptedTime: Date.now(), callId: call.callId, isIncoming: call.isIncoming, isVideoCall: call.isVideoCall });
         }
         addCallHistoryForEndedCall(conversation, call, acceptedTimeParam) {
             let acceptedTime = acceptedTimeParam;
@@ -503,28 +571,26 @@ require(exports => {
             if (call.endedReason === ringrtc_1.CallEndedReason.AcceptedOnAnotherDevice) {
                 acceptedTime = Date.now();
             }
-            const callHistoryDetails = {
+            conversation.addCallHistory({
                 wasIncoming: call.isIncoming,
                 wasVideoCall: call.isVideoCall,
                 wasDeclined,
                 acceptedTime,
                 endedTime: Date.now(),
-            };
-            conversation.addCallHistory(callHistoryDetails);
+            });
         }
-        addCallHistoryForFailedIncomingCall(conversation, call) {
-            const callHistoryDetails = {
+        addCallHistoryForFailedIncomingCall(conversation, wasVideoCall) {
+            conversation.addCallHistory({
                 wasIncoming: true,
-                wasVideoCall: call.isVideoCall,
+                wasVideoCall,
                 // Since the user didn't decline, make sure it shows up as a missed call instead
                 wasDeclined: false,
                 acceptedTime: undefined,
                 endedTime: Date.now(),
-            };
-            conversation.addCallHistory(callHistoryDetails);
+            });
         }
         addCallHistoryForAutoEndedIncomingCall(conversation, _reason) {
-            const callHistoryDetails = {
+            conversation.addCallHistory({
                 wasIncoming: true,
                 // We don't actually know, but it doesn't seem that important in this case,
                 // but we could maybe plumb this info through RingRTC
@@ -533,8 +599,7 @@ require(exports => {
                 wasDeclined: false,
                 acceptedTime: undefined,
                 endedTime: Date.now(),
-            };
-            conversation.addCallHistory(callHistoryDetails);
+            });
         }
     }
     exports.CallingClass = CallingClass;

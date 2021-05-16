@@ -16,6 +16,20 @@
     const ConversationListItem_1 = require("./ConversationListItem");
     const SearchResults_1 = require("./SearchResults");
     const _util_1 = require("./_util");
+    var RowType;
+    (function (RowType) {
+        RowType[RowType["ArchiveButton"] = 0] = "ArchiveButton";
+        RowType[RowType["ArchivedConversation"] = 1] = "ArchivedConversation";
+        RowType[RowType["Conversation"] = 2] = "Conversation";
+        RowType[RowType["Header"] = 3] = "Header";
+        RowType[RowType["PinnedConversation"] = 4] = "PinnedConversation";
+        RowType[RowType["Undefined"] = 5] = "Undefined";
+    })(RowType = exports.RowType || (exports.RowType = {}));
+    var HeaderType;
+    (function (HeaderType) {
+        HeaderType[HeaderType["Pinned"] = 0] = "Pinned";
+        HeaderType[HeaderType["Chats"] = 1] = "Chats";
+    })(HeaderType = exports.HeaderType || (exports.HeaderType = {}));
     class LeftPane extends react_1.default.Component {
         constructor() {
             super(...arguments);
@@ -23,21 +37,106 @@
             this.containerRef = react_1.default.createRef();
             this.setFocusToFirstNeeded = false;
             this.setFocusToLastNeeded = false;
-            this.renderRow = ({ index, key, style, }) => {
-                const { archivedConversations, conversations, i18n, openConversationInternal, showArchived, } = this.props;
-                if (!conversations || !archivedConversations) {
-                    throw new Error('renderRow: Tried to render without conversations or archivedConversations');
-                }
-                if (!showArchived && index === conversations.length) {
-                    return this.renderArchivedButton({ key, style });
-                }
-                const conversation = showArchived
-                    ? archivedConversations[index]
-                    : conversations[index];
-                return (react_1.default.createElement("div", { key: key, className: "module-left-pane__conversation-container", style: style },
-                    react_1.default.createElement(ConversationListItem_1.ConversationListItem, Object.assign({}, conversation, { onClick: openConversationInternal, i18n: i18n }))));
+            this.calculateRowHeight = ({ index }) => {
+                const { type } = this.getRowFromIndex(index);
+                return type === RowType.Header ? 40 : 68;
             };
-            this.renderArchivedButton = ({ key, style, }) => {
+            this.getRowFromIndex = (index) => {
+                const { archivedConversations, conversations, pinnedConversations, showArchived, } = this.props;
+                if (!conversations || !pinnedConversations || !archivedConversations) {
+                    return {
+                        type: RowType.Undefined,
+                    };
+                }
+                if (showArchived) {
+                    return {
+                        index,
+                        type: RowType.ArchivedConversation,
+                    };
+                }
+                let conversationIndex = index;
+                if (pinnedConversations.length) {
+                    if (conversations.length) {
+                        if (index === 0) {
+                            return {
+                                headerType: HeaderType.Pinned,
+                                type: RowType.Header,
+                            };
+                        }
+                        if (index <= pinnedConversations.length) {
+                            return {
+                                index: index - 1,
+                                type: RowType.PinnedConversation,
+                            };
+                        }
+                        if (index === pinnedConversations.length + 1) {
+                            return {
+                                headerType: HeaderType.Chats,
+                                type: RowType.Header,
+                            };
+                        }
+                        conversationIndex -= pinnedConversations.length + 2;
+                    }
+                    else {
+                        return {
+                            index,
+                            type: RowType.PinnedConversation,
+                        };
+                    }
+                }
+                if (conversationIndex === conversations.length) {
+                    return {
+                        type: RowType.ArchiveButton,
+                    };
+                }
+                return {
+                    index: conversationIndex,
+                    type: RowType.Conversation,
+                };
+            };
+            this.renderHeaderRow = (index, key, style) => {
+                const { i18n } = this.props;
+                switch (index) {
+                    case HeaderType.Pinned: {
+                        return (react_1.default.createElement("div", { className: "module-left-pane__header-row", key: key, style: style }, i18n('LeftPane--pinned')));
+                    }
+                    case HeaderType.Chats: {
+                        return (react_1.default.createElement("div", { className: "module-left-pane__header-row", key: key, style: style }, i18n('LeftPane--chats')));
+                    }
+                    default: {
+                        window.log.warn('LeftPane: invalid HeaderRowIndex received');
+                        return react_1.default.createElement(react_1.default.Fragment, null);
+                    }
+                }
+            };
+            this.renderRow = ({ index, key, style, }) => {
+                const { archivedConversations, conversations, pinnedConversations, } = this.props;
+                if (!conversations || !pinnedConversations || !archivedConversations) {
+                    throw new Error('renderRow: Tried to render without conversations or pinnedConversations or archivedConversations');
+                }
+                const row = this.getRowFromIndex(index);
+                switch (row.type) {
+                    case RowType.ArchiveButton: {
+                        return this.renderArchivedButton(key, style);
+                    }
+                    case RowType.ArchivedConversation: {
+                        return this.renderConversationRow(archivedConversations[row.index], key, style);
+                    }
+                    case RowType.Conversation: {
+                        return this.renderConversationRow(conversations[row.index], key, style);
+                    }
+                    case RowType.Header: {
+                        return this.renderHeaderRow(row.headerType, key, style);
+                    }
+                    case RowType.PinnedConversation: {
+                        return this.renderConversationRow(pinnedConversations[row.index], key, style);
+                    }
+                    default:
+                        window.log.warn('LeftPane: unknown RowType received');
+                        return react_1.default.createElement(react_1.default.Fragment, null);
+                }
+            };
+            this.renderArchivedButton = (key, style) => {
                 const { archivedConversations, i18n, showArchivedConversations, } = this.props;
                 if (!archivedConversations || !archivedConversations.length) {
                     throw new Error('renderArchivedButton: Tried to render without archivedConversations');
@@ -91,6 +190,12 @@
                 }
                 this.listRef.current.scrollToRow(row);
             };
+            this.recomputeRowHeights = () => {
+                if (!this.listRef || !this.listRef.current) {
+                    return;
+                }
+                this.listRef.current.recomputeRowHeights();
+            };
             this.getScrollContainer = () => {
                 if (!this.listRef || !this.listRef.current) {
                     return null;
@@ -140,21 +245,33 @@
                 }
             }, 100, { maxWait: 100 });
             this.getLength = () => {
-                const { archivedConversations, conversations, showArchived } = this.props;
-                if (!conversations || !archivedConversations) {
+                const { archivedConversations, conversations, pinnedConversations, showArchived, } = this.props;
+                if (!conversations || !archivedConversations || !pinnedConversations) {
                     return 0;
                 }
-                // That extra 1 element added to the list is the 'archived conversations' button
-                return showArchived
-                    ? archivedConversations.length
-                    : conversations.length + (archivedConversations.length ? 1 : 0);
+                if (showArchived) {
+                    return archivedConversations.length;
+                }
+                let { length } = conversations;
+                if (pinnedConversations.length) {
+                    if (length) {
+                        // includes two additional rows for pinned/chats headers
+                        length += 2;
+                    }
+                    length += pinnedConversations.length;
+                }
+                // includes one additional row for 'archived conversations' button
+                if (archivedConversations.length) {
+                    length += 1;
+                }
+                return length;
             };
             this.renderList = ({ height, width, }) => {
-                const { archivedConversations, i18n, conversations, openConversationInternal, renderMessageSearchResult, startNewConversation, searchResults, showArchived, } = this.props;
+                const { archivedConversations, i18n, conversations, openConversationInternal, pinnedConversations, renderMessageSearchResult, startNewConversation, searchResults, showArchived, } = this.props;
                 if (searchResults) {
                     return (react_1.default.createElement(SearchResults_1.SearchResults, Object.assign({}, searchResults, { height: height || 0, width: width || 0, openConversationInternal: openConversationInternal, startNewConversation: startNewConversation, renderMessageSearchResult: renderMessageSearchResult, i18n: i18n })));
                 }
-                if (!conversations || !archivedConversations) {
+                if (!conversations || !archivedConversations || !pinnedConversations) {
                     throw new Error('render: must provided conversations and archivedConverstions if no search results are provided');
                 }
                 const length = this.getLength();
@@ -167,7 +284,7 @@
                 //   it re-renders when our conversation data changes. Otherwise it would just render
                 //   on startup and scroll.
                 return (react_1.default.createElement("div", { "aria-live": "polite", className: "module-left-pane__list", key: listKey, onFocus: this.handleFocus, onKeyDown: this.handleKeyDown, ref: this.containerRef, role: "presentation", tabIndex: -1 },
-                    react_1.default.createElement(react_virtualized_1.List, { className: "module-left-pane__virtual-list", conversations: conversations, height: height || 0, onScroll: this.onScroll, ref: this.listRef, rowCount: length, rowHeight: 68, rowRenderer: this.renderRow, tabIndex: -1, width: width || 0 })));
+                    react_1.default.createElement(react_virtualized_1.List, { className: "module-left-pane__virtual-list", conversations: conversations, height: height || 0, onScroll: this.onScroll, ref: this.listRef, rowCount: length, rowHeight: this.calculateRowHeight, rowRenderer: this.renderRow, tabIndex: -1, width: width || 0 })));
             };
             this.renderArchivedHeader = () => {
                 const { i18n, showInbox } = this.props;
@@ -175,6 +292,11 @@
                     react_1.default.createElement("button", { onClick: showInbox, className: "module-left-pane__to-inbox-button", title: i18n('backToInbox'), "aria-label": i18n('backToInbox'), type: "button" }),
                     react_1.default.createElement("div", { className: "module-left-pane__archive-header-text" }, i18n('archivedConversations'))));
             };
+        }
+        renderConversationRow(conversation, key, style) {
+            const { i18n, openConversationInternal } = this.props;
+            return (react_1.default.createElement("div", { key: key, className: "module-left-pane__conversation-container", style: style },
+                react_1.default.createElement(ConversationListItem_1.ConversationListItem, Object.assign({}, conversation, { onClick: openConversationInternal, i18n: i18n }))));
         }
         render() {
             const { i18n, renderExpiredBuildDialog, renderMainHeader, renderNetworkStatus, renderRelinkDialog, renderUpdateDialog, showArchived, } = this.props;
@@ -189,6 +311,15 @@
                 showArchived && (react_1.default.createElement("div", { className: "module-left-pane__archive-helper-text", key: 0 }, i18n('archiveHelperText'))),
                 react_1.default.createElement(react_measure_1.default, { bounds: true }, ({ contentRect, measureRef }) => (react_1.default.createElement("div", { className: "module-left-pane__list--measure", ref: measureRef },
                     react_1.default.createElement("div", { className: "module-left-pane__list--wrapper" }, this.renderList(contentRect.bounds)))))));
+        }
+        componentDidUpdate(oldProps) {
+            const { pinnedConversations: oldPinned } = oldProps;
+            const { pinnedConversations: pinned } = this.props;
+            const oldLength = (oldPinned && oldPinned.length) || 0;
+            const newLength = (pinned && pinned.length) || 0;
+            if (oldLength !== newLength) {
+                this.recomputeRowHeights();
+            }
         }
     }
     exports.LeftPane = LeftPane;

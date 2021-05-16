@@ -5,13 +5,12 @@
     window.ts.textsecure = window.ts.textsecure || {};
     const exports = window.ts.textsecure.Crypto = {};
 
-    // tslint:disable no-bitwise no-default-export
     Object.defineProperty(exports, "__esModule", { value: true });
     const PROFILE_IV_LENGTH = 12; // bytes
     const PROFILE_KEY_LENGTH = 32; // bytes
     const PROFILE_TAG_LENGTH = 128; // bits
     const PROFILE_NAME_PADDED_LENGTH = 53; // bytes
-    function verifyDigest(data, theirDigest) {
+    async function verifyDigest(data, theirDigest) {
         return window.crypto.subtle
             .digest({ name: 'SHA-256' }, data)
             .then(ourDigest => {
@@ -142,8 +141,6 @@
                 .importKey('raw', key, { name: 'AES-GCM' }, false, ['decrypt'])
                 .then(async (keyForEncryption) => window.crypto.subtle
                     .decrypt({ name: 'AES-GCM', iv, tagLength: PROFILE_TAG_LENGTH }, keyForEncryption, ciphertext)
-                    // Typescript says that there's no .catch() available here
-                    // @ts-ignore
                     .catch((e) => {
                         if (e.name === 'OperationError') {
                             // bad mac, basically.
@@ -152,6 +149,7 @@
                             error.name = 'ProfileDecryptError';
                             throw error;
                         }
+                        return undefined; // uses of this function are not guarded
                     }));
         },
         async encryptProfileName(name, key) {
