@@ -55,11 +55,13 @@
                 });
             }
         }
-        registerError(identifier, reason, error) {
+        registerError(identifier, reason, providedError) {
+            let error = providedError;
             if (!error || (error.name === 'HTTPError' && error.code !== 404)) {
                 error = new Errors_1.OutgoingMessageError(identifier, this.message.toArrayBuffer(), this.timestamp, error);
             }
             error.reason = reason;
+            error.stackForLog = providedError ? providedError.stack : undefined;
             this.errors[this.errors.length] = error;
             this.numberCompleted();
         }
