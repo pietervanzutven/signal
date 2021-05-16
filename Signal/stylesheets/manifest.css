@@ -6018,17 +6018,18 @@ img.emoji.jumbo {
   width: 100%; }
 
 .module-calling__background {
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-radius: 4px 4px 0 0;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  justify-content: center;
+  overflow: hidden;
   position: absolute;
   width: 100%; }
   .module-calling__background--blur {
-    backdrop-filter: blur(7px);
-    backface-visibility: hidden;
-    background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 4px 4px 0 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: blur(25px);
     height: 100%;
     position: absolute;
     width: 100%; }
@@ -6298,14 +6299,10 @@ img.emoji.jumbo {
   font-size: 13px;
   line-height: 18px;
   letter-spacing: -0.03px;
-  align-items: center;
   background-color: #2e2e2e;
   border-radius: 8px;
   color: #ffffff;
-  display: flex;
-  flex-direction: column;
   flex: 1 1 auto;
-  justify-content: center;
   margin-bottom: 24px;
   margin-top: 24px;
   max-width: 640px;

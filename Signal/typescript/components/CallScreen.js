@@ -172,15 +172,16 @@ require(exports => {
                 message = i18n('callReconnecting');
             }
             else if (callState === Calling_1.CallState.Accepted && acceptedDuration) {
-                message = i18n('callDuration', [this.renderDuration(acceptedDuration)]);
+                message = i18n('callDuration', [
+                    CallScreen.renderDuration(acceptedDuration),
+                ]);
             }
             if (!message) {
                 return null;
             }
             return react_1.default.createElement("div", { className: "module-ongoing-call__header-message" }, message);
         }
-        // eslint-disable-next-line class-methods-use-this
-        renderDuration(ms) {
+        static renderDuration(ms) {
             const secs = Math.floor((ms / 1000) % 60)
                 .toString()
                 .padStart(2, '0');
