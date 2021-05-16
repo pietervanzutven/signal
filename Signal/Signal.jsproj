@@ -193,7 +193,6 @@
     <Content Include="js\modules\refresh_sender_certificate.js" />
     <Content Include="js\modules\settings.js" />
     <Content Include="js\modules\signal.js" />
-    <Content Include="js\modules\sleep.js" />
     <Content Include="js\modules\stickers.js" />
     <Content Include="js\modules\string_to_array_buffer.js" />
     <Content Include="js\modules\types\attachment.js" />
@@ -3963,6 +3962,7 @@
     <Content Include="typescript\util\safetyNumber.js" />
     <Content Include="typescript\util\saveURLAsFile.js" />
     <Content Include="typescript\util\sgnlHref.js" />
+    <Content Include="typescript\util\sleep.js" />
     <Content Include="typescript\util\sniffImageMimeType.js" />
     <Content Include="typescript\util\Sound.js" />
     <Content Include="typescript\util\storageService.js" />

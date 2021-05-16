@@ -4,6 +4,7 @@ require(exports => {
     const lodash_1 = require("lodash");
     const zkgroup_1 = require("zkgroup");
     const zkgroup_2 = require("../util/zkgroup");
+    const sleep_1 = require("../util/sleep");
     exports.GROUP_CREDENTIALS_KEY = 'groupCredentials';
     const SECOND = 1000;
     const MINUTE = 60 * SECOND;
@@ -11,9 +12,6 @@ require(exports => {
     const DAY = 24 * HOUR;
     function getTodayInEpoch() {
         return Math.floor(Date.now() / DAY);
-    }
-    async function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
     }
     let started = false;
     async function initializeGroupCredentialFetcher() {
@@ -49,7 +47,7 @@ require(exports => {
                 const wait = BACKOFF[count] || BACKOFF.max;
                 window.log.info(`runWithRetry: ${fn.name} failed. Waiting ${wait}ms for retry. Error: ${error.stack}`);
                 // eslint-disable-next-line no-await-in-loop
-                await sleep(wait);
+                await sleep_1.sleep(wait);
             }
         }
         // It's important to schedule our next run here instead of the level above; otherwise we
