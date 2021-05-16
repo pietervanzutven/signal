@@ -569,37 +569,36 @@
                 });
             }
         };
-        function getConversationByIndex(index) {
+        function getConversationsToSearch() {
             const state = store.getState();
-            const lists = window.Signal.State.Selectors.conversations.getLeftPaneLists(state);
-            const toSearch = state.conversations.showArchived
-                ? lists.archivedConversations
-                : lists.conversations;
-            const target = toSearch[index];
+            const { archivedConversations, conversations: unpinnedConversations, pinnedConversations, } = window.Signal.State.Selectors.conversations.getLeftPaneLists(state);
+            return state.conversations.showArchived
+                ? archivedConversations
+                : [...pinnedConversations, ...unpinnedConversations];
+        }
+        function getConversationByIndex(index) {
+            const conversationsToSearch = getConversationsToSearch();
+            const target = conversationsToSearch[index];
             if (target) {
                 return target.id;
             }
             return null;
         }
         function findConversation(conversationId, direction, unreadOnly) {
-            const state = store.getState();
-            const lists = window.Signal.State.Selectors.conversations.getLeftPaneLists(state);
-            const toSearch = state.conversations.showArchived
-                ? lists.archivedConversations
-                : lists.conversations;
+            const conversationsToSearch = getConversationsToSearch();
             const increment = direction === 'up' ? -1 : 1;
             let startIndex;
             if (conversationId) {
-                const index = toSearch.findIndex((item) => item.id === conversationId);
+                const index = conversationsToSearch.findIndex((item) => item.id === conversationId);
                 if (index >= 0) {
                     startIndex = index + increment;
                 }
             }
             else {
-                startIndex = direction === 'up' ? toSearch.length - 1 : 0;
+                startIndex = direction === 'up' ? conversationsToSearch.length - 1 : 0;
             }
-            for (let i = startIndex, max = toSearch.length; i >= 0 && i < max; i += increment) {
-                const target = toSearch[i];
+            for (let i = startIndex, max = conversationsToSearch.length; i >= 0 && i < max; i += increment) {
+                const target = conversationsToSearch[i];
                 if (!unreadOnly) {
                     return target.id;
                 }
