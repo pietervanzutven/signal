@@ -229,14 +229,17 @@
     <Content Include="node_modules\curve25519-n\index.js" />
     <Content Include="node_modules\es6-symbol\index.js" />
     <Content Include="node_modules\inherits\index.js" />
+    <Content Include="node_modules\lodash\all.js" />
     <Content Include="node_modules\lodash\assignIn.js" />
     <Content Include="node_modules\lodash\clone.js" />
     <Content Include="node_modules\lodash\defaults.js" />
+    <Content Include="node_modules\lodash\every.js" />
     <Content Include="node_modules\lodash\extend.js" />
     <Content Include="node_modules\lodash\first.js" />
     <Content Include="node_modules\lodash\has.js" />
     <Content Include="node_modules\lodash\include.js" />
     <Content Include="node_modules\lodash\isBoolean.js" />
+    <Content Include="node_modules\lodash\keys.js" />
     <Content Include="node_modules\lodash\pluck.js" />
     <Content Include="node_modules\lodash\property.js" />
     <Content Include="node_modules\lodash\reduce.js" />
