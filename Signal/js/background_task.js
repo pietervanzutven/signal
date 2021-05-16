@@ -2,7 +2,7 @@
 
 var window = this;
 window.PROTO_ROOT = '/protos';
-importScripts('ms-appx:///libtextsecure/components.js','ms-appx:///libtextsecure/protobufs.js','ms-appx:///js/typescript/textsecure/EventTarget.js','ms-appx:///js/typescript/textsecure/WebsocketResources.js');
+importScripts('ms-appx:///libtextsecure/components.js','ms-appx:///libtextsecure/protobufs.js','ms-appx:///typescript/textsecure/EventTarget.js','ms-appx:///typescript/textsecure/WebsocketResources.js');
 window.textsecure = Object.assign(window.textsecure, window.ts.textsecure);
 
 function updateToast(message) {
