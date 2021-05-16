@@ -1,12 +1,10 @@
 /* global window */
 
 (function () {
-  'use strict';
+  const { ipcRenderer, remote } = window.top.require('electron');
 
-  const { ipcRenderer, remote } = window.top.electron;
-
-  const url = window.top.url;
-  const i18n = window.top.modules.i18n;
+  const url = window.top.require('url');
+  const i18n = window.top.require('./js/modules/i18n');
 
   const config = url.parse(window.location.toString(), true).query;
   const { locale } = config;
@@ -38,7 +36,7 @@
   window.getAppInstance = () => config.appInstance;
 
   // So far we're only using this for Signal.Types
-  const Signal = window.top.signal;
+  const Signal = window.top.require('./js/modules/signal');
 
   window.Signal = Signal.setup({
     Attachments: null,
@@ -120,7 +118,7 @@
       });
   }
 
-  window.log = window.top.log;
+  window.top.require('./js/logging');
 
-  window.Backbone = window.top.Backbone;
+  window.Backbone = window.top.require('backbone');
 })();
