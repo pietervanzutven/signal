@@ -190,6 +190,13 @@
                 window.log.info('Lightbox: Unexpected content type', { contentType });
                 return (react_1.default.createElement(Icon, { i18n: i18n, onClick: this.onObjectClick, url: "images/file.svg" }));
             };
+            this.onContextMenu = (event) => {
+                const { contentType } = this.props;
+                // These are the only image types supported by Electron's NativeImage
+                if (event && contentType !== 'image/png' && contentType !== 'image/jpg') {
+                    event.preventDefault();
+                }
+            };
             this.onClose = () => {
                 const { close } = this.props;
                 if (!close) {
