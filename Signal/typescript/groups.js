@@ -14,6 +14,7 @@ require(exports => {
     exports.MASTER_KEY_LENGTH = 32;
     const TEMPORAL_AUTH_REJECTED_CODE = 401;
     const GROUP_ACCESS_DENIED_CODE = 403;
+    const SUPPORTED_CHANGE_EPOCH = 0;
     // Group Modifications
     function buildDisappearingMessagesTimerChange({ expireTimer, group, }) {
         const actions = new window.textsecure.protobuf.GroupChange.Actions();
@@ -220,7 +221,12 @@ require(exports => {
             window.log.info(`getGroupUpdates/${logId}: Processing just one change`);
             const groupChangeBuffer = Crypto_1.base64ToArrayBuffer(groupChangeBase64);
             const groupChange = window.textsecure.protobuf.GroupChange.decode(groupChangeBuffer);
-            return integrateGroupChange({ group, newRevision, groupChange });
+            const isChangeSupported = !lodash_1.isNumber(groupChange.changeEpoch) ||
+                groupChange.changeEpoch <= SUPPORTED_CHANGE_EPOCH;
+            if (isChangeSupported) {
+                return integrateGroupChange({ group, newRevision, groupChange });
+            }
+            window.log.info(`getGroupUpdates/${logId}: Failing over; group change unsupported`);
         }
         if (lodash_1.isNumber(newRevision)) {
             try {
@@ -474,12 +480,19 @@ require(exports => {
         const { sourceUuid } = decryptedChangeActions;
         const sourceConversation = window.ConversationController.getOrCreate(sourceUuid, 'private');
         const sourceConversationId = sourceConversation.id;
+        const isChangeSupported = !lodash_1.isNumber(groupChange.changeEpoch) ||
+            groupChange.changeEpoch <= SUPPORTED_CHANGE_EPOCH;
         const isFirstFetch = !lodash_1.isNumber(group.revision);
         const isMoreThanOneVersionUp = groupChangeActions.version &&
             lodash_1.isNumber(group.revision) &&
             groupChangeActions.version > group.revision + 1;
-        if (groupState && (isFirstFetch || isMoreThanOneVersionUp)) {
-            window.log.info(`integrateGroupChange/${logId}: Applying full group state, from version ${group.revision} to ${groupState.version}`);
+        if (!isChangeSupported || isFirstFetch || isMoreThanOneVersionUp) {
+            if (!groupState) {
+                throw new Error(`integrateGroupChange/${logId}: No group state, but we can't apply changes!`);
+            }
+            window.log.info(`integrateGroupChange/${logId}: Applying full group state, from version ${group.revision} to ${groupState.version}`, {
+                isChangeSupported,
+            });
             const decryptedGroupState = decryptGroupState(groupState, group.secretParams, logId);
             const newAttributes = await applyGroupState({
                 group,
