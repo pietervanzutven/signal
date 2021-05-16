@@ -300,7 +300,8 @@ Whisper.ConversationView = Whisper.View.extend({
             const expirationSettingName = expireTimer
                 ? Whisper.ExpirationTimerOptions.getName(expireTimer || 0)
                 : null;
-            return Object.assign(Object.assign({}, this.model.cachedProps), { leftGroup: this.model.get('left'), disableTimerChanges: this.model.get('left') ||
+            return Object.assign(Object.assign({}, this.model.format()), { leftGroup: this.model.get('left'), disableTimerChanges: this.model.isMissingRequiredProfileSharing() ||
+                    this.model.get('left') ||
                     !this.model.getAccepted() ||
                     !this.model.canChangeTimer(), showBackButton: Boolean(this.panels && this.panels.length), expirationSettingName, timerOptions: Whisper.ExpirationTimerOptions.map((item) => ({
                     name: item.getName(),

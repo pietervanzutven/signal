@@ -689,7 +689,7 @@
                 react_1.default.createElement("div", { className: classnames_1.default('module-message__error', `module-message__error--${direction}`) })));
         }
         renderMenu(isCorrectSide, triggerId) {
-            const { attachments, canReply, direction, disableMenu, i18n, id, isSticker, isTapToView, reactToMessage, renderEmojiPicker, replyToMessage, selectedReaction, } = this.props;
+            const { attachments, canDownload, canReply, direction, disableMenu, i18n, id, isSticker, isTapToView, reactToMessage, renderEmojiPicker, replyToMessage, selectedReaction, } = this.props;
             if (!isCorrectSide || disableMenu) {
                 return null;
             }
@@ -754,7 +754,7 @@
             return (react_1.default.createElement(react_popper_1.Manager, null,
                 react_1.default.createElement("div", { className: classnames_1.default('module-message__buttons', `module-message__buttons--${direction}`) },
                     canReply ? reactButton : null,
-                    canReply ? downloadButton : null,
+                    canDownload ? downloadButton : null,
                     canReply ? replyButton : null,
                     menuButton),
                 reactionPickerRoot &&
@@ -771,12 +771,13 @@
                     }))), reactionPickerRoot)));
         }
         renderContextMenu(triggerId) {
-            const { attachments, canReply, deleteMessage, deleteMessageForEveryone, direction, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, } = this.props;
+            const { attachments, canDownload, canReply, deleteMessage, deleteMessageForEveryone, direction, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, } = this.props;
             const { canDeleteForEveryone } = this.state;
             const showRetry = status === 'error' && direction === 'outgoing';
             const multipleAttachments = attachments && attachments.length > 1;
             const menu = (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
-                !isSticker &&
+                canDownload &&
+                    !isSticker &&
                     !multipleAttachments &&
                     !isTapToView &&
                     attachments &&

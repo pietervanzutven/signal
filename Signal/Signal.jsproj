@@ -3739,6 +3739,7 @@
     <Content Include="typescript\components\conversation\LastSeenIndicator.js" />
     <Content Include="typescript\components\conversation\Linkify.js" />
     <Content Include="typescript\components\conversation\LinkPreviewDate.js" />
+    <Content Include="typescript\components\conversation\MandatoryProfileSharingActions.js" />
     <Content Include="typescript\components\conversation\media-gallery\AttachmentSection.js" />
     <Content Include="typescript\components\conversation\media-gallery\DocumentListItem.js" />
     <Content Include="typescript\components\conversation\media-gallery\EmptyState.js" />

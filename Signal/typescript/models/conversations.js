@@ -119,6 +119,11 @@ require(exports => {
             this.typingPauseTimer = null;
             // Keep props ready
             this.generateProps = () => {
+                // This is to prevent race conditions on startup; Conversation models are created
+                //   but the full window.ConversationController.load() sequence isn't complete.
+                if (!window.ConversationController.isFetchComplete()) {
+                    return;
+                }
                 this.cachedProps = this.getProps();
             };
             this.on('change', this.generateProps);
@@ -679,16 +684,10 @@ require(exports => {
             });
         }
         format() {
+            this.cachedProps = this.cachedProps || this.getProps();
             return this.cachedProps;
         }
         getProps() {
-            // This is to prevent race conditions on startup; Conversation models are created
-            //   but the full window.ConversationController.load() sequence isn't complete. So, we
-            //   don't cache props on create, but we do later when load() calls generateProps()
-            //   for us.
-            if (!window.ConversationController.isFetchComplete()) {
-                return null;
-            }
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const color = this.getColor();
             const typingValues = window._.values(this.contactTypingTimers || {});
@@ -706,6 +705,13 @@ require(exports => {
                 draftTimestamp >= timestamp);
             const inboxPosition = this.get('inbox_position');
             const messageRequestsEnabled = window.Signal.RemoteConfig.isEnabled('desktop.messageRequests');
+            let groupVersion;
+            if (this.isGroupV1()) {
+                groupVersion = 1;
+            }
+            else if (this.isGroupV2()) {
+                groupVersion = 2;
+            }
             // TODO: DESKTOP-720
             /* eslint-disable @typescript-eslint/no-non-null-assertion */
             const result = {
@@ -719,12 +725,14 @@ require(exports => {
                 draftPreview,
                 draftText,
                 firstName: this.get('profileName'),
+                groupVersion,
                 inboxPosition,
                 isAccepted: this.getAccepted(),
                 isArchived: this.get('isArchived'),
                 isBlocked: this.isBlocked(),
                 isMe: this.isMe(),
                 isPinned: this.get('isPinned'),
+                isMissingMandatoryProfileSharing: this.isMissingRequiredProfileSharing(),
                 isVerified: this.isVerified(),
                 lastMessage: {
                     status: this.get('lastMessageStatus'),
@@ -1200,6 +1208,13 @@ require(exports => {
         }
         getMessageRequestResponseType() {
             return this.get('messageRequestResponseType') || 0;
+        }
+        isMissingRequiredProfileSharing() {
+            const mandatoryProfileSharingEnabled = window.Signal.RemoteConfig.isEnabled('desktop.mandatoryProfileSharing');
+            if (!mandatoryProfileSharingEnabled) {
+                return false;
+            }
+            return !this.get('profileSharing');
         }
         /**
          * Determine if this conversation should be considered "accepted" in terms
@@ -1966,7 +1981,7 @@ require(exports => {
             if (!this.id) {
                 return;
             }
-        let [previewMessage, activityMessage] = await Promise.all([
+            let [previewMessage, activityMessage] = await Promise.all([
                 window.Signal.Data.getLastConversationPreview(this.id, {
                     Message: window.Whisper.Message,
                 }),
@@ -1974,15 +1989,15 @@ require(exports => {
                     Message: window.Whisper.Message,
                 }),
             ]);
-        // Register the message with MessageController so that if it already exists
-        // in memory we use that data instead of the data from the db which may
-        // be out of date.
-        if (previewMessage) {
-            previewMessage = window.MessageController.register(previewMessage.id, previewMessage);
-        }
-        if (activityMessage) {
-            activityMessage = window.MessageController.register(activityMessage.id, activityMessage);
-        }
+            // Register the message with MessageController so that if it already exists
+            // in memory we use that data instead of the data from the db which may
+            // be out of date.
+            if (previewMessage) {
+                previewMessage = window.MessageController.register(previewMessage.id, previewMessage);
+            }
+            if (activityMessage) {
+                activityMessage = window.MessageController.register(activityMessage.id, activityMessage);
+            }
             if (this.hasDraft() &&
                 this.get('draftTimestamp') &&
                 (!previewMessage ||
@@ -2670,17 +2685,16 @@ require(exports => {
                 return 'signal-blue';
             }
             const { migrateColor } = Util;
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             return migrateColor(this.get('color'));
         }
         getAvatarPath() {
             const avatar = this.isMe()
                 ? this.get('profileAvatar') || this.get('avatar')
                 : this.get('avatar') || this.get('profileAvatar');
-            if (avatar && avatar.path) {
-                return getAbsoluteAttachmentPath(avatar.path);
+            if (!avatar || !avatar.path) {
+                return undefined;
             }
-            return null;
+            return getAbsoluteAttachmentPath(avatar.path);
         }
         canChangeTimer() {
             if (this.isPrivate()) {

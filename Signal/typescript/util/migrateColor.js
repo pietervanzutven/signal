@@ -32,9 +32,6 @@ require(exports => {
             case 'grey':
             case 'ultramarine':
                 return color;
-            // Can uncomment this to ensure that we've covered all potential cases
-            // default:
-            //   throw missingCaseError(color);
             default:
                 return 'grey';
         }

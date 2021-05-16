@@ -487,7 +487,7 @@
     function initializeRedux() {
         // Here we set up a full redux store with initial state for our LeftPane Root
         const convoCollection = window.getConversations();
-        const conversations = convoCollection.map(conversation => conversation.cachedProps);
+        const conversations = convoCollection.map(conversation => conversation.format());
         const ourNumber = window.textsecure.storage.user.getNumber();
         const ourUuid = window.textsecure.storage.user.getUuid();
         const ourConversationId = window.ConversationController.getOurConversationId();

@@ -61,11 +61,7 @@ require(exports => {
                 window.log.info('Call already in progress, new call not allowed.');
                 return;
             }
-            const conversationProps = conversation.cachedProps;
-            if (!conversationProps) {
-                window.log.error('CallingClass.startCallingLobby(): No conversation props?');
-                return;
-            }
+            const conversationProps = conversation.format();
             window.log.info('CallingClass.startCallingLobby(): Starting lobby');
             this.uxActions.showCallLobby({
                 callDetails: Object.assign(Object.assign({}, conversationProps), { callId: undefined, isIncoming: false, isVideoCall }),
@@ -550,10 +546,7 @@ require(exports => {
             };
         }
         getAcceptedCallDetails(conversation, call) {
-            const conversationProps = conversation.cachedProps;
-            if (!conversationProps) {
-                throw new Error('getAcceptedCallDetails: No conversation props?');
-            }
+            const conversationProps = conversation.format();
             return Object.assign(Object.assign({}, conversationProps), { acceptedTime: Date.now(), callId: call.callId, isIncoming: call.isIncoming, isVideoCall: call.isVideoCall });
         }
         addCallHistoryForEndedCall(conversation, call, acceptedTimeParam) {
