@@ -77,11 +77,14 @@
                         }
                         conversationIndex -= pinnedConversations.length + 2;
                     }
-                    else {
+                    else if (index < pinnedConversations.length) {
                         return {
                             index,
                             type: RowType.PinnedConversation,
                         };
+                    }
+                    else {
+                        conversationIndex = 0;
                     }
                 }
                 if (conversationIndex === conversations.length) {
@@ -313,11 +316,16 @@
                     react_1.default.createElement("div", { className: "module-left-pane__list--wrapper" }, this.renderList(contentRect.bounds)))))));
         }
         componentDidUpdate(oldProps) {
-            const { pinnedConversations: oldPinned } = oldProps;
-            const { pinnedConversations: pinned } = this.props;
-            const oldLength = (oldPinned && oldPinned.length) || 0;
-            const newLength = (pinned && pinned.length) || 0;
-            if (oldLength !== newLength) {
+            const { conversations: oldConversations = [], pinnedConversations: oldPinnedConversations = [], archivedConversations: oldArchivedConversations = [], showArchived: oldShowArchived, } = oldProps;
+            const { conversations: newConversations = [], pinnedConversations: newPinnedConversations = [], archivedConversations: newArchivedConversations = [], showArchived: newShowArchived, } = this.props;
+            const oldHasArchivedConversations = Boolean(oldArchivedConversations.length);
+            const newHasArchivedConversations = Boolean(newArchivedConversations.length);
+            // This could probably be optimized further, but we want to be extra-careful that our
+            //   heights are correct.
+            if (oldConversations.length !== newConversations.length ||
+                oldPinnedConversations.length !== newPinnedConversations.length ||
+                oldHasArchivedConversations !== newHasArchivedConversations ||
+                oldShowArchived !== newShowArchived) {
                 this.recomputeRowHeights();
             }
         }
