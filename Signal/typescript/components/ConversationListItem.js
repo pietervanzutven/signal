@@ -61,18 +61,11 @@
             if (!lastMessage && !typingContact) {
                 return null;
             }
+            const messageBody = lastMessage ? lastMessage.text : '';
             const withUnread = lodash_1.isNumber(unreadCount) && unreadCount > 0;
             const showingDraft = shouldShowDraft && draftPreview;
             const deletedForEveryone = Boolean(lastMessage && lastMessage.deletedForEveryone);
-            // Note: instead of re-using showingDraft here we explode it because
-            //   typescript can't tell that draftPreview is truthy otherwise
-            // Avoiding touching logic to fix linting
             /* eslint-disable no-nested-ternary */
-            const text = shouldShowDraft && draftPreview
-                ? draftPreview
-                : lastMessage && lastMessage.text
-                    ? lastMessage.text
-                    : '';
             return (react_1.default.createElement("div", { className: "module-conversation-list-item__message" },
                 react_1.default.createElement("div", {
                     dir: "auto", className: classnames_1.default('module-conversation-list-item__message__text', withUnread
@@ -80,7 +73,9 @@
                         : null)
                 },
                     muteExpiresAt && Date.now() < muteExpiresAt && (react_1.default.createElement("span", { className: "module-conversation-list-item__muted" })),
-                    !acceptedMessageRequest ? (react_1.default.createElement("span", { className: "module-conversation-list-item__message-request" }, i18n('ConversationListItem--message-request'))) : typingContact ? (react_1.default.createElement(TypingAnimation_1.TypingAnimation, { i18n: i18n })) : (react_1.default.createElement(react_1.default.Fragment, null, showingDraft ? (react_1.default.createElement("span", { className: "module-conversation-list-item__message__draft-prefix" }, i18n('ConversationListItem--draft-prefix'))) : deletedForEveryone ? (react_1.default.createElement("span", { className: "module-conversation-list-item__message__deleted-for-everyone" }, i18n('message--deletedForEveryone'))) : (react_1.default.createElement(MessageBody_1.MessageBody, { text: text.split('\n')[0], disableJumbomoji: true, disableLinks: true, i18n: i18n }))))),
+                    !acceptedMessageRequest ? (react_1.default.createElement("span", { className: "module-conversation-list-item__message-request" }, i18n('ConversationListItem--message-request'))) : typingContact ? (react_1.default.createElement(TypingAnimation_1.TypingAnimation, { i18n: i18n })) : (react_1.default.createElement(react_1.default.Fragment, null, showingDraft ? (react_1.default.createElement(react_1.default.Fragment, null,
+                        react_1.default.createElement("span", { className: "module-conversation-list-item__message__draft-prefix" }, i18n('ConversationListItem--draft-prefix')),
+                        react_1.default.createElement(MessageBody_1.MessageBody, { text: (draftPreview || '').split('\n')[0], disableJumbomoji: true, disableLinks: true, i18n: i18n }))) : deletedForEveryone ? (react_1.default.createElement("span", { className: "module-conversation-list-item__message__deleted-for-everyone" }, i18n('message--deletedForEveryone'))) : (react_1.default.createElement(MessageBody_1.MessageBody, { text: (messageBody || '').split('\n')[0], disableJumbomoji: true, disableLinks: true, i18n: i18n }))))),
                 !showingDraft && lastMessage && lastMessage.status ? (react_1.default.createElement("div", { className: classnames_1.default('module-conversation-list-item__message__status-icon', `module-conversation-list-item__message__status-icon--${lastMessage.status}`) })) : null));
         }
         /* eslint-enable no-nested-ternary */

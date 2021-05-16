@@ -564,6 +564,19 @@ require(exports => {
                 members: this.getRecipients(),
             };
         }
+        getGroupIdBuffer() {
+            const groupIdString = this.get('groupId');
+            if (!groupIdString) {
+                return undefined;
+            }
+            if (this.isGroupV1()) {
+                return Crypto_1.fromEncodedBinaryToArrayBuffer(groupIdString);
+            }
+            if (this.isGroupV2()) {
+                return Crypto_1.base64ToArrayBuffer(groupIdString);
+            }
+            return undefined;
+        }
         sendTypingMessage(isTyping) {
             if (!window.textsecure.messaging) {
                 return;
@@ -573,7 +586,7 @@ require(exports => {
                 return;
             }
             const recipientId = this.isPrivate() ? this.getSendTarget() : undefined;
-            const groupId = !this.isPrivate() ? this.get('groupId') : undefined;
+            const groupId = this.getGroupIdBuffer();
             const groupMembers = this.getRecipients();
             // We don't send typing messages if our recipients list is empty
             if (!this.isPrivate() && !groupMembers.length) {
@@ -994,19 +1007,12 @@ require(exports => {
                 ourNumber || ourUuid, {
                 syncMessage: true,
             });
-            const groupId = this.get('groupId');
-            let groupIdBuffer;
-            if (groupId && this.isGroupV1()) {
-                groupIdBuffer = Crypto_1.fromEncodedBinaryToArrayBuffer(groupId);
-            }
-            else if (groupId && this.isGroupV2()) {
-                groupIdBuffer = Crypto_1.base64ToArrayBuffer(groupId);
-            }
+            const groupId = this.getGroupIdBuffer();
             try {
                 await wrap(window.textsecure.messaging.syncMessageRequestResponse({
                     threadE164: this.get('e164'),
                     threadUuid: this.get('uuid'),
-                    groupId: groupIdBuffer,
+                    groupId,
                     type: response,
                 }, sendOptions));
             }

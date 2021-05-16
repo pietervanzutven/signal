@@ -582,13 +582,10 @@
             const recipients = (groupId
                 ? lodash_1.without(groupMembers, myNumber, myUuid)
                 : [recipientId]);
-            const groupIdBuffer = groupId
-                ? Crypto_2.fromEncodedBinaryToArrayBuffer(groupId)
-                : null;
             const action = isTyping ? ACTION_ENUM.STARTED : ACTION_ENUM.STOPPED;
             const finalTimestamp = timestamp || Date.now();
             const typingMessage = new window.textsecure.protobuf.TypingMessage();
-            typingMessage.groupId = groupIdBuffer;
+            typingMessage.groupId = groupId || null;
             typingMessage.action = action;
             typingMessage.timestamp = finalTimestamp;
             const contentMessage = new window.textsecure.protobuf.Content();
