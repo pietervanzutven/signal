@@ -2059,7 +2059,7 @@ require(exports => {
                 lastMessageStatus: (previewMessage ? previewMessage.getMessagePropStatus() : null) || null,
                 timestamp,
                 lastMessageDeletedForEveryone: previewMessage
-                    ? previewMessage.deletedForEveryone
+                    ? previewMessage.get('deletedForEveryone')
                     : false,
             });
             window.Signal.Data.updateConversation(this.attributes);

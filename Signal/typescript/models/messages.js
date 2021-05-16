@@ -738,6 +738,11 @@ require(exports => {
                     text: window.i18n('message--getDescription--unsupported-message'),
                 };
             }
+            if (this.get('deletedForEveryone')) {
+                return {
+                    text: window.i18n('message--deletedForEveryone'),
+                };
+            }
             if (this.isProfileChange()) {
                 const change = this.get('profileChange');
                 const changedId = this.get('changedId');
@@ -1165,10 +1170,11 @@ require(exports => {
             return this.OUR_NUMBER;
         }
         getSourceDevice() {
+            const sourceDevice = this.get('sourceDevice');
             if (this.isIncoming()) {
-                return this.get('sourceDevice');
+                return sourceDevice;
             }
-            return window.textsecure.storage.user.getDeviceId();
+            return sourceDevice || window.textsecure.storage.user.getDeviceId();
         }
         getSourceUuid() {
             if (this.isIncoming()) {

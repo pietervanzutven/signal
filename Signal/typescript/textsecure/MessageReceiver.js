@@ -66,13 +66,13 @@
                 maxSize: 30,
                 processBatch: this.cacheRemoveBatch.bind(this),
             });
-            // We always process our cache before any websocket message
-            this.pendingQueue.add(async () => this.queueAllCached());
         }
         connect() {
             if (this.calledClose) {
                 return;
             }
+            // We always process our cache before processing a new websocket message
+            this.pendingQueue.add(async () => this.queueAllCached());
             this.count = 0;
             if (this.hasConnected) {
                 const ev = new Event('reconnect');
