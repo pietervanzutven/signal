@@ -403,14 +403,7 @@ require(exports => {
             const messages = await getMessagesBySentAt(targetTimestamp, {
                 MessageCollection: window.Whisper.MessageCollection,
             });
-            const targetMessage = messages.find(m => {
-                const contact = m.getContact();
-                if (!contact) {
-                    return false;
-                }
-                const mcid = contact.get('id');
-                return mcid === targetFromId;
-            });
+            const targetMessage = messages.find(m => m.getContactId() === targetFromId);
             if (targetMessage) {
                 return targetMessage.getConversation();
             }
