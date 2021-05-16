@@ -1355,7 +1355,7 @@ require(exports => {
             const options = conversation.getSendOptions();
             if (conversation.isPrivate()) {
                 const [identifier] = recipients;
-                promise = window.textsecure.messaging.sendMessageToIdentifier(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('sent_at'), this.get('expireTimer'), profileKey, options);
+                promise = window.textsecure.messaging.sendMessageToIdentifier(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('deletedForEveryoneTimestamp'), this.get('sent_at'), this.get('expireTimer'), profileKey, options);
             }
             else {
                 // Because this is a partial group send, we manually construct the request like
@@ -1495,14 +1495,21 @@ require(exports => {
                     this.trigger('sent', this);
                     this.sendSyncMessage();
                 })
-                .catch(result => {
+                .catch((result) => {
                     this.trigger('done');
-                    if (result.dataMessage) {
+                    if ('dataMessage' in result && result.dataMessage) {
                         this.set({ dataMessage: result.dataMessage });
                     }
                     let promises = [];
                     // If we successfully sent to a user, we can remove our unregistered flag.
-                    result.successfulIdentifiers.forEach((identifier) => {
+                    let successfulIdentifiers;
+                    if ('successfulIdentifiers' in result) {
+                        ({ successfulIdentifiers =[] } = result);
+                    }
+                    else {
+                        successfulIdentifiers = [];
+                    }
+                    successfulIdentifiers.forEach((identifier) => {
                         const c = window.ConversationController.get(identifier);
                         if (c && c.isEverUnregistered()) {
                             c.setRegistered();
@@ -1522,7 +1529,7 @@ require(exports => {
                         }
                     }
                     else {
-                        if (result.successfulIdentifiers.length > 0) {
+                        if (successfulIdentifiers.length > 0) {
                             const sentTo = this.get('sent_to') || [];
                             // If we just found out that we couldn't send to a user because they are no
                             //   longer registered, we will update our unregistered flag. In groups we
@@ -1556,7 +1563,7 @@ require(exports => {
                             });
                             promises.push(this.sendSyncMessage());
                         }
-                        else {
+                        else if (result.errors) {
                             this.saveErrors(result.errors);
                         }
                         promises = promises.concat(
