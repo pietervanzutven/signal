@@ -67,7 +67,9 @@ require(exports => {
                 callDetails: Object.assign(Object.assign({}, conversationProps), { callId: undefined, isIncoming: false, isVideoCall }),
             });
             await this.startDeviceReselectionTimer();
-            this.enableLocalCamera();
+            if (isVideoCall) {
+                this.enableLocalCamera();
+            }
         }
         stopCallingLobby() {
             this.disableLocalCamera();
