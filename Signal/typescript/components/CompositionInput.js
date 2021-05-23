@@ -127,9 +127,7 @@
                 return;
             }
             const text = getText();
-            if (text.length > 0) {
-                onSubmit(text);
-            }
+            onSubmit(text.trim());
         };
         if (inputApi) {
             // eslint-disable-next-line no-param-reassign
