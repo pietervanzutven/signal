@@ -4339,7 +4339,7 @@ img.emoji.jumbo {
   line-height: 21px;
   letter-spacing: -0.14px;
   font-weight: bold;
-  overflow-x: hidden;
+  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   color: #1b1b1b; }
