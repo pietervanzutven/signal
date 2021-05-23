@@ -3260,8 +3260,8 @@ img.emoji.jumbo {
   padding: 5px; }
   .keyboard-mode .module-inline-notification-wrapper:focus {
     background-color: #f6f6f6; }
-    .dark-theme .keyboard-mode .module-inline-notification-wrapper:focus {
-      background-color: #2e2e2e; }
+  .dark-theme.keyboard-mode .module-inline-notification-wrapper:focus {
+    background-color: #2e2e2e; }
 
 .module-group-notification {
   margin-left: 1em;
@@ -3982,8 +3982,8 @@ img.emoji.jumbo {
     background-color: #1b1b1b; }
   .keyboard-mode .module-media-gallery__tab:focus {
     background-color: #dedede; }
-    .dark-theme .keyboard-mode .module-media-gallery__tab:focus {
-      background-color: #3b3b3b; }
+  .dark-theme.keyboard-mode .module-media-gallery__tab:focus {
+    background-color: #3b3b3b; }
 
 .module-media-gallery__tab--active {
   border-bottom: 2px solid #2c6bed; }
@@ -8436,9 +8436,9 @@ img.emoji.jumbo {
   .keyboard-mode .module-shortcut-guide__header-close:focus {
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>x-24</title><polygon points='19.53 5.53 18.47 4.47 12 10.939 5.53 4.47 4.47 5.53 10.939 12 4.47 18.47 5.53 19.53 12 13.061 18.47 19.53 19.53 18.47 13.061 12 19.53 5.53' fill='%232C6BED'/></svg>") no-repeat center;
     background-size: 100%; }
-    .dark-theme .keyboard-mode .module-shortcut-guide__header-close:focus {
-      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>x-24</title><polygon points='19.53 5.53 18.47 4.47 12 10.939 5.53 4.47 4.47 5.53 10.939 12 4.47 18.47 5.53 19.53 12 13.061 18.47 19.53 19.53 18.47 13.061 12 19.53 5.53' fill='%236191F3'/></svg>") no-repeat center;
-      background-size: 100%; }
+  .dark-theme.keyboard-mode .module-shortcut-guide__header-close:focus {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>x-24</title><polygon points='19.53 5.53 18.47 4.47 12 10.939 5.53 4.47 4.47 5.53 10.939 12 4.47 18.47 5.53 19.53 12 13.061 18.47 19.53 19.53 18.47 13.061 12 19.53 5.53' fill='%236191F3'/></svg>") no-repeat center;
+    background-size: 100%; }
 
 .module-shortcut-guide__section-header {
   font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
@@ -8473,8 +8473,8 @@ img.emoji.jumbo {
   border-bottom: 1px solid #e9e9e9; }
   .keyboard-mode .module-shortcut-guide__shortcut:focus {
     background-color: #e9e9e9; }
-    .dark-theme .keyboard-mode .module-shortcut-guide__shortcut:focus {
-      background-color: #1b1b1b; }
+  .dark-theme.keyboard-mode .module-shortcut-guide__shortcut:focus {
+    background-color: #1b1b1b; }
   .dark-theme .module-shortcut-guide__shortcut {
     border-bottom: 1px solid #1b1b1b; }
 
