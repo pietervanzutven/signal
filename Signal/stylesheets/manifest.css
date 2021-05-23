@@ -8077,7 +8077,7 @@ img.emoji.jumbo {
         border: 2px solid #3b3b3b; }
     .module-composition-input__input__scroller--large {
       max-height: 227px;
-      height: 227px; }
+      min-height: 227px; }
       .module-composition-input__input__scroller--large .DraftEditor-root {
         height: 213px; }
   .module-composition-input__input:focus-within {
