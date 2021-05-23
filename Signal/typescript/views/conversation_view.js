@@ -1,5 +1,6 @@
 "use strict";
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// Copyright 2020 Signal Messenger, LLC
+// SPDX-License-Identifier: AGPL-3.0-only
 const FIVE_MINUTES = 1000 * 60 * 5;
 const LINK_PREVIEW_TIMEOUT = 60 * 1000;
 window.Whisper = window.Whisper || {};
@@ -387,8 +388,8 @@ Whisper.ConversationView = Whisper.View.extend({
             compositionApi,
             onClickAddPack: () => this.showStickerManager(),
             onPickSticker: (packId, stickerId) => this.sendStickerMessage({ packId, stickerId }),
-            onSubmit: (message) => this.sendMessage(message),
-            onEditorStateChange: (msg, caretLocation) => this.onEditorStateChange(msg, caretLocation),
+            onSubmit: (message, mentions) => this.sendMessage(message, mentions),
+            onEditorStateChange: (msg, bodyRanges, caretLocation) => this.onEditorStateChange(msg, bodyRanges, caretLocation),
             onTextTooLong: () => this.showToast(Whisper.MessageBodyTooLongToast),
             onChooseAttachment: this.onChooseAttachment.bind(this),
             getQuotedMessage: () => this.model.get('quotedMessageId'),
@@ -2251,7 +2252,7 @@ Whisper.ConversationView = Whisper.View.extend({
                 } }),
         });
     },
-    async sendMessage(message = '', options = {}) {
+    async sendMessage(message = '', mentions = [], options = {}) {
         this.sendStart = Date.now();
         try {
             const contacts = await this.getUntrustedContacts(options);
@@ -2259,7 +2260,7 @@ Whisper.ConversationView = Whisper.View.extend({
             if (contacts && contacts.length) {
                 const sendAnyway = await this.showSendAnywayDialog(contacts);
                 if (sendAnyway) {
-                    this.sendMessage(message, { force: true });
+                    this.sendMessage(message, mentions, { force: true });
                     return;
                 }
                 this.enableMessageField();
@@ -2307,7 +2308,8 @@ Whisper.ConversationView = Whisper.View.extend({
             const attachments = await this.getFiles();
             const sendDelta = Date.now() - this.sendStart;
             window.log.info('Send pre-checks took', sendDelta, 'milliseconds');
-            this.model.sendMessage(message, attachments, this.quote, this.getLinkPreview());
+            this.model.sendMessage(message, attachments, this.quote, this.getLinkPreview(), undefined, // sticker
+            mentions);
             this.compositionApi.current.reset();
             this.model.setMarkedUnread(false);
             this.setQuoteMessage(null);
@@ -2321,17 +2323,18 @@ Whisper.ConversationView = Whisper.View.extend({
             this.enableMessageField();
         }
     },
-    onEditorStateChange(messageText, caretLocation) {
+    onEditorStateChange(messageText, bodyRanges, caretLocation) {
         this.maybeBumpTyping(messageText);
-        this.debouncedSaveDraft(messageText);
+        this.debouncedSaveDraft(messageText, bodyRanges);
         this.debouncedMaybeGrabLinkPreview(messageText, caretLocation);
     },
-    async saveDraft(messageText) {
+    async saveDraft(messageText, bodyRanges) {
         const trimmed = messageText && messageText.length > 0 ? messageText.trim() : '';
         if (this.model.get('draft') && (!messageText || trimmed.length === 0)) {
             this.model.set({
                 draft: null,
                 draftChanged: true,
+                draftBodyRanges: [],
             });
             await this.saveModel();
             return;
@@ -2340,6 +2343,7 @@ Whisper.ConversationView = Whisper.View.extend({
             this.model.set({
                 draft: messageText,
                 draftChanged: true,
+                draftBodyRanges: bodyRanges,
             });
             await this.saveModel();
         }

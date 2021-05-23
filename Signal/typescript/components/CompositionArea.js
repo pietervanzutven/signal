@@ -1,10 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    const exports = window.ts.components.CompositionArea = {};
-
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
@@ -32,7 +29,7 @@
     };
     exports.CompositionArea = ({ i18n, attachmentListEl, micCellEl, onChooseAttachment,
         // CompositionInput
-        onSubmit, compositionApi, onEditorStateChange, onTextTooLong, startingText, clearQuotedMessage, getQuotedMessage,
+        onSubmit, compositionApi, onEditorStateChange, onTextTooLong, draftText, draftBodyRanges, clearQuotedMessage, getQuotedMessage, members,
         // EmojiButton
         onPickEmoji, onSetSkinTone, recentEmojis, skinTone,
         // StickerButton
@@ -40,7 +37,7 @@
         // Message Requests
         acceptedMessageRequest, areWePending, conversationType, groupVersion, isBlocked, isMissingMandatoryProfileSharing, messageRequestsEnabled, name, onAccept, onBlock, onBlockAndDelete, onDelete, onUnblock, phoneNumber, profileName, title, }) => {
         const [disabled, setDisabled] = React.useState(false);
-        const [showMic, setShowMic] = React.useState(!startingText);
+        const [showMic, setShowMic] = React.useState(!draftText);
         const [micActive, setMicActive] = React.useState(false);
         const [dirty, setDirty] = React.useState(false);
         const [large, setLarge] = React.useState(false);
@@ -175,7 +172,7 @@
             React.createElement("div", { className: classnames_1.default('module-composition-area__row', large ? 'module-composition-area__row--padded' : null) },
                 !large ? emojiButtonFragment : null,
                 React.createElement("div", { className: "module-composition-area__input" },
-                    React.createElement(CompositionInput_1.CompositionInput, { i18n: i18n, disabled: disabled, large: large, inputApi: inputApiRef, onPickEmoji: onPickEmoji, onSubmit: handleSubmit, onEditorStateChange: onEditorStateChange, onTextTooLong: onTextTooLong, onDirtyChange: setDirty, skinTone: skinTone, startingText: startingText, clearQuotedMessage: clearQuotedMessage, getQuotedMessage: getQuotedMessage })),
+                    React.createElement(CompositionInput_1.CompositionInput, { i18n: i18n, disabled: disabled, large: large, inputApi: inputApiRef, onPickEmoji: onPickEmoji, onSubmit: handleSubmit, onEditorStateChange: onEditorStateChange, onTextTooLong: onTextTooLong, onDirtyChange: setDirty, skinTone: skinTone, draftText: draftText, draftBodyRanges: draftBodyRanges, clearQuotedMessage: clearQuotedMessage, getQuotedMessage: getQuotedMessage, members: members })),
                 !large ? (React.createElement(React.Fragment, null,
                     stickerButtonFragment,
                     !dirty ? micButtonFragment : null,
@@ -187,4 +184,4 @@
                 !dirty ? micButtonFragment : null,
                 dirty || !showMic ? sendButtonFragment : null)) : null));
     };
-})();
+});

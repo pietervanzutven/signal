@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -37,6 +39,7 @@ require(exports => {
             this.quill.keyboard.addBinding({ key: 39 }, clearResults); // 39 = Right
             this.quill.keyboard.addBinding({ key: 40 }, changeIndex(1)); // 40 = Down
             this.quill.on('text-change', lodash_1.default.debounce(this.onTextChange.bind(this), 100));
+            this.quill.on('selection-change', this.onSelectionChange.bind(this));
         }
         destroy() {
             this.root.remove();
@@ -56,6 +59,10 @@ require(exports => {
                 }
             }
             return ['', ''];
+        }
+        onSelectionChange() {
+            // Selection should never change while we're editing an emoji
+            this.reset();
         }
         onTextChange() {
             const range = this.quill.getSelection();
@@ -169,19 +176,19 @@ require(exports => {
                     },
                 }
             }, ({ ref, style }) => (react_1.default.createElement("div", {
-                ref: ref, className: "module-composition-input__emoji-suggestions", style: style, role: "listbox", "aria-expanded": true, "aria-activedescendant": `emoji-result--${emojiResults.length
+                ref: ref, className: "module-composition-input__suggestions", style: style, role: "listbox", "aria-expanded": true, "aria-activedescendant": `emoji-result--${emojiResults.length
                     ? emojiResults[emojiResultsIndex].short_name
                     : ''}`, tabIndex: 0
             }, emojiResults.map((emoji, index) => (react_1.default.createElement("button", {
                 type: "button", key: emoji.short_name, id: `emoji-result--${emoji.short_name}`, role: "option button", "aria-selected": emojiResultsIndex === index, onClick: () => {
                     this.index = index;
                     this.completeEmoji();
-                }, className: classnames_1.default('module-composition-input__emoji-suggestions__row', emojiResultsIndex === index
-                    ? 'module-composition-input__emoji-suggestions__row--selected'
+                }, className: classnames_1.default('module-composition-input__suggestions__row', emojiResultsIndex === index
+                    ? 'module-composition-input__suggestions__row--selected'
                     : null)
             },
                 react_1.default.createElement(Emoji_1.Emoji, { shortName: emoji.short_name, size: 16, skinTone: this.options.skinTone }),
-                react_1.default.createElement("div", { className: "module-composition-input__emoji-suggestions__row__short-name" },
+                react_1.default.createElement("div", { className: "module-composition-input__suggestions__row__short-name" },
                     ":",
                     emoji.short_name,
                     ":"))))))), this.root);

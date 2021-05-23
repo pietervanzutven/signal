@@ -1,4 +1,4 @@
-(function () {
+require(exports => {
     "use strict";
     // Copyright 2019-2020 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
@@ -20,51 +20,104 @@
     const emoji_regex_1 = __importDefault(require("emoji-regex"));
     const react_popper_1 = require("react-popper");
     const quill_1 = __importDefault(require("quill"));
+    const completion_1 = require("../quill/mentions/completion");
     const emoji_1 = require("../quill/emoji");
     const lib_1 = require("./emoji/lib");
-    const matchImage_1 = require("../quill/matchImage");
+    const blot_1 = require("../quill/mentions/blot");
+    const matchers_1 = require("../quill/emoji/matchers");
+    const matchers_2 = require("../quill/mentions/matchers");
+    const util_1 = require("../quill/util");
     quill_1.default.register('formats/emoji', emoji_1.EmojiBlot);
+    quill_1.default.register('formats/mention', blot_1.MentionBlot);
     quill_1.default.register('modules/emojiCompletion', emoji_1.EmojiCompletion);
+    quill_1.default.register('modules/mentionCompletion', completion_1.MentionCompletion);
     const Block = quill_1.default.import('blots/block');
     Block.tagName = 'DIV';
     quill_1.default.register(Block, true);
     const MAX_LENGTH = 64 * 1024;
     exports.CompositionInput = props => {
-        const { i18n, disabled, large, inputApi, onPickEmoji, onSubmit, skinTone, startingText, } = props;
+        const { i18n, disabled, large, inputApi, onPickEmoji, onSubmit, skinTone, draftText, draftBodyRanges, getQuotedMessage, clearQuotedMessage, members, } = props;
         const [emojiCompletionElement, setEmojiCompletionElement] = React.useState();
         const [lastSelectionRange, setLastSelectionRange,] = React.useState(null);
+        const [mentionCompletionElement, setMentionCompletionElement,] = React.useState();
         const emojiCompletionRef = React.useRef();
+        const mentionCompletionRef = React.useRef();
         const quillRef = React.useRef();
         const scrollerRef = React.useRef(null);
         const propsRef = React.useRef(props);
-        const generateDelta = (text) => {
-            const re = emoji_regex_1.default();
-            const ops = [];
-            let index = 0;
-            let match;
-            // eslint-disable-next-line no-cond-assign
-            while ((match = re.exec(text))) {
-                const [emoji] = match;
-                ops.push({ insert: text.slice(index, match.index) });
-                ops.push({ insert: { emoji } });
-                index = match.index + emoji.length;
-            }
-            ops.push({ insert: text.slice(index, text.length) });
-            return new quill_delta_1.default(ops);
+        const memberRepositoryRef = React.useRef(new util_1.MemberRepository());
+        const insertMentionOps = (incomingOps, bodyRanges) => {
+            const ops = [...incomingOps];
+            // Working backwards through bodyRanges (to avoid offsetting later mentions),
+            // Shift off the op with the text to the left of the last mention,
+            // Insert a mention based on the current bodyRange,
+            // Unshift the mention and surrounding text to leave the ops ready for the next range
+            bodyRanges
+                .sort((a, b) => b.start - a.start)
+                .forEach(({ start, length, mentionUuid, replacementText }) => {
+                    const op = ops.shift();
+                    if (op) {
+                        const { insert } = op;
+                        if (typeof insert === 'string') {
+                            const left = insert.slice(0, start);
+                            const right = insert.slice(start + length);
+                            const mention = {
+                                uuid: mentionUuid,
+                                title: replacementText,
+                            };
+                            ops.unshift({ insert: right });
+                            ops.unshift({ insert: { mention } });
+                            ops.unshift({ insert: left });
+                        }
+                        else {
+                            ops.unshift(op);
+                        }
+                    }
+                });
+            return ops;
         };
-        const getText = () => {
+        const insertEmojiOps = (incomingOps) => {
+            return incomingOps.reduce((ops, op) => {
+                if (typeof op.insert === 'string') {
+                    const text = op.insert;
+                    const re = emoji_regex_1.default();
+                    let index = 0;
+                    let match;
+                    // eslint-disable-next-line no-cond-assign
+                    while ((match = re.exec(text))) {
+                        const [emoji] = match;
+                        ops.push({ insert: text.slice(index, match.index) });
+                        ops.push({ insert: { emoji } });
+                        index = match.index + emoji.length;
+                    }
+                    ops.push({ insert: text.slice(index, text.length) });
+                }
+                else {
+                    ops.push(op);
+                }
+                return ops;
+            }, []);
+        };
+        const generateDelta = (text, bodyRanges) => {
+            const initialOps = [{ insert: text }];
+            const opsWithMentions = insertMentionOps(initialOps, bodyRanges);
+            const opsWithEmojis = insertEmojiOps(opsWithMentions);
+            return new quill_delta_1.default(opsWithEmojis);
+        };
+        const getTextAndMentions = () => {
             const quill = quillRef.current;
             if (quill === undefined) {
-                return '';
+                return ['', []];
             }
             const contents = quill.getContents();
             if (contents === undefined) {
-                return '';
+                return ['', []];
             }
             const { ops } = contents;
             if (ops === undefined) {
-                return '';
+                return ['', []];
             }
+            const mentions = [];
             const text = ops.reduce((acc, { insert }) => {
                 if (typeof insert === 'string') {
                     return acc + insert;
@@ -72,9 +125,18 @@
                 if (insert.emoji) {
                     return acc + insert.emoji;
                 }
+                if (insert.mention) {
+                    mentions.push({
+                        length: 1,
+                        mentionUuid: insert.mention.uuid,
+                        replacementText: insert.mention.title,
+                        start: acc.length,
+                    });
+                    return `${acc}\uFFFC`;
+                }
                 return acc;
             }, '');
-            return text.trim();
+            return [text.trim(), mentions];
         };
         const focus = () => {
             const quill = quillRef.current;
@@ -125,8 +187,9 @@
             if (quill === undefined) {
                 return;
             }
-            const text = getText();
-            onSubmit(text.trim());
+            const [text, mentions] = getTextAndMentions();
+            window.log.info(`Submitting a message with ${mentions.length} mentions`);
+            onSubmit(text, mentions);
         };
         if (inputApi) {
             // eslint-disable-next-line no-param-reassign
@@ -148,17 +211,22 @@
         const onEnter = () => {
             const quill = quillRef.current;
             const emojiCompletion = emojiCompletionRef.current;
+            const mentionCompletion = mentionCompletionRef.current;
             if (quill === undefined) {
                 return false;
             }
-            if (emojiCompletion === undefined) {
+            if (emojiCompletion === undefined || mentionCompletion === undefined) {
                 return false;
             }
             if (emojiCompletion.results.length) {
                 emojiCompletion.completeEmoji();
                 return false;
             }
-            if (propsRef.current.large) {
+            if (mentionCompletion.results.length) {
+                mentionCompletion.completeMention();
+                return false;
+            }
+            if (large) {
                 return true;
             }
             submit();
@@ -167,14 +235,19 @@
         const onTab = () => {
             const quill = quillRef.current;
             const emojiCompletion = emojiCompletionRef.current;
+            const mentionCompletion = mentionCompletionRef.current;
             if (quill === undefined) {
                 return false;
             }
-            if (emojiCompletion === undefined) {
+            if (emojiCompletion === undefined || mentionCompletion === undefined) {
                 return false;
             }
             if (emojiCompletion.results.length) {
                 emojiCompletion.completeEmoji();
+                return false;
+            }
+            if (mentionCompletion.results.length) {
+                mentionCompletion.completeMention();
                 return false;
             }
             return true;
@@ -185,21 +258,28 @@
                 return false;
             }
             const emojiCompletion = emojiCompletionRef.current;
+            const mentionCompletion = mentionCompletionRef.current;
             if (emojiCompletion) {
                 if (emojiCompletion.results.length) {
                     emojiCompletion.reset();
                     return false;
                 }
             }
-            if (propsRef.current.getQuotedMessage()) {
-                propsRef.current.clearQuotedMessage();
+            if (mentionCompletion) {
+                if (mentionCompletion.results.length) {
+                    mentionCompletion.reset();
+                    return false;
+                }
+            }
+            if (getQuotedMessage()) {
+                clearQuotedMessage();
                 return false;
             }
             return true;
         };
         const onChange = () => {
-            const text = getText();
             const quill = quillRef.current;
+            const [text, mentions] = getTextAndMentions();
             if (quill !== undefined) {
                 const historyModule = quill.getModule('history');
                 if (text.length > MAX_LENGTH) {
@@ -209,7 +289,7 @@
                 }
                 if (propsRef.current.onEditorStateChange) {
                     const selection = quill.getSelection();
-                    propsRef.current.onEditorStateChange(text, selection ? selection.index : undefined);
+                    propsRef.current.onEditorStateChange(text, mentions, selection ? selection.index : undefined);
                 }
             }
             if (propsRef.current.onDirtyChange) {
@@ -233,20 +313,51 @@
         }, [skinTone]);
         React.useEffect(() => () => {
             const emojiCompletion = emojiCompletionRef.current;
-            if (emojiCompletion === undefined) {
+            const mentionCompletion = mentionCompletionRef.current;
+            if (emojiCompletion !== undefined) {
+                emojiCompletion.destroy();
+            }
+            if (mentionCompletion !== undefined) {
+                mentionCompletion.destroy();
+            }
+        }, []);
+        const removeStaleMentions = (currentMembers) => {
+            const quill = quillRef.current;
+            if (quill === undefined) {
                 return;
             }
-            emojiCompletion.destroy();
-        }, []);
+            const { ops } = quill.getContents();
+            if (ops === undefined) {
+                return;
+            }
+            const currentMemberUuids = currentMembers
+                .map(m => m.uuid)
+                .filter((uuid) => uuid !== undefined);
+            const newDelta = util_1.getDeltaToRemoveStaleMentions(ops, currentMemberUuids);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            quill.updateContents(newDelta);
+        };
+        const memberIds = members ? members.map(m => m.id) : [];
+        React.useEffect(() => {
+            memberRepositoryRef.current.updateMembers(members || []);
+            removeStaleMentions(members || []);
+            // We are still depending on members, but ESLint can't tell
+            // Comparing the actual members list does not work for a couple reasons:
+            //    * Arrays with the same objects are not "equal" to React
+            //    * We only care about added/removed members, ignoring other attributes
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [JSON.stringify(memberIds)]);
         const reactQuill = React.useMemo(() => {
-            const delta = generateDelta(startingText || '');
+            const delta = generateDelta(draftText || '', draftBodyRanges || []);
             return (React.createElement(react_quill_1.default, {
                 className: "module-composition-input__quill", onChange: onChange, defaultValue: delta, modules: {
                     toolbar: false,
                     clipboard: {
                         matchers: [
-                            ['IMG', matchImage_1.matchEmojiImage],
-                            ['SPAN', matchImage_1.matchEmojiBlot],
+                            ['IMG', matchers_1.matchEmojiImage],
+                            ['SPAN', matchers_1.matchEmojiBlot],
+                            ['SPAN', matchers_1.matchReactEmoji],
+                            ['SPAN', matchers_2.matchMention(memberRepositoryRef)],
                         ],
                     },
                     keyboard: {
@@ -265,7 +376,13 @@
                         onPickEmoji,
                         skinTone,
                     },
-                }, formats: ['emoji'], placeholder: i18n('sendMessage'), readOnly: disabled, ref: element => {
+                    mentionCompletion: {
+                        me: members ? members.find(foo => foo.isMe) : undefined,
+                        memberRepositoryRef,
+                        setMentionPickerElement: setMentionCompletionElement,
+                        i18n,
+                    },
+                }, formats: ['emoji', 'mention'], placeholder: i18n('sendMessage'), readOnly: disabled, ref: element => {
                     if (element) {
                         const quill = element.getEditor();
                         const keyboard = quill.getModule('keyboard');
@@ -281,7 +398,9 @@
                             if (scroller !== null) {
                                 quill.scrollingContainer = scroller;
                             }
-                            quill.setSelection(quill.getLength(), 0);
+                            setTimeout(() => {
+                                quill.setSelection(quill.getLength(), 0);
+                            }, 0);
                         });
                         quill.on('selection-change', (newRange, oldRange) => {
                             // If we lose focus, store the last edit point for emoji insertion
@@ -291,6 +410,7 @@
                         });
                         quillRef.current = quill;
                         emojiCompletionRef.current = quill.getModule('emojiCompletion');
+                        mentionCompletionRef.current = quill.getModule('mentionCompletion');
                     }
                 }
             }));
@@ -307,6 +427,7 @@
                         : null)
                 },
                     reactQuill,
-                    emojiCompletionElement))))));
+                    emojiCompletionElement,
+                    mentionCompletionElement))))));
     };
-})();
+});

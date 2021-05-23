@@ -7,6 +7,7 @@ require(exports => {
     const sniffImageMimeType_1 = require("../util/sniffImageMimeType");
     const MIME_1 = require("../types/MIME");
     const Crypto_1 = require("../Crypto");
+    const util_1 = require("../util");
     /* eslint-disable more/no-then */
     window.Whisper = window.Whisper || {};
     const SEALED_SENDER = {
@@ -35,6 +36,10 @@ require(exports => {
     ];
     const THREE_HOURS = 3 * 60 * 60 * 1000;
     class ConversationModel extends window.Backbone.Model {
+        constructor() {
+            super(...arguments);
+            this.intlCollator = new Intl.Collator();
+        }
         // eslint-disable-next-line class-methods-use-this
         defaults() {
             return {
@@ -463,7 +468,8 @@ require(exports => {
         getDraftPreview() {
             const draft = this.get('draft');
             if (draft) {
-                return draft;
+                const bodyRanges = this.get('draftBodyRanges') || [];
+                return util_1.getTextWithMentions(bodyRanges, draft);
             }
             const draftAttachments = this.get('draftAttachments') || [];
             if (draftAttachments.length > 0) {
@@ -732,6 +738,7 @@ require(exports => {
             const draftTimestamp = this.get('draftTimestamp');
             const draftPreview = this.getDraftPreview();
             const draftText = this.get('draft');
+            const draftBodyRanges = this.get('draftBodyRanges');
             const shouldShowDraft = (this.hasDraft() &&
                 draftTimestamp &&
                 draftTimestamp >= timestamp);
@@ -745,6 +752,12 @@ require(exports => {
             else if (this.isGroupV2()) {
                 groupVersion = 2;
             }
+            const members = this.isGroupV2()
+                ? this.getMembers()
+                    .sort((left, right) => sortConversationTitles(left, right, this.intlCollator))
+                    .map(member => member.format())
+                    .filter((member) => member !== null)
+                : undefined;
             // TODO: DESKTOP-720
             /* eslint-disable @typescript-eslint/no-non-null-assertion */
             const result = {
@@ -757,6 +770,7 @@ require(exports => {
                 canChangeTimer: this.canChangeTimer(),
                 avatarPath: this.getAvatarPath(),
                 color,
+                draftBodyRanges,
                 draftPreview,
                 draftText,
                 firstName: this.get('profileName'),
@@ -776,6 +790,7 @@ require(exports => {
                 lastUpdated: this.get('timestamp'),
                 left: Boolean(this.get('left')),
                 markedUnread: this.get('markedUnread'),
+                members,
                 membersCount: this.isPrivate()
                     ? undefined
                     : (this.get('membersV2') || this.get('members') || []).length,
@@ -1803,7 +1818,7 @@ require(exports => {
             const profileKey = window.storage.get('profileKey');
             await window.textsecure.messaging.sendProfileKeyUpdate(profileKey, recipients, this.getSendOptions(), this.get('groupId'));
         }
-        sendMessage(body, attachments, quote, preview, sticker) {
+        sendMessage(body, attachments, quote, preview, sticker, mentions) {
             this.clearTypingTimers();
             const { clearUnreadMetrics } = window.reduxActions.conversations;
             clearUnreadMetrics(this.id);
@@ -1831,6 +1846,7 @@ require(exports => {
                     expireTimer,
                     recipients,
                     sticker,
+                    bodyRanges: mentions,
                 });
                 if (this.isPrivate()) {
                     messageWithSchema.destination = destination;
@@ -1899,6 +1915,7 @@ require(exports => {
                         quote,
                         sticker,
                         timestamp: now,
+                        mentions,
                     }, options);
                 }
                 else {
@@ -3088,6 +3105,11 @@ require(exports => {
             return this.conversation.isMe();
         },
     });
+    const sortConversationTitles = (left, right, collator) => {
+        const leftLower = left.getTitle().toLowerCase();
+        const rightLower = right.getTitle().toLowerCase();
+        return collator.compare(leftLower, rightLower);
+    };
     // We need a custom collection here to get the sorting we need
     window.Whisper.GroupConversationCollection = window.Backbone.Collection.extend({
         model: window.Whisper.GroupMemberConversation,
@@ -3101,9 +3123,7 @@ require(exports => {
             if (!left.isAdmin && right.isAdmin) {
                 return 1;
             }
-            const leftLower = left.getTitle().toLowerCase();
-            const rightLower = right.getTitle().toLowerCase();
-            return this.collator.compare(leftLower, rightLower);
+            return sortConversationTitles(left, right, this.collator);
         },
     });
 });

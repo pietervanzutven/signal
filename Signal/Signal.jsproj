@@ -3826,7 +3826,12 @@
     <Content Include="typescript\quill\emoji\blot.js" />
     <Content Include="typescript\quill\emoji\completion.js" />
     <Content Include="typescript\quill\emoji\index.js" />
+    <Content Include="typescript\quill\emoji\matchers.js" />
     <Content Include="typescript\quill\matchImage.js" />
+    <Content Include="typescript\quill\mentions\blot.js" />
+    <Content Include="typescript\quill\mentions\completion.js" />
+    <Content Include="typescript\quill\mentions\matchers.js" />
+    <Content Include="typescript\quill\util.js" />
     <Content Include="typescript\RemoteConfig.js" />
     <Content Include="typescript\services\bounce.js" />
     <Content Include="typescript\services\calling.js" />
@@ -4037,10 +4042,6 @@
     <Content Include="TextSecure.cer" />
     <Content Include="textsecureservicewhispersystemsorg.cer" />
     <None Include="Signal_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="typescript\test\state\ducks\" />
-    <Folder Include="typescript\test\util\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).targets" />
   <!-- To modify your build process, add your task inside one of the targets below then uncomment

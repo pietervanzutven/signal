@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
     const ExpirationTimerOptions_1 = require("../util/ExpirationTimerOptions");
     window.Whisper = window.Whisper || {};
@@ -1361,7 +1363,8 @@ require(exports => {
             if (recipients.length === 1 &&
                 (recipients[0] === this.OUR_NUMBER || recipients[0] === this.OUR_UUID)) {
                 const [identifier] = recipients;
-                const dataMessage = await window.textsecure.messaging.getMessageProto(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('deletedForEveryoneTimestamp'), this.get('sent_at'), this.get('expireTimer'), profileKey);
+                const dataMessage = await window.textsecure.messaging.getMessageProto(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('deletedForEveryoneTimestamp'), this.get('sent_at'), this.get('expireTimer'), profileKey, undefined, // flags
+                    this.get('bodyRanges'));
                 return this.sendSyncMessageOnly(dataMessage);
             }
             let promise;
@@ -1477,7 +1480,8 @@ require(exports => {
             const stickerWithData = await loadStickerData(this.get('sticker'));
             // Special-case the self-send case - we send only a sync message
             if (identifier === this.OUR_NUMBER || identifier === this.OUR_UUID) {
-                const dataMessage = await window.textsecure.messaging.getMessageProto(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('sent_at'), this.get('expireTimer'), profileKey);
+                const dataMessage = await window.textsecure.messaging.getMessageProto(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('deletedForEveryoneTimestamp'), this.get('sent_at'), this.get('expireTimer'), profileKey, undefined, // flags
+                    this.get('bodyRanges'));
                 return this.sendSyncMessageOnly(dataMessage);
             }
             const { wrap, sendOptions } = window.ConversationController.prepareForSend(identifier);
