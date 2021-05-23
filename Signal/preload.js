@@ -1,3 +1,6 @@
+// Copyright 2017-2020 Signal Messenger, LLC
+// SPDX-License-Identifier: AGPL-3.0-only
+
 /* global Whisper, window */
 
 /* eslint-disable global-require, no-inner-declarations */
@@ -552,6 +555,7 @@
       /* eslint-disable global-require, import/no-extraneous-dependencies */
       require('./ts/test-electron/models/messages_test');
       require('./ts/test-electron/linkPreviews/linkPreviewFetch_test');
+      require('./ts/test-electron/state/ducks/calling_test');
 
       delete window.describe;
 
