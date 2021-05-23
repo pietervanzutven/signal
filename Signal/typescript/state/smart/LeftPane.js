@@ -20,30 +20,25 @@ require(exports => {
     // Workaround: A react component's required properties are filtering up through connect()
     //   https://github.com/DefinitelyTyped/DefinitelyTyped/issues/31363
     /* eslint-disable @typescript-eslint/no-explicit-any */
-    const FilteredSmartMainHeader = MainHeader_1.SmartMainHeader;
     const FilteredSmartMessageSearchResult = MessageSearchResult_1.SmartMessageSearchResult;
-    const FilteredSmartNetworkStatus = NetworkStatus_1.SmartNetworkStatus;
-    const FilteredSmartUpdateDialog = UpdateDialog_1.SmartUpdateDialog;
-    const FilteredSmartExpiredBuildDialog = ExpiredBuildDialog_1.SmartExpiredBuildDialog;
-    const FilteredSmartRelinkDialog = RelinkDialog_1.SmartRelinkDialog;
     /* eslint-enable @typescript-eslint/no-explicit-any */
     function renderExpiredBuildDialog() {
-        return react_1.default.createElement(FilteredSmartExpiredBuildDialog, null);
+        return react_1.default.createElement(ExpiredBuildDialog_1.SmartExpiredBuildDialog, null);
     }
     function renderMainHeader() {
-        return react_1.default.createElement(FilteredSmartMainHeader, null);
+        return react_1.default.createElement(MainHeader_1.SmartMainHeader, null);
     }
     function renderMessageSearchResult(id) {
         return react_1.default.createElement(FilteredSmartMessageSearchResult, { id: id });
     }
     function renderNetworkStatus() {
-        return react_1.default.createElement(FilteredSmartNetworkStatus, null);
+        return react_1.default.createElement(NetworkStatus_1.SmartNetworkStatus, null);
     }
     function renderRelinkDialog() {
-        return react_1.default.createElement(FilteredSmartRelinkDialog, null);
+        return react_1.default.createElement(RelinkDialog_1.SmartRelinkDialog, null);
     }
     function renderUpdateDialog() {
-        return react_1.default.createElement(FilteredSmartUpdateDialog, null);
+        return react_1.default.createElement(UpdateDialog_1.SmartUpdateDialog, null);
     }
     const mapStateToProps = (state) => {
         const showSearch = search_1.isSearching(state);

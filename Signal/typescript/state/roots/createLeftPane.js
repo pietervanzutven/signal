@@ -7,11 +7,6 @@ require(exports => {
     const react_1 = __importDefault(require("react"));
     const react_redux_1 = require("react-redux");
     const LeftPane_1 = require("../smart/LeftPane");
-    // Workaround: A react component's required properties are filtering up through connect()
-    //   https://github.com/DefinitelyTyped/DefinitelyTyped/issues/31363
-    /* eslint-disable @typescript-eslint/no-explicit-any */
-    const FilteredLeftPane = LeftPane_1.SmartLeftPane;
-    /* eslint-enable @typescript-eslint/no-explicit-any */
     exports.createLeftPane = (store) => (react_1.default.createElement(react_redux_1.Provider, { store: store },
-        react_1.default.createElement(FilteredLeftPane, null)));
+        react_1.default.createElement(LeftPane_1.SmartLeftPane, null)));
 });

@@ -10,13 +10,8 @@ require(exports => {
     const CallManager_1 = require("../../components/CallManager");
     const user_1 = require("../selectors/user");
     const CallingDeviceSelection_1 = require("./CallingDeviceSelection");
-    // Workaround: A react component's required properties are filtering up through connect()
-    //   https://github.com/DefinitelyTyped/DefinitelyTyped/issues/31363
-    /* eslint-disable @typescript-eslint/no-explicit-any */
-    const FilteredCallingDeviceSelection = CallingDeviceSelection_1.SmartCallingDeviceSelection;
-    /* eslint-enable @typescript-eslint/no-explicit-any */
     function renderDeviceSelection() {
-        return react_1.default.createElement(FilteredCallingDeviceSelection, null);
+        return react_1.default.createElement(CallingDeviceSelection_1.SmartCallingDeviceSelection, null);
     }
     const mapStateToProps = (state) => {
         const { calling } = state;
