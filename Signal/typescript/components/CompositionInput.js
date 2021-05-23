@@ -32,11 +32,13 @@
     Block.tagName = 'DIV';
     quill_1.default.register(Block, true);
     const MAX_LENGTH = 64 * 1024;
-    exports.CompositionInput = ({ i18n, disabled, large, inputApi, onDirtyChange, onEditorStateChange, onTextTooLong, onPickEmoji, onSubmit, skinTone, startingText, getQuotedMessage, clearQuotedMessage, }) => {
+    exports.CompositionInput = props => {
+        const { i18n, disabled, large, inputApi, onPickEmoji, onSubmit, skinTone, startingText, } = props;
         const [emojiCompletionElement, setEmojiCompletionElement] = React.useState();
         const emojiCompletionRef = React.useRef();
         const quillRef = React.useRef();
         const scrollerRef = React.useRef(null);
+        const propsRef = React.useRef(props);
         const generateDelta = (text) => {
             const re = emoji_regex_1.default();
             const ops = [];
@@ -124,7 +126,10 @@
             if (quill === undefined) {
                 return;
             }
-            onSubmit(getText());
+            const text = getText();
+            if (text.length > 0) {
+                onSubmit(text);
+            }
         };
         if (inputApi) {
             // eslint-disable-next-line no-param-reassign
@@ -136,7 +141,14 @@
                 submit,
             };
         }
-        const onEnter = React.useCallback(() => {
+        React.useEffect(() => {
+            propsRef.current = props;
+        }, [props]);
+        const onShortKeyEnter = () => {
+            submit();
+            return false;
+        };
+        const onEnter = () => {
             const quill = quillRef.current;
             const emojiCompletion = emojiCompletionRef.current;
             if (quill === undefined) {
@@ -149,17 +161,13 @@
                 emojiCompletion.completeEmoji();
                 return false;
             }
-            if (large) {
+            if (propsRef.current.large) {
                 return true;
             }
-            const text = getText();
-            if (text.length > 0) {
-                onSubmit(text);
-                reset();
-            }
+            submit();
             return false;
-        }, [large, onSubmit]);
-        const onTab = React.useCallback(() => {
+        };
+        const onTab = () => {
             const quill = quillRef.current;
             const emojiCompletion = emojiCompletionRef.current;
             if (quill === undefined) {
@@ -173,8 +181,8 @@
                 return false;
             }
             return true;
-        }, []);
-        const onEscape = React.useCallback(() => {
+        };
+        const onEscape = () => {
             const quill = quillRef.current;
             if (quill === undefined) {
                 return false;
@@ -186,31 +194,31 @@
                     return false;
                 }
             }
-            if (getQuotedMessage()) {
-                clearQuotedMessage();
+            if (propsRef.current.getQuotedMessage()) {
+                propsRef.current.clearQuotedMessage();
                 return false;
             }
             return true;
-        }, [getQuotedMessage, clearQuotedMessage]);
-        const onChange = React.useCallback(() => {
+        };
+        const onChange = () => {
             const text = getText();
             const quill = quillRef.current;
             if (quill !== undefined) {
                 const historyModule = quill.getModule('history');
                 if (text.length > MAX_LENGTH) {
                     historyModule.undo();
-                    onTextTooLong();
+                    propsRef.current.onTextTooLong();
                     return;
                 }
-                if (onEditorStateChange) {
+                if (propsRef.current.onEditorStateChange) {
                     const selection = quill.getSelection();
-                    onEditorStateChange(text, selection ? selection.index : undefined);
+                    propsRef.current.onEditorStateChange(text, selection ? selection.index : undefined);
                 }
             }
-            if (onDirtyChange) {
-                onDirtyChange(text.length > 0);
+            if (propsRef.current.onDirtyChange) {
+                propsRef.current.onDirtyChange(text.length > 0);
             }
-        }, [onDirtyChange, onEditorStateChange, onTextTooLong]);
+        };
         React.useEffect(() => {
             const quill = quillRef.current;
             if (quill === undefined) {
@@ -250,7 +258,7 @@
                             onShortKeyEnter: {
                                 key: 13,
                                 shortKey: true,
-                                handler: onEnter,
+                                handler: onShortKeyEnter,
                             },
                             onEscape: { key: 27, handler: onEscape },
                         },
