@@ -316,7 +316,6 @@ require(exports => {
                             existing.set({ e164: undefined });
                             updateConversation(existing.attributes);
                             byE164[e164] = conversation;
-                            // eslint-disable-next-line no-continue
                             continue;
                         }
                         window.log.warn(`checkForConflicts: Found conflict with e164 ${e164}`);

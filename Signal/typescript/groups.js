@@ -176,8 +176,7 @@ require(exports => {
             //   Unknown Group in the left pane.
             active_at: isInitialDataFetch && newAttributes.name
                 ? syntheticTimestamp
-                : newAttributes.active_at
-        }));
+            : newAttributes.active_at }));
         // Save all synthetic messages describing group changes
         const changeMessagesToSave = groupChangeMessages.map(changeMessage => {
             // We do this to preserve the order of the timeline
@@ -337,16 +336,14 @@ require(exports => {
         const existingMembers = group.membersV2 || [];
         const newAttributes = Object.assign(Object.assign({}, group), { membersV2: existingMembers.filter(member => member.conversationId !== ourConversationId), left: true });
         const isNewlyRemoved = existingMembers.length > (newAttributes.membersV2 || []).length;
-        const youWereRemovedMessage = Object.assign(Object.assign({}, generateBasicMessage()), {
-            type: 'group-v2-change', groupV2Change: {
+    const youWereRemovedMessage = Object.assign(Object.assign({}, generateBasicMessage()), { type: 'group-v2-change', groupV2Change: {
                 details: [
                     {
                         type: 'member-remove',
                         conversationId: ourConversationId,
                     },
                 ],
-            }
-        });
+        } });
         return {
             newAttributes,
             groupChangeMessages: isNewlyRemoved ? [youWereRemovedMessage] : [],
@@ -406,7 +403,6 @@ require(exports => {
         for (let i = 0; i < imax; i += 1) {
             const { groupChanges } = changes[i];
             if (!groupChanges) {
-                // eslint-disable-next-line no-continue
                 continue;
             }
             const jmax = groupChanges.length;
@@ -415,7 +411,6 @@ require(exports => {
                 const { groupChange, groupState } = changeState;
                 if (!groupChange || !groupState) {
                     window.log.warn('integrateGroupChanges: item had neither groupState nor groupChange. Skipping.');
-                    // eslint-disable-next-line no-continue
                     continue;
                 }
                 try {
@@ -716,20 +711,17 @@ require(exports => {
             ourConversationId &&
             sourceConversationId &&
             sourceConversationId === ourConversationId) {
-            message = Object.assign(Object.assign({}, generateBasicMessage()), {
-                type: 'group-v2-change', groupV2Change: {
+        message = Object.assign(Object.assign({}, generateBasicMessage()), { type: 'group-v2-change', groupV2Change: {
                     from: sourceConversationId,
                     details: [
                         {
                             type: 'create',
                         },
                     ],
-                }
-            });
+            } });
         }
         else if (firstUpdate && ourConversationId && areWeInvitedToGroup) {
-            message = Object.assign(Object.assign({}, generateBasicMessage()), {
-                type: 'group-v2-change', groupV2Change: {
+        message = Object.assign(Object.assign({}, generateBasicMessage()), { type: 'group-v2-change', groupV2Change: {
                     from: whoInvitedUsUserId || sourceConversationId,
                     details: [
                         {
@@ -737,12 +729,10 @@ require(exports => {
                             conversationId: ourConversationId,
                         },
                     ],
-                }
-            });
+            } });
         }
         else if (firstUpdate && ourConversationId && areWeInGroup) {
-            message = Object.assign(Object.assign({}, generateBasicMessage()), {
-                type: 'group-v2-change', groupV2Change: {
+        message = Object.assign(Object.assign({}, generateBasicMessage()), { type: 'group-v2-change', groupV2Change: {
                     from: sourceConversationId,
                     details: [
                         {
@@ -750,28 +740,23 @@ require(exports => {
                             conversationId: ourConversationId,
                         },
                     ],
-                }
-            });
+            } });
         }
         else if (firstUpdate) {
-            message = Object.assign(Object.assign({}, generateBasicMessage()), {
-                type: 'group-v2-change', groupV2Change: {
+        message = Object.assign(Object.assign({}, generateBasicMessage()), { type: 'group-v2-change', groupV2Change: {
                     from: sourceConversationId,
                     details: [
                         {
                             type: 'create',
                         },
                     ],
-                }
-            });
+            } });
         }
         else if (details.length > 0) {
-            message = Object.assign(Object.assign({}, generateBasicMessage()), {
-                type: 'group-v2-change', sourceUuid, groupV2Change: {
+        message = Object.assign(Object.assign({}, generateBasicMessage()), { type: 'group-v2-change', sourceUuid, groupV2Change: {
                     from: sourceConversationId,
                     details,
-                }
-            });
+            } });
         }
         // This is checked differently, because it needs to be its own entry in the timeline,
         //   with its own icon, etc.
@@ -782,12 +767,10 @@ require(exports => {
             (Boolean(old.expireTimer) &&
                 Boolean(current.expireTimer) &&
                 old.expireTimer !== current.expireTimer)) {
-            timerNotification = Object.assign(Object.assign({}, generateBasicMessage()), {
-                type: 'timer-notification', sourceUuid, flags: window.textsecure.protobuf.DataMessage.Flags.EXPIRATION_TIMER_UPDATE, expirationTimerUpdate: {
+        timerNotification = Object.assign(Object.assign({}, generateBasicMessage()), { type: 'timer-notification', sourceUuid, flags: window.textsecure.protobuf.DataMessage.Flags.EXPIRATION_TIMER_UPDATE, expirationTimerUpdate: {
                     expireTimer: current.expireTimer || 0,
                     sourceUuid,
-                }
-            });
+            } });
         }
         const result = lodash_1.compact([message, timerNotification]);
         window.log.info(`extractDiffs/${logId} complete, generated ${result.length} change messages`);

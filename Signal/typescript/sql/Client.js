@@ -9,7 +9,6 @@
     /* eslint-disable no-await-in-loop */
     /* eslint-disable camelcase */
     /* eslint-disable no-param-reassign */
-    /* eslint-disable no-continue */
     /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
     /* eslint-disable @typescript-eslint/no-explicit-any */
     /* eslint-disable @typescript-eslint/ban-types */
@@ -253,7 +252,8 @@
     function _updateJob(id, data) {
         const { resolve, reject } = data;
         const { fnName, start } = _jobs[id];
-    _jobs[id] = Object.assign(Object.assign(Object.assign({}, _jobs[id]), data), { resolve: (value) => {
+        _jobs[id] = Object.assign(Object.assign(Object.assign({}, _jobs[id]), data), {
+            resolve: (value) => {
                 _removeJob(id);
                 const end = Date.now();
                 const delta = end - start;
@@ -270,7 +270,8 @@
                     window.restart();
                 }
                 return reject(error);
-        } });
+            }
+        });
     }
     function _removeJob(id) {
         if (_DEBUG) {

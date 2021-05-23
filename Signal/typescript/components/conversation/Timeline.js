@@ -191,7 +191,6 @@
                     const child = children[i];
                     const { id, offsetTop, offsetHeight } = child;
                     if (!id) {
-                        // eslint-disable-next-line no-continue
                         continue;
                     }
                     const bottom = offsetTop + offsetHeight;
@@ -206,7 +205,6 @@
                     const child = children[i];
                     const { offsetTop, id } = child;
                     if (!id) {
-                        // eslint-disable-next-line no-continue
                         continue;
                     }
                     if (offsetTop + AT_TOP_THRESHOLD >= visibleTop) {
