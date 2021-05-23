@@ -117,26 +117,7 @@ require(exports => {
             if (ops === undefined) {
                 return ['', []];
             }
-            const mentions = [];
-            const text = ops.reduce((acc, { insert }) => {
-                if (typeof insert === 'string') {
-                    return acc + insert;
-                }
-                if (insert.emoji) {
-                    return acc + insert.emoji;
-                }
-                if (insert.mention) {
-                    mentions.push({
-                        length: 1,
-                        mentionUuid: insert.mention.uuid,
-                        replacementText: insert.mention.title,
-                        start: acc.length,
-                    });
-                    return `${acc}\uFFFC`;
-                }
-                return acc;
-            }, '');
-            return [text.trim(), mentions];
+            return util_1.getTextAndMentionsFromOps(ops);
         };
         const focus = () => {
             const quill = quillRef.current;
@@ -226,7 +207,7 @@ require(exports => {
                 mentionCompletion.completeMention();
                 return false;
             }
-            if (large) {
+            if (propsRef.current.large) {
                 return true;
             }
             submit();
@@ -276,6 +257,20 @@ require(exports => {
                 return false;
             }
             return true;
+        };
+        const onCtrlA = () => {
+            const quill = quillRef.current;
+            if (quill === undefined) {
+                return;
+            }
+            quill.setSelection(0, 0);
+        };
+        const onCtrlE = () => {
+            const quill = quillRef.current;
+            if (quill === undefined) {
+                return;
+            }
+            quill.setSelection(quill.getLength(), 0);
         };
         const onChange = () => {
             const quill = quillRef.current;
@@ -369,6 +364,8 @@ require(exports => {
                                 handler: onShortKeyEnter,
                             },
                             onEscape: { key: 27, handler: onEscape },
+                            onCtrlA: { key: 65, ctrlKey: true, handler: onCtrlA },
+                            onCtrlE: { key: 69, ctrlKey: true, handler: onCtrlE },
                         },
                     },
                     emojiCompletion: {
@@ -400,6 +397,7 @@ require(exports => {
                             }
                             setTimeout(() => {
                                 quill.setSelection(quill.getLength(), 0);
+                                quill.root.classList.add('ql-editor--loaded');
                             }, 0);
                         });
                         quill.on('selection-change', (newRange, oldRange) => {

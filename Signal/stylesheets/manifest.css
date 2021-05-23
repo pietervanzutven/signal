@@ -8041,7 +8041,10 @@ img.emoji.jumbo {
 .module-composition-input__quill {
   height: 100%; }
   .module-composition-input__quill .ql-editor {
+    caret-color: transparent;
     padding: 0; }
+    .module-composition-input__quill .ql-editor--loaded {
+      caret-color: auto; }
     .module-composition-input__quill .ql-editor.ql-blank::before {
       left: 0;
       right: 0;

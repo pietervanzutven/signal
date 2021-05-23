@@ -15,6 +15,43 @@ require(exports => {
         minMatchCharLength: 1,
         keys: ['name', 'firstName', 'profileName', 'title'],
     };
+    exports.getTextAndMentionsFromOps = (ops) => {
+        const mentions = [];
+        const text = ops.reduce((acc, { insert }, index) => {
+            if (typeof insert === 'string') {
+                let textToAdd;
+                switch (index) {
+                    case 0: {
+                        textToAdd = insert.trimLeft();
+                        break;
+                    }
+                    case ops.length - 1: {
+                        textToAdd = insert.trimRight();
+                        break;
+                    }
+                    default: {
+                        textToAdd = insert;
+                        break;
+                    }
+                }
+                return acc + textToAdd;
+            }
+            if (insert.emoji) {
+                return acc + insert.emoji;
+            }
+            if (insert.mention) {
+                mentions.push({
+                    length: 1,
+                    mentionUuid: insert.mention.uuid,
+                    replacementText: insert.mention.title,
+                    start: acc.length,
+                });
+                return `${acc}\uFFFC`;
+            }
+            return acc;
+        }, '');
+        return [text, mentions];
+    };
     exports.getDeltaToRemoveStaleMentions = (ops, memberUuids) => {
         const newOps = ops.reduce((memo, op) => {
             if (op.insert) {
