@@ -264,6 +264,7 @@
     <Content Include="node_modules\react-quill\dist\quill.core.css" />
     <Content Include="node_modules\react-quill\index.js" />
     <Content Include="node_modules\react-tooltip-lite\react-tooltip-lite.min.js" />
+    <Content Include="node_modules\redux-thunk\index.js" />
     <Content Include="node_modules\ref-array-napi\index.js" />
     <Content Include="node_modules\ringrtc\index.js" />
     <Content Include="node_modules\util\index.js" />

@@ -7,6 +7,7 @@ require(exports => {
     Object.defineProperty(exports, "__esModule", { value: true });
     const redux_1 = require("redux");
     const redux_promise_middleware_1 = __importDefault(require("redux-promise-middleware"));
+    const redux_thunk_1 = __importDefault(require("redux-thunk"));
     const redux_logger_1 = require("redux-logger");
     const reducer_1 = require("./reducer");
     const env = window.getEnvironment();
@@ -22,8 +23,11 @@ require(exports => {
     const logger = redux_logger_1.createLogger({
         logger: directConsole,
     });
-    // Exclude logger if we're in production mode
-    const middlewareList = env === 'production' ? [redux_promise_middleware_1.default] : [redux_promise_middleware_1.default, logger];
+    const middlewareList = [
+        redux_promise_middleware_1.default,
+        redux_thunk_1.default,
+        ...(env === 'production' ? [] : [logger]),
+    ];
     const enhancer = redux_1.applyMiddleware(...middlewareList);
     exports.createStore = (initialState) => redux_1.createStore(reducer_1.reducer, initialState, enhancer);
 });
