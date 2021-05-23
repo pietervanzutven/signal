@@ -17,521 +17,285 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const React = __importStar(require("react"));
-    const react_dom_1 = require("react-dom");
-    const draft_js_1 = require("draft-js");
-    const react_measure_1 = __importDefault(require("react-measure"));
-    const react_popper_1 = require("react-popper");
-    const lodash_1 = require("lodash");
+    const quill_delta_1 = __importDefault(require("quill-delta"));
+    const react_quill_1 = __importDefault(require("react-quill"));
     const classnames_1 = __importDefault(require("classnames"));
     const emoji_regex_1 = __importDefault(require("emoji-regex"));
-    const Emoji_1 = require("./emoji/Emoji");
+    const react_popper_1 = require("react-popper");
+    const quill_1 = __importDefault(require("quill"));
+    const emoji_1 = require("../quill/emoji");
     const lib_1 = require("./emoji/lib");
-    const _util_1 = require("./_util");
+    const matchImage_1 = require("../quill/matchImage");
+    quill_1.default.register('formats/emoji', emoji_1.EmojiBlot);
+    quill_1.default.register('modules/emojiCompletion', emoji_1.EmojiCompletion);
+    const Block = quill_1.default.import('blots/block');
+    Block.tagName = 'DIV';
+    quill_1.default.register(Block, true);
     const MAX_LENGTH = 64 * 1024;
-    const colonsRegex = /(?:^|\s):[a-z0-9-_+]+:?/gi;
-    const triggerEmojiRegex = /^(?:[-+]\d|[a-z]{2})/i;
-    function getTrimmedMatchAtIndex(str, index, pattern) {
-        let match;
-        // Reset regex state
-        pattern.exec('');
-        // eslint-disable-next-line no-cond-assign
-        while ((match = pattern.exec(str))) {
-            const matchStr = match.toString();
-            const start = match.index + (matchStr.length - matchStr.trimLeft().length);
-            const end = match.index + matchStr.trimRight().length;
-            if (index >= start && index <= end) {
-                return match.toString();
+    exports.CompositionInput = ({ i18n, disabled, large, inputApi, onDirtyChange, onEditorStateChange, onTextTooLong, onPickEmoji, onSubmit, skinTone, startingText, getQuotedMessage, clearQuotedMessage, }) => {
+        const [emojiCompletionElement, setEmojiCompletionElement] = React.useState();
+        const emojiCompletionRef = React.useRef();
+        const quillRef = React.useRef();
+        const scrollerRef = React.useRef(null);
+        const generateDelta = (text) => {
+            const re = emoji_regex_1.default();
+            const ops = [];
+            let index = 0;
+            let match;
+            // eslint-disable-next-line no-cond-assign
+            while ((match = re.exec(text))) {
+                const [emoji] = match;
+                ops.push({ insert: text.slice(index, match.index) });
+                ops.push({ insert: { emoji } });
+                index = match.index + emoji.length;
             }
-        }
-        return null;
-    }
-    function getLengthOfSelectedText(state) {
-        const currentSelection = state.getSelection();
-        let length = 0;
-        const currentContent = state.getCurrentContent();
-        const startKey = currentSelection.getStartKey();
-        const endKey = currentSelection.getEndKey();
-        const startBlock = currentContent.getBlockForKey(startKey);
-        const isStartAndEndBlockAreTheSame = startKey === endKey;
-        const startBlockTextLength = startBlock.getLength();
-        const startSelectedTextLength = startBlockTextLength - currentSelection.getStartOffset();
-        const endSelectedTextLength = currentSelection.getEndOffset();
-        const keyAfterEnd = currentContent.getKeyAfter(endKey);
-        if (isStartAndEndBlockAreTheSame) {
-            length +=
-                currentSelection.getEndOffset() - currentSelection.getStartOffset();
-        }
-        else {
-            let currentKey = startKey;
-            while (currentKey && currentKey !== keyAfterEnd) {
-                if (currentKey === startKey) {
-                    length += startSelectedTextLength + 1;
-                }
-                else if (currentKey === endKey) {
-                    length += endSelectedTextLength;
-                }
-                else {
-                    length += currentContent.getBlockForKey(currentKey).getLength() + 1;
-                }
-                currentKey = currentContent.getKeyAfter(currentKey);
-            }
-        }
-        return length;
-    }
-    function getWordAtIndex(str, index) {
-        const start = str
-            .slice(0, index + 1)
-            .replace(/\s+$/, '')
-            .search(/\S+$/);
-        let end = str
-            .slice(index)
-            .split('')
-            .findIndex(c => /[^a-z0-9-_]/i.test(c) || c === ':') + index;
-        const endChar = str[end];
-        if (/\w|:/.test(endChar)) {
-            end += 1;
-        }
-        const word = str.slice(start, end);
-        if (word === ':' && index + 1 <= str.length) {
-            return getWordAtIndex(str, index + 1);
-        }
-        return {
-            start,
-            end,
-            word,
+            ops.push({ insert: text.slice(index, text.length) });
+            return new quill_delta_1.default(ops);
         };
-    }
-    const compositeDecorator = new draft_js_1.CompositeDecorator([
-        {
-            strategy: (block, cb) => {
-                const pat = emoji_regex_1.default();
-                const text = block.getText();
-                let match;
-                let index;
-                // eslint-disable-next-line no-cond-assign
-                while ((match = pat.exec(text))) {
-                    index = match.index;
-                    cb(index, index + match[0].length);
+        const getText = () => {
+            const quill = quillRef.current;
+            if (quill === undefined) {
+                return '';
+            }
+            const contents = quill.getContents();
+            if (contents === undefined) {
+                return '';
+            }
+            const { ops } = contents;
+            if (ops === undefined) {
+                return '';
+            }
+            const text = ops.reduce((acc, { insert }) => {
+                if (typeof insert === 'string') {
+                    return acc + insert;
                 }
-            },
-            component: ({ children, contentState, entityKey, }) => entityKey ? (React.createElement(Emoji_1.Emoji, { shortName: contentState.getEntity(entityKey).getData().shortName, skinTone: contentState.getEntity(entityKey).getData().skinTone, inline: true, size: 20 }, children)) : (children),
-        },
-    ]);
-    const getInitialEditorState = (startingText) => {
-        if (!startingText) {
-            return draft_js_1.EditorState.createEmpty(compositeDecorator);
-        }
-        const end = startingText.length;
-        const state = draft_js_1.EditorState.createWithContent(draft_js_1.ContentState.createFromText(startingText), compositeDecorator);
-        const selection = state.getSelection();
-        const selectionAtEnd = selection.merge({
-            anchorOffset: end,
-            focusOffset: end,
-        });
-        return draft_js_1.EditorState.forceSelection(state, selectionAtEnd);
-    };
-    exports.CompositionInput = ({ i18n, disabled, large, editorRef, inputApi, onDirtyChange, onEditorStateChange, onEditorSizeChange, onTextTooLong, onPickEmoji, onSubmit, skinTone, startingText, getQuotedMessage, clearQuotedMessage, }) => {
-        const [editorRenderState, setEditorRenderState] = React.useState(getInitialEditorState(startingText));
-        const [searchText, setSearchText] = React.useState('');
-        const [emojiResults, setEmojiResults] = React.useState([]);
-        const [emojiResultsIndex, setEmojiResultsIndex] = React.useState(0);
-        const [editorWidth, setEditorWidth] = React.useState(0);
-        const [popperRoot, setPopperRoot] = React.useState(null);
-        const dirtyRef = React.useRef(false);
-        const focusRef = React.useRef(false);
-        const editorStateRef = React.useRef(editorRenderState);
-        const rootElRef = React.useRef();
-        const rootElRefMerger = React.useMemo(_util_1.createRefMerger, []);
-        // This function sets editorState and also keeps a reference to the newly set
-        // state so we can reference the state in effects and callbacks without
-        // excessive cleanup
-        const setAndTrackEditorState = React.useCallback((newState) => {
-            setEditorRenderState(newState);
-            editorStateRef.current = newState;
-        }, [setEditorRenderState, editorStateRef]);
-        const updateExternalStateListeners = React.useCallback((newState) => {
-            const plainText = newState
-                .getCurrentContent()
-                .getPlainText()
-                .trim();
-            const cursorBlockKey = newState.getSelection().getStartKey();
-            const cursorBlockIndex = editorStateRef.current
-                .getCurrentContent()
-                .getBlockMap()
-                .keySeq()
-                .findIndex(key => key === cursorBlockKey);
-            const caretLocation = newState
-                .getCurrentContent()
-                .getBlockMap()
-                .valueSeq()
-                .toArray()
-                .reduce((sum, block, currentIndex) => {
-                    if (currentIndex < cursorBlockIndex) {
-                        return sum + block.getText().length + 1; // +1 for newline
-                    }
-                    if (currentIndex === cursorBlockIndex) {
-                        return sum + newState.getSelection().getStartOffset();
-                    }
-                    return sum;
-                }, 0);
-            if (onDirtyChange) {
-                const isDirty = !!plainText;
-                if (dirtyRef.current !== isDirty) {
-                    dirtyRef.current = isDirty;
-                    onDirtyChange(isDirty);
+                if (insert.emoji) {
+                    return acc + insert.emoji;
                 }
-            }
-            if (onEditorStateChange) {
-                onEditorStateChange(plainText, caretLocation);
-            }
-        }, [onDirtyChange, onEditorStateChange, editorStateRef]);
-        const resetEmojiResults = React.useCallback(() => {
-            setEmojiResults([]);
-            setEmojiResultsIndex(0);
-            setSearchText('');
-        }, [setEmojiResults, setEmojiResultsIndex, setSearchText]);
-        const getWordAtCaret = React.useCallback((state = editorStateRef.current) => {
-            const selection = state.getSelection();
-            const index = selection.getAnchorOffset();
-            return getWordAtIndex(state
-                .getCurrentContent()
-                .getBlockForKey(selection.getAnchorKey())
-                .getText(), index);
-        }, []);
-        const selectEmojiResult = React.useCallback((dir, e) => {
-            if (emojiResults.length > 0) {
-                if (e) {
-                    e.preventDefault();
-                }
-                if (dir === 'next') {
-                    setEmojiResultsIndex(index => {
-                        const next = index + 1;
-                        if (next >= emojiResults.length) {
-                            return 0;
-                        }
-                        return next;
-                    });
-                }
-                if (dir === 'prev') {
-                    setEmojiResultsIndex(index => {
-                        const next = index - 1;
-                        if (next < 0) {
-                            return emojiResults.length - 1;
-                        }
-                        return next;
-                    });
-                }
-            }
-        }, [emojiResults]);
-        const submit = React.useCallback(() => {
-            const { current: state } = editorStateRef;
-            const trimmedText = state
-                .getCurrentContent()
-                .getPlainText()
-                .trim();
-            onSubmit(trimmedText);
-        }, [editorStateRef, onSubmit]);
-        const handleEditorCommand = React.useCallback((command, state, emojiOverride) => {
-            if (command === 'enter-emoji') {
-                const { short_name: shortName } = emojiOverride || emojiResults[emojiResultsIndex];
-                const content = state.getCurrentContent();
-                const selection = state.getSelection();
-                const word = getWordAtCaret(state);
-                const emojiContent = lib_1.convertShortName(shortName, skinTone);
-                const emojiEntityKey = content
-                    .createEntity('emoji', 'IMMUTABLE', {
-                        shortName,
-                        skinTone,
-                    })
-                    .getLastCreatedEntityKey();
-                const replaceSelection = selection.merge({
-                    anchorOffset: word.start,
-                    focusOffset: word.end,
-                });
-                let newContent = draft_js_1.Modifier.replaceText(content, replaceSelection, emojiContent, undefined, emojiEntityKey);
-                const afterSelection = newContent.getSelectionAfter();
-                if (afterSelection.getAnchorOffset() ===
-                    newContent.getBlockForKey(afterSelection.getAnchorKey()).getLength()) {
-                    newContent = draft_js_1.Modifier.insertText(newContent, afterSelection, ' ');
-                }
-                const newState = draft_js_1.EditorState.push(state, newContent, 'insert-emoji');
-                setAndTrackEditorState(newState);
-                resetEmojiResults();
-                onPickEmoji({ shortName });
-                return 'handled';
-            }
-            if (command === 'submit') {
-                submit();
-                return 'handled';
-            }
-            if (command === 'next-emoji') {
-                selectEmojiResult('next');
-            }
-            if (command === 'prev-emoji') {
-                selectEmojiResult('prev');
-            }
-            return 'not-handled';
-        },
-            // Missing `onPickEmoji`, which is a prop, so not clearly memoized
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            [
-                emojiResults,
-                emojiResultsIndex,
-                getWordAtCaret,
-                resetEmojiResults,
-                selectEmojiResult,
-                setAndTrackEditorState,
-                skinTone,
-                submit,
-            ]);
-        const handleEditorStateChange = React.useCallback((newState) => {
-            // Does the current position have any emojiable text?
-            const selection = newState.getSelection();
-            const caretLocation = selection.getStartOffset();
-            const content = newState
-                .getCurrentContent()
-                .getBlockForKey(selection.getAnchorKey())
-                .getText();
-            const match = getTrimmedMatchAtIndex(content, caretLocation, colonsRegex);
-            // Update the state to indicate emojiable text at the current position.
-            const newSearchText = match ? match.trim().substr(1) : '';
-            if (newSearchText.endsWith(':')) {
-                const bareText = lodash_1.trimEnd(newSearchText, ':');
-                const emoji = lodash_1.head(lib_1.search(bareText));
-                if (emoji && bareText === emoji.short_name) {
-                    handleEditorCommand('enter-emoji', newState, emoji);
-                    // Prevent inserted colon from persisting to state
-                    return;
-                }
-                    resetEmojiResults();
-                }
-            else if (triggerEmojiRegex.test(newSearchText) && focusRef.current) {
-                setEmojiResults(lib_1.search(newSearchText, 10));
-                setSearchText(newSearchText);
-                setEmojiResultsIndex(0);
-            }
-            else {
-                resetEmojiResults();
-            }
-            // Finally, update the editor state
-            setAndTrackEditorState(newState);
-            updateExternalStateListeners(newState);
-        }, [
-            focusRef,
-            handleEditorCommand,
-            resetEmojiResults,
-            setAndTrackEditorState,
-            setSearchText,
-            setEmojiResults,
-            updateExternalStateListeners,
-        ]);
-        const handleBeforeInput = React.useCallback(() => {
-            if (!editorStateRef.current) {
-                return 'not-handled';
-            }
-            const editorState = editorStateRef.current;
-            const plainText = editorState.getCurrentContent().getPlainText();
-            const selectedTextLength = getLengthOfSelectedText(editorState);
-            if (plainText.length - selectedTextLength > MAX_LENGTH - 1) {
-                onTextTooLong();
-                return 'handled';
-            }
-            return 'not-handled';
-        }, [onTextTooLong, editorStateRef]);
-        const handlePastedText = React.useCallback((pastedText) => {
-            if (!editorStateRef.current) {
-                return 'not-handled';
-            }
-            const editorState = editorStateRef.current;
-            const plainText = editorState.getCurrentContent().getPlainText();
-            const selectedTextLength = getLengthOfSelectedText(editorState);
-            if (plainText.length + pastedText.length - selectedTextLength >
-                MAX_LENGTH) {
-                onTextTooLong();
-                return 'handled';
-            }
-            return 'not-handled';
-        }, [onTextTooLong, editorStateRef]);
-        const resetEditorState = React.useCallback(() => {
-            const newEmptyState = draft_js_1.EditorState.createEmpty(compositeDecorator);
-            setAndTrackEditorState(newEmptyState);
-            resetEmojiResults();
-        }, [resetEmojiResults, setAndTrackEditorState]);
-        const handleEditorSizeChange = React.useCallback((rect) => {
-            if (rect.bounds) {
-                setEditorWidth(rect.bounds.width);
-                if (onEditorSizeChange) {
-                    onEditorSizeChange(rect);
-                }
-            }
-        }, [onEditorSizeChange, setEditorWidth]);
-        const handleEditorArrowKey = React.useCallback((e) => {
-            if (e.key === 'ArrowUp') {
-                selectEmojiResult('prev', e);
-            }
-            if (e.key === 'ArrowDown') {
-                selectEmojiResult('next', e);
-            }
-        }, [selectEmojiResult]);
-        const handleEscapeKey = React.useCallback((e) => {
-            if (emojiResults.length > 0) {
-                e.preventDefault();
-                resetEmojiResults();
-            }
-            else if (getQuotedMessage()) {
-                clearQuotedMessage();
-            }
-        }, [clearQuotedMessage, emojiResults, getQuotedMessage, resetEmojiResults]);
-        const insertEmoji = React.useCallback((e, replaceWord = false) => {
-            const { current: state } = editorStateRef;
-            const selection = state.getSelection();
-            const oldContent = state.getCurrentContent();
-            const emojiContent = lib_1.convertShortName(e.shortName, e.skinTone);
-            const emojiEntityKey = oldContent
-                .createEntity('emoji', 'IMMUTABLE', {
-                    shortName: e.shortName,
-                    skinTone: e.skinTone,
-                })
-                .getLastCreatedEntityKey();
-            const word = getWordAtCaret();
-            let newContent = draft_js_1.Modifier.replaceText(oldContent, replaceWord
-                ? selection.merge({
-                    anchorOffset: word.start,
-                    focusOffset: word.end,
-                })
-                : selection, emojiContent, undefined, emojiEntityKey);
-            const afterSelection = newContent.getSelectionAfter();
-            if (afterSelection.getAnchorOffset() ===
-                newContent.getBlockForKey(afterSelection.getAnchorKey()).getLength()) {
-                newContent = draft_js_1.Modifier.insertText(newContent, afterSelection, ' ');
-            }
-            const newState = draft_js_1.EditorState.push(state, newContent, 'insert-emoji');
-            setAndTrackEditorState(newState);
-            resetEmojiResults();
-        }, [editorStateRef, getWordAtCaret, setAndTrackEditorState, resetEmojiResults]);
-        const onTab = React.useCallback((e) => {
-            if (e.shiftKey || emojiResults.length === 0) {
+                return acc;
+            }, '');
+            return text.trim();
+        };
+        const focus = () => {
+            const quill = quillRef.current;
+            if (quill === undefined) {
                 return;
             }
-            e.preventDefault();
-            handleEditorCommand('enter-emoji', editorStateRef.current);
-        }, [emojiResults, editorStateRef, handleEditorCommand]);
-        const editorKeybindingFn = React.useCallback((e) => {
-                const commandKey = lodash_1.get(window, 'platform') === 'darwin' && e.metaKey;
-                const controlKey = lodash_1.get(window, 'platform') !== 'darwin' && e.ctrlKey;
-                if (e.key === 'Enter' && emojiResults.length > 0) {
-                    e.preventDefault();
-                    return 'enter-emoji';
-                }
-                if (e.key === 'Enter' && !e.shiftKey && !e.altKey) {
-                    if (large && !(controlKey || commandKey)) {
-                        return draft_js_1.getDefaultKeyBinding(e);
-                    }
-                    e.preventDefault();
-                    return 'submit';
-                }
-                if (e.key === 'n' && e.ctrlKey) {
-                    e.preventDefault();
-                    return 'next-emoji';
-                }
-                if (e.key === 'p' && e.ctrlKey) {
-                    e.preventDefault();
-                    return 'prev-emoji';
-                }
-                // Get rid of default draft.js ctrl-m binding which interferes with Windows minimize
-                if (e.key === 'm' && e.ctrlKey) {
-                    return null;
-                }
-                if (lodash_1.get(window, 'platform') === 'linux') {
-                    // Get rid of default draft.js shift-del binding which interferes with Linux cut
-                    if (e.key === 'Delete' && e.shiftKey) {
-                        return null;
-                    }
-                }
-                // Get rid of Ctrl-Shift-M, which by default adds a newline
-                if ((e.key === 'm' || e.key === 'M') && e.shiftKey && e.ctrlKey) {
-                    e.preventDefault();
-                    return null;
-                }
-                // Get rid of Ctrl-/, which on GNOME is bound to 'select all'
-                if (e.key === '/' && !e.shiftKey && e.ctrlKey) {
-                    e.preventDefault();
-                    return null;
-                }
-                return draft_js_1.getDefaultKeyBinding(e);
-            }, [emojiResults, large]);
-        // Create popper root
-        React.useEffect(() => {
-            if (emojiResults.length > 0) {
-                const root = document.createElement('div');
-                setPopperRoot(root);
-                document.body.appendChild(root);
-                return () => {
-                    document.body.removeChild(root);
-                    setPopperRoot(null);
-                };
+            quill.focus();
+        };
+        const insertEmoji = (e) => {
+            const quill = quillRef.current;
+            if (quill === undefined) {
+                return;
             }
-            return lodash_1.noop;
-        }, [setPopperRoot, emojiResults]);
-        const onFocus = React.useCallback(() => {
-            focusRef.current = true;
-        }, [focusRef]);
-        const onBlur = React.useCallback(() => {
-            focusRef.current = false;
-        }, [focusRef]);
-        // Manage focus
-        // Chromium places the editor caret at the beginning of contenteditable divs on focus
-        // Here, we force the last known selection on focusin
-        // (doing this with onFocus wasn't behaving properly)
-        // This needs to be done in an effect because React doesn't support focus{In,Out}
-        // https://github.com/facebook/react/issues/6410
-        React.useLayoutEffect(() => {
-            const { current: rootEl } = rootElRef;
-            if (rootEl) {
-                const onFocusIn = () => {
-                    const { current: oldState } = editorStateRef;
-                    // Force selection to be old selection
-                    setAndTrackEditorState(draft_js_1.EditorState.forceSelection(oldState, oldState.getSelection()));
-                };
-                rootEl.addEventListener('focusin', onFocusIn);
-                return () => {
-                    rootEl.removeEventListener('focusin', onFocusIn);
-                };
+            const range = quill.getSelection();
+            if (range === null) {
+                return;
             }
-            return lodash_1.noop;
-        }, [editorStateRef, rootElRef, setAndTrackEditorState]);
+            const emoji = lib_1.convertShortName(e.shortName, e.skinTone);
+            const delta = new quill_delta_1.default()
+                .retain(range.index)
+                .delete(range.length)
+                .insert({ emoji });
+            quill.updateContents(delta, 'user');
+            quill.setSelection(range.index + 1, 0, 'user');
+        };
+        const reset = () => {
+            const quill = quillRef.current;
+            if (quill === undefined) {
+                return;
+            }
+            quill.setText('');
+            const historyModule = quill.getModule('history');
+            if (historyModule === undefined) {
+                return;
+            }
+            historyModule.clear();
+        };
+        const resetEmojiResults = () => {
+            const emojiCompletion = emojiCompletionRef.current;
+            if (emojiCompletion === undefined) {
+                return;
+            }
+            emojiCompletion.reset();
+        };
+        const submit = () => {
+            const quill = quillRef.current;
+            if (quill === undefined) {
+                return;
+            }
+            onSubmit(getText());
+        };
         if (inputApi) {
-            // Using a React.MutableRefObject, so we need to reassign this prop.
             // eslint-disable-next-line no-param-reassign
             inputApi.current = {
-                reset: resetEditorState,
-                submit,
+                focus,
                 insertEmoji,
+                reset,
                 resetEmojiResults,
+                submit,
             };
         }
+        const onEnter = React.useCallback(() => {
+            const quill = quillRef.current;
+            const emojiCompletion = emojiCompletionRef.current;
+            if (quill === undefined) {
+                return false;
+            }
+            if (emojiCompletion === undefined) {
+                return false;
+            }
+            if (emojiCompletion.results.length) {
+                emojiCompletion.completeEmoji();
+                return false;
+            }
+            if (large) {
+                return true;
+            }
+            const text = getText();
+            if (text.length > 0) {
+                onSubmit(text);
+                reset();
+            }
+            return false;
+        }, [large, onSubmit]);
+        const onTab = React.useCallback(() => {
+            const quill = quillRef.current;
+            const emojiCompletion = emojiCompletionRef.current;
+            if (quill === undefined) {
+                return false;
+            }
+            if (emojiCompletion === undefined) {
+                return false;
+            }
+            if (emojiCompletion.results.length) {
+                emojiCompletion.completeEmoji();
+                return false;
+            }
+            return true;
+        }, []);
+        const onEscape = React.useCallback(() => {
+            const quill = quillRef.current;
+            if (quill === undefined) {
+                return false;
+            }
+            const emojiCompletion = emojiCompletionRef.current;
+            if (emojiCompletion) {
+                if (emojiCompletion.results.length) {
+                    emojiCompletion.reset();
+                    return false;
+                }
+            }
+            if (getQuotedMessage()) {
+                clearQuotedMessage();
+                return false;
+            }
+            return true;
+        }, [getQuotedMessage, clearQuotedMessage]);
+        const onChange = React.useCallback(() => {
+            const text = getText();
+            const quill = quillRef.current;
+            if (quill !== undefined) {
+                const historyModule = quill.getModule('history');
+                if (text.length > MAX_LENGTH) {
+                    historyModule.undo();
+                    onTextTooLong();
+                    return;
+                }
+                if (onEditorStateChange) {
+                    const selection = quill.getSelection();
+                    onEditorStateChange(text, selection ? selection.index : undefined);
+                }
+            }
+            if (onDirtyChange) {
+                onDirtyChange(text.length > 0);
+            }
+        }, [onDirtyChange, onEditorStateChange, onTextTooLong]);
+        React.useEffect(() => {
+            const quill = quillRef.current;
+            if (quill === undefined) {
+                return;
+            }
+            quill.enable(!disabled);
+            quill.focus();
+        }, [disabled]);
+        React.useEffect(() => {
+            const emojiCompletion = emojiCompletionRef.current;
+            if (emojiCompletion === undefined || skinTone === undefined) {
+                return;
+            }
+            emojiCompletion.options.skinTone = skinTone;
+        }, [skinTone]);
+        React.useEffect(() => () => {
+            const emojiCompletion = emojiCompletionRef.current;
+            if (emojiCompletion === undefined) {
+                return;
+            }
+            emojiCompletion.destroy();
+        }, []);
+        const reactQuill = React.useMemo(() => {
+            const delta = generateDelta(startingText || '');
+            return (React.createElement(react_quill_1.default, {
+                className: "module-composition-input__quill", onChange: onChange, defaultValue: delta, modules: {
+                    toolbar: false,
+                    clipboard: {
+                        matchers: [
+                            ['IMG', matchImage_1.matchEmojiImage],
+                            ['SPAN', matchImage_1.matchEmojiBlot],
+                        ],
+                    },
+                    keyboard: {
+                        bindings: {
+                            onEnter: { key: 13, handler: onEnter },
+                            onShortKeyEnter: {
+                                key: 13,
+                                shortKey: true,
+                                handler: onEnter,
+                            },
+                            onEscape: { key: 27, handler: onEscape },
+                        },
+                    },
+                    emojiCompletion: {
+                        setEmojiPickerElement: setEmojiCompletionElement,
+                        onPickEmoji,
+                        skinTone,
+                    },
+                }, formats: ['emoji'], placeholder: i18n('sendMessage'), readOnly: disabled, ref: element => {
+                    if (element) {
+                        const quill = element.getEditor();
+                        const keyboard = quill.getModule('keyboard');
+                        // force the tab handler to be prepended, otherwise it won't be
+                        // executed: https://github.com/quilljs/quill/issues/1967
+                        keyboard.bindings[9].unshift({ key: 9, handler: onTab }); // 9 = Tab
+                        // also, remove the default \t insertion binding
+                        keyboard.bindings[9].pop();
+                        // When loading a multi-line message out of a draft, the cursor
+                        // position needs to be pushed to the end of the input manually.
+                        quill.once('editor-change', () => {
+                            const scroller = scrollerRef.current;
+                            if (scroller !== null) {
+                                quill.scrollingContainer = scroller;
+                            }
+                            quill.setSelection(quill.getLength(), 0);
+                        });
+                        quillRef.current = quill;
+                        emojiCompletionRef.current = quill.getModule('emojiCompletion');
+                    }
+                }
+            }));
+        },
+            // quill shouldn't re-render, all changes should take place exclusively
+            // through mutating the quill state directly instead of through props
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            []);
         return (React.createElement(react_popper_1.Manager, null,
-            React.createElement(react_popper_1.Reference, null, popperRef => (React.createElement(react_measure_1.default, { bounds: true, onResize: handleEditorSizeChange }, ({ measureRef }) => (React.createElement("div", { className: "module-composition-input__input", ref: rootElRefMerger(popperRef.ref, measureRef, rootElRef) },
+            React.createElement(react_popper_1.Reference, null, ({ ref }) => (React.createElement("div", { className: "module-composition-input__input", ref: ref },
                 React.createElement("div", {
-                    className: classnames_1.default('module-composition-input__input__scroller', large
+                    ref: scrollerRef, className: classnames_1.default('module-composition-input__input__scroller', large
                         ? 'module-composition-input__input__scroller--large'
                         : null)
                 },
-                    React.createElement(draft_js_1.Editor, { ref: editorRef, editorState: editorRenderState, onChange: handleEditorStateChange, placeholder: i18n('sendMessage'), onUpArrow: handleEditorArrowKey, onDownArrow: handleEditorArrowKey, onEscape: handleEscapeKey, onTab: onTab, handleKeyCommand: handleEditorCommand, handleBeforeInput: handleBeforeInput, handlePastedText: handlePastedText, keyBindingFn: editorKeybindingFn, spellCheck: true, stripPastedStyles: true, readOnly: disabled, onFocus: onFocus, onBlur: onBlur }))))))),
-            emojiResults.length > 0 && popperRoot
-                ? react_dom_1.createPortal(React.createElement(react_popper_1.Popper, { placement: "top", key: searchText }, ({ ref, style }) => (React.createElement("div", { ref: ref, className: "module-composition-input__emoji-suggestions", style: Object.assign(Object.assign({}, style), { width: editorWidth }), role: "listbox", "aria-expanded": true, "aria-activedescendant": `emoji-result--${emojiResults[emojiResultsIndex].short_name}`, tabIndex: 0 }, emojiResults.map((emoji, index) => (React.createElement("button", {
-                    type: "button", key: emoji.short_name, id: `emoji-result--${emoji.short_name}`, role: "option button", "aria-selected": emojiResultsIndex === index, onMouseDown: () => {
-                        insertEmoji({ shortName: emoji.short_name, skinTone }, true);
-                        onPickEmoji({ shortName: emoji.short_name });
-                    }, className: classnames_1.default('module-composition-input__emoji-suggestions__row', emojiResultsIndex === index
-                        ? 'module-composition-input__emoji-suggestions__row--selected'
-                        : null)
-                },
-                    React.createElement(Emoji_1.Emoji, { shortName: emoji.short_name, size: 16, skinTone: skinTone }),
-                    React.createElement("div", { className: "module-composition-input__emoji-suggestions__row__short-name" },
-                        ":",
-                        emoji.short_name,
-                        ":"))))))), popperRoot)
-                : null));
+                    reactQuill,
+                    emojiCompletionElement))))));
     };
 })();

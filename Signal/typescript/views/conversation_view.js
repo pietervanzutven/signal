@@ -1645,10 +1645,6 @@ Whisper.ConversationView = Whisper.View.extend({
             compositionApi.current.focusInput();
         }
     },
-    focusMessageFieldAndClearDisabled() {
-        this.compositionApi.current.setDisabled(false);
-        this.focusMessageField();
-    },
     disableMessageField() {
         this.compositionApi.current.setDisabled(true);
     },
@@ -2212,7 +2208,7 @@ Whisper.ConversationView = Whisper.View.extend({
             this.quotedMessage = message;
             if (message) {
                 this.quote = await this.model.makeQuote(this.quotedMessage);
-                this.focusMessageFieldAndClearDisabled();
+                this.enableMessageField();
             }
         }
         this.renderQuotedMessage();
@@ -2261,12 +2257,12 @@ Whisper.ConversationView = Whisper.View.extend({
                     this.sendMessage(message, { force: true });
                     return;
                 }
-                this.focusMessageFieldAndClearDisabled();
+                this.enableMessageField();
                 return;
             }
         }
         catch (error) {
-            this.focusMessageFieldAndClearDisabled();
+            this.enableMessageField();
             window.log.error('sendMessage error:', error && error.stack ? error.stack : error);
             return;
         }
@@ -2292,7 +2288,7 @@ Whisper.ConversationView = Whisper.View.extend({
         }
         if (ToastView) {
             this.showToast(ToastView);
-            this.focusMessageFieldAndClearDisabled();
+            this.enableMessageField();
             return;
         }
         try {
@@ -2316,7 +2312,7 @@ Whisper.ConversationView = Whisper.View.extend({
             window.log.error('Error pulling attached files before send', error && error.stack ? error.stack : error);
         }
         finally {
-            this.focusMessageFieldAndClearDisabled();
+            this.enableMessageField();
         }
     },
     onEditorStateChange(messageText, caretLocation) {

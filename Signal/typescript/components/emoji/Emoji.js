@@ -33,7 +33,7 @@
             ? { backgroundImage: `url('${image}')` }
             : {};
         return (React.createElement("span", { ref: ref, className: classnames_1.default('module-emoji', `module-emoji--${size}px`, inline ? `module-emoji--${size}px--inline` : null, className), style: Object.assign(Object.assign({}, style), backgroundStyle) }, inline ? (
-            // When using this component as a draft.js decorator it is very
+            // When using this component as in a CompositionInput it is very
             // important that these children are the only elements to render
             children) : (React.createElement("img", { className: `module-emoji__image--${size}px`, src: image, alt: shortName }))));
     }));

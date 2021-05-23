@@ -21,8 +21,8 @@
   >
   <title>Signal</title>
   <link href="node_modules/sanitize.css/sanitize.css" rel="stylesheet" type="text/css" />
+  <link href="node_modules/react-quill/dist/quill.core.css" rel="stylesheet" type="text/css" />
   <link href="stylesheets/manifest.css" rel="stylesheet" type="text/css" />
-  <link href="node_modules/draft-js/dist/Draft.css" rel="stylesheet" type="text/css" />
 
   <!--
     When making changes to these templates, be sure to update test/index.html as well
@@ -382,6 +382,7 @@
   <script type='text/javascript' src='node_modules/lodash/isArrayBuffer.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isBoolean.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isEmpty.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/isEqual.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isFunction.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isNumber.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isObject.js'></script>
@@ -447,6 +448,7 @@
   <script type='text/javascript' src='node_modules/reselect/reselect.js'></script>
   <script type='text/javascript' src='node_modules/popper.js/popper-utils.js'></script>
   <script type='text/javascript' src='node_modules/popper.js/popper.js'></script>
+  <script type='text/javascript' src='node_modules/quill/index.js'></script>
   <script type='text/javascript' src='node_modules/react/index.js'></script>
   <script type='text/javascript' src='node_modules/react-dom/index.js'></script>
   <script type='text/javascript' src='node_modules/react-contextmenu/helpers.js'></script>
@@ -463,6 +465,7 @@
   <script type='text/javascript' src='node_modules/react-virtualized/react-virtualized.js'></script>
   <script type='text/javascript' src='node_modules/react-popper/index.umd.js'></script>
   <script type='text/javascript' src='node_modules/react-measure/index.umd.js'></script>
+  <script type='text/javascript' src='node_modules/react-quill/index.js'></script>
   <script type='text/javascript' src='node_modules/moment/moment.js'></script>
   <script type='text/javascript' src='node_modules/uc.micro/categories/Cc/regex.js'></script>
   <script type='text/javascript' src='node_modules/uc.micro/categories/Cf/regex.js'></script>
@@ -501,7 +504,6 @@
   <script type='text/javascript' src='node_modules/p-props/index.js'></script>
   <script type='text/javascript' src='node_modules/fuse.js/fuse.js'></script>
   <script type='text/javascript' src='node_modules/immutable/immutable.js'></script>
-  <script type='text/javascript' src='node_modules/draft-js/Draft.js'></script>
   <script type='text/javascript' src='node_modules/sanitize-filename/index.js'></script>
   <script type='text/javascript' src='node_modules/normalize-path/index.js'></script>
   <script type='text/javascript' src='node_modules/https/index.js'></script>
@@ -715,6 +717,10 @@
   <script type='text/javascript' src='typescript/models/messages.js'></script>
   <script type='text/javascript' src='typescript/linkPreviews/isLinkPreviewDateValid.js'></script>
   <script type='text/javascript' src='typescript/linkPreviews/linkPreviewFetch.js'></script>
+  <script type='text/javascript' src='typescript/quill/matchImage.js'></script>
+  <script type='text/javascript' src='typescript/quill/emoji/blot.js'></script>
+  <script type='text/javascript' src='typescript/quill/emoji/completion.js'></script>
+  <script type='text/javascript' src='typescript/quill/emoji/index.js'></script>
   <script type='text/javascript' src='typescript/services/networkObserver.js'></script>
   <script type='text/javascript' src='typescript/services/updateListener.js'></script>
   <script type='text/javascript' src='typescript/services/bounce.js'></script>

@@ -146,19 +146,27 @@
             .join('');
     }
     exports.unifiedToEmoji = unifiedToEmoji;
-    function convertShortName(shortName, skinTone = 0) {
+    function convertShortNameToData(shortName, skinTone = 0) {
         const base = dataByShortName[shortName];
         if (!base) {
-            return '';
+            return undefined;
         }
         const toneKey = is_1.default.number(skinTone) ? exports.skinTones[skinTone - 1] : skinTone;
         if (skinTone && base.skin_variations) {
             const variation = base.skin_variations[toneKey];
             if (variation) {
-                return unifiedToEmoji(variation.unified);
+                return Object.assign(Object.assign({}, base), variation);
             }
         }
-        return unifiedToEmoji(base.unified);
+        return base;
+    }
+    exports.convertShortNameToData = convertShortNameToData;
+    function convertShortName(shortName, skinTone = 0) {
+        const emojiData = convertShortNameToData(shortName, skinTone);
+        if (!emojiData) {
+            return '';
+        }
+        return unifiedToEmoji(emojiData.unified);
     }
     exports.convertShortName = convertShortName;
     function emojiToImage(emoji) {

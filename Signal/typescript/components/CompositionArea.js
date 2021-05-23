@@ -32,7 +32,7 @@
     };
     exports.CompositionArea = ({ i18n, attachmentListEl, micCellEl, onChooseAttachment,
         // CompositionInput
-        onSubmit, compositionApi, onEditorSizeChange, onEditorStateChange, onTextTooLong, startingText, clearQuotedMessage, getQuotedMessage,
+        onSubmit, compositionApi, onEditorStateChange, onTextTooLong, startingText, clearQuotedMessage, getQuotedMessage,
         // EmojiButton
         onPickEmoji, onSetSkinTone, recentEmojis, skinTone,
         // StickerButton
@@ -44,7 +44,6 @@
         const [micActive, setMicActive] = React.useState(false);
         const [dirty, setDirty] = React.useState(false);
         const [large, setLarge] = React.useState(false);
-        const editorRef = React.useRef(null);
         const inputApiRef = React.useRef();
         const handleForceSend = React.useCallback(() => {
             setLarge(false);
@@ -57,10 +56,10 @@
             onSubmit(...args);
         }, [setLarge, onSubmit]);
         const focusInput = React.useCallback(() => {
-            if (editorRef.current) {
-                editorRef.current.focus();
+            if (inputApiRef.current) {
+                inputApiRef.current.focus();
             }
-        }, [editorRef]);
+        }, [inputApiRef]);
         const withStickers = lib_1.countStickers({
             knownPacks,
             blessedPacks,
@@ -176,7 +175,7 @@
             React.createElement("div", { className: classnames_1.default('module-composition-area__row', large ? 'module-composition-area__row--padded' : null) },
                 !large ? emojiButtonFragment : null,
                 React.createElement("div", { className: "module-composition-area__input" },
-                    React.createElement(CompositionInput_1.CompositionInput, { i18n: i18n, disabled: disabled, large: large, editorRef: editorRef, inputApi: inputApiRef, onPickEmoji: onPickEmoji, onSubmit: handleSubmit, onEditorSizeChange: onEditorSizeChange, onEditorStateChange: onEditorStateChange, onTextTooLong: onTextTooLong, onDirtyChange: setDirty, skinTone: skinTone, startingText: startingText, clearQuotedMessage: clearQuotedMessage, getQuotedMessage: getQuotedMessage })),
+                    React.createElement(CompositionInput_1.CompositionInput, { i18n: i18n, disabled: disabled, large: large, inputApi: inputApiRef, onPickEmoji: onPickEmoji, onSubmit: handleSubmit, onEditorStateChange: onEditorStateChange, onTextTooLong: onTextTooLong, onDirtyChange: setDirty, skinTone: skinTone, startingText: startingText, clearQuotedMessage: clearQuotedMessage, getQuotedMessage: getQuotedMessage })),
                 !large ? (React.createElement(React.Fragment, null,
                     stickerButtonFragment,
                     !dirty ? micButtonFragment : null,

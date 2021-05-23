@@ -241,6 +241,7 @@
     <Content Include="node_modules\lodash\has.js" />
     <Content Include="node_modules\lodash\include.js" />
     <Content Include="node_modules\lodash\isBoolean.js" />
+    <Content Include="node_modules\lodash\isEqual.js" />
     <Content Include="node_modules\lodash\keys.js" />
     <Content Include="node_modules\lodash\pluck.js" />
     <Content Include="node_modules\lodash\property.js" />
@@ -256,9 +257,12 @@
     <Content Include="node_modules\p-props\index.js" />
     <Content Include="node_modules\path\index.js" />
     <Content Include="node_modules\path\wrapper.js" />
+    <Content Include="node_modules\quill\index.js" />
     <Content Include="node_modules\react-blurhash\Blurhash.js" />
     <Content Include="node_modules\react-blurhash\BlurhashCanvas.js" />
     <Content Include="node_modules\react-blurhash\index.js" />
+    <Content Include="node_modules\react-quill\dist\quill.core.css" />
+    <Content Include="node_modules\react-quill\index.js" />
     <Content Include="node_modules\react-tooltip-lite\react-tooltip-lite.min.js" />
     <Content Include="node_modules\ref-array-napi\index.js" />
     <Content Include="node_modules\ringrtc\index.js" />
@@ -325,8 +329,6 @@
     <Content Include="node_modules\core\error.js" />
     <Content Include="node_modules\core\require.js" />
     <Content Include="node_modules\core\uwp-config.js" />
-    <Content Include="node_modules\draft-js\dist\Draft.css" />
-    <Content Include="node_modules\draft-js\Draft.js" />
     <Content Include="node_modules\emoji-datasource-apple\img\apple\64\0023-fe0f-20e3.png" />
     <Content Include="node_modules\emoji-datasource-apple\img\apple\64\002a-fe0f-20e3.png" />
     <Content Include="node_modules\emoji-datasource-apple\img\apple\64\0030-fe0f-20e3.png" />
@@ -3820,6 +3822,10 @@
     <Content Include="typescript\notifications\getStatus.js" />
     <Content Include="typescript\OS.js" />
     <Content Include="typescript\protobuf\protobuf.js" />
+    <Content Include="typescript\quill\emoji\blot.js" />
+    <Content Include="typescript\quill\emoji\completion.js" />
+    <Content Include="typescript\quill\emoji\index.js" />
+    <Content Include="typescript\quill\matchImage.js" />
     <Content Include="typescript\RemoteConfig.js" />
     <Content Include="typescript\services\bounce.js" />
     <Content Include="typescript\services\calling.js" />
@@ -4026,6 +4032,9 @@
     <Content Include="TextSecure.cer" />
     <Content Include="textsecureservicewhispersystemsorg.cer" />
     <None Include="Signal_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="typescript\test\quill\emoji\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).targets" />
   <!-- To modify your build process, add your task inside one of the targets below then uncomment
