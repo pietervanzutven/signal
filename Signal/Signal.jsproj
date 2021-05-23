@@ -75,6 +75,7 @@
     <Content Include="app\global_errors.js" />
     <Content Include="app\logging.js" />
     <Content Include="app\config.js" />
+    <Content Include="app\menu.js" />
     <Content Include="app\spell_check.js" />
     <Content Include="app\sql_channel.js" />
     <Content Include="app\user_config.js" />
@@ -232,6 +233,7 @@
     <Content Include="node_modules\lodash\all.js" />
     <Content Include="node_modules\lodash\assignIn.js" />
     <Content Include="node_modules\lodash\clone.js" />
+    <Content Include="node_modules\lodash\contains.js" />
     <Content Include="node_modules\lodash\defaults.js" />
     <Content Include="node_modules\lodash\every.js" />
     <Content Include="node_modules\lodash\extend.js" />
@@ -3523,7 +3525,7 @@
     <Content Include="node_modules\got\got.js" />
     <Content Include="node_modules\https\index.js" />
     <Content Include="node_modules\immutable\immutable.js" />
-    <Content Include="node_modules\int-tel-input\build\img\flags.png" />
+    <Content Include="node_modules\intl-tel-input\build\img\flags.png" />
     <Content Include="node_modules\journeyapps\sqlcipher.js" />
     <Content Include="node_modules\jquery\dist\jquery.js" />
     <Content Include="node_modules\linkify-it\index.js" />
@@ -3627,15 +3629,7 @@
     <Content Include="node_modules\rimraf\index.js" />
     <Content Include="node_modules\sanitize-filename\index.js" />
     <Content Include="node_modules\sanitize.css\sanitize.css" />
-    <Content Include="node_modules\semver\classes\semver.js" />
-    <Content Include="node_modules\semver\functions\compare.js" />
-    <Content Include="node_modules\semver\functions\gte.js" />
-    <Content Include="node_modules\semver\functions\lt.js" />
     <Content Include="node_modules\semver\index.js" />
-    <Content Include="node_modules\semver\internal\constants.js" />
-    <Content Include="node_modules\semver\internal\debug.js" />
-    <Content Include="node_modules\semver\internal\identifiers.js" />
-    <Content Include="node_modules\semver\internal\re.js" />
     <Content Include="node_modules\sindresorhus\is.js" />
     <Content Include="node_modules\sjcl\sjcl.js" />
     <Content Include="node_modules\sql\sql-asm.js" />

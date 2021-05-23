@@ -91,6 +91,7 @@ const logging = require('./app/logging');
 const sql = require('./ts/sql/Server').default;
 const sqlChannels = require('./app/sql_channel');
 const windowState = require('./app/window_state');
+const { createTemplate } = require('./app/menu');
 const { isSgnlHref, parseSgnlHref } = require('./ts/util/sgnlHref');
 
 let appStartInitialSpellcheckSetting = true;
