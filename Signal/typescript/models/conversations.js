@@ -770,6 +770,7 @@ require(exports => {
                     deletedForEveryone: this.get('lastMessageDeletedForEveryone'),
                 },
                 lastUpdated: this.get('timestamp'),
+                markedUnread: this.get('markedUnread'),
                 membersCount: this.isPrivate()
                     ? undefined
                     : (this.get('membersV2') || this.get('members') || []).length,
@@ -2082,6 +2083,11 @@ require(exports => {
                 this.captureChange('isArchived');
             }
         }
+        setMarkedUnread(markedUnread) {
+            this.set({ markedUnread });
+            window.Signal.Data.updateConversation(this.attributes);
+            this.captureChange('markedUnread');
+        }
         async updateExpirationTimer(providedExpireTimer, providedSource, receivedAt, options = {}) {
             if (this.isGroupV2()) {
                 if (providedSource || receivedAt) {
@@ -2784,6 +2790,7 @@ require(exports => {
         // [X] blocked
         // [X] whitelisted
         // [X] archived
+        // [X] markedUnread
         captureChange(property) {
             if (!window.Signal.RemoteConfig.isEnabled('desktop.storageWrite')) {
                 window.log.info('conversation.captureChange: Returning early; desktop.storageWrite is falsey');

@@ -109,7 +109,7 @@
             }));
         }
         renderMenu(triggerId) {
-            const { disableTimerChanges, i18n, acceptedMessageRequest, isMe, isPinned, type, isArchived, muteExpirationLabel, onDeleteMessages, onResetSession, onSetDisappearingMessages, onSetMuteNotifications, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onSetPin, onMoveToInbox, timerOptions, } = this.props;
+            const { disableTimerChanges, i18n, acceptedMessageRequest, isMe, isPinned, type, isArchived, markedUnread, muteExpirationLabel, onDeleteMessages, onResetSession, onSetDisappearingMessages, onSetMuteNotifications, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onMarkUnread, onSetPin, onMoveToInbox, timerOptions, } = this.props;
             const muteOptions = [];
             if (muteExpirationLabel) {
                 muteOptions.push(...[
@@ -131,24 +131,25 @@
             const muteTitle = i18n('muteNotificationsTitle');
             const isGroup = type === 'group';
             return (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
-                react_1.default.createElement(react_contextmenu_1.SubMenu, { title: muteTitle }, muteOptions.map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
-                    key: item.name, disabled: item.disabled, onClick: () => {
-                        onSetMuteNotifications(item.value);
-                    }
-                }, item.name)))),
-                isPinned ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: () => onSetPin(false) }, i18n('unpinConversation'))) : (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: () => onSetPin(true) }, i18n('pinConversation'))),
                 disableTimerChanges ? null : (react_1.default.createElement(react_contextmenu_1.SubMenu, { title: disappearingTitle }, (timerOptions || []).map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     key: item.value, onClick: () => {
                         onSetDisappearingMessages(item.value);
                     }
                 }, item.name))))),
-                react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowAllMedia }, i18n('viewRecentMedia')),
+                react_1.default.createElement(react_contextmenu_1.SubMenu, { title: muteTitle }, muteOptions.map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                    key: item.name, disabled: item.disabled, onClick: () => {
+                        onSetMuteNotifications(item.value);
+                    }
+                }, item.name)))),
                 isGroup ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowGroupMembers }, i18n('showMembers'))) : null,
+                react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowAllMedia }, i18n('viewRecentMedia')),
                 !isGroup && !isMe ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowSafetyNumber }, i18n('showSafetyNumber'))) : null,
-                react_1.default.createElement(react_contextmenu_1.MenuItem, { divider: true }),
                 !isGroup && acceptedMessageRequest ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onResetSession }, i18n('resetSession'))) : null,
+                react_1.default.createElement(react_contextmenu_1.MenuItem, { divider: true }),
+                !markedUnread ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onMarkUnread }, i18n('markUnread'))) : null,
                 isArchived ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onMoveToInbox }, i18n('moveConversationToInbox'))) : (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onArchive }, i18n('archiveConversation'))),
-                react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onDeleteMessages }, i18n('deleteMessages'))));
+                react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onDeleteMessages }, i18n('deleteMessages')),
+                isPinned ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: () => onSetPin(false) }, i18n('unpinConversation'))) : (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: () => onSetPin(true) }, i18n('pinConversation')))));
         }
         render() {
             const { id } = this.props;
