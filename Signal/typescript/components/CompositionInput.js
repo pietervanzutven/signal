@@ -1,10 +1,7 @@
 (function () {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    const exports = window.ts.components.CompositionInput = {};
-
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
@@ -35,6 +32,7 @@
     exports.CompositionInput = props => {
         const { i18n, disabled, large, inputApi, onPickEmoji, onSubmit, skinTone, startingText, } = props;
         const [emojiCompletionElement, setEmojiCompletionElement] = React.useState();
+        const [lastSelectionRange, setLastSelectionRange,] = React.useState(null);
         const emojiCompletionRef = React.useRef();
         const quillRef = React.useRef();
         const scrollerRef = React.useRef(null);
@@ -91,16 +89,17 @@
                 return;
             }
             const range = quill.getSelection();
-            if (range === null) {
+            const insertionRange = range || lastSelectionRange;
+            if (insertionRange === null) {
                 return;
             }
             const emoji = lib_1.convertShortName(e.shortName, e.skinTone);
             const delta = new quill_delta_1.default()
-                .retain(range.index)
-                .delete(range.length)
+                .retain(insertionRange.index)
+                .delete(insertionRange.length)
                 .insert({ emoji });
             quill.updateContents(delta, 'user');
-            quill.setSelection(range.index + 1, 0, 'user');
+            quill.setSelection(insertionRange.index + 1, 0, 'user');
         };
         const reset = () => {
             const quill = quillRef.current;
@@ -283,6 +282,12 @@
                                 quill.scrollingContainer = scroller;
                             }
                             quill.setSelection(quill.getLength(), 0);
+                        });
+                        quill.on('selection-change', (newRange, oldRange) => {
+                            // If we lose focus, store the last edit point for emoji insertion
+                            if (newRange === null) {
+                                setLastSelectionRange(oldRange);
+                            }
                         });
                         quillRef.current = quill;
                         emojiCompletionRef.current = quill.getModule('emojiCompletion');
