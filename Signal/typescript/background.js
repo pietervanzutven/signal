@@ -496,8 +496,8 @@
                 conversationLookup: window.Signal.Util.makeLookup(conversations, 'id'),
                 messagesByConversation: {},
                 messagesLookup: {},
-                selectedConversation: null,
-                selectedMessage: null,
+                selectedConversation: undefined,
+                selectedMessage: undefined,
                 selectedMessageCounter: 0,
                 showArchived: false,
             },
@@ -606,7 +606,7 @@
                 if (!unreadOnly) {
                     return target.id;
                 }
-                if (target.unreadCount > 0) {
+                if ((target.unreadCount || 0) > 0) {
                     return target.id;
                 }
             }

@@ -300,24 +300,22 @@ Whisper.ConversationView = Whisper.View.extend({
         }
     },
     setupHeader() {
-        const getHeaderProps = (_unknown) => {
-            const expireTimer = this.model.get('expireTimer');
-            const expirationSettingName = expireTimer
-                ? Whisper.ExpirationTimerOptions.getName(expireTimer || 0)
-                : null;
-            return Object.assign(Object.assign({}, this.model.format()), { leftGroup: this.model.get('left'), disableTimerChanges: this.model.isMissingRequiredProfileSharing() ||
-                    this.model.get('left') ||
-                    !this.model.getAccepted() ||
-                    !this.model.canChangeTimer(), showBackButton: Boolean(this.panels && this.panels.length), expirationSettingName, timerOptions: Whisper.ExpirationTimerOptions.map((item) => ({
-                    name: item.getName(),
-                    value: item.get('seconds'),
-                })), muteExpirationLabel: this.getMuteExpirationLabel(), onSetDisappearingMessages: (seconds) => this.setDisappearingMessages(seconds), onDeleteMessages: () => this.destroyMessages(), onResetSession: () => this.endSession(), onSearchInConversation: () => {
+        this.titleView = new Whisper.ReactWrapperView({
+            className: 'title-wrapper',
+            JSX: window.Signal.State.Roots.createConversationHeader(window.reduxStore, {
+                id: this.model.id,
+                onSetDisappearingMessages: (seconds) => this.setDisappearingMessages(seconds),
+                onDeleteMessages: () => this.destroyMessages(),
+                onResetSession: () => this.endSession(),
+                onSearchInConversation: () => {
                     const { searchInConversation } = window.reduxActions.search;
                     const name = this.model.isMe()
                         ? window.i18n('noteToSelf')
                         : this.model.getTitle();
                     searchInConversation(this.model.id, name);
-                }, onSetMuteNotifications: (ms) => this.setMuteNotifications(ms), onSetPin: this.setPin.bind(this), 
+                },
+                onSetMuteNotifications: (ms) => this.setMuteNotifications(ms),
+                onSetPin: this.setPin.bind(this),
                 // These are view only and don't update the Conversation model, so they
                 //   need a manual update call.
                 onOutgoingAudioCallInConversation: async () => {
@@ -332,7 +330,8 @@ Whisper.ConversationView = Whisper.View.extend({
                     else {
                         window.log.info('onOutgoingAudioCallInConversation: call is deemed "unsafe". Stopping');
                     }
-                }, onOutgoingVideoCallInConversation: async () => {
+                },
+                onOutgoingVideoCallInConversation: async () => {
                     window.log.info('onOutgoingVideoCallInConversation: about to start a video call');
                     const conversation = this.model;
                     const isVideoCall = true;
@@ -344,34 +343,34 @@ Whisper.ConversationView = Whisper.View.extend({
                     else {
                         window.log.info('onOutgoingVideoCallInConversation: call is deemed "unsafe". Stopping');
                     }
-                }, onShowSafetyNumber: () => {
+                },
+                onShowSafetyNumber: () => {
                     this.showSafetyNumber();
-                }, onShowAllMedia: () => {
+                },
+                onShowAllMedia: () => {
                     this.showAllMedia();
-                }, onShowGroupMembers: async () => {
+                },
+                onShowGroupMembers: async () => {
                     await this.showMembers();
-                    this.updateHeader();
-                }, onGoBack: () => {
+                },
+                onGoBack: () => {
                     this.resetPanel();
-                }, onArchive: () => {
+                },
+                onArchive: () => {
                     this.model.setArchived(true);
                     this.model.trigger('unload', 'archive');
                     Whisper.ToastView.show(Whisper.ConversationArchivedToast, document.body);
-                }, onMarkUnread: () => {
+                },
+                onMarkUnread: () => {
                     this.model.setMarkedUnread(true);
                     Whisper.ToastView.show(Whisper.ConversationMarkedUnreadToast, document.body);
-                }, onMoveToInbox: () => {
+                },
+                onMoveToInbox: () => {
                     this.model.setArchived(false);
                     Whisper.ToastView.show(Whisper.ConversationUnarchivedToast, document.body);
-                } });
-        };
-        this.titleView = new Whisper.ReactWrapperView({
-            className: 'title-wrapper',
-            Component: window.Signal.Components.ConversationHeader,
-            props: getHeaderProps(this.model),
+                },
+            }),
         });
-        this.updateHeader = () => this.titleView.update(getHeaderProps());
-        this.listenTo(this.model, 'change', this.updateHeader);
         this.$('.conversation-header').append(this.titleView.el);
     },
     setupCompositionArea({ attachmentListEl }) {
@@ -903,6 +902,7 @@ Whisper.ConversationView = Whisper.View.extend({
                 const panel = this.panels[i];
                 panel.remove();
             }
+            window.reduxActions.conversations.setSelectedConversationPanelDepth(0);
         }
         this.remove();
         this.model.messageCollection.reset([]);
@@ -1642,7 +1642,6 @@ Whisper.ConversationView = Whisper.View.extend({
         };
         this.listenTo(this.model.messageCollection, 'remove', update);
         this.listenBack(view);
-        this.updateHeader();
     },
     focusMessageField() {
         if (this.panels && this.panels.length) {
@@ -1729,7 +1728,6 @@ Whisper.ConversationView = Whisper.View.extend({
                 model: conversation,
             });
             this.listenBack(view);
-            this.updateHeader();
         }
     },
     downloadAttachmentWrapper(messageId) {
@@ -1976,7 +1974,6 @@ Whisper.ConversationView = Whisper.View.extend({
         this.listenTo(message, 'expired', onClose);
         // We could listen to all involved contacts, but we'll call that overkill
         this.listenBack(view);
-        this.updateHeader();
         view.render();
     },
     showStickerManager() {
@@ -1988,7 +1985,6 @@ Whisper.ConversationView = Whisper.View.extend({
             },
         });
         this.listenBack(view);
-        this.updateHeader();
         view.render();
     },
     showContactDetail({ contact, signalAccount }) {
@@ -2009,7 +2005,6 @@ Whisper.ConversationView = Whisper.View.extend({
             },
         });
         this.listenBack(view);
-        this.updateHeader();
     },
     async openConversation(number) {
         window.Whisper.events.trigger('showConversation', number);
@@ -2024,6 +2019,7 @@ Whisper.ConversationView = Whisper.View.extend({
         view.$el.one('animationend', () => {
             view.$el.addClass('panel--static');
         });
+        window.reduxActions.conversations.setSelectedConversationPanelDepth(this.panels.length);
     },
     resetPanel() {
         if (!this.panels || !this.panels.length) {
@@ -2039,7 +2035,6 @@ Whisper.ConversationView = Whisper.View.extend({
         if (this.panels.length > 0) {
             this.panels[0].$el.fadeIn(250);
         }
-        this.updateHeader();
         view.$el.addClass('panel--remove').one('transitionend', () => {
             view.remove();
             if (this.panels.length === 0) {
@@ -2047,6 +2042,7 @@ Whisper.ConversationView = Whisper.View.extend({
                 window.dispatchEvent(new Event('resize'));
             }
         });
+        window.reduxActions.conversations.setSelectedConversationPanelDepth(this.panels.length);
     },
     endSession() {
         this.model.endSession();

@@ -11,12 +11,15 @@
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
+    const moment_1 = __importDefault(require("moment"));
     const classnames_1 = __importDefault(require("classnames"));
     const react_contextmenu_1 = require("react-contextmenu");
     const Emojify_1 = require("./Emojify");
     const Avatar_1 = require("../Avatar");
     const InContactsIcon_1 = require("../InContactsIcon");
     const getMuteOptions_1 = require("../../util/getMuteOptions");
+    const ExpirationTimerOptions_1 = require("../../util/ExpirationTimerOptions");
+    const isMuted_1 = require("../../util/isMuted");
     class ConversationHeader extends react_1.default.Component {
         constructor(props) {
             super(props);
@@ -56,7 +59,10 @@
                 react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: type, i18n: i18n, noteToSelf: isMe, title: title, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28 })));
         }
         renderExpirationLength() {
-            const { expirationSettingName, showBackButton } = this.props;
+            const { i18n, expireTimer, showBackButton } = this.props;
+            const expirationSettingName = expireTimer
+                ? ExpirationTimerOptions_1.ExpirationTimerOptions.getName(i18n, expireTimer)
+                : undefined;
             if (!expirationSettingName) {
                 return null;
             }
@@ -85,33 +91,31 @@
                     : 'module-conversation-header__search-button--show'), disabled: showBackButton, "aria-label": i18n('search')
             }));
         }
-        renderOutgoingAudioCallButton() {
-            const { i18n, isMe, onOutgoingAudioCallInConversation, showBackButton, type, } = this.props;
-            if (type === 'group' || isMe) {
+        renderOutgoingCallButtons() {
+            const { i18n, onOutgoingAudioCallInConversation, onOutgoingVideoCallInConversation, showCallButtons, showBackButton, } = this.props;
+            if (!showCallButtons) {
                 return null;
             }
-            return (react_1.default.createElement("button", {
-                type: "button", onClick: onOutgoingAudioCallInConversation, className: classnames_1.default('module-conversation-header__audio-calling-button', showBackButton
-                    ? null
-                    : 'module-conversation-header__audio-calling-button--show'), disabled: showBackButton, "aria-label": i18n('makeOutgoingCall')
-            }));
-        }
-        renderOutgoingVideoCallButton() {
-            const { i18n, isMe, type } = this.props;
-            if (type === 'group' || isMe) {
-                return null;
-            }
-            const { onOutgoingVideoCallInConversation, showBackButton } = this.props;
-            return (react_1.default.createElement("button", {
-                type: "button", onClick: onOutgoingVideoCallInConversation, className: classnames_1.default('module-conversation-header__video-calling-button', showBackButton
-                    ? null
-                    : 'module-conversation-header__video-calling-button--show'), disabled: showBackButton, "aria-label": i18n('makeOutgoingVideoCall')
-            }));
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("button", {
+                    type: "button", onClick: onOutgoingVideoCallInConversation, className: classnames_1.default('module-conversation-header__video-calling-button', showBackButton
+                        ? null
+                        : 'module-conversation-header__video-calling-button--show'), disabled: showBackButton, "aria-label": i18n('makeOutgoingVideoCall')
+                }),
+                react_1.default.createElement("button", {
+                    type: "button", onClick: onOutgoingAudioCallInConversation, className: classnames_1.default('module-conversation-header__audio-calling-button', showBackButton
+                        ? null
+                        : 'module-conversation-header__audio-calling-button--show'), disabled: showBackButton, "aria-label": i18n('makeOutgoingCall')
+                })));
         }
         renderMenu(triggerId) {
-            const { disableTimerChanges, i18n, acceptedMessageRequest, isMe, isPinned, type, isArchived, markedUnread, muteExpirationLabel, onDeleteMessages, onResetSession, onSetDisappearingMessages, onSetMuteNotifications, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onMarkUnread, onSetPin, onMoveToInbox, timerOptions, } = this.props;
+            const { i18n, acceptedMessageRequest, canChangeTimer, isArchived, isMe, isPinned, type, markedUnread, muteExpiresAt, isMissingMandatoryProfileSharing, left, onDeleteMessages, onResetSession, onSetDisappearingMessages, onSetMuteNotifications, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onMarkUnread, onSetPin, onMoveToInbox, } = this.props;
             const muteOptions = [];
-            if (muteExpirationLabel) {
+            if (isMuted_1.isMuted(muteExpiresAt)) {
+                const expires = moment_1.default(muteExpiresAt);
+                const muteExpirationLabel = moment_1.default().isSame(expires, 'day')
+                    ? expires.format('hh:mm A')
+                    : expires.format('M/D/YY, hh:mm A');
                 muteOptions.push(...[
                     {
                         name: i18n('muteExpirationLabel', [muteExpirationLabel]),
@@ -130,12 +134,16 @@
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const muteTitle = i18n('muteNotificationsTitle');
             const isGroup = type === 'group';
+            const disableTimerChanges = Boolean(!canChangeTimer ||
+                !acceptedMessageRequest ||
+                left ||
+                isMissingMandatoryProfileSharing);
             return (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
-                disableTimerChanges ? null : (react_1.default.createElement(react_contextmenu_1.SubMenu, { title: disappearingTitle }, (timerOptions || []).map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
-                    key: item.value, onClick: () => {
-                        onSetDisappearingMessages(item.value);
+                disableTimerChanges ? null : (react_1.default.createElement(react_contextmenu_1.SubMenu, { title: disappearingTitle }, ExpirationTimerOptions_1.ExpirationTimerOptions.map((item) => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                    key: item.get('seconds'), onClick: () => {
+                        onSetDisappearingMessages(item.get('seconds'));
                     }
-                }, item.name))))),
+                }, item.getName(i18n)))))),
                 react_1.default.createElement(react_contextmenu_1.SubMenu, { title: muteTitle }, muteOptions.map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     key: item.name, disabled: item.disabled, onClick: () => {
                         onSetMuteNotifications(item.value);
@@ -162,8 +170,7 @@
                         this.renderTitle())),
                 this.renderExpirationLength(),
                 this.renderSearchButton(),
-                this.renderOutgoingVideoCallButton(),
-                this.renderOutgoingAudioCallButton(),
+                this.renderOutgoingCallButtons(),
                 this.renderMoreButton(triggerId),
                 this.renderMenu(triggerId)));
         }

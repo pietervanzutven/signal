@@ -3864,6 +3864,7 @@
     <Content Include="typescript\state\reducer.js" />
     <Content Include="typescript\state\roots\createCallManager.js" />
     <Content Include="typescript\state\roots\createCompositionArea.js" />
+    <Content Include="typescript\state\roots\createConversationHeader.js" />
     <Content Include="typescript\state\roots\createLeftPane.js" />
     <Content Include="typescript\state\roots\createSafetyNumberViewer.js" />
     <Content Include="typescript\state\roots\createShortcutGuideModal.js" />
@@ -3880,6 +3881,7 @@
     <Content Include="typescript\state\smart\CallManager.js" />
     <Content Include="typescript\state\smart\CompositionArea.js" />
     <Content Include="typescript\state\smart\ContactName.js" />
+    <Content Include="typescript\state\smart\ConversationHeader.js" />
     <Content Include="typescript\state\smart\EmojiPicker.js" />
     <Content Include="typescript\state\smart\ExpiredBuildDialog.js" />
     <Content Include="typescript\state\smart\HeroRow.js" />
@@ -3943,6 +3945,7 @@
     <Content Include="typescript\util\combineNames.js" />
     <Content Include="typescript\util\deleteForEveryone.js" />
     <Content Include="typescript\util\downloadAttachment.js" />
+    <Content Include="typescript\util\ExpirationTimerOptions.js" />
     <Content Include="typescript\util\formatDuration.js" />
     <Content Include="typescript\util\formatRelativeTime.js" />
     <Content Include="typescript\util\getInitials.js" />
@@ -3956,6 +3959,7 @@
     <Content Include="typescript\util\imageToBlurHash.js" />
     <Content Include="typescript\util\index.js" />
     <Content Include="typescript\util\isFileDangerous.js" />
+    <Content Include="typescript\util\isMuted.js" />
     <Content Include="typescript\util\isPathInside.js" />
     <Content Include="typescript\util\JobQueue.js" />
     <Content Include="typescript\util\libphonenumberInstance.js" />
@@ -4034,7 +4038,8 @@
     <None Include="Signal_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="typescript\test\quill\emoji\" />
+    <Folder Include="typescript\test\state\ducks\" />
+    <Folder Include="typescript\test\util\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).targets" />
   <!-- To modify your build process, add your task inside one of the targets below then uncomment

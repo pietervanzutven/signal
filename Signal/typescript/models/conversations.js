@@ -1,6 +1,7 @@
 require(exports => {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    const isMuted_1 = require("../util/isMuted");
     const sniffImageMimeType_1 = require("../util/sniffImageMimeType");
     const MIME_1 = require("../types/MIME");
     const Crypto_1 = require("../Crypto");
@@ -751,6 +752,7 @@ require(exports => {
                 acceptedMessageRequest: this.getAccepted(),
                 activeAt: this.get('active_at'),
                 areWePending: Boolean(ourConversationId && this.isMemberPending(ourConversationId)),
+                canChangeTimer: this.canChangeTimer(),
                 avatarPath: this.getAvatarPath(),
                 color,
                 draftPreview,
@@ -770,11 +772,13 @@ require(exports => {
                     deletedForEveryone: this.get('lastMessageDeletedForEveryone'),
                 },
                 lastUpdated: this.get('timestamp'),
+                left: Boolean(this.get('left')),
                 markedUnread: this.get('markedUnread'),
                 membersCount: this.isPrivate()
                     ? undefined
                     : (this.get('membersV2') || this.get('members') || []).length,
                 messageRequestsEnabled,
+                expireTimer: this.get('expireTimer'),
                 muteExpiresAt: this.get('muteExpiresAt'),
                 name: this.get('name'),
                 phoneNumber: this.getNumber(),
@@ -2803,8 +2807,7 @@ require(exports => {
             });
         }
         isMuted() {
-            return (Boolean(this.get('muteExpiresAt')) &&
-                Date.now() < this.get('muteExpiresAt'));
+            return isMuted_1.isMuted(this.get('muteExpiresAt'));
         }
         getMuteTimeoutId() {
             return `mute(${this.get('id')})`;

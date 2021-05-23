@@ -33,16 +33,13 @@
     AttachmentList,
   } = require('../../ts/components/conversation/AttachmentList');
   const { CaptionEditor } = require('../../ts/components/CaptionEditor');
-const { ConfirmationModal } = require('../../ts/components/ConfirmationModal');
+  const { ConfirmationModal } = require('../../ts/components/ConfirmationModal');
   const {
     ContactDetail,
   } = require('../../ts/components/conversation/ContactDetail');
   const { ContactListItem } = require('../../ts/components/ContactListItem');
-  const {
-    ConversationHeader,
-  } = require('../../ts/components/conversation/ConversationHeader');
   const { Emojify } = require('../../ts/components/conversation/Emojify');
-const { ErrorModal } = require('../../ts/components/ErrorModal');
+  const { ErrorModal } = require('../../ts/components/ErrorModal');
   const { Lightbox } = require('../../ts/components/Lightbox');
   const { LightboxGallery } = require('../../ts/components/LightboxGallery');
   const {
@@ -52,7 +49,7 @@ const { ErrorModal } = require('../../ts/components/ErrorModal');
     MessageDetail,
   } = require('../../ts/components/conversation/MessageDetail');
   const { Quote } = require('../../ts/components/conversation/Quote');
-const { ProgressModal } = require('../../ts/components/ProgressModal');
+  const { ProgressModal } = require('../../ts/components/ProgressModal');
   const {
     SafetyNumberChangeDialog,
   } = require('../../ts/components/SafetyNumberChangeDialog');
@@ -68,6 +65,9 @@ const { ProgressModal } = require('../../ts/components/ProgressModal');
   const {
     createCompositionArea,
   } = require('../../ts/state/roots/createCompositionArea');
+  const {
+    createConversationHeader,
+  } = require('../../ts/state/roots/createConversationHeader');
   const { createCallManager } = require('../../ts/state/roots/createCallManager');
   const { createLeftPane } = require('../../ts/state/roots/createLeftPane');
   const {
@@ -297,19 +297,18 @@ const { ProgressModal } = require('../../ts/components/ProgressModal');
     const Components = {
       AttachmentList,
       CaptionEditor,
-    ConfirmationModal,
+      ConfirmationModal,
       ContactDetail,
       ContactListItem,
-      ConversationHeader,
       Emojify,
-    ErrorModal,
+      ErrorModal,
       getCallingNotificationText,
       Lightbox,
       LightboxGallery,
       MediaGallery,
       MessageDetail,
       Quote,
-    ProgressModal,
+      ProgressModal,
       SafetyNumberChangeDialog,
       StagedLinkPreview,
       Types: {
@@ -320,6 +319,7 @@ const { ProgressModal } = require('../../ts/components/ProgressModal');
     const Roots = {
       createCallManager,
       createCompositionArea,
+      createConversationHeader,
       createLeftPane,
       createSafetyNumberViewer,
       createShortcutGuideModal,

@@ -8,6 +8,15 @@ require(exports => {
     const callingTones_1 = require("../../util/callingTones");
     const callingPermissions_1 = require("../../util/callingPermissions");
     const bounceAppIcon_1 = require("../../shims/bounceAppIcon");
+    // Helpers
+    function isCallActive({ callDetails, callState, }) {
+        return Boolean(callDetails &&
+            ((!callDetails.isIncoming &&
+                (callState === Calling_1.CallState.Prering || callState === Calling_1.CallState.Ringing)) ||
+                callState === Calling_1.CallState.Accepted ||
+                callState === Calling_1.CallState.Reconnecting));
+    }
+    exports.isCallActive = isCallActive;
     // Actions
     const ACCEPT_CALL = 'calling/ACCEPT_CALL';
     const CANCEL_CALL = 'calling/CANCEL_CALL';
@@ -269,6 +278,7 @@ require(exports => {
             settingsDialogOpen: false,
         };
     }
+    exports.getEmptyState = getEmptyState;
     function reducer(state = getEmptyState(), action) {
         if (action.type === SHOW_CALL_LOBBY) {
             return Object.assign(Object.assign({}, state), { callDetails: action.payload.callDetails, callState: undefined, hasLocalAudio: true, hasLocalVideo: action.payload.callDetails.isVideoCall });

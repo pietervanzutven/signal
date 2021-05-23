@@ -1,6 +1,7 @@
 require(exports => {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    const ExpirationTimerOptions_1 = require("../util/ExpirationTimerOptions");
     window.Whisper = window.Whisper || {};
     const { Message: TypedMessage, Attachment, MIME, Contact, PhoneNumber, Errors, } = window.Signal.Types;
     const { deleteExternalMessageFiles, getAbsoluteAttachmentPath, loadAttachmentData, loadQuoteData, loadPreviewData, loadStickerData, upgradeMessageSchema, } = window.Signal.Migrations;
@@ -324,7 +325,7 @@ require(exports => {
                 return undefined;
             }
             const { expireTimer, fromSync, source, sourceUuid } = timerUpdate;
-            const timespan = window.Whisper.ExpirationTimerOptions.getName(expireTimer || 0);
+            const timespan = ExpirationTimerOptions_1.ExpirationTimerOptions.getName(window.i18n, expireTimer || 0);
             const disabled = !expireTimer;
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const sourceId = window.ConversationController.ensureContactIds({
@@ -915,7 +916,7 @@ require(exports => {
                 }
                 return {
                     text: window.i18n('timerSetTo', [
-                        window.Whisper.ExpirationTimerOptions.getAbbreviated(expireTimer || 0),
+                        ExpirationTimerOptions_1.ExpirationTimerOptions.getAbbreviated(window.i18n, expireTimer || 0),
                     ]),
                 };
             }
