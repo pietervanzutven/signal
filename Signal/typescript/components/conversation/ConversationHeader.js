@@ -131,22 +131,23 @@
             const muteTitle = i18n('muteNotificationsTitle');
             const isGroup = type === 'group';
             return (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
-                disableTimerChanges ? null : (react_1.default.createElement(react_contextmenu_1.SubMenu, { title: disappearingTitle }, (timerOptions || []).map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
-                    key: item.value, onClick: () => {
-                        onSetDisappearingMessages(item.value);
-                    }
-                }, item.name))))),
                 react_1.default.createElement(react_contextmenu_1.SubMenu, { title: muteTitle }, muteOptions.map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     key: item.name, disabled: item.disabled, onClick: () => {
                         onSetMuteNotifications(item.value);
                     }
                 }, item.name)))),
+                isPinned ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: () => onSetPin(false) }, i18n('unpinConversation'))) : (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: () => onSetPin(true) }, i18n('pinConversation'))),
+                disableTimerChanges ? null : (react_1.default.createElement(react_contextmenu_1.SubMenu, { title: disappearingTitle }, (timerOptions || []).map(item => (react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                    key: item.value, onClick: () => {
+                        onSetDisappearingMessages(item.value);
+                    }
+                }, item.name))))),
                 react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowAllMedia }, i18n('viewRecentMedia')),
                 isGroup ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowGroupMembers }, i18n('showMembers'))) : null,
                 !isGroup && !isMe ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onShowSafetyNumber }, i18n('showSafetyNumber'))) : null,
+                react_1.default.createElement(react_contextmenu_1.MenuItem, { divider: true }),
                 !isGroup && acceptedMessageRequest ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onResetSession }, i18n('resetSession'))) : null,
                 isArchived ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onMoveToInbox }, i18n('moveConversationToInbox'))) : (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onArchive }, i18n('archiveConversation'))),
-                isPinned ? (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: () => onSetPin(false) }, i18n('unpinConversation'))) : (react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: () => onSetPin(true) }, i18n('pinConversation'))),
                 react_1.default.createElement(react_contextmenu_1.MenuItem, { onClick: onDeleteMessages }, i18n('deleteMessages'))));
         }
         render() {
