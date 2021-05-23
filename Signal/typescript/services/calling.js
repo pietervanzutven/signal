@@ -1,13 +1,10 @@
 require(exports => {
     "use strict";
-    /* eslint-disable class-methods-use-this */
-    var __importDefault = (this && this.__importDefault) || function (mod) {
-        return (mod && mod.__esModule) ? mod : { "default": mod };
-    };
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
+    /* eslint-disable class-methods-use-this */
     const ringrtc_1 = require("ringrtc");
-    // ts-ignore
-    const is_1 = __importDefault(require("@sindresorhus/is"));
     var ringrtc_2 = require("ringrtc");
     exports.CallState = ringrtc_2.CallState;
     exports.CanvasVideoRenderer = ringrtc_2.CanvasVideoRenderer;
@@ -21,18 +18,6 @@ require(exports => {
             this.uxActions = uxActions;
             if (!uxActions) {
                 throw new Error('CallingClass.initialize: Invalid uxActions.');
-            }
-            if (!is_1.default.function_(uxActions.incomingCall)) {
-                throw new Error('CallingClass.initialize: Invalid uxActions.incomingCall');
-            }
-            if (!is_1.default.function_(uxActions.outgoingCall)) {
-                throw new Error('CallingClass.initialize: Invalid uxActions.outgoingCall');
-            }
-            if (!is_1.default.function_(uxActions.callStateChange)) {
-                throw new Error('CallingClass.initialize: Invalid uxActions.callStateChange');
-            }
-            if (!is_1.default.function_(uxActions.remoteVideoChange)) {
-                throw new Error('CallingClass.initialize: Invalid uxActions.remoteVideoChange');
             }
             ringrtc_1.RingRTC.handleOutgoingSignaling = this.handleOutgoingSignaling.bind(this);
             ringrtc_1.RingRTC.handleIncomingCall = this.handleIncomingCall.bind(this);
