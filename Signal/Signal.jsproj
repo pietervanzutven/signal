@@ -3828,6 +3828,7 @@
     <Content Include="typescript\quill\emoji\index.js" />
     <Content Include="typescript\quill\emoji\matchers.js" />
     <Content Include="typescript\quill\matchImage.js" />
+    <Content Include="typescript\quill\memberRepository.js" />
     <Content Include="typescript\quill\mentions\blot.js" />
     <Content Include="typescript\quill\mentions\completion.js" />
     <Content Include="typescript\quill\mentions\matchers.js" />

@@ -27,6 +27,7 @@ require(exports => {
     const matchers_1 = require("../quill/emoji/matchers");
     const matchers_2 = require("../quill/mentions/matchers");
     const util_1 = require("../quill/util");
+    const memberRepository_1 = require("../quill/memberRepository");
     quill_1.default.register('formats/emoji', emoji_1.EmojiBlot);
     quill_1.default.register('formats/mention', blot_1.MentionBlot);
     quill_1.default.register('modules/emojiCompletion', emoji_1.EmojiCompletion);
@@ -45,7 +46,7 @@ require(exports => {
         const quillRef = React.useRef();
         const scrollerRef = React.useRef(null);
         const propsRef = React.useRef(props);
-        const memberRepositoryRef = React.useRef(new util_1.MemberRepository());
+        const memberRepositoryRef = React.useRef(new memberRepository_1.MemberRepository());
         const insertMentionOps = (incomingOps, bodyRanges) => {
             const ops = [...incomingOps];
             // Working backwards through bodyRanges (to avoid offsetting later mentions),
