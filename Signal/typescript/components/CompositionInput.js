@@ -26,8 +26,8 @@ require(exports => {
     const blot_1 = require("../quill/mentions/blot");
     const matchers_1 = require("../quill/emoji/matchers");
     const matchers_2 = require("../quill/mentions/matchers");
-    const util_1 = require("../quill/util");
     const memberRepository_1 = require("../quill/memberRepository");
+    const util_1 = require("../quill/util");
     quill_1.default.register('formats/emoji', emoji_1.EmojiBlot);
     quill_1.default.register('formats/mention', blot_1.MentionBlot);
     quill_1.default.register('modules/emojiCompletion', emoji_1.EmojiCompletion);
@@ -249,7 +249,7 @@ require(exports => {
             }
             if (mentionCompletion) {
                 if (mentionCompletion.results.length) {
-                    mentionCompletion.reset();
+                    mentionCompletion.clearResults();
                     return false;
                 }
             }
@@ -272,6 +272,25 @@ require(exports => {
                 return;
             }
             quill.setSelection(quill.getLength(), 0);
+        };
+        const onBackspace = () => {
+            const quill = quillRef.current;
+            if (quill === undefined) {
+                return true;
+            }
+            const selection = quill.getSelection();
+            if (!selection || selection.length > 0) {
+                return true;
+            }
+            const [blotToDelete] = quill.getLeaf(selection.index);
+            if (!util_1.isMentionBlot(blotToDelete)) {
+                return true;
+            }
+            const contents = quill.getContents(0, selection.index - 1);
+            const restartDelta = util_1.getDeltaToRestartMention(contents.ops);
+            quill.updateContents(restartDelta);
+            quill.setSelection(selection.index, 0);
+            return false;
         };
         const onChange = () => {
             const quill = quillRef.current;
@@ -367,6 +386,7 @@ require(exports => {
                             onEscape: { key: 27, handler: onEscape },
                             onCtrlA: { key: 65, ctrlKey: true, handler: onCtrlA },
                             onCtrlE: { key: 69, ctrlKey: true, handler: onCtrlE },
+                            onBackspace: { key: 8, handler: onBackspace },
                         },
                     },
                     emojiCompletion: {

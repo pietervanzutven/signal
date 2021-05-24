@@ -8068,7 +8068,8 @@ img.emoji.jumbo {
   display: inline-block;
   padding-left: 4px;
   padding-right: 4px;
-  border: 1px solid transparent; }
+  height: 22px;
+  line-height: 22px; }
   .dark-theme .module-composition-input__at-mention {
     background-color: #5e5e5e; }
 

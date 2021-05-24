@@ -19,19 +19,22 @@ require(exports => {
         }
         static value(node) {
             const { uuid, title } = node.dataset;
+            if (uuid === undefined || title === undefined) {
+                throw new Error(`Failed to make MentionBlot with uuid: ${uuid} and title: ${title}`);
+            }
             return {
                 uuid,
                 title,
             };
         }
-        static buildSpan(member, node) {
-            node.setAttribute('data-uuid', member.uuid || '');
-            node.setAttribute('data-title', member.title || '');
+        static buildSpan(mention, node) {
+            node.setAttribute('data-uuid', mention.uuid || '');
+            node.setAttribute('data-title', mention.title || '');
             const mentionSpan = document.createElement('span');
             react_dom_1.render(react_1.default.createElement("span", { className: "module-composition-input__at-mention" },
                 react_1.default.createElement("bdi", null,
                     "@",
-                    react_1.default.createElement(Emojify_1.Emojify, { text: member.title }))), mentionSpan);
+                    react_1.default.createElement(Emojify_1.Emojify, { text: mention.title }))), mentionSpan);
             node.appendChild(mentionSpan);
         }
     }
