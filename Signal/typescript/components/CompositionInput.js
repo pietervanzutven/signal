@@ -28,10 +28,12 @@ require(exports => {
     const matchers_2 = require("../quill/mentions/matchers");
     const memberRepository_1 = require("../quill/memberRepository");
     const util_1 = require("../quill/util");
+    const signal_clipboard_1 = require("../quill/signal-clipboard");
     quill_1.default.register('formats/emoji', emoji_1.EmojiBlot);
     quill_1.default.register('formats/mention', blot_1.MentionBlot);
     quill_1.default.register('modules/emojiCompletion', emoji_1.EmojiCompletion);
     quill_1.default.register('modules/mentionCompletion', completion_1.MentionCompletion);
+    quill_1.default.register('modules/signalClipboard', signal_clipboard_1.SignalClipboard);
     const Block = quill_1.default.import('blots/block');
     Block.tagName = 'DIV';
     quill_1.default.register(Block, true);
@@ -367,10 +369,11 @@ require(exports => {
             return (React.createElement(react_quill_1.default, {
                 className: "module-composition-input__quill", onChange: onChange, defaultValue: delta, modules: {
                     toolbar: false,
+                    signalClipboard: true,
                     clipboard: {
                         matchers: [
                             ['IMG', matchers_1.matchEmojiImage],
-                            ['SPAN', matchers_1.matchEmojiBlot],
+                            ['IMG', matchers_1.matchEmojiBlot],
                             ['SPAN', matchers_1.matchReactEmoji],
                             ['SPAN', matchers_2.matchMention(memberRepositoryRef)],
                         ],

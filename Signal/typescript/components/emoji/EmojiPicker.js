@@ -1,11 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    window.ts.components.emoji = window.ts.components.emoji || {};
-    const exports = window.ts.components.emoji.EmojiPicker = {};
-
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
@@ -190,7 +186,7 @@
             emojiGrid.length > 0 ? (React.createElement("div", null,
                 React.createElement(react_virtualized_1.AutoSizer, null, ({ width, height }) => (React.createElement(react_virtualized_1.Grid, { key: searchText, className: "module-emoji-picker__body", width: width, height: height, columnCount: COL_COUNT, columnWidth: 38, rowHeight: getRowHeight, rowCount: emojiGrid.length, cellRenderer: cellRenderer, scrollToRow: scrollToRow, scrollToAlignment: "start", onSectionRendered: onSectionRendered }))))) : (React.createElement("div", { className: classnames_1.default('module-emoji-picker__body', 'module-emoji-picker__body--empty') },
                     i18n('EmojiPicker--empty'),
-                    React.createElement(Emoji_1.Emoji, { shortName: "slightly_frowning_face", size: 16, inline: true, style: { marginLeft: '4px' } }))),
+                    React.createElement(Emoji_1.Emoji, { shortName: "slightly_frowning_face", size: 16, style: { marginLeft: '4px' } }))),
             React.createElement("footer", { className: "module-emoji-picker__footer" }, [0, 1, 2, 3, 4, 5].map(tone => (React.createElement("button", {
                 type: "button", key: tone, "data-tone": tone, onClick: handlePickTone, title: i18n('EmojiPicker--skin-tone', [`${tone}`]), className: classnames_1.default('module-emoji-picker__button', 'module-emoji-picker__button--footer', selectedTone === tone
                     ? 'module-emoji-picker__button--selected'
@@ -198,4 +194,4 @@
             },
                 React.createElement(Emoji_1.Emoji, { shortName: "hand", skinTone: tone, size: 20 })))))));
     }));
-})();
+});

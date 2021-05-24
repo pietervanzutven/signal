@@ -1,21 +1,26 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(require("react"));
     const quill_1 = __importDefault(require("quill"));
-    const react_dom_1 = require("react-dom");
-    const Emoji_1 = require("../../components/emoji/Emoji");
+    const lib_1 = require("../../components/emoji/lib");
     const Embed = quill_1.default.import('blots/embed');
+    // the DOM structure of this EmojiBlot should match the other emoji implementations:
+    // ts/components/conversation/Emojify.tsx
+    // ts/components/emoji/Emoji.tsx
     class EmojiBlot extends Embed {
         static create(emoji) {
             const node = super.create(undefined);
             node.dataset.emoji = emoji;
-            const emojiSpan = document.createElement('span');
-            react_dom_1.render(react_1.default.createElement(Emoji_1.Emoji, { emoji: emoji, inline: true, size: 20 }, emoji), emojiSpan);
-            node.appendChild(emojiSpan);
+            const image = lib_1.emojiToImage(emoji);
+            node.setAttribute('src', image || '');
+            node.setAttribute('data-emoji', emoji);
+            node.setAttribute('title', emoji);
+            node.setAttribute('aria-label', emoji);
             return node;
         }
         static value(node) {
@@ -24,6 +29,6 @@ require(exports => {
     }
     exports.EmojiBlot = EmojiBlot;
     EmojiBlot.blotName = 'emoji';
-    EmojiBlot.tagName = 'span';
+    EmojiBlot.tagName = 'img';
     EmojiBlot.className = 'emoji-blot';
 });

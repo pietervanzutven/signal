@@ -16,6 +16,33 @@ require(exports => {
     };
     exports.isInsertEmojiOp = (op) => exports.isSpecificInsertOp(op, 'emoji');
     exports.isInsertMentionOp = (op) => exports.isSpecificInsertOp(op, 'mention');
+    exports.getTextFromOps = (ops) => ops.reduce((acc, { insert }, index) => {
+        if (typeof insert === 'string') {
+            let textToAdd;
+            switch (index) {
+                case 0: {
+                    textToAdd = insert.trimLeft();
+                    break;
+                }
+                case ops.length - 1: {
+                    textToAdd = insert.trimRight();
+                    break;
+                }
+                default: {
+                    textToAdd = insert;
+                    break;
+                }
+            }
+            return acc + textToAdd;
+        }
+        if (insert.emoji) {
+            return acc + insert.emoji;
+        }
+        if (insert.mention) {
+            return `${acc}@${insert.mention.title}`;
+        }
+        return acc;
+    }, '');
     exports.getTextAndMentionsFromOps = (ops) => {
         const mentions = [];
         const text = ops.reduce((acc, op, index) => {

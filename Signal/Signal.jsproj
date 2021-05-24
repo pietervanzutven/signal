@@ -3949,6 +3949,7 @@
     <Content Include="typescript\quill\mentions\blot.js" />
     <Content Include="typescript\quill\mentions\completion.js" />
     <Content Include="typescript\quill\mentions\matchers.js" />
+    <Content Include="typescript\quill\signal-clipboard\index.js" />
     <Content Include="typescript\quill\util.js" />
     <Content Include="typescript\RemoteConfig.js" />
     <Content Include="typescript\services\bounce.js" />

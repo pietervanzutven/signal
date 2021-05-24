@@ -1,11 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    window.ts.components.emoji = window.ts.components.emoji || {};
-    const exports = window.ts.components.emoji.Emoji = {};
-
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
@@ -21,7 +17,10 @@
     const classnames_1 = __importDefault(require("classnames"));
     const lib_1 = require("./lib");
     exports.EmojiSizes = [16, 18, 20, 24, 28, 32, 48, 64, 66];
-    exports.Emoji = React.memo(React.forwardRef(({ style = {}, size = 28, shortName, skinTone, emoji, inline, className, children, }, ref) => {
+    // the DOM structure of this Emoji should match the other emoji implementations:
+    // ts/components/conversation/Emojify.tsx
+    // ts/quill/emoji/blot.tsx
+    exports.Emoji = React.memo(React.forwardRef(({ style = {}, size = 28, shortName, skinTone, emoji, className }, ref) => {
         let image = '';
         if (shortName) {
             image = lib_1.getImagePath(shortName, skinTone);
@@ -29,12 +28,7 @@
         else if (emoji) {
             image = lib_1.emojiToImage(emoji) || '';
         }
-        const backgroundStyle = inline
-            ? { backgroundImage: `url('${image}')` }
-            : {};
-        return (React.createElement("span", { ref: ref, className: classnames_1.default('module-emoji', `module-emoji--${size}px`, inline ? `module-emoji--${size}px--inline` : null, className), style: Object.assign(Object.assign({}, style), backgroundStyle) }, inline ? (
-            // When using this component as in a CompositionInput it is very
-            // important that these children are the only elements to render
-            children) : (React.createElement("img", { className: `module-emoji__image--${size}px`, src: image, alt: shortName }))));
+        return (React.createElement("span", { ref: ref, className: classnames_1.default('module-emoji', `module-emoji--${size}px`, className), style: style },
+            React.createElement("img", { className: `module-emoji__image--${size}px`, src: image, "aria-label": emoji, title: emoji })));
     }));
-})();
+});
