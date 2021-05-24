@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -433,7 +435,7 @@ require(exports => {
                 updateConversation(conversation.attributes);
             });
             remotelyPinnedConversations.forEach(conversation => {
-                conversation.set({ isPinned: true });
+                conversation.set({ isPinned: true, isArchived: false });
                 updateConversation(conversation.attributes);
             });
             window.storage.put('pinnedConversationIds', remotelyPinnedConversationIds);
