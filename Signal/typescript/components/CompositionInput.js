@@ -261,20 +261,6 @@ require(exports => {
             }
             return true;
         };
-        const onCtrlA = () => {
-            const quill = quillRef.current;
-            if (quill === undefined) {
-                return;
-            }
-            quill.setSelection(0, 0);
-        };
-        const onCtrlE = () => {
-            const quill = quillRef.current;
-            if (quill === undefined) {
-                return;
-            }
-            quill.setSelection(quill.getLength(), 0);
-        };
         const onBackspace = () => {
             const quill = quillRef.current;
             if (quill === undefined) {
@@ -387,8 +373,6 @@ require(exports => {
                                 handler: onShortKeyEnter,
                             },
                             onEscape: { key: 27, handler: onEscape },
-                            onCtrlA: { key: 65, ctrlKey: true, handler: onCtrlA },
-                            onCtrlE: { key: 69, ctrlKey: true, handler: onCtrlE },
                             onBackspace: { key: 8, handler: onBackspace },
                         },
                     },

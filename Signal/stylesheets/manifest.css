@@ -8069,7 +8069,7 @@ img.emoji.jumbo {
 .module-composition-input__at-mention {
   background-color: #c6c6c6;
   border-radius: 4px;
-  display: inline-block;
+  display: inline;
   padding-left: 4px;
   padding-right: 4px;
   height: 22px;
