@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -11,7 +13,7 @@ require(exports => {
     const CallScreen_1 = require("./CallScreen");
     const IncomingCallBar_1 = require("./IncomingCallBar");
     const Calling_1 = require("../types/Calling");
-    exports.CallManager = ({ acceptCall, availableCameras, callDetails, callState, callEndedReason, cancelCall, closeNeedPermissionScreen, declineCall, hangUp, hasLocalAudio, hasLocalVideo, hasRemoteVideo, i18n, pip, renderDeviceSelection, setLocalAudio, setLocalPreview, setLocalVideo, setRendererCanvas, settingsDialogOpen, startCall, toggleParticipants, togglePip, toggleSettings, }) => {
+    exports.CallManager = ({ acceptCall, availableCameras, callDetails, callState, callEndedReason, cancelCall, closeNeedPermissionScreen, declineCall, hangUp, hasLocalAudio, hasLocalVideo, hasRemoteVideo, i18n, me, pip, renderDeviceSelection, setLocalAudio, setLocalPreview, setLocalVideo, setRendererCanvas, settingsDialogOpen, startCall, toggleParticipants, togglePip, toggleSettings, }) => {
         if (!callDetails) {
             return null;
         }
@@ -40,7 +42,7 @@ require(exports => {
                 return (react_1.default.createElement(CallingPip_1.CallingPip, { callDetails: callDetails, hangUp: hangUp, hasLocalVideo: hasLocalVideo, hasRemoteVideo: hasRemoteVideo, i18n: i18n, setLocalPreview: setLocalPreview, setRendererCanvas: setRendererCanvas, togglePip: togglePip }));
             }
             return (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement(CallScreen_1.CallScreen, { callDetails: callDetails, callState: callState, hangUp: hangUp, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, hasRemoteVideo: hasRemoteVideo, setLocalPreview: setLocalPreview, setRendererCanvas: setRendererCanvas, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, togglePip: togglePip, toggleSettings: toggleSettings }),
+                react_1.default.createElement(CallScreen_1.CallScreen, { callDetails: callDetails, callState: callState, hangUp: hangUp, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, me: me, hasRemoteVideo: hasRemoteVideo, setLocalPreview: setLocalPreview, setRendererCanvas: setRendererCanvas, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, togglePip: togglePip, toggleSettings: toggleSettings }),
                 settingsDialogOpen && renderDeviceSelection()));
         }
         if (incoming && ringing) {
