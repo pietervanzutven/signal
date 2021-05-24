@@ -373,7 +373,9 @@ require(exports => {
                 .getConversations()
                 .filter(conversation => Boolean(conversation.get('isPinned')));
             const modelPinnedConversationIds = modelPinnedConversations.map(conversation => conversation.get('id'));
-            const missingStoragePinnedConversationIds = window.ConversationController.getPinnedConversationIds().filter(id => !modelPinnedConversationIds.includes(id));
+            const missingStoragePinnedConversationIds = window.storage
+                .get('pinnedConversationIds', [])
+                .filter(id => !modelPinnedConversationIds.includes(id));
             if (missingStoragePinnedConversationIds.length !== 0) {
                 window.log.info('mergeAccountRecord: pinnedConversationIds in storage does not match pinned Conversation models');
             }

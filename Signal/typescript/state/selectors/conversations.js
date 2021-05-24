@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+// Copyright 2019-2020 Signal Messenger, LLC
+// SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -89,7 +91,7 @@ require(exports => {
         }
         conversations.sort(comparator);
         archivedConversations.sort(comparator);
-        const pinnedConversationIds = window.ConversationController.getPinnedConversationIds();
+    const pinnedConversationIds = window.storage.get('pinnedConversationIds', []);
         pinnedConversations.sort((a, b) => pinnedConversationIds.indexOf(a.id) - pinnedConversationIds.indexOf(b.id));
         return { conversations, archivedConversations, pinnedConversations };
     };
