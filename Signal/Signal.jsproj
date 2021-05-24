@@ -3956,6 +3956,7 @@
     <Content Include="typescript\util\formatRelativeTime.js" />
     <Content Include="typescript\util\getInitials.js" />
     <Content Include="typescript\util\getMuteOptions.js" />
+    <Content Include="typescript\util\getOwn.js" />
     <Content Include="typescript\util\getStringForProfileChange.js" />
     <Content Include="typescript\util\getTextWithMentions.js" />
     <Content Include="typescript\util\getUserAgent.js" />

@@ -1,11 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    window.ts.components.emoji = window.ts.components.emoji || {};
-    const exports = window.ts.components.emoji.lib = {};
-
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -18,6 +14,7 @@
     const fuse_js_1 = __importDefault(require("fuse.js"));
     const p_queue_1 = __importDefault(require("p-queue"));
     const is_1 = __importDefault(require("@sindresorhus/is"));
+    const getOwn_1 = require("../../util/getOwn");
     exports.skinTones = ['1F3FB', '1F3FC', '1F3FD', '1F3FE', '1F3FF'];
     const data = emoji_datasource_1.default
         .filter(emoji => emoji.has_img_apple)
@@ -170,17 +167,11 @@
     }
     exports.convertShortName = convertShortName;
     function emojiToImage(emoji) {
-        if (!Object.prototype.hasOwnProperty.call(imageByEmoji, emoji)) {
-            return undefined;
-        }
-        return imageByEmoji[emoji];
+        return getOwn_1.getOwn(imageByEmoji, emoji);
     }
     exports.emojiToImage = emojiToImage;
     function emojiToData(emoji) {
-        if (!Object.prototype.hasOwnProperty.call(dataByEmoji, emoji)) {
-            return undefined;
-        }
-        return dataByEmoji[emoji];
+        return getOwn_1.getOwn(dataByEmoji, emoji);
     }
     exports.emojiToData = emojiToData;
     function getCountOfAllMatches(str, regex) {
@@ -232,4 +223,4 @@
             });
         }
     });
-})();
+});
