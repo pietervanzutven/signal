@@ -2107,9 +2107,12 @@ require(exports => {
             }
         }
         setMarkedUnread(markedUnread) {
+            const previousMarkedUnread = this.get('markedUnread');
             this.set({ markedUnread });
             window.Signal.Data.updateConversation(this.attributes);
-            this.captureChange('markedUnread');
+            if (Boolean(previousMarkedUnread) !== Boolean(markedUnread)) {
+                this.captureChange('markedUnread');
+            }
             window.Whisper.events.trigger('updateUnreadCount');
         }
         async updateExpirationTimer(providedExpireTimer, providedSource, receivedAt, options = {}) {
