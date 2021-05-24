@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
     const ringrtc_1 = require("ringrtc");
     const notify_1 = require("../../services/notify");
@@ -18,12 +20,10 @@ require(exports => {
     }
     exports.isCallActive = isCallActive;
     // Actions
-    const ACCEPT_CALL = 'calling/ACCEPT_CALL';
+    const ACCEPT_CALL_PENDING = 'calling/ACCEPT_CALL_PENDING';
     const CANCEL_CALL = 'calling/CANCEL_CALL';
     const SHOW_CALL_LOBBY = 'calling/SHOW_CALL_LOBBY';
-    const CALL_STATE_CHANGE = 'calling/CALL_STATE_CHANGE';
     const CALL_STATE_CHANGE_FULFILLED = 'calling/CALL_STATE_CHANGE_FULFILLED';
-    const CHANGE_IO_DEVICE = 'calling/CHANGE_IO_DEVICE';
     const CHANGE_IO_DEVICE_FULFILLED = 'calling/CHANGE_IO_DEVICE_FULFILLED';
     const CLOSE_NEED_PERMISSION_SCREEN = 'calling/CLOSE_NEED_PERMISSION_SCREEN';
     const DECLINE_CALL = 'calling/DECLINE_CALL';
@@ -33,7 +33,6 @@ require(exports => {
     const REFRESH_IO_DEVICES = 'calling/REFRESH_IO_DEVICES';
     const REMOTE_VIDEO_CHANGE = 'calling/REMOTE_VIDEO_CHANGE';
     const SET_LOCAL_AUDIO = 'calling/SET_LOCAL_AUDIO';
-    const SET_LOCAL_VIDEO = 'calling/SET_LOCAL_VIDEO';
     const SET_LOCAL_VIDEO_FULFILLED = 'calling/SET_LOCAL_VIDEO_FULFILLED';
     const START_CALL = 'calling/START_CALL';
     const TOGGLE_PARTICIPANTS = 'calling/TOGGLE_PARTICIPANTS';
@@ -41,59 +40,58 @@ require(exports => {
     const TOGGLE_SETTINGS = 'calling/TOGGLE_SETTINGS';
     // Action Creators
     function acceptCall(payload) {
-        (async () => {
+        return async (dispatch) => {
+            dispatch({
+                type: ACCEPT_CALL_PENDING,
+                payload,
+            });
             try {
                 await calling_1.calling.accept(payload.callId, payload.asVideoCall);
             }
             catch (err) {
                 window.log.error(`Failed to acceptCall: ${err.stack}`);
             }
-        })();
-        return {
-            type: ACCEPT_CALL,
-            payload,
         };
     }
     function callStateChange(payload) {
-        return {
-            type: CALL_STATE_CHANGE,
-            payload: doCallStateChange(payload),
+        return async (dispatch) => {
+            const { callDetails, callState } = payload;
+            const { isIncoming } = callDetails;
+            if (callState === Calling_1.CallState.Ringing && isIncoming) {
+                await callingTones_1.callingTones.playRingtone();
+                await showCallNotification(callDetails);
+                bounceAppIcon_1.bounceAppIconStart();
+            }
+            if (callState !== Calling_1.CallState.Ringing) {
+                await callingTones_1.callingTones.stopRingtone();
+                bounceAppIcon_1.bounceAppIconStop();
+            }
+            if (callState === Calling_1.CallState.Ended) {
+                await callingTones_1.callingTones.playEndCall();
+            }
+            dispatch({
+                type: CALL_STATE_CHANGE_FULFILLED,
+                payload,
+            });
         };
     }
     function changeIODevice(payload) {
-        return {
-            type: CHANGE_IO_DEVICE,
-            payload: doChangeIODevice(payload),
+        return async (dispatch) => {
+            // Only `setPreferredCamera` returns a Promise.
+            if (payload.type === Calling_1.CallingDeviceType.CAMERA) {
+                await calling_1.calling.setPreferredCamera(payload.selectedDevice);
+            }
+            else if (payload.type === Calling_1.CallingDeviceType.MICROPHONE) {
+                calling_1.calling.setPreferredMicrophone(payload.selectedDevice);
+            }
+            else if (payload.type === Calling_1.CallingDeviceType.SPEAKER) {
+                calling_1.calling.setPreferredSpeaker(payload.selectedDevice);
+            }
+            dispatch({
+                type: CHANGE_IO_DEVICE_FULFILLED,
+                payload,
+            });
         };
-    }
-    async function doChangeIODevice(payload) {
-        if (payload.type === Calling_1.CallingDeviceType.CAMERA) {
-            await calling_1.calling.setPreferredCamera(payload.selectedDevice);
-        }
-        else if (payload.type === Calling_1.CallingDeviceType.MICROPHONE) {
-            calling_1.calling.setPreferredMicrophone(payload.selectedDevice);
-        }
-        else if (payload.type === Calling_1.CallingDeviceType.SPEAKER) {
-            calling_1.calling.setPreferredSpeaker(payload.selectedDevice);
-        }
-        return payload;
-    }
-    async function doCallStateChange(payload) {
-        const { callDetails, callState } = payload;
-        const { isIncoming } = callDetails;
-        if (callState === Calling_1.CallState.Ringing && isIncoming) {
-            await callingTones_1.callingTones.playRingtone();
-            await showCallNotification(callDetails);
-            bounceAppIcon_1.bounceAppIconStart();
-        }
-        if (callState !== Calling_1.CallState.Ringing) {
-            await callingTones_1.callingTones.stopRingtone();
-            bounceAppIcon_1.bounceAppIconStop();
-        }
-        if (callState === Calling_1.CallState.Ended) {
-            await callingTones_1.callingTones.playEndCall();
-        }
-        return payload;
     }
     async function showCallNotification(callDetails) {
         const canNotify = await window.getCallSystemNotification();
@@ -165,17 +163,13 @@ require(exports => {
         };
     }
     function setLocalPreview(payload) {
-        calling_1.calling.videoCapturer.setLocalPreview(payload.element);
-        return {
-            type: 'NOOP',
-            payload: null,
+        return () => {
+            calling_1.calling.videoCapturer.setLocalPreview(payload.element);
         };
     }
     function setRendererCanvas(payload) {
-        calling_1.calling.videoRenderer.setCanvas(payload.element);
-        return {
-            type: 'NOOP',
-            payload: null,
+        return () => {
+            calling_1.calling.videoRenderer.setCanvas(payload.element);
         };
     }
     function setLocalAudio(payload) {
@@ -188,9 +182,27 @@ require(exports => {
         };
     }
     function setLocalVideo(payload) {
-        return {
-            type: SET_LOCAL_VIDEO,
-            payload: doSetLocalVideo(payload),
+        return async (dispatch) => {
+            let enabled;
+            if (await callingPermissions_1.requestCameraPermissions()) {
+                if (payload.callId) {
+                    calling_1.calling.setOutgoingVideo(payload.callId, payload.enabled);
+                }
+                else if (payload.enabled) {
+                    calling_1.calling.enableLocalCamera();
+                }
+                else {
+                    calling_1.calling.disableLocalCamera();
+                }
+                ({ enabled } = payload);
+            }
+            else {
+                enabled = false;
+            }
+            dispatch({
+                type: SET_LOCAL_VIDEO_FULFILLED,
+                payload: Object.assign(Object.assign({}, payload), { enabled }),
+            });
         };
     }
     function showCallLobby(payload) {
@@ -220,21 +232,6 @@ require(exports => {
         return {
             type: TOGGLE_SETTINGS,
         };
-    }
-    async function doSetLocalVideo(payload) {
-        if (await callingPermissions_1.requestCameraPermissions()) {
-            if (payload.callId) {
-                calling_1.calling.setOutgoingVideo(payload.callId, payload.enabled);
-            }
-            else if (payload.enabled) {
-                calling_1.calling.enableLocalCamera();
-            }
-            else {
-                calling_1.calling.disableLocalCamera();
-            }
-            return payload;
-        }
-        return Object.assign(Object.assign({}, payload), { enabled: false });
     }
     exports.actions = {
         acceptCall,
@@ -286,7 +283,7 @@ require(exports => {
         if (action.type === START_CALL) {
             return Object.assign(Object.assign({}, state), { callState: Calling_1.CallState.Prering });
         }
-        if (action.type === ACCEPT_CALL) {
+        if (action.type === ACCEPT_CALL_PENDING) {
             return Object.assign(Object.assign({}, state), { hasLocalAudio: true, hasLocalVideo: action.payload.asVideoCall });
         }
         if (action.type === CANCEL_CALL ||
