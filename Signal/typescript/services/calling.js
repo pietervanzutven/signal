@@ -372,7 +372,7 @@ require(exports => {
             }
             const messageAgeSec = envelope.messageAgeSec ? envelope.messageAgeSec : 0;
             window.log.info('CallingClass.handleCallingMessage(): Handling in RingRTC');
-            ringrtc_1.RingRTC.handleCallingMessage(remoteUserId, remoteDeviceId, this.localDeviceId, messageAgeSec, callingMessage, senderIdentityKey, receiverIdentityKey);
+            ringrtc_1.RingRTC.handleCallingMessage(remoteUserId, null, remoteDeviceId, this.localDeviceId, messageAgeSec, callingMessage, senderIdentityKey, receiverIdentityKey);
         }
         async selectPreferredDevices(settings) {
             if ((!this.lastMediaDeviceSettings && settings.selectedCamera) ||
