@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = require("lodash");
     const uuid_1 = require("uuid");
@@ -176,7 +178,8 @@ require(exports => {
             //   Unknown Group in the left pane.
             active_at: isInitialDataFetch && newAttributes.name
                 ? syntheticTimestamp
-            : newAttributes.active_at }));
+                : newAttributes.active_at
+        }));
         // Save all synthetic messages describing group changes
         const changeMessagesToSave = groupChangeMessages.map(changeMessage => {
             // We do this to preserve the order of the timeline
@@ -336,14 +339,16 @@ require(exports => {
         const existingMembers = group.membersV2 || [];
         const newAttributes = Object.assign(Object.assign({}, group), { membersV2: existingMembers.filter(member => member.conversationId !== ourConversationId), left: true });
         const isNewlyRemoved = existingMembers.length > (newAttributes.membersV2 || []).length;
-    const youWereRemovedMessage = Object.assign(Object.assign({}, generateBasicMessage()), { type: 'group-v2-change', groupV2Change: {
+        const youWereRemovedMessage = Object.assign(Object.assign({}, generateBasicMessage()), {
+            type: 'group-v2-change', groupV2Change: {
                 details: [
                     {
                         type: 'member-remove',
                         conversationId: ourConversationId,
                     },
                 ],
-        } });
+            }
+        });
         return {
             newAttributes,
             groupChangeMessages: isNewlyRemoved ? [youWereRemovedMessage] : [],
@@ -704,24 +709,10 @@ require(exports => {
         // Here we hardcode initial messages if this is our first time processing data this
         //   group. Ideally we can collapse it down to just one of: 'you were added',
         //   'you were invited', or 'you created.'
-        if (firstUpdate && dropInitialJoinMessage) {
-            message = undefined;
-        }
-        else if (firstUpdate &&
-            ourConversationId &&
-            sourceConversationId &&
-            sourceConversationId === ourConversationId) {
-        message = Object.assign(Object.assign({}, generateBasicMessage()), { type: 'group-v2-change', groupV2Change: {
-                    from: sourceConversationId,
-                    details: [
-                        {
-                            type: 'create',
-                        },
-                    ],
-            } });
-        }
-        else if (firstUpdate && ourConversationId && areWeInvitedToGroup) {
-        message = Object.assign(Object.assign({}, generateBasicMessage()), { type: 'group-v2-change', groupV2Change: {
+        if (firstUpdate && ourConversationId && areWeInvitedToGroup) {
+            // Note, we will add 'you were invited' to group even if dropInitialJoinMessage = true
+            message = Object.assign(Object.assign({}, generateBasicMessage()), {
+                type: 'group-v2-change', groupV2Change: {
                     from: whoInvitedUsUserId || sourceConversationId,
                     details: [
                         {
@@ -729,10 +720,31 @@ require(exports => {
                             conversationId: ourConversationId,
                         },
                     ],
-            } });
+                }
+            });
+        }
+        else if (firstUpdate && dropInitialJoinMessage) {
+            // None of the rest of the messages should be added if dropInitialJoinMessage = true
+            message = undefined;
+        }
+        else if (firstUpdate &&
+            ourConversationId &&
+            sourceConversationId &&
+            sourceConversationId === ourConversationId) {
+            message = Object.assign(Object.assign({}, generateBasicMessage()), {
+                type: 'group-v2-change', groupV2Change: {
+                    from: sourceConversationId,
+                    details: [
+                        {
+                            type: 'create',
+                        },
+                    ],
+                }
+            });
         }
         else if (firstUpdate && ourConversationId && areWeInGroup) {
-        message = Object.assign(Object.assign({}, generateBasicMessage()), { type: 'group-v2-change', groupV2Change: {
+            message = Object.assign(Object.assign({}, generateBasicMessage()), {
+                type: 'group-v2-change', groupV2Change: {
                     from: sourceConversationId,
                     details: [
                         {
@@ -740,23 +752,28 @@ require(exports => {
                             conversationId: ourConversationId,
                         },
                     ],
-            } });
+                }
+            });
         }
         else if (firstUpdate) {
-        message = Object.assign(Object.assign({}, generateBasicMessage()), { type: 'group-v2-change', groupV2Change: {
+            message = Object.assign(Object.assign({}, generateBasicMessage()), {
+                type: 'group-v2-change', groupV2Change: {
                     from: sourceConversationId,
                     details: [
                         {
                             type: 'create',
                         },
                     ],
-            } });
+                }
+            });
         }
         else if (details.length > 0) {
-        message = Object.assign(Object.assign({}, generateBasicMessage()), { type: 'group-v2-change', sourceUuid, groupV2Change: {
+            message = Object.assign(Object.assign({}, generateBasicMessage()), {
+                type: 'group-v2-change', sourceUuid, groupV2Change: {
                     from: sourceConversationId,
                     details,
-            } });
+                }
+            });
         }
         // This is checked differently, because it needs to be its own entry in the timeline,
         //   with its own icon, etc.
@@ -767,10 +784,12 @@ require(exports => {
             (Boolean(old.expireTimer) &&
                 Boolean(current.expireTimer) &&
                 old.expireTimer !== current.expireTimer)) {
-        timerNotification = Object.assign(Object.assign({}, generateBasicMessage()), { type: 'timer-notification', sourceUuid, flags: window.textsecure.protobuf.DataMessage.Flags.EXPIRATION_TIMER_UPDATE, expirationTimerUpdate: {
+            timerNotification = Object.assign(Object.assign({}, generateBasicMessage()), {
+                type: 'timer-notification', sourceUuid, flags: window.textsecure.protobuf.DataMessage.Flags.EXPIRATION_TIMER_UPDATE, expirationTimerUpdate: {
                     expireTimer: current.expireTimer || 0,
                     sourceUuid,
-            } });
+                }
+            });
         }
         const result = lodash_1.compact([message, timerNotification]);
         window.log.info(`extractDiffs/${logId} complete, generated ${result.length} change messages`);
