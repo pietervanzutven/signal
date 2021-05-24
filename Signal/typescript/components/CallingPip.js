@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -7,8 +9,7 @@ require(exports => {
     const react_1 = __importDefault(require("react"));
     const Avatar_1 = require("./Avatar");
     const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
-    function renderAvatar(callDetails, i18n) {
-        const { avatarPath, color, name, phoneNumber, profileName, title, } = callDetails;
+    function renderAvatar({ avatarPath, color, name, phoneNumber, profileName, title, }, i18n) {
         return (react_1.default.createElement("div", { className: "module-calling-pip__video--remote" },
             react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: avatarPath, color: color },
                 react_1.default.createElement("div", { className: "module-calling-pip__video--avatar" },
@@ -18,7 +19,7 @@ require(exports => {
     const PIP_WIDTH = 120;
     const PIP_DEFAULT_Y = 56;
     const PIP_PADDING = 8;
-    exports.CallingPip = ({ callDetails, hangUp, hasLocalVideo, hasRemoteVideo, i18n, setLocalPreview, setRendererCanvas, togglePip, }) => {
+    exports.CallingPip = ({ conversation, hangUp, hasLocalVideo, hasRemoteVideo, i18n, setLocalPreview, setRendererCanvas, togglePip, }) => {
         const videoContainerRef = react_1.default.useRef(null);
         const localVideoRef = react_1.default.useRef(null);
         const remoteVideoRef = react_1.default.useRef(null);
@@ -113,12 +114,12 @@ require(exports => {
                     transition: dragState.isDragging ? 'none' : 'transform ease-out 300ms',
                 }
             },
-                hasRemoteVideo ? (react_1.default.createElement("canvas", { className: "module-calling-pip__video--remote", ref: remoteVideoRef })) : (renderAvatar(callDetails, i18n)),
+                hasRemoteVideo ? (react_1.default.createElement("canvas", { className: "module-calling-pip__video--remote", ref: remoteVideoRef })) : (renderAvatar(conversation, i18n)),
                 hasLocalVideo ? (react_1.default.createElement("video", { className: "module-calling-pip__video--local", ref: localVideoRef, autoPlay: true })) : null,
                 react_1.default.createElement("div", { className: "module-calling-pip__actions" },
                     react_1.default.createElement("button", {
                         type: "button", "aria-label": i18n('calling__hangup'), className: "module-calling-pip__button--hangup", onClick: () => {
-                            hangUp({ callId: callDetails.callId });
+                            hangUp({ conversationId: conversation.id });
                         }
                     }),
                     react_1.default.createElement("button", { type: "button", "aria-label": i18n('calling__pip'), className: "module-calling-pip__button--pip", onClick: togglePip }))));

@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -13,11 +15,9 @@ require(exports => {
             react_1.default.createElement(react_tooltip_lite_1.default, { arrowSize: 6, content: tooltipContent, direction: "bottom", distance: 16, hoverDelay: 0 },
                 react_1.default.createElement("div", null))));
     };
-    exports.IncomingCallBar = ({ acceptCall, callDetails, declineCall, i18n, }) => {
-        if (!callDetails) {
-            return null;
-        }
-        const { avatarPath, callId, color, title, name, phoneNumber, profileName, } = callDetails;
+    exports.IncomingCallBar = ({ acceptCall, declineCall, i18n, call, conversation, }) => {
+        const { isVideoCall } = call;
+        const { id: conversationId, avatarPath, color, title, name, phoneNumber, profileName, } = conversation;
         return (react_1.default.createElement("div", { className: "module-incoming-call" },
             react_1.default.createElement("div", { className: "module-incoming-call__contact" },
                 react_1.default.createElement("div", { className: "module-incoming-call__contact--avatar" },
@@ -25,33 +25,31 @@ require(exports => {
                 react_1.default.createElement("div", { className: "module-incoming-call__contact--name" },
                     react_1.default.createElement("div", { className: "module-incoming-call__contact--name-header" },
                         react_1.default.createElement(ContactName_1.ContactName, { name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, i18n: i18n })),
-                    react_1.default.createElement("div", { dir: "auto", className: "module-incoming-call__contact--message-text" }, i18n(callDetails.isVideoCall
-                        ? 'incomingVideoCall'
-                        : 'incomingAudioCall')))),
-            react_1.default.createElement("div", { className: "module-incoming-call__actions" }, callDetails.isVideoCall ? (react_1.default.createElement(react_1.default.Fragment, null,
+                    react_1.default.createElement("div", { dir: "auto", className: "module-incoming-call__contact--message-text" }, i18n(isVideoCall ? 'incomingVideoCall' : 'incomingAudioCall')))),
+            react_1.default.createElement("div", { className: "module-incoming-call__actions" }, isVideoCall ? (react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement(CallButton, {
                     classSuffix: "decline", onClick: () => {
-                        declineCall({ callId });
+                        declineCall({ conversationId });
                     }, tabIndex: 0, tooltipContent: i18n('declineCall')
                 }),
                 react_1.default.createElement(CallButton, {
                     classSuffix: "accept-video-as-audio", onClick: () => {
-                        acceptCall({ callId, asVideoCall: false });
+                        acceptCall({ conversationId, asVideoCall: false });
                     }, tabIndex: 0, tooltipContent: i18n('acceptCallWithoutVideo')
                 }),
                 react_1.default.createElement(CallButton, {
                     classSuffix: "accept-video", onClick: () => {
-                        acceptCall({ callId, asVideoCall: true });
+                        acceptCall({ conversationId, asVideoCall: true });
                     }, tabIndex: 0, tooltipContent: i18n('acceptCall')
                 }))) : (react_1.default.createElement(react_1.default.Fragment, null,
                     react_1.default.createElement(CallButton, {
                         classSuffix: "decline", onClick: () => {
-                            declineCall({ callId });
+                            declineCall({ conversationId });
                         }, tabIndex: 0, tooltipContent: i18n('declineCall')
                     }),
                     react_1.default.createElement(CallButton, {
                         classSuffix: "accept-audio", onClick: () => {
-                            acceptCall({ callId, asVideoCall: false });
+                            acceptCall({ conversationId, asVideoCall: false });
                         }, tabIndex: 0, tooltipContent: i18n('acceptCall')
                     }))))));
     };

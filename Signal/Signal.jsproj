@@ -3995,6 +3995,7 @@
     <Content Include="typescript\state\roots\createStickerManager.js" />
     <Content Include="typescript\state\roots\createStickerPreviewModal.js" />
     <Content Include="typescript\state\roots\createTimeline.js" />
+    <Content Include="typescript\state\selectors\calling.js" />
     <Content Include="typescript\state\selectors\conversations.js" />
     <Content Include="typescript\state\selectors\network.js" />
     <Content Include="typescript\state\selectors\safetyNumber.js" />

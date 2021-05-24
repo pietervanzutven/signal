@@ -11,15 +11,57 @@ require(exports => {
     const actions_1 = require("../actions");
     const CallManager_1 = require("../../components/CallManager");
     const conversations_1 = require("../selectors/conversations");
+    const calling_1 = require("../selectors/calling");
     const user_1 = require("../selectors/user");
     const CallingDeviceSelection_1 = require("./CallingDeviceSelection");
     function renderDeviceSelection() {
         return react_1.default.createElement(CallingDeviceSelection_1.SmartCallingDeviceSelection, null);
     }
-    const mapStateToProps = (state) => {
+    const mapStateToActiveCallProp = (state) => {
         const { calling } = state;
-        return Object.assign(Object.assign({}, calling), { i18n: user_1.getIntl(state), me: conversations_1.getMe(state), renderDeviceSelection });
+        const { activeCallState } = calling;
+        if (!activeCallState) {
+            return undefined;
+        }
+        const call = calling_1.getActiveCall(calling);
+        if (!call) {
+            window.log.error('There was an active call state but no corresponding call');
+            return undefined;
+        }
+        const conversation = conversations_1.getConversationSelector(state)(activeCallState.conversationId);
+        if (!conversation) {
+            window.log.error('The active call has no corresponding conversation');
+            return undefined;
+        }
+        return {
+            call,
+            activeCallState,
+            conversation,
+        };
     };
+    const mapStateToIncomingCallProp = (state) => {
+        const call = calling_1.getIncomingCall(state.calling);
+        if (!call) {
+            return undefined;
+        }
+        const conversation = conversations_1.getConversationSelector(state)(call.conversationId);
+        if (!conversation) {
+            window.log.error('The incoming call has no corresponding conversation');
+            return undefined;
+        }
+        return {
+            call,
+            conversation,
+        };
+    };
+    const mapStateToProps = (state) => ({
+        activeCall: mapStateToActiveCallProp(state),
+        availableCameras: state.calling.availableCameras,
+        i18n: user_1.getIntl(state),
+        incomingCall: mapStateToIncomingCallProp(state),
+        me: conversations_1.getMe(state),
+        renderDeviceSelection,
+    });
     const smart = react_redux_1.connect(mapStateToProps, actions_1.mapDispatchToProps);
     exports.SmartCallManager = smart(CallManager_1.CallManager);
 });

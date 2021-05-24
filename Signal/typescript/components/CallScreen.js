@@ -20,26 +20,17 @@ require(exports => {
     const CallingButton_1 = require("./CallingButton");
     const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
     const Calling_1 = require("../types/Calling");
-    exports.CallScreen = ({ callDetails, callState, hangUp, hasLocalAudio, hasLocalVideo, hasRemoteVideo, i18n, me, setLocalAudio, setLocalVideo, setLocalPreview, setRendererCanvas, togglePip, toggleSettings, }) => {
-        const { acceptedTime, callId } = callDetails || {};
+    exports.CallScreen = ({ callState, conversation, hangUp, hasLocalAudio, hasLocalVideo, hasRemoteVideo, i18n, joinedAt, me, setLocalAudio, setLocalVideo, setLocalPreview, setRendererCanvas, togglePip, toggleSettings, }) => {
         const toggleAudio = react_1.useCallback(() => {
-            if (!callId) {
-                return;
-            }
             setLocalAudio({
-                callId,
                 enabled: !hasLocalAudio,
             });
-        }, [callId, setLocalAudio, hasLocalAudio]);
+        }, [setLocalAudio, hasLocalAudio]);
         const toggleVideo = react_1.useCallback(() => {
-            if (!callId) {
-                return;
-            }
             setLocalVideo({
-                callId,
                 enabled: !hasLocalVideo,
             });
-        }, [callId, setLocalVideo, hasLocalVideo]);
+        }, [setLocalVideo, hasLocalVideo]);
         const [acceptedDuration, setAcceptedDuration] = react_1.useState(null);
         const [showControls, setShowControls] = react_1.useState(true);
         const localVideoRef = react_1.useRef(null);
@@ -53,15 +44,15 @@ require(exports => {
             };
         }, [setLocalPreview, setRendererCanvas]);
         react_1.useEffect(() => {
-            if (!acceptedTime) {
+            if (!joinedAt) {
                 return lodash_1.noop;
             }
             // It's really jumpy with a value of 500ms.
             const interval = setInterval(() => {
-                setAcceptedDuration(Date.now() - acceptedTime);
+                setAcceptedDuration(Date.now() - joinedAt);
             }, 100);
             return clearInterval.bind(null, interval);
-        }, [acceptedTime]);
+        }, [joinedAt]);
         react_1.useEffect(() => {
             if (!showControls) {
                 return lodash_1.noop;
@@ -94,9 +85,6 @@ require(exports => {
             };
         }, [toggleAudio, toggleVideo]);
         const isAudioOnly = !hasLocalVideo && !hasRemoteVideo;
-        if (!callDetails || !callState) {
-            return null;
-        }
         const controlsFadeClass = classnames_1.default({
             'module-ongoing-call__controls--fadeIn': (showControls || isAudioOnly) && callState !== Calling_1.CallState.Accepted,
             'module-ongoing-call__controls--fadeOut': !showControls && !isAudioOnly && callState === Calling_1.CallState.Accepted,
@@ -113,12 +101,12 @@ require(exports => {
             }, role: "group"
         },
             react_1.default.createElement("div", { className: classnames_1.default('module-calling__header', 'module-ongoing-call__header', controlsFadeClass) },
-                react_1.default.createElement("div", { className: "module-calling__header--header-name" }, callDetails.title),
+                react_1.default.createElement("div", { className: "module-calling__header--header-name" }, conversation.title),
                 renderHeaderMessage(i18n, callState, acceptedDuration),
                 react_1.default.createElement("div", { className: "module-calling-tools" },
                     react_1.default.createElement("button", { type: "button", "aria-label": i18n('callingDeviceSelection__settings'), className: "module-calling-tools__button module-calling-button__settings", onClick: toggleSettings }),
                     react_1.default.createElement("button", { type: "button", "aria-label": i18n('calling__pip'), className: "module-calling-tools__button module-calling-button__pip", onClick: togglePip }))),
-            hasRemoteVideo ? (react_1.default.createElement("canvas", { className: "module-ongoing-call__remote-video-enabled", ref: remoteVideoRef })) : (renderAvatar(i18n, callDetails)),
+            hasRemoteVideo ? (react_1.default.createElement("canvas", { className: "module-ongoing-call__remote-video-enabled", ref: remoteVideoRef })) : (renderAvatar(i18n, conversation)),
             react_1.default.createElement("div", { className: "module-ongoing-call__footer" },
                 react_1.default.createElement("div", { className: "module-ongoing-call__footer__local-preview-offset" }),
                 react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__footer__actions', controlsFadeClass) },
@@ -126,14 +114,13 @@ require(exports => {
                     react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: audioButtonType, i18n: i18n, onClick: toggleAudio, tooltipDistance: 24 }),
                     react_1.default.createElement(CallingButton_1.CallingButton, {
                         buttonType: CallingButton_1.CallingButtonType.HANG_UP, i18n: i18n, onClick: () => {
-                            hangUp({ callId });
+                            hangUp({ conversationId: conversation.id });
                         }, tooltipDistance: 24
                     })),
                 react_1.default.createElement("div", { className: "module-ongoing-call__footer__local-preview" }, hasLocalVideo ? (react_1.default.createElement("video", { className: "module-ongoing-call__footer__local-preview__video", ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: me.avatarPath, color: me.color },
                     react_1.default.createElement(Avatar_1.Avatar, { avatarPath: me.avatarPath, color: me.color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: me.name, phoneNumber: me.phoneNumber, profileName: me.profileName, title: me.title, size: 80 })))))));
     };
-    function renderAvatar(i18n, callDetails) {
-        const { avatarPath, color, name, phoneNumber, profileName, title, } = callDetails;
+    function renderAvatar(i18n, { avatarPath, color, name, phoneNumber, profileName, title, }) {
         return (react_1.default.createElement("div", { className: "module-ongoing-call__remote-video-disabled" },
             react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, size: 112 })));
     }
