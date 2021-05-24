@@ -6241,7 +6241,8 @@ img.emoji.jumbo {
   justify-content: center; }
 
 .module-ongoing-call__header {
-  position: absolute; }
+  position: absolute;
+  background: linear-gradient(rgba(0, 0, 0, 0.4), transparent); }
 
 .module-ongoing-call__header-message {
   font-weight: normal;
