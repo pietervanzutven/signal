@@ -27,7 +27,7 @@ require(exports => {
             if (!callState) {
                 return (react_1.default.createElement(react_1.default.Fragment, null,
                     react_1.default.createElement(CallingLobby_1.CallingLobby, {
-                        availableCameras: availableCameras, conversation: conversation, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, isGroupCall: false, onCallCanceled: cancelCall, onJoinCall: () => {
+                        availableCameras: availableCameras, conversation: conversation, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, isGroupCall: false, me: me, onCallCanceled: cancelCall, onJoinCall: () => {
                             startCall({
                                 conversationId: conversation.id,
                                 hasLocalAudio,
