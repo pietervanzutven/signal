@@ -18,6 +18,7 @@
         className: 'members',
         toInclude: {
           listenBack: options.listenBack,
+          conversation: options.conversation,
         },
       });
       this.member_list_view.render();

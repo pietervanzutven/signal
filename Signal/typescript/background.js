@@ -716,6 +716,9 @@
                     if (className.includes('module-main-header__search__input')) {
                         return;
                     }
+                    if (className.includes('module-contact-modal')) {
+                        return;
+                    }
                 }
                 // These add listeners to document, but we'll run first
                 const confirmationModal = document.querySelector('.module-confirmation-dialog__overlay');

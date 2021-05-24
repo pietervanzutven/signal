@@ -1,3 +1,6 @@
+// Copyright 2018-2020 Signal Messenger, LLC
+// SPDX-License-Identifier: AGPL-3.0-only
+
 // The idea with this file is to make it webpackable for the style guide
 
 (function () {
@@ -38,6 +41,9 @@
     ContactDetail,
   } = require('../../ts/components/conversation/ContactDetail');
   const { ContactListItem } = require('../../ts/components/ContactListItem');
+  const {
+    ContactModal,
+  } = require('../../ts/components/conversation/ContactModal');
   const { Emojify } = require('../../ts/components/conversation/Emojify');
   const { ErrorModal } = require('../../ts/components/ErrorModal');
   const { Lightbox } = require('../../ts/components/Lightbox');
@@ -65,6 +71,9 @@
   const {
     createCompositionArea,
   } = require('../../ts/state/roots/createCompositionArea');
+  const {
+    createContactModal,
+  } = require('../../ts/state/roots/createContactModal');
   const {
     createConversationHeader,
   } = require('../../ts/state/roots/createConversationHeader');
@@ -300,6 +309,7 @@
       ConfirmationModal,
       ContactDetail,
       ContactListItem,
+      ContactModal,
       Emojify,
       ErrorModal,
       getCallingNotificationText,
@@ -319,6 +329,7 @@
     const Roots = {
       createCallManager,
       createCompositionArea,
+      createContactModal,
       createConversationHeader,
       createLeftPane,
       createSafetyNumberViewer,

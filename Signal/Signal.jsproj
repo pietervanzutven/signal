@@ -3843,6 +3843,7 @@
     <Content Include="typescript\components\conversation\AttachmentList.js" />
     <Content Include="typescript\components\conversation\CallingNotification.js" />
     <Content Include="typescript\components\conversation\ContactDetail.js" />
+    <Content Include="typescript\components\conversation\ContactModal.js" />
     <Content Include="typescript\components\conversation\ContactName.js" />
     <Content Include="typescript\components\conversation\ConversationHeader.js" />
     <Content Include="typescript\components\conversation\ConversationHero.js" />
@@ -3989,6 +3990,7 @@
     <Content Include="typescript\state\reducer.js" />
     <Content Include="typescript\state\roots\createCallManager.js" />
     <Content Include="typescript\state\roots\createCompositionArea.js" />
+    <Content Include="typescript\state\roots\createContactModal.js" />
     <Content Include="typescript\state\roots\createConversationHeader.js" />
     <Content Include="typescript\state\roots\createLeftPane.js" />
     <Content Include="typescript\state\roots\createSafetyNumberViewer.js" />
@@ -4006,6 +4008,7 @@
     <Content Include="typescript\state\smart\CallingDeviceSelection.js" />
     <Content Include="typescript\state\smart\CallManager.js" />
     <Content Include="typescript\state\smart\CompositionArea.js" />
+    <Content Include="typescript\state\smart\ContactModal.js" />
     <Content Include="typescript\state\smart\ContactName.js" />
     <Content Include="typescript\state\smart\ConversationHeader.js" />
     <Content Include="typescript\state\smart\EmojiPicker.js" />

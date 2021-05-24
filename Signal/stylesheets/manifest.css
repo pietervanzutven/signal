@@ -2320,9 +2320,23 @@ img.emoji.jumbo {
     box-shadow: 0px 0px 0px 2px #2c6bed; }
 
 .module-message__author-avatar {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  text-align: inherit;
+  cursor: pointer;
   position: absolute;
   bottom: 0px;
   right: calc(100% + 8px); }
+  .module-message__author-avatar:focus {
+    outline: none; }
+    .keyboard-mode .module-message__author-avatar:focus .module-avatar {
+      box-shadow: 0 0 0 3px #2c6bed; }
 
 .module-message__typing-container {
   height: 16px;
@@ -4628,6 +4642,22 @@ img.emoji.jumbo {
 .module-avatar__icon--80.module-avatar__icon--direct {
   height: 62px;
   width: 62px; }
+
+.module-avatar--96 {
+  height: 96px;
+  width: 96px; }
+  .module-avatar--96 img {
+    height: 96px;
+    width: 96px; }
+
+.module-avatar__label--96 {
+  width: 96px;
+  font-size: 48px;
+  line-height: 96px; }
+
+.module-avatar__icon--96 {
+  height: 70px;
+  width: 70px; }
 
 .module-avatar--112 {
   height: 112px;
@@ -8746,6 +8776,140 @@ img.emoji.jumbo {
   padding: 7px 14px; }
   .keyboard-mode .module-button__green:focus {
     box-shadow: 0px 0px 0px 2px #2c6bed; }
+
+.module-contact-modal {
+  font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: -0.03px;
+  min-width: 250px;
+  padding: 18px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3), 0px 0px 8px rgba(0, 0, 0, 0.05);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  color: #1b1b1b; }
+  .dark-theme .module-contact-modal {
+    background: #3b3b3b;
+    color: #e9e9e9; }
+  .module-contact-modal__overlay {
+    background: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5; }
+
+.module-contact-modal__name {
+  font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 21px;
+  letter-spacing: -0.14px;
+  font-weight: bold;
+  margin-top: 6px; }
+
+.module-contact-modal__profile-and-number {
+  color: #5e5e5e; }
+  .dark-theme .module-contact-modal__profile-and-number {
+    color: #b9b9b9; }
+
+.module-contact-modal__button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 12px 0 -3px;
+  width: calc(100% + (18px * 2)); }
+
+.module-contact-modal__button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  text-align: inherit;
+  display: flex;
+  align-items: center;
+  padding: 7px 18px;
+  width: 100%; }
+  .module-contact-modal__button:last-child {
+    margin-bottom: 0; }
+  .module-contact-modal__button:hover {
+    background-color: #dedede; }
+    .dark-theme .module-contact-modal__button:hover {
+      background-color: #5e5e5e; }
+  .keyboard-mode .module-contact-modal__button:focus {
+    background-color: #dedede; }
+    .dark-theme .keyboard-mode .module-contact-modal__button:focus {
+      background-color: #5e5e5e; }
+
+.module-contact-modal__bubble-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  width: 20px; }
+
+.module-contact-modal__send-message__bubble-icon {
+  height: 16px;
+  width: 18px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>message-outline-24</title><path d='M12,4c4.963,0,9,3.364,9,7.5S16.963,19,12,19a10.536,10.536,0,0,1-3.19-.5l-.465-.148-.464.155L4.739,19.556l.394-2.365.118-.707-.477-.536A6.651,6.651,0,0,1,3,11.5C3,7.364,7.037,4,12,4m0-1.5c-5.8,0-10.5,4.029-10.5,9a8.164,8.164,0,0,0,2.153,5.445l-.639,3.836c-.073.438.144.719.505.719a.9.9,0,0,0,.279-.049l4.558-1.519A12.019,12.019,0,0,0,12,20.5c5.8,0,10.5-4.029,10.5-9s-4.773-9-10.5-9Z' fill='%233B3B3B'/></svg>") no-repeat center;
+  background-size: 100%; }
+  .dark-theme .module-contact-modal__send-message__bubble-icon {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>message-outline-24</title><path d='M12,4c4.963,0,9,3.364,9,7.5S16.963,19,12,19a10.536,10.536,0,0,1-3.19-.5l-.465-.148-.464.155L4.739,19.556l.394-2.365.118-.707-.477-.536A6.651,6.651,0,0,1,3,11.5C3,7.364,7.037,4,12,4m0-1.5c-5.8,0-10.5,4.029-10.5,9a8.164,8.164,0,0,0,2.153,5.445l-.639,3.836c-.073.438.144.719.505.719a.9.9,0,0,0,.279-.049l4.558-1.519A12.019,12.019,0,0,0,12,20.5c5.8,0,10.5-4.029,10.5-9s-4.773-9-10.5-9Z' fill='%23DEDEDE'/></svg>") no-repeat center;
+    background-size: 100%; }
+
+.module-contact-modal__safety-number__bubble-icon {
+  height: 18px;
+  width: 17px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>safety-number-outline-24</title><path d='M21.793,7.888A19.35,19.35,0,0,1,12,23C7.6,20.4,2,15.5,2,4.5,9,4.5,12,1,12,1s2.156,2.5,7.05,3.268L17.766,5.553A14.7,14.7,0,0,1,12,3,15.653,15.653,0,0,1,3.534,5.946c.431,8.846,4.8,12.96,8.458,15.29A17.39,17.39,0,0,0,19.983,9.7ZM22.53,5.03,21.47,3.97,12,13.439,8.53,9.97,7.47,11.03,12,15.561Z' fill='%233B3B3B'/></svg>") no-repeat center;
+  background-size: 100%; }
+  .dark-theme .module-contact-modal__safety-number__bubble-icon {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>safety-number-outline-24</title><path d='M21.793,7.888A19.35,19.35,0,0,1,12,23C7.6,20.4,2,15.5,2,4.5,9,4.5,12,1,12,1s2.156,2.5,7.05,3.268L17.766,5.553A14.7,14.7,0,0,1,12,3,15.653,15.653,0,0,1,3.534,5.946c.431,8.846,4.8,12.96,8.458,15.29A17.39,17.39,0,0,0,19.983,9.7ZM22.53,5.03,21.47,3.97,12,13.439,8.53,9.97,7.47,11.03,12,15.561Z' fill='%23DEDEDE'/></svg>") no-repeat center;
+    background-size: 100%; }
+
+.module-contact-modal__remove-from-group__bubble-icon {
+  height: 16px;
+  width: 16px;
+  background: url("data:image/svg+xml;utf8,<svg width='17' height='17' viewBox='0 0 17 17' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6.08342 10.875V16.5H4.83342V10.875H6.08342ZM14.0001 0.666664H7.33342C6.67037 0.666664 6.03449 0.930056 5.56565 1.3989C5.09681 1.86774 4.83342 2.50362 4.83342 3.16666V7.125H6.08342V3.16666C6.08342 2.83514 6.21511 2.5172 6.44953 2.28278C6.68395 2.04836 7.00189 1.91666 7.33342 1.91666H14.0001C14.3316 1.91666 14.6495 2.04836 14.884 2.28278C15.1184 2.5172 15.2501 2.83514 15.2501 3.16666V16.5H16.5001V3.16666C16.5001 2.50362 16.2367 1.86774 15.7679 1.3989C15.299 0.930056 14.6631 0.666664 14.0001 0.666664ZM8.92175 4.40416L8.03842 5.2875L10.5184 7.76833L11.3676 8.375H0.666748V9.625H11.3676L10.4151 10.3058L8.03592 12.7142L8.92425 13.5933L13.4901 8.9725L8.92175 4.40416Z' fill='%233B3B3B'/></svg>") no-repeat center;
+  background-size: 100%; }
+  .dark-theme .module-contact-modal__remove-from-group__bubble-icon {
+    background: url("data:image/svg+xml;utf8,<svg width='17' height='17' viewBox='0 0 17 17' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6.08342 10.875V16.5H4.83342V10.875H6.08342ZM14.0001 0.666664H7.33342C6.67037 0.666664 6.03449 0.930056 5.56565 1.3989C5.09681 1.86774 4.83342 2.50362 4.83342 3.16666V7.125H6.08342V3.16666C6.08342 2.83514 6.21511 2.5172 6.44953 2.28278C6.68395 2.04836 7.00189 1.91666 7.33342 1.91666H14.0001C14.3316 1.91666 14.6495 2.04836 14.884 2.28278C15.1184 2.5172 15.2501 2.83514 15.2501 3.16666V16.5H16.5001V3.16666C16.5001 2.50362 16.2367 1.86774 15.7679 1.3989C15.299 0.930056 14.6631 0.666664 14.0001 0.666664ZM8.92175 4.40416L8.03842 5.2875L10.5184 7.76833L11.3676 8.375H0.666748V9.625H11.3676L10.4151 10.3058L8.03592 12.7142L8.92425 13.5933L13.4901 8.9725L8.92175 4.40416Z' fill='%23DEDEDE'/></svg>") no-repeat center;
+    background-size: 100%; }
+
+.module-contact-modal__close-button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  text-align: inherit;
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 16px;
+  height: 16px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>x-24</title><polygon points='19.53 5.53 18.47 4.47 12 10.939 5.53 4.47 4.47 5.53 10.939 12 4.47 18.47 5.53 19.53 12 13.061 18.47 19.53 19.53 18.47 13.061 12 19.53 5.53' fill='%233B3B3B'/></svg>") no-repeat center;
+  background-size: 100%; }
+  .dark-theme .module-contact-modal__close-button {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>x-24</title><polygon points='19.53 5.53 18.47 4.47 12 10.939 5.53 4.47 4.47 5.53 10.939 12 4.47 18.47 5.53 19.53 12 13.061 18.47 19.53 19.53 18.47 13.061 12 19.53 5.53' fill='%23B9B9B9'/></svg>") no-repeat center;
+    background-size: 100%; }
+  .keyboard-mode .module-contact-modal__close-button:focus {
+    background-color: #2c6bed; }
 
 .module-background-color__default {
   background-color: rgba(0, 0, 0, 0.4); }

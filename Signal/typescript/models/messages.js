@@ -507,6 +507,7 @@ require(exports => {
                 canReply: this.canReply(),
                 canDeleteForEveryone: this.canDeleteForEveryone(),
                 canDownload: this.canDownload(),
+                authorId: contact.id,
                 authorTitle: contact.title,
                 authorColor,
                 authorName: contact.name,

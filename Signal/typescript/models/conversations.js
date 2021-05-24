@@ -767,6 +767,7 @@ require(exports => {
                 acceptedMessageRequest: this.getAccepted(),
                 activeAt: this.get('active_at'),
                 areWePending: Boolean(ourConversationId && this.isMemberPending(ourConversationId)),
+                areWeAdmin: this.areWeAdmin(),
                 canChangeTimer: this.canChangeTimer(),
                 avatarPath: this.getAvatarPath(),
                 color,
@@ -1017,6 +1018,23 @@ require(exports => {
             }
             else {
                 window.log.error('leaveGroupV2: We were neither a member nor a pending member of the group');
+            }
+        }
+        async removeFromGroupV2(conversationId) {
+            if (this.isGroupV2() && this.isMemberPending(conversationId)) {
+                await this.modifyGroupV2({
+                    name: 'removePendingMember',
+                    createGroupChange: () => this.removePendingMember(conversationId),
+                });
+            }
+            else if (this.isGroupV2() && this.isMember(conversationId)) {
+                await this.modifyGroupV2({
+                    name: 'removeFromGroup',
+                    createGroupChange: () => this.removeMember(conversationId),
+                });
+            }
+            else {
+                window.log.error(`removeFromGroupV2: Member ${conversationId} is neither a member nor a pending member of the group`);
             }
         }
         async syncMessageRequestResponse(response) {
@@ -2793,6 +2811,12 @@ require(exports => {
             if (canAnyoneChangeTimer) {
                 return true;
             }
+            return this.areWeAdmin();
+        }
+        areWeAdmin() {
+            if (!this.isGroupV2()) {
+                return false;
+            }
             const memberEnum = window.textsecure.protobuf.Member.Role;
             const members = this.get('membersV2') || [];
             const myId = window.ConversationController.getOurConversationId();
@@ -2800,11 +2824,7 @@ require(exports => {
             if (!me) {
                 return false;
             }
-            const isAdministrator = me.role === memberEnum.ADMINISTRATOR;
-            if (isAdministrator) {
-                return true;
-            }
-            return false;
+            return me.role === memberEnum.ADMINISTRATOR;
         }
         // Set of items to captureChanges on:
         // [-] uuid
