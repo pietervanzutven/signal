@@ -17,70 +17,42 @@ require(exports => {
     };
     exports.isInsertEmojiOp = (op) => exports.isSpecificInsertOp(op, 'emoji');
     exports.isInsertMentionOp = (op) => exports.isSpecificInsertOp(op, 'mention');
-    exports.getTextFromOps = (ops) => ops.reduce((acc, { insert }, index) => {
-        if (typeof insert === 'string') {
-            let textToAdd;
-            switch (index) {
-                case 0: {
-                    textToAdd = insert.trimLeft();
-                    break;
-                }
-                case ops.length - 1: {
-                    textToAdd = insert.trimRight();
-                    break;
-                }
-                default: {
-                    textToAdd = insert;
-                    break;
-                }
-            }
-            const textWithoutNewlines = textToAdd.replace(/\n+$/, '');
-            return acc + textWithoutNewlines;
-        }
-        if (insert.emoji) {
-            return acc + insert.emoji;
-        }
-        if (insert.mention) {
-            return `${acc}@${insert.mention.title}`;
-        }
-        return acc;
-    }, '');
-    exports.getTextAndMentionsFromOps = (ops) => {
-        const mentions = [];
-        const text = ops.reduce((acc, op, index) => {
+    exports.getTextFromOps = (ops) => ops
+        .reduce((acc, op) => {
             if (typeof op.insert === 'string') {
-                let textToAdd;
-                switch (index) {
-                    case 0: {
-                        textToAdd = op.insert.trimLeft();
-                        break;
-                    }
-                    case ops.length - 1: {
-                        textToAdd = op.insert.trimRight();
-                        break;
-                    }
-                    default: {
-                        textToAdd = op.insert;
-                        break;
-                    }
-                }
-                const textWithoutNewlines = textToAdd.replace(/\n+$/, '');
-                return acc + textWithoutNewlines;
+                return acc + op.insert;
             }
             if (exports.isInsertEmojiOp(op)) {
                 return acc + op.insert.emoji;
             }
             if (exports.isInsertMentionOp(op)) {
-                mentions.push({
-                    length: 1,
-                    mentionUuid: op.insert.mention.uuid,
-                    replacementText: op.insert.mention.title,
-                    start: acc.length,
-                });
-                return `${acc}\uFFFC`;
+                return `${acc}@${op.insert.mention.title}`;
             }
             return acc;
-        }, '');
+        }, '')
+        .trim();
+    exports.getTextAndMentionsFromOps = (ops) => {
+        const mentions = [];
+        const text = ops
+            .reduce((acc, op) => {
+                if (typeof op.insert === 'string') {
+                    return acc + op.insert;
+                }
+                if (exports.isInsertEmojiOp(op)) {
+                    return acc + op.insert.emoji;
+                }
+                if (exports.isInsertMentionOp(op)) {
+                    mentions.push({
+                        length: 1,
+                        mentionUuid: op.insert.mention.uuid,
+                        replacementText: op.insert.mention.title,
+                        start: acc.length,
+                    });
+                    return `${acc}\uFFFC`;
+                }
+                return acc;
+            }, '')
+            .trim();
         return [text, mentions];
     };
     exports.getBlotTextPartitions = (blot, index) => {
