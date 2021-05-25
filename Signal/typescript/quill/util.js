@@ -33,7 +33,8 @@ require(exports => {
                     break;
                 }
             }
-            return acc + textToAdd;
+            const textWithoutNewlines = textToAdd.replace(/\n+$/, '');
+            return acc + textWithoutNewlines;
         }
         if (insert.emoji) {
             return acc + insert.emoji;
@@ -62,7 +63,8 @@ require(exports => {
                         break;
                     }
                 }
-                return acc + textToAdd;
+                const textWithoutNewlines = textToAdd.replace(/\n+$/, '');
+                return acc + textWithoutNewlines;
             }
             if (exports.isInsertEmojiOp(op)) {
                 return acc + op.insert.emoji;
