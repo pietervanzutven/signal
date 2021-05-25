@@ -454,12 +454,15 @@ require(exports => {
             const sticker = this.get('sticker');
             if (sticker && sticker.data) {
                 const { data } = sticker;
-                // We don't show anything if we're still loading a sticker
-                if (data.pending || !data.path) {
+                // We don't show anything if we don't have the sticker or the blurhash...
+                if (!data.blurHash && (data.pending || !data.path)) {
                     return [];
                 }
                 return [
-                    Object.assign(Object.assign({}, data), { url: getAbsoluteAttachmentPath(data.path) }),
+                    Object.assign(Object.assign({}, data), {
+                        // We want to show the blurhash for stickers, not the spinner
+                        pending: false, url: data.path ? getAbsoluteAttachmentPath(data.path) : undefined
+                    }),
                 ];
             }
             const attachments = this.get('attachments') || [];
@@ -1713,6 +1716,14 @@ require(exports => {
             }
             window.log.info(`Queueing ${normalAttachments.length} normal attachment downloads for message ${this.idForLogging()}`);
             const attachments = await Promise.all(normalAttachments.map((attachment, index) => {
+                if (!attachment) {
+                    return attachment;
+                }
+                // We've already downloaded this!
+                if (attachment.path) {
+                    window.log.info(`Normal attachment already downloaded for message ${this.idForLogging()}`);
+                    return attachment;
+                }
                 count += 1;
                 return window.Signal.AttachmentDownloads.addJob(attachment, {
                     messageId,
@@ -1724,6 +1735,11 @@ require(exports => {
             window.log.info(`Queueing ${previewsToQueue.length} preview attachment downloads for message ${this.idForLogging()}`);
             const preview = await Promise.all(previewsToQueue.map(async (item, index) => {
                 if (!item.image) {
+                    return item;
+                }
+                // We've already downloaded this!
+                if (item.image.path) {
+                    window.log.info(`Preview attachment already downloaded for message ${this.idForLogging()}`);
                     return item;
                 }
                 count += 1;
@@ -1739,6 +1755,11 @@ require(exports => {
             window.log.info(`Queueing ${contactsToQueue.length} contact attachment downloads for message ${this.idForLogging()}`);
             const contact = await Promise.all(contactsToQueue.map(async (item, index) => {
                 if (!item.avatar || !item.avatar.avatar) {
+                    return item;
+                }
+                // We've already downloaded this!
+                if (item.avatar.avatar.path) {
+                    window.log.info(`Contact attachment already downloaded for message ${this.idForLogging()}`);
                     return item;
                 }
                 count += 1;
@@ -1759,9 +1780,12 @@ require(exports => {
             if (quoteAttachmentsToQueue.length > 0) {
                 quote = Object.assign(Object.assign({}, quote), {
                     attachments: await Promise.all((quote.attachments || []).map(async (item, index) => {
-                        // If we already have a path, then we copied this image from the quoted
-                        //    message and we don't need to download the attachment.
-                        if (!item.thumbnail || item.thumbnail.path) {
+                        if (!item.thumbnail) {
+                            return item;
+                        }
+                        // We've already downloaded this!
+                        if (item.thumbnail.path) {
+                            window.log.info(`Quote attachment already downloaded for message ${this.idForLogging()}`);
                             return item;
                         }
                         count += 1;
@@ -1777,7 +1801,10 @@ require(exports => {
             }
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             let sticker = this.get('sticker');
-            if (sticker) {
+            if (sticker && sticker.data && sticker.data.path) {
+                window.log.info(`Sticker attachment already downloaded for message ${this.idForLogging()}`);
+            }
+            else if (sticker) {
                 window.log.info(`Queueing sticker download for message ${this.idForLogging()}`);
                 count += 1;
                 const { packId, stickerId, packKey } = sticker;

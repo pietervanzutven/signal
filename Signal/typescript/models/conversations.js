@@ -905,7 +905,15 @@ require(exports => {
                     await this.sendReadReceiptsFor(receiptSpecs);
                 }
                 // eslint-disable-next-line no-await-in-loop
-                await Promise.all(readMessages.map(m => m.queueAttachmentDownloads()));
+                await Promise.all(readMessages.map(async (m) => {
+                    const registered = window.MessageController.register(m.id, m);
+                    const shouldSave = await registered.queueAttachmentDownloads();
+                    if (shouldSave) {
+                        await window.Signal.Data.saveMessage(registered.attributes, {
+                            Message: window.Whisper.Message,
+                        });
+                    }
+                }));
             } while (messages.length > 0);
         }
         async applyMessageRequestResponse(response, { fromSync = false, viaStorageServiceSync = false } = {}) {

@@ -248,6 +248,7 @@ require(exports => {
             message.sticker.data &&
             previous.sticker &&
             previous.sticker.data &&
+            !previous.sticker.data.blurHash &&
             previous.sticker.data.pending !== message.sticker.data.pending;
         if (stickerPendingChanged) {
             return true;
