@@ -14,6 +14,8 @@ require(exports => {
     }
     // Constants
     exports.MASTER_KEY_LENGTH = 32;
+    exports.ID_V1_LENGTH = 16;
+    exports.ID_LENGTH = 32;
     const TEMPORAL_AUTH_REJECTED_CODE = 401;
     const GROUP_ACCESS_DENIED_CODE = 403;
     const SUPPORTED_CHANGE_EPOCH = 0;

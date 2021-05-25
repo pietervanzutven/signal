@@ -144,7 +144,8 @@ require(exports => {
             if (!groupId) {
                 return false;
             }
-            return Crypto_1.fromEncodedBinaryToArrayBuffer(groupId).byteLength === 16;
+            const buffer = Crypto_1.fromEncodedBinaryToArrayBuffer(groupId);
+            return buffer.byteLength === window.Signal.Groups.ID_V1_LENGTH;
         }
         isGroupV2() {
             const groupId = this.get('groupId');
@@ -152,7 +153,8 @@ require(exports => {
                 return false;
             }
             const groupVersion = this.get('groupVersion') || 0;
-            return groupVersion === 2 && Crypto_1.base64ToArrayBuffer(groupId).byteLength === 32;
+            return (groupVersion === 2 &&
+                Crypto_1.base64ToArrayBuffer(groupId).byteLength === window.Signal.Groups.ID_LENGTH);
         }
         isMemberPending(conversationId) {
             if (!this.isGroupV2()) {
@@ -533,6 +535,9 @@ require(exports => {
             await window.Signal.Groups.waitThenMaybeUpdateGroup({
                 conversation: this,
             });
+        }
+        isValid() {
+            return this.isPrivate() || this.isGroupV1() || this.isGroupV2();
         }
         maybeRepairGroupV2(data) {
             if (this.get('groupVersion') &&

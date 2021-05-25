@@ -28,6 +28,11 @@ Whisper.LeftGroupToast = Whisper.ToastView.extend({
         return { toastMessage: window.i18n('youLeftTheGroup') };
     },
 });
+Whisper.InvalidConversationToast = Whisper.ToastView.extend({
+    render_attributes() {
+        return { toastMessage: window.i18n('invalidConversation') };
+    },
+});
 Whisper.OriginalNotFoundToast = Whisper.ToastView.extend({
     render_attributes() {
         return { toastMessage: window.i18n('originalMessageNotFound') };
@@ -2194,6 +2199,9 @@ Whisper.ConversationView = Whisper.View.extend({
             if (mandatoryProfileSharingEnabled && !this.model.get('profileSharing')) {
                 this.model.set({ profileSharing: true });
             }
+            if (this.showInvalidMessageToast()) {
+                return;
+            }
             const { packId, stickerId } = options;
             this.model.sendStickerMessage(packId, stickerId);
         }
@@ -2299,6 +2307,35 @@ Whisper.ConversationView = Whisper.View.extend({
                 } }),
         });
     },
+    showInvalidMessageToast(messageText) {
+        let ToastView;
+        if (window.reduxStore.getState().expiration.hasExpired) {
+            ToastView = Whisper.ExpiredToast;
+        }
+        if (!this.model.isValid()) {
+            ToastView = Whisper.InvalidConversationToast;
+        }
+        if (this.model.isPrivate() &&
+            (window.storage.isBlocked(this.model.get('e164')) ||
+                window.storage.isUuidBlocked(this.model.get('uuid')))) {
+            ToastView = Whisper.BlockedToast;
+        }
+        if (!this.model.isPrivate() &&
+            window.storage.isGroupBlocked(this.model.get('groupId'))) {
+            ToastView = Whisper.BlockedGroupToast;
+        }
+        if (!this.model.isPrivate() && this.model.get('left')) {
+            ToastView = Whisper.LeftGroupToast;
+        }
+        if (messageText && messageText.length > MAX_MESSAGE_BODY_LENGTH) {
+            ToastView = Whisper.MessageBodyTooLongToast;
+        }
+        if (ToastView) {
+            this.showToast(ToastView);
+            return true;
+        }
+        return false;
+    },
     async sendMessage(message = '', mentions = [], options = {}) {
         this.sendStart = Date.now();
         try {
@@ -2320,27 +2357,7 @@ Whisper.ConversationView = Whisper.View.extend({
             return;
         }
         this.model.clearTypingTimers();
-        let ToastView;
-        if (window.reduxStore.getState().expiration.hasExpired) {
-            ToastView = Whisper.ExpiredToast;
-        }
-        if (this.model.isPrivate() &&
-            (window.storage.isBlocked(this.model.get('e164')) ||
-                window.storage.isUuidBlocked(this.model.get('uuid')))) {
-            ToastView = Whisper.BlockedToast;
-        }
-        if (!this.model.isPrivate() &&
-            window.storage.isGroupBlocked(this.model.get('groupId'))) {
-            ToastView = Whisper.BlockedGroupToast;
-        }
-        if (!this.model.isPrivate() && this.model.get('left')) {
-            ToastView = Whisper.LeftGroupToast;
-        }
-        if (message.length > MAX_MESSAGE_BODY_LENGTH) {
-            ToastView = Whisper.MessageBodyTooLongToast;
-        }
-        if (ToastView) {
-            this.showToast(ToastView);
+        if (this.showInvalidMessageToast(message)) {
             this.enableMessageField();
             return;
         }
