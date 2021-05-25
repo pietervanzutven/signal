@@ -39,7 +39,16 @@ require(exports => {
             this.quill.keyboard.addBinding({ key: 38 }, changeIndex(-1)); // 38 = Up
             this.quill.keyboard.addBinding({ key: 39 }, clearResults); // 39 = Right
             this.quill.keyboard.addBinding({ key: 40 }, changeIndex(1)); // 40 = Down
-            this.quill.on('text-change', lodash_1.default.debounce(this.onTextChange.bind(this), 100));
+            this.quill.keyboard.addBinding({
+                // 186 + Shift = Colon
+                key: 186,
+                shiftKey: true,
+            }, () => this.onTextChange(true));
+            this.quill.keyboard.addBinding({
+                // 58 = Also Colon
+                key: 58,
+            }, () => this.onTextChange(true));
+            this.quill.on('text-change', lodash_1.default.debounce(() => this.onTextChange(), 100));
             this.quill.on('selection-change', this.onSelectionChange.bind(this));
         }
         destroy() {
@@ -58,25 +67,28 @@ require(exports => {
             // Selection should never change while we're editing an emoji
             this.reset();
         }
-        onTextChange() {
+        onTextChange(justPressedColon = false) {
+            const PASS_THROUGH = true;
+            const INTERCEPT = false;
             const range = this.quill.getSelection();
             if (!range)
-                return;
+                return PASS_THROUGH;
             const [blot, index] = this.quill.getLeaf(range.index);
-            const [leftTokenTextMatch, rightTokenTextMatch] = util_1.matchBlotTextPartitions(blot, index, "(?<=^|\s):([-+0-9a-z_]*)(:?)$", /^([-+0-9a-z_]*):/);
+            const [leftTokenTextMatch, rightTokenTextMatch] = util_1.matchBlotTextPartitions(blot, index, /(?<=^|\s):([-+0-9a-z_]*)(:?)$/, /^([-+0-9a-z_]*):/);
             if (leftTokenTextMatch) {
                 const [, leftTokenText, isSelfClosing] = leftTokenTextMatch;
-                if (isSelfClosing) {
+                if (isSelfClosing || justPressedColon) {
                     if (lib_1.isShortName(leftTokenText)) {
                         const emojiData = lib_1.convertShortNameToData(leftTokenText, this.options.skinTone);
+                        const numberOfColons = isSelfClosing ? 2 : 1;
                         if (emojiData) {
-                            this.insertEmoji(emojiData, range.index - leftTokenText.length - 2, leftTokenText.length + 2);
-                            return;
+                            this.insertEmoji(emojiData, range.index - leftTokenText.length - numberOfColons, leftTokenText.length + numberOfColons);
+                            return INTERCEPT;
                         }
                     }
                     else {
                         this.reset();
-                        return;
+                        return PASS_THROUGH;
                     }
                 }
                 if (rightTokenTextMatch) {
@@ -86,13 +98,13 @@ require(exports => {
                         const emojiData = lib_1.convertShortNameToData(tokenText, this.options.skinTone);
                         if (emojiData) {
                             this.insertEmoji(emojiData, range.index - leftTokenText.length - 1, tokenText.length + 2);
-                            return;
+                            return INTERCEPT;
                         }
                     }
                 }
                 if (leftTokenText.length < 2) {
                     this.reset();
-                    return;
+                    return PASS_THROUGH;
                 }
                 const showEmojiResults = lib_1.search(leftTokenText, 10);
                 if (showEmojiResults.length > 0) {
@@ -106,6 +118,7 @@ require(exports => {
             else if (this.results.length !== 0) {
                 this.reset();
             }
+            return PASS_THROUGH;
         }
         completeEmoji() {
             const range = this.quill.getSelection();
