@@ -17,7 +17,6 @@ require(exports => {
     const quill_delta_1 = __importDefault(require("quill-delta"));
     const react_quill_1 = __importDefault(require("react-quill"));
     const classnames_1 = __importDefault(require("classnames"));
-    const emoji_regex_1 = __importDefault(require("emoji-regex"));
     const react_popper_1 = require("react-popper");
     const quill_1 = __importDefault(require("quill"));
     const completion_1 = require("../quill/mentions/completion");
@@ -49,62 +48,10 @@ require(exports => {
         const scrollerRef = React.useRef(null);
         const propsRef = React.useRef(props);
         const memberRepositoryRef = React.useRef(new memberRepository_1.MemberRepository());
-        const insertMentionOps = (incomingOps, bodyRanges) => {
-            const ops = [...incomingOps];
-            // Working backwards through bodyRanges (to avoid offsetting later mentions),
-            // Shift off the op with the text to the left of the last mention,
-            // Insert a mention based on the current bodyRange,
-            // Unshift the mention and surrounding text to leave the ops ready for the next range
-            bodyRanges
-                .sort((a, b) => b.start - a.start)
-                .forEach(({ start, length, mentionUuid, replacementText }) => {
-                    const op = ops.shift();
-                    if (op) {
-                        const { insert } = op;
-                        if (typeof insert === 'string') {
-                            const left = insert.slice(0, start);
-                            const right = insert.slice(start + length);
-                            const mention = {
-                                uuid: mentionUuid,
-                                title: replacementText,
-                            };
-                            ops.unshift({ insert: right });
-                            ops.unshift({ insert: { mention } });
-                            ops.unshift({ insert: left });
-                        }
-                        else {
-                            ops.unshift(op);
-                        }
-                    }
-                });
-            return ops;
-        };
-        const insertEmojiOps = (incomingOps) => {
-            return incomingOps.reduce((ops, op) => {
-                if (typeof op.insert === 'string') {
-                    const text = op.insert;
-                    const re = emoji_regex_1.default();
-                    let index = 0;
-                    let match;
-                    // eslint-disable-next-line no-cond-assign
-                    while ((match = re.exec(text))) {
-                        const [emoji] = match;
-                        ops.push({ insert: text.slice(index, match.index) });
-                        ops.push({ insert: { emoji } });
-                        index = match.index + emoji.length;
-                    }
-                    ops.push({ insert: text.slice(index, text.length) });
-                }
-                else {
-                    ops.push(op);
-                }
-                return ops;
-            }, []);
-        };
         const generateDelta = (text, bodyRanges) => {
             const initialOps = [{ insert: text }];
-            const opsWithMentions = insertMentionOps(initialOps, bodyRanges);
-            const opsWithEmojis = insertEmojiOps(opsWithMentions);
+            const opsWithMentions = util_1.insertMentionOps(initialOps, bodyRanges);
+            const opsWithEmojis = util_1.insertEmojiOps(opsWithMentions);
             return new quill_delta_1.default(opsWithEmojis);
         };
         const getTextAndMentions = () => {
@@ -361,6 +308,7 @@ require(exports => {
                             ['IMG', matchers_1.matchEmojiImage],
                             ['IMG', matchers_1.matchEmojiBlot],
                             ['SPAN', matchers_1.matchReactEmoji],
+                            [Node.TEXT_NODE, matchers_1.matchEmojiText],
                             ['SPAN', matchers_2.matchMention(memberRepositoryRef)],
                         ],
                     },

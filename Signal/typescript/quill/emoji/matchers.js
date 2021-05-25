@@ -7,6 +7,7 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const quill_delta_1 = __importDefault(require("quill-delta"));
+    const util_1 = require("../util");
     exports.matchEmojiImage = (node) => {
         if (node.classList.contains('emoji')) {
             const emoji = node.getAttribute('title');
@@ -27,5 +28,9 @@ require(exports => {
             return new quill_delta_1.default().insert({ emoji });
         }
         return delta;
+    };
+    exports.matchEmojiText = (node) => {
+        const nodeAsInsert = { insert: node.data };
+        return new quill_delta_1.default(util_1.insertEmojiOps([nodeAsInsert]));
     };
 });
