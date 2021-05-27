@@ -74,7 +74,7 @@ require(exports => {
             if (!range)
                 return PASS_THROUGH;
             const [blot, index] = this.quill.getLeaf(range.index);
-            const [leftTokenTextMatch, rightTokenTextMatch] = util_1.matchBlotTextPartitions(blot, index, /(?<=^|\s):([-+0-9a-z_]*)(:?)$/, /^([-+0-9a-z_]*):/);
+            const [leftTokenTextMatch, rightTokenTextMatch] = util_1.matchBlotTextPartitions(blot, index, /^(?=^|\s):([-+0-9a-z_]*)(:?)$/, /^([-+0-9a-z_]*):/);
             if (leftTokenTextMatch) {
                 const [, leftTokenText, isSelfClosing] = leftTokenTextMatch;
                 if (isSelfClosing || justPressedColon) {
