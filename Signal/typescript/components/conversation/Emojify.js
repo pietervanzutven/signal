@@ -1,11 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    window.ts.components.conversation = window.ts.components.conversation || {};
-    const exports = window.ts.components.conversation.Emojify = {};
-
+    // Copyright 2018-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -15,6 +11,9 @@
     const emoji_regex_1 = __importDefault(require("emoji-regex"));
     const lib_1 = require("../emoji/lib");
     // Some of this logic taken from emoji-js/replacement
+    // the DOM structure for this getImageTag should match the other emoji implementations:
+    // ts/components/emoji/Emoji.tsx
+    // ts/quill/emoji/blot.tsx
     function getImageTag({ match, sizeClass, key, }) {
         const img = lib_1.emojiToImage(match[0]);
         if (!img) {
@@ -61,4 +60,4 @@
     Emojify.defaultProps = {
         renderNonEmoji: ({ text }) => text,
     };
-})();
+});

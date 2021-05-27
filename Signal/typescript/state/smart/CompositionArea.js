@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_redux_1 = require("react-redux");
     const reselect_1 = require("reselect");
@@ -17,7 +19,7 @@ require(exports => {
         if (!conversation) {
             throw new Error(`Conversation id ${id} not found!`);
         }
-        const { draftText } = conversation;
+        const { draftText, draftBodyRanges } = conversation;
         const receivedPacks = stickers_1.getReceivedStickerPacks(state);
         const installedPacks = stickers_1.getInstalledStickerPacks(state);
         const blessedPacks = stickers_1.getBlessedStickerPacks(state);
@@ -30,7 +32,8 @@ require(exports => {
         const recentEmojis = selectRecentEmojis(state);
         return Object.assign(Object.assign({
             // Base
-            i18n: user_1.getIntl(state), startingText: draftText,
+            i18n: user_1.getIntl(state), draftText,
+            draftBodyRanges,
             // Emojis
             recentEmojis, skinTone: lodash_1.get(state, ['items', 'skinTone'], 0),
             // Stickers

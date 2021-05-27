@@ -172,7 +172,7 @@
                 const isImageTypeSupported = GoogleChrome.isImageTypeSupported(contentType);
                 if (isImageTypeSupported) {
                     return (react_1.default.createElement("button", { type: "button", style: styles.buttonContainer, onClick: this.onObjectClick },
-                        react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), style: styles.img, src: objectURL })));
+                        react_1.default.createElement("img", { alt: i18n('lightboxImageAlt'), style: styles.img, src: objectURL, onContextMenu: this.onContextMenu })));
                 }
                 const isVideoTypeSupported = GoogleChrome.isVideoTypeSupported(contentType);
                 if (isVideoTypeSupported) {

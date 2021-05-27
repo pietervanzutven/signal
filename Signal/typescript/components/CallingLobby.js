@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -7,20 +9,14 @@ require(exports => {
     const react_1 = __importDefault(require("react"));
     const CallingButton_1 = require("./CallingButton");
     const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
-    exports.CallingLobby = ({ availableCameras, callDetails, hasLocalAudio, hasLocalVideo, i18n, isGroupCall = false, onCallCanceled, onJoinCall, setLocalAudio, setLocalPreview, setLocalVideo, toggleParticipants, toggleSettings, }) => {
+    exports.CallingLobby = ({ availableCameras, conversation, hasLocalAudio, hasLocalVideo, i18n, isGroupCall = false, me, onCallCanceled, onJoinCall, setLocalAudio, setLocalPreview, setLocalVideo, toggleParticipants, toggleSettings, }) => {
         const localVideoRef = react_1.default.useRef(null);
         const toggleAudio = react_1.default.useCallback(() => {
-            if (!callDetails) {
-                return;
-            }
             setLocalAudio({ enabled: !hasLocalAudio });
-        }, [callDetails, hasLocalAudio, setLocalAudio]);
+        }, [hasLocalAudio, setLocalAudio]);
         const toggleVideo = react_1.default.useCallback(() => {
-            if (!callDetails) {
-                return;
-            }
             setLocalVideo({ enabled: !hasLocalVideo });
-        }, [callDetails, hasLocalVideo, setLocalVideo]);
+        }, [hasLocalVideo, setLocalVideo]);
         react_1.default.useEffect(() => {
             setLocalPreview({ element: localVideoRef });
             return () => {
@@ -59,12 +55,12 @@ require(exports => {
             : CallingButton_1.CallingButtonType.AUDIO_OFF;
         return (react_1.default.createElement("div", { className: "module-calling__container" },
             react_1.default.createElement("div", { className: "module-calling__header" },
-                react_1.default.createElement("div", { className: "module-calling__header--header-name" }, callDetails.title),
+                react_1.default.createElement("div", { className: "module-calling__header--header-name" }, conversation.title),
                 react_1.default.createElement("div", { className: "module-calling-tools" },
                     isGroupCall ? (react_1.default.createElement("button", { type: "button", "aria-label": i18n('calling__participants'), className: "module-calling-tools__button module-calling-button__participants", onClick: toggleParticipants })) : null,
                     react_1.default.createElement("button", { type: "button", "aria-label": i18n('callingDeviceSelection__settings'), className: "module-calling-tools__button module-calling-button__settings", onClick: toggleSettings }))),
             react_1.default.createElement("div", { className: "module-calling-lobby__video" },
-                hasLocalVideo && availableCameras.length > 0 ? (react_1.default.createElement("video", { ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: callDetails.avatarPath, color: callDetails.color },
+                hasLocalVideo && availableCameras.length > 0 ? (react_1.default.createElement("video", { ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: me.avatarPath, color: me.color },
                     react_1.default.createElement("div", { className: "module-calling-lobby__video-off--icon" }),
                     react_1.default.createElement("span", { className: "module-calling-lobby__video-off--text" }, i18n('calling__your-video-is-off')))),
                 react_1.default.createElement("div", { className: "module-calling__buttons" },

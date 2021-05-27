@@ -21,8 +21,8 @@
   >
   <title>Signal</title>
   <link href="node_modules/sanitize.css/sanitize.css" rel="stylesheet" type="text/css" />
+  <link href="node_modules/react-quill/dist/quill.core.css" rel="stylesheet" type="text/css" />
   <link href="stylesheets/manifest.css" rel="stylesheet" type="text/css" />
-  <link href="node_modules/draft-js/dist/Draft.css" rel="stylesheet" type="text/css" />
 
   <!--
     When making changes to these templates, be sure to update test/index.html as well
@@ -238,6 +238,7 @@
             </div>
           </div>
         </div>
+        <a href='#' id='setupAsStandaloneLink'>Setup as standalone device.</a>
       </div>
     </div>
     {{/isStep3}}
@@ -334,7 +335,6 @@
   <script type='text/javascript' src='node_modules/core/events.js'></script>
   <script type='text/javascript' src='node_modules/core/fs.js'></script>
   <script type='text/javascript' src='node_modules/core/fs_extra.js'></script>
-  <script type='text/javascript' src='node_modules/core/indexedDB.js'></script>
   <script type='text/javascript' src='node_modules/core/notification.js'></script>
   <script type='text/javascript' src='node_modules/core/os.js'></script>
   <script type='text/javascript' src='node_modules/core/process.js'></script>
@@ -374,12 +374,14 @@
   <script type='text/javascript' src='node_modules/lodash/has.js'></script>
   <script type='text/javascript' src='node_modules/lodash/head.js'></script>
   <script type='text/javascript' src='node_modules/lodash/includes.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/contains.js'></script>
   <script type='text/javascript' src='node_modules/lodash/include.js'></script>
   <script type='text/javascript' src='node_modules/lodash/initial.js'></script>
   <script type='text/javascript' src='node_modules/lodash/intersection.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isArrayBuffer.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isBoolean.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isEmpty.js'></script>
+  <script type='text/javascript' src='node_modules/lodash/isEqual.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isFunction.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isNumber.js'></script>
   <script type='text/javascript' src='node_modules/lodash/isObject.js'></script>
@@ -429,14 +431,6 @@
   <script type='text/javascript' src='node_modules/blob-util/blob-util.js'></script>
   <script type='text/javascript' src='node_modules/sindresorhus/is.js'></script>
   <script type='text/javascript' src='node_modules/to-arraybuffer/to-arraybuffer.js'></script>
-  <script type='text/javascript' src='node_modules/semver/internal/constants.js'></script>
-  <script type='text/javascript' src='node_modules/semver/internal/debug.js'></script>
-  <script type='text/javascript' src='node_modules/semver/internal/identifiers.js'></script>
-  <script type='text/javascript' src='node_modules/semver/internal/re.js'></script>
-  <script type='text/javascript' src='node_modules/semver/classes/semver.js'></script>
-  <script type='text/javascript' src='node_modules/semver/functions/compare.js'></script>
-  <script type='text/javascript' src='node_modules/semver/functions/gte.js'></script>
-  <script type='text/javascript' src='node_modules/semver/functions/lt.js'></script>
   <script type='text/javascript' src='node_modules/semver/index.js'></script>
   <script type='text/javascript' src='node_modules/protobuf/protobuf.js'></script>
   <script type='text/javascript' src='node_modules/google-libphonenumber/libphonenumber.js'></script>
@@ -450,9 +444,12 @@
   <script type='text/javascript' src='node_modules/redux-logger/redux-logger.js'></script>
   <script type='text/javascript' src='node_modules/redux-promise-middleware/isPromise.js'></script>
   <script type='text/javascript' src='node_modules/redux-promise-middleware/index.js'></script>
+  <script type='text/javascript' src='node_modules/redux-thunk/index.js'></script>
   <script type='text/javascript' src='node_modules/reselect/reselect.js'></script>
   <script type='text/javascript' src='node_modules/popper.js/popper-utils.js'></script>
   <script type='text/javascript' src='node_modules/popper.js/popper.js'></script>
+  <script type='text/javascript' src='node_modules/quill/index.js'></script>
+  <script type='text/javascript' src='node_modules/quill-delta/index.js'></script>
   <script type='text/javascript' src='node_modules/react/index.js'></script>
   <script type='text/javascript' src='node_modules/react-dom/index.js'></script>
   <script type='text/javascript' src='node_modules/react-contextmenu/helpers.js'></script>
@@ -469,6 +466,7 @@
   <script type='text/javascript' src='node_modules/react-virtualized/react-virtualized.js'></script>
   <script type='text/javascript' src='node_modules/react-popper/index.umd.js'></script>
   <script type='text/javascript' src='node_modules/react-measure/index.umd.js'></script>
+  <script type='text/javascript' src='node_modules/react-quill/index.js'></script>
   <script type='text/javascript' src='node_modules/moment/moment.js'></script>
   <script type='text/javascript' src='node_modules/uc.micro/categories/Cc/regex.js'></script>
   <script type='text/javascript' src='node_modules/uc.micro/categories/Cf/regex.js'></script>
@@ -507,7 +505,6 @@
   <script type='text/javascript' src='node_modules/p-props/index.js'></script>
   <script type='text/javascript' src='node_modules/fuse.js/fuse.js'></script>
   <script type='text/javascript' src='node_modules/immutable/immutable.js'></script>
-  <script type='text/javascript' src='node_modules/draft-js/Draft.js'></script>
   <script type='text/javascript' src='node_modules/sanitize-filename/index.js'></script>
   <script type='text/javascript' src='node_modules/normalize-path/index.js'></script>
   <script type='text/javascript' src='node_modules/https/index.js'></script>
@@ -591,6 +588,7 @@
   <script type='text/javascript' src='typescript/state/reducer.js'></script>
   <script type='text/javascript' src='typescript/state/types.js'></script>
   <script type='text/javascript' src='typescript/state/createStore.js'></script>
+  <script type='text/javascript' src='typescript/state/selectors/calling.js'></script>
   <script type='text/javascript' src='typescript/state/selectors/user.js'></script>
   <script type='text/javascript' src='typescript/state/selectors/conversations.js'></script>
   <script type='text/javascript' src='typescript/state/selectors/network.js'></script>
@@ -599,7 +597,9 @@
   <script type='text/javascript' src='typescript/state/selectors/stickers.js'></script>
   <script type='text/javascript' src='typescript/state/smart/CallingDeviceSelection.js'></script>
   <script type='text/javascript' src='typescript/state/smart/CallManager.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/ContactModal.js'></script>
   <script type='text/javascript' src='typescript/state/smart/ContactName.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/ConversationHeader.js'></script>
   <script type='text/javascript' src='typescript/state/smart/CompositionArea.js'></script>
   <script type='text/javascript' src='typescript/state/smart/ExpiredBuildDialog.js'></script>
   <script type='text/javascript' src='typescript/state/smart/HeroRow.js'></script>
@@ -622,6 +622,8 @@
   <script type='text/javascript' src='typescript/state/smart/Timeline.js'></script>
   <script type='text/javascript' src='typescript/state/roots/createCallManager.js'></script>
   <script type='text/javascript' src='typescript/state/roots/createCompositionArea.js'></script>
+  <script type='text/javascript' src='typescript/state/roots/createConversationHeader.js'></script>
+  <script type='text/javascript' src='typescript/state/roots/createContactModal.js'></script>
   <script type='text/javascript' src='typescript/state/roots/createLeftPane.js'></script>
   <script type='text/javascript' src='typescript/state/roots/createSafetyNumberViewer.js'></script>
   <script type='text/javascript' src='typescript/state/roots/createShortcutGuideModal.js'></script>
@@ -644,10 +646,12 @@
   <script type='text/javascript' src='typescript/util/combineNames.js'></script>
   <script type='text/javascript' src='typescript/util/downloadAttachment.js'></script>
   <script type='text/javascript' src='typescript/util/deleteForEveryone.js'></script>
+  <script type='text/javascript' src='typescript/util/ExpirationTimerOptions.js'></script>
   <script type='text/javascript' src='typescript/util/formatDuration.js'></script>
   <script type='text/javascript' src='typescript/util/formatRelativeTime.js'></script>
   <script type='text/javascript' src='typescript/util/getInitials.js'></script>
   <script type='text/javascript' src='typescript/util/getMuteOptions.js'></script>
+  <script type='text/javascript' src='typescript/util/getOwn.js'></script>
   <script type='text/javascript' src='typescript/util/getStringForProfileChange.js'></script>
   <script type='text/javascript' src='typescript/util/getTextWithMentions.js'></script>
   <script type='text/javascript' src='typescript/util/getUserAgent.js'></script>
@@ -656,6 +660,7 @@
   <script type='text/javascript' src='typescript/util/hooks.js'></script>
   <script type='text/javascript' src='typescript/util/imageToBlurHash.js'></script>
   <script type='text/javascript' src='typescript/util/isFileDangerous.js'></script>
+  <script type='text/javascript' src='typescript/util/isMuted.js'></script>
   <script type='text/javascript' src='typescript/util/isPathInside.js'></script>
   <script type='text/javascript' src='typescript/util/JobQueue.js'></script>
   <script type='text/javascript' src='typescript/util/libphonenumberInstance.js'></script>
@@ -721,6 +726,17 @@
   <script type='text/javascript' src='typescript/models/messages.js'></script>
   <script type='text/javascript' src='typescript/linkPreviews/isLinkPreviewDateValid.js'></script>
   <script type='text/javascript' src='typescript/linkPreviews/linkPreviewFetch.js'></script>
+  <script type='text/javascript' src='typescript/quill/matchImage.js'></script>
+  <script type='text/javascript' src='typescript/quill/memberRepository.js'></script>
+  <script type='text/javascript' src='typescript/quill/emoji/blot.js'></script>
+  <script type='text/javascript' src='typescript/quill/emoji/completion.js'></script>
+  <script type='text/javascript' src='typescript/quill/emoji/matchers.js'></script>
+  <script type='text/javascript' src='typescript/quill/emoji/index.js'></script>
+  <script type='text/javascript' src='typescript/quill/mentions/blot.js'></script>
+  <script type='text/javascript' src='typescript/quill/mentions/completion.js'></script>
+  <script type='text/javascript' src='typescript/quill/mentions/matchers.js'></script>
+  <script type='text/javascript' src='typescript/quill/signal-clipboard/index.js'></script>
+  <script type='text/javascript' src='typescript/quill/util.js'></script>
   <script type='text/javascript' src='typescript/services/networkObserver.js'></script>
   <script type='text/javascript' src='typescript/services/updateListener.js'></script>
   <script type='text/javascript' src='typescript/services/bounce.js'></script>
@@ -737,6 +753,7 @@
   <script type='text/javascript' src='typescript/components/CallingButton.js'></script>
   <script type='text/javascript' src='typescript/components/CallingDeviceSelection.js'></script>
   <script type='text/javascript' src='typescript/components/CallingLobby.js'></script>
+  <script type='text/javascript' src='typescript/components/CallingParticipantsList.js'></script>
   <script type='text/javascript' src='typescript/components/ErrorModal.js'></script>
   <script type='text/javascript' src='typescript/components/ExpiredBuildDialog.js'></script>
   <script type='text/javascript' src='typescript/components/InContactsIcon.js'></script>
@@ -779,6 +796,7 @@
   <script type='text/javascript' src='typescript/components/conversation/AddNewLines.js'></script>
   <script type='text/javascript' src='typescript/components/conversation/AtMentionify.js'></script>
   <script type='text/javascript' src='typescript/components/conversation/CallingNotification.js'></script>
+  <script type='text/javascript' src='typescript/components/conversation/ContactModal.js'></script>
   <script type='text/javascript' src='typescript/components/conversation/Emojify.js'></script>
   <script type='text/javascript' src='typescript/components/conversation/ExpireTimer.js'></script>
   <script type='text/javascript' src='typescript/components/conversation/Linkify.js'></script>
@@ -848,6 +866,7 @@
   <script type='text/javascript' src='app/logging.js'></script>
   <script type='text/javascript' src='app/config.js'></script>
   <script type='text/javascript' src='app/locale.js'></script>
+  <script type='text/javascript' src='app/menu.js'></script>
   <script type='text/javascript' src='app/base_config.js'></script>
   <script type='text/javascript' src='app/ephemeral_config.js'></script>
   <script type='text/javascript' src='app/user_config.js'></script>

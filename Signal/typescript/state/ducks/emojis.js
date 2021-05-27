@@ -11,17 +11,25 @@ require(exports => {
     // Action Creators
     exports.actions = {
         onUseEmoji,
+        useEmoji,
     };
     exports.useActions = () => hooks_1.useBoundActions(exports.actions);
-    function onUseEmoji({ shortName }) {
-        return {
-            type: 'emojis/USE_EMOJI',
-            payload: doUseEmoji(shortName),
+    function onUseEmoji({ shortName, }) {
+        return async (dispatch) => {
+            try {
+                await updateEmojiUsage(shortName);
+                dispatch(useEmoji(shortName));
+            }
+            catch (err) {
+                // Errors are ignored.
+            }
         };
     }
-    async function doUseEmoji(shortName) {
-        await updateEmojiUsage(shortName);
-        return shortName;
+    function useEmoji(payload) {
+        return {
+            type: 'emojis/USE_EMOJI',
+            payload,
+        };
     }
     // Reducer
     function getEmptyState() {
@@ -30,7 +38,7 @@ require(exports => {
         };
     }
     function reducer(state = getEmptyState(), action) {
-        if (action.type === 'emojis/USE_EMOJI_FULFILLED') {
+        if (action.type === 'emojis/USE_EMOJI') {
             const { payload } = action;
             return Object.assign(Object.assign({}, state), { recents: lodash_1.take(lodash_1.uniq([payload, ...state.recents]), 32) });
         }

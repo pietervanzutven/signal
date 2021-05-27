@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = require("lodash");
     const uuid_1 = require("uuid");
@@ -12,6 +14,8 @@ require(exports => {
     }
     // Constants
     exports.MASTER_KEY_LENGTH = 32;
+    exports.ID_V1_LENGTH = 16;
+    exports.ID_LENGTH = 32;
     const TEMPORAL_AUTH_REJECTED_CODE = 401;
     const GROUP_ACCESS_DENIED_CODE = 403;
     const SUPPORTED_CHANGE_EPOCH = 0;
@@ -406,7 +410,6 @@ require(exports => {
         for (let i = 0; i < imax; i += 1) {
             const { groupChanges } = changes[i];
             if (!groupChanges) {
-                // eslint-disable-next-line no-continue
                 continue;
             }
             const jmax = groupChanges.length;
@@ -415,7 +418,6 @@ require(exports => {
                 const { groupChange, groupState } = changeState;
                 if (!groupChange || !groupState) {
                     window.log.warn('integrateGroupChanges: item had neither groupState nor groupChange. Skipping.');
-                    // eslint-disable-next-line no-continue
                     continue;
                 }
                 try {
@@ -709,7 +711,22 @@ require(exports => {
         // Here we hardcode initial messages if this is our first time processing data this
         //   group. Ideally we can collapse it down to just one of: 'you were added',
         //   'you were invited', or 'you created.'
-        if (firstUpdate && dropInitialJoinMessage) {
+        if (firstUpdate && ourConversationId && areWeInvitedToGroup) {
+            // Note, we will add 'you were invited' to group even if dropInitialJoinMessage = true
+            message = Object.assign(Object.assign({}, generateBasicMessage()), {
+                type: 'group-v2-change', groupV2Change: {
+                    from: whoInvitedUsUserId || sourceConversationId,
+                    details: [
+                        {
+                            type: 'pending-add-one',
+                            conversationId: ourConversationId,
+                        },
+                    ],
+                }
+            });
+        }
+        else if (firstUpdate && dropInitialJoinMessage) {
+            // None of the rest of the messages should be added if dropInitialJoinMessage = true
             message = undefined;
         }
         else if (firstUpdate &&
@@ -722,19 +739,6 @@ require(exports => {
                     details: [
                         {
                             type: 'create',
-                        },
-                    ],
-                }
-            });
-        }
-        else if (firstUpdate && ourConversationId && areWeInvitedToGroup) {
-            message = Object.assign(Object.assign({}, generateBasicMessage()), {
-                type: 'group-v2-change', groupV2Change: {
-                    from: whoInvitedUsUserId || sourceConversationId,
-                    details: [
-                        {
-                            type: 'pending-add-one',
-                            conversationId: ourConversationId,
                         },
                     ],
                 }

@@ -1,3 +1,6 @@
+// Copyright 2017-2020 Signal Messenger, LLC
+// SPDX-License-Identifier: AGPL-3.0-only
+
 /* global Whisper, window */
 
 /* eslint-disable global-require, no-inner-declarations */
@@ -535,7 +538,8 @@
       );
       const link = e.target.closest('a');
       const selection = Boolean(window.getSelection().toString());
-      if (!editable && !selection && !link) {
+      const image = e.target.closest('.module-lightbox img');
+      if (!editable && !selection && !link && !image) {
         e.preventDefault();
       }
     });
@@ -549,7 +553,10 @@
       };
 
       /* eslint-disable global-require, import/no-extraneous-dependencies */
+      require('./ts/test-electron/models/messages_test');
       require('./ts/test-electron/linkPreviews/linkPreviewFetch_test');
+      require('./ts/test-electron/state/ducks/calling_test');
+      require('./ts/test-electron/state/selectors/calling_test');
 
       delete window.describe;
 

@@ -1,10 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    const exports = window.ts.components.Avatar = {};
-
+    // Copyright 2018-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
@@ -64,7 +61,7 @@
             const { avatarPath, color, innerRef, noteToSelf, onClick, size, className, } = this.props;
             const { imageBroken } = this.state;
             const hasImage = !noteToSelf && avatarPath && !imageBroken;
-            if (![28, 32, 52, 80, 112].includes(size)) {
+            if (![28, 32, 52, 80, 96, 112].includes(size)) {
                 throw new Error(`Size ${size} is not supported!`);
             }
             let contents;
@@ -78,4 +75,4 @@
         }
     }
     exports.Avatar = Avatar;
-})();
+});

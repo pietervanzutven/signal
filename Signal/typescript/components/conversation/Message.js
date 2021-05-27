@@ -1,11 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    window.ts.components.conversation = window.ts.components.conversation || {};
-    const exports = window.ts.components.conversation.Message = {};
-
+    // Copyright 2018-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -652,14 +648,13 @@
             }, i18n('sendMessageToContact')));
         }
         renderAvatar() {
-            const { authorAvatarPath, authorName, authorPhoneNumber, authorProfileName, authorTitle, collapseMetadata, authorColor, conversationType, direction, i18n, } = this.props;
+            const { authorAvatarPath, authorId, authorName, authorPhoneNumber, authorProfileName, authorTitle, collapseMetadata, authorColor, conversationType, direction, i18n, showContactModal, } = this.props;
             if (collapseMetadata ||
                 conversationType !== 'group' ||
                 direction === 'outgoing') {
-                return;
+                return undefined;
             }
-            // eslint-disable-next-line consistent-return
-            return (react_1.default.createElement("div", { className: "module-message__author-avatar" },
+            return (react_1.default.createElement("button", { type: "button", className: "module-message__author-avatar", onClick: () => showContactModal(authorId), tabIndex: 0 },
                 react_1.default.createElement(Avatar_1.Avatar, { avatarPath: authorAvatarPath, color: authorColor, conversationType: "direct", i18n: i18n, name: authorName, phoneNumber: authorPhoneNumber, profileName: authorProfileName, title: authorTitle, size: 28 })));
         }
         renderText() {
@@ -773,7 +768,8 @@
         renderContextMenu(triggerId) {
             const { attachments, canDownload, canReply, deleteMessage, deleteMessageForEveryone, direction, i18n, id, isSticker, isTapToView, replyToMessage, retrySend, showMessageDetail, status, } = this.props;
             const { canDeleteForEveryone } = this.state;
-            const showRetry = status === 'error' && direction === 'outgoing';
+            const showRetry = (status === 'error' || status === 'partial-sent') &&
+                direction === 'outgoing';
             const multipleAttachments = attachments && attachments.length > 1;
             const menu = (react_1.default.createElement(react_contextmenu_1.ContextMenu, { id: triggerId },
                 canDownload &&
@@ -783,31 +779,31 @@
                     attachments &&
                     attachments[0] ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                         attributes: {
-                            className: 'module-message__context__download',
+                            className: 'module-message__context--icon module-message__context__download',
                         }, onClick: this.openGenericAttachment
                     }, i18n('downloadAttachment'))) : null,
                 canReply ? (react_1.default.createElement(react_1.default.Fragment, null,
                     react_1.default.createElement(react_contextmenu_1.MenuItem, {
                         attributes: {
-                            className: 'module-message__context__react',
-                        }, onClick: (event) => {
-                            event.stopPropagation();
-                            event.preventDefault();
-                            this.toggleReactionPicker();
-                        }
-                    }, i18n('reactToMessage')),
-                    react_1.default.createElement(react_contextmenu_1.MenuItem, {
-                        attributes: {
-                            className: 'module-message__context__reply',
+                            className: 'module-message__context--icon module-message__context__reply',
                         }, onClick: (event) => {
                             event.stopPropagation();
                             event.preventDefault();
                             replyToMessage(id);
                         }
-                    }, i18n('replyToMessage')))) : null,
+                    }, i18n('replyToMessage')),
+                    react_1.default.createElement(react_contextmenu_1.MenuItem, {
+                        attributes: {
+                            className: 'module-message__context--icon module-message__context__react',
+                        }, onClick: (event) => {
+                            event.stopPropagation();
+                            event.preventDefault();
+                            this.toggleReactionPicker();
+                        }
+                    }, i18n('reactToMessage')))) : null,
                 react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
-                        className: 'module-message__context__more-info',
+                        className: 'module-message__context--icon module-message__context__more-info',
                     }, onClick: (event) => {
                         event.stopPropagation();
                         event.preventDefault();
@@ -816,7 +812,7 @@
                 }, i18n('moreInfo')),
                 showRetry ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
-                        className: 'module-message__context__retry-send',
+                        className: 'module-message__context--icon module-message__context__retry-send',
                     }, onClick: (event) => {
                         event.stopPropagation();
                         event.preventDefault();
@@ -825,7 +821,7 @@
                 }, i18n('retrySend'))) : null,
                 react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
-                        className: 'module-message__context__delete-message',
+                        className: 'module-message__context--icon module-message__context__delete-message',
                     }, onClick: (event) => {
                         event.stopPropagation();
                         event.preventDefault();
@@ -834,7 +830,7 @@
                 }, i18n('deleteMessage')),
                 canDeleteForEveryone ? (react_1.default.createElement(react_contextmenu_1.MenuItem, {
                     attributes: {
-                        className: 'module-message__context__delete-message-for-everyone',
+                        className: 'module-message__context--icon module-message__context__delete-message-for-everyone',
                     }, onClick: (event) => {
                         event.stopPropagation();
                         event.preventDefault();
@@ -1119,4 +1115,4 @@
         }
     }
     exports.Message = Message;
-})();
+});

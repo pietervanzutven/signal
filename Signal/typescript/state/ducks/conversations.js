@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
     /* eslint-disable camelcase */
     const lodash_1 = require("lodash");
@@ -19,6 +21,7 @@ require(exports => {
         setMessagesLoading,
         setLoadCountdownStart,
         setIsNearBottom,
+        setSelectedConversationPanelDepth,
         clearChangedMessages,
         clearSelectedMessage,
         clearUnreadMetrics,
@@ -146,6 +149,12 @@ require(exports => {
             },
         };
     }
+    function setSelectedConversationPanelDepth(panelDepth) {
+        return {
+            type: 'SET_SELECTED_CONVERSATION_PANEL_DEPTH',
+            payload: { panelDepth },
+        };
+    }
     function clearChangedMessages(conversationId) {
         return {
             type: 'CLEAR_CHANGED_MESSAGES',
@@ -217,6 +226,7 @@ require(exports => {
             messagesLookup: {},
             selectedMessageCounter: 0,
             showArchived: false,
+            selectedConversationPanelDepth: 0,
         };
     }
     function hasMessageHeightChanged(message, previous) {
@@ -238,6 +248,7 @@ require(exports => {
             message.sticker.data &&
             previous.sticker &&
             previous.sticker.data &&
+            !previous.sticker.data.blurHash &&
             previous.sticker.data.pending !== message.sticker.data.pending;
         if (stickerPendingChanged) {
             return true;
@@ -323,10 +334,13 @@ require(exports => {
             const selectedConversation = state.selectedConversation !== id
                 ? state.selectedConversation
                 : undefined;
-            return Object.assign(Object.assign({}, state), { selectedConversation, messagesLookup: lodash_1.omit(state.messagesLookup, messageIds), messagesByConversation: lodash_1.omit(state.messagesByConversation, [id]) });
+            return Object.assign(Object.assign({}, state), { selectedConversation, selectedConversationPanelDepth: 0, messagesLookup: lodash_1.omit(state.messagesLookup, messageIds), messagesByConversation: lodash_1.omit(state.messagesByConversation, [id]) });
         }
         if (action.type === 'CONVERSATIONS_REMOVE_ALL') {
             return getEmptyState();
+        }
+        if (action.type === 'SET_SELECTED_CONVERSATION_PANEL_DEPTH') {
+            return Object.assign(Object.assign({}, state), { selectedConversationPanelDepth: action.payload.panelDepth });
         }
         if (action.type === 'MESSAGE_SELECTED') {
             const { messageId, conversationId } = action.payload;

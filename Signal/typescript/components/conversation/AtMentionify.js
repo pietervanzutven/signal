@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -38,10 +40,11 @@ require(exports => {
                             range.conversationID) {
                             openConversation(range.conversationID);
                         }
-                    }, tabIndex: 0, role: "link"
+                    }, tabIndex: 0, role: "link", "data-id": range.conversationID, "data-title": range.replacementText
                 },
-                    "@",
-                    react_1.default.createElement(Emojify_1.Emojify, { text: range.replacementText })));
+                    react_1.default.createElement("bdi", null,
+                        "@",
+                        react_1.default.createElement(Emojify_1.Emojify, { text: range.replacementText }))));
             }
             last = MENTIONS_REGEX.lastIndex;
             match = MENTIONS_REGEX.exec(text);

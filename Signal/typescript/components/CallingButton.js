@@ -57,6 +57,7 @@ require(exports => {
         }
         const className = classnames_1.default('module-calling-button__icon', `module-calling-button__icon--${classNameSuffix}`);
         return (react_1.default.createElement("button", { "aria-label": tooltipContent, type: "button", className: className, onClick: onClick },
-            react_1.default.createElement(react_tooltip_lite_1.default, { arrowSize: 6, content: tooltipContent, direction: tooltipDirection, distance: tooltipDistance, hoverDelay: 0 })));
+            react_1.default.createElement(react_tooltip_lite_1.default, { arrowSize: 6, content: tooltipContent, direction: tooltipDirection, distance: tooltipDistance, hoverDelay: 0 },
+                react_1.default.createElement("div", null))));
     };
 });

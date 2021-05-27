@@ -1,6 +1,9 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
+    const ExpirationTimerOptions_1 = require("../util/ExpirationTimerOptions");
     window.Whisper = window.Whisper || {};
     const { Message: TypedMessage, Attachment, MIME, Contact, PhoneNumber, Errors, } = window.Signal.Types;
     const { deleteExternalMessageFiles, getAbsoluteAttachmentPath, loadAttachmentData, loadQuoteData, loadPreviewData, loadStickerData, upgradeMessageSchema, } = window.Signal.Migrations;
@@ -324,7 +327,7 @@ require(exports => {
                 return undefined;
             }
             const { expireTimer, fromSync, source, sourceUuid } = timerUpdate;
-            const timespan = window.Whisper.ExpirationTimerOptions.getName(expireTimer || 0);
+            const timespan = ExpirationTimerOptions_1.ExpirationTimerOptions.getName(window.i18n, expireTimer || 0);
             const disabled = !expireTimer;
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const sourceId = window.ConversationController.ensureContactIds({
@@ -451,12 +454,15 @@ require(exports => {
             const sticker = this.get('sticker');
             if (sticker && sticker.data) {
                 const { data } = sticker;
-                // We don't show anything if we're still loading a sticker
-                if (data.pending || !data.path) {
+                // We don't show anything if we don't have the sticker or the blurhash...
+                if (!data.blurHash && (data.pending || !data.path)) {
                     return [];
                 }
                 return [
-                    Object.assign(Object.assign({}, data), { url: getAbsoluteAttachmentPath(data.path) }),
+                    Object.assign(Object.assign({}, data), {
+                        // We want to show the blurhash for stickers, not the spinner
+                        pending: false, url: data.path ? getAbsoluteAttachmentPath(data.path) : undefined
+                    }),
                 ];
             }
             const attachments = this.get('attachments') || [];
@@ -504,6 +510,7 @@ require(exports => {
                 canReply: this.canReply(),
                 canDeleteForEveryone: this.canDeleteForEveryone(),
                 canDownload: this.canDownload(),
+                authorId: contact.id,
                 authorTitle: contact.title,
                 authorColor,
                 authorName: contact.name,
@@ -915,7 +922,7 @@ require(exports => {
                 }
                 return {
                     text: window.i18n('timerSetTo', [
-                        window.Whisper.ExpirationTimerOptions.getAbbreviated(expireTimer || 0),
+                        ExpirationTimerOptions_1.ExpirationTimerOptions.getAbbreviated(window.i18n, expireTimer || 0),
                     ]),
                 };
             }
@@ -1275,16 +1282,17 @@ require(exports => {
                 const delta = this.get('expireTimer') * 1000;
                 const expiresAt = start + delta;
                 this.set({ expires_at: expiresAt });
+                window.log.info('Set message expiration', {
+                    start,
+                    expiresAt,
+                    sentAt: this.get('sent_at'),
+                });
                 const id = this.get('id');
                 if (id && !skipSave) {
                     await window.Signal.Data.saveMessage(this.attributes, {
                         Message: window.Whisper.Message,
                     });
                 }
-                window.log.info('Set message expiration', {
-                    expiresAt,
-                    sentAt: this.get('sent_at'),
-                });
             }
         }
         getIncomingContact() {
@@ -1360,7 +1368,8 @@ require(exports => {
             if (recipients.length === 1 &&
                 (recipients[0] === this.OUR_NUMBER || recipients[0] === this.OUR_UUID)) {
                 const [identifier] = recipients;
-                const dataMessage = await window.textsecure.messaging.getMessageProto(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('deletedForEveryoneTimestamp'), this.get('sent_at'), this.get('expireTimer'), profileKey);
+                const dataMessage = await window.textsecure.messaging.getMessageProto(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('deletedForEveryoneTimestamp'), this.get('sent_at'), this.get('expireTimer'), profileKey, undefined, // flags
+                    this.get('bodyRanges'));
                 return this.sendSyncMessageOnly(dataMessage);
             }
             let promise;
@@ -1476,7 +1485,8 @@ require(exports => {
             const stickerWithData = await loadStickerData(this.get('sticker'));
             // Special-case the self-send case - we send only a sync message
             if (identifier === this.OUR_NUMBER || identifier === this.OUR_UUID) {
-                const dataMessage = await window.textsecure.messaging.getMessageProto(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('sent_at'), this.get('expireTimer'), profileKey);
+                const dataMessage = await window.textsecure.messaging.getMessageProto(identifier, body, attachments, quoteWithData, previewWithData, stickerWithData, null, this.get('deletedForEveryoneTimestamp'), this.get('sent_at'), this.get('expireTimer'), profileKey, undefined, // flags
+                    this.get('bodyRanges'));
                 return this.sendSyncMessageOnly(dataMessage);
             }
             const { wrap, sendOptions } = window.ConversationController.prepareForSend(identifier);
@@ -1706,6 +1716,14 @@ require(exports => {
             }
             window.log.info(`Queueing ${normalAttachments.length} normal attachment downloads for message ${this.idForLogging()}`);
             const attachments = await Promise.all(normalAttachments.map((attachment, index) => {
+                if (!attachment) {
+                    return attachment;
+                }
+                // We've already downloaded this!
+                if (attachment.path) {
+                    window.log.info(`Normal attachment already downloaded for message ${this.idForLogging()}`);
+                    return attachment;
+                }
                 count += 1;
                 return window.Signal.AttachmentDownloads.addJob(attachment, {
                     messageId,
@@ -1717,6 +1735,11 @@ require(exports => {
             window.log.info(`Queueing ${previewsToQueue.length} preview attachment downloads for message ${this.idForLogging()}`);
             const preview = await Promise.all(previewsToQueue.map(async (item, index) => {
                 if (!item.image) {
+                    return item;
+                }
+                // We've already downloaded this!
+                if (item.image.path) {
+                    window.log.info(`Preview attachment already downloaded for message ${this.idForLogging()}`);
                     return item;
                 }
                 count += 1;
@@ -1732,6 +1755,11 @@ require(exports => {
             window.log.info(`Queueing ${contactsToQueue.length} contact attachment downloads for message ${this.idForLogging()}`);
             const contact = await Promise.all(contactsToQueue.map(async (item, index) => {
                 if (!item.avatar || !item.avatar.avatar) {
+                    return item;
+                }
+                // We've already downloaded this!
+                if (item.avatar.avatar.path) {
+                    window.log.info(`Contact attachment already downloaded for message ${this.idForLogging()}`);
                     return item;
                 }
                 count += 1;
@@ -1752,9 +1780,12 @@ require(exports => {
             if (quoteAttachmentsToQueue.length > 0) {
                 quote = Object.assign(Object.assign({}, quote), {
                     attachments: await Promise.all((quote.attachments || []).map(async (item, index) => {
-                        // If we already have a path, then we copied this image from the quoted
-                        //    message and we don't need to download the attachment.
-                        if (!item.thumbnail || item.thumbnail.path) {
+                        if (!item.thumbnail) {
+                            return item;
+                        }
+                        // We've already downloaded this!
+                        if (item.thumbnail.path) {
+                            window.log.info(`Quote attachment already downloaded for message ${this.idForLogging()}`);
                             return item;
                         }
                         count += 1;
@@ -1770,7 +1801,10 @@ require(exports => {
             }
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             let sticker = this.get('sticker');
-            if (sticker) {
+            if (sticker && sticker.data && sticker.data.path) {
+                window.log.info(`Sticker attachment already downloaded for message ${this.idForLogging()}`);
+            }
+            else if (sticker) {
                 window.log.info(`Queueing sticker download for message ${this.idForLogging()}`);
                 count += 1;
                 const { packId, stickerId, packKey } = sticker;

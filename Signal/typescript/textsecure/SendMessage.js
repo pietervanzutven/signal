@@ -1,20 +1,17 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.textsecure = window.ts.textsecure || {};
-    const exports = window.ts.textsecure.SendMessage = {};
-
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
+    var __importDefault = (this && this.__importDefault) || function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports, "__esModule", { value: true });
     /* eslint-disable no-nested-ternary */
     /* eslint-disable class-methods-use-this */
     /* eslint-disable more/no-then */
     /* eslint-disable no-bitwise */
     /* eslint-disable @typescript-eslint/no-explicit-any */
     /* eslint-disable max-classes-per-file */
-    var __importDefault = (this && this.__importDefault) || function (mod) {
-        return (mod && mod.__esModule) ? mod : { "default": mod };
-    };
-    Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = require("lodash");
     const p_queue_1 = __importDefault(require("p-queue"));
     const TaskWithTimeout_1 = __importDefault(require("./TaskWithTimeout"));
@@ -50,6 +47,7 @@
             this.reaction = options.reaction;
             this.timestamp = options.timestamp;
             this.deletedForEveryoneTimestamp = options.deletedForEveryoneTimestamp;
+            this.mentions = options.mentions;
             if (!(this.recipients instanceof Array)) {
                 throw new Error('Invalid recipient list');
             }
@@ -107,6 +105,10 @@
             proto.attachments = this.attachmentPointers;
             if (this.body) {
                 proto.body = this.body;
+                const mentionCount = this.mentions ? this.mentions.length : 0;
+                const placeholders = this.body.match(/\uFFFC/g);
+                const placeholderCount = placeholders ? placeholders.length : 0;
+                window.log.info(`Sending a message with ${mentionCount} mentions and ${placeholderCount} placeholders`);
             }
             if (this.flags) {
                 proto.flags = this.flags;
@@ -132,7 +134,12 @@
                 }
             }
             if (this.reaction) {
-                proto.reaction = this.reaction;
+                proto.reaction = new window.textsecure.protobuf.DataMessage.Reaction();
+                proto.reaction.emoji = this.reaction.emoji || null;
+                proto.reaction.remove = this.reaction.remove || false;
+                proto.reaction.targetAuthorE164 = this.reaction.targetAuthorE164 || null;
+                proto.reaction.targetAuthorUuid = this.reaction.targetAuthorUuid || null;
+                proto.reaction.targetTimestamp = this.reaction.targetTimestamp || null;
             }
             if (Array.isArray(this.preview)) {
                 proto.preview = this.preview.map(preview => {
@@ -150,9 +157,10 @@
                 const { BodyRange, Quote } = window.textsecure.protobuf.DataMessage;
                 proto.quote = new Quote();
                 const { quote } = proto;
-                quote.id = this.quote.id;
-                quote.author = this.quote.author;
-                quote.text = this.quote.text;
+                quote.id = this.quote.id || null;
+                quote.author = this.quote.author || null;
+                quote.authorUuid = this.quote.authorUuid || null;
+                quote.text = this.quote.text || null;
                 quote.attachments = (this.quote.attachments || []).map((attachment) => {
                     const quotedAttachment = new QuotedAttachment();
                     quotedAttachment.contentType = attachment.contentType;
@@ -188,6 +196,15 @@
                 proto.delete = {
                     targetSentTimestamp: this.deletedForEveryoneTimestamp,
                 };
+            }
+            if (this.mentions) {
+                proto.requiredProtocolVersion =
+                    window.textsecure.protobuf.DataMessage.ProtocolVersion.MENTIONS;
+                proto.bodyRanges = this.mentions.map(({ start, length, mentionUuid }) => ({
+                    start,
+                    length,
+                    mentionUuid,
+                }));
             }
             this.dataMessage = proto;
             return proto;
@@ -785,7 +802,7 @@
                 this.sendMessageProto(timestamp, providedIdentifiers, proto, callback, silent, options);
             });
         }
-        async getMessageProto(destination, body, attachments, quote, preview, sticker, reaction, deletedForEveryoneTimestamp, timestamp, expireTimer, profileKey, flags) {
+        async getMessageProto(destination, body, attachments, quote, preview, sticker, reaction, deletedForEveryoneTimestamp, timestamp, expireTimer, profileKey, flags, mentions) {
             const attributes = {
                 recipients: [destination],
                 destination,
@@ -800,6 +817,7 @@
                 expireTimer,
                 profileKey,
                 flags,
+                mentions,
             };
             return this.getMessageProtoObj(attributes);
         }
@@ -865,7 +883,7 @@
             const sendSyncPromise = this.sendSyncMessage(buffer, timestamp, e164, uuid, null, [], [], false, options).catch(logError('resetSession/sendSync error:'));
             return Promise.all([sendToContactPromise, sendSyncPromise]);
         }
-        async sendMessageToGroup({ attachments, expireTimer, groupV2, groupV1, messageText, preview, profileKey, quote, reaction, sticker, deletedForEveryoneTimestamp, timestamp, }, options) {
+        async sendMessageToGroup({ attachments, expireTimer, groupV2, groupV1, messageText, preview, profileKey, quote, reaction, sticker, deletedForEveryoneTimestamp, timestamp, mentions, }, options) {
             if (!groupV1 && !groupV2) {
                 throw new Error('sendMessageToGroup: Neither group1 nor groupv2 information provided!');
             }
@@ -904,6 +922,7 @@
                         type: window.textsecure.protobuf.GroupContext.Type.DELIVER,
                     }
                     : undefined,
+                mentions,
             };
             if (recipients.length === 0) {
                 return Promise.resolve({
@@ -993,4 +1012,4 @@
         }
     }
     exports.default = MessageSender;
-})();
+});

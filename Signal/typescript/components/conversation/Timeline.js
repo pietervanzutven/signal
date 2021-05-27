@@ -1,11 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    window.ts.components.conversation = window.ts.components.conversation || {};
-    const exports = window.ts.components.conversation.Timeline = {};
-
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -191,7 +187,6 @@
                     const child = children[i];
                     const { id, offsetTop, offsetHeight } = child;
                     if (!id) {
-                        // eslint-disable-next-line no-continue
                         continue;
                     }
                     const bottom = offsetTop + offsetHeight;
@@ -206,7 +201,6 @@
                     const child = children[i];
                     const { offsetTop, id } = child;
                     if (!id) {
-                        // eslint-disable-next-line no-continue
                         continue;
                     }
                     if (offsetTop + AT_TOP_THRESHOLD >= visibleTop) {
@@ -659,4 +653,4 @@
         }
     }
     exports.Timeline = Timeline;
-})();
+});

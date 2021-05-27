@@ -30,7 +30,9 @@
                 react_1.default.createElement("div", { className: "module-document-list-item__icon" }),
                 react_1.default.createElement("div", { className: "module-document-list-item__metadata" },
                     react_1.default.createElement("span", { className: "module-document-list-item__file-name" }, fileName),
-                    react_1.default.createElement("span", { className: "module-document-list-item__file-size" }, typeof fileSize === 'number' ? filesize_1.default(fileSize) : '')),
+                    react_1.default.createElement("span", { className: "module-document-list-item__file-size" }, typeof fileSize === 'number'
+                        ? filesize_1.default(fileSize, { round: 0 })
+                        : '')),
                 react_1.default.createElement("div", { className: "module-document-list-item__date" }, moment_1.default(timestamp).format('ddd, MMM D, Y'))));
         }
     }

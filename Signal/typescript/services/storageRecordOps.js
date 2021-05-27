@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -69,6 +71,7 @@ require(exports => {
         contactRecord.blocked = conversation.isBlocked();
         contactRecord.whitelisted = Boolean(conversation.get('profileSharing'));
         contactRecord.archived = Boolean(conversation.get('isArchived'));
+        contactRecord.markedUnread = Boolean(conversation.get('markedUnread'));
         applyUnknownFields(contactRecord, conversation);
         return contactRecord;
     }
@@ -86,6 +89,7 @@ require(exports => {
         }
         accountRecord.avatarUrl = window.storage.get('avatarUrl') || '';
         accountRecord.noteToSelfArchived = Boolean(conversation.get('isArchived'));
+        accountRecord.noteToSelfMarkedUnread = Boolean(conversation.get('markedUnread'));
         accountRecord.readReceipts = Boolean(window.storage.get('read-receipt-setting'));
         accountRecord.sealedSenderIndicators = Boolean(window.storage.get('sealedSenderIndicators'));
         accountRecord.typingIndicators = Boolean(window.storage.get('typingIndicators'));
@@ -136,6 +140,7 @@ require(exports => {
         groupV1Record.blocked = conversation.isBlocked();
         groupV1Record.whitelisted = Boolean(conversation.get('profileSharing'));
         groupV1Record.archived = Boolean(conversation.get('isArchived'));
+        groupV1Record.markedUnread = Boolean(conversation.get('markedUnread'));
         applyUnknownFields(groupV1Record, conversation);
         return groupV1Record;
     }
@@ -149,6 +154,7 @@ require(exports => {
         groupV2Record.blocked = conversation.isBlocked();
         groupV2Record.whitelisted = Boolean(conversation.get('profileSharing'));
         groupV2Record.archived = Boolean(conversation.get('isArchived'));
+        groupV2Record.markedUnread = Boolean(conversation.get('markedUnread'));
         applyUnknownFields(groupV2Record, conversation);
         return groupV2Record;
     }
@@ -238,6 +244,7 @@ require(exports => {
         }
         conversation.set({
             isArchived: Boolean(groupV1Record.archived),
+            markedUnread: Boolean(groupV1Record.markedUnread),
             storageID,
         });
         applyMessageRequestState(groupV1Record, conversation);
@@ -280,6 +287,7 @@ require(exports => {
         });
         conversation.set({
             isArchived: Boolean(groupV2Record.archived),
+            markedUnread: Boolean(groupV2Record.markedUnread),
             storageID,
         });
         applyMessageRequestState(groupV2Record, conversation);
@@ -337,6 +345,7 @@ require(exports => {
         addUnknownFields(contactRecord, conversation);
         conversation.set({
             isArchived: Boolean(contactRecord.archived),
+            markedUnread: Boolean(contactRecord.markedUnread),
             storageID,
         });
         const hasPendingChanges = doesRecordHavePendingChanges(await toContactRecord(conversation), contactRecord, conversation);
@@ -345,7 +354,7 @@ require(exports => {
     }
     exports.mergeContactRecord = mergeContactRecord;
     async function mergeAccountRecord(storageID, accountRecord) {
-        const { avatarUrl, linkPreviews, noteToSelfArchived, pinnedConversations: remotelyPinnedConversationClasses, profileKey, readReceipts, sealedSenderIndicators, typingIndicators, } = accountRecord;
+        const { avatarUrl, linkPreviews, noteToSelfArchived, noteToSelfMarkedUnread, pinnedConversations: remotelyPinnedConversationClasses, profileKey, readReceipts, sealedSenderIndicators, typingIndicators, } = accountRecord;
         window.storage.put('read-receipt-setting', readReceipts);
         if (typeof sealedSenderIndicators === 'boolean') {
             window.storage.put('sealedSenderIndicators', sealedSenderIndicators);
@@ -364,7 +373,9 @@ require(exports => {
                 .getConversations()
                 .filter(conversation => Boolean(conversation.get('isPinned')));
             const modelPinnedConversationIds = modelPinnedConversations.map(conversation => conversation.get('id'));
-            const missingStoragePinnedConversationIds = window.ConversationController.getPinnedConversationIds().filter(id => !modelPinnedConversationIds.includes(id));
+            const missingStoragePinnedConversationIds = window.storage
+                .get('pinnedConversationIds', [])
+                .filter(id => !modelPinnedConversationIds.includes(id));
             if (missingStoragePinnedConversationIds.length !== 0) {
                 window.log.info('mergeAccountRecord: pinnedConversationIds in storage does not match pinned Conversation models');
             }
@@ -426,7 +437,7 @@ require(exports => {
                 updateConversation(conversation.attributes);
             });
             remotelyPinnedConversations.forEach(conversation => {
-                conversation.set({ isPinned: true });
+                conversation.set({ isPinned: true, isArchived: false });
                 updateConversation(conversation.attributes);
             });
             window.storage.put('pinnedConversationIds', remotelyPinnedConversationIds);
@@ -439,6 +450,7 @@ require(exports => {
         addUnknownFields(accountRecord, conversation);
         conversation.set({
             isArchived: Boolean(noteToSelfArchived),
+            markedUnread: Boolean(noteToSelfMarkedUnread),
             storageID,
         });
         if (accountRecord.profileKey) {

@@ -53,7 +53,6 @@ require(exports => {
 
   if (window.console) {
     console._log = console.log;
-    console.log = log;
   }
 
   // The mechanics of preparing a log for publish

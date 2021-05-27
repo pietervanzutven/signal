@@ -1,9 +1,13 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
+    const isMuted_1 = require("../util/isMuted");
     const sniffImageMimeType_1 = require("../util/sniffImageMimeType");
     const MIME_1 = require("../types/MIME");
     const Crypto_1 = require("../Crypto");
+    const util_1 = require("../util");
     /* eslint-disable more/no-then */
     window.Whisper = window.Whisper || {};
     const SEALED_SENDER = {
@@ -32,6 +36,10 @@ require(exports => {
     ];
     const THREE_HOURS = 3 * 60 * 60 * 1000;
     class ConversationModel extends window.Backbone.Model {
+        constructor() {
+            super(...arguments);
+            this.intlCollator = new Intl.Collator();
+        }
         // eslint-disable-next-line class-methods-use-this
         defaults() {
             return {
@@ -136,7 +144,8 @@ require(exports => {
             if (!groupId) {
                 return false;
             }
-            return Crypto_1.fromEncodedBinaryToArrayBuffer(groupId).byteLength === 16;
+            const buffer = Crypto_1.fromEncodedBinaryToArrayBuffer(groupId);
+            return buffer.byteLength === window.Signal.Groups.ID_V1_LENGTH;
         }
         isGroupV2() {
             const groupId = this.get('groupId');
@@ -144,7 +153,8 @@ require(exports => {
                 return false;
             }
             const groupVersion = this.get('groupVersion') || 0;
-            return groupVersion === 2 && Crypto_1.base64ToArrayBuffer(groupId).byteLength === 32;
+            return (groupVersion === 2 &&
+                Crypto_1.base64ToArrayBuffer(groupId).byteLength === window.Signal.Groups.ID_LENGTH);
         }
         isMemberPending(conversationId) {
             if (!this.isGroupV2()) {
@@ -460,7 +470,8 @@ require(exports => {
         getDraftPreview() {
             const draft = this.get('draft');
             if (draft) {
-                return draft;
+                const bodyRanges = this.get('draftBodyRanges') || [];
+                return util_1.getTextWithMentions(bodyRanges, draft);
             }
             const draftAttachments = this.get('draftAttachments') || [];
             if (draftAttachments.length > 0) {
@@ -524,6 +535,9 @@ require(exports => {
             await window.Signal.Groups.waitThenMaybeUpdateGroup({
                 conversation: this,
             });
+        }
+        isValid() {
+            return this.isPrivate() || this.isGroupV1() || this.isGroupV2();
         }
         maybeRepairGroupV2(data) {
             if (this.get('groupVersion') &&
@@ -729,6 +743,7 @@ require(exports => {
             const draftTimestamp = this.get('draftTimestamp');
             const draftPreview = this.getDraftPreview();
             const draftText = this.get('draft');
+            const draftBodyRanges = this.get('draftBodyRanges');
             const shouldShowDraft = (this.hasDraft() &&
                 draftTimestamp &&
                 draftTimestamp >= timestamp);
@@ -742,6 +757,12 @@ require(exports => {
             else if (this.isGroupV2()) {
                 groupVersion = 2;
             }
+            const members = this.isGroupV2()
+                ? this.getMembers()
+                    .sort((left, right) => sortConversationTitles(left, right, this.intlCollator))
+                    .map(member => member.format())
+                    .filter((member) => member !== null)
+                : undefined;
             // TODO: DESKTOP-720
             /* eslint-disable @typescript-eslint/no-non-null-assertion */
             const result = {
@@ -751,8 +772,11 @@ require(exports => {
                 acceptedMessageRequest: this.getAccepted(),
                 activeAt: this.get('active_at'),
                 areWePending: Boolean(ourConversationId && this.isMemberPending(ourConversationId)),
+                areWeAdmin: this.areWeAdmin(),
+                canChangeTimer: this.canChangeTimer(),
                 avatarPath: this.getAvatarPath(),
                 color,
+                draftBodyRanges,
                 draftPreview,
                 draftText,
                 firstName: this.get('profileName'),
@@ -770,10 +794,14 @@ require(exports => {
                     deletedForEveryone: this.get('lastMessageDeletedForEveryone'),
                 },
                 lastUpdated: this.get('timestamp'),
+                left: Boolean(this.get('left')),
+                markedUnread: this.get('markedUnread'),
+                members,
                 membersCount: this.isPrivate()
                     ? undefined
                     : (this.get('membersV2') || this.get('members') || []).length,
                 messageRequestsEnabled,
+                expireTimer: this.get('expireTimer'),
                 muteExpiresAt: this.get('muteExpiresAt'),
                 name: this.get('name'),
                 phoneNumber: this.getNumber(),
@@ -882,97 +910,109 @@ require(exports => {
                     await this.sendReadReceiptsFor(receiptSpecs);
                 }
                 // eslint-disable-next-line no-await-in-loop
-                await Promise.all(readMessages.map(m => m.queueAttachmentDownloads()));
+                await Promise.all(readMessages.map(async (m) => {
+                    const registered = window.MessageController.register(m.id, m);
+                    const shouldSave = await registered.queueAttachmentDownloads();
+                    if (shouldSave) {
+                        await window.Signal.Data.saveMessage(registered.attributes, {
+                            Message: window.Whisper.Message,
+                        });
+                    }
+                }));
             } while (messages.length > 0);
         }
         async applyMessageRequestResponse(response, { fromSync = false, viaStorageServiceSync = false } = {}) {
-            const messageRequestEnum = window.textsecure.protobuf.SyncMessage.MessageRequestResponse.Type;
-            const isLocalAction = !fromSync && !viaStorageServiceSync;
-            const ourConversationId = window.ConversationController.getOurConversationId();
-            const currentMessageRequestState = this.get('messageRequestResponseType');
-            const didResponseChange = response !== currentMessageRequestState;
-            const wasPreviouslyAccepted = this.getAccepted();
-            // Apply message request response locally
-            this.set({
-                messageRequestResponseType: response,
-            });
-            window.Signal.Data.updateConversation(this.attributes);
-            if (response === messageRequestEnum.ACCEPT) {
-                this.unblock({ viaStorageServiceSync });
-                this.enableProfileSharing({ viaStorageServiceSync });
-                // We really don't want to call this if we don't have to. It can take a lot of time
-                //   to go through old messages to download attachments.
-                if (didResponseChange && !wasPreviouslyAccepted) {
-                    await this.handleReadAndDownloadAttachments({ isLocalAction });
+            try {
+                const messageRequestEnum = window.textsecure.protobuf.SyncMessage.MessageRequestResponse.Type;
+                const isLocalAction = !fromSync && !viaStorageServiceSync;
+                const ourConversationId = window.ConversationController.getOurConversationId();
+                const currentMessageRequestState = this.get('messageRequestResponseType');
+                const didResponseChange = response !== currentMessageRequestState;
+                const wasPreviouslyAccepted = this.getAccepted();
+                // Apply message request response locally
+                this.set({
+                    messageRequestResponseType: response,
+                });
+                if (response === messageRequestEnum.ACCEPT) {
+                    this.unblock({ viaStorageServiceSync });
+                    this.enableProfileSharing({ viaStorageServiceSync });
+                    // We really don't want to call this if we don't have to. It can take a lot of
+                    //   time to go through old messages to download attachments.
+                    if (didResponseChange && !wasPreviouslyAccepted) {
+                        await this.handleReadAndDownloadAttachments({ isLocalAction });
+                    }
+                    if (isLocalAction) {
+                        if (this.isGroupV1() || this.isPrivate()) {
+                            this.sendProfileKeyUpdate();
+                        }
+                        else if (ourConversationId &&
+                            this.isGroupV2() &&
+                            this.isMemberPending(ourConversationId)) {
+                            await this.modifyGroupV2({
+                                name: 'promotePendingMember',
+                                createGroupChange: () => this.promotePendingMember(ourConversationId),
+                            });
+                        }
+                        else if (ourConversationId &&
+                            this.isGroupV2() &&
+                            this.isMember(ourConversationId)) {
+                            window.log.info('applyMessageRequestResponse/accept: Already a member of v2 group');
+                        }
+                        else {
+                            window.log.error('applyMessageRequestResponse/accept: Neither member nor pending member of v2 group');
+                        }
+                    }
                 }
-                if (isLocalAction) {
-                    if (this.isGroupV1() || this.isPrivate()) {
-                        this.sendProfileKeyUpdate();
+                else if (response === messageRequestEnum.BLOCK) {
+                    // Block locally, other devices should block upon receiving the sync message
+                    this.block({ viaStorageServiceSync });
+                    this.disableProfileSharing({ viaStorageServiceSync });
+                    if (isLocalAction) {
+                        if (this.isGroupV1() || this.isPrivate()) {
+                            await this.leaveGroup();
+                        }
+                        else if (this.isGroupV2()) {
+                            await this.leaveGroupV2();
+                        }
                     }
-                    else if (ourConversationId &&
-                        this.isGroupV2() &&
-                        this.isMemberPending(ourConversationId)) {
-                        await this.modifyGroupV2({
-                            name: 'promotePendingMember',
-                            createGroupChange: () => this.promotePendingMember(ourConversationId),
-                        });
+                }
+                else if (response === messageRequestEnum.DELETE) {
+                    this.disableProfileSharing({ viaStorageServiceSync });
+                    // Delete messages locally, other devices should delete upon receiving
+                    // the sync message
+                    await this.destroyMessages();
+                    this.updateLastMessage();
+                    if (isLocalAction) {
+                        this.trigger('unload', 'deleted from message request');
+                        if (this.isGroupV1() || this.isPrivate()) {
+                            await this.leaveGroup();
+                        }
+                        else if (this.isGroupV2()) {
+                            await this.leaveGroupV2();
+                        }
                     }
-                    else if (ourConversationId &&
-                        this.isGroupV2() &&
-                        this.isMember(ourConversationId)) {
-                        window.log.info('applyMessageRequestResponse/accept: Already a member of v2 group');
-                    }
-                    else {
-                        window.log.error('applyMessageRequestResponse/accept: Neither member nor pending member of v2 group');
+                }
+                else if (response === messageRequestEnum.BLOCK_AND_DELETE) {
+                    // Block locally, other devices should block upon receiving the sync message
+                    this.block({ viaStorageServiceSync });
+                    this.disableProfileSharing({ viaStorageServiceSync });
+                    // Delete messages locally, other devices should delete upon receiving
+                    // the sync message
+                    await this.destroyMessages();
+                    this.updateLastMessage();
+                    if (isLocalAction) {
+                        this.trigger('unload', 'blocked and deleted from message request');
+                        if (this.isGroupV1() || this.isPrivate()) {
+                            await this.leaveGroup();
+                        }
+                        else if (this.isGroupV2()) {
+                            await this.leaveGroupV2();
+                        }
                     }
                 }
             }
-            else if (response === messageRequestEnum.BLOCK) {
-                // Block locally, other devices should block upon receiving the sync message
-                this.block({ viaStorageServiceSync });
-                this.disableProfileSharing({ viaStorageServiceSync });
-                if (isLocalAction) {
-                    if (this.isGroupV1() || this.isPrivate()) {
-                        await this.leaveGroup();
-                    }
-                    else if (this.isGroupV2()) {
-                        await this.leaveGroupV2();
-                    }
-                }
-            }
-            else if (response === messageRequestEnum.DELETE) {
-                this.disableProfileSharing({ viaStorageServiceSync });
-                // Delete messages locally, other devices should delete upon receiving
-                // the sync message
-                await this.destroyMessages();
-                this.updateLastMessage();
-                if (isLocalAction) {
-                    this.trigger('unload', 'deleted from message request');
-                    if (this.isGroupV1() || this.isPrivate()) {
-                        await this.leaveGroup();
-                    }
-                    else if (this.isGroupV2()) {
-                        await this.leaveGroupV2();
-                    }
-                }
-            }
-            else if (response === messageRequestEnum.BLOCK_AND_DELETE) {
-                // Block locally, other devices should block upon receiving the sync message
-                this.block({ viaStorageServiceSync });
-                this.disableProfileSharing({ viaStorageServiceSync });
-                // Delete messages locally, other devices should delete upon receiving
-                // the sync message
-                await this.destroyMessages();
-                this.updateLastMessage();
-                if (isLocalAction) {
-                    this.trigger('unload', 'blocked and deleted from message request');
-                    if (this.isGroupV1() || this.isPrivate()) {
-                        await this.leaveGroup();
-                    }
-                    else if (this.isGroupV2()) {
-                        await this.leaveGroupV2();
-                    }
-                }
+            finally {
+                window.Signal.Data.updateConversation(this.attributes);
             }
         }
         async leaveGroupV2() {
@@ -995,6 +1035,23 @@ require(exports => {
             }
             else {
                 window.log.error('leaveGroupV2: We were neither a member nor a pending member of the group');
+            }
+        }
+        async removeFromGroupV2(conversationId) {
+            if (this.isGroupV2() && this.isMemberPending(conversationId)) {
+                await this.modifyGroupV2({
+                    name: 'removePendingMember',
+                    createGroupChange: () => this.removePendingMember(conversationId),
+                });
+            }
+            else if (this.isGroupV2() && this.isMember(conversationId)) {
+                await this.modifyGroupV2({
+                    name: 'removeFromGroup',
+                    createGroupChange: () => this.removeMember(conversationId),
+                });
+            }
+            else {
+                window.log.error(`removeFromGroupV2: Member ${conversationId} is neither a member nor a pending member of the group`);
             }
         }
         async syncMessageRequestResponse(response) {
@@ -1736,6 +1793,9 @@ require(exports => {
                 // We are only creating this model so we can use its sync message
                 // sending functionality. It will not be saved to the datbase.
                 const message = new window.Whisper.Message(attributes);
+                // This is to ensure that the functions in send() and sendSyncMessage() don't save
+                //   anything to the database.
+                message.doNotSave = true;
                 // We're offline!
                 if (!window.textsecure.messaging) {
                     throw new Error('Cannot send reaction while offline!');
@@ -1773,9 +1833,6 @@ require(exports => {
                         profileKey,
                     }, options);
                 })();
-                // This is to ensure that the functions in send() and sendSyncMessage() don't save
-                //   anything to the database.
-                message.doNotSave = true;
                 return message.send(this.wrapSend(promise));
             }).catch(error => {
                 window.log.error('Error sending reaction', reaction, target, error);
@@ -1796,7 +1853,7 @@ require(exports => {
             const profileKey = window.storage.get('profileKey');
             await window.textsecure.messaging.sendProfileKeyUpdate(profileKey, recipients, this.getSendOptions(), this.get('groupId'));
         }
-        sendMessage(body, attachments, quote, preview, sticker) {
+        sendMessage(body, attachments, quote, preview, sticker, mentions) {
             this.clearTypingTimers();
             const { clearUnreadMetrics } = window.reduxActions.conversations;
             clearUnreadMetrics(this.id);
@@ -1824,6 +1881,7 @@ require(exports => {
                     expireTimer,
                     recipients,
                     sticker,
+                    bodyRanges: mentions,
                 });
                 if (this.isPrivate()) {
                     messageWithSchema.destination = destination;
@@ -1892,6 +1950,7 @@ require(exports => {
                         quote,
                         sticker,
                         timestamp: now,
+                        mentions,
                     }, options);
                 }
                 else {
@@ -2081,6 +2140,15 @@ require(exports => {
                 }
                 this.captureChange('isArchived');
             }
+        }
+        setMarkedUnread(markedUnread) {
+            const previousMarkedUnread = this.get('markedUnread');
+            this.set({ markedUnread });
+            window.Signal.Data.updateConversation(this.attributes);
+            if (Boolean(previousMarkedUnread) !== Boolean(markedUnread)) {
+                this.captureChange('markedUnread');
+            }
+            window.Whisper.events.trigger('updateUnreadCount');
         }
         async updateExpirationTimer(providedExpireTimer, providedSource, receivedAt, options = {}) {
             if (this.isGroupV2()) {
@@ -2760,6 +2828,12 @@ require(exports => {
             if (canAnyoneChangeTimer) {
                 return true;
             }
+            return this.areWeAdmin();
+        }
+        areWeAdmin() {
+            if (!this.isGroupV2()) {
+                return false;
+            }
             const memberEnum = window.textsecure.protobuf.Member.Role;
             const members = this.get('membersV2') || [];
             const myId = window.ConversationController.getOurConversationId();
@@ -2767,11 +2841,7 @@ require(exports => {
             if (!me) {
                 return false;
             }
-            const isAdministrator = me.role === memberEnum.ADMINISTRATOR;
-            if (isAdministrator) {
-                return true;
-            }
-            return false;
+            return me.role === memberEnum.ADMINISTRATOR;
         }
         // Set of items to captureChanges on:
         // [-] uuid
@@ -2784,6 +2854,7 @@ require(exports => {
         // [X] blocked
         // [X] whitelisted
         // [X] archived
+        // [X] markedUnread
         captureChange(property) {
             if (!window.Signal.RemoteConfig.isEnabled('desktop.storageWrite')) {
                 window.log.info('conversation.captureChange: Returning early; desktop.storageWrite is falsey');
@@ -2796,8 +2867,7 @@ require(exports => {
             });
         }
         isMuted() {
-            return (Boolean(this.get('muteExpiresAt')) &&
-                Date.now() < this.get('muteExpiresAt'));
+            return isMuted_1.isMuted(this.get('muteExpiresAt'));
         }
         getMuteTimeoutId() {
             return `mute(${this.get('id')})`;
@@ -3075,6 +3145,11 @@ require(exports => {
             return this.conversation.isMe();
         },
     });
+    const sortConversationTitles = (left, right, collator) => {
+        const leftLower = left.getTitle().toLowerCase();
+        const rightLower = right.getTitle().toLowerCase();
+        return collator.compare(leftLower, rightLower);
+    };
     // We need a custom collection here to get the sorting we need
     window.Whisper.GroupConversationCollection = window.Backbone.Collection.extend({
         model: window.Whisper.GroupMemberConversation,
@@ -3088,9 +3163,7 @@ require(exports => {
             if (!left.isAdmin && right.isAdmin) {
                 return 1;
             }
-            const leftLower = left.getTitle().toLowerCase();
-            const rightLower = right.getTitle().toLowerCase();
-            return this.collator.compare(leftLower, rightLower);
+            return sortConversationTitles(left, right, this.collator);
         },
     });
 });

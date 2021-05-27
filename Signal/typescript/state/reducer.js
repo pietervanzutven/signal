@@ -13,7 +13,7 @@ require(exports => {
     const stickers_1 = require("./ducks/stickers");
     const updates_1 = require("./ducks/updates");
     const user_1 = require("./ducks/user");
-    exports.reducers = {
+    exports.reducer = redux_1.combineReducers({
         calling: calling_1.reducer,
         conversations: conversations_1.reducer,
         emojis: emojis_1.reducer,
@@ -25,7 +25,5 @@ require(exports => {
         stickers: stickers_1.reducer,
         updates: updates_1.reducer,
         user: user_1.reducer,
-    };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    exports.reducer = redux_1.combineReducers(exports.reducers);
+    });
 });

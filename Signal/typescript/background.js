@@ -1,4 +1,6 @@
 "use strict";
+// Copyright 2020 Signal Messenger, LLC
+// SPDX-License-Identifier: AGPL-3.0-only
 // eslint-disable-next-line func-names
 (async function () {
     const eventHandlerQueue = new window.PQueue({
@@ -496,8 +498,8 @@
                 conversationLookup: window.Signal.Util.makeLookup(conversations, 'id'),
                 messagesByConversation: {},
                 messagesLookup: {},
-                selectedConversation: null,
-                selectedMessage: null,
+                selectedConversation: undefined,
+                selectedMessage: undefined,
                 selectedMessageCounter: 0,
                 showArchived: false,
             },
@@ -606,7 +608,7 @@
                 if (!unreadOnly) {
                     return target.id;
                 }
-                if (target.unreadCount > 0) {
+                if ((target.unreadCount || 0) > 0) {
                     return target.id;
                 }
             }
@@ -712,6 +714,9 @@
                     }
                     // MainHeader search box
                     if (className.includes('module-main-header__search__input')) {
+                        return;
+                    }
+                    if (className.includes('module-contact-modal')) {
                         return;
                     }
                 }
@@ -1232,244 +1237,256 @@
         window.Signal.AttachmentDownloads.stop();
     }
     let connectCount = 0;
+    let connecting = false;
     async function connect(firstRun) {
-        window.log.info('connect', { firstRun, connectCount });
-        if (reconnectTimer) {
-            clearTimeout(reconnectTimer);
-            reconnectTimer = null;
-        }
-        // Bootstrap our online/offline detection, only the first time we connect
-        if (connectCount === 0 && navigator.onLine) {
-            window.addEventListener('offline', onOffline);
-        }
-        if (connectCount === 0 && !navigator.onLine) {
-            window.log.warn('Starting up offline; will connect when we have network access');
-            window.addEventListener('online', onOnline);
-            onEmpty(); // this ensures that the loading screen is dismissed
+        if (connecting) {
+            window.log.warn('connect already running', { connectCount });
             return;
         }
-        if (!window.Signal.Util.Registration.everDone()) {
-            return;
-        }
-        preMessageReceiverStatus = WebSocket.CONNECTING;
-        if (messageReceiver) {
-            await messageReceiver.stopProcessing();
-            await window.waitForAllBatchers();
-            messageReceiver.unregisterBatchers();
-            messageReceiver = null;
-        }
-        const OLD_USERNAME = window.storage.get('number_id');
-        const USERNAME = window.storage.get('uuid_id');
-        const PASSWORD = window.storage.get('password');
-        const mySignalingKey = window.storage.get('signaling_key');
-        window.textsecure.messaging = new window.textsecure.MessageSender(USERNAME || OLD_USERNAME, PASSWORD);
-        if (connectCount === 0) {
-            try {
-                // Force a re-fetch before we process our queue. We may want to turn on something
-                //   which changes how we process incoming messages!
-                await window.Signal.RemoteConfig.refreshRemoteConfig();
+        try {
+            connecting = true;
+            window.log.info('connect', { firstRun, connectCount });
+            if (reconnectTimer) {
+                clearTimeout(reconnectTimer);
+                reconnectTimer = null;
             }
-            catch (error) {
-                window.log.error('connect: Error refreshing remote config:', error && error.stack ? error.stack : error);
+            // Bootstrap our online/offline detection, only the first time we connect
+            if (connectCount === 0 && navigator.onLine) {
+                window.addEventListener('offline', onOffline);
             }
-            try {
-                if (window.Signal.RemoteConfig.isEnabled('desktop.cds')) {
-                    const lonelyE164s = window
-                        .getConversations()
-                        .filter(c => Boolean(c.isPrivate() &&
-                        c.get('e164') &&
-                        !c.get('uuid') &&
-                        !c.isEverUnregistered()))
-                        .map(c => c.get('e164'));
-                    if (lonelyE164s.length > 0) {
-                        const lookup = await window.textsecure.messaging.getUuidsForE164s(lonelyE164s);
-                        const e164s = Object.keys(lookup);
-                        e164s.forEach(e164 => {
-                            const uuid = lookup[e164];
-                            if (!uuid) {
-                                const byE164 = window.ConversationController.get(e164);
-                                if (byE164) {
-                                    byE164.setUnregistered();
-                                }
-                            }
-                            window.ConversationController.ensureContactIds({
-                                e164,
-                                uuid,
-                                highTrust: true,
-                            });
-                        });
-                    }
-                }
+            if (connectCount === 0 && !navigator.onLine) {
+                window.log.warn('Starting up offline; will connect when we have network access');
+                window.addEventListener('online', onOnline);
+                onEmpty(); // this ensures that the loading screen is dismissed
+                return;
             }
-            catch (error) {
-                window.log.error('connect: Error fetching UUIDs for lonely e164s:', error && error.stack ? error.stack : error);
+            if (!window.Signal.Util.Registration.everDone()) {
+                return;
             }
-        }
-        connectCount += 1;
-        window.Whisper.deliveryReceiptQueue.pause(); // avoid flood of delivery receipts until we catch up
-        window.Whisper.Notifications.disable(); // avoid notification flood until empty
-        // initialize the socket and start listening for messages
-        window.log.info('Initializing socket and listening for messages');
-        const messageReceiverOptions = {
-            serverTrustRoot: window.getServerTrustRoot(),
-        };
-        messageReceiver = new window.textsecure.MessageReceiver(OLD_USERNAME, USERNAME, PASSWORD, mySignalingKey, messageReceiverOptions);
-        window.textsecure.messageReceiver = messageReceiver;
-        window.Signal.Services.initializeGroupCredentialFetcher();
-        preMessageReceiverStatus = null;
-        function addQueuedEventListener(name, handler) {
-            messageReceiver.addEventListener(name, (...args) => eventHandlerQueue.add(async () => {
+            preMessageReceiverStatus = WebSocket.CONNECTING;
+            if (messageReceiver) {
+                await messageReceiver.stopProcessing();
+                await window.waitForAllBatchers();
+                messageReceiver.unregisterBatchers();
+                messageReceiver = null;
+            }
+            const OLD_USERNAME = window.storage.get('number_id');
+            const USERNAME = window.storage.get('uuid_id');
+            const PASSWORD = window.storage.get('password');
+            const mySignalingKey = window.storage.get('signaling_key');
+            window.textsecure.messaging = new window.textsecure.MessageSender(USERNAME || OLD_USERNAME, PASSWORD);
+            if (connectCount === 0) {
                 try {
-                    await handler(...args);
+                    // Force a re-fetch before we process our queue. We may want to turn on
+                    //   something which changes how we process incoming messages!
+                    await window.Signal.RemoteConfig.refreshRemoteConfig();
                 }
-                finally {
-                    // message/sent: Message.handleDataMessage has its own queue and will trigger
-                    //   this event itself when complete.
-                    // error: Error processing (below) also has its own queue and self-trigger.
-                    if (name !== 'message' && name !== 'sent' && name !== 'error') {
-                        window.Whisper.events.trigger('incrementProgress');
+                catch (error) {
+                    window.log.error('connect: Error refreshing remote config:', error && error.stack ? error.stack : error);
+                }
+                try {
+                    if (window.Signal.RemoteConfig.isEnabled('desktop.cds')) {
+                        const lonelyE164s = window
+                            .getConversations()
+                            .filter(c => Boolean(c.isPrivate() &&
+                            c.get('e164') &&
+                            !c.get('uuid') &&
+                            !c.isEverUnregistered()))
+                            .map(c => c.get('e164'));
+                        if (lonelyE164s.length > 0) {
+                            const lookup = await window.textsecure.messaging.getUuidsForE164s(lonelyE164s);
+                            const e164s = Object.keys(lookup);
+                            e164s.forEach(e164 => {
+                                const uuid = lookup[e164];
+                                if (!uuid) {
+                                    const byE164 = window.ConversationController.get(e164);
+                                    if (byE164) {
+                                        byE164.setUnregistered();
+                                    }
+                                }
+                                window.ConversationController.ensureContactIds({
+                                    e164,
+                                    uuid,
+                                    highTrust: true,
+                                });
+                            });
+                        }
                     }
                 }
-            }));
-        }
-        addQueuedEventListener('message', onMessageReceived);
-        addQueuedEventListener('delivery', onDeliveryReceipt);
-        addQueuedEventListener('contact', onContactReceived);
-        addQueuedEventListener('group', onGroupReceived);
-        addQueuedEventListener('sent', onSentMessage);
-        addQueuedEventListener('readSync', onReadSync);
-        addQueuedEventListener('read', onReadReceipt);
-        addQueuedEventListener('verified', onVerified);
-        addQueuedEventListener('error', onError);
-        addQueuedEventListener('empty', onEmpty);
-        addQueuedEventListener('reconnect', onReconnect);
-        addQueuedEventListener('configuration', onConfiguration);
-        addQueuedEventListener('typing', onTyping);
-        addQueuedEventListener('sticker-pack', onStickerPack);
-        addQueuedEventListener('viewSync', onViewSync);
-        addQueuedEventListener('messageRequestResponse', onMessageRequestResponse);
-        addQueuedEventListener('profileKeyUpdate', onProfileKeyUpdate);
-        addQueuedEventListener('fetchLatest', onFetchLatestSync);
-        addQueuedEventListener('keys', onKeysSync);
-        window.Signal.AttachmentDownloads.start({
-            getMessageReceiver: () => messageReceiver,
-            logger: window.log,
-        });
-        if (connectCount === 1) {
-            window.Signal.Stickers.downloadQueuedPacks();
-            if (!newVersion) {
-                runStorageService();
+                catch (error) {
+                    window.log.error('connect: Error fetching UUIDs for lonely e164s:', error && error.stack ? error.stack : error);
+                }
             }
-        }
-        // On startup after upgrading to a new version, request a contact sync
-        //   (but only if we're not the primary device)
-        if (!firstRun &&
-            connectCount === 1 &&
-            newVersion &&
-            // eslint-disable-next-line eqeqeq
-            window.textsecure.storage.user.getDeviceId() != '1') {
-            window.log.info('Boot after upgrading. Requesting contact sync');
-            window.getSyncRequest();
-            runStorageService();
-            try {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                const manager = window.getAccountManager();
-                await Promise.all([
-                    manager.maybeUpdateDeviceName(),
-                    manager.maybeDeleteSignalingKey(),
-                ]);
-            }
-            catch (e) {
-                window.log.error('Problem with account manager updates after starting new version: ', e && e.stack ? e.stack : e);
-            }
-        }
-        const udSupportKey = 'hasRegisterSupportForUnauthenticatedDelivery';
-        if (!window.storage.get(udSupportKey)) {
-            const server = window.WebAPI.connect({
-                username: USERNAME || OLD_USERNAME,
-                password: PASSWORD,
-            });
-            try {
-                await server.registerSupportForUnauthenticatedDelivery();
-                window.storage.put(udSupportKey, true);
-            }
-            catch (error) {
-                window.log.error('Error: Unable to register for unauthenticated delivery support.', error && error.stack ? error.stack : error);
-            }
-        }
-        const deviceId = window.textsecure.storage.user.getDeviceId();
-        // If we didn't capture a UUID on registration, go get it from the server
-        if (!window.textsecure.storage.user.getUuid()) {
-            const server = window.WebAPI.connect({
-                username: OLD_USERNAME,
-                password: PASSWORD,
-            });
-            try {
-                const { uuid } = await server.whoami();
-                window.textsecure.storage.user.setUuidAndDeviceId(uuid, deviceId);
-                const ourNumber = window.textsecure.storage.user.getNumber();
-                const me = await window.ConversationController.getOrCreateAndWait(ourNumber, 'private');
-                me.updateUuid(uuid);
-            }
-            catch (error) {
-                window.log.error('Error: Unable to retrieve UUID from service.', error && error.stack ? error.stack : error);
-            }
-        }
-        // We need to do this after fetching our UUID
-        const hasRegisteredGV23Support = 'hasRegisteredGV23Support';
-        if (!window.storage.get(hasRegisteredGV23Support) &&
-            window.textsecure.storage.user.getUuid()) {
-            const server = window.WebAPI.connect({
-                username: USERNAME || OLD_USERNAME,
-                password: PASSWORD,
-            });
-            try {
-                await server.registerCapabilities({ 'gv2-3': true });
-                window.storage.put(hasRegisteredGV23Support, true);
-            }
-            catch (error) {
-                window.log.error('Error: Unable to register support for GV2.', error && error.stack ? error.stack : error);
-            }
-        }
-        if (firstRun === true && deviceId !== '1') {
-            const hasThemeSetting = Boolean(window.storage.get('theme-setting'));
-            if (!hasThemeSetting &&
-                window.textsecure.storage.get('userAgent') === 'OWI') {
-                window.storage.put('theme-setting', 'ios');
-                onChangeTheme();
-            }
-            const syncRequest = new window.textsecure.SyncRequest(window.textsecure.messaging, messageReceiver);
-            window.Whisper.events.trigger('contactsync:begin');
-            syncRequest.addEventListener('success', () => {
-                window.log.info('sync successful');
-                window.storage.put('synced_at', Date.now());
-                window.Whisper.events.trigger('contactsync');
-                runStorageService();
-            });
-            syncRequest.addEventListener('timeout', () => {
-                window.log.error('sync timed out');
-                window.Whisper.events.trigger('contactsync');
-                runStorageService();
-            });
-            const ourId = window.ConversationController.getOurConversationId();
-            const { wrap, sendOptions, } = window.ConversationController.prepareForSend(ourId, {
-                syncMessage: true,
-            });
-            const installedStickerPacks = window.Signal.Stickers.getInstalledStickerPacks();
-            if (installedStickerPacks.length) {
-                const operations = installedStickerPacks.map((pack) => ({
-                    packId: pack.id,
-                    packKey: pack.key,
-                    installed: true,
+            connectCount += 1;
+            window.Whisper.deliveryReceiptQueue.pause(); // avoid flood of delivery receipts until we catch up
+            window.Whisper.Notifications.disable(); // avoid notification flood until empty
+            // initialize the socket and start listening for messages
+            window.log.info('Initializing socket and listening for messages');
+            const messageReceiverOptions = {
+                serverTrustRoot: window.getServerTrustRoot(),
+            };
+            messageReceiver = new window.textsecure.MessageReceiver(OLD_USERNAME, USERNAME, PASSWORD, mySignalingKey, messageReceiverOptions);
+            window.textsecure.messageReceiver = messageReceiver;
+            window.Signal.Services.initializeGroupCredentialFetcher();
+            preMessageReceiverStatus = null;
+            // eslint-disable-next-line no-inner-declarations
+            function addQueuedEventListener(name, handler) {
+                messageReceiver.addEventListener(name, (...args) => eventHandlerQueue.add(async () => {
+                    try {
+                        await handler(...args);
+                    }
+                    finally {
+                        // message/sent: Message.handleDataMessage has its own queue and will
+                        //   trigger this event itself when complete.
+                        // error: Error processing (below) also has its own queue and self-trigger.
+                        if (name !== 'message' && name !== 'sent' && name !== 'error') {
+                            window.Whisper.events.trigger('incrementProgress');
+                        }
+                    }
                 }));
-                wrap(window.textsecure.messaging.sendStickerPackSync(operations, sendOptions)).catch(error => {
-                    window.log.error('Failed to send installed sticker packs via sync message', error && error.stack ? error.stack : error);
-                });
             }
+            addQueuedEventListener('message', onMessageReceived);
+            addQueuedEventListener('delivery', onDeliveryReceipt);
+            addQueuedEventListener('contact', onContactReceived);
+            addQueuedEventListener('group', onGroupReceived);
+            addQueuedEventListener('sent', onSentMessage);
+            addQueuedEventListener('readSync', onReadSync);
+            addQueuedEventListener('read', onReadReceipt);
+            addQueuedEventListener('verified', onVerified);
+            addQueuedEventListener('error', onError);
+            addQueuedEventListener('empty', onEmpty);
+            addQueuedEventListener('reconnect', onReconnect);
+            addQueuedEventListener('configuration', onConfiguration);
+            addQueuedEventListener('typing', onTyping);
+            addQueuedEventListener('sticker-pack', onStickerPack);
+            addQueuedEventListener('viewSync', onViewSync);
+            addQueuedEventListener('messageRequestResponse', onMessageRequestResponse);
+            addQueuedEventListener('profileKeyUpdate', onProfileKeyUpdate);
+            addQueuedEventListener('fetchLatest', onFetchLatestSync);
+            addQueuedEventListener('keys', onKeysSync);
+            window.Signal.AttachmentDownloads.start({
+                getMessageReceiver: () => messageReceiver,
+                logger: window.log,
+            });
+            if (connectCount === 1) {
+                window.Signal.Stickers.downloadQueuedPacks();
+                if (!newVersion) {
+                    runStorageService();
+                }
+            }
+            // On startup after upgrading to a new version, request a contact sync
+            //   (but only if we're not the primary device)
+            if (!firstRun &&
+                connectCount === 1 &&
+                newVersion &&
+                // eslint-disable-next-line eqeqeq
+                window.textsecure.storage.user.getDeviceId() != '1') {
+                window.log.info('Boot after upgrading. Requesting contact sync');
+                window.getSyncRequest();
+                runStorageService();
+                try {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    const manager = window.getAccountManager();
+                    await Promise.all([
+                        manager.maybeUpdateDeviceName(),
+                        manager.maybeDeleteSignalingKey(),
+                    ]);
+                }
+                catch (e) {
+                    window.log.error('Problem with account manager updates after starting new version: ', e && e.stack ? e.stack : e);
+                }
+            }
+            const udSupportKey = 'hasRegisterSupportForUnauthenticatedDelivery';
+            if (!window.storage.get(udSupportKey)) {
+                const server = window.WebAPI.connect({
+                    username: USERNAME || OLD_USERNAME,
+                    password: PASSWORD,
+                });
+                try {
+                    await server.registerSupportForUnauthenticatedDelivery();
+                    window.storage.put(udSupportKey, true);
+                }
+                catch (error) {
+                    window.log.error('Error: Unable to register for unauthenticated delivery support.', error && error.stack ? error.stack : error);
+                }
+            }
+            const deviceId = window.textsecure.storage.user.getDeviceId();
+            // If we didn't capture a UUID on registration, go get it from the server
+            if (!window.textsecure.storage.user.getUuid()) {
+                const server = window.WebAPI.connect({
+                    username: OLD_USERNAME,
+                    password: PASSWORD,
+                });
+                try {
+                    const { uuid } = await server.whoami();
+                    window.textsecure.storage.user.setUuidAndDeviceId(uuid, deviceId);
+                    const ourNumber = window.textsecure.storage.user.getNumber();
+                    const me = await window.ConversationController.getOrCreateAndWait(ourNumber, 'private');
+                    me.updateUuid(uuid);
+                }
+                catch (error) {
+                    window.log.error('Error: Unable to retrieve UUID from service.', error && error.stack ? error.stack : error);
+                }
+            }
+            // We need to do this after fetching our UUID
+            const hasRegisteredGV23Support = 'hasRegisteredGV23Support';
+            if (!window.storage.get(hasRegisteredGV23Support) &&
+                window.textsecure.storage.user.getUuid()) {
+                const server = window.WebAPI.connect({
+                    username: USERNAME || OLD_USERNAME,
+                    password: PASSWORD,
+                });
+                try {
+                    await server.registerCapabilities({ 'gv2-3': true });
+                    window.storage.put(hasRegisteredGV23Support, true);
+                }
+                catch (error) {
+                    window.log.error('Error: Unable to register support for GV2.', error && error.stack ? error.stack : error);
+                }
+            }
+            if (firstRun === true && deviceId !== '1') {
+                const hasThemeSetting = Boolean(window.storage.get('theme-setting'));
+                if (!hasThemeSetting &&
+                    window.textsecure.storage.get('userAgent') === 'OWI') {
+                    window.storage.put('theme-setting', 'ios');
+                    onChangeTheme();
+                }
+                const syncRequest = new window.textsecure.SyncRequest(window.textsecure.messaging, messageReceiver);
+                window.Whisper.events.trigger('contactsync:begin');
+                syncRequest.addEventListener('success', () => {
+                    window.log.info('sync successful');
+                    window.storage.put('synced_at', Date.now());
+                    window.Whisper.events.trigger('contactsync');
+                    runStorageService();
+                });
+                syncRequest.addEventListener('timeout', () => {
+                    window.log.error('sync timed out');
+                    window.Whisper.events.trigger('contactsync');
+                    runStorageService();
+                });
+                const ourId = window.ConversationController.getOurConversationId();
+                const { wrap, sendOptions, } = window.ConversationController.prepareForSend(ourId, {
+                    syncMessage: true,
+                });
+                const installedStickerPacks = window.Signal.Stickers.getInstalledStickerPacks();
+                if (installedStickerPacks.length) {
+                    const operations = installedStickerPacks.map((pack) => ({
+                        packId: pack.id,
+                        packKey: pack.key,
+                        installed: true,
+                    }));
+                    wrap(window.textsecure.messaging.sendStickerPackSync(operations, sendOptions)).catch(error => {
+                        window.log.error('Failed to send installed sticker packs via sync message', error && error.stack ? error.stack : error);
+                    });
+                }
+            }
+            window.storage.onready(async () => {
+                idleDetector.start();
+            });
         }
-        window.storage.onready(async () => {
-            idleDetector.start();
-        });
+        finally {
+            connecting = false;
+        }
     }
     function onChangeTheme() {
         const view = window.owsDesktopApp.appView;

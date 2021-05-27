@@ -1,5 +1,6 @@
 "use strict";
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// Copyright 2020 Signal Messenger, LLC
+// SPDX-License-Identifier: AGPL-3.0-only
 const FIVE_MINUTES = 1000 * 60 * 5;
 const LINK_PREVIEW_TIMEOUT = 60 * 1000;
 window.Whisper = window.Whisper || {};
@@ -25,6 +26,11 @@ Whisper.BlockedGroupToast = Whisper.ToastView.extend({
 Whisper.LeftGroupToast = Whisper.ToastView.extend({
     render_attributes() {
         return { toastMessage: window.i18n('youLeftTheGroup') };
+    },
+});
+Whisper.InvalidConversationToast = Whisper.ToastView.extend({
+    render_attributes() {
+        return { toastMessage: window.i18n('invalidConversation') };
     },
 });
 Whisper.OriginalNotFoundToast = Whisper.ToastView.extend({
@@ -60,6 +66,11 @@ Whisper.ConversationArchivedToast = Whisper.ToastView.extend({
 Whisper.ConversationUnarchivedToast = Whisper.ToastView.extend({
     render_attributes() {
         return { toastMessage: window.i18n('conversationReturnedToInbox') };
+    },
+});
+Whisper.ConversationMarkedUnreadToast = Whisper.ToastView.extend({
+    render_attributes() {
+        return { toastMessage: window.i18n('conversationMarkedUnread') };
     },
 });
 Whisper.TapToViewExpiredIncomingToast = Whisper.ToastView.extend({
@@ -210,6 +221,7 @@ Whisper.ConversationView = Whisper.View.extend({
         this.listenTo(this.model, 'attach-file', this.onChooseAttachment);
         this.listenTo(this.model, 'escape-pressed', this.resetPanel);
         this.listenTo(this.model, 'show-message-details', this.showMessageDetail);
+        this.listenTo(this.model, 'show-contact-modal', this.showContactModal);
         this.listenTo(this.model, 'toggle-reply', (messageId) => {
             const target = this.quote || !messageId ? null : messageId;
             this.setQuoteMessage(target);
@@ -283,7 +295,7 @@ Whisper.ConversationView = Whisper.View.extend({
     },
     setPin(value) {
         if (value) {
-            const pinnedConversationIds = window.ConversationController.getPinnedConversationIds();
+            const pinnedConversationIds = window.storage.get('pinnedConversationIds', []);
             if (pinnedConversationIds.length >= 4) {
                 this.showToast(Whisper.PinnedConversationsFullToast);
                 return;
@@ -295,24 +307,22 @@ Whisper.ConversationView = Whisper.View.extend({
         }
     },
     setupHeader() {
-        const getHeaderProps = (_unknown) => {
-            const expireTimer = this.model.get('expireTimer');
-            const expirationSettingName = expireTimer
-                ? Whisper.ExpirationTimerOptions.getName(expireTimer || 0)
-                : null;
-            return Object.assign(Object.assign({}, this.model.format()), { leftGroup: this.model.get('left'), disableTimerChanges: this.model.isMissingRequiredProfileSharing() ||
-                    this.model.get('left') ||
-                    !this.model.getAccepted() ||
-                    !this.model.canChangeTimer(), showBackButton: Boolean(this.panels && this.panels.length), expirationSettingName, timerOptions: Whisper.ExpirationTimerOptions.map((item) => ({
-                    name: item.getName(),
-                    value: item.get('seconds'),
-                })), muteExpirationLabel: this.getMuteExpirationLabel(), onSetDisappearingMessages: (seconds) => this.setDisappearingMessages(seconds), onDeleteMessages: () => this.destroyMessages(), onResetSession: () => this.endSession(), onSearchInConversation: () => {
+        this.titleView = new Whisper.ReactWrapperView({
+            className: 'title-wrapper',
+            JSX: window.Signal.State.Roots.createConversationHeader(window.reduxStore, {
+                id: this.model.id,
+                onSetDisappearingMessages: (seconds) => this.setDisappearingMessages(seconds),
+                onDeleteMessages: () => this.destroyMessages(),
+                onResetSession: () => this.endSession(),
+                onSearchInConversation: () => {
                     const { searchInConversation } = window.reduxActions.search;
                     const name = this.model.isMe()
                         ? window.i18n('noteToSelf')
                         : this.model.getTitle();
                     searchInConversation(this.model.id, name);
-                }, onSetMuteNotifications: (ms) => this.setMuteNotifications(ms), onSetPin: this.setPin.bind(this), 
+                },
+                onSetMuteNotifications: (ms) => this.setMuteNotifications(ms),
+                onSetPin: this.setPin.bind(this),
                 // These are view only and don't update the Conversation model, so they
                 //   need a manual update call.
                 onOutgoingAudioCallInConversation: async () => {
@@ -327,7 +337,8 @@ Whisper.ConversationView = Whisper.View.extend({
                     else {
                         window.log.info('onOutgoingAudioCallInConversation: call is deemed "unsafe". Stopping');
                     }
-                }, onOutgoingVideoCallInConversation: async () => {
+                },
+                onOutgoingVideoCallInConversation: async () => {
                     window.log.info('onOutgoingVideoCallInConversation: about to start a video call');
                     const conversation = this.model;
                     const isVideoCall = true;
@@ -339,31 +350,34 @@ Whisper.ConversationView = Whisper.View.extend({
                     else {
                         window.log.info('onOutgoingVideoCallInConversation: call is deemed "unsafe". Stopping');
                     }
-                }, onShowSafetyNumber: () => {
+                },
+                onShowSafetyNumber: () => {
                     this.showSafetyNumber();
-                }, onShowAllMedia: () => {
+                },
+                onShowAllMedia: () => {
                     this.showAllMedia();
-                }, onShowGroupMembers: async () => {
+                },
+                onShowGroupMembers: async () => {
                     await this.showMembers();
-                    this.updateHeader();
-                }, onGoBack: () => {
+                },
+                onGoBack: () => {
                     this.resetPanel();
-                }, onArchive: () => {
+                },
+                onArchive: () => {
                     this.model.setArchived(true);
                     this.model.trigger('unload', 'archive');
                     Whisper.ToastView.show(Whisper.ConversationArchivedToast, document.body);
-                }, onMoveToInbox: () => {
+                },
+                onMarkUnread: () => {
+                    this.model.setMarkedUnread(true);
+                    Whisper.ToastView.show(Whisper.ConversationMarkedUnreadToast, document.body);
+                },
+                onMoveToInbox: () => {
                     this.model.setArchived(false);
                     Whisper.ToastView.show(Whisper.ConversationUnarchivedToast, document.body);
-                } });
-        };
-        this.titleView = new Whisper.ReactWrapperView({
-            className: 'title-wrapper',
-            Component: window.Signal.Components.ConversationHeader,
-            props: getHeaderProps(this.model),
+                },
+            }),
         });
-        this.updateHeader = () => this.titleView.update(getHeaderProps());
-        this.listenTo(this.model, 'change', this.updateHeader);
         this.$('.conversation-header').append(this.titleView.el);
     },
     setupCompositionArea({ attachmentListEl }) {
@@ -380,8 +394,8 @@ Whisper.ConversationView = Whisper.View.extend({
             compositionApi,
             onClickAddPack: () => this.showStickerManager(),
             onPickSticker: (packId, stickerId) => this.sendStickerMessage({ packId, stickerId }),
-            onSubmit: (message) => this.sendMessage(message),
-            onEditorStateChange: (msg, caretLocation) => this.onEditorStateChange(msg, caretLocation),
+            onSubmit: (message, mentions) => this.sendMessage(message, mentions),
+            onEditorStateChange: (msg, bodyRanges, caretLocation) => this.onEditorStateChange(msg, bodyRanges, caretLocation),
             onTextTooLong: () => this.showToast(Whisper.MessageBodyTooLongToast),
             onChooseAttachment: this.onChooseAttachment.bind(this),
             getQuotedMessage: () => this.model.get('quotedMessageId'),
@@ -503,6 +517,9 @@ Whisper.ConversationView = Whisper.View.extend({
         };
         const showMessageDetail = (messageId) => {
             this.showMessageDetail(messageId);
+        };
+        const showContactModal = (contactId) => {
+            this.showContactModal(contactId);
         };
         const openConversation = (conversationId, messageId) => {
             this.openConversation(conversationId, messageId);
@@ -650,6 +667,7 @@ Whisper.ConversationView = Whisper.View.extend({
                 retrySend,
                 scrollToQuotedMessage,
                 showContactDetail,
+                showContactModal,
                 showIdentity,
                 showMessageDetail,
                 showVisualAttachment,
@@ -863,6 +881,9 @@ Whisper.ConversationView = Whisper.View.extend({
         if (this.captionEditorView) {
             this.captionEditorView.remove();
         }
+        if (this.contactModalView) {
+            this.contactModalView.remove();
+        }
         if (this.stickerButtonView) {
             this.stickerButtonView.remove();
         }
@@ -895,6 +916,7 @@ Whisper.ConversationView = Whisper.View.extend({
                 const panel = this.panels[i];
                 panel.remove();
             }
+            window.reduxActions.conversations.setSelectedConversationPanelDepth(0);
         }
         this.remove();
         this.model.messageCollection.reset([]);
@@ -1634,7 +1656,6 @@ Whisper.ConversationView = Whisper.View.extend({
         };
         this.listenTo(this.model.messageCollection, 'remove', update);
         this.listenBack(view);
-        this.updateHeader();
     },
     focusMessageField() {
         if (this.panels && this.panels.length) {
@@ -1644,10 +1665,6 @@ Whisper.ConversationView = Whisper.View.extend({
         if (compositionApi && compositionApi.current) {
             compositionApi.current.focusInput();
         }
-    },
-    focusMessageFieldAndClearDisabled() {
-        this.compositionApi.current.setDisabled(false);
-        this.focusMessageField();
     },
     disableMessageField() {
         this.compositionApi.current.setDisabled(true);
@@ -1680,6 +1697,7 @@ Whisper.ConversationView = Whisper.View.extend({
             // we pass this in to allow nested panels
             listenBack: this.listenBack.bind(this),
             needVerify: options.needVerify,
+            conversation: this.model,
         });
         this.listenBack(view);
     },
@@ -1725,7 +1743,6 @@ Whisper.ConversationView = Whisper.View.extend({
                 model: conversation,
             });
             this.listenBack(view);
-            this.updateHeader();
         }
     },
     downloadAttachmentWrapper(messageId) {
@@ -1948,6 +1965,44 @@ Whisper.ConversationView = Whisper.View.extend({
         this.listenTo(message, 'expired', () => this.lightboxGalleryView.remove());
         window.Signal.Backbone.Views.Lightbox.show(this.lightboxGalleryView.el);
     },
+    showContactModal(contactId) {
+        if (this.contactModalView) {
+            this.contactModalView.remove();
+            this.contactModalView = null;
+        }
+        this.previousFocus = document.activeElement;
+        const hideContactModal = () => {
+            if (this.contactModalView) {
+                this.contactModalView.remove();
+                this.contactModalView = null;
+                if (this.previousFocus && this.previousFocus.focus) {
+                    this.previousFocus.focus();
+                    this.previousFocus = null;
+                }
+            }
+        };
+        this.contactModalView = new Whisper.ReactWrapperView({
+            className: 'progress-modal-wrapper',
+            JSX: window.Signal.State.Roots.createContactModal(window.reduxStore, {
+                contactId,
+                currentConversationId: this.model.id,
+                onClose: hideContactModal,
+                openConversation: (conversationId) => {
+                    hideContactModal();
+                    this.openConversation(conversationId);
+                },
+                showSafetyNumber: (conversationId) => {
+                    hideContactModal();
+                    this.showSafetyNumber(conversationId);
+                },
+                removeMember: (conversationId) => {
+                    hideContactModal();
+                    this.model.removeFromGroupV2(conversationId);
+                },
+            }),
+        });
+        this.contactModalView.render();
+    },
     showMessageDetail(messageId) {
         const message = this.model.messageCollection.get(messageId);
         if (!message) {
@@ -1972,7 +2027,6 @@ Whisper.ConversationView = Whisper.View.extend({
         this.listenTo(message, 'expired', onClose);
         // We could listen to all involved contacts, but we'll call that overkill
         this.listenBack(view);
-        this.updateHeader();
         view.render();
     },
     showStickerManager() {
@@ -1984,7 +2038,6 @@ Whisper.ConversationView = Whisper.View.extend({
             },
         });
         this.listenBack(view);
-        this.updateHeader();
         view.render();
     },
     showContactDetail({ contact, signalAccount }) {
@@ -2005,7 +2058,6 @@ Whisper.ConversationView = Whisper.View.extend({
             },
         });
         this.listenBack(view);
-        this.updateHeader();
     },
     async openConversation(number) {
         window.Whisper.events.trigger('showConversation', number);
@@ -2020,6 +2072,7 @@ Whisper.ConversationView = Whisper.View.extend({
         view.$el.one('animationend', () => {
             view.$el.addClass('panel--static');
         });
+        window.reduxActions.conversations.setSelectedConversationPanelDepth(this.panels.length);
     },
     resetPanel() {
         if (!this.panels || !this.panels.length) {
@@ -2035,7 +2088,6 @@ Whisper.ConversationView = Whisper.View.extend({
         if (this.panels.length > 0) {
             this.panels[0].$el.fadeIn(250);
         }
-        this.updateHeader();
         view.$el.addClass('panel--remove').one('transitionend', () => {
             view.remove();
             if (this.panels.length === 0) {
@@ -2043,6 +2095,7 @@ Whisper.ConversationView = Whisper.View.extend({
                 window.dispatchEvent(new Event('resize'));
             }
         });
+        window.reduxActions.conversations.setSelectedConversationPanelDepth(this.panels.length);
     },
     endSession() {
         this.model.endSession();
@@ -2146,6 +2199,9 @@ Whisper.ConversationView = Whisper.View.extend({
             if (mandatoryProfileSharingEnabled && !this.model.get('profileSharing')) {
                 this.model.set({ profileSharing: true });
             }
+            if (this.showInvalidMessageToast()) {
+                return;
+            }
             const { packId, stickerId } = options;
             this.model.sendStickerMessage(packId, stickerId);
         }
@@ -2212,7 +2268,8 @@ Whisper.ConversationView = Whisper.View.extend({
             this.quotedMessage = message;
             if (message) {
                 this.quote = await this.model.makeQuote(this.quotedMessage);
-                this.focusMessageFieldAndClearDisabled();
+                this.enableMessageField();
+                this.focusMessageField();
             }
         }
         this.renderQuotedMessage();
@@ -2250,30 +2307,13 @@ Whisper.ConversationView = Whisper.View.extend({
                 } }),
         });
     },
-    async sendMessage(message = '', options = {}) {
-        this.sendStart = Date.now();
-        try {
-            const contacts = await this.getUntrustedContacts(options);
-            this.disableMessageField();
-            if (contacts && contacts.length) {
-                const sendAnyway = await this.showSendAnywayDialog(contacts);
-                if (sendAnyway) {
-                    this.sendMessage(message, { force: true });
-                    return;
-                }
-                this.focusMessageFieldAndClearDisabled();
-                return;
-            }
-        }
-        catch (error) {
-            this.focusMessageFieldAndClearDisabled();
-            window.log.error('sendMessage error:', error && error.stack ? error.stack : error);
-            return;
-        }
-        this.model.clearTypingTimers();
+    showInvalidMessageToast(messageText) {
         let ToastView;
         if (window.reduxStore.getState().expiration.hasExpired) {
             ToastView = Whisper.ExpiredToast;
+        }
+        if (!this.model.isValid()) {
+            ToastView = Whisper.InvalidConversationToast;
         }
         if (this.model.isPrivate() &&
             (window.storage.isBlocked(this.model.get('e164')) ||
@@ -2287,12 +2327,38 @@ Whisper.ConversationView = Whisper.View.extend({
         if (!this.model.isPrivate() && this.model.get('left')) {
             ToastView = Whisper.LeftGroupToast;
         }
-        if (message.length > MAX_MESSAGE_BODY_LENGTH) {
+        if (messageText && messageText.length > MAX_MESSAGE_BODY_LENGTH) {
             ToastView = Whisper.MessageBodyTooLongToast;
         }
         if (ToastView) {
             this.showToast(ToastView);
-            this.focusMessageFieldAndClearDisabled();
+            return true;
+        }
+        return false;
+    },
+    async sendMessage(message = '', mentions = [], options = {}) {
+        this.sendStart = Date.now();
+        try {
+            const contacts = await this.getUntrustedContacts(options);
+            this.disableMessageField();
+            if (contacts && contacts.length) {
+                const sendAnyway = await this.showSendAnywayDialog(contacts);
+                if (sendAnyway) {
+                    this.sendMessage(message, mentions, { force: true });
+                    return;
+                }
+                this.enableMessageField();
+                return;
+            }
+        }
+        catch (error) {
+            this.enableMessageField();
+            window.log.error('sendMessage error:', error && error.stack ? error.stack : error);
+            return;
+        }
+        this.model.clearTypingTimers();
+        if (this.showInvalidMessageToast(message)) {
+            this.enableMessageField();
             return;
         }
         try {
@@ -2306,8 +2372,10 @@ Whisper.ConversationView = Whisper.View.extend({
             const attachments = await this.getFiles();
             const sendDelta = Date.now() - this.sendStart;
             window.log.info('Send pre-checks took', sendDelta, 'milliseconds');
-            this.model.sendMessage(message, attachments, this.quote, this.getLinkPreview());
+            this.model.sendMessage(message, attachments, this.quote, this.getLinkPreview(), undefined, // sticker
+            mentions);
             this.compositionApi.current.reset();
+            this.model.setMarkedUnread(false);
             this.setQuoteMessage(null);
             this.resetLinkPreview();
             this.clearAttachments();
@@ -2316,20 +2384,21 @@ Whisper.ConversationView = Whisper.View.extend({
             window.log.error('Error pulling attached files before send', error && error.stack ? error.stack : error);
         }
         finally {
-            this.focusMessageFieldAndClearDisabled();
+            this.enableMessageField();
         }
     },
-    onEditorStateChange(messageText, caretLocation) {
+    onEditorStateChange(messageText, bodyRanges, caretLocation) {
         this.maybeBumpTyping(messageText);
-        this.debouncedSaveDraft(messageText);
+        this.debouncedSaveDraft(messageText, bodyRanges);
         this.debouncedMaybeGrabLinkPreview(messageText, caretLocation);
     },
-    async saveDraft(messageText) {
+    async saveDraft(messageText, bodyRanges) {
         const trimmed = messageText && messageText.length > 0 ? messageText.trim() : '';
         if (this.model.get('draft') && (!messageText || trimmed.length === 0)) {
             this.model.set({
                 draft: null,
                 draftChanged: true,
+                draftBodyRanges: [],
             });
             await this.saveModel();
             return;
@@ -2338,6 +2407,7 @@ Whisper.ConversationView = Whisper.View.extend({
             this.model.set({
                 draft: messageText,
                 draftChanged: true,
+                draftBodyRanges: bodyRanges,
             });
             await this.saveModel();
         }

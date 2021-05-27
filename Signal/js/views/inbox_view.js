@@ -231,6 +231,8 @@
         'private'
       );
 
+      conversation.setMarkedUnread(false);
+
       const { openConversationExternal } = window.reduxActions.conversations;
       if (openConversationExternal) {
         openConversationExternal(id, messageId);

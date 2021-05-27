@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -49,7 +51,18 @@ require(exports => {
             },
             updateUnreadCount() {
                 const canCountMutedConversations = window.storage.get('badge-count-muted-conversations');
-                const newUnreadCount = lodash_1.reduce(this.map((m) => !canCountMutedConversations && m.isMuted() ? 0 : m.get('unreadCount')), (item, memo) => (item || 0) + memo, 0);
+                const canCount = (m) => !m.isMuted() || canCountMutedConversations;
+                const getUnreadCount = (m) => {
+                    const unreadCount = m.get('unreadCount');
+                    if (unreadCount) {
+                        return unreadCount;
+                    }
+                    if (m.get('markedUnread')) {
+                        return 1;
+                    }
+                    return 0;
+                };
+                const newUnreadCount = lodash_1.reduce(this.map((m) => canCount(m) ? getUnreadCount(m) : 0), (item, memo) => (item || 0) + memo, 0);
                 window.storage.put('unreadCount', newUnreadCount);
                 if (newUnreadCount > 0) {
                     window.setBadgeCount(newUnreadCount);
@@ -316,7 +329,6 @@ require(exports => {
                             existing.set({ e164: undefined });
                             updateConversation(existing.attributes);
                             byE164[e164] = conversation;
-                            // eslint-disable-next-line no-continue
                             continue;
                         }
                         window.log.warn(`checkForConflicts: Found conflict with e164 ${e164}`);
@@ -482,27 +494,6 @@ require(exports => {
             };
             this._initialPromise = load();
             return this._initialPromise;
-        }
-        getPinnedConversationIds() {
-            let pinnedConversationIds = window.storage.get('pinnedConversationIds');
-            // If pinnedConversationIds is missing, we're upgrading from
-            // a previous version and need to backfill storage from pinned
-            // conversation models.
-            if (pinnedConversationIds === undefined) {
-                window.log.info('getPinnedConversationIds: no pinned conversations in storage');
-                const modelPinnedConversationIds = this._conversations
-                    .filter(conversation => conversation.get('isPinned'))
-                    // pinIndex is a deprecated field. We now rely on the order of
-                    // the ids in storage, which is synced with the AccountRecord.
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    .sort((a, b) => (a.get('pinIndex') || 0) - (b.get('pinIndex') || 0))
-                    .map(conversation => conversation.get('id'));
-                window.log.info(`getPinnedConversationIds: falling back to ${modelPinnedConversationIds.length} pinned models`);
-                window.storage.put('pinnedConversationIds', modelPinnedConversationIds);
-                pinnedConversationIds = modelPinnedConversationIds;
-            }
-            return pinnedConversationIds;
         }
     }
     exports.ConversationController = ConversationController;
