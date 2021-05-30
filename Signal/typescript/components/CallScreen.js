@@ -135,7 +135,11 @@ require(exports => {
                             hangUp({ conversationId: conversation.id });
                         }, tooltipDistance: 24
                     })),
-                react_1.default.createElement("div", { className: "module-ongoing-call__footer__local-preview" }, hasLocalVideo ? (react_1.default.createElement("video", { className: "module-ongoing-call__footer__local-preview__video", ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: me.avatarPath, color: me.color },
+                react_1.default.createElement("div", {
+                    className: classnames_1.default('module-ongoing-call__footer__local-preview', {
+                        'module-ongoing-call__footer__local-preview--audio-muted': !hasLocalAudio,
+                    })
+                }, hasLocalVideo ? (react_1.default.createElement("video", { className: "module-ongoing-call__footer__local-preview__video", ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: me.avatarPath, color: me.color },
                     react_1.default.createElement(Avatar_1.Avatar, { avatarPath: me.avatarPath, color: me.color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: me.name, phoneNumber: me.phoneNumber, profileName: me.profileName, title: me.title, size: 80 })))))));
     };
     function getCallModeClassSuffix(callMode) {

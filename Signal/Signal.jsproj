@@ -3895,12 +3895,15 @@
     <Content Include="typescript\components\conversation\VerificationNotification.js" />
     <Content Include="typescript\components\conversation\_contactUtil.js" />
     <Content Include="typescript\components\Countdown.js" />
+    <Content Include="typescript\components\DirectCallRemoteParticipant.js" />
     <Content Include="typescript\components\emoji\Emoji.js" />
     <Content Include="typescript\components\emoji\EmojiButton.js" />
     <Content Include="typescript\components\emoji\EmojiPicker.js" />
     <Content Include="typescript\components\emoji\lib.js" />
     <Content Include="typescript\components\ErrorModal.js" />
     <Content Include="typescript\components\ExpiredBuildDialog.js" />
+    <Content Include="typescript\components\GroupCallRemoteParticipant.js" />
+    <Content Include="typescript\components\GroupCallRemoteParticipants.js" />
     <Content Include="typescript\components\IncomingCallBar.js" />
     <Content Include="typescript\components\InContactsIcon.js" />
     <Content Include="typescript\components\Intl.js" />
