@@ -3942,6 +3942,7 @@
     <Content Include="typescript\notifications\getStatus.js" />
     <Content Include="typescript\OS.js" />
     <Content Include="typescript\protobuf\protobuf.js" />
+    <Content Include="typescript\quill\block\blot.js" />
     <Content Include="typescript\quill\emoji\blot.js" />
     <Content Include="typescript\quill\emoji\completion.js" />
     <Content Include="typescript\quill\emoji\index.js" />

@@ -28,14 +28,13 @@ require(exports => {
     const memberRepository_1 = require("../quill/memberRepository");
     const util_1 = require("../quill/util");
     const signal_clipboard_1 = require("../quill/signal-clipboard");
+    const blot_2 = require("../quill/block/blot");
     quill_1.default.register('formats/emoji', emoji_1.EmojiBlot);
     quill_1.default.register('formats/mention', blot_1.MentionBlot);
+    quill_1.default.register('formats/block', blot_2.DirectionalBlot);
     quill_1.default.register('modules/emojiCompletion', emoji_1.EmojiCompletion);
     quill_1.default.register('modules/mentionCompletion', completion_1.MentionCompletion);
     quill_1.default.register('modules/signalClipboard', signal_clipboard_1.SignalClipboard);
-    const Block = quill_1.default.import('blots/block');
-    Block.tagName = 'DIV';
-    quill_1.default.register(Block, true);
     const MAX_LENGTH = 64 * 1024;
     exports.CompositionInput = props => {
         const { i18n, disabled, large, inputApi, onPickEmoji, onSubmit, skinTone, draftText, draftBodyRanges, getQuotedMessage, clearQuotedMessage, members, } = props;
