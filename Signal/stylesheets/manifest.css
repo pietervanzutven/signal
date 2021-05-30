@@ -8084,7 +8084,8 @@ img.emoji.jumbo {
   height: 100%; }
   .module-composition-input__quill .ql-editor {
     caret-color: transparent;
-    padding: 0; }
+    padding: 0;
+    text-align: start; }
     .module-composition-input__quill .ql-editor--loaded {
       caret-color: auto; }
     .module-composition-input__quill .ql-editor.ql-blank::before {
