@@ -6,6 +6,23 @@ require(exports => {
     /* eslint-disable camelcase */
     const lodash_1 = require("lodash");
     const events_1 = require("../../shims/events");
+    const Calling_1 = require("../../types/Calling");
+    // Helpers
+    exports.getConversationCallMode = (conversation) => {
+        if (conversation.left ||
+            conversation.isBlocked ||
+            conversation.isMe ||
+            !conversation.acceptedMessageRequest) {
+            return Calling_1.CallMode.None;
+        }
+        if (conversation.type === 'direct') {
+            return Calling_1.CallMode.Direct;
+        }
+        if (conversation.type === 'group' && conversation.groupVersion === 2) {
+            return Calling_1.CallMode.Group;
+        }
+        return Calling_1.CallMode.None;
+    };
     // Action Creators
     exports.actions = {
         conversationAdded,

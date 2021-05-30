@@ -1,6 +1,17 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
+    var CallMode;
+    (function (CallMode) {
+        CallMode[CallMode["None"] = 0] = "None";
+        CallMode[CallMode["Direct"] = 1] = "Direct";
+        CallMode[CallMode["Group"] = 2] = "Group";
+    })(CallMode = exports.CallMode || (exports.CallMode = {}));
+    // Ideally, we would import many of these directly from RingRTC. But because Storybook
+    //   cannot import RingRTC (as it runs in the browser), we have these copies. That also
+    //   means we have to convert the "real" enum to our enum in some cases.
     // Must be kept in sync with RingRTC.CallState
     var CallState;
     (function (CallState) {
@@ -31,6 +42,21 @@ require(exports => {
         CallEndedReason["BusyOnAnotherDevice"] = "BusyOnAnotherDevice";
         CallEndedReason["CallerIsNotMultiring"] = "CallerIsNotMultiring";
     })(CallEndedReason = exports.CallEndedReason || (exports.CallEndedReason = {}));
+    // Must be kept in sync with RingRTC's ConnectionState
+    var GroupCallConnectionState;
+    (function (GroupCallConnectionState) {
+        GroupCallConnectionState[GroupCallConnectionState["NotConnected"] = 0] = "NotConnected";
+        GroupCallConnectionState[GroupCallConnectionState["Connecting"] = 1] = "Connecting";
+        GroupCallConnectionState[GroupCallConnectionState["Connected"] = 2] = "Connected";
+        GroupCallConnectionState[GroupCallConnectionState["Reconnecting"] = 3] = "Reconnecting";
+    })(GroupCallConnectionState = exports.GroupCallConnectionState || (exports.GroupCallConnectionState = {}));
+    // Must be kept in sync with RingRTC's JoinState
+    var GroupCallJoinState;
+    (function (GroupCallJoinState) {
+        GroupCallJoinState[GroupCallJoinState["NotJoined"] = 0] = "NotJoined";
+        GroupCallJoinState[GroupCallJoinState["Joining"] = 1] = "Joining";
+        GroupCallJoinState[GroupCallJoinState["Joined"] = 2] = "Joined";
+    })(GroupCallJoinState = exports.GroupCallJoinState || (exports.GroupCallJoinState = {}));
     var CallingDeviceType;
     (function (CallingDeviceType) {
         CallingDeviceType[CallingDeviceType["CAMERA"] = 0] = "CAMERA";

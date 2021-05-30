@@ -1010,6 +1010,9 @@ require(exports => {
         async modifyStorageRecords(data, options) {
             return this.server.modifyStorageRecords(data, options);
         }
+        async getGroupMembershipToken(options) {
+            return this.server.getGroupExternalCredential(options);
+        }
     }
     exports.default = MessageSender;
 });

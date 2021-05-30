@@ -1,17 +1,16 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    const exports = window.ts.Crypto = {};
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
 
     window.sjcl.beware["CTR mode is dangerous because it doesn't protect message integrity."]();
-    window.crypto.randomBytes = n => Buffer.from(window.ts.Crypto.getRandomBytes(n));
 
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const p_props_1 = __importDefault(require("p-props"));
+    const lodash_1 = require("lodash");
     function typedArrayToArrayBuffer(typedArray) {
         const { buffer, byteOffset, byteLength } = typedArray;
         return buffer.slice(byteOffset, byteLength + byteOffset);
@@ -426,6 +425,26 @@
         };
     }
     exports.encryptCdsDiscoveryRequest = encryptCdsDiscoveryRequest;
+    function uuidToArrayBuffer(uuid) {
+        if (uuid.length !== 36) {
+            window.log.warn('uuidToArrayBuffer: received a string of invalid length. Returning an empty ArrayBuffer');
+            return new ArrayBuffer(0);
+        }
+        return Uint8Array.from(lodash_1.chunk(uuid.replace(/-/g, ''), 2).map(pair => parseInt(pair.join(''), 16))).buffer;
+    }
+    exports.uuidToArrayBuffer = uuidToArrayBuffer;
+    function arrayBufferToUuid(arrayBuffer) {
+        if (arrayBuffer.byteLength !== 16) {
+            window.log.warn('arrayBufferToUuid: received an ArrayBuffer of invalid length. Returning undefined');
+            return undefined;
+        }
+        const uuids = splitUuids(arrayBuffer);
+        if (uuids.length === 1) {
+            return uuids[0] || undefined;
+        }
+        return undefined;
+    }
+    exports.arrayBufferToUuid = arrayBufferToUuid;
     function splitUuids(arrayBuffer) {
         const uuids = [];
         for (let i = 0; i < arrayBuffer.byteLength; i += 16) {
@@ -449,4 +468,4 @@
         return uuids;
     }
     exports.splitUuids = splitUuids;
-})();
+});

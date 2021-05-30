@@ -6,14 +6,16 @@ require(exports => {
     const ringrtc_1 = require("ringrtc");
     const lodash_1 = require("lodash");
     const getOwn_1 = require("../../util/getOwn");
+    const missingCaseError_1 = require("../../util/missingCaseError");
     const notify_1 = require("../../services/notify");
     const calling_1 = require("../../services/calling");
-    const calling_2 = require("../selectors/calling");
     const Calling_1 = require("../../types/Calling");
     const callingTones_1 = require("../../util/callingTones");
     const callingPermissions_1 = require("../../util/callingPermissions");
     const bounceAppIcon_1 = require("../../shims/bounceAppIcon");
     // Helpers
+    exports.getActiveCall = ({ activeCallState, callsByConversation, }) => activeCallState &&
+        getOwn_1.getOwn(callsByConversation, activeCallState.conversationId);
     // Actions
     const ACCEPT_CALL_PENDING = 'calling/ACCEPT_CALL_PENDING';
     const CANCEL_CALL = 'calling/CANCEL_CALL';
@@ -22,6 +24,7 @@ require(exports => {
     const CHANGE_IO_DEVICE_FULFILLED = 'calling/CHANGE_IO_DEVICE_FULFILLED';
     const CLOSE_NEED_PERMISSION_SCREEN = 'calling/CLOSE_NEED_PERMISSION_SCREEN';
     const DECLINE_CALL = 'calling/DECLINE_CALL';
+    const GROUP_CALL_STATE_CHANGE = 'calling/GROUP_CALL_STATE_CHANGE';
     const HANG_UP = 'calling/HANG_UP';
     const INCOMING_CALL = 'calling/INCOMING_CALL';
     const OUTGOING_CALL = 'calling/OUTGOING_CALL';
@@ -29,7 +32,7 @@ require(exports => {
     const REMOTE_VIDEO_CHANGE = 'calling/REMOTE_VIDEO_CHANGE';
     const SET_LOCAL_AUDIO_FULFILLED = 'calling/SET_LOCAL_AUDIO_FULFILLED';
     const SET_LOCAL_VIDEO_FULFILLED = 'calling/SET_LOCAL_VIDEO_FULFILLED';
-    const START_CALL = 'calling/START_CALL';
+    const START_DIRECT_CALL = 'calling/START_DIRECT_CALL';
     const TOGGLE_PARTICIPANTS = 'calling/TOGGLE_PARTICIPANTS';
     const TOGGLE_PIP = 'calling/TOGGLE_PIP';
     const TOGGLE_SETTINGS = 'calling/TOGGLE_SETTINGS';
@@ -110,8 +113,8 @@ require(exports => {
             payload: null,
         };
     }
-    function cancelCall() {
-        window.Signal.Services.calling.stopCallingLobby();
+    function cancelCall(payload) {
+        calling_1.calling.stopCallingLobby(payload.conversationId);
         return {
             type: CANCEL_CALL,
         };
@@ -120,6 +123,12 @@ require(exports => {
         calling_1.calling.decline(payload.conversationId);
         return {
             type: DECLINE_CALL,
+            payload,
+        };
+    }
+    function groupCallStateChange(payload) {
+        return {
+            type: GROUP_CALL_STATE_CHANGE,
             payload,
         };
     }
@@ -167,10 +176,12 @@ require(exports => {
     }
     function setLocalAudio(payload) {
         return (dispatch, getState) => {
-            const { conversationId } = calling_2.getActiveCall(getState().calling) || {};
-            if (conversationId) {
-                calling_1.calling.setOutgoingAudio(conversationId, payload.enabled);
+            const activeCall = exports.getActiveCall(getState().calling);
+            if (!activeCall) {
+                window.log.warn('Trying to set local audio when no call is active');
+                return;
             }
+            calling_1.calling.setOutgoingAudio(activeCall.conversationId, payload.enabled);
             dispatch({
                 type: SET_LOCAL_AUDIO_FULFILLED,
                 payload,
@@ -179,11 +190,16 @@ require(exports => {
     }
     function setLocalVideo(payload) {
         return async (dispatch, getState) => {
+            const activeCall = exports.getActiveCall(getState().calling);
+            if (!activeCall) {
+                window.log.warn('Trying to set local video when no call is active');
+                return;
+            }
             let enabled;
             if (await callingPermissions_1.requestCameraPermissions()) {
-                const { conversationId, callState } = calling_2.getActiveCall(getState().calling) || {};
-                if (conversationId && callState) {
-                    calling_1.calling.setOutgoingVideo(conversationId, payload.enabled);
+                if (activeCall.callMode === Calling_1.CallMode.Group ||
+                    (activeCall.callMode === Calling_1.CallMode.Direct && activeCall.callState)) {
+                    calling_1.calling.setOutgoingVideo(activeCall.conversationId, payload.enabled);
                 }
                 else if (payload.enabled) {
                     calling_1.calling.enableLocalCamera();
@@ -209,10 +225,23 @@ require(exports => {
         };
     }
     function startCall(payload) {
-        calling_1.calling.startOutgoingCall(payload.conversationId, payload.hasLocalAudio, payload.hasLocalVideo);
-        return {
-            type: START_CALL,
-            payload,
+        return dispatch => {
+            switch (payload.callMode) {
+                case Calling_1.CallMode.Direct:
+                    calling_1.calling.startOutgoingDirectCall(payload.conversationId, payload.hasLocalAudio, payload.hasLocalVideo);
+                    dispatch({
+                        type: START_DIRECT_CALL,
+                        payload,
+                    });
+                    break;
+                case Calling_1.CallMode.Group:
+                    calling_1.calling.joinGroupCall(payload.conversationId, payload.hasLocalAudio, payload.hasLocalVideo);
+                    // The calling service should already be wired up to Redux so we don't need to
+                    //   dispatch anything here.
+                    break;
+                default:
+                    throw missingCaseError_1.missingCaseError(payload.callMode);
+            }
         };
     }
     function toggleParticipants() {
@@ -237,6 +266,7 @@ require(exports => {
         changeIODevice,
         closeNeedPermissionScreen,
         declineCall,
+        groupCallStateChange,
         hangUp,
         receiveIncomingCall,
         outgoingCall,
@@ -273,30 +303,49 @@ require(exports => {
             : state)), { callsByConversation: lodash_1.omit(state.callsByConversation, conversationId) });
     }
     function reducer(state = getEmptyState(), action) {
-        var _a;
+        var _a, _b, _c, _d, _e;
         const { callsByConversation } = state;
         if (action.type === SHOW_CALL_LOBBY) {
-            return Object.assign(Object.assign({}, state), {
-                callsByConversation: Object.assign(Object.assign({}, callsByConversation), {
-                    [action.payload.conversationId]: {
+            let call;
+            switch (action.payload.callMode) {
+                case Calling_1.CallMode.Direct:
+                    call = {
+                        callMode: Calling_1.CallMode.Direct,
                         conversationId: action.payload.conversationId,
                         isIncoming: false,
-                        isVideoCall: action.payload.isVideoCall,
-                    }
-                }), activeCallState: {
+                        isVideoCall: action.payload.hasLocalVideo,
+                    };
+                    break;
+                case Calling_1.CallMode.Group:
+                    // We expect to be in this state briefly. The Calling service should update the
+                    //   call state shortly.
+                    call = {
+                        callMode: Calling_1.CallMode.Group,
+                        conversationId: action.payload.conversationId,
+                        connectionState: action.payload.connectionState,
+                        joinState: action.payload.joinState,
+                        remoteParticipants: action.payload.remoteParticipants,
+                    };
+                    break;
+                default:
+                    throw missingCaseError_1.missingCaseError(action.payload);
+            }
+            return Object.assign(Object.assign({}, state), {
+                callsByConversation: Object.assign(Object.assign({}, callsByConversation), { [action.payload.conversationId]: call }), activeCallState: {
                     conversationId: action.payload.conversationId,
-                    hasLocalAudio: true,
-                    hasLocalVideo: action.payload.isVideoCall,
+                    hasLocalAudio: action.payload.hasLocalAudio,
+                    hasLocalVideo: action.payload.hasLocalVideo,
                     participantsList: false,
                     pip: false,
                     settingsDialogOpen: false,
                 }
             });
         }
-        if (action.type === START_CALL) {
+        if (action.type === START_DIRECT_CALL) {
             return Object.assign(Object.assign({}, state), {
                 callsByConversation: Object.assign(Object.assign({}, callsByConversation), {
                     [action.payload.conversationId]: {
+                        callMode: Calling_1.CallMode.Direct,
                         conversationId: action.payload.conversationId,
                         callState: Calling_1.CallState.Prering,
                         isIncoming: false,
@@ -331,11 +380,19 @@ require(exports => {
         if (action.type === CANCEL_CALL ||
             action.type === HANG_UP ||
             action.type === CLOSE_NEED_PERMISSION_SCREEN) {
-            if (!state.activeCallState) {
+            const activeCall = exports.getActiveCall(state);
+            if (!activeCall) {
                 window.log.warn('No active call to remove');
                 return state;
             }
-            return removeConversationFromState(state, state.activeCallState.conversationId);
+            switch (activeCall.callMode) {
+                case Calling_1.CallMode.Direct:
+                    return removeConversationFromState(state, activeCall.conversationId);
+                case Calling_1.CallMode.Group:
+                    return lodash_1.omit(state, 'activeCallState');
+                default:
+                    throw missingCaseError_1.missingCaseError(activeCall);
+            }
         }
         if (action.type === DECLINE_CALL) {
             return removeConversationFromState(state, action.payload.conversationId);
@@ -344,6 +401,7 @@ require(exports => {
             return Object.assign(Object.assign({}, state), {
                 callsByConversation: Object.assign(Object.assign({}, callsByConversation), {
                     [action.payload.conversationId]: {
+                        callMode: Calling_1.CallMode.Direct,
                         conversationId: action.payload.conversationId,
                         callState: Calling_1.CallState.Prering,
                         isIncoming: true,
@@ -356,6 +414,7 @@ require(exports => {
             return Object.assign(Object.assign({}, state), {
                 callsByConversation: Object.assign(Object.assign({}, callsByConversation), {
                     [action.payload.conversationId]: {
+                        callMode: Calling_1.CallMode.Direct,
                         conversationId: action.payload.conversationId,
                         callState: Calling_1.CallState.Prering,
                         isIncoming: false,
@@ -380,12 +439,12 @@ require(exports => {
                 return removeConversationFromState(state, action.payload.conversationId);
             }
             const call = getOwn_1.getOwn(state.callsByConversation, action.payload.conversationId);
-            if (!call) {
-                window.log.warn('Cannot update state for non-existent call');
+            if (((_a = call) === null || _a === void 0 ? void 0 : _a.callMode) !== Calling_1.CallMode.Direct) {
+                window.log.warn('Cannot update state for a non-direct call');
                 return state;
             }
             let activeCallState;
-            if (((_a = state.activeCallState) === null || _a === void 0 ? void 0 : _a.conversationId) === action.payload.conversationId) {
+            if (((_b = state.activeCallState) === null || _b === void 0 ? void 0 : _b.conversationId) === action.payload.conversationId) {
                 activeCallState = Object.assign(Object.assign({}, state.activeCallState), { joinedAt: action.payload.acceptedTime });
             }
             else {
@@ -393,11 +452,36 @@ require(exports => {
             }
             return Object.assign(Object.assign({}, state), { callsByConversation: Object.assign(Object.assign({}, callsByConversation), { [action.payload.conversationId]: Object.assign(Object.assign({}, call), { callState: action.payload.callState, callEndedReason: action.payload.callEndedReason }) }), activeCallState });
         }
+        if (action.type === GROUP_CALL_STATE_CHANGE) {
+            const { conversationId, connectionState, joinState, hasLocalAudio, hasLocalVideo, remoteParticipants, } = action.payload;
+            if (connectionState === Calling_1.GroupCallConnectionState.NotConnected) {
+                return Object.assign(Object.assign({}, state), {
+                    callsByConversation: lodash_1.omit(callsByConversation, conversationId), activeCallState: ((_c = state.activeCallState) === null || _c === void 0 ? void 0 : _c.conversationId) === conversationId
+                        ? undefined
+                        : state.activeCallState
+                });
+            }
+            return Object.assign(Object.assign({}, state), {
+                callsByConversation: Object.assign(Object.assign({}, callsByConversation), {
+                    [conversationId]: {
+                        callMode: Calling_1.CallMode.Group,
+                        conversationId,
+                        connectionState,
+                        joinState,
+                        remoteParticipants,
+                    }
+                }), activeCallState: ((_d = state.activeCallState) === null || _d === void 0 ? void 0 : _d.conversationId) === conversationId
+                    ? Object.assign(Object.assign({}, state.activeCallState), {
+                        hasLocalAudio,
+                        hasLocalVideo
+                    }) : state.activeCallState
+            });
+        }
         if (action.type === REMOTE_VIDEO_CHANGE) {
             const { conversationId, hasVideo } = action.payload;
             const call = getOwn_1.getOwn(state.callsByConversation, conversationId);
-            if (!call) {
-                window.log.warn('Cannot update remote video for a non-existent call');
+            if (((_e = call) === null || _e === void 0 ? void 0 : _e.callMode) !== Calling_1.CallMode.Direct) {
+                window.log.warn('Cannot update remote video for a non-direct call');
                 return state;
             }
             return Object.assign(Object.assign({}, state), { callsByConversation: Object.assign(Object.assign({}, callsByConversation), { [conversationId]: Object.assign(Object.assign({}, call), { hasRemoteVideo: hasVideo }) }) });

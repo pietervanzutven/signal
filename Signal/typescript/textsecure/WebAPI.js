@@ -1,17 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.textsecure = window.ts.textsecure || {};
-    const exports = window.ts.textsecure.WebAPI = {};
-
-    /* eslint-disable no-param-reassign */
-    /* eslint-disable more/no-then */
-    /* eslint-disable no-bitwise */
-    /* eslint-disable guard-for-in */
-    /* eslint-disable no-restricted-syntax */
-    /* eslint-disable no-nested-ternary */
-    /* eslint-disable @typescript-eslint/no-explicit-any */
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -23,6 +13,13 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    /* eslint-disable no-param-reassign */
+    /* eslint-disable more/no-then */
+    /* eslint-disable no-bitwise */
+    /* eslint-disable guard-for-in */
+    /* eslint-disable no-restricted-syntax */
+    /* eslint-disable no-nested-ternary */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const node_fetch_1 = __importDefault(require("node-fetch"));
     const proxy_agent_1 = __importDefault(require("proxy-agent"));
     const https_1 = require("https");
@@ -414,6 +411,7 @@
         getStickerPackUpload: 'v1/sticker/pack/form',
         groupLog: 'v1/groups/logs',
         groups: 'v1/groups',
+        groupToken: 'v1/groups/token',
         keys: 'v2/keys',
         messages: 'v1/messages',
         profile: 'v1/profile',
@@ -490,6 +488,7 @@
                 getGroup,
                 getGroupAvatar,
                 getGroupCredentials,
+                getGroupExternalCredential,
                 getGroupLog,
                 getIceServers,
                 getKeysForIdentifier,
@@ -509,6 +508,7 @@
                 fetchLinkPreviewMetadata,
                 fetchLinkPreviewImage,
                 makeProxiedRequest,
+                makeSfuRequest,
                 modifyGroup,
                 modifyStorageRecords,
                 putAttachment,
@@ -1084,6 +1084,18 @@
                     result,
                 };
             }
+            async function makeSfuRequest(targetUrl, type, headers, body) {
+                return _outerAjax(targetUrl, {
+                    certificateAuthority,
+                    data: body,
+                    headers,
+                    proxyUrl,
+                    responseType: 'arraybufferwithdetails',
+                    timeout: 0,
+                    type,
+                    version,
+                });
+            }
             // Groups
             function generateGroupAuth(groupPublicParamsHex, authCredentialPresentationHex) {
                 return _btoa(`${groupPublicParamsHex}:${authCredentialPresentationHex}`);
@@ -1096,6 +1108,18 @@
                     responseType: 'json',
                 });
                 return response.credentials;
+            }
+            async function getGroupExternalCredential(options) {
+                const basicAuth = generateGroupAuth(options.groupPublicParamsHex, options.authCredentialPresentationHex);
+                const response = await _ajax({
+                    basicAuth,
+                    call: 'groupToken',
+                    httpType: 'GET',
+                    contentType: 'application/x-protobuf',
+                    responseType: 'arraybuffer',
+                    host: storageUrl,
+                });
+                return window.textsecure.protobuf.GroupExternalCredential.decode(response);
             }
             function verifyAttributes(attributes) {
                 const { key, credential, acl, algorithm, date, policy, signature, } = attributes;
@@ -1474,4 +1498,4 @@
         }
     }
     exports.initialize = initialize;
-})();
+});

@@ -8,22 +8,27 @@ require(exports => {
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
     const react_redux_1 = require("react-redux");
+    const ringrtc_1 = require("ringrtc");
     const actions_1 = require("../actions");
     const CallManager_1 = require("../../components/CallManager");
+    const calling_1 = require("../../services/calling");
     const conversations_1 = require("../selectors/conversations");
-    const calling_1 = require("../selectors/calling");
+    const calling_2 = require("../ducks/calling");
+    const calling_3 = require("../selectors/calling");
     const user_1 = require("../selectors/user");
     const CallingDeviceSelection_1 = require("./CallingDeviceSelection");
     function renderDeviceSelection() {
         return react_1.default.createElement(CallingDeviceSelection_1.SmartCallingDeviceSelection, null);
     }
+    const createCanvasVideoRenderer = () => new ringrtc_1.CanvasVideoRenderer();
+    const getGroupCallVideoFrameSource = calling_1.calling.getGroupCallVideoFrameSource.bind(calling_1.calling);
     const mapStateToActiveCallProp = (state) => {
         const { calling } = state;
         const { activeCallState } = calling;
         if (!activeCallState) {
             return undefined;
         }
-        const call = calling_1.getActiveCall(calling);
+        const call = calling_2.getActiveCall(calling);
         if (!call) {
             window.log.error('There was an active call state but no corresponding call');
             return undefined;
@@ -40,7 +45,7 @@ require(exports => {
         };
     };
     const mapStateToIncomingCallProp = (state) => {
-        const call = calling_1.getIncomingCall(state.calling);
+        const call = calling_3.getIncomingCall(state.calling);
         if (!call) {
             return undefined;
         }
@@ -57,6 +62,8 @@ require(exports => {
     const mapStateToProps = (state) => ({
         activeCall: mapStateToActiveCallProp(state),
         availableCameras: state.calling.availableCameras,
+        createCanvasVideoRenderer,
+        getGroupCallVideoFrameSource,
         i18n: user_1.getIntl(state),
         incomingCall: mapStateToIncomingCallProp(state),
         me: conversations_1.getMe(state),

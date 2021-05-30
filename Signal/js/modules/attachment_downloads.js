@@ -9,8 +9,8 @@
 (function () {
   'use strict'
 
-  const { isFunction, isNumber, omit } = window.lodash;
-  const getGuid = window.uuid.v4;
+  const { isFunction, isNumber, omit } = require('lodash');
+  const getGuid = require('uuid/v4');
   const {
     getMessageById,
     getNextAttachmentDownloadJobs,
@@ -19,9 +19,9 @@
     saveAttachmentDownloadJob,
     saveMessage,
     setAttachmentDownloadJobPending,
-  } = window.ts.sql.Client.default;
+  } = require('../../ts/sql/Client').default;
   const { downloadAttachment } = require('../../ts/util/downloadAttachment');
-  const { stringFromBytes } = window.ts.Crypto;
+  const { stringFromBytes } = require('../../ts/Crypto');
 
   window.attachment_downloads = {
     start,

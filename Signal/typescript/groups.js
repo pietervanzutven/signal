@@ -127,6 +127,57 @@ require(exports => {
         };
     }
     exports.deriveGroupFields = deriveGroupFields;
+    async function makeRequestWithTemporalRetry({ logId, publicParams, secretParams, request, }) {
+        const data = window.storage.get(groupCredentialFetcher_1.GROUP_CREDENTIALS_KEY);
+        if (!data) {
+            throw new Error(`makeRequestWithTemporalRetry/${logId}: No group credentials!`);
+        }
+        const groupCredentials = groupCredentialFetcher_1.getCredentialsForToday(data);
+        const sender = window.textsecure.messaging;
+        if (!sender) {
+            throw new Error(`makeRequestWithTemporalRetry/${logId}: textsecure.messaging is not available!`);
+        }
+        const todayOptions = getGroupCredentials({
+            authCredentialBase64: groupCredentials.today.credential,
+            groupPublicParamsBase64: publicParams,
+            groupSecretParamsBase64: secretParams,
+            serverPublicParamsBase64: window.getServerPublicParams(),
+        });
+        try {
+            return await request(sender, todayOptions);
+        }
+        catch (todayError) {
+            if (todayError.code === TEMPORAL_AUTH_REJECTED_CODE) {
+                window.log.warn(`makeRequestWithTemporalRetry/${logId}: Trying again with tomorrow's credentials`);
+                const tomorrowOptions = getGroupCredentials({
+                    authCredentialBase64: groupCredentials.tomorrow.credential,
+                    groupPublicParamsBase64: publicParams,
+                    groupSecretParamsBase64: secretParams,
+                    serverPublicParamsBase64: window.getServerPublicParams(),
+                });
+                return request(sender, tomorrowOptions);
+            }
+            throw todayError;
+        }
+    }
+    async function fetchMembershipProof({ publicParams, secretParams, }) {
+        // Ensure we have the credentials we need before attempting GroupsV2 operations
+        await groupCredentialFetcher_1.maybeFetchNewCredentials();
+        if (!publicParams) {
+            throw new Error('fetchMembershipProof: group was missing publicParams!');
+        }
+        if (!secretParams) {
+            throw new Error('fetchMembershipProof: group was missing secretParams!');
+        }
+        const response = await makeRequestWithTemporalRetry({
+            logId: 'fetchMembershipProof',
+            publicParams,
+            secretParams,
+            request: (sender, options) => sender.getGroupMembershipToken(options),
+        });
+        return response.token;
+    }
+    exports.fetchMembershipProof = fetchMembershipProof;
     async function waitThenMaybeUpdateGroup(options) {
         // First wait to process all incoming messages on the websocket
         await window.waitForEmptyEventQueue();
@@ -1547,4 +1598,24 @@ require(exports => {
         }
         return member;
     }
+    function getMembershipList(conversationId) {
+        const conversation = window.ConversationController.get(conversationId);
+        if (!conversation) {
+            throw new Error('getMembershipList: cannot find conversation');
+        }
+        const secretParams = conversation.get('secretParams');
+        if (!secretParams) {
+            throw new Error('getMembershipList: no secretParams');
+        }
+        const clientZkGroupCipher = zkgroup_1.getClientZkGroupCipher(secretParams);
+        return conversation.getMembers().map(member => {
+            const uuid = member.get('uuid');
+            if (!uuid) {
+                throw new Error('getMembershipList: member has no UUID');
+            }
+            const uuidCiphertext = zkgroup_1.encryptUuid(clientZkGroupCipher, uuid);
+            return { uuid, uuidCiphertext };
+        });
+    }
+    exports.getMembershipList = getMembershipList;
 });
