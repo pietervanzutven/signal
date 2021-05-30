@@ -19,6 +19,14 @@ require(exports => {
         div.appendChild(contents);
         return div.innerHTML;
     };
+    const replaceAngleBrackets = (text) => {
+        const entities = [
+            [/&/g, '&amp;'],
+            [/</g, '&lt;'],
+            [/>/g, '&gt;'],
+        ];
+        return entities.reduce((acc, [re, replaceValue]) => acc.replace(re, replaceValue), text);
+    };
     class SignalClipboard {
         constructor(quill) {
             this.quill = quill;
@@ -63,13 +71,16 @@ require(exports => {
             }
             const text = event.clipboardData.getData('text/plain');
             const html = event.clipboardData.getData('text/signal');
+            const clipboardDelta = html
+                ? clipboard.convert(html)
+                : clipboard.convert(replaceAngleBrackets(text));
             const { scrollTop } = this.quill.scrollingContainer;
             this.quill.selection.update('silent');
             if (selection) {
                 setTimeout(() => {
                     const delta = new quill_delta_1.default()
                         .retain(selection.index)
-                        .concat(clipboard.convert(html || text));
+                        .concat(clipboardDelta);
                     this.quill.updateContents(delta, 'user');
                     this.quill.setSelection(delta.length(), 0, 'silent');
                     this.quill.scrollingContainer.scrollTop = scrollTop;
