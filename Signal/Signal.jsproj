@@ -3554,6 +3554,7 @@
     <Content Include="node_modules\lodash\union.js" />
     <Content Include="node_modules\lodash\_baseGet.js" />
     <Content Include="node_modules\lodash\_toPath.js" />
+    <Content Include="node_modules\uwp-fetch\index.js" />
     <Content Include="node_modules\node-forge\forge.all.min.js" />
     <Content Include="node_modules\p-props\index.js" />
     <Content Include="node_modules\path\index.js" />
