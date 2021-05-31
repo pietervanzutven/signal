@@ -835,8 +835,16 @@ require(exports => {
                 result = await window.textsecure.messaging.server.makeSfuRequest(url, httpMethod, headers, body);
             }
             catch (err) {
-                window.log.error('handleSendHttpRequest: fetch failed with error', err);
-                ringrtc_1.RingRTC.httpRequestFailed(requestId, String(err));
+                if (err.code !== -1) {
+                    // WebAPI treats certain response codes as errors, but RingRTC still needs to
+                    // see them. It does not currently look at the response body, so we're giving
+                    // it an empty one.
+                    ringrtc_1.RingRTC.receivedHttpResponse(requestId, err.code, new ArrayBuffer(0));
+                }
+                else {
+                    window.log.error('handleSendHttpRequest: fetch failed with error', err);
+                    ringrtc_1.RingRTC.httpRequestFailed(requestId, String(err));
+                }
                 return;
             }
             ringrtc_1.RingRTC.receivedHttpResponse(requestId, result.response.status, result.data);
