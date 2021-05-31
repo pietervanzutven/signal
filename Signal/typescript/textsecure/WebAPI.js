@@ -263,7 +263,7 @@ require(exports => {
             }
             else if (unauthenticated) {
                 if (!accessKey) {
-                    throw new Error('_promiseAjax: mode is aunathenticated, but accessKey was not provided');
+                    throw new Error('_promiseAjax: mode is unauthenticated, but accessKey was not provided');
                 }
                 // Access key is already a Base64 string
                 fetchOptions.headers['Unidentified-Access-Key'] = accessKey;
