@@ -59,7 +59,7 @@ require(exports => {
         return (react_1.default.createElement("div", { className: "module-calling__container" },
             react_1.default.createElement(CallingHeader_1.CallingHeader, { conversationTitle: conversation.title, i18n: i18n, isGroupCall: isGroupCall, remoteParticipants: participantNames.length, toggleParticipants: toggleParticipants, toggleSettings: toggleSettings }),
             react_1.default.createElement("div", { className: "module-calling-lobby__video" },
-                hasLocalVideo && availableCameras.length > 0 ? (react_1.default.createElement("video", { ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: me.avatarPath, color: me.color },
+                hasLocalVideo && availableCameras.length > 0 ? (react_1.default.createElement("video", { className: "module-calling-lobby__video-on__video", ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: me.avatarPath, color: me.color },
                     react_1.default.createElement("div", { className: "module-calling-lobby__video-off--icon" }),
                     react_1.default.createElement("span", { className: "module-calling-lobby__video-off--text" }, i18n('calling__your-video-is-off')))),
                 react_1.default.createElement("div", { className: "module-calling__buttons" },
