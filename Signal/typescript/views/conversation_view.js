@@ -1360,10 +1360,7 @@ Whisper.ConversationView = Whisper.View.extend({
         if (!fileName.includes('.')) {
             return fileName;
         }
-        return fileName
-            .split('.')
-            .slice(0, -1)
-            .join('.');
+        return fileName.split('.').slice(0, -1).join('.');
     },
     getType(contentType) {
         if (!contentType) {

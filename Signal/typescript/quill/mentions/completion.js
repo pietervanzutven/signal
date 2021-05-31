@@ -109,10 +109,7 @@ require(exports => {
             }
         }
         insertMention(mention, index, range, withTrailingSpace = false) {
-            const delta = new quill_delta_1.default()
-                .retain(index)
-                .delete(range)
-                .insert({ mention });
+            const delta = new quill_delta_1.default().retain(index).delete(range).insert({ mention });
             if (withTrailingSpace) {
                 this.quill.updateContents(delta.insert(' '), 'user');
                 this.quill.setSelection(index + 2, 0, 'user');

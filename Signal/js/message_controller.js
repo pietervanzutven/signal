@@ -1,5 +1,8 @@
-﻿// eslint-disable-next-line func-names
-(function() {
+// Copyright 2019-2020 Signal Messenger, LLC
+// SPDX-License-Identifier: AGPL-3.0-only
+
+// eslint-disable-next-line func-names
+(function () {
   window.Whisper = window.Whisper || {};
 
   const messageLookup = Object.create(null);

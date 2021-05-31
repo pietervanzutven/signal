@@ -96,9 +96,7 @@
             return;
         }
         interactionMode = 'keyboard';
-        $(document.body)
-            .addClass('keyboard-mode')
-            .removeClass('mouse-mode');
+        $(document.body).addClass('keyboard-mode').removeClass('mouse-mode');
         const { userChanged } = window.reduxActions.user;
         const { clearSelectedMessage } = window.reduxActions.conversations;
         if (clearSelectedMessage) {
@@ -115,9 +113,7 @@
             return;
         }
         interactionMode = 'mouse';
-        $(document.body)
-            .addClass('mouse-mode')
-            .removeClass('keyboard-mode');
+        $(document.body).addClass('mouse-mode').removeClass('keyboard-mode');
         const { userChanged } = window.reduxActions.user;
         const { clearSelectedMessage } = window.reduxActions.conversations;
         if (clearSelectedMessage) {

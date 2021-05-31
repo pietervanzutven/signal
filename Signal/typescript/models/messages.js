@@ -2084,8 +2084,7 @@ require(exports => {
                         urls.includes(item.url) &&
                         window.Signal.LinkPreviews.isLinkSafeToPreview(item.url));
                     if (preview.length < incomingPreview.length) {
-                        window.log.info(`${message.idForLogging()}: Eliminated ${preview.length -
-                            incomingPreview.length} previews with invalid urls'`);
+                        window.log.info(`${message.idForLogging()}: Eliminated ${preview.length - incomingPreview.length} previews with invalid urls'`);
                     }
                     message.set({
                         id: window.getGuid(),

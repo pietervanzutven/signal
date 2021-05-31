@@ -1,7 +1,7 @@
 /* global Whisper, Mustache, _ */
 
 // eslint-disable-next-line func-names
-(function() {
+(function () {
   window.Whisper = window.Whisper || {};
 
   Whisper.ToastView = Whisper.View.extend({

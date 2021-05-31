@@ -1,10 +1,12 @@
 require(exports => {
     "use strict";
-    /* eslint-disable no-console */
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    /* eslint-disable no-console */
     const redux_1 = require("redux");
     const redux_promise_middleware_1 = __importDefault(require("redux-promise-middleware"));
     const redux_thunk_1 = __importDefault(require("redux-thunk"));
