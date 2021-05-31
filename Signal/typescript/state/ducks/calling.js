@@ -335,7 +335,7 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: action.payload.hasLocalAudio,
                     hasLocalVideo: action.payload.hasLocalVideo,
-                    participantsList: false,
+                    showParticipantsList: false,
                     pip: false,
                     settingsDialogOpen: false,
                 }
@@ -355,7 +355,7 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: action.payload.hasLocalAudio,
                     hasLocalVideo: action.payload.hasLocalVideo,
-                    participantsList: false,
+                    showParticipantsList: false,
                     pip: false,
                     settingsDialogOpen: false,
                 }
@@ -371,7 +371,7 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: true,
                     hasLocalVideo: action.payload.asVideoCall,
-                    participantsList: false,
+                    showParticipantsList: false,
                     pip: false,
                     settingsDialogOpen: false,
                 }
@@ -424,7 +424,7 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: action.payload.hasLocalAudio,
                     hasLocalVideo: action.payload.hasLocalVideo,
-                    participantsList: false,
+                    showParticipantsList: false,
                     pip: false,
                     settingsDialogOpen: false,
                 }
@@ -539,7 +539,7 @@ require(exports => {
                 window.log.warn('Cannot toggle participants list when there is no active call');
                 return state;
             }
-            return Object.assign(Object.assign({}, state), { activeCallState: Object.assign(Object.assign({}, activeCallState), { participantsList: !activeCallState.participantsList }) });
+            return Object.assign(Object.assign({}, state), { activeCallState: Object.assign(Object.assign({}, activeCallState), { showParticipantsList: !activeCallState.showParticipantsList }) });
         }
         if (action.type === TOGGLE_PIP) {
             const { activeCallState } = state;

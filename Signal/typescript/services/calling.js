@@ -316,20 +316,29 @@ require(exports => {
             const joinState = localDeviceState.connectionState === ringrtc_1.ConnectionState.NotConnected
                 ? Calling_1.GroupCallJoinState.NotJoined
                 : this.convertRingRtcJoinState(localDeviceState.joinState);
+            const ourId = window.ConversationController.getOurConversationId();
             return {
                 connectionState: this.convertRingRtcConnectionState(localDeviceState.connectionState),
                 joinState,
                 hasLocalAudio: !localDeviceState.audioMuted,
                 hasLocalVideo: !localDeviceState.videoMuted,
-                remoteParticipants: remoteDeviceStates.map(remoteDeviceState => ({
-                    demuxId: remoteDeviceState.demuxId,
-                    userId: Crypto_1.arrayBufferToUuid(remoteDeviceState.userId) || '',
-                    hasRemoteAudio: !remoteDeviceState.audioMuted,
-                    hasRemoteVideo: !remoteDeviceState.videoMuted,
-                    // If RingRTC doesn't send us an aspect ratio, we make a guess.
-                    videoAspectRatio: remoteDeviceState.videoAspectRatio ||
-                        (remoteDeviceState.videoMuted ? 1 : 4 / 3),
-                })),
+                remoteParticipants: remoteDeviceStates.map(remoteDeviceState => {
+                    const uuid = Crypto_1.arrayBufferToUuid(remoteDeviceState.userId);
+                    const id = window.ConversationController.ensureContactIds({ uuid });
+                    if (!id) {
+                        throw new Error('Calling.formatGroupCallForRedux: no conversation found');
+                    }
+                    return {
+                        conversationId: id,
+                        demuxId: remoteDeviceState.demuxId,
+                        hasRemoteAudio: !remoteDeviceState.audioMuted,
+                        hasRemoteVideo: !remoteDeviceState.videoMuted,
+                        isSelf: id === ourId,
+                        // If RingRTC doesn't send us an aspect ratio, we make a guess.
+                        videoAspectRatio: remoteDeviceState.videoAspectRatio ||
+                            (remoteDeviceState.videoMuted ? 1 : 4 / 3),
+                    };
+                }),
             };
         }
         getGroupCallVideoFrameSource(conversationId, demuxId) {

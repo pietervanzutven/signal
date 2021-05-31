@@ -15,6 +15,7 @@ require(exports => {
     const conversations_1 = require("../selectors/conversations");
     const calling_2 = require("../ducks/calling");
     const calling_3 = require("../selectors/calling");
+    const Calling_1 = require("../../types/Calling");
     const user_1 = require("../selectors/user");
     const CallingDeviceSelection_1 = require("./CallingDeviceSelection");
     function renderDeviceSelection() {
@@ -33,15 +34,37 @@ require(exports => {
             window.log.error('There was an active call state but no corresponding call');
             return undefined;
         }
-        const conversation = conversations_1.getConversationSelector(state)(activeCallState.conversationId);
+        const conversationSelector = conversations_1.getConversationSelector(state);
+        const conversation = conversationSelector(activeCallState.conversationId);
         if (!conversation) {
             window.log.error('The active call has no corresponding conversation');
             return undefined;
         }
+        const groupCallParticipants = [];
+        if (call && call.callMode === Calling_1.CallMode.Group) {
+            call.remoteParticipants.forEach((remoteParticipant) => {
+                const remoteConversation = conversationSelector(remoteParticipant.conversationId);
+                if (!remoteConversation) {
+                    window.log.error('Remote participant has no corresponding conversation');
+                    return;
+                }
+                groupCallParticipants.push({
+                    avatarPath: remoteConversation.avatarPath,
+                    color: remoteConversation.color,
+                    firstName: remoteConversation.firstName,
+                    hasRemoteAudio: remoteParticipant.hasRemoteAudio,
+                    hasRemoteVideo: remoteParticipant.hasRemoteVideo,
+                    isSelf: remoteParticipant.isSelf,
+                    profileName: remoteConversation.profileName,
+                    title: remoteConversation.title,
+                });
+            });
+        }
         return {
-            call,
             activeCallState,
+            call,
             conversation,
+            groupCallParticipants,
         };
     };
     const mapStateToIncomingCallProp = (state) => {

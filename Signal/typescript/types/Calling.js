@@ -5,9 +5,9 @@ require(exports => {
     Object.defineProperty(exports, "__esModule", { value: true });
     var CallMode;
     (function (CallMode) {
-        CallMode[CallMode["None"] = 0] = "None";
-        CallMode[CallMode["Direct"] = 1] = "Direct";
-        CallMode[CallMode["Group"] = 2] = "Group";
+        CallMode["None"] = "None";
+        CallMode["Direct"] = "Direct";
+        CallMode["Group"] = "Group";
     })(CallMode = exports.CallMode || (exports.CallMode = {}));
     // Ideally, we would import many of these directly from RingRTC. But because Storybook
     //   cannot import RingRTC (as it runs in the browser), we have these copies. That also

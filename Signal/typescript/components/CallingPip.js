@@ -7,22 +7,15 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
-    const Avatar_1 = require("./Avatar");
-    const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
-    function renderAvatar({ avatarPath, color, name, phoneNumber, profileName, title, }, i18n) {
-        return (react_1.default.createElement("div", { className: "module-calling-pip__video--remote" },
-            react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: avatarPath, color: color },
-                react_1.default.createElement("div", { className: "module-calling-pip__video--avatar" },
-                    react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, size: 52 })))));
-    }
+    const react_tooltip_lite_1 = __importDefault(require("react-tooltip-lite"));
+    const CallingPipRemoteVideo_1 = require("./CallingPipRemoteVideo");
     const PIP_HEIGHT = 156;
     const PIP_WIDTH = 120;
     const PIP_DEFAULT_Y = 56;
     const PIP_PADDING = 8;
-    exports.CallingPip = ({ conversation, hangUp, hasLocalVideo, hasRemoteVideo, i18n, setLocalPreview, setRendererCanvas, togglePip, }) => {
+    exports.CallingPip = ({ call, conversation, createCanvasVideoRenderer, getGroupCallVideoFrameSource, hangUp, hasLocalVideo, i18n, setLocalPreview, setRendererCanvas, togglePip, }) => {
         const videoContainerRef = react_1.default.useRef(null);
         const localVideoRef = react_1.default.useRef(null);
-        const remoteVideoRef = react_1.default.useRef(null);
         const [dragState, setDragState] = react_1.default.useState({
             offsetX: 0,
             offsetY: 0,
@@ -34,8 +27,7 @@ require(exports => {
         });
         react_1.default.useEffect(() => {
             setLocalPreview({ element: localVideoRef });
-            setRendererCanvas({ element: remoteVideoRef });
-        }, [setLocalPreview, setRendererCanvas]);
+        }, [setLocalPreview]);
         const handleMouseMove = react_1.default.useCallback((ev) => {
             if (dragState.isDragging) {
                 setDragContainerStyle({
@@ -114,7 +106,7 @@ require(exports => {
                     transition: dragState.isDragging ? 'none' : 'transform ease-out 300ms',
                 }
             },
-                hasRemoteVideo ? (react_1.default.createElement("canvas", { className: "module-calling-pip__video--remote", ref: remoteVideoRef })) : (renderAvatar(conversation, i18n)),
+                react_1.default.createElement(CallingPipRemoteVideo_1.CallingPipRemoteVideo, { call: call, conversation: conversation, createCanvasVideoRenderer: createCanvasVideoRenderer, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, i18n: i18n, setRendererCanvas: setRendererCanvas }),
                 hasLocalVideo ? (react_1.default.createElement("video", { className: "module-calling-pip__video--local", ref: localVideoRef, autoPlay: true })) : null,
                 react_1.default.createElement("div", { className: "module-calling-pip__actions" },
                     react_1.default.createElement("button", {
@@ -122,6 +114,8 @@ require(exports => {
                             hangUp({ conversationId: conversation.id });
                         }
                     }),
-                    react_1.default.createElement("button", { type: "button", "aria-label": i18n('calling__pip'), className: "module-calling-pip__button--pip", onClick: togglePip }))));
+                    react_1.default.createElement("button", { type: "button", "aria-label": i18n('calling__pip--off'), className: "module-calling-pip__button--pip", onClick: togglePip },
+                        react_1.default.createElement(react_tooltip_lite_1.default, { arrowSize: 6, content: i18n('calling__pip--off'), hoverDelay: 0 },
+                            react_1.default.createElement("div", null))))));
     };
 });

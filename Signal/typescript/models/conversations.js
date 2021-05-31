@@ -2765,7 +2765,7 @@ require(exports => {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     this.get('profileName'), this.get('profileFamilyName'));
             }
-            return null;
+            return undefined;
         }
         getNumber() {
             if (!this.isPrivate()) {

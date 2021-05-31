@@ -6032,13 +6032,15 @@ img.emoji.jumbo {
   padding-top: 24px;
   text-align: center;
   text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-  top: 0;
   width: 100%; }
   .module-calling__header--header-name {
-    font-weight: 600;
     font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.009em;
     line-height: 21px;
-    letter-spacing: -0.009em; }
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
 
 .module-calling__buttons {
   bottom: 0;
@@ -6278,7 +6280,9 @@ img.emoji.jumbo {
   position: absolute; }
 
 .module-ongoing-call__header {
-  background: linear-gradient(rgba(0, 0, 0, 0.4), transparent); }
+  background: linear-gradient(rgba(0, 0, 0, 0.4), transparent);
+  top: 0;
+  width: 100%; }
 
 .module-ongoing-call__header-message {
   font-weight: normal;
@@ -6373,6 +6377,9 @@ img.emoji.jumbo {
     margin-right: 25px; }
 
 .module-calling-lobby__actions {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
   flex: 0 0 100px; }
 
 .module-calling-lobby__button {
@@ -6405,6 +6412,11 @@ img.emoji.jumbo {
 
 .module-calling-lobby__video-off--text {
   z-index: 1; }
+
+.module-calling-lobby__info {
+  color: #ffffff;
+  margin-bottom: 36px;
+  margin-top: 12px; }
 
 .module-calling-pip {
   backface-visibility: hidden;
@@ -8800,6 +8812,7 @@ img.emoji.jumbo {
   border-radius: 4px;
   border: none;
   color: #ffffff;
+  line-height: 24px;
   outline: none;
   padding: 7px 14px; }
   .keyboard-mode .module-button__gray:focus {
@@ -8815,6 +8828,7 @@ img.emoji.jumbo {
   border-radius: 4px;
   border: none;
   color: #ffffff;
+  line-height: 24px;
   outline: none;
   padding: 7px 14px; }
   .keyboard-mode .module-button__green:focus {

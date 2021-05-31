@@ -17,13 +17,14 @@ require(exports => {
     const lodash_1 = require("lodash");
     const classnames_1 = __importDefault(require("classnames"));
     const Avatar_1 = require("./Avatar");
+    const CallingHeader_1 = require("./CallingHeader");
     const CallingButton_1 = require("./CallingButton");
     const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
     const Calling_1 = require("../types/Calling");
     const missingCaseError_1 = require("../util/missingCaseError");
     const DirectCallRemoteParticipant_1 = require("./DirectCallRemoteParticipant");
     const GroupCallRemoteParticipants_1 = require("./GroupCallRemoteParticipants");
-    exports.CallScreen = ({ call, conversation, createCanvasVideoRenderer, getGroupCallVideoFrameSource, hangUp, hasLocalAudio, hasLocalVideo, i18n, joinedAt, me, setLocalAudio, setLocalVideo, setLocalPreview, setRendererCanvas, togglePip, toggleSettings, }) => {
+    exports.CallScreen = ({ call, conversation, createCanvasVideoRenderer, getGroupCallVideoFrameSource, hangUp, hasLocalAudio, hasLocalVideo, i18n, joinedAt, me, setLocalAudio, setLocalVideo, setLocalPreview, setRendererCanvas, stickyControls, toggleParticipants, togglePip, toggleSettings, }) => {
         const toggleAudio = react_1.useCallback(() => {
             setLocalAudio({
                 enabled: !hasLocalAudio,
@@ -54,14 +55,14 @@ require(exports => {
             return clearInterval.bind(null, interval);
         }, [joinedAt]);
         react_1.useEffect(() => {
-            if (!showControls) {
+            if (!showControls || stickyControls) {
                 return lodash_1.noop;
             }
             const timer = setTimeout(() => {
                 setShowControls(false);
             }, 5000);
             return clearInterval.bind(null, timer);
-        }, [showControls]);
+        }, [showControls, stickyControls]);
         react_1.useEffect(() => {
             const handleKeyDown = (event) => {
                 let eventHandled = false;
@@ -86,17 +87,17 @@ require(exports => {
         }, [toggleAudio, toggleVideo]);
         let hasRemoteVideo;
         let isConnected;
-        let remoteParticipants;
+        let remoteParticipantsElement;
         switch (call.callMode) {
             case Calling_1.CallMode.Direct:
                 hasRemoteVideo = Boolean(call.hasRemoteVideo);
                 isConnected = call.callState === Calling_1.CallState.Accepted;
-                remoteParticipants = (react_1.default.createElement(DirectCallRemoteParticipant_1.DirectCallRemoteParticipant, { conversation: conversation, hasRemoteVideo: hasRemoteVideo, i18n: i18n, setRendererCanvas: setRendererCanvas }));
+                remoteParticipantsElement = (react_1.default.createElement(DirectCallRemoteParticipant_1.DirectCallRemoteParticipant, { conversation: conversation, hasRemoteVideo: hasRemoteVideo, i18n: i18n, setRendererCanvas: setRendererCanvas }));
                 break;
             case Calling_1.CallMode.Group:
                 hasRemoteVideo = call.remoteParticipants.some(remoteParticipant => remoteParticipant.hasRemoteVideo);
                 isConnected = call.connectionState === Calling_1.GroupCallConnectionState.Connected;
-                remoteParticipants = (react_1.default.createElement(GroupCallRemoteParticipants_1.GroupCallRemoteParticipants, { remoteParticipants: call.remoteParticipants, createCanvasVideoRenderer: createCanvasVideoRenderer, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource }));
+                remoteParticipantsElement = (react_1.default.createElement(GroupCallRemoteParticipants_1.GroupCallRemoteParticipants, { remoteParticipants: call.remoteParticipants, createCanvasVideoRenderer: createCanvasVideoRenderer, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource }));
                 break;
             default:
                 throw missingCaseError_1.missingCaseError(call);
@@ -112,19 +113,23 @@ require(exports => {
             'module-ongoing-call__controls--fadeIn': (showControls || isAudioOnly) && !isConnected,
             'module-ongoing-call__controls--fadeOut': !showControls && !isAudioOnly && isConnected,
         });
+        const remoteParticipants = call.callMode === Calling_1.CallMode.Group ? call.remoteParticipants.length : 0;
         return (react_1.default.createElement("div", {
             className: classnames_1.default('module-calling__container', `module-ongoing-call__container--${getCallModeClassSuffix(call.callMode)}`), onMouseMove: () => {
                 setShowControls(true);
             }, role: "group"
         },
-            react_1.default.createElement("div", { className: classnames_1.default('module-calling__header', 'module-ongoing-call__header', controlsFadeClass) },
-                react_1.default.createElement("div", { className: "module-calling__header--header-name" }, conversation.title),
-                call.callMode === Calling_1.CallMode.Direct &&
-                renderHeaderMessage(i18n, call.callState || Calling_1.CallState.Prering, acceptedDuration),
-                react_1.default.createElement("div", { className: "module-calling-tools" },
-                    react_1.default.createElement("button", { type: "button", "aria-label": i18n('callingDeviceSelection__settings'), className: "module-calling-tools__button module-calling-button__settings", onClick: toggleSettings }),
-                    call.callMode === Calling_1.CallMode.Direct && (react_1.default.createElement("button", { type: "button", "aria-label": i18n('calling__pip'), className: "module-calling-tools__button module-calling-button__pip", onClick: togglePip })))),
-            remoteParticipants,
+            react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__header', controlsFadeClass) },
+                react_1.default.createElement(CallingHeader_1.CallingHeader, {
+                    canPip: true, conversationTitle: react_1.default.createElement(react_1.default.Fragment, null,
+                        call.callMode === Calling_1.CallMode.Group &&
+                            !call.remoteParticipants.length
+                            ? i18n('calling__in-this-call--zero')
+                            : conversation.title,
+                        call.callMode === Calling_1.CallMode.Direct &&
+                        renderHeaderMessage(i18n, call.callState || Calling_1.CallState.Prering, acceptedDuration)), i18n: i18n, isGroupCall: call.callMode === Calling_1.CallMode.Group, remoteParticipants: remoteParticipants, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings
+                })),
+            remoteParticipantsElement,
             react_1.default.createElement("div", { className: "module-ongoing-call__footer" },
                 react_1.default.createElement("div", { className: "module-ongoing-call__footer__local-preview-offset" }),
                 react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__footer__actions', controlsFadeClass) },
