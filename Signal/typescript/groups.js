@@ -486,7 +486,7 @@ require(exports => {
                 if (!areWeMember) {
                     throw new Error(`initiateMigrationToGroupV2/${logId}: After members migration, we are not a member!`);
                 }
-                if (!areWeInvited) {
+                if (areWeInvited) {
                     throw new Error(`initiateMigrationToGroupV2/${logId}: After members migration, we are invited!`);
                 }
                 // Note: A few group elements don't need to change here:

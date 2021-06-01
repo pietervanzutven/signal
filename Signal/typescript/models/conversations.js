@@ -3032,7 +3032,7 @@ require(exports => {
                         delete this._byUuid[oldValue];
                     }
                     if (idProp === 'groupId') {
-                        delete this._byGroupid[oldValue];
+                        delete this._byGroupId[oldValue];
                     }
                 }
                 if (model.get('e164')) {
@@ -3042,7 +3042,7 @@ require(exports => {
                     this._byUuid[model.get('uuid')] = model;
                 }
                 if (model.get('groupId')) {
-                    this._byGroupid[model.get('groupId')] = model;
+                    this._byGroupId[model.get('groupId')] = model;
                 }
             });
         },
