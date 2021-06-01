@@ -12,10 +12,12 @@ require(exports => {
     const getOwn_1 = require("../util/getOwn");
     const groups_1 = require("../groups");
     const missingCaseError_1 = require("../util/missingCaseError");
+    const RINGRTC_SFU_URL = 'https://sfu.voip.signal.org/';
     const RINGRTC_HTTP_METHOD_TO_OUR_HTTP_METHOD = new Map([
         [ringrtc_1.HttpMethod.Get, 'GET'],
         [ringrtc_1.HttpMethod.Put, 'PUT'],
         [ringrtc_1.HttpMethod.Post, 'POST'],
+        [ringrtc_1.HttpMethod.Delete, 'DELETE'],
     ]);
     var ringrtc_2 = require("ringrtc");
     exports.CallState = ringrtc_2.CallState;
@@ -188,7 +190,7 @@ require(exports => {
             }
             const groupIdBuffer = Crypto_1.base64ToArrayBuffer(groupId);
             let isRequestingMembershipProof = false;
-            const outerGroupCall = ringrtc_1.RingRTC.getGroupCall(groupIdBuffer, {
+            const outerGroupCall = ringrtc_1.RingRTC.getGroupCall(groupIdBuffer, RINGRTC_SFU_URL, {
                 onLocalDeviceStateChanged: groupCall => {
                     const localDeviceState = groupCall.getLocalDeviceState();
                     if (localDeviceState.connectionState === ringrtc_1.ConnectionState.NotConnected) {
@@ -203,7 +205,7 @@ require(exports => {
                             this.disableLocalCamera();
                         }
                         else {
-                            this.enableLocalCamera();
+                            this.videoCapturer.enableCaptureAndSend(groupCall);
                         }
                     }
                     this.syncGroupCallToRedux(conversationId, groupCall);
@@ -211,7 +213,7 @@ require(exports => {
                 onRemoteDeviceStatesChanged: groupCall => {
                     this.syncGroupCallToRedux(conversationId, groupCall);
                 },
-                onJoinedMembersChanged: groupCall => {
+                onPeekChanged: groupCall => {
                     this.syncGroupCallToRedux(conversationId, groupCall);
                 },
                 async requestMembershipProof(groupCall) {

@@ -43,7 +43,7 @@ require(exports => {
     //    "scalar": how much can we scale these boxes up while still fitting them on the
     //    screen? The biggest scalar wins as the "best arrangement".
     // 4. Lay out this arrangement on the screen.
-    exports.GroupCallRemoteParticipants = ({ createCanvasVideoRenderer, getGroupCallVideoFrameSource, remoteParticipants, }) => {
+    exports.GroupCallRemoteParticipants = ({ getGroupCallVideoFrameSource, remoteParticipants, }) => {
         const [containerDimensions, setContainerDimensions] = react_1.useState({
             width: 0,
             height: 0,
@@ -147,7 +147,7 @@ require(exports => {
                 const renderedWidth = remoteParticipant.videoAspectRatio * gridParticipantHeight;
                 const left = rowWidthSoFar + leftOffset;
                 rowWidthSoFar += renderedWidth + PARTICIPANT_MARGIN;
-                return (react_1.default.createElement(GroupCallRemoteParticipant_1.GroupCallRemoteParticipant, { key: remoteParticipant.demuxId, createCanvasVideoRenderer: createCanvasVideoRenderer, demuxId: remoteParticipant.demuxId, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, hasRemoteAudio: remoteParticipant.hasRemoteAudio, hasRemoteVideo: remoteParticipant.hasRemoteVideo, height: gridParticipantHeight, left: left, top: top, width: renderedWidth }));
+                return (react_1.default.createElement(GroupCallRemoteParticipant_1.GroupCallRemoteParticipant, { key: remoteParticipant.demuxId, demuxId: remoteParticipant.demuxId, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, hasRemoteAudio: remoteParticipant.hasRemoteAudio, hasRemoteVideo: remoteParticipant.hasRemoteVideo, height: gridParticipantHeight, left: left, top: top, width: renderedWidth }));
             });
         });
         const remoteParticipantElements = lodash_1.flatten(rowElements);

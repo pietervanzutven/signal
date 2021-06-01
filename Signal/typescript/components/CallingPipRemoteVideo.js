@@ -12,7 +12,7 @@ require(exports => {
     const DirectCallRemoteParticipant_1 = require("./DirectCallRemoteParticipant");
     const GroupCallRemoteParticipant_1 = require("./GroupCallRemoteParticipant");
     const Calling_1 = require("../types/Calling");
-    exports.CallingPipRemoteVideo = ({ call, conversation, createCanvasVideoRenderer, getGroupCallVideoFrameSource, i18n, setRendererCanvas, }) => {
+    exports.CallingPipRemoteVideo = ({ call, conversation, getGroupCallVideoFrameSource, i18n, setRendererCanvas, }) => {
         if (call.callMode === Calling_1.CallMode.Direct) {
             if (!call.hasRemoteVideo) {
                 const { avatarPath, color, name, phoneNumber, profileName, title, } = conversation;
@@ -27,7 +27,7 @@ require(exports => {
         if (call.callMode === Calling_1.CallMode.Group) {
             const speaker = call.remoteParticipants[0];
             return (react_1.default.createElement("div", { className: "module-calling-pip__video--remote" },
-                react_1.default.createElement(GroupCallRemoteParticipant_1.GroupCallRemoteParticipant, { key: speaker.demuxId, createCanvasVideoRenderer: createCanvasVideoRenderer, demuxId: speaker.demuxId, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, hasRemoteAudio: speaker.hasRemoteAudio, hasRemoteVideo: speaker.hasRemoteVideo, height: "100%", left: 0, top: 0, width: "100%" })));
+                react_1.default.createElement(GroupCallRemoteParticipant_1.GroupCallRemoteParticipant, { isInPip: true, key: speaker.demuxId, demuxId: speaker.demuxId, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, hasRemoteAudio: speaker.hasRemoteAudio, hasRemoteVideo: speaker.hasRemoteVideo })));
         }
         throw new Error('CallingRemoteVideo: Unknown Call Mode');
     };

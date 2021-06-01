@@ -8,7 +8,6 @@ require(exports => {
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
     const react_redux_1 = require("react-redux");
-    const ringrtc_1 = require("ringrtc");
     const actions_1 = require("../actions");
     const CallManager_1 = require("../../components/CallManager");
     const calling_1 = require("../../services/calling");
@@ -21,7 +20,6 @@ require(exports => {
     function renderDeviceSelection() {
         return react_1.default.createElement(CallingDeviceSelection_1.SmartCallingDeviceSelection, null);
     }
-    const createCanvasVideoRenderer = () => new ringrtc_1.CanvasVideoRenderer();
     const getGroupCallVideoFrameSource = calling_1.calling.getGroupCallVideoFrameSource.bind(calling_1.calling);
     const mapStateToActiveCallProp = (state) => {
         const { calling } = state;
@@ -85,7 +83,6 @@ require(exports => {
     const mapStateToProps = (state) => ({
         activeCall: mapStateToActiveCallProp(state),
         availableCameras: state.calling.availableCameras,
-        createCanvasVideoRenderer,
         getGroupCallVideoFrameSource,
         i18n: user_1.getIntl(state),
         incomingCall: mapStateToIncomingCallProp(state),
