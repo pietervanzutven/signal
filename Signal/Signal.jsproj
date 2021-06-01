@@ -3854,6 +3854,7 @@
     <Content Include="typescript\components\conversation\Emojify.js" />
     <Content Include="typescript\components\conversation\ExpireTimer.js" />
     <Content Include="typescript\components\conversation\GroupNotification.js" />
+    <Content Include="typescript\components\conversation\GroupV1Migration.js" />
     <Content Include="typescript\components\conversation\GroupV2Change.js" />
     <Content Include="typescript\components\conversation\Image.js" />
     <Content Include="typescript\components\conversation\ImageGrid.js" />
@@ -3906,6 +3907,7 @@
     <Content Include="typescript\components\ExpiredBuildDialog.js" />
     <Content Include="typescript\components\GroupCallRemoteParticipant.js" />
     <Content Include="typescript\components\GroupCallRemoteParticipants.js" />
+    <Content Include="typescript\components\GroupV1MigrationDialog.js" />
     <Content Include="typescript\components\IncomingCallBar.js" />
     <Content Include="typescript\components\InContactsIcon.js" />
     <Content Include="typescript\components\Intl.js" />
@@ -3915,6 +3917,7 @@
     <Content Include="typescript\components\MainHeader.js" />
     <Content Include="typescript\components\MessageBodyHighlight.js" />
     <Content Include="typescript\components\MessageSearchResult.js" />
+    <Content Include="typescript\components\ModalHost.js" />
     <Content Include="typescript\components\NetworkStatus.js" />
     <Content Include="typescript\components\ProgressDialog.js" />
     <Content Include="typescript\components\ProgressModal.js" />

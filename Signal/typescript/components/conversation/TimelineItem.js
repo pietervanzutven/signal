@@ -16,6 +16,7 @@ require(exports => {
     const VerificationNotification_1 = require("./VerificationNotification");
     const GroupNotification_1 = require("./GroupNotification");
     const GroupV2Change_1 = require("./GroupV2Change");
+    const GroupV1Migration_1 = require("./GroupV1Migration");
     const ResetSessionNotification_1 = require("./ResetSessionNotification");
     const ProfileChangeNotification_1 = require("./ProfileChangeNotification");
     class TimelineItem extends react_1.default.PureComponent {
@@ -54,6 +55,9 @@ require(exports => {
             }
             else if (item.type === 'groupV2Change') {
                 notification = (react_1.default.createElement(GroupV2Change_1.GroupV2Change, Object.assign({ renderContact: renderContact }, item.data, { i18n: i18n })));
+            }
+            else if (item.type === 'groupV1Migration') {
+                notification = (react_1.default.createElement(GroupV1Migration_1.GroupV1Migration, Object.assign({}, this.props, item.data, { i18n: i18n })));
             }
             else if (item.type === 'resetSessionNotification') {
                 notification = (react_1.default.createElement(ResetSessionNotification_1.ResetSessionNotification, Object.assign({}, this.props, item.data, { i18n: i18n })));

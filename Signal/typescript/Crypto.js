@@ -59,6 +59,13 @@ require(exports => {
         return concatenateBytes(part1, part2);
     }
     exports.deriveStickerPackKey = deriveStickerPackKey;
+    async function deriveMasterKeyFromGroupV1(groupV1Id) {
+        const salt = getZeroes(32);
+        const info = bytesFromString('GV2 Migration');
+        const [part1] = await window.libsignal.HKDF.deriveSecrets(groupV1Id, salt, info);
+        return part1;
+    }
+    exports.deriveMasterKeyFromGroupV1 = deriveMasterKeyFromGroupV1;
     async function computeHash(data) {
         const hash = await window.crypto.subtle.digest({ name: 'SHA-512' }, data);
         return arrayBufferToBase64(hash);
@@ -264,13 +271,14 @@ require(exports => {
         return new Uint8Array(pt);
     }
     exports.decryptAesCtr = decryptAesCtr;
-    async function encryptAesGcm(key, iv, plaintext) {
+    async function encryptAesGcm(key, iv, plaintext, additionalData) {
         const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
         const ivBits = window.sjcl.codec.arrayBuffer.toBits(iv);
         const ptBits = window.sjcl.codec.arrayBuffer.toBits(plaintext);
+        const adataBits = additionalData ? window.sjcl.codec.arrayBuffer.toBits(additionalData) : [];
 
         const aes = new window.sjcl.cipher.aes(keyBits);
-        const ctBits = window.sjcl.mode.gcm.encrypt(aes, ptBits, ivBits);
+        const ctBits = window.sjcl.mode.gcm.encrypt(aes, ptBits, ivBits, adataBits);
 
         const ct = window.sjcl.codec.bytes.fromBits(ctBits);
         return new Uint8Array(ct);
@@ -280,7 +288,7 @@ require(exports => {
         const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
         const ivBits = window.sjcl.codec.arrayBuffer.toBits(iv);
         const ctBits = window.sjcl.codec.arrayBuffer.toBits(ciphertext);
-        const adataBits = additionalData ? window.sjcl.codec.arrayBuffer.toBits(additionalData) : undefined;
+        const adataBits = additionalData ? window.sjcl.codec.arrayBuffer.toBits(additionalData) : [];
 
         const aes = new window.sjcl.cipher.aes(keyBits);
         const ptBits = window.sjcl.mode.gcm.decrypt(aes, ctBits, ivBits, adataBits);

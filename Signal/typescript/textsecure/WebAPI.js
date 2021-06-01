@@ -405,7 +405,7 @@ require(exports => {
         devices: 'v1/devices',
         directoryAuth: 'v1/directory/auth',
         discovery: 'v1/discovery',
-        getGroupAvatarUpload: '/v1/groups/avatar/form',
+        getGroupAvatarUpload: 'v1/groups/avatar/form',
         getGroupCredentials: 'v1/certificate/group',
         getIceServers: 'v1/accounts/turn',
         getStickerPackUpload: 'v1/sticker/pack/form',
@@ -715,11 +715,13 @@ require(exports => {
                 });
             }
             async function confirmCode(number, code, newPassword, registrationId, deviceName, options = {}) {
+                const capabilities = {
+                    'gv2-3': true,
+                    'gv1-migration': true,
+                };
                 const { accessKey } = options;
                 const jsonData = {
-                    capabilities: {
-                        'gv2-3': true,
-                    },
+                    capabilities,
                     fetchesMessages: true,
                     name: deviceName || undefined,
                     registrationId,
@@ -1177,9 +1179,10 @@ require(exports => {
                 await _ajax({
                     basicAuth,
                     call: 'groups',
-                    httpType: 'PUT',
+                    contentType: 'application/x-protobuf',
                     data,
                     host: storageUrl,
+                    httpType: 'PUT',
                 });
             }
             async function getGroup(options) {
@@ -1187,10 +1190,10 @@ require(exports => {
                 const response = await _ajax({
                     basicAuth,
                     call: 'groups',
-                    httpType: 'GET',
                     contentType: 'application/x-protobuf',
-                    responseType: 'arraybuffer',
                     host: storageUrl,
+                    httpType: 'GET',
+                    responseType: 'arraybuffer',
                 });
                 return window.textsecure.protobuf.Group.decode(response);
             }
@@ -1200,11 +1203,11 @@ require(exports => {
                 const response = await _ajax({
                     basicAuth,
                     call: 'groups',
-                    httpType: 'PATCH',
-                    data,
                     contentType: 'application/x-protobuf',
-                    responseType: 'arraybuffer',
+                    data,
                     host: storageUrl,
+                    httpType: 'PATCH',
+                    responseType: 'arraybuffer',
                 });
                 return window.textsecure.protobuf.GroupChange.decode(response);
             }
@@ -1213,11 +1216,11 @@ require(exports => {
                 const withDetails = await _ajax({
                     basicAuth,
                     call: 'groupLog',
-                    urlParameters: `/${startVersion}`,
-                    httpType: 'GET',
                     contentType: 'application/x-protobuf',
-                    responseType: 'arraybufferwithdetails',
                     host: storageUrl,
+                    httpType: 'GET',
+                    responseType: 'arraybufferwithdetails',
+                    urlParameters: `/${startVersion}`,
                 });
                 const { data, response } = withDetails;
                 const changes = window.textsecure.protobuf.GroupChanges.decode(data);

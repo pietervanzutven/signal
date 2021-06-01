@@ -1,10 +1,11 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.textsecure = window.ts.textsecure || {};
-    const exports = window.ts.textsecure.MessageReceiver = {};
-
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
+    var __importDefault = (this && this.__importDefault) || function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports, "__esModule", { value: true });
     /* eslint-disable @typescript-eslint/ban-types */
     /* eslint-disable no-bitwise */
     /* eslint-disable class-methods-use-this */
@@ -12,10 +13,6 @@
     /* eslint-disable camelcase */
     /* eslint-disable @typescript-eslint/no-explicit-any */
     /* eslint-disable max-classes-per-file */
-    var __importDefault = (this && this.__importDefault) || function (mod) {
-        return (mod && mod.__esModule) ? mod : { "default": mod };
-    };
-    Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = require("lodash");
     const p_queue_1 = __importDefault(require("p-queue"));
     const uuid_1 = require("uuid");
@@ -24,10 +21,13 @@
     const Helpers_1 = __importDefault(require("./Helpers"));
     const WebsocketResources_1 = __importDefault(require("./WebsocketResources"));
     const Crypto_1 = __importDefault(require("./Crypto"));
+    const Crypto_2 = require("../Crypto");
     const ContactsParser_1 = require("./ContactsParser");
     const Errors_1 = require("./Errors");
     const WebSocket_1 = require("./WebSocket");
     const groups_1 = require("../groups");
+    const GROUPV1_ID_LENGTH = 16;
+    const GROUPV2_ID_LENGTH = 32;
     const RETRY_TIMEOUT = 2 * 60 * 1000;
     class MessageReceiverInner extends EventTarget_1.default {
         constructor(oldUsername, username, password, signalingKey, options) {
@@ -767,7 +767,12 @@
             if (!destination) {
                 throw new Error('MessageReceiver.handleDataMessage: source and sourceUuid were falsey');
             }
-            this.deriveGroupsV2Data(msg);
+            if (this.isInvalidGroupData(msg, envelope)) {
+                this.removeFromCache(envelope);
+                return undefined;
+            }
+            this.deriveGroupV1Data(msg);
+            this.deriveGroupV2Data(msg);
             if (msg.flags &&
                 msg.flags & window.textsecure.protobuf.DataMessage.Flags.END_SESSION) {
                 p = this.handleEndSession(destination);
@@ -900,7 +905,7 @@
             }
             return Promise.all(results);
         }
-        handleTypingMessage(envelope, typingMessage) {
+        async handleTypingMessage(envelope, typingMessage) {
             const ev = new Event('typing');
             this.removeFromCache(envelope);
             if (envelope.timestamp && typingMessage.timestamp) {
@@ -915,41 +920,91 @@
             ev.sender = envelope.source;
             ev.senderUuid = envelope.sourceUuid;
             ev.senderDevice = envelope.sourceDevice;
-            const groupIdBuffer = groupId ? groupId.toArrayBuffer() : null;
             ev.typing = {
                 typingMessage,
                 timestamp: timestamp ? timestamp.toNumber() : Date.now(),
-                groupId: groupIdBuffer && groupIdBuffer.byteLength <= 16
-                    ? groupId.toString('binary')
-                    : null,
-                groupV2Id: groupIdBuffer && groupIdBuffer.byteLength > 16
-                    ? groupId.toString('base64')
-                    : null,
                 started: action === window.textsecure.protobuf.TypingMessage.Action.STARTED,
                 stopped: action === window.textsecure.protobuf.TypingMessage.Action.STOPPED,
             };
+            const groupIdBuffer = groupId ? groupId.toArrayBuffer() : null;
+            if (groupIdBuffer && groupIdBuffer.byteLength > 0) {
+                if (groupIdBuffer.byteLength === GROUPV1_ID_LENGTH) {
+                    ev.typing.groupId = groupId.toString('binary');
+                    ev.typing.groupV2Id = await this.deriveGroupV2FromV1(groupIdBuffer);
+                }
+                else if (groupIdBuffer.byteLength === GROUPV2_ID_LENGTH) {
+                    ev.typing.groupV2Id = groupId.toString('base64');
+                }
+                else {
+                    window.log.error('handleTypingMessage: Received invalid groupId value');
+                    this.removeFromCache(envelope);
+                }
+            }
             return this.dispatchEvent(ev);
         }
         handleNullMessage(envelope) {
             window.log.info('null message from', this.getEnvelopeId(envelope));
             this.removeFromCache(envelope);
         }
-        deriveGroupsV2Data(message) {
+        isInvalidGroupData(message, envelope) {
+            const { group, groupV2 } = message;
+            if (group) {
+                const id = group.id.toArrayBuffer();
+                const isInvalid = id.byteLength !== GROUPV1_ID_LENGTH;
+                if (isInvalid) {
+                    window.log.info('isInvalidGroupData: invalid GroupV1 message from', this.getEnvelopeId(envelope));
+                }
+                return isInvalid;
+            }
+            if (groupV2) {
+                const masterKey = groupV2.masterKey.toArrayBuffer();
+                const isInvalid = masterKey.byteLength !== groups_1.MASTER_KEY_LENGTH;
+                if (isInvalid) {
+                    window.log.info('isInvalidGroupData: invalid GroupV2 message from', this.getEnvelopeId(envelope));
+                }
+                return isInvalid;
+            }
+            return false;
+        }
+        async deriveGroupV2FromV1(groupId) {
+            if (groupId.byteLength !== GROUPV1_ID_LENGTH) {
+                throw new Error(`deriveGroupV2FromV1: had id with wrong byteLength: ${groupId.byteLength}`);
+            }
+            const masterKey = await Crypto_2.deriveMasterKeyFromGroupV1(groupId);
+            const data = groups_1.deriveGroupFields(masterKey);
+            const toBase64 = MessageReceiverInner.arrayBufferToStringBase64;
+            return toBase64(data.id);
+        }
+        async deriveGroupV1Data(message) {
+            const { group } = message;
+            if (!group) {
+                return;
+            }
+            if (!group.id) {
+                throw new Error('deriveGroupV1Data: had falsey id');
+            }
+            const id = group.id.toArrayBuffer();
+            if (id.byteLength !== GROUPV1_ID_LENGTH) {
+                throw new Error(`deriveGroupV1Data: had id with wrong byteLength: ${id.byteLength}`);
+            }
+            group.derivedGroupV2Id = await this.deriveGroupV2FromV1(id);
+        }
+        deriveGroupV2Data(message) {
             const { groupV2 } = message;
             if (!groupV2) {
                 return;
             }
             if (!lodash_1.isNumber(groupV2.revision)) {
-                throw new Error('deriveGroupsV2Data: revision was not a number');
+                throw new Error('deriveGroupV2Data: revision was not a number');
             }
             if (!groupV2.masterKey) {
-                throw new Error('deriveGroupsV2Data: had falsey masterKey');
+                throw new Error('deriveGroupV2Data: had falsey masterKey');
             }
             const toBase64 = MessageReceiverInner.arrayBufferToStringBase64;
             const masterKey = groupV2.masterKey.toArrayBuffer();
             const length = masterKey.byteLength;
             if (length !== groups_1.MASTER_KEY_LENGTH) {
-                throw new Error(`deriveGroupsV2Data: masterKey had length ${length}, expected ${groups_1.MASTER_KEY_LENGTH}`);
+                throw new Error(`deriveGroupV2Data: masterKey had length ${length}, expected ${groups_1.MASTER_KEY_LENGTH}`);
             }
             const fields = groups_1.deriveGroupFields(masterKey);
             groupV2.masterKey = toBase64(masterKey);
@@ -1000,7 +1055,12 @@
                 if (!sentMessage || !sentMessage.message) {
                     throw new Error('MessageReceiver.handleSyncMessage: sync sent message was missing message');
                 }
-                this.deriveGroupsV2Data(sentMessage.message);
+                if (this.isInvalidGroupData(sentMessage.message, envelope)) {
+                    this.removeFromCache(envelope);
+                    return undefined;
+                }
+                this.deriveGroupV1Data(sentMessage.message);
+                this.deriveGroupV2Data(sentMessage.message);
                 window.log.info('sent message to', this.getDestination(sentMessage), sentMessage.timestamp.toNumber(), 'from', this.getEnvelopeId(envelope));
                 return this.handleSentMessage(envelope, sentMessage);
             }
@@ -1072,9 +1132,26 @@
             ev.confirm = this.removeFromCache.bind(this, envelope);
             ev.threadE164 = sync.threadE164;
             ev.threadUuid = sync.threadUuid;
-            ev.groupId = sync.groupId ? sync.groupId.toString('binary') : null;
             ev.messageRequestResponseType = sync.type;
+            const idBuffer = sync.groupId
+                ? sync.groupId.toArrayBuffer()
+                : null;
+            if (idBuffer && idBuffer.byteLength > 0) {
+                if (idBuffer.byteLength === GROUPV1_ID_LENGTH) {
+                    ev.groupId = sync.groupId.toString('binary');
+                    ev.groupV2Id = await this.deriveGroupV2FromV1(idBuffer);
+                }
+                else if (idBuffer.byteLength === GROUPV2_ID_LENGTH) {
+                    ev.groupV2Id = sync.groupId.toString('base64');
+                }
+                else {
+                    this.removeFromCache(envelope);
+                    window.log.error('Received message request with invalid groupId');
+                    return undefined;
+                }
+            }
             window.normalizeUuids(ev, ['threadUuid'], 'MessageReceiver::handleMessageRequestResponse');
+            return this.dispatchAndWait(ev);
         }
         async handleFetchLatest(envelope, sync) {
             window.log.info('got fetch latest sync message');
@@ -1414,4 +1491,4 @@
     MessageReceiver.arrayBufferToString = MessageReceiverInner.arrayBufferToString;
     MessageReceiver.stringToArrayBufferBase64 = MessageReceiverInner.stringToArrayBufferBase64;
     MessageReceiver.arrayBufferToStringBase64 = MessageReceiverInner.arrayBufferToStringBase64;
-})();
+});

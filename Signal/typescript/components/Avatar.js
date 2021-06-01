@@ -46,8 +46,8 @@ require(exports => {
             return (React.createElement("img", { onError: this.handleImageErrorBound, alt: i18n('contactAvatarAlt', [title]), src: avatarPath }));
         }
         renderNoImage() {
-            const { conversationType, name, noteToSelf, profileName, size, } = this.props;
-            const initials = getInitials_1.getInitials(name || profileName);
+            const { conversationType, noteToSelf, size, title } = this.props;
+            const initials = getInitials_1.getInitials(title);
             const isGroup = conversationType === 'group';
             if (noteToSelf) {
                 return (React.createElement("div", { className: classnames_1.default('module-avatar__icon', 'module-avatar__icon--note-to-self', `module-avatar__icon--${size}`) }));

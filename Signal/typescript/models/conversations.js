@@ -153,8 +153,13 @@ require(exports => {
                 return false;
             }
             const groupVersion = this.get('groupVersion') || 0;
-            return (groupVersion === 2 &&
-                Crypto_1.base64ToArrayBuffer(groupId).byteLength === window.Signal.Groups.ID_LENGTH);
+            try {
+                return (groupVersion === 2 && Crypto_1.base64ToArrayBuffer(groupId).byteLength === 32);
+            }
+            catch (error) {
+                window.log.error('isGroupV2: Failed to process groupId in base64!');
+                return false;
+            }
         }
         isMemberPending(conversationId) {
             if (!this.isGroupV2()) {
@@ -297,7 +302,6 @@ require(exports => {
                         const groupChange = await window.Signal.Groups.uploadGroupChange({
                             actions,
                             group: this.attributes,
-                            serverPublicParamsBase64: window.getServerPublicParams(),
                         });
                         const groupChangeBuffer = groupChange.toArrayBuffer();
                         const groupChangeBase64 = Crypto_1.arrayBufferToBase64(groupChangeBuffer);
@@ -538,6 +542,18 @@ require(exports => {
         }
         isValid() {
             return this.isPrivate() || this.isGroupV1() || this.isGroupV2();
+        }
+        async maybeMigrateV1Group() {
+            if (!this.isGroupV1()) {
+                return;
+            }
+            const isMigrated = await window.Signal.Groups.hasV1GroupBeenMigrated(this);
+            if (!isMigrated) {
+                return;
+            }
+            await window.Signal.Groups.waitThenRespondToGroupV2Migration({
+                conversation: this,
+            });
         }
         maybeRepairGroupV2(data) {
             if (this.get('groupVersion') &&
@@ -1077,17 +1093,24 @@ require(exports => {
                 }, sendOptions));
             }
             catch (result) {
-                if (result instanceof Error) {
+                this.processSendResponse(result);
+            }
+        }
+        // We only want to throw if there's a 'real' error contained with this information
+        //   coming back from our low-level send infrastructure.
+        processSendResponse(result) {
+            if (result instanceof Error) {
+                throw result;
+            }
+            else if (result && result.errors) {
+                // We filter out unregistered user errors, because we ignore those in groups
+                const wasThereARealError = window._.some(result.errors, error => error.name !== 'UnregisteredUserError');
+                if (wasThereARealError) {
                     throw result;
                 }
-                else if (result && result.errors) {
-                    // We filter out unregistered user errors, because we ignore those in groups
-                    const wasThereARealError = window._.some(result.errors, error => error.name !== 'UnregisteredUserError');
-                    if (wasThereARealError) {
-                        throw result;
-                    }
-                }
+                return true;
             }
+            return true;
         }
         onMessageError() {
             this.updateVerified();
@@ -2019,9 +2042,6 @@ require(exports => {
                 sendMetadata,
             };
         }
-        getUuidCapable() {
-            return Boolean(window._.property('uuid')(this.get('capabilities')));
-        }
         getSendMetadata(options = {}) {
             const { syncMessage, disableMeCheck } = options;
             // START: this code has an Expiration date of ~2018/11/21
@@ -2041,7 +2061,6 @@ require(exports => {
             }
             const accessKey = this.get('accessKey');
             const sealedSender = this.get('sealedSender');
-            const uuidCapable = this.getUuidCapable();
             // We never send sync messages as sealed sender
             if (syncMessage && this.isMe()) {
                 return null;
@@ -2052,9 +2071,6 @@ require(exports => {
             if (sealedSender === SEALED_SENDER.UNKNOWN) {
                 const info = {
                     accessKey: accessKey || Crypto_1.arrayBufferToBase64(Crypto_1.getRandomBytes(16)),
-                    // Indicates that a client is capable of receiving uuid-only messages.
-                    // Not used yet.
-                    uuidCapable,
                 };
                 return Object.assign(Object.assign({}, (e164 ? { [e164]: info } : {})), (uuid ? { [uuid]: info } : {}));
             }
@@ -2065,9 +2081,6 @@ require(exports => {
                 accessKey: accessKey && sealedSender === SEALED_SENDER.ENABLED
                     ? accessKey
                     : Crypto_1.arrayBufferToBase64(Crypto_1.getRandomBytes(16)),
-                // Indicates that a client is capable of receiving uuid-only messages.
-                // Not used yet.
-                uuidCapable,
             };
             return Object.assign(Object.assign({}, (e164 ? { [e164]: info } : {})), (uuid ? { [uuid]: info } : {}));
         }
@@ -2925,10 +2938,10 @@ require(exports => {
                 reaction: reaction ? reaction.toJSON() : null,
             });
         }
-        notifyTyping(options = {}) {
-            const { isTyping, senderId, isMe, senderDevice } = options;
+        notifyTyping(options) {
+            const { isTyping, senderId, fromMe, senderDevice } = options;
             // We don't do anything with typing messages from our other devices
-            if (isMe) {
+            if (fromMe) {
                 return;
             }
             const typingToken = `${senderId}.${senderDevice}`;

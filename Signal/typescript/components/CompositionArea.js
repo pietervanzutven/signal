@@ -149,8 +149,9 @@ require(exports => {
                 document.removeEventListener('keydown', handler);
             };
         }, [setLarge]);
-        if (messageRequestsEnabled &&
-            (!acceptedMessageRequest || isBlocked || areWePending)) {
+        if (isBlocked ||
+            areWePending ||
+            (messageRequestsEnabled && !acceptedMessageRequest)) {
             return (React.createElement(MessageRequestActions_1.MessageRequestActions, { i18n: i18n, conversationType: conversationType, isBlocked: isBlocked, onBlock: onBlock, onBlockAndDelete: onBlockAndDelete, onUnblock: onUnblock, onDelete: onDelete, onAccept: onAccept, name: name, profileName: profileName, phoneNumber: phoneNumber, title: title }));
         }
         // If no message request, but we haven't shared profile yet, we show profile-sharing UI

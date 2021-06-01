@@ -935,6 +935,12 @@ require(exports => {
             }
             return this.sendMessage(attrs, options);
         }
+        async createGroup(group, options) {
+            return this.server.createGroup(group, options);
+        }
+        async uploadGroupAvatar(avatar, options) {
+            return this.server.uploadGroupAvatar(avatar, options);
+        }
         async getGroup(options) {
             return this.server.getGroup(options);
         }
