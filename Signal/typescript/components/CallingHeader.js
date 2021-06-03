@@ -9,8 +9,9 @@ require(exports => {
     const react_1 = __importDefault(require("react"));
     const classnames_1 = __importDefault(require("classnames"));
     const Tooltip_1 = require("./Tooltip");
-    exports.CallingHeader = ({ canPip = false, conversationTitle, i18n, isGroupCall = false, remoteParticipants, showParticipantsList, toggleParticipants, togglePip, toggleSettings, }) => (react_1.default.createElement("div", { className: "module-calling__header" },
-        react_1.default.createElement("div", { className: "module-calling__header--header-name" }, conversationTitle),
+    exports.CallingHeader = ({ canPip = false, i18n, isGroupCall = false, message, remoteParticipants, showParticipantsList, title, toggleParticipants, togglePip, toggleSettings, }) => (react_1.default.createElement("div", { className: "module-calling__header" },
+        title ? (react_1.default.createElement("div", { className: "module-calling__header--header-name" }, title)) : null,
+        message ? (react_1.default.createElement("div", { className: "module-ongoing-call__header-message" }, message)) : null,
         react_1.default.createElement("div", { className: "module-calling-tools" },
             isGroupCall ? (react_1.default.createElement("div", { className: "module-calling-tools__button" },
                 react_1.default.createElement(Tooltip_1.Tooltip, {
