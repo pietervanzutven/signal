@@ -22,6 +22,7 @@ require(exports => {
         OutgoingCallButtonStyle[OutgoingCallButtonStyle["None"] = 0] = "None";
         OutgoingCallButtonStyle[OutgoingCallButtonStyle["JustVideo"] = 1] = "JustVideo";
         OutgoingCallButtonStyle[OutgoingCallButtonStyle["Both"] = 2] = "Both";
+        OutgoingCallButtonStyle[OutgoingCallButtonStyle["Join"] = 3] = "Join";
     })(OutgoingCallButtonStyle = exports.OutgoingCallButtonStyle || (exports.OutgoingCallButtonStyle = {}));
     class ConversationHeader extends react_1.default.Component {
         constructor(props) {
@@ -97,9 +98,9 @@ require(exports => {
         renderOutgoingCallButtons() {
             const { i18n, onOutgoingAudioCallInConversation, onOutgoingVideoCallInConversation, outgoingCallButtonStyle, showBackButton, } = this.props;
             const videoButton = (react_1.default.createElement("button", {
-                type: "button", onClick: onOutgoingVideoCallInConversation, className: classnames_1.default('module-conversation-header__video-calling-button', showBackButton
+                type: "button", onClick: onOutgoingVideoCallInConversation, className: classnames_1.default('module-conversation-header__calling-button', 'module-conversation-header__calling-button--video', showBackButton
                     ? null
-                    : 'module-conversation-header__video-calling-button--show'), disabled: showBackButton, "aria-label": i18n('makeOutgoingVideoCall')
+                    : 'module-conversation-header__calling-button--show'), disabled: showBackButton, "aria-label": i18n('makeOutgoingVideoCall')
             }));
             switch (outgoingCallButtonStyle) {
                 case OutgoingCallButtonStyle.None:
@@ -110,10 +111,16 @@ require(exports => {
                     return (react_1.default.createElement(react_1.default.Fragment, null,
                         videoButton,
                         react_1.default.createElement("button", {
-                            type: "button", onClick: onOutgoingAudioCallInConversation, className: classnames_1.default('module-conversation-header__audio-calling-button', showBackButton
+                            type: "button", onClick: onOutgoingAudioCallInConversation, className: classnames_1.default('module-conversation-header__calling-button', 'module-conversation-header__calling-button--audio', showBackButton
                                 ? null
-                                : 'module-conversation-header__audio-calling-button--show'), disabled: showBackButton, "aria-label": i18n('makeOutgoingCall')
+                                : 'module-conversation-header__calling-button--show'), disabled: showBackButton, "aria-label": i18n('makeOutgoingCall')
                         })));
+                case OutgoingCallButtonStyle.Join:
+                    return (react_1.default.createElement("button", {
+                        type: "button", onClick: onOutgoingVideoCallInConversation, className: classnames_1.default('module-conversation-header__calling-button', 'module-conversation-header__calling-button--join', showBackButton
+                            ? null
+                            : 'module-conversation-header__calling-button--show'), disabled: showBackButton
+                    }, i18n('joinOngoingCall')));
                 default:
                     throw missingCaseError_1.missingCaseError(outgoingCallButtonStyle);
             }

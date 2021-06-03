@@ -11,9 +11,11 @@ require(exports => {
     const conversations_2 = require("../ducks/conversations");
     const calling_1 = require("../ducks/calling");
     const user_1 = require("../selectors/user");
+    const getOwn_1 = require("../../util/getOwn");
     const missingCaseError_1 = require("../../util/missingCaseError");
     const getOutgoingCallButtonStyle = (conversation, state) => {
-        if (calling_1.getActiveCall(state.calling)) {
+        const { calling } = state;
+        if (calling_1.getActiveCall(calling)) {
             return ConversationHeader_1.OutgoingCallButtonStyle.None;
         }
         const conversationCallMode = conversations_2.getConversationCallMode(conversation);
@@ -22,11 +24,17 @@ require(exports => {
                 return ConversationHeader_1.OutgoingCallButtonStyle.None;
             case Calling_1.CallMode.Direct:
                 return ConversationHeader_1.OutgoingCallButtonStyle.Both;
-            case Calling_1.CallMode.Group:
+            case Calling_1.CallMode.Group: {
                 if (!window.GROUP_CALLING) {
                     return ConversationHeader_1.OutgoingCallButtonStyle.None;
                 }
+                const call = getOwn_1.getOwn(calling.callsByConversation, conversation.id);
+                if ((call === null || call === void 0 ? void 0 : call.callMode) === Calling_1.CallMode.Group &&
+                    calling_1.isAnybodyElseInGroupCall(call.peekInfo, user_1.getUserConversationId(state))) {
+                    return ConversationHeader_1.OutgoingCallButtonStyle.Join;
+                }
                 return ConversationHeader_1.OutgoingCallButtonStyle.JustVideo;
+            }
             default:
                 throw missingCaseError_1.missingCaseError(conversationCallMode);
         }

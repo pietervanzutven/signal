@@ -171,6 +171,40 @@ require(exports => {
             const call = getOwn_1.getOwn(this.callsByConversation, conversationId);
             return call instanceof ringrtc_1.GroupCall ? call : undefined;
         }
+        getGroupCallMembers(conversationId) {
+            return groups_1.getMembershipList(conversationId).map(member => new ringrtc_1.GroupMemberInfo(Crypto_1.uuidToArrayBuffer(member.uuid), member.uuidCiphertext));
+        }
+        async peekGroupCall(conversationId) {
+            var _a;
+            // This can be undefined in two cases:
+            //
+            // 1. There is no group call instance. This is "stateless peeking", and is expected
+            //    when we want to peek on a call that we've never connected to.
+            // 2. There is a group call instance but RingRTC doesn't have the peek info yet. This
+            //    should only happen for a brief period as you connect to the call. (You probably
+            //    don't want to call this function while a group call is connected—you should
+            //    instead be grabbing the peek info off of the instance—but we handle it here
+            //    to avoid possible race conditions.)
+            const statefulPeekInfo = (_a = this.getGroupCall(conversationId)) === null || _a === void 0 ? void 0 : _a.getPeekInfo();
+            if (statefulPeekInfo) {
+                return statefulPeekInfo;
+            }
+            const conversation = window.ConversationController.get(conversationId);
+            if (!conversation) {
+                throw new Error('Missing conversation; not peeking group call');
+            }
+            const publicParams = conversation.get('publicParams');
+            const secretParams = conversation.get('secretParams');
+            if (!publicParams || !secretParams) {
+                throw new Error('Conversation is missing required parameters. Cannot peek group call');
+            }
+            const proof = await groups_1.fetchMembershipProof({ publicParams, secretParams });
+            if (!proof) {
+                throw new Error('No membership proof. Cannot peek group call');
+            }
+            const membershipProof = new TextEncoder().encode(proof).buffer;
+            return ringrtc_1.RingRTC.peekGroupCall(RINGRTC_SFU_URL, membershipProof, this.getGroupCallMembers(conversationId));
+        }
         /**
          * Connect to a conversation's group call and connect it to Redux.
          *
@@ -238,8 +272,8 @@ require(exports => {
                         isRequestingMembershipProof = false;
                     }
                 },
-                requestGroupMembers(groupCall) {
-                    groupCall.setGroupMembers(groups_1.getMembershipList(conversationId).map(member => new ringrtc_1.GroupMemberInfo(Crypto_1.uuidToArrayBuffer(member.uuid), member.uuidCiphertext)));
+                requestGroupMembers: groupCall => {
+                    groupCall.setGroupMembers(this.getGroupCallMembers(conversationId));
                 },
                 onEnded: lodash_1.noop,
             });
@@ -307,35 +341,58 @@ require(exports => {
                     throw missingCaseError_1.missingCaseError(joinState);
             }
         }
+        uuidToConversationId(userId) {
+            const result = window.ConversationController.ensureContactIds({
+                uuid: Crypto_1.arrayBufferToUuid(userId),
+            });
+            if (!result) {
+                throw new Error('Calling.uuidToConversationId: no conversation found for that UUID');
+            }
+            return result;
+        }
+        formatGroupCallPeekInfoForRedux(peekInfo = { joinedMembers: [], deviceCount: 0 }) {
+            var _a;
+            return {
+                conversationIds: peekInfo.joinedMembers.map(this.uuidToConversationId),
+                creator: peekInfo.creator && this.uuidToConversationId(peekInfo.creator),
+                eraId: peekInfo.eraId,
+                maxDevices: (_a = peekInfo.maxDevices) !== null && _a !== void 0 ? _a : Infinity,
+                deviceCount: peekInfo.deviceCount,
+            };
+        }
         formatGroupCallForRedux(groupCall) {
             const localDeviceState = groupCall.getLocalDeviceState();
             // RingRTC doesn't ensure that the demux ID is unique. This can happen if someone
             //   leaves the call and quickly rejoins; RingRTC will tell us that there are two
             //   participants with the same demux ID in the call.
             const remoteDeviceStates = lodash_1.uniqBy(groupCall.getRemoteDeviceStates() || [], remoteDeviceState => remoteDeviceState.demuxId);
+            // `GroupCall.prototype.getPeekInfo()` won't return anything at first, so we try to
+            //   set a reasonable default based on the remote device states (which is likely an
+            //   empty array at this point, but we handle the case where it is not).
+            const peekInfo = groupCall.getPeekInfo() || {
+                joinedMembers: remoteDeviceStates.map(({ userId }) => userId),
+                deviceCount: remoteDeviceStates.length,
+            };
             // It should be impossible to be disconnected and Joining or Joined. Just in case, we
             //   try to handle that case.
             const joinState = localDeviceState.connectionState === ringrtc_1.ConnectionState.NotConnected
                 ? Calling_1.GroupCallJoinState.NotJoined
                 : this.convertRingRtcJoinState(localDeviceState.joinState);
-            const ourId = window.ConversationController.getOurConversationId();
+            const ourConversationId = window.ConversationController.getOurConversationId();
             return {
                 connectionState: this.convertRingRtcConnectionState(localDeviceState.connectionState),
                 joinState,
                 hasLocalAudio: !localDeviceState.audioMuted,
                 hasLocalVideo: !localDeviceState.videoMuted,
+                peekInfo: this.formatGroupCallPeekInfoForRedux(peekInfo),
                 remoteParticipants: remoteDeviceStates.map(remoteDeviceState => {
-                    const uuid = Crypto_1.arrayBufferToUuid(remoteDeviceState.userId);
-                    const id = window.ConversationController.ensureContactIds({ uuid });
-                    if (!id) {
-                        throw new Error('Calling.formatGroupCallForRedux: no conversation found');
-                    }
+                    const conversationId = this.uuidToConversationId(remoteDeviceState.userId);
                     return {
-                        conversationId: id,
+                        conversationId,
                         demuxId: remoteDeviceState.demuxId,
                         hasRemoteAudio: !remoteDeviceState.audioMuted,
                         hasRemoteVideo: !remoteDeviceState.videoMuted,
-                        isSelf: id === ourId,
+                        isSelf: conversationId === ourConversationId,
                         // If RingRTC doesn't send us an aspect ratio, we make a guess.
                         videoAspectRatio: remoteDeviceState.videoAspectRatio ||
                             (remoteDeviceState.videoMuted ? 1 : 4 / 3),

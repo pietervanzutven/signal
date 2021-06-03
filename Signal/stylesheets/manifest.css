@@ -3766,39 +3766,53 @@ span.module-in-contacts-icon__tooltip {
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>search-24</title><path d='M17.257,16.2,15.9,15.385a8.022,8.022,0,1,0-.519.519l.812,1.353L20.439,21.5,21.5,20.439ZM10,16.5A6.5,6.5,0,1,1,16.5,10,6.508,6.508,0,0,1,10,16.5Z' fill='%23DEDEDE'/></svg>") no-repeat center;
     background-size: 100%; }
 
-.module-conversation-header__audio-calling-button {
-  background: url("data:image/svg+xml;utf8,<svg id='Export' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><title>phone-right-outline-24</title><path d='M7.34,2.5a.76.76,0,0,1,.41.13A.75.75,0,0,1,8,3L9.47,7a.69.69,0,0,1,0,.45.71.71,0,0,1-.26.38,9.6,9.6,0,0,1-1.34.82l-1.36.71.73,1.35a15.28,15.28,0,0,0,6.05,6l1.35.74.7-1.36a10.4,10.4,0,0,1,.83-1.35.72.72,0,0,1,.25-.21.62.62,0,0,1,.33-.07.73.73,0,0,1,.25,0L21,16a.71.71,0,0,1,.36.28.75.75,0,0,1,.12.44A9.39,9.39,0,0,1,21,19.28a3.27,3.27,0,0,1-3.07,2.22,3.79,3.79,0,0,1-.58-.05A18.45,18.45,0,0,1,2.55,6.68,3.25,3.25,0,0,1,3,4.44,3.3,3.3,0,0,1,4.72,3,9.38,9.38,0,0,1,7.29,2.5Zm0-1.5H7.19a11.19,11.19,0,0,0-3,.6A4.75,4.75,0,0,0,1.08,7,20,20,0,0,0,6.59,17.42a19.9,19.9,0,0,0,10.47,5.5,4.89,4.89,0,0,0,.85.08,4.82,4.82,0,0,0,2.75-.89,4.75,4.75,0,0,0,1.73-2.32,10.89,10.89,0,0,0,.6-3,2.22,2.22,0,0,0-1.46-2.23l-4-1.46a2.22,2.22,0,0,0-2.55.77,12.73,12.73,0,0,0-1,1.54A13.8,13.8,0,0,1,8.57,10a11.65,11.65,0,0,0,1.54-1,2.17,2.17,0,0,0,.81-1.14,2.23,2.23,0,0,0,0-1.4l-1.46-4A2.35,2.35,0,0,0,8.61,1.4,2.22,2.22,0,0,0,7.34,1Z' fill='%233B3B3B'/></svg>") no-repeat center;
-  background-size: 100%;
-  height: 24px;
-  width: 24px;
+.module-conversation-header__calling-button {
   margin-left: 12px;
   border: none;
   opacity: 0;
   transition: opacity 250ms ease-out; }
-  .dark-theme .module-conversation-header__audio-calling-button {
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>phone-right-solid-24</title><path d='M21.11,16.608a26.24,26.24,0,0,1-4.513-2.5,1.384,1.384,0,0,0-1.918.284,9.116,9.116,0,0,0-.866,1.465,4.5,4.5,0,0,0-.357,1.242A13.113,13.113,0,0,1,6.9,10.542a4.474,4.474,0,0,0,1.243-.355,9.019,9.019,0,0,0,1.343-.779,1.444,1.444,0,0,0,.4-2A26.2,26.2,0,0,1,7.357,2.9a1.42,1.42,0,0,0-1.71-.825,8.63,8.63,0,0,0-1.1.421,4.284,4.284,0,0,0-2.5,4.392l-.014,0A16.948,16.948,0,0,0,17.073,21.953l0-.016a4.308,4.308,0,0,0,4.441-2.492,8.732,8.732,0,0,0,.431-1.13A1.42,1.42,0,0,0,21.11,16.608Z' fill='%23DEDEDE'/></svg>") no-repeat center;
-    background-size: 100%; }
-  .module-conversation-header__audio-calling-button:disabled {
+  .module-conversation-header__calling-button:disabled {
     cursor: default; }
-  .module-conversation-header__audio-calling-button--show {
+  .module-conversation-header__calling-button--show {
     opacity: 1; }
-
-.module-conversation-header__video-calling-button {
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>video-outline-24</title><path d='M22,6.56a1.06,1.06,0,0,0-.42.09L18,8.31V6.5a3,3,0,0,0-3-3H4a3,3,0,0,0-3,3v11a3,3,0,0,0,3,3H15a3,3,0,0,0,3-3V15.69l3.58,1.66a1.06,1.06,0,0,0,.42.09,1,1,0,0,0,1-1V7.56A1,1,0,0,0,22,6.56ZM16.5,17.5A1.5,1.5,0,0,1,15,19H4a1.5,1.5,0,0,1-1.5-1.5V6.5A1.5,1.5,0,0,1,4,5H15a1.5,1.5,0,0,1,1.5,1.5Zm5-9.16V16l-1-.81L18,14V10l2.48-1.15,1-.81Z' fill='%233B3B3B'/></svg>") no-repeat center;
-  background-size: 100%;
-  height: 24px;
-  width: 24px;
-  margin-left: 12px;
-  border: none;
-  opacity: 0;
-  transition: opacity 250ms ease-out; }
-  .dark-theme .module-conversation-header__video-calling-button {
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>video-solid-24</title><path d='M23,8.06v7.88a1,1,0,0,1-1.42.91L18,15.2V8.8l3.58-1.65A1,1,0,0,1,23,8.06ZM16.5,17V7a3,3,0,0,0-3-3H4A3,3,0,0,0,1,7V17a3,3,0,0,0,3,3h9.5A3,3,0,0,0,16.5,17Z' fill='%23DEDEDE'/></svg>") no-repeat center;
-    background-size: 100%; }
-  .module-conversation-header__video-calling-button:disabled {
-    cursor: default; }
-  .module-conversation-header__video-calling-button--show {
-    opacity: 1; }
+  .module-conversation-header__calling-button--video {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>video-outline-24</title><path d='M22,6.56a1.06,1.06,0,0,0-.42.09L18,8.31V6.5a3,3,0,0,0-3-3H4a3,3,0,0,0-3,3v11a3,3,0,0,0,3,3H15a3,3,0,0,0,3-3V15.69l3.58,1.66a1.06,1.06,0,0,0,.42.09,1,1,0,0,0,1-1V7.56A1,1,0,0,0,22,6.56ZM16.5,17.5A1.5,1.5,0,0,1,15,19H4a1.5,1.5,0,0,1-1.5-1.5V6.5A1.5,1.5,0,0,1,4,5H15a1.5,1.5,0,0,1,1.5,1.5Zm5-9.16V16l-1-.81L18,14V10l2.48-1.15,1-.81Z' fill='%233B3B3B'/></svg>") no-repeat center;
+    background-size: 100%;
+    height: 24px;
+    width: 24px; }
+    .dark-theme .module-conversation-header__calling-button--video {
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>video-solid-24</title><path d='M23,8.06v7.88a1,1,0,0,1-1.42.91L18,15.2V8.8l3.58-1.65A1,1,0,0,1,23,8.06ZM16.5,17V7a3,3,0,0,0-3-3H4A3,3,0,0,0,1,7V17a3,3,0,0,0,3,3h9.5A3,3,0,0,0,16.5,17Z' fill='%23DEDEDE'/></svg>") no-repeat center;
+      background-size: 100%; }
+  .module-conversation-header__calling-button--audio {
+    background: url("data:image/svg+xml;utf8,<svg id='Export' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><title>phone-right-outline-24</title><path d='M7.34,2.5a.76.76,0,0,1,.41.13A.75.75,0,0,1,8,3L9.47,7a.69.69,0,0,1,0,.45.71.71,0,0,1-.26.38,9.6,9.6,0,0,1-1.34.82l-1.36.71.73,1.35a15.28,15.28,0,0,0,6.05,6l1.35.74.7-1.36a10.4,10.4,0,0,1,.83-1.35.72.72,0,0,1,.25-.21.62.62,0,0,1,.33-.07.73.73,0,0,1,.25,0L21,16a.71.71,0,0,1,.36.28.75.75,0,0,1,.12.44A9.39,9.39,0,0,1,21,19.28a3.27,3.27,0,0,1-3.07,2.22,3.79,3.79,0,0,1-.58-.05A18.45,18.45,0,0,1,2.55,6.68,3.25,3.25,0,0,1,3,4.44,3.3,3.3,0,0,1,4.72,3,9.38,9.38,0,0,1,7.29,2.5Zm0-1.5H7.19a11.19,11.19,0,0,0-3,.6A4.75,4.75,0,0,0,1.08,7,20,20,0,0,0,6.59,17.42a19.9,19.9,0,0,0,10.47,5.5,4.89,4.89,0,0,0,.85.08,4.82,4.82,0,0,0,2.75-.89,4.75,4.75,0,0,0,1.73-2.32,10.89,10.89,0,0,0,.6-3,2.22,2.22,0,0,0-1.46-2.23l-4-1.46a2.22,2.22,0,0,0-2.55.77,12.73,12.73,0,0,0-1,1.54A13.8,13.8,0,0,1,8.57,10a11.65,11.65,0,0,0,1.54-1,2.17,2.17,0,0,0,.81-1.14,2.23,2.23,0,0,0,0-1.4l-1.46-4A2.35,2.35,0,0,0,8.61,1.4,2.22,2.22,0,0,0,7.34,1Z' fill='%233B3B3B'/></svg>") no-repeat center;
+    background-size: 100%;
+    height: 24px;
+    width: 24px; }
+    .dark-theme .module-conversation-header__calling-button--audio {
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>phone-right-solid-24</title><path d='M21.11,16.608a26.24,26.24,0,0,1-4.513-2.5,1.384,1.384,0,0,0-1.918.284,9.116,9.116,0,0,0-.866,1.465,4.5,4.5,0,0,0-.357,1.242A13.113,13.113,0,0,1,6.9,10.542a4.474,4.474,0,0,0,1.243-.355,9.019,9.019,0,0,0,1.343-.779,1.444,1.444,0,0,0,.4-2A26.2,26.2,0,0,1,7.357,2.9a1.42,1.42,0,0,0-1.71-.825,8.63,8.63,0,0,0-1.1.421,4.284,4.284,0,0,0-2.5,4.392l-.014,0A16.948,16.948,0,0,0,17.073,21.953l0-.016a4.308,4.308,0,0,0,4.441-2.492,8.732,8.732,0,0,0,.431-1.13A1.42,1.42,0,0,0,21.11,16.608Z' fill='%23DEDEDE'/></svg>") no-repeat center;
+      background-size: 100%; }
+  .module-conversation-header__calling-button--join {
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 21px;
+    letter-spacing: -0.14px;
+    align-items: center;
+    background-color: #4caf50;
+    border-radius: 9999px;
+    color: #ffffff;
+    display: flex;
+    outline: none;
+    padding: 5px 18px; }
+    .keyboard-mode .module-conversation-header__calling-button--join:focus {
+      box-shadow: 0px 0px 0px 4px #2c6bed; }
+    .module-conversation-header__calling-button--join:before {
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>video-solid-24</title><path d='M23,8.06v7.88a1,1,0,0,1-1.42.91L18,15.2V8.8l3.58-1.65A1,1,0,0,1,23,8.06ZM16.5,17V7a3,3,0,0,0-3-3H4A3,3,0,0,0,1,7V17a3,3,0,0,0,3,3h9.5A3,3,0,0,0,16.5,17Z' fill='%23FFFFFF'/></svg>") no-repeat center;
+      background-size: 100%;
+      content: '';
+      display: block;
+      height: 24px;
+      margin-right: 5px;
+      width: 24px; }
 
 .module-message-detail {
   max-width: 650px;

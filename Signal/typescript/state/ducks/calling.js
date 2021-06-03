@@ -13,9 +13,12 @@ require(exports => {
     const callingTones_1 = require("../../util/callingTones");
     const callingPermissions_1 = require("../../util/callingPermissions");
     const bounceAppIcon_1 = require("../../shims/bounceAppIcon");
+    const sleep_1 = require("../../util/sleep");
+    const LatestQueue_1 = require("../../util/LatestQueue");
     // Helpers
     exports.getActiveCall = ({ activeCallState, callsByConversation, }) => activeCallState &&
         getOwn_1.getOwn(callsByConversation, activeCallState.conversationId);
+    exports.isAnybodyElseInGroupCall = ({ conversationIds }, ourConversationId) => conversationIds.some(id => id !== ourConversationId);
     // Actions
     const ACCEPT_CALL_PENDING = 'calling/ACCEPT_CALL_PENDING';
     const CANCEL_CALL = 'calling/CANCEL_CALL';
@@ -28,6 +31,7 @@ require(exports => {
     const HANG_UP = 'calling/HANG_UP';
     const INCOMING_CALL = 'calling/INCOMING_CALL';
     const OUTGOING_CALL = 'calling/OUTGOING_CALL';
+    const PEEK_NOT_CONNECTED_GROUP_CALL_FULFILLED = 'calling/PEEK_NOT_CONNECTED_GROUP_CALL_FULFILLED';
     const REFRESH_IO_DEVICES = 'calling/REFRESH_IO_DEVICES';
     const REMOTE_VIDEO_CHANGE = 'calling/REMOTE_VIDEO_CHANGE';
     const SET_LOCAL_AUDIO_FULFILLED = 'calling/SET_LOCAL_AUDIO_FULFILLED';
@@ -127,9 +131,11 @@ require(exports => {
         };
     }
     function groupCallStateChange(payload) {
-        return {
-            type: GROUP_CALL_STATE_CHANGE,
-            payload,
+        return (dispatch, getState) => {
+            dispatch({
+                type: GROUP_CALL_STATE_CHANGE,
+                payload: Object.assign(Object.assign({}, payload), { ourConversationId: getState().user.ourConversationId }),
+            });
         };
     }
     function hangUp(payload) {
@@ -150,6 +156,60 @@ require(exports => {
         return {
             type: OUTGOING_CALL,
             payload,
+        };
+    }
+    // We might call this function many times in rapid succession (for example, if lots of
+    //   people are joining and leaving at once). We want to make sure to update eventually
+    //   (if people join and leave for an hour, we don't want you to have to wait an hour to
+    //   get an update), and we also don't want to update too often. That's why we use a
+    //   "latest queue".
+    const peekQueueByConversation = new Map();
+    function peekNotConnectedGroupCall(payload) {
+        return (dispatch, getState) => {
+            const { conversationId } = payload;
+            let queue = peekQueueByConversation.get(conversationId);
+            if (!queue) {
+                queue = new LatestQueue_1.LatestQueue();
+                queue.onceEmpty(() => {
+                    peekQueueByConversation.delete(conversationId);
+                });
+                peekQueueByConversation.set(conversationId, queue);
+            }
+            queue.add(async () => {
+                const state = getState();
+                // We make sure we're not trying to peek at a connected (or connecting, or
+                //   reconnecting) call. Because this is asynchronous, it's possible that the call
+                //   will connect by the time we dispatch, so we also need to do a similar check in
+                //   the reducer.
+                const existingCall = getOwn_1.getOwn(state.calling.callsByConversation, conversationId);
+                if ((existingCall === null || existingCall === void 0 ? void 0 : existingCall.callMode) === Calling_1.CallMode.Group &&
+                    existingCall.connectionState !== Calling_1.GroupCallConnectionState.NotConnected) {
+                    return;
+                }
+                // If we peek right after receiving the message, we may get outdated information.
+                //   This is most noticeable when someone leaves. We add a delay and then make sure
+                //   to only be peeking once.
+                await sleep_1.sleep(1000);
+                let peekInfo;
+                try {
+                    peekInfo = await calling_1.calling.peekGroupCall(conversationId);
+                }
+                catch (err) {
+                    window.log.error('Group call peeking failed', err);
+                    return;
+                }
+                if (!peekInfo) {
+                    return;
+                }
+                dispatch({
+                    type: PEEK_NOT_CONNECTED_GROUP_CALL_FULFILLED,
+                    payload: {
+                        conversationId,
+                        peekInfo: calling_1.calling.formatGroupCallPeekInfoForRedux(peekInfo),
+                        ourConversationId: state.user.ourConversationId,
+                    },
+                });
+            });
         };
     }
     function refreshIODevices(payload) {
@@ -270,6 +330,7 @@ require(exports => {
         hangUp,
         receiveIncomingCall,
         outgoingCall,
+        peekNotConnectedGroupCall,
         refreshIODevices,
         remoteVideoChange,
         setLocalPreview,
@@ -324,6 +385,7 @@ require(exports => {
                         conversationId: action.payload.conversationId,
                         connectionState: action.payload.connectionState,
                         joinState: action.payload.joinState,
+                        peekInfo: action.payload.peekInfo,
                         remoteParticipants: action.payload.remoteParticipants,
                     };
                     break;
@@ -453,13 +515,24 @@ require(exports => {
             return Object.assign(Object.assign({}, state), { callsByConversation: Object.assign(Object.assign({}, callsByConversation), { [action.payload.conversationId]: Object.assign(Object.assign({}, call), { callState: action.payload.callState, callEndedReason: action.payload.callEndedReason }) }), activeCallState });
         }
         if (action.type === GROUP_CALL_STATE_CHANGE) {
-            const { conversationId, connectionState, joinState, hasLocalAudio, hasLocalVideo, remoteParticipants, } = action.payload;
+            const { connectionState, conversationId, hasLocalAudio, hasLocalVideo, joinState, ourConversationId, peekInfo, remoteParticipants, } = action.payload;
+            let newActiveCallState;
             if (connectionState === Calling_1.GroupCallConnectionState.NotConnected) {
-                return Object.assign(Object.assign({}, state), {
-                    callsByConversation: lodash_1.omit(callsByConversation, conversationId), activeCallState: ((_b = state.activeCallState) === null || _b === void 0 ? void 0 : _b.conversationId) === conversationId
+                newActiveCallState =
+                    ((_b = state.activeCallState) === null || _b === void 0 ? void 0 : _b.conversationId) === conversationId
                         ? undefined
-                        : state.activeCallState
-                });
+                        : state.activeCallState;
+                if (!exports.isAnybodyElseInGroupCall(peekInfo, ourConversationId)) {
+                    return Object.assign(Object.assign({}, state), { callsByConversation: lodash_1.omit(callsByConversation, conversationId), activeCallState: newActiveCallState });
+                }
+            }
+            else {
+                newActiveCallState =
+                    ((_c = state.activeCallState) === null || _c === void 0 ? void 0 : _c.conversationId) === conversationId
+                        ? Object.assign(Object.assign({}, state.activeCallState), {
+                            hasLocalAudio,
+                            hasLocalVideo
+                        }) : state.activeCallState;
             }
             return Object.assign(Object.assign({}, state), {
                 callsByConversation: Object.assign(Object.assign({}, callsByConversation), {
@@ -468,14 +541,44 @@ require(exports => {
                         conversationId,
                         connectionState,
                         joinState,
+                        peekInfo,
                         remoteParticipants,
                     }
-                }), activeCallState: ((_c = state.activeCallState) === null || _c === void 0 ? void 0 : _c.conversationId) === conversationId
-                    ? Object.assign(Object.assign({}, state.activeCallState), {
-                        hasLocalAudio,
-                        hasLocalVideo
-                    }) : state.activeCallState
+                }), activeCallState: newActiveCallState
             });
+        }
+        if (action.type === PEEK_NOT_CONNECTED_GROUP_CALL_FULFILLED) {
+            const { conversationId, peekInfo, ourConversationId } = action.payload;
+            const existingCall = getOwn_1.getOwn(state.callsByConversation, conversationId) || {
+                callMode: Calling_1.CallMode.Group,
+                conversationId,
+                connectionState: Calling_1.GroupCallConnectionState.NotConnected,
+                joinState: Calling_1.GroupCallJoinState.NotJoined,
+                peekInfo: {
+                    conversationIds: [],
+                    maxDevices: Infinity,
+                    deviceCount: 0,
+                },
+                remoteParticipants: [],
+            };
+            if (existingCall.callMode !== Calling_1.CallMode.Group) {
+                window.log.error('Unexpected state: trying to update a non-group call. Doing nothing');
+                return state;
+            }
+            // This action should only update non-connected group calls. It's not necessarily a
+            //   mistake if this action is dispatched "over" a connected call. Here's a valid
+            //   sequence of events:
+            //
+            // 1. We ask RingRTC to peek, kicking off an asynchronous operation.
+            // 2. The associated group call is joined.
+            // 3. The peek promise from step 1 resolves.
+            if (existingCall.connectionState !== Calling_1.GroupCallConnectionState.NotConnected) {
+                return state;
+            }
+            if (!exports.isAnybodyElseInGroupCall(peekInfo, ourConversationId)) {
+                return removeConversationFromState(state, conversationId);
+            }
+            return Object.assign(Object.assign({}, state), { callsByConversation: Object.assign(Object.assign({}, callsByConversation), { [conversationId]: Object.assign(Object.assign({}, existingCall), { peekInfo }) }) });
         }
         if (action.type === REMOTE_VIDEO_CHANGE) {
             const { conversationId, hasVideo } = action.payload;
