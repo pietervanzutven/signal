@@ -7,7 +7,7 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
-    const react_tooltip_lite_1 = __importDefault(require("react-tooltip-lite"));
+    const Tooltip_1 = require("./Tooltip");
     const CallingPipRemoteVideo_1 = require("./CallingPipRemoteVideo");
     const PIP_HEIGHT = 156;
     const PIP_WIDTH = 120;
@@ -110,12 +110,12 @@ require(exports => {
                 hasLocalVideo ? (react_1.default.createElement("video", { className: "module-calling-pip__video--local", ref: localVideoRef, autoPlay: true })) : null,
                 react_1.default.createElement("div", { className: "module-calling-pip__actions" },
                     react_1.default.createElement("button", {
-                        type: "button", "aria-label": i18n('calling__hangup'), className: "module-calling-pip__button--hangup", onClick: () => {
+                        "aria-label": i18n('calling__hangup'), className: "module-calling-pip__button--hangup", onClick: () => {
                             hangUp({ conversationId: conversation.id });
-                        }
+                        }, type: "button"
                     }),
-                    react_1.default.createElement("button", { type: "button", "aria-label": i18n('calling__pip--off'), className: "module-calling-pip__button--pip", onClick: togglePip },
-                        react_1.default.createElement(react_tooltip_lite_1.default, { arrowSize: 6, content: i18n('calling__pip--off'), hoverDelay: 0 },
+                    react_1.default.createElement(Tooltip_1.Tooltip, { content: i18n('calling__pip--off') },
+                        react_1.default.createElement("button", { "aria-label": i18n('calling__pip--off'), className: "module-calling-pip__button--pip", onClick: togglePip, type: "button" },
                             react_1.default.createElement("div", null))))));
     };
 });

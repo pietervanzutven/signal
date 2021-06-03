@@ -133,12 +133,12 @@ require(exports => {
             react_1.default.createElement("div", { className: "module-ongoing-call__footer" },
                 react_1.default.createElement("div", { className: "module-ongoing-call__footer__local-preview-offset" }),
                 react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__footer__actions', controlsFadeClass) },
-                    react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: videoButtonType, i18n: i18n, onClick: toggleVideo, tooltipDistance: 24 }),
-                    react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: audioButtonType, i18n: i18n, onClick: toggleAudio, tooltipDistance: 24 }),
+                    react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: videoButtonType, i18n: i18n, onClick: toggleVideo }),
+                    react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: audioButtonType, i18n: i18n, onClick: toggleAudio }),
                     react_1.default.createElement(CallingButton_1.CallingButton, {
                         buttonType: CallingButton_1.CallingButtonType.HANG_UP, i18n: i18n, onClick: () => {
                             hangUp({ conversationId: conversation.id });
-                        }, tooltipDistance: 24
+                        }
                     })),
                 react_1.default.createElement("div", {
                     className: classnames_1.default('module-ongoing-call__footer__local-preview', {

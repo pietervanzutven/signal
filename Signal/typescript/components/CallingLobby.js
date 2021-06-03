@@ -8,6 +8,7 @@ require(exports => {
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
     const CallingButton_1 = require("./CallingButton");
+    const Tooltip_1 = require("./Tooltip");
     const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
     const CallingHeader_1 = require("./CallingHeader");
     const Spinner_1 = require("./Spinner");
@@ -63,8 +64,8 @@ require(exports => {
                     react_1.default.createElement("div", { className: "module-calling-lobby__video-off--icon" }),
                     react_1.default.createElement("span", { className: "module-calling-lobby__video-off--text" }, i18n('calling__your-video-is-off')))),
                 react_1.default.createElement("div", { className: "module-calling__buttons" },
-                    react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: videoButtonType, i18n: i18n, onClick: toggleVideo, tooltipDirection: CallingButton_1.TooltipDirection.UP, tooltipDistance: 24 }),
-                    react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: audioButtonType, i18n: i18n, onClick: toggleAudio, tooltipDirection: CallingButton_1.TooltipDirection.UP, tooltipDistance: 24 }))),
+                    react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: videoButtonType, i18n: i18n, onClick: toggleVideo, tooltipDirection: Tooltip_1.TooltipPlacement.Top }),
+                    react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: audioButtonType, i18n: i18n, onClick: toggleAudio, tooltipDirection: Tooltip_1.TooltipPlacement.Top }))),
             isGroupCall ? (react_1.default.createElement("div", { className: "module-calling-lobby__info" },
                 participantNames.length === 0 &&
                 i18n('calling__lobby-summary--zero'),

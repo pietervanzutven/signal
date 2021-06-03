@@ -7,25 +7,25 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
-    const react_tooltip_lite_1 = __importDefault(require("react-tooltip-lite"));
+    const Tooltip_1 = require("./Tooltip");
     exports.CallingHeader = ({ canPip = false, conversationTitle, i18n, isGroupCall = false, remoteParticipants, toggleParticipants, togglePip, toggleSettings, }) => (react_1.default.createElement("div", { className: "module-calling__header" },
         react_1.default.createElement("div", { className: "module-calling__header--header-name" }, conversationTitle),
         react_1.default.createElement("div", { className: "module-calling-tools" },
             isGroupCall ? (react_1.default.createElement("div", { className: "module-calling-tools__button" },
-                react_1.default.createElement(react_tooltip_lite_1.default, {
-                    arrowSize: 6, content: i18n('calling__participants', [
+                react_1.default.createElement(Tooltip_1.Tooltip, {
+                    content: i18n('calling__participants', [
                         String(remoteParticipants),
-                    ]), direction: "down", hoverDelay: 0
+                    ])
                 },
                     react_1.default.createElement("button", {
-                        type: "button", "aria-label": i18n('calling__participants', [
+                        "aria-label": i18n('calling__participants', [
                             String(remoteParticipants),
-                        ]), className: "module-calling-button__participants", onClick: toggleParticipants
+                        ]), className: "module-calling-button__participants", onClick: toggleParticipants, type: "button"
                     })))) : null,
             react_1.default.createElement("div", { className: "module-calling-tools__button" },
-                react_1.default.createElement(react_tooltip_lite_1.default, { arrowSize: 6, content: i18n('callingDeviceSelection__settings'), direction: "down", hoverDelay: 0 },
-                    react_1.default.createElement("button", { type: "button", "aria-label": i18n('callingDeviceSelection__settings'), className: "module-calling-button__settings", onClick: toggleSettings }))),
+                react_1.default.createElement(Tooltip_1.Tooltip, { content: i18n('callingDeviceSelection__settings') },
+                    react_1.default.createElement("button", { "aria-label": i18n('callingDeviceSelection__settings'), className: "module-calling-button__settings", onClick: toggleSettings, type: "button" }))),
             canPip && (react_1.default.createElement("div", { className: "module-calling-tools__button" },
-                react_1.default.createElement(react_tooltip_lite_1.default, { arrowSize: 6, content: i18n('calling__pip--on'), direction: "down", hoverDelay: 0 },
-                    react_1.default.createElement("button", { type: "button", "aria-label": i18n('calling__pip--on'), className: "module-calling-button__pip", onClick: togglePip })))))));
+                react_1.default.createElement(Tooltip_1.Tooltip, { content: i18n('calling__pip--on') },
+                    react_1.default.createElement("button", { "aria-label": i18n('calling__pip--on'), className: "module-calling-button__pip", onClick: togglePip, type: "button" })))))));
 });

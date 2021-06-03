@@ -1,19 +1,14 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
     const classnames_1 = __importDefault(require("classnames"));
-    const react_tooltip_lite_1 = __importDefault(require("react-tooltip-lite"));
-    var TooltipDirection;
-    (function (TooltipDirection) {
-        TooltipDirection["UP"] = "up";
-        TooltipDirection["RIGHT"] = "right";
-        TooltipDirection["DOWN"] = "down";
-        TooltipDirection["LEFT"] = "left";
-    })(TooltipDirection = exports.TooltipDirection || (exports.TooltipDirection = {}));
+    const Tooltip_1 = require("./Tooltip");
     var CallingButtonType;
     (function (CallingButtonType) {
         CallingButtonType["AUDIO_DISABLED"] = "AUDIO_DISABLED";
@@ -24,7 +19,7 @@ require(exports => {
         CallingButtonType["VIDEO_OFF"] = "VIDEO_OFF";
         CallingButtonType["VIDEO_ON"] = "VIDEO_ON";
     })(CallingButtonType = exports.CallingButtonType || (exports.CallingButtonType = {}));
-    exports.CallingButton = ({ buttonType, i18n, onClick, tooltipDirection = TooltipDirection.DOWN, tooltipDistance = 16, }) => {
+    exports.CallingButton = ({ buttonType, i18n, onClick, tooltipDirection, }) => {
         let classNameSuffix = '';
         let tooltipContent = '';
         if (buttonType === CallingButtonType.AUDIO_DISABLED) {
@@ -56,8 +51,8 @@ require(exports => {
             tooltipContent = i18n('calling__hangup');
         }
         const className = classnames_1.default('module-calling-button__icon', `module-calling-button__icon--${classNameSuffix}`);
-        return (react_1.default.createElement("button", { "aria-label": tooltipContent, type: "button", className: className, onClick: onClick },
-            react_1.default.createElement(react_tooltip_lite_1.default, { arrowSize: 6, content: tooltipContent, direction: tooltipDirection, distance: tooltipDistance, hoverDelay: 0 },
+        return (react_1.default.createElement(Tooltip_1.Tooltip, { content: tooltipContent, direction: tooltipDirection },
+            react_1.default.createElement("button", { "aria-label": tooltipContent, type: "button", className: className, onClick: onClick },
                 react_1.default.createElement("div", null))));
     };
 });
