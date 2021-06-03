@@ -38,8 +38,28 @@ require(exports => {
             window.log.error('The active call has no corresponding conversation');
             return undefined;
         }
+        // TODO: The way we deal with remote participants isn't ideal. See DESKTOP-949.
+        let isCallFull = false;
+        const groupCallPeekedParticipants = [];
         const groupCallParticipants = [];
-        if (call && call.callMode === Calling_1.CallMode.Group) {
+        if (call.callMode === Calling_1.CallMode.Group) {
+            isCallFull = call.peekInfo.deviceCount >= call.peekInfo.maxDevices;
+            call.peekInfo.conversationIds.forEach((conversationId) => {
+                const peekedConversation = conversationSelector(conversationId);
+                if (!peekedConversation) {
+                    window.log.error('Peeked participant has no corresponding conversation');
+                    return;
+                }
+                groupCallPeekedParticipants.push({
+                    avatarPath: peekedConversation.avatarPath,
+                    color: peekedConversation.color,
+                    firstName: peekedConversation.firstName,
+                    isSelf: conversationId === state.user.ourConversationId,
+                    name: peekedConversation.name,
+                    profileName: peekedConversation.profileName,
+                    title: peekedConversation.title,
+                });
+            });
             call.remoteParticipants.forEach((remoteParticipant) => {
                 const remoteConversation = conversationSelector(remoteParticipant.conversationId);
                 if (!remoteConversation) {
@@ -65,6 +85,8 @@ require(exports => {
             activeCallState,
             call,
             conversation,
+            isCallFull,
+            groupCallPeekedParticipants,
             groupCallParticipants,
         };
     };

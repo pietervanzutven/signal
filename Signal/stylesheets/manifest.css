@@ -6443,6 +6443,8 @@ span.module-in-contacts-icon__tooltip {
   margin-left: 8px;
   margin-right: 8px;
   width: 160px; }
+  .module-calling-lobby__button[disabled] {
+    opacity: 0.5; }
 
 .module-calling-lobby__video {
   font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;

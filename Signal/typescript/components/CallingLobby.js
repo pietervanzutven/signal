@@ -12,7 +12,7 @@ require(exports => {
     const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
     const CallingHeader_1 = require("./CallingHeader");
     const Spinner_1 = require("./Spinner");
-    exports.CallingLobby = ({ availableCameras, conversation, hasLocalAudio, hasLocalVideo, i18n, isGroupCall = false, me, onCallCanceled, onJoinCall, participantNames, setLocalAudio, setLocalPreview, setLocalVideo, showParticipantsList, toggleParticipants, toggleSettings, }) => {
+    exports.CallingLobby = ({ availableCameras, conversation, hasLocalAudio, hasLocalVideo, i18n, isGroupCall = false, isCallFull = false, me, onCallCanceled, onJoinCall, participantNames, setLocalAudio, setLocalPreview, setLocalVideo, showParticipantsList, toggleParticipants, toggleSettings, }) => {
         const localVideoRef = react_1.default.useRef(null);
         const toggleAudio = react_1.default.useCallback(() => {
             setLocalAudio({ enabled: !hasLocalAudio });
@@ -57,6 +57,22 @@ require(exports => {
         const audioButtonType = hasLocalAudio
             ? CallingButton_1.CallingButtonType.AUDIO_ON
             : CallingButton_1.CallingButtonType.AUDIO_OFF;
+        let joinButton;
+        if (isCallFull) {
+            joinButton = (react_1.default.createElement("button", { className: "module-button__green module-calling-lobby__button", disabled: true, tabIndex: 0, type: "button" }, i18n('calling__call-is-full')));
+        }
+        else if (isCallConnecting) {
+            joinButton = (react_1.default.createElement("button", { className: "module-button__green module-calling-lobby__button", disabled: true, tabIndex: 0, type: "button" },
+                react_1.default.createElement(Spinner_1.Spinner, { svgSize: "small" })));
+        }
+        else {
+            joinButton = (react_1.default.createElement("button", {
+                className: "module-button__green module-calling-lobby__button", onClick: () => {
+                    setIsCallConnecting(true);
+                    onJoinCall();
+                }, tabIndex: 0, type: "button"
+            }, isGroupCall ? i18n('calling__join') : i18n('calling__start')));
+        }
         return (react_1.default.createElement("div", { className: "module-calling__container" },
             react_1.default.createElement(CallingHeader_1.CallingHeader, { conversationTitle: conversation.title, i18n: i18n, isGroupCall: isGroupCall, remoteParticipants: participantNames.length, showParticipantsList: showParticipantsList, toggleParticipants: toggleParticipants, toggleSettings: toggleSettings }),
             react_1.default.createElement("div", { className: "module-calling-lobby__video" },
@@ -90,13 +106,6 @@ require(exports => {
                 }))) : null,
             react_1.default.createElement("div", { className: "module-calling-lobby__actions" },
                 react_1.default.createElement("button", { className: "module-button__gray module-calling-lobby__button", onClick: onCallCanceled, tabIndex: 0, type: "button" }, i18n('cancel')),
-                isCallConnecting && (react_1.default.createElement("button", { className: "module-button__green module-calling-lobby__button", disabled: true, tabIndex: 0, type: "button" },
-                    react_1.default.createElement(Spinner_1.Spinner, { svgSize: "small" }))),
-                !isCallConnecting && (react_1.default.createElement("button", {
-                    className: "module-button__green module-calling-lobby__button", onClick: () => {
-                        setIsCallConnecting(true);
-                        onJoinCall();
-                    }, tabIndex: 0, type: "button"
-                }, isGroupCall ? i18n('calling__join') : i18n('calling__start'))))));
+                joinButton)));
     };
 });

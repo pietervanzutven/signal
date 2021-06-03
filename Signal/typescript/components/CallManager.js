@@ -20,7 +20,7 @@ require(exports => {
     const Calling_1 = require("../types/Calling");
     const missingCaseError_1 = require("../util/missingCaseError");
     const ActiveCallManager = ({ activeCall, availableCameras, cancelCall, closeNeedPermissionScreen, hangUp, i18n, getGroupCallVideoFrameSource, me, renderDeviceSelection, setLocalAudio, setLocalPreview, setLocalVideo, setRendererCanvas, startCall, toggleParticipants, togglePip, toggleSettings, }) => {
-        const { call, activeCallState, conversation, groupCallParticipants, } = activeCall;
+        const { call, activeCallState, conversation, groupCallPeekedParticipants, groupCallParticipants, isCallFull, } = activeCall;
         const { hasLocalAudio, hasLocalVideo, joinedAt, pip, settingsDialogOpen, showParticipantsList, } = activeCallState;
         const cancelActiveCall = react_1.useCallback(() => {
             cancelCall({ conversationId: conversation.id });
@@ -56,11 +56,11 @@ require(exports => {
                 throw missingCaseError_1.missingCaseError(call);
         }
         if (showCallLobby) {
-            const participantNames = groupCallParticipants.map(participant => participant.isSelf
+            const participantNames = groupCallPeekedParticipants.map(participant => participant.isSelf
                 ? i18n('you')
                 : participant.firstName || participant.title);
             return (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement(CallingLobby_1.CallingLobby, { availableCameras: availableCameras, conversation: conversation, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, isGroupCall: call.callMode === Calling_1.CallMode.Group, me: me, onCallCanceled: cancelActiveCall, onJoinCall: joinActiveCall, participantNames: participantNames, setLocalPreview: setLocalPreview, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, showParticipantsList: showParticipantsList, toggleParticipants: toggleParticipants, toggleSettings: toggleSettings }),
+                react_1.default.createElement(CallingLobby_1.CallingLobby, { availableCameras: availableCameras, conversation: conversation, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, isGroupCall: call.callMode === Calling_1.CallMode.Group, isCallFull: isCallFull, me: me, onCallCanceled: cancelActiveCall, onJoinCall: joinActiveCall, participantNames: participantNames, setLocalPreview: setLocalPreview, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, showParticipantsList: showParticipantsList, toggleParticipants: toggleParticipants, toggleSettings: toggleSettings }),
                 settingsDialogOpen && renderDeviceSelection(),
                 showParticipantsList && call.callMode === Calling_1.CallMode.Group ? (react_1.default.createElement(CallingParticipantsList_1.CallingParticipantsList, { i18n: i18n, onClose: toggleParticipants, participants: groupCallParticipants })) : null));
         }
