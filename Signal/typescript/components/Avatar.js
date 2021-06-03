@@ -16,6 +16,15 @@ require(exports => {
     const React = __importStar(require("react"));
     const classnames_1 = __importDefault(require("classnames"));
     const getInitials_1 = require("../util/getInitials");
+    var AvatarSize;
+    (function (AvatarSize) {
+        AvatarSize[AvatarSize["TWENTY_EIGHT"] = 28] = "TWENTY_EIGHT";
+        AvatarSize[AvatarSize["THIRTY_TWO"] = 32] = "THIRTY_TWO";
+        AvatarSize[AvatarSize["FIFTY_TWO"] = 52] = "FIFTY_TWO";
+        AvatarSize[AvatarSize["EIGHTY"] = 80] = "EIGHTY";
+        AvatarSize[AvatarSize["NINETY_SIX"] = 96] = "NINETY_SIX";
+        AvatarSize[AvatarSize["ONE_HUNDRED_TWELVE"] = 112] = "ONE_HUNDRED_TWELVE";
+    })(AvatarSize = exports.AvatarSize || (exports.AvatarSize = {}));
     class Avatar extends React.Component {
         constructor(props) {
             super(props);

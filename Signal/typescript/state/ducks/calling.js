@@ -303,7 +303,7 @@ require(exports => {
             : state)), { callsByConversation: lodash_1.omit(state.callsByConversation, conversationId) });
     }
     function reducer(state = getEmptyState(), action) {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c;
         const { callsByConversation } = state;
         if (action.type === SHOW_CALL_LOBBY) {
             let call;
@@ -439,12 +439,12 @@ require(exports => {
                 return removeConversationFromState(state, action.payload.conversationId);
             }
             const call = getOwn_1.getOwn(state.callsByConversation, action.payload.conversationId);
-            if (((_a = call) === null || _a === void 0 ? void 0 : _a.callMode) !== Calling_1.CallMode.Direct) {
+            if ((call === null || call === void 0 ? void 0 : call.callMode) !== Calling_1.CallMode.Direct) {
                 window.log.warn('Cannot update state for a non-direct call');
                 return state;
             }
             let activeCallState;
-            if (((_b = state.activeCallState) === null || _b === void 0 ? void 0 : _b.conversationId) === action.payload.conversationId) {
+            if (((_a = state.activeCallState) === null || _a === void 0 ? void 0 : _a.conversationId) === action.payload.conversationId) {
                 activeCallState = Object.assign(Object.assign({}, state.activeCallState), { joinedAt: action.payload.acceptedTime });
             }
             else {
@@ -456,7 +456,7 @@ require(exports => {
             const { conversationId, connectionState, joinState, hasLocalAudio, hasLocalVideo, remoteParticipants, } = action.payload;
             if (connectionState === Calling_1.GroupCallConnectionState.NotConnected) {
                 return Object.assign(Object.assign({}, state), {
-                    callsByConversation: lodash_1.omit(callsByConversation, conversationId), activeCallState: ((_c = state.activeCallState) === null || _c === void 0 ? void 0 : _c.conversationId) === conversationId
+                    callsByConversation: lodash_1.omit(callsByConversation, conversationId), activeCallState: ((_b = state.activeCallState) === null || _b === void 0 ? void 0 : _b.conversationId) === conversationId
                         ? undefined
                         : state.activeCallState
                 });
@@ -470,7 +470,7 @@ require(exports => {
                         joinState,
                         remoteParticipants,
                     }
-                }), activeCallState: ((_d = state.activeCallState) === null || _d === void 0 ? void 0 : _d.conversationId) === conversationId
+                }), activeCallState: ((_c = state.activeCallState) === null || _c === void 0 ? void 0 : _c.conversationId) === conversationId
                     ? Object.assign(Object.assign({}, state.activeCallState), {
                         hasLocalAudio,
                         hasLocalVideo
@@ -480,7 +480,7 @@ require(exports => {
         if (action.type === REMOTE_VIDEO_CHANGE) {
             const { conversationId, hasVideo } = action.payload;
             const call = getOwn_1.getOwn(state.callsByConversation, conversationId);
-            if (((_e = call) === null || _e === void 0 ? void 0 : _e.callMode) !== Calling_1.CallMode.Direct) {
+            if ((call === null || call === void 0 ? void 0 : call.callMode) !== Calling_1.CallMode.Direct) {
                 window.log.warn('Cannot update remote video for a non-direct call');
                 return state;
             }

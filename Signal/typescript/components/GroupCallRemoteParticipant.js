@@ -17,10 +17,12 @@ require(exports => {
     const classnames_1 = __importDefault(require("classnames"));
     const lodash_1 = require("lodash");
     const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
+    const Avatar_1 = require("./Avatar");
     // The max size video frame we'll support (in RGBA)
     const FRAME_BUFFER_SIZE = 1920 * 1080 * 4;
     exports.GroupCallRemoteParticipant = react_1.default.memo(props => {
-        const { demuxId, getGroupCallVideoFrameSource, hasRemoteAudio, hasRemoteVideo, } = props;
+        const { getGroupCallVideoFrameSource } = props;
+        const { avatarPath, color, profileName, title, demuxId, hasRemoteAudio, hasRemoteVideo, } = props.remoteParticipant;
         const [isWide, setIsWide] = react_1.useState(true);
         const remoteVideoRef = react_1.useRef(null);
         const canvasContextRef = react_1.useRef(null);
@@ -72,14 +74,26 @@ require(exports => {
         else {
             canvasStyles = { height: '100%' };
         }
+        let avatarSize;
         // TypeScript isn't smart enough to know that `isInPip` by itself disambiguates the
         //   types, so we have to use `props.isInPip` instead.
         // eslint-disable-next-line react/destructuring-assignment
         if (props.isInPip) {
             containerStyles = canvasStyles;
+            avatarSize = Avatar_1.AvatarSize.FIFTY_TWO;
         }
         else {
             const { top, left, width, height } = props;
+            const shorterDimension = Math.min(width, height);
+            if (shorterDimension >= 240) {
+                avatarSize = Avatar_1.AvatarSize.ONE_HUNDRED_TWELVE;
+            }
+            else if (shorterDimension >= 180) {
+                avatarSize = Avatar_1.AvatarSize.EIGHTY;
+            }
+            else {
+                avatarSize = Avatar_1.AvatarSize.FIFTY_TWO;
+            }
             containerStyles = {
                 height,
                 left,
@@ -106,7 +120,7 @@ require(exports => {
                     canvasContextRef.current = null;
                 }
             }
-        })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, null,
-            react_1.default.createElement("span", null)))));
+        })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: avatarPath, color: color },
+            react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: props.i18n, profileName: profileName, title: title, size: avatarSize })))));
     });
 });

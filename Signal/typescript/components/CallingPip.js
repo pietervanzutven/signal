@@ -13,7 +13,7 @@ require(exports => {
     const PIP_WIDTH = 120;
     const PIP_DEFAULT_Y = 56;
     const PIP_PADDING = 8;
-    exports.CallingPip = ({ call, conversation, getGroupCallVideoFrameSource, hangUp, hasLocalVideo, i18n, setLocalPreview, setRendererCanvas, togglePip, }) => {
+    exports.CallingPip = ({ activeCall, getGroupCallVideoFrameSource, hangUp, hasLocalVideo, i18n, setLocalPreview, setRendererCanvas, togglePip, }) => {
         const videoContainerRef = react_1.default.useRef(null);
         const localVideoRef = react_1.default.useRef(null);
         const [dragState, setDragState] = react_1.default.useState({
@@ -106,12 +106,12 @@ require(exports => {
                     transition: dragState.isDragging ? 'none' : 'transform ease-out 300ms',
                 }
             },
-                react_1.default.createElement(CallingPipRemoteVideo_1.CallingPipRemoteVideo, { call: call, conversation: conversation, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, i18n: i18n, setRendererCanvas: setRendererCanvas }),
+                react_1.default.createElement(CallingPipRemoteVideo_1.CallingPipRemoteVideo, { activeCall: activeCall, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, i18n: i18n, setRendererCanvas: setRendererCanvas }),
                 hasLocalVideo ? (react_1.default.createElement("video", { className: "module-calling-pip__video--local", ref: localVideoRef, autoPlay: true })) : null,
                 react_1.default.createElement("div", { className: "module-calling-pip__actions" },
                     react_1.default.createElement("button", {
                         "aria-label": i18n('calling__hangup'), className: "module-calling-pip__button--hangup", onClick: () => {
-                            hangUp({ conversationId: conversation.id });
+                            hangUp({ conversationId: activeCall.conversation.id });
                         }, type: "button"
                     }),
                     react_1.default.createElement(Tooltip_1.Tooltip, { content: i18n('calling__pip--off') },

@@ -6440,6 +6440,8 @@ span.module-in-contacts-icon__tooltip {
     justify-content: center;
     position: relative;
     width: 100%; }
+    .module-calling-pip__video--remote .module-ongoing-call__group-call-remote-participant--audio-muted::before {
+      display: none; }
   .module-calling-pip__video--local {
     bottom: 38px;
     height: 32px;
