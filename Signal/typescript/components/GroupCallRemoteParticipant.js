@@ -18,12 +18,14 @@ require(exports => {
     const lodash_1 = require("lodash");
     const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
     const Avatar_1 = require("./Avatar");
+    const ContactName_1 = require("./conversation/ContactName");
     // The max size video frame we'll support (in RGBA)
     const FRAME_BUFFER_SIZE = 1920 * 1080 * 4;
     exports.GroupCallRemoteParticipant = react_1.default.memo(props => {
         const { getGroupCallVideoFrameSource } = props;
         const { avatarPath, color, profileName, title, demuxId, hasRemoteAudio, hasRemoteVideo, } = props.remoteParticipant;
         const [isWide, setIsWide] = react_1.useState(true);
+        const [hasHover, setHover] = react_1.useState(false);
         const remoteVideoRef = react_1.useRef(null);
         const canvasContextRef = react_1.useRef(null);
         const frameBufferRef = react_1.useRef(new ArrayBuffer(FRAME_BUFFER_SIZE));
@@ -102,25 +104,28 @@ require(exports => {
                 width,
             };
         }
-        return (react_1.default.createElement("div", {
-            className: classnames_1.default('module-ongoing-call__group-call-remote-participant', {
-                'module-ongoing-call__group-call-remote-participant--audio-muted': !hasRemoteAudio,
-            }), style: containerStyles
-        }, hasRemoteVideo ? (react_1.default.createElement("canvas", {
-            className: "module-ongoing-call__group-call-remote-participant__remote-video", style: canvasStyles, ref: canvasEl => {
-                remoteVideoRef.current = canvasEl;
-                if (canvasEl) {
-                    canvasContextRef.current = canvasEl.getContext('2d', {
-                        alpha: false,
-                        desynchronized: true,
-                        storage: 'discardable',
-                    });
+        return (react_1.default.createElement("div", { className: "module-ongoing-call__group-call-remote-participant", onMouseEnter: () => setHover(true), onMouseLeave: () => setHover(false), style: containerStyles },
+            hasHover && (react_1.default.createElement("div", {
+                className: classnames_1.default('module-ongoing-call__group-call-remote-participant--title', {
+                    'module-ongoing-call__group-call-remote-participant--audio-muted': !hasRemoteAudio,
+                })
+            },
+                react_1.default.createElement(ContactName_1.ContactName, { module: "module-ongoing-call__group-call-remote-participant--contact-name", profileName: profileName, title: title, i18n: props.i18n }))),
+            hasRemoteVideo ? (react_1.default.createElement("canvas", {
+                className: "module-ongoing-call__group-call-remote-participant__remote-video", style: canvasStyles, ref: canvasEl => {
+                    remoteVideoRef.current = canvasEl;
+                    if (canvasEl) {
+                        canvasContextRef.current = canvasEl.getContext('2d', {
+                            alpha: false,
+                            desynchronized: true,
+                            storage: 'discardable',
+                        });
+                    }
+                    else {
+                        canvasContextRef.current = null;
+                    }
                 }
-                else {
-                    canvasContextRef.current = null;
-                }
-            }
-        })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: avatarPath, color: color },
-            react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: props.i18n, profileName: profileName, title: title, size: avatarSize })))));
+            })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: avatarPath, color: color },
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: props.i18n, profileName: profileName, title: title, size: avatarSize })))));
     });
 });
