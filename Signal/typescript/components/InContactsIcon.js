@@ -7,13 +7,14 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
     const Tooltip_1 = require("./Tooltip");
     exports.InContactsIcon = (props) => {
-        const { i18n } = props;
+        const { className, i18n } = props;
         /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
         return (react_1.default.createElement("span", { className: "module-in-contacts-icon__tooltip" },
             react_1.default.createElement(Tooltip_1.Tooltip, { content: i18n('contactInAddressBook') },
-                react_1.default.createElement("span", { tabIndex: 0, role: "img", "aria-label": i18n('contactInAddressBook'), className: "module-in-contacts-icon__icon" }))));
+                react_1.default.createElement("span", { "aria-label": i18n('contactInAddressBook'), className: classnames_1.default('module-in-contacts-icon__icon', className), role: "img", tabIndex: 0 }))));
         /* eslint-enable jsx-a11y/no-noninteractive-tabindex */
     };
 });

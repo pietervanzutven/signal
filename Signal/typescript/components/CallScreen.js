@@ -114,7 +114,10 @@ require(exports => {
             'module-ongoing-call__controls--fadeIn': (showControls || isAudioOnly) && !isConnected,
             'module-ongoing-call__controls--fadeOut': !showControls && !isAudioOnly && isConnected,
         });
-        const remoteParticipants = call.callMode === Calling_1.CallMode.Group ? call.remoteParticipants.length : 0;
+        const remoteParticipants = call.callMode === Calling_1.CallMode.Group
+            ? activeCall.groupCallParticipants.length
+            : 0;
+        const { showParticipantsList } = activeCall.activeCallState;
         return (react_1.default.createElement("div", {
             className: classnames_1.default('module-calling__container', `module-ongoing-call__container--${getCallModeClassSuffix(call.callMode)}`), onMouseMove: () => {
                 setShowControls(true);
@@ -128,7 +131,7 @@ require(exports => {
                             ? i18n('calling__in-this-call--zero')
                             : conversation.title,
                         call.callMode === Calling_1.CallMode.Direct &&
-                        renderHeaderMessage(i18n, call.callState || Calling_1.CallState.Prering, acceptedDuration)), i18n: i18n, isGroupCall: call.callMode === Calling_1.CallMode.Group, remoteParticipants: remoteParticipants, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings
+                        renderHeaderMessage(i18n, call.callState || Calling_1.CallState.Prering, acceptedDuration)), i18n: i18n, isGroupCall: call.callMode === Calling_1.CallMode.Group, remoteParticipants: remoteParticipants, showParticipantsList: showParticipantsList, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings
                 })),
             remoteParticipantsElement,
             react_1.default.createElement("div", { className: "module-ongoing-call__footer" },

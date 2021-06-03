@@ -6191,8 +6191,36 @@ span.module-in-contacts-icon__tooltip {
 .module-calling-button__participants {
   background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>group-solid-24</title><path d='M10.25,16.25m-2.5-8.5a3.5,3.5,0,1,0,3.5,3.5A3.5,3.5,0,0,0,7.75,7.75Zm3.539,7.027a4.988,4.988,0,0,1-7.078,0A4.735,4.735,0,0,0,1,19.25V20a1,1,0,0,0,1,1H13.5a1,1,0,0,0,1-1v-.75A4.735,4.735,0,0,0,11.289,14.777ZM16.25,2.75a3.5,3.5,0,1,0,3.5,3.5A3.5,3.5,0,0,0,16.25,2.75Zm3.539,7.027a4.989,4.989,0,0,1-7.074.005c-.063.022-.131.033-.193.057a4.675,4.675,0,0,1-.333,3.663A6.294,6.294,0,0,1,15.078,16H22a1,1,0,0,0,1-1v-.75A4.735,4.735,0,0,0,19.789,9.777Z' fill='%23FFFFFF'/></svg>") no-repeat center;
   background-size: 100%;
+  display: inline-block;
   height: 22px;
   width: 22px; }
+  .module-calling-button__participants--container {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    text-align: inherit;
+    border: none;
+    color: #ffffff; }
+  .module-calling-button__participants--shown {
+    background-color: #3b3b3b;
+    border-radius: 16px;
+    padding: 6px 8px;
+    padding-bottom: 2px;
+    margin-top: -6px;
+    margin-right: -8px; }
+  .module-calling-button__participants--count {
+    font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: -0.03px;
+    font-weight: bold;
+    margin-left: 5px;
+    vertical-align: top; }
 
 .module-calling-button__settings {
   background: url("data:image/svg+xml;utf8,<svg id='Source' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><title>settings-solid-16</title><path d='M14.55,6.68l-1.1-.6a.49.49,0,0,1-.24-.58l.36-1.2A1.51,1.51,0,0,0,11.7,2.43l-1.2.36a.49.49,0,0,1-.58-.24l-.6-1.1a1.5,1.5,0,0,0-2.64,0l-.6,1.1a.49.49,0,0,1-.58.24L4.3,2.43A1.51,1.51,0,0,0,2.43,4.3l.36,1.2a.49.49,0,0,1-.24.58l-1.1.6a1.5,1.5,0,0,0,0,2.64l1.1.6a.49.49,0,0,1,.24.58l-.36,1.2A1.51,1.51,0,0,0,4.3,13.57l1.2-.36a.49.49,0,0,1,.58.24l.6,1.1a1.5,1.5,0,0,0,2.64,0l.6-1.1a.49.49,0,0,1,.58-.24l1.2.36a1.51,1.51,0,0,0,1.87-1.87l-.36-1.2a.49.49,0,0,1,.24-.58l1.1-.6A1.5,1.5,0,0,0,14.55,6.68ZM8,12a4,4,0,1,1,4-4A4,4,0,0,1,8,12Z' fill='%23FFFFFF'/></svg>") no-repeat center;
@@ -6533,6 +6561,8 @@ span.module-in-contacts-icon__tooltip {
     line-height: 18px;
     letter-spacing: -0.03px;
     font-weight: bold; }
+  .module-calling-participants-list__contact-icon {
+    background-color: #b9b9b9; }
   .module-calling-participants-list__list {
     height: 100%;
     margin-bottom: 0;

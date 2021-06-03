@@ -7,8 +7,9 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
     const Tooltip_1 = require("./Tooltip");
-    exports.CallingHeader = ({ canPip = false, conversationTitle, i18n, isGroupCall = false, remoteParticipants, toggleParticipants, togglePip, toggleSettings, }) => (react_1.default.createElement("div", { className: "module-calling__header" },
+    exports.CallingHeader = ({ canPip = false, conversationTitle, i18n, isGroupCall = false, remoteParticipants, showParticipantsList, toggleParticipants, togglePip, toggleSettings, }) => (react_1.default.createElement("div", { className: "module-calling__header" },
         react_1.default.createElement("div", { className: "module-calling__header--header-name" }, conversationTitle),
         react_1.default.createElement("div", { className: "module-calling-tools" },
             isGroupCall ? (react_1.default.createElement("div", { className: "module-calling-tools__button" },
@@ -20,8 +21,12 @@ require(exports => {
                     react_1.default.createElement("button", {
                         "aria-label": i18n('calling__participants', [
                             String(remoteParticipants),
-                        ]), className: "module-calling-button__participants", onClick: toggleParticipants, type: "button"
-                    })))) : null,
+                        ]), className: classnames_1.default('module-calling-button__participants--container', {
+                            'module-calling-button__participants--shown': showParticipantsList,
+                        }), onClick: toggleParticipants, type: "button"
+                    },
+                        react_1.default.createElement("i", { className: "module-calling-button__participants" }),
+                        react_1.default.createElement("span", { className: "module-calling-button__participants--count" }, remoteParticipants))))) : null,
             react_1.default.createElement("div", { className: "module-calling-tools__button" },
                 react_1.default.createElement(Tooltip_1.Tooltip, { content: i18n('callingDeviceSelection__settings'), theme: Tooltip_1.TooltipTheme.Dark },
                     react_1.default.createElement("button", { "aria-label": i18n('callingDeviceSelection__settings'), className: "module-calling-button__settings", onClick: toggleSettings, type: "button" }))),

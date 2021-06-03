@@ -12,7 +12,7 @@ require(exports => {
     const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
     const CallingHeader_1 = require("./CallingHeader");
     const Spinner_1 = require("./Spinner");
-    exports.CallingLobby = ({ availableCameras, conversation, hasLocalAudio, hasLocalVideo, i18n, isGroupCall = false, me, onCallCanceled, onJoinCall, participantNames, setLocalAudio, setLocalPreview, setLocalVideo, toggleParticipants, toggleSettings, }) => {
+    exports.CallingLobby = ({ availableCameras, conversation, hasLocalAudio, hasLocalVideo, i18n, isGroupCall = false, me, onCallCanceled, onJoinCall, participantNames, setLocalAudio, setLocalPreview, setLocalVideo, showParticipantsList, toggleParticipants, toggleSettings, }) => {
         const localVideoRef = react_1.default.useRef(null);
         const toggleAudio = react_1.default.useCallback(() => {
             setLocalAudio({ enabled: !hasLocalAudio });
@@ -58,7 +58,7 @@ require(exports => {
             ? CallingButton_1.CallingButtonType.AUDIO_ON
             : CallingButton_1.CallingButtonType.AUDIO_OFF;
         return (react_1.default.createElement("div", { className: "module-calling__container" },
-            react_1.default.createElement(CallingHeader_1.CallingHeader, { conversationTitle: conversation.title, i18n: i18n, isGroupCall: isGroupCall, remoteParticipants: participantNames.length, toggleParticipants: toggleParticipants, toggleSettings: toggleSettings }),
+            react_1.default.createElement(CallingHeader_1.CallingHeader, { conversationTitle: conversation.title, i18n: i18n, isGroupCall: isGroupCall, remoteParticipants: participantNames.length, showParticipantsList: showParticipantsList, toggleParticipants: toggleParticipants, toggleSettings: toggleSettings }),
             react_1.default.createElement("div", { className: "module-calling-lobby__video" },
                 hasLocalVideo && availableCameras.length > 0 ? (react_1.default.createElement("video", { className: "module-calling-lobby__video-on__video", ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: me.avatarPath, color: me.color },
                     react_1.default.createElement("div", { className: "module-calling-lobby__video-off--icon" }),

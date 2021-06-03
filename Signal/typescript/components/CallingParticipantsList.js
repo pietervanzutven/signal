@@ -11,6 +11,7 @@ require(exports => {
     const react_dom_1 = require("react-dom");
     const Avatar_1 = require("./Avatar");
     const ContactName_1 = require("./conversation/ContactName");
+    const InContactsIcon_1 = require("./InContactsIcon");
     exports.CallingParticipantsList = react_1.default.memo(({ i18n, onClose, participants }) => {
         const [root, setRoot] = react_1.default.useState(null);
         react_1.default.useEffect(() => {
@@ -22,10 +23,15 @@ require(exports => {
                 setRoot(null);
             };
         }, []);
+        const handleCancel = react_1.default.useCallback((e) => {
+            if (e.target === e.currentTarget) {
+                onClose();
+            }
+        }, [onClose]);
         if (!root) {
             return null;
         }
-        return react_dom_1.createPortal(react_1.default.createElement("div", { role: "presentation", className: "module-calling-participants-list__overlay" },
+        return react_dom_1.createPortal(react_1.default.createElement("div", { className: "module-calling-participants-list__overlay", onClick: handleCancel, role: "presentation" },
             react_1.default.createElement("div", { className: "module-calling-participants-list" },
                 react_1.default.createElement("div", { className: "module-calling-participants-list__header" },
                     react_1.default.createElement("div", { className: "module-calling-participants-list__title" },
@@ -39,7 +45,11 @@ require(exports => {
                 react_1.default.createElement("ul", { className: "module-calling-participants-list__list" }, participants.map((participant, index) => (react_1.default.createElement("li", { className: "module-calling-participants-list__contact", key: index },
                     react_1.default.createElement("div", null,
                         react_1.default.createElement(Avatar_1.Avatar, { avatarPath: participant.avatarPath, color: participant.color, conversationType: "direct", i18n: i18n, profileName: participant.profileName, title: participant.title, size: 32 }),
-                        participant.isSelf ? (react_1.default.createElement("span", { className: "module-calling-participants-list__name" }, i18n('you'))) : (react_1.default.createElement(ContactName_1.ContactName, { i18n: i18n, module: "module-calling-participants-list__name", title: participant.title }))),
+                        participant.isSelf ? (react_1.default.createElement("span", { className: "module-calling-participants-list__name" }, i18n('you'))) : (react_1.default.createElement(react_1.default.Fragment, null,
+                            react_1.default.createElement(ContactName_1.ContactName, { i18n: i18n, module: "module-calling-participants-list__name", title: participant.title }),
+                            participant.name ? (react_1.default.createElement("span", null,
+                                ' ',
+                                react_1.default.createElement(InContactsIcon_1.InContactsIcon, { className: "module-calling-participants-list__contact-icon", i18n: i18n }))) : null))),
                     react_1.default.createElement("div", null,
                         !participant.hasRemoteAudio ? (react_1.default.createElement("span", { className: "module-calling-participants-list__muted--audio" })) : null,
                         !participant.hasRemoteVideo ? (react_1.default.createElement("span", { className: "module-calling-participants-list__muted--video" })) : null))))))), root);
