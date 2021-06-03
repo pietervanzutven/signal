@@ -7,7 +7,6 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
-    const Tooltip_1 = require("./Tooltip");
     const CallingPipRemoteVideo_1 = require("./CallingPipRemoteVideo");
     const PIP_HEIGHT = 156;
     const PIP_WIDTH = 120;
@@ -114,8 +113,7 @@ require(exports => {
                             hangUp({ conversationId: activeCall.conversation.id });
                         }, type: "button"
                     }),
-                    react_1.default.createElement(Tooltip_1.Tooltip, { content: i18n('calling__pip--off'), theme: Tooltip_1.TooltipTheme.Dark },
-                        react_1.default.createElement("button", { "aria-label": i18n('calling__pip--off'), className: "module-calling-pip__button--pip", onClick: togglePip, type: "button" },
-                            react_1.default.createElement("div", null))))));
+                    react_1.default.createElement("button", { "aria-label": i18n('calling__pip--off'), className: "module-calling-pip__button--pip", onClick: togglePip, type: "button" },
+                        react_1.default.createElement("div", null)))));
     };
 });

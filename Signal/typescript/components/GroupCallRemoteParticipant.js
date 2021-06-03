@@ -104,8 +104,9 @@ require(exports => {
                 width,
             };
         }
+        const showHover = hasHover && !props.isInPip;
         return (react_1.default.createElement("div", { className: "module-ongoing-call__group-call-remote-participant", onMouseEnter: () => setHover(true), onMouseLeave: () => setHover(false), style: containerStyles },
-            hasHover && (react_1.default.createElement("div", {
+            showHover && (react_1.default.createElement("div", {
                 className: classnames_1.default('module-ongoing-call__group-call-remote-participant--title', {
                     'module-ongoing-call__group-call-remote-participant--audio-muted': !hasRemoteAudio,
                 })

@@ -129,7 +129,7 @@ require(exports => {
                         call.callMode === Calling_1.CallMode.Group &&
                             !call.remoteParticipants.length
                             ? i18n('calling__in-this-call--zero')
-                            : conversation.title,
+                            : '',
                         call.callMode === Calling_1.CallMode.Direct &&
                         renderHeaderMessage(i18n, call.callState || Calling_1.CallState.Prering, acceptedDuration)), i18n: i18n, isGroupCall: call.callMode === Calling_1.CallMode.Group, remoteParticipants: remoteParticipants, showParticipantsList: showParticipantsList, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings
                 })),
