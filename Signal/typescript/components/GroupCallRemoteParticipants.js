@@ -131,7 +131,7 @@ require(exports => {
             containerDimensions.height,
         ]);
         // 4. Lay out this arrangement on the screen.
-        const gridParticipantHeight = gridArrangement.scalar * MIN_RENDERED_HEIGHT;
+        const gridParticipantHeight = Math.floor(gridArrangement.scalar * MIN_RENDERED_HEIGHT);
         const gridParticipantHeightWithMargin = gridParticipantHeight + PARTICIPANT_MARGIN;
         const gridTotalRowHeightWithMargin = gridParticipantHeightWithMargin * gridArrangement.rows.length;
         const gridTopOffset = Math.floor((containerDimensions.height - gridTotalRowHeightWithMargin) / 2);
@@ -141,10 +141,10 @@ require(exports => {
                 gridArrangement.scalar;
             const totalRowWidth = totalRowWidthWithoutMargins +
                 PARTICIPANT_MARGIN * (remoteParticipantsInRow.length - 1);
-            const leftOffset = (containerDimensions.width - totalRowWidth) / 2;
+            const leftOffset = Math.floor((containerDimensions.width - totalRowWidth) / 2);
             let rowWidthSoFar = 0;
             return remoteParticipantsInRow.map(remoteParticipant => {
-                const renderedWidth = remoteParticipant.videoAspectRatio * gridParticipantHeight;
+                const renderedWidth = Math.floor(remoteParticipant.videoAspectRatio * gridParticipantHeight);
                 const left = rowWidthSoFar + leftOffset;
                 rowWidthSoFar += renderedWidth + PARTICIPANT_MARGIN;
                 return (react_1.default.createElement(GroupCallRemoteParticipant_1.GroupCallRemoteParticipant, { key: remoteParticipant.demuxId, demuxId: remoteParticipant.demuxId, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, hasRemoteAudio: remoteParticipant.hasRemoteAudio, hasRemoteVideo: remoteParticipant.hasRemoteVideo, height: gridParticipantHeight, left: left, top: top, width: renderedWidth }));

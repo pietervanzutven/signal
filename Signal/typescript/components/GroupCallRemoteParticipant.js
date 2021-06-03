@@ -19,11 +19,11 @@ require(exports => {
     const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
     // The max size video frame we'll support (in RGBA)
     const FRAME_BUFFER_SIZE = 1920 * 1080 * 4;
-    exports.GroupCallRemoteParticipant = props => {
+    exports.GroupCallRemoteParticipant = react_1.default.memo(props => {
         const { demuxId, getGroupCallVideoFrameSource, hasRemoteAudio, hasRemoteVideo, } = props;
-        const [canvasStyles, setCanvasStyles] = react_1.useState({});
+        const [isWide, setIsWide] = react_1.useState(true);
         const remoteVideoRef = react_1.useRef(null);
-        const rafIdRef = react_1.useRef(null);
+        const canvasContextRef = react_1.useRef(null);
         const frameBufferRef = react_1.useRef(new ArrayBuffer(FRAME_BUFFER_SIZE));
         const videoFrameSource = react_1.useMemo(() => getGroupCallVideoFrameSource(demuxId), [getGroupCallVideoFrameSource, demuxId]);
         const renderVideoFrame = react_1.useCallback(() => {
@@ -31,8 +31,8 @@ require(exports => {
             if (!canvasEl) {
                 return;
             }
-            const context = canvasEl.getContext('2d');
-            if (!context) {
+            const canvasContext = canvasContextRef.current;
+            if (!canvasContext) {
                 return;
             }
             const frameDimensions = videoFrameSource.receiveVideoFrame(frameBufferRef.current);
@@ -40,36 +40,38 @@ require(exports => {
                 return;
             }
             const [frameWidth, frameHeight] = frameDimensions;
+            if (frameWidth < 2 || frameHeight < 2) {
+                return;
+            }
             canvasEl.width = frameWidth;
             canvasEl.height = frameHeight;
-            context.putImageData(new ImageData(new Uint8ClampedArray(frameBufferRef.current, 0, frameWidth * frameHeight * 4), frameWidth, frameHeight), 0, 0);
-            // If our `width` and `height` props don't match the canvas's aspect ratio, we want to
-            //   fill the container. This can happen when RingRTC gives us an inaccurate
-            //   `videoAspectRatio`, or if the container is an unexpected size.
-            if (frameWidth > frameHeight) {
-                setCanvasStyles({ width: '100%' });
-            }
-            else {
-                setCanvasStyles({ height: '100%' });
-            }
+            canvasContext.putImageData(new ImageData(new Uint8ClampedArray(frameBufferRef.current, 0, frameWidth * frameHeight * 4), frameWidth, frameHeight), 0, 0);
+            setIsWide(frameWidth > frameHeight);
         }, [videoFrameSource]);
         react_1.useEffect(() => {
             if (!hasRemoteVideo) {
                 return lodash_1.noop;
             }
-            const tick = () => {
+            let rafId = requestAnimationFrame(tick);
+            function tick() {
                 renderVideoFrame();
-                rafIdRef.current = requestAnimationFrame(tick);
-            };
-            rafIdRef.current = requestAnimationFrame(tick);
+                rafId = requestAnimationFrame(tick);
+            }
             return () => {
-                if (rafIdRef.current) {
-                    cancelAnimationFrame(rafIdRef.current);
-                    rafIdRef.current = null;
-                }
+                cancelAnimationFrame(rafId);
             };
         }, [hasRemoteVideo, renderVideoFrame, videoFrameSource]);
+        let canvasStyles;
         let containerStyles;
+        // If our `width` and `height` props don't match the canvas's aspect ratio, we want to
+        //   fill the container. This can happen when RingRTC gives us an inaccurate
+        //   `videoAspectRatio`, or if the container is an unexpected size.
+        if (isWide) {
+            canvasStyles = { width: '100%' };
+        }
+        else {
+            canvasStyles = { height: '100%' };
+        }
         // TypeScript isn't smart enough to know that `isInPip` by itself disambiguates the
         //   types, so we have to use `props.isInPip` instead.
         // eslint-disable-next-line react/destructuring-assignment
@@ -90,7 +92,21 @@ require(exports => {
             className: classnames_1.default('module-ongoing-call__group-call-remote-participant', {
                 'module-ongoing-call__group-call-remote-participant--audio-muted': !hasRemoteAudio,
             }), style: containerStyles
-        }, hasRemoteVideo ? (react_1.default.createElement("canvas", { className: "module-ongoing-call__group-call-remote-participant__remote-video", style: canvasStyles, ref: remoteVideoRef })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, null,
+        }, hasRemoteVideo ? (react_1.default.createElement("canvas", {
+            className: "module-ongoing-call__group-call-remote-participant__remote-video", style: canvasStyles, ref: canvasEl => {
+                remoteVideoRef.current = canvasEl;
+                if (canvasEl) {
+                    canvasContextRef.current = canvasEl.getContext('2d', {
+                        alpha: false,
+                        desynchronized: true,
+                        storage: 'discardable',
+                    });
+                }
+                else {
+                    canvasContextRef.current = null;
+                }
+            }
+        })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, null,
             react_1.default.createElement("span", null)))));
-    };
+    });
 });
