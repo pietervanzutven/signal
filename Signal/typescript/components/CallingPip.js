@@ -114,7 +114,7 @@ require(exports => {
                             hangUp({ conversationId: activeCall.conversation.id });
                         }, type: "button"
                     }),
-                    react_1.default.createElement(Tooltip_1.Tooltip, { content: i18n('calling__pip--off') },
+                    react_1.default.createElement(Tooltip_1.Tooltip, { content: i18n('calling__pip--off'), theme: Tooltip_1.TooltipTheme.Dark },
                         react_1.default.createElement("button", { "aria-label": i18n('calling__pip--off'), className: "module-calling-pip__button--pip", onClick: togglePip, type: "button" },
                             react_1.default.createElement("div", null))))));
     };

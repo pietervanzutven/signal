@@ -15,7 +15,7 @@ require(exports => {
                 react_1.default.createElement(Tooltip_1.Tooltip, {
                     content: i18n('calling__participants', [
                         String(remoteParticipants),
-                    ])
+                    ]), theme: Tooltip_1.TooltipTheme.Dark
                 },
                     react_1.default.createElement("button", {
                         "aria-label": i18n('calling__participants', [
@@ -23,9 +23,9 @@ require(exports => {
                         ]), className: "module-calling-button__participants", onClick: toggleParticipants, type: "button"
                     })))) : null,
             react_1.default.createElement("div", { className: "module-calling-tools__button" },
-                react_1.default.createElement(Tooltip_1.Tooltip, { content: i18n('callingDeviceSelection__settings') },
+                react_1.default.createElement(Tooltip_1.Tooltip, { content: i18n('callingDeviceSelection__settings'), theme: Tooltip_1.TooltipTheme.Dark },
                     react_1.default.createElement("button", { "aria-label": i18n('callingDeviceSelection__settings'), className: "module-calling-button__settings", onClick: toggleSettings, type: "button" }))),
             canPip && (react_1.default.createElement("div", { className: "module-calling-tools__button" },
-                react_1.default.createElement(Tooltip_1.Tooltip, { content: i18n('calling__pip--on') },
+                react_1.default.createElement(Tooltip_1.Tooltip, { content: i18n('calling__pip--on'), theme: Tooltip_1.TooltipTheme.Dark },
                     react_1.default.createElement("button", { "aria-label": i18n('calling__pip--on'), className: "module-calling-button__pip", onClick: togglePip, type: "button" })))))));
 });

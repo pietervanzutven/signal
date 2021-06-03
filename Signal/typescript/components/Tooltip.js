@@ -15,9 +15,25 @@ require(exports => {
         TooltipPlacement["Bottom"] = "bottom";
         TooltipPlacement["Left"] = "left";
     })(TooltipPlacement = exports.TooltipPlacement || (exports.TooltipPlacement = {}));
-    exports.Tooltip = ({ children, content, direction, sticky, }) => {
+    var TooltipTheme;
+    (function (TooltipTheme) {
+        TooltipTheme["System"] = "system";
+        TooltipTheme["Light"] = "light";
+        TooltipTheme["Dark"] = "dark";
+    })(TooltipTheme = exports.TooltipTheme || (exports.TooltipTheme = {}));
+    exports.Tooltip = ({ children, content, direction, sticky, theme = TooltipTheme.System, }) => {
         const isSticky = Boolean(sticky);
         const [showTooltip, setShowTooltip] = react_1.default.useState(isSticky);
+        let tooltipTheme;
+        if (theme === TooltipTheme.Light) {
+            tooltipTheme = 'light-theme';
+        }
+        else if (theme === TooltipTheme.Dark) {
+            tooltipTheme = 'dark-theme';
+        }
+        else {
+            tooltipTheme = '';
+        }
         return (react_1.default.createElement(react_popper_1.Manager, null,
             react_1.default.createElement(react_popper_1.Reference, null, ({ ref }) => (react_1.default.createElement("span", {
                 onBlur: () => {
@@ -38,8 +54,9 @@ require(exports => {
                     }
                 }, ref: ref
             }, children))),
-            react_1.default.createElement(react_popper_1.Popper, { placement: direction }, ({ arrowProps, placement, ref, style }) => showTooltip && (react_1.default.createElement("div", { className: "module-tooltip", ref: ref, style: style, "data-placement": placement },
-                content,
-                react_1.default.createElement("div", { className: "module-tooltip-arrow", ref: arrowProps.ref, style: arrowProps.style }))))));
+            react_1.default.createElement(react_popper_1.Popper, { placement: direction }, ({ arrowProps, placement, ref, style }) => showTooltip && (react_1.default.createElement("div", { className: tooltipTheme },
+                react_1.default.createElement("div", { className: "module-tooltip", ref: ref, style: style, "data-placement": placement },
+                    content,
+                    react_1.default.createElement("div", { className: "module-tooltip-arrow", ref: arrowProps.ref, style: arrowProps.style })))))));
     };
 });

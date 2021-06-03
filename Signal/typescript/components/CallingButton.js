@@ -51,7 +51,7 @@ require(exports => {
             tooltipContent = i18n('calling__hangup');
         }
         const className = classnames_1.default('module-calling-button__icon', `module-calling-button__icon--${classNameSuffix}`);
-        return (react_1.default.createElement(Tooltip_1.Tooltip, { content: tooltipContent, direction: tooltipDirection },
+        return (react_1.default.createElement(Tooltip_1.Tooltip, { content: tooltipContent, direction: tooltipDirection, theme: Tooltip_1.TooltipTheme.Dark },
             react_1.default.createElement("button", { "aria-label": tooltipContent, type: "button", className: className, onClick: onClick },
                 react_1.default.createElement("div", null))));
     };

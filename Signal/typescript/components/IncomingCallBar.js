@@ -11,7 +11,7 @@ require(exports => {
     const Tooltip_1 = require("./Tooltip");
     const ContactName_1 = require("./conversation/ContactName");
     const CallButton = ({ classSuffix, onClick, tabIndex, tooltipContent, }) => {
-        return (react_1.default.createElement(Tooltip_1.Tooltip, { content: tooltipContent },
+        return (react_1.default.createElement(Tooltip_1.Tooltip, { content: tooltipContent, theme: Tooltip_1.TooltipTheme.Dark },
             react_1.default.createElement("button", { className: `module-incoming-call__button module-incoming-call__button--${classSuffix}`, onClick: onClick, tabIndex: tabIndex, type: "button" },
                 react_1.default.createElement("div", null))));
     };
