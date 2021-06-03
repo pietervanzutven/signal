@@ -154,7 +154,9 @@ require(exports => {
             }
             const groupVersion = this.get('groupVersion') || 0;
             try {
-                return (groupVersion === 2 && Crypto_1.base64ToArrayBuffer(groupId).byteLength === 32);
+                return (groupVersion === 2 &&
+                    Crypto_1.base64ToArrayBuffer(groupId).byteLength ===
+                    window.Signal.Groups.ID_LENGTH);
             }
             catch (error) {
                 window.log.error('isGroupV2: Failed to process groupId in base64!');
