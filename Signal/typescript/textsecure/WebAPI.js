@@ -597,7 +597,7 @@ require(exports => {
                     httpType: 'GET',
                     responseType: 'json',
                 });
-                return res.config.filter(({ name }) => name.startsWith('desktop.'));
+                return res.config.filter(({ name }) => name.startsWith('desktop.') || name.startsWith('global.'));
             }
             async function getSenderCertificate() {
                 return _ajax({

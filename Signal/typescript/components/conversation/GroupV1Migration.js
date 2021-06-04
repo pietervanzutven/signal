@@ -31,7 +31,7 @@ require(exports => {
             renderUsers(droppedMembers, i18n, 'GroupV1--Migration--removed'),
             React.createElement("button", { type: "button", className: "module-group-v1-migration--button", onClick: showDialog }, i18n('GroupV1--Migration--learn-more')),
             showingDialog ? (React.createElement(ModalHost_1.ModalHost, { onClose: dismissDialog },
-                React.createElement(GroupV1MigrationDialog_1.GroupV1MigrationDialog, { droppedMembers: droppedMembers, hasMigrated: true, i18n: i18n, invitedMembers: invitedMembers, learnMore: () => window.log.warn('GroupV1Migration: Modal called learnMore()'), migrate: () => window.log.warn('GroupV1Migration: Modal called migrate()'), onClose: dismissDialog }))) : null));
+                React.createElement(GroupV1MigrationDialog_1.GroupV1MigrationDialog, { droppedMembers: droppedMembers, hasMigrated: true, i18n: i18n, invitedMembers: invitedMembers, migrate: () => window.log.warn('GroupV1Migration: Modal called migrate()'), onClose: dismissDialog }))) : null));
     }
     exports.GroupV1Migration = GroupV1Migration;
     function renderUsers(members, i18n, keyPrefix) {

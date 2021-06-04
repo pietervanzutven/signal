@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = require("lodash");
     function getServer() {
@@ -68,4 +70,8 @@ require(exports => {
         return lodash_1.get(config, [name, 'enabled'], false);
     }
     exports.isEnabled = isEnabled;
+    function getValue(name) {
+        return lodash_1.get(config, [name, 'value'], undefined);
+    }
+    exports.getValue = getValue;
 });

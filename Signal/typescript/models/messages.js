@@ -1456,33 +1456,39 @@ require(exports => {
             return isAccepted;
         }
         canReply() {
-            var _a, _b;
             const conversation = this.getConversation();
             const errors = this.get('errors');
             const isOutgoing = this.get('type') === 'outgoing';
             const numDelivered = this.get('delivered');
-            // Case 1: If mandatory profile sharing is enabled, and we haven't shared yet, then
+            if (!conversation) {
+                return false;
+            }
+            // If GroupV1 groups have been disabled, we can't reply.
+            if (conversation.isGroupV1AndDisabled()) {
+                return false;
+            }
+            // If mandatory profile sharing is enabled, and we haven't shared yet, then
             //   we can't reply.
-            if ((_a = conversation) === null || _a === void 0 ? void 0 : _a.isMissingRequiredProfileSharing()) {
+            if (conversation.isMissingRequiredProfileSharing()) {
                 return false;
             }
-            // Case 2: We cannot reply if we have accepted the message request
-            if (!((_b = conversation) === null || _b === void 0 ? void 0 : _b.getAccepted())) {
+            // We cannot reply if we haven't accepted the message request
+            if (!conversation.getAccepted()) {
                 return false;
             }
-            // Case 3: We cannot reply if this message is deleted for everyone
+            // We cannot reply if this message is deleted for everyone
             if (this.get('deletedForEveryone')) {
                 return false;
             }
-            // Case 4: We can reply if this is outgoing and delievered to at least one recipient
+            // We can reply if this is outgoing and delievered to at least one recipient
             if (isOutgoing && numDelivered > 0) {
                 return true;
             }
-            // Case 5: We can reply if there are no errors
+            // We can reply if there are no errors
             if (!errors || (errors && errors.length === 0)) {
                 return true;
             }
-            // Case 6: default
+            // Fail safe.
             return false;
         }
         // Called when the user ran into an error with a specific user, wants to send to them

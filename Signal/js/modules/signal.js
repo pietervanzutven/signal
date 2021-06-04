@@ -3,11 +3,7 @@
 
 // The idea with this file is to make it webpackable for the style guide
 
-(function () {
-  'use strict';
-
-  const exports = window.signal = {};
-
+require(exports => {
   const { bindActionCreators } = require('redux');
   const Backbone = require('../../ts/backbone');
   const Crypto = require('../../ts/Crypto');
@@ -78,6 +74,9 @@
     createConversationHeader,
   } = require('../../ts/state/roots/createConversationHeader');
   const { createCallManager } = require('../../ts/state/roots/createCallManager');
+  const {
+    createGroupV1MigrationModal,
+  } = require('../../ts/state/roots/createGroupV1MigrationModal');
   const { createLeftPane } = require('../../ts/state/roots/createLeftPane');
   const {
     createSafetyNumberViewer,
@@ -331,6 +330,7 @@
       createCompositionArea,
       createContactModal,
       createConversationHeader,
+      createGroupV1MigrationModal,
       createLeftPane,
       createSafetyNumberViewer,
       createShortcutGuideModal,
@@ -429,4 +429,4 @@
       Workflow,
     };
   };
-})();
+});

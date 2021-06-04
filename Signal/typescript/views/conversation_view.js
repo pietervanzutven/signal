@@ -273,8 +273,6 @@ Whisper.ConversationView = Whisper.View.extend({
         this.linkPreviewAbortController = null;
     },
     events: {
-        'click .composition-area-placeholder': 'onClickPlaceholder',
-        'click .bottom-bar': 'focusMessageField',
         'click .capture-audio .microphone': 'captureAudio',
         'change input.file-input': 'onChoseAttachment',
         dragover: 'onDragOver',
@@ -435,6 +433,7 @@ Whisper.ConversationView = Whisper.View.extend({
                     task: this.model.syncMessageRequestResponse.bind(this.model, messageRequestEnum.BLOCK_AND_DELETE),
                 });
             },
+            onStartGroupMigration: () => this.startMigrationToGV2(),
         };
         this.compositionAreaView = new Whisper.ReactWrapperView({
             className: 'composition-area-wrapper',
@@ -463,7 +462,7 @@ Whisper.ConversationView = Whisper.View.extend({
         //   show a spinner until it's done
         try {
             window.log.info(`longRunningTaskWrapper/${idLog}: Starting task`);
-            await task();
+            const result = await task();
             window.log.info(`longRunningTaskWrapper/${idLog}: Task completed successfully`);
             if (progressTimeout) {
                 clearTimeout(progressTimeout);
@@ -478,6 +477,7 @@ Whisper.ConversationView = Whisper.View.extend({
                 progressView.remove();
                 progressView = undefined;
             }
+            return result;
         }
         catch (error) {
             window.log.error(`longRunningTaskWrapper/${idLog}: Error!`, error && error.stack ? error.stack : error);
@@ -499,6 +499,7 @@ Whisper.ConversationView = Whisper.View.extend({
                     onClose: () => errorView.remove(),
                 },
             });
+            throw error;
         }
     },
     setupTimeline() {
@@ -832,10 +833,41 @@ Whisper.ConversationView = Whisper.View.extend({
             finish();
         }
     },
-    // We need this, or clicking the reactified buttons will submit the form and send any
-    //   mid-composition message content.
-    onClickPlaceholder(e) {
-        e.preventDefault();
+    async startMigrationToGV2() {
+        const logId = this.model.idForLogging();
+        if (!this.model.isGroupV1()) {
+            throw new Error(`startMigrationToGV2/${logId}: Cannot start, not a GroupV1 group`);
+        }
+        const onClose = () => {
+            if (this.migrationDialog) {
+                this.migrationDialog.remove();
+                this.migrationDialog = undefined;
+            }
+        };
+        onClose();
+        const migrate = () => {
+            onClose();
+            this.longRunningTaskWrapper({
+                name: 'initiateMigrationToGroupV2',
+                task: () => window.Signal.Groups.initiateMigrationToGroupV2(this.model),
+            });
+        };
+        // Grab the dropped/invited user set
+        const { droppedGV2MemberIds, pendingMembersV2, } = await this.longRunningTaskWrapper({
+            name: 'getGroupMigrationMembers',
+            task: () => window.Signal.Groups.getGroupMigrationMembers(this.model),
+        });
+        const invitedMemberIds = pendingMembersV2.map((item) => item.conversationId);
+        this.migrationDialog = new Whisper.ReactWrapperView({
+            className: 'group-v1-migration-wrapper',
+            JSX: window.Signal.State.Roots.createGroupV1MigrationModal(window.reduxStore, {
+                droppedMemberIds: droppedGV2MemberIds,
+                hasMigrated: false,
+                invitedMemberIds,
+                migrate,
+                onClose,
+            }),
+        });
     },
     onChooseAttachment() {
         this.$('input.file-input').click();

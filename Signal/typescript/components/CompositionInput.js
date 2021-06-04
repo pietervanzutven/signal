@@ -380,10 +380,16 @@ require(exports => {
             // through mutating the quill state directly instead of through props
             // eslint-disable-next-line react-hooks/exhaustive-deps
             []);
+        // The onClick handler below is only to make it easier for mouse users to focus the
+        //   message box. In 'large' mode, the actual Quill text box can be one line while the
+        //   visual text box is much larger. Clicking that should allow you to start typing,
+        //   hence the click handler.
+        // eslint-disable-next-line max-len
+        /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
         return (React.createElement(react_popper_1.Manager, null,
             React.createElement(react_popper_1.Reference, null, ({ ref }) => (React.createElement("div", { className: "module-composition-input__input", ref: ref },
                 React.createElement("div", {
-                    ref: scrollerRef, className: classnames_1.default('module-composition-input__input__scroller', large
+                    ref: scrollerRef, onClick: focus, className: classnames_1.default('module-composition-input__input__scroller', large
                         ? 'module-composition-input__input__scroller--large'
                         : null)
                 },

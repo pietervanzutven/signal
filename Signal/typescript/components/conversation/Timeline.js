@@ -7,6 +7,7 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = require("lodash");
+    const classnames_1 = __importDefault(require("classnames"));
     const react_1 = __importDefault(require("react"));
     const react_virtualized_1 = require("react-virtualized");
     const ScrollDownButton_1 = require("./ScrollDownButton");
@@ -624,14 +625,14 @@ require(exports => {
             this.updateWithVisibleRows();
         }
         render() {
-            const { i18n, id, items } = this.props;
+            const { i18n, id, items, isGroupV1AndDisabled } = this.props;
             const { shouldShowScrollDownButton, areUnreadBelowCurrentPosition, } = this.state;
             const rowCount = this.getRowCount();
             const scrollToIndex = this.getScrollTarget();
             if (!items || rowCount === 0) {
                 return null;
             }
-            return (react_1.default.createElement("div", { className: "module-timeline", role: "presentation", tabIndex: -1, onBlur: this.handleBlur, onKeyDown: this.handleKeyDown },
+            return (react_1.default.createElement("div", { className: classnames_1.default('module-timeline', isGroupV1AndDisabled ? 'module-timeline--disabled' : null), role: "presentation", tabIndex: -1, onBlur: this.handleBlur, onKeyDown: this.handleKeyDown },
                 react_1.default.createElement(react_virtualized_1.AutoSizer, null, ({ height, width }) => {
                     if (this.mostRecentWidth && this.mostRecentWidth !== width) {
                         this.resizeFlag = true;

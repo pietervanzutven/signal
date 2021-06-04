@@ -3853,6 +3853,7 @@
     <Content Include="typescript\components\conversation\Emojify.js" />
     <Content Include="typescript\components\conversation\ExpireTimer.js" />
     <Content Include="typescript\components\conversation\GroupNotification.js" />
+    <Content Include="typescript\components\conversation\GroupV1DisabledActions.js" />
     <Content Include="typescript\components\conversation\GroupV1Migration.js" />
     <Content Include="typescript\components\conversation\GroupV2Change.js" />
     <Content Include="typescript\components\conversation\Image.js" />
@@ -4001,6 +4002,7 @@
     <Content Include="typescript\state\roots\createCompositionArea.js" />
     <Content Include="typescript\state\roots\createContactModal.js" />
     <Content Include="typescript\state\roots\createConversationHeader.js" />
+    <Content Include="typescript\state\roots\createGroupV1MigrationModal.js" />
     <Content Include="typescript\state\roots\createLeftPane.js" />
     <Content Include="typescript\state\roots\createSafetyNumberViewer.js" />
     <Content Include="typescript\state\roots\createShortcutGuideModal.js" />
@@ -4022,6 +4024,7 @@
     <Content Include="typescript\state\smart\ConversationHeader.js" />
     <Content Include="typescript\state\smart\EmojiPicker.js" />
     <Content Include="typescript\state\smart\ExpiredBuildDialog.js" />
+    <Content Include="typescript\state\smart\GroupV1MigrationDialog.js" />
     <Content Include="typescript\state\smart\HeroRow.js" />
     <Content Include="typescript\state\smart\LastSeenIndicator.js" />
     <Content Include="typescript\state\smart\LeftPane.js" />

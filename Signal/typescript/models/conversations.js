@@ -391,6 +391,10 @@ require(exports => {
             });
             window.Signal.Data.updateConversation(this.attributes);
         }
+        isGroupV1AndDisabled() {
+            return (this.isGroupV1() &&
+                window.Signal.RemoteConfig.isEnabled('desktop.disableGV1'));
+        }
         isBlocked() {
             const uuid = this.get('uuid');
             if (uuid) {
@@ -804,6 +808,7 @@ require(exports => {
                 isArchived: this.get('isArchived'),
                 isBlocked: this.isBlocked(),
                 isMe: this.isMe(),
+                isGroupV1AndDisabled: this.isGroupV1AndDisabled(),
                 isPinned: this.get('isPinned'),
                 isMissingMandatoryProfileSharing: this.isMissingRequiredProfileSharing(),
                 isVerified: this.isVerified(),
@@ -2834,6 +2839,9 @@ require(exports => {
         canChangeTimer() {
             if (this.isPrivate()) {
                 return true;
+            }
+            if (this.isGroupV1AndDisabled()) {
+                return false;
             }
             if (!this.isGroupV2()) {
                 return true;

@@ -22,7 +22,7 @@ require(exports => {
         }
     }
     exports.GroupV1MigrationDialog = React.memo((props) => {
-        const { droppedMembers, hasMigrated, i18n, invitedMembers, learnMore, migrate, onClose, } = props;
+        const { droppedMembers, hasMigrated, i18n, invitedMembers, migrate, onClose, } = props;
         const title = hasMigrated
             ? i18n('GroupV1--Migration--info--title')
             : i18n('GroupV1--Migration--migrate--title');
@@ -43,15 +43,15 @@ require(exports => {
                     React.createElement("div", { className: "module-group-v2-migration-dialog__item__content" }, keepHistory)),
                 renderMembers(invitedMembers, 'GroupV1--Migration--info--invited', i18n),
                 renderMembers(droppedMembers, droppedMembersKey, i18n)),
-            renderButtons(hasMigrated, onClose, learnMore, migrate, i18n)));
+            renderButtons(hasMigrated, onClose, migrate, i18n)));
     });
-    function renderButtons(hasMigrated, onClose, learnMore, migrate, i18n) {
+    function renderButtons(hasMigrated, onClose, migrate, i18n) {
         if (hasMigrated) {
             return (React.createElement("div", { className: classnames_1.default('module-group-v2-migration-dialog__buttons', 'module-group-v2-migration-dialog__buttons--narrow') },
                 React.createElement("button", { className: "module-group-v2-migration-dialog__button", ref: focusRef, type: "button", onClick: onClose }, i18n('Confirmation--confirm'))));
         }
         return (React.createElement("div", { className: "module-group-v2-migration-dialog__buttons" },
-            React.createElement("button", { className: classnames_1.default('module-group-v2-migration-dialog__button', 'module-group-v2-migration-dialog__button--secondary'), type: "button", onClick: learnMore }, i18n('GroupV1--Migration--learn-more')),
+            React.createElement("button", { className: classnames_1.default('module-group-v2-migration-dialog__button', 'module-group-v2-migration-dialog__button--secondary'), type: "button", onClick: onClose }, i18n('cancel')),
             React.createElement("button", { className: "module-group-v2-migration-dialog__button", ref: focusRef, type: "button", onClick: migrate }, i18n('GroupV1--Migration--migrate'))));
     }
     function renderMembers(members, prefix, i18n) {
