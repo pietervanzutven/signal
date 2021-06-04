@@ -6428,6 +6428,28 @@ span.module-in-contacts-icon__tooltip {
   animation-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
   animation-fill-mode: forwards; }
 
+.module-ongoing-call__toast {
+  font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 21px;
+  letter-spacing: -0.14px;
+  font-weight: bold;
+  background-color: #3b3b3b;
+  border-radius: 8px;
+  color: #ffffff;
+  max-width: 80%;
+  opacity: 1;
+  padding: 12px;
+  position: absolute;
+  text-align: center;
+  top: 12px;
+  transition: top 200ms ease-out, opacity 200ms ease-out;
+  user-select: none;
+  z-index: 1; }
+  .module-ongoing-call__toast--hidden {
+    opacity: 0;
+    top: 5px; }
+
 .module-calling-tools {
   display: flex;
   justify-content: flex-end;

@@ -24,6 +24,7 @@ require(exports => {
     const missingCaseError_1 = require("../util/missingCaseError");
     const DirectCallRemoteParticipant_1 = require("./DirectCallRemoteParticipant");
     const GroupCallRemoteParticipants_1 = require("./GroupCallRemoteParticipants");
+const GroupCallToastManager_1 = require("./GroupCallToastManager");
     exports.CallScreen = ({ activeCall, getGroupCallVideoFrameSource, hangUp, hasLocalAudio, hasLocalVideo, i18n, joinedAt, me, setLocalAudio, setLocalVideo, setLocalPreview, setRendererCanvas, stickyControls, toggleParticipants, togglePip, toggleSettings, }) => {
         const { call, conversation, groupCallParticipants } = activeCall;
         const toggleAudio = react_1.useCallback(() => {
@@ -126,11 +127,10 @@ require(exports => {
             'module-ongoing-call__controls--fadeOut': !showControls && !isAudioOnly && isConnected,
         });
         const { showParticipantsList } = activeCall.activeCallState;
-        return (react_1.default.createElement("div", {
-            className: classnames_1.default('module-calling__container', `module-ongoing-call__container--${getCallModeClassSuffix(call.callMode)}`), onMouseMove: () => {
+    return (react_1.default.createElement("div", { className: classnames_1.default('module-calling__container', `module-ongoing-call__container--${getCallModeClassSuffix(call.callMode)}`), onMouseMove: () => {
                 setShowControls(true);
-            }, role: "group"
-        },
+        }, role: "group" },
+        call.callMode === Calling_1.CallMode.Group ? (react_1.default.createElement(GroupCallToastManager_1.GroupCallToastManager, { connectionState: call.connectionState, i18n: i18n })) : null,
             react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__header', controlsFadeClass) },
                 react_1.default.createElement(CallingHeader_1.CallingHeader, { canPip: true, i18n: i18n, isGroupCall: call.callMode === Calling_1.CallMode.Group, message: headerMessage, participantCount: participantCount, showParticipantsList: showParticipantsList, title: headerTitle, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings })),
             remoteParticipantsElement,
@@ -139,16 +139,12 @@ require(exports => {
                 react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__footer__actions', controlsFadeClass) },
                     react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: videoButtonType, i18n: i18n, onClick: toggleVideo }),
                     react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: audioButtonType, i18n: i18n, onClick: toggleAudio }),
-                    react_1.default.createElement(CallingButton_1.CallingButton, {
-                        buttonType: CallingButton_1.CallingButtonType.HANG_UP, i18n: i18n, onClick: () => {
+                react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: CallingButton_1.CallingButtonType.HANG_UP, i18n: i18n, onClick: () => {
                             hangUp({ conversationId: conversation.id });
-                        }
-                    })),
-                react_1.default.createElement("div", {
-                    className: classnames_1.default('module-ongoing-call__footer__local-preview', {
+                    } })),
+            react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__footer__local-preview', {
                         'module-ongoing-call__footer__local-preview--audio-muted': !hasLocalAudio,
-                    })
-                }, hasLocalVideo ? (react_1.default.createElement("video", { className: "module-ongoing-call__footer__local-preview__video", ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: me.avatarPath, color: me.color },
+                }) }, hasLocalVideo ? (react_1.default.createElement("video", { className: "module-ongoing-call__footer__local-preview__video", ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: me.avatarPath, color: me.color },
                     react_1.default.createElement(Avatar_1.Avatar, { avatarPath: me.avatarPath, color: me.color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: me.name, phoneNumber: me.phoneNumber, profileName: me.profileName, title: me.title, size: 80 })))))));
     };
     function getCallModeClassSuffix(callMode) {

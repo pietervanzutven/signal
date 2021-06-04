@@ -3907,6 +3907,7 @@
     <Content Include="typescript\components\ExpiredBuildDialog.js" />
     <Content Include="typescript\components\GroupCallRemoteParticipant.js" />
     <Content Include="typescript\components\GroupCallRemoteParticipants.js" />
+    <Content Include="typescript\components\GroupCallToastManager.js" />
     <Content Include="typescript\components\GroupV1MigrationDialog.js" />
     <Content Include="typescript\components\IncomingCallBar.js" />
     <Content Include="typescript\components\InContactsIcon.js" />
