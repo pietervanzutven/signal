@@ -132,7 +132,7 @@ require(exports => {
             }, role: "group"
         },
             react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__header', controlsFadeClass) },
-                react_1.default.createElement(CallingHeader_1.CallingHeader, { canPip: true, i18n: i18n, isGroupCall: call.callMode === Calling_1.CallMode.Group, message: headerMessage, remoteParticipants: participantCount, showParticipantsList: showParticipantsList, title: headerTitle, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings })),
+                react_1.default.createElement(CallingHeader_1.CallingHeader, { canPip: true, i18n: i18n, isGroupCall: call.callMode === Calling_1.CallMode.Group, message: headerMessage, participantCount: participantCount, showParticipantsList: showParticipantsList, title: headerTitle, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings })),
             remoteParticipantsElement,
             react_1.default.createElement("div", { className: "module-ongoing-call__footer" },
                 react_1.default.createElement("div", { className: "module-ongoing-call__footer__local-preview-offset" }),
