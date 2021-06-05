@@ -18,7 +18,7 @@ require(exports => {
     // Helpers
     exports.getActiveCall = ({ activeCallState, callsByConversation, }) => activeCallState &&
         getOwn_1.getOwn(callsByConversation, activeCallState.conversationId);
-    exports.isAnybodyElseInGroupCall = ({ conversationIds }, ourConversationId) => conversationIds.some(id => id !== ourConversationId);
+    exports.isAnybodyElseInGroupCall = ({ uuids }, ourUuid) => uuids.some(id => id !== ourUuid);
     // Actions
     const ACCEPT_CALL_PENDING = 'calling/ACCEPT_CALL_PENDING';
     const CANCEL_CALL = 'calling/CANCEL_CALL';
@@ -134,7 +134,7 @@ require(exports => {
         return (dispatch, getState) => {
             dispatch({
                 type: GROUP_CALL_STATE_CHANGE,
-                payload: Object.assign(Object.assign({}, payload), { ourConversationId: getState().user.ourConversationId }),
+                payload: Object.assign(Object.assign({}, payload), { ourUuid: getState().user.ourUuid }),
             });
         };
     }
@@ -367,6 +367,12 @@ require(exports => {
         };
     }
     exports.getEmptyState = getEmptyState;
+    function getExistingPeekInfo(conversationId, state) {
+        const existingCall = getOwn_1.getOwn(state.callsByConversation, conversationId);
+        return (existingCall === null || existingCall === void 0 ? void 0 : existingCall.callMode) === Calling_1.CallMode.Group
+            ? existingCall.peekInfo
+            : undefined;
+    }
     function removeConversationFromState(state, conversationId) {
         var _a;
         return Object.assign(Object.assign({}, (conversationId === ((_a = state.activeCallState) === null || _a === void 0 ? void 0 : _a.conversationId)
@@ -395,7 +401,12 @@ require(exports => {
                         conversationId: action.payload.conversationId,
                         connectionState: action.payload.connectionState,
                         joinState: action.payload.joinState,
-                        peekInfo: action.payload.peekInfo,
+                        peekInfo: action.payload.peekInfo ||
+                            getExistingPeekInfo(action.payload.conversationId, state) || {
+                            uuids: action.payload.remoteParticipants.map(({ uuid }) => uuid),
+                            maxDevices: Infinity,
+                            deviceCount: action.payload.remoteParticipants.length,
+                        },
                         remoteParticipants: action.payload.remoteParticipants,
                     };
                     break;
@@ -525,14 +536,20 @@ require(exports => {
             return Object.assign(Object.assign({}, state), { callsByConversation: Object.assign(Object.assign({}, callsByConversation), { [action.payload.conversationId]: Object.assign(Object.assign({}, call), { callState: action.payload.callState, callEndedReason: action.payload.callEndedReason }) }), activeCallState });
         }
         if (action.type === GROUP_CALL_STATE_CHANGE) {
-            const { connectionState, conversationId, hasLocalAudio, hasLocalVideo, joinState, ourConversationId, peekInfo, remoteParticipants, } = action.payload;
+            const { connectionState, conversationId, hasLocalAudio, hasLocalVideo, joinState, ourUuid, peekInfo, remoteParticipants, } = action.payload;
+            const newPeekInfo = peekInfo ||
+                getExistingPeekInfo(conversationId, state) || {
+                uuids: remoteParticipants.map(({ uuid }) => uuid),
+                maxDevices: Infinity,
+                deviceCount: remoteParticipants.length,
+            };
             let newActiveCallState;
             if (connectionState === Calling_1.GroupCallConnectionState.NotConnected) {
                 newActiveCallState =
                     ((_b = state.activeCallState) === null || _b === void 0 ? void 0 : _b.conversationId) === conversationId
                         ? undefined
                         : state.activeCallState;
-                if (!exports.isAnybodyElseInGroupCall(peekInfo, ourConversationId)) {
+                if (!exports.isAnybodyElseInGroupCall(newPeekInfo, ourUuid)) {
                     return Object.assign(Object.assign({}, state), { callsByConversation: lodash_1.omit(callsByConversation, conversationId), activeCallState: newActiveCallState });
                 }
             }
@@ -551,7 +568,7 @@ require(exports => {
                         conversationId,
                         connectionState,
                         joinState,
-                        peekInfo,
+                        peekInfo: newPeekInfo,
                         remoteParticipants,
                     }
                 }), activeCallState: newActiveCallState

@@ -20,19 +20,24 @@ require(exports => {
     const Calling_1 = require("../types/Calling");
     const missingCaseError_1 = require("../util/missingCaseError");
     const ActiveCallManager = ({ activeCall, availableCameras, cancelCall, closeNeedPermissionScreen, hangUp, i18n, getGroupCallVideoFrameSource, me, renderDeviceSelection, setGroupCallVideoRequest, setLocalAudio, setLocalPreview, setLocalVideo, setRendererCanvas, startCall, toggleParticipants, togglePip, toggleSettings, }) => {
-        const { call, activeCallState, conversation, groupCallPeekedParticipants, groupCallParticipants, isCallFull, } = activeCall;
-        const { hasLocalAudio, hasLocalVideo, joinedAt, pip, settingsDialogOpen, showParticipantsList, } = activeCallState;
+        const { conversation, hasLocalAudio, hasLocalVideo, joinedAt, peekedParticipants, pip, settingsDialogOpen, showParticipantsList, } = activeCall;
         const cancelActiveCall = react_1.useCallback(() => {
             cancelCall({ conversationId: conversation.id });
         }, [cancelCall, conversation.id]);
         const joinActiveCall = react_1.useCallback(() => {
             startCall({
-                callMode: call.callMode,
+                callMode: activeCall.callMode,
                 conversationId: conversation.id,
                 hasLocalAudio,
                 hasLocalVideo,
             });
-        }, [startCall, call.callMode, conversation.id, hasLocalAudio, hasLocalVideo]);
+        }, [
+            startCall,
+            activeCall.callMode,
+            conversation.id,
+            hasLocalAudio,
+            hasLocalVideo,
+        ]);
         const getGroupCallVideoFrameSourceForActiveCall = react_1.useCallback((demuxId) => {
             return getGroupCallVideoFrameSource(conversation.id, demuxId);
         }, [getGroupCallVideoFrameSource, conversation.id]);
@@ -42,41 +47,47 @@ require(exports => {
                 resolutions,
             });
         }, [setGroupCallVideoRequest, conversation.id]);
+        let isCallFull;
         let showCallLobby;
-        switch (call.callMode) {
+        switch (activeCall.callMode) {
             case Calling_1.CallMode.Direct: {
-                const { callState, callEndedReason } = call;
+                const { callState, callEndedReason } = activeCall;
                 const ended = callState === Calling_1.CallState.Ended;
                 if (ended &&
                     callEndedReason === Calling_1.CallEndedReason.RemoteHangupNeedPermission) {
                     return (react_1.default.createElement(CallNeedPermissionScreen_1.CallNeedPermissionScreen, { close: closeNeedPermissionScreen, conversation: conversation, i18n: i18n }));
                 }
                 showCallLobby = !callState;
+                isCallFull = false;
                 break;
             }
             case Calling_1.CallMode.Group: {
-                showCallLobby = call.joinState === Calling_1.GroupCallJoinState.NotJoined;
+                showCallLobby = activeCall.joinState === Calling_1.GroupCallJoinState.NotJoined;
+                isCallFull = activeCall.deviceCount >= activeCall.maxDevices;
                 break;
             }
             default:
-                throw missingCaseError_1.missingCaseError(call);
+                throw missingCaseError_1.missingCaseError(activeCall);
         }
         if (showCallLobby) {
-            const participantNames = groupCallPeekedParticipants.map(participant => participant.isSelf
-                ? i18n('you')
-                : participant.firstName || participant.title);
             return (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement(CallingLobby_1.CallingLobby, { availableCameras: availableCameras, conversation: conversation, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, isGroupCall: call.callMode === Calling_1.CallMode.Group, isCallFull: isCallFull, me: me, onCallCanceled: cancelActiveCall, onJoinCall: joinActiveCall, participantNames: participantNames, setLocalPreview: setLocalPreview, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, showParticipantsList: showParticipantsList, toggleParticipants: toggleParticipants, toggleSettings: toggleSettings }),
+                react_1.default.createElement(CallingLobby_1.CallingLobby, { availableCameras: availableCameras, conversation: conversation, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, isGroupCall: activeCall.callMode === Calling_1.CallMode.Group, isCallFull: isCallFull, me: me, onCallCanceled: cancelActiveCall, onJoinCall: joinActiveCall, peekedParticipants: peekedParticipants, setLocalPreview: setLocalPreview, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, showParticipantsList: showParticipantsList, toggleParticipants: toggleParticipants, toggleSettings: toggleSettings }),
                 settingsDialogOpen && renderDeviceSelection(),
-                showParticipantsList && call.callMode === Calling_1.CallMode.Group ? (react_1.default.createElement(CallingParticipantsList_1.CallingParticipantsList, { i18n: i18n, onClose: toggleParticipants, participants: groupCallParticipants })) : null));
+                showParticipantsList && activeCall.callMode === Calling_1.CallMode.Group ? (react_1.default.createElement(CallingParticipantsList_1.CallingParticipantsList, { i18n: i18n, onClose: toggleParticipants, participants: peekedParticipants })) : null));
         }
         if (pip) {
             return (react_1.default.createElement(CallingPip_1.CallingPip, { activeCall: activeCall, getGroupCallVideoFrameSource: getGroupCallVideoFrameSourceForActiveCall, hangUp: hangUp, hasLocalVideo: hasLocalVideo, i18n: i18n, setGroupCallVideoRequest: setGroupCallVideoRequestForConversation, setLocalPreview: setLocalPreview, setRendererCanvas: setRendererCanvas, togglePip: togglePip }));
         }
+        const groupCallParticipantsForParticipantsList = activeCall.callMode === Calling_1.CallMode.Group
+            ? [
+                ...activeCall.remoteParticipants.map(participant => (Object.assign(Object.assign({}, participant), { hasAudio: participant.hasRemoteAudio, hasVideo: participant.hasRemoteVideo, isSelf: false }))),
+                Object.assign(Object.assign({}, me), { hasAudio: hasLocalAudio, hasVideo: hasLocalVideo, isSelf: true }),
+            ]
+            : [];
         return (react_1.default.createElement(react_1.default.Fragment, null,
-            react_1.default.createElement(CallScreen_1.CallScreen, { activeCall: activeCall, getGroupCallVideoFrameSource: getGroupCallVideoFrameSourceForActiveCall, hangUp: hangUp, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, joinedAt: joinedAt, me: me, setGroupCallVideoRequest: setGroupCallVideoRequestForConversation, setLocalPreview: setLocalPreview, setRendererCanvas: setRendererCanvas, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, stickyControls: showParticipantsList, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings }),
+            react_1.default.createElement(CallScreen_1.CallScreen, { activeCall: activeCall, getGroupCallVideoFrameSource: getGroupCallVideoFrameSourceForActiveCall, hangUp: hangUp, i18n: i18n, joinedAt: joinedAt, me: me, setGroupCallVideoRequest: setGroupCallVideoRequestForConversation, setLocalPreview: setLocalPreview, setRendererCanvas: setRendererCanvas, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, stickyControls: showParticipantsList, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings }),
             settingsDialogOpen && renderDeviceSelection(),
-            showParticipantsList && call.callMode === Calling_1.CallMode.Group ? (react_1.default.createElement(CallingParticipantsList_1.CallingParticipantsList, { i18n: i18n, onClose: toggleParticipants, participants: groupCallParticipants })) : null));
+            showParticipantsList && activeCall.callMode === Calling_1.CallMode.Group ? (react_1.default.createElement(CallingParticipantsList_1.CallingParticipantsList, { i18n: i18n, onClose: toggleParticipants, participants: groupCallParticipantsForParticipantsList })) : null));
     };
     exports.CallManager = props => {
         const { activeCall, incomingCall, acceptCall, declineCall, i18n } = props;

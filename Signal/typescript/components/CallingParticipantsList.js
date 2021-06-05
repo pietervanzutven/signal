@@ -14,6 +14,7 @@ require(exports => {
     const InContactsIcon_1 = require("./InContactsIcon");
     exports.CallingParticipantsList = react_1.default.memo(({ i18n, onClose, participants }) => {
         const [root, setRoot] = react_1.default.useState(null);
+        const sortedParticipants = react_1.default.useMemo(() => participants.sort((a, b) => a.title.localeCompare(b.title)), [participants]);
         react_1.default.useEffect(() => {
             const div = document.createElement('div');
             document.body.appendChild(div);
@@ -42,7 +43,13 @@ require(exports => {
                             String(participants.length),
                         ])),
                     react_1.default.createElement("button", { type: "button", className: "module-calling-participants-list__close", onClick: onClose, tabIndex: 0, "aria-label": i18n('close') })),
-                react_1.default.createElement("ul", { className: "module-calling-participants-list__list" }, participants.map((participant, index) => (react_1.default.createElement("li", { className: "module-calling-participants-list__contact", key: index },
+                react_1.default.createElement("ul", { className: "module-calling-participants-list__list" }, sortedParticipants.map((participant, index) => (react_1.default.createElement("li", {
+                    className: "module-calling-participants-list__contact",
+                    // It's tempting to use `participant.uuid` as the `key` here, but that
+                    //   can result in duplicate keys for participants who have joined on
+                    //   multiple devices.
+                    key: index
+                },
                     react_1.default.createElement("div", null,
                         react_1.default.createElement(Avatar_1.Avatar, { avatarPath: participant.avatarPath, color: participant.color, conversationType: "direct", i18n: i18n, profileName: participant.profileName, title: participant.title, size: 32 }),
                         participant.isSelf ? (react_1.default.createElement("span", { className: "module-calling-participants-list__name" }, i18n('you'))) : (react_1.default.createElement(react_1.default.Fragment, null,
@@ -51,7 +58,7 @@ require(exports => {
                                 ' ',
                                 react_1.default.createElement(InContactsIcon_1.InContactsIcon, { className: "module-calling-participants-list__contact-icon", i18n: i18n }))) : null))),
                     react_1.default.createElement("div", null,
-                        !participant.hasRemoteAudio ? (react_1.default.createElement("span", { className: "module-calling-participants-list__muted--audio" })) : null,
-                        !participant.hasRemoteVideo ? (react_1.default.createElement("span", { className: "module-calling-participants-list__muted--video" })) : null))))))), root);
+                        participant.hasAudio === false ? (react_1.default.createElement("span", { className: "module-calling-participants-list__muted--audio" })) : null,
+                        participant.hasVideo === false ? (react_1.default.createElement("span", { className: "module-calling-participants-list__muted--video" })) : null))))))), root);
     });
 });

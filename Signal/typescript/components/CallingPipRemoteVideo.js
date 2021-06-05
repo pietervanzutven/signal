@@ -29,20 +29,20 @@ require(exports => {
                     react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, size: 52 })))));
     };
     exports.CallingPipRemoteVideo = ({ activeCall, getGroupCallVideoFrameSource, i18n, setGroupCallVideoRequest, setRendererCanvas, }) => {
-        const { call, conversation, groupCallParticipants } = activeCall;
+        const { conversation } = activeCall;
         const isPageVisible = hooks_1.usePageVisibility();
         const activeGroupCallSpeaker = react_1.useMemo(() => {
-            if (call.callMode !== Calling_1.CallMode.Group) {
+            if (activeCall.callMode !== Calling_1.CallMode.Group) {
                 return undefined;
             }
-            return lodash_1.maxBy(groupCallParticipants, participant => participant.speakerTime || -Infinity);
-        }, [call.callMode, groupCallParticipants]);
+            return lodash_1.maxBy(activeCall.remoteParticipants, participant => participant.speakerTime || -Infinity);
+        }, [activeCall.callMode, activeCall.remoteParticipants]);
         react_1.useEffect(() => {
-            if (call.callMode !== Calling_1.CallMode.Group) {
+            if (activeCall.callMode !== Calling_1.CallMode.Group) {
                 return;
             }
             if (isPageVisible) {
-                setGroupCallVideoRequest(groupCallParticipants.map(participant => {
+                setGroupCallVideoRequest(activeCall.remoteParticipants.map(participant => {
                     const isVisible = participant === activeGroupCallSpeaker &&
                         participant.hasRemoteVideo;
                     if (isVisible) {
@@ -56,23 +56,24 @@ require(exports => {
                 }));
             }
             else {
-                setGroupCallVideoRequest(groupCallParticipants.map(nonRenderedRemoteParticipant_1.nonRenderedRemoteParticipant));
+                setGroupCallVideoRequest(activeCall.remoteParticipants.map(nonRenderedRemoteParticipant_1.nonRenderedRemoteParticipant));
             }
         }, [
-            call.callMode,
-            groupCallParticipants,
+            activeCall.callMode,
+            activeCall.remoteParticipants,
             activeGroupCallSpeaker,
             isPageVisible,
             setGroupCallVideoRequest,
         ]);
-        if (call.callMode === Calling_1.CallMode.Direct) {
-            if (!call.hasRemoteVideo) {
+        if (activeCall.callMode === Calling_1.CallMode.Direct) {
+            const { hasRemoteVideo } = activeCall.remoteParticipants[0];
+            if (!hasRemoteVideo) {
                 return react_1.default.createElement(NoVideo, { activeCall: activeCall, i18n: i18n });
             }
             return (react_1.default.createElement("div", { className: "module-calling-pip__video--remote" },
-                react_1.default.createElement(DirectCallRemoteParticipant_1.DirectCallRemoteParticipant, { conversation: conversation, hasRemoteVideo: call.hasRemoteVideo, i18n: i18n, setRendererCanvas: setRendererCanvas })));
+                react_1.default.createElement(DirectCallRemoteParticipant_1.DirectCallRemoteParticipant, { conversation: conversation, hasRemoteVideo: hasRemoteVideo, i18n: i18n, setRendererCanvas: setRendererCanvas })));
         }
-        if (call.callMode === Calling_1.CallMode.Group) {
+        if (activeCall.callMode === Calling_1.CallMode.Group) {
             if (!activeGroupCallSpeaker) {
                 return react_1.default.createElement(NoVideo, { activeCall: activeCall, i18n: i18n });
             }

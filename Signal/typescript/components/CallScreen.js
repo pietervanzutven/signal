@@ -25,8 +25,8 @@ require(exports => {
     const DirectCallRemoteParticipant_1 = require("./DirectCallRemoteParticipant");
     const GroupCallRemoteParticipants_1 = require("./GroupCallRemoteParticipants");
     const GroupCallToastManager_1 = require("./GroupCallToastManager");
-    exports.CallScreen = ({ activeCall, getGroupCallVideoFrameSource, hangUp, hasLocalAudio, hasLocalVideo, i18n, joinedAt, me, setGroupCallVideoRequest, setLocalAudio, setLocalVideo, setLocalPreview, setRendererCanvas, stickyControls, toggleParticipants, togglePip, toggleSettings, }) => {
-        const { call, conversation, groupCallParticipants } = activeCall;
+    exports.CallScreen = ({ activeCall, getGroupCallVideoFrameSource, hangUp, i18n, joinedAt, me, setGroupCallVideoRequest, setLocalAudio, setLocalVideo, setLocalPreview, setRendererCanvas, stickyControls, toggleParticipants, togglePip, toggleSettings, }) => {
+        const { conversation, hasLocalAudio, hasLocalVideo, showParticipantsList, } = activeCall;
         const toggleAudio = react_1.useCallback(() => {
             setLocalAudio({
                 enabled: !hasLocalAudio,
@@ -87,33 +87,32 @@ require(exports => {
                 document.removeEventListener('keydown', handleKeyDown);
             };
         }, [toggleAudio, toggleVideo]);
-        let hasRemoteVideo;
+        const hasRemoteVideo = activeCall.remoteParticipants.some(remoteParticipant => remoteParticipant.hasRemoteVideo);
         let headerMessage;
         let headerTitle;
         let isConnected;
         let participantCount;
         let remoteParticipantsElement;
-        switch (call.callMode) {
+        switch (activeCall.callMode) {
             case Calling_1.CallMode.Direct:
-                hasRemoteVideo = Boolean(call.hasRemoteVideo);
-                headerMessage = renderHeaderMessage(i18n, call.callState || Calling_1.CallState.Prering, acceptedDuration);
+                headerMessage = renderHeaderMessage(i18n, activeCall.callState || Calling_1.CallState.Prering, acceptedDuration);
                 headerTitle = conversation.title;
-                isConnected = call.callState === Calling_1.CallState.Accepted;
+                isConnected = activeCall.callState === Calling_1.CallState.Accepted;
                 participantCount = isConnected ? 2 : 0;
                 remoteParticipantsElement = (react_1.default.createElement(DirectCallRemoteParticipant_1.DirectCallRemoteParticipant, { conversation: conversation, hasRemoteVideo: hasRemoteVideo, i18n: i18n, setRendererCanvas: setRendererCanvas }));
                 break;
             case Calling_1.CallMode.Group:
-                hasRemoteVideo = call.remoteParticipants.some(remoteParticipant => remoteParticipant.hasRemoteVideo);
-                participantCount = activeCall.groupCallParticipants.length;
+                participantCount = activeCall.remoteParticipants.length + 1;
                 headerMessage = undefined;
-                headerTitle = activeCall.groupCallParticipants.length
+                headerTitle = activeCall.remoteParticipants.length
                     ? undefined
                     : i18n('calling__in-this-call--zero');
-                isConnected = call.connectionState === Calling_1.GroupCallConnectionState.Connected;
-                remoteParticipantsElement = (react_1.default.createElement(GroupCallRemoteParticipants_1.GroupCallRemoteParticipants, { getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, i18n: i18n, remoteParticipants: groupCallParticipants, setGroupCallVideoRequest: setGroupCallVideoRequest }));
+                isConnected =
+                    activeCall.connectionState === Calling_1.GroupCallConnectionState.Connected;
+                remoteParticipantsElement = (react_1.default.createElement(GroupCallRemoteParticipants_1.GroupCallRemoteParticipants, { getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, i18n: i18n, remoteParticipants: activeCall.remoteParticipants, setGroupCallVideoRequest: setGroupCallVideoRequest }));
                 break;
             default:
-                throw missingCaseError_1.missingCaseError(call);
+                throw missingCaseError_1.missingCaseError(activeCall);
         }
         const videoButtonType = hasLocalVideo
             ? CallingButton_1.CallingButtonType.VIDEO_ON
@@ -126,15 +125,14 @@ require(exports => {
             'module-ongoing-call__controls--fadeIn': (showControls || isAudioOnly) && !isConnected,
             'module-ongoing-call__controls--fadeOut': !showControls && !isAudioOnly && isConnected,
         });
-        const { showParticipantsList } = activeCall.activeCallState;
         return (react_1.default.createElement("div", {
-            className: classnames_1.default('module-calling__container', `module-ongoing-call__container--${getCallModeClassSuffix(call.callMode)}`), onMouseMove: () => {
+            className: classnames_1.default('module-calling__container', `module-ongoing-call__container--${getCallModeClassSuffix(activeCall.callMode)}`), onMouseMove: () => {
                 setShowControls(true);
             }, role: "group"
         },
-            call.callMode === Calling_1.CallMode.Group ? (react_1.default.createElement(GroupCallToastManager_1.GroupCallToastManager, { connectionState: call.connectionState, i18n: i18n })) : null,
+            activeCall.callMode === Calling_1.CallMode.Group ? (react_1.default.createElement(GroupCallToastManager_1.GroupCallToastManager, { connectionState: activeCall.connectionState, i18n: i18n })) : null,
             react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__header', controlsFadeClass) },
-                react_1.default.createElement(CallingHeader_1.CallingHeader, { canPip: true, i18n: i18n, isGroupCall: call.callMode === Calling_1.CallMode.Group, message: headerMessage, participantCount: participantCount, showParticipantsList: showParticipantsList, title: headerTitle, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings })),
+                react_1.default.createElement(CallingHeader_1.CallingHeader, { canPip: true, i18n: i18n, isGroupCall: activeCall.callMode === Calling_1.CallMode.Group, message: headerMessage, participantCount: participantCount, showParticipantsList: showParticipantsList, title: headerTitle, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings })),
             remoteParticipantsElement,
             react_1.default.createElement("div", { className: "module-ongoing-call__footer" },
                 react_1.default.createElement("div", { className: "module-ongoing-call__footer__local-preview-offset" }),
