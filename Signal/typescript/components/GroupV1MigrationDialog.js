@@ -21,6 +21,9 @@ require(exports => {
             el.focus();
         }
     }
+    function sort(list) {
+        return [...list].sort((a, b) => a.title.localeCompare(b.title));
+    }
     exports.GroupV1MigrationDialog = React.memo((props) => {
         const { areWeInvited, droppedMembers, hasMigrated, i18n, invitedMembers, migrate, onClose, } = props;
         const title = hasMigrated
@@ -67,7 +70,7 @@ require(exports => {
             React.createElement("div", { className: "module-group-v2-migration-dialog__item__bullet" }),
             React.createElement("div", { className: "module-group-v2-migration-dialog__item__content" },
                 React.createElement("div", null, i18n(key)),
-                members.map(member => (React.createElement("div", { key: member.id, className: "module-group-v2-migration-dialog__member" },
+                sort(members).map(member => (React.createElement("div", { key: member.id, className: "module-group-v2-migration-dialog__member" },
                     React.createElement(Avatar_1.Avatar, Object.assign({}, member, { conversationType: member.type, size: 28, i18n: i18n })),
                     ' ',
                     React.createElement("span", { className: "module-group-v2-migration-dialog__member__name" }, member.title)))))));
