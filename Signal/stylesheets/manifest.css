@@ -6584,6 +6584,8 @@ span.module-in-contacts-icon__tooltip {
   position: absolute;
   width: 120px;
   z-index: 2; }
+  .module-calling-pip .module-ongoing-call__group-call-remote-participant {
+    border-radius: 0; }
   .module-calling-pip__video--remote {
     align-items: center;
     background-color: #121212;
