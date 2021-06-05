@@ -1922,9 +1922,11 @@
         }
         if (data.message.groupCallUpdate) {
             if (data.message.groupV2 && messageDescriptor.type === Message.GROUP) {
-                window.reduxActions.calling.peekNotConnectedGroupCall({
-                    conversationId: messageDescriptor.id,
-                });
+                if (window.GROUP_CALLING) {
+                    window.reduxActions.calling.peekNotConnectedGroupCall({
+                        conversationId: messageDescriptor.id,
+                    });
+                }
                 return Promise.resolve();
             }
             window.log.warn('Received a group call update for a conversation that is not a GV2 group. Ignoring that property and continuing.');
