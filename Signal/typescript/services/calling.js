@@ -763,7 +763,7 @@ require(exports => {
                 ringrtc_1.RingRTC.setAudioInput(settings.selectedMicrophone.index);
             }
             if (settings.selectedSpeaker) {
-                window.log.info('MediaDevice: selecting speaker', settings.selectedMicrophone);
+                window.log.info('MediaDevice: selecting speaker', settings.selectedSpeaker);
                 ringrtc_1.RingRTC.setAudioOutput(settings.selectedSpeaker.index);
             }
         }
