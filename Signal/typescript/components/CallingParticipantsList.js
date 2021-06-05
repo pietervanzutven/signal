@@ -12,9 +12,10 @@ require(exports => {
     const Avatar_1 = require("./Avatar");
     const ContactName_1 = require("./conversation/ContactName");
     const InContactsIcon_1 = require("./InContactsIcon");
+    const sortByTitle_1 = require("../util/sortByTitle");
     exports.CallingParticipantsList = react_1.default.memo(({ i18n, onClose, participants }) => {
         const [root, setRoot] = react_1.default.useState(null);
-        const sortedParticipants = react_1.default.useMemo(() => participants.sort((a, b) => a.title.localeCompare(b.title)), [participants]);
+        const sortedParticipants = react_1.default.useMemo(() => sortByTitle_1.sortByTitle(participants), [participants]);
         react_1.default.useEffect(() => {
             const div = document.createElement('div');
             document.body.appendChild(div);
