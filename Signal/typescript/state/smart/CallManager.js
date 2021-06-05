@@ -73,6 +73,7 @@ require(exports => {
                     firstName: remoteConversation.firstName,
                     hasRemoteAudio: remoteParticipant.hasRemoteAudio,
                     hasRemoteVideo: remoteParticipant.hasRemoteVideo,
+                    isBlocked: Boolean(remoteConversation.isBlocked),
                     isSelf: remoteParticipant.isSelf,
                     name: remoteConversation.name,
                     profileName: remoteConversation.profileName,
@@ -81,6 +82,7 @@ require(exports => {
                     videoAspectRatio: remoteParticipant.videoAspectRatio,
                 });
             });
+            groupCallParticipants.sort((a, b) => a.title.localeCompare(b.title));
         }
         return {
             activeCallState,

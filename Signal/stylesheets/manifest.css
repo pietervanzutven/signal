@@ -6349,6 +6349,33 @@ span.module-in-contacts-icon__tooltip {
   transition: top 200ms linear, left 200ms linear, width 200ms linear, height 200ms linear; }
   .module-ongoing-call__group-call-remote-participant__remote-video {
     background-color: #3b3b3b; }
+  .module-ongoing-call__group-call-remote-participant__blocked {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>block-24</title><path d='M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,1.5a9.448,9.448,0,0,1,6.159,2.281L4.781,18.159A9.488,9.488,0,0,1,12,2.5Zm0,19a9.448,9.448,0,0,1-6.159-2.281L19.219,5.841A9.488,9.488,0,0,1,12,21.5Z' fill='%23FFFFFF'/></svg>") no-repeat center;
+    background-size: 100%;
+    height: 24px;
+    margin-bottom: 16px;
+    width: 24px; }
+    .module-ongoing-call__group-call-remote-participant__blocked--info {
+      background: none;
+      color: inherit;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font: inherit;
+      cursor: pointer;
+      outline: inherit;
+      text-align: inherit;
+      background-color: #3b3b3b;
+      border-radius: 16px;
+      color: #ffffff;
+      line-height: 16px;
+      padding: 3px 10px; }
+    .module-ongoing-call__group-call-remote-participant__blocked--modal-title {
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      display: -webkit-box;
+      overflow: hidden;
+      text-overflow: ellipsis; }
   .module-ongoing-call__group-call-remote-participant--title {
     font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
     font-size: 11px;

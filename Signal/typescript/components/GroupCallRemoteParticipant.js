@@ -18,14 +18,17 @@ require(exports => {
     const lodash_1 = require("lodash");
     const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
     const Avatar_1 = require("./Avatar");
+    const ConfirmationModal_1 = require("./ConfirmationModal");
+    const Intl_1 = require("./Intl");
     const ContactName_1 = require("./conversation/ContactName");
     // The max size video frame we'll support (in RGBA)
     const FRAME_BUFFER_SIZE = 1920 * 1080 * 4;
     exports.GroupCallRemoteParticipant = react_1.default.memo(props => {
-        const { getGroupCallVideoFrameSource } = props;
-        const { avatarPath, color, profileName, title, demuxId, hasRemoteAudio, hasRemoteVideo, } = props.remoteParticipant;
+        const { getGroupCallVideoFrameSource, i18n } = props;
+        const { avatarPath, color, demuxId, hasRemoteAudio, hasRemoteVideo, isBlocked, profileName, title, } = props.remoteParticipant;
         const [isWide, setIsWide] = react_1.useState(true);
         const [hasHover, setHover] = react_1.useState(false);
+        const [showBlockInfo, setShowBlockInfo] = react_1.useState(false);
         const remoteVideoRef = react_1.useRef(null);
         const canvasContextRef = react_1.useRef(null);
         const frameBufferRef = react_1.useRef(new ArrayBuffer(FRAME_BUFFER_SIZE));
@@ -105,14 +108,35 @@ require(exports => {
             };
         }
         const showHover = hasHover && !props.isInPip;
+        const canShowVideo = hasRemoteVideo && !isBlocked;
+        if (showBlockInfo) {
+            return (react_1.default.createElement(ConfirmationModal_1.ConfirmationModal, {
+                i18n: i18n, onClose: () => {
+                    setShowBlockInfo(false);
+                }, title: react_1.default.createElement("div", { className: "module-ongoing-call__group-call-remote-participant__blocked--modal-title" },
+                    react_1.default.createElement(Intl_1.Intl, {
+                        i18n: i18n, id: "calling__you-have-blocked", components: [
+                            react_1.default.createElement(ContactName_1.ContactName, { key: "name", profileName: profileName, title: title, i18n: i18n }),
+                        ]
+                    })), actions: [
+                        {
+                            text: i18n('ok'),
+                            action: () => {
+                                setShowBlockInfo(false);
+                            },
+                            style: 'affirmative',
+                        },
+                    ]
+            }, i18n('calling__block-info')));
+        }
         return (react_1.default.createElement("div", { className: "module-ongoing-call__group-call-remote-participant", onMouseEnter: () => setHover(true), onMouseLeave: () => setHover(false), style: containerStyles },
             showHover && (react_1.default.createElement("div", {
                 className: classnames_1.default('module-ongoing-call__group-call-remote-participant--title', {
                     'module-ongoing-call__group-call-remote-participant--audio-muted': !hasRemoteAudio,
                 })
             },
-                react_1.default.createElement(ContactName_1.ContactName, { module: "module-ongoing-call__group-call-remote-participant--contact-name", profileName: profileName, title: title, i18n: props.i18n }))),
-            hasRemoteVideo ? (react_1.default.createElement("canvas", {
+                react_1.default.createElement(ContactName_1.ContactName, { module: "module-ongoing-call__group-call-remote-participant--contact-name", profileName: profileName, title: title, i18n: i18n }))),
+            canShowVideo ? (react_1.default.createElement("canvas", {
                 className: "module-ongoing-call__group-call-remote-participant__remote-video", style: canvasStyles, ref: canvasEl => {
                     remoteVideoRef.current = canvasEl;
                     if (canvasEl) {
@@ -126,7 +150,12 @@ require(exports => {
                         canvasContextRef.current = null;
                     }
                 }
-            })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: avatarPath, color: color },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: props.i18n, profileName: profileName, title: title, size: avatarSize })))));
+            })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: avatarPath, color: color }, isBlocked ? (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("i", { className: "module-ongoing-call__group-call-remote-participant__blocked" }),
+                react_1.default.createElement("button", {
+                    type: "button", className: "module-ongoing-call__group-call-remote-participant__blocked--info", onClick: () => {
+                        setShowBlockInfo(true);
+                    }
+                }, i18n('moreInfo')))) : (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, profileName: profileName, title: title, size: avatarSize }))))));
     });
 });
