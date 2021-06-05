@@ -13,6 +13,7 @@ require(exports => {
     const user_1 = require("../selectors/user");
     const getOwn_1 = require("../../util/getOwn");
     const missingCaseError_1 = require("../../util/missingCaseError");
+    const isGroupCallingEnabled_1 = require("../../util/isGroupCallingEnabled");
     const getOutgoingCallButtonStyle = (conversation, state) => {
         const { calling } = state;
         if (calling_1.getActiveCall(calling)) {
@@ -25,7 +26,7 @@ require(exports => {
             case Calling_1.CallMode.Direct:
                 return ConversationHeader_1.OutgoingCallButtonStyle.Both;
             case Calling_1.CallMode.Group: {
-                if (!window.GROUP_CALLING) {
+                if (!isGroupCallingEnabled_1.isGroupCallingEnabled()) {
                     return ConversationHeader_1.OutgoingCallButtonStyle.None;
                 }
                 const call = getOwn_1.getOwn(calling.callsByConversation, conversation.id);

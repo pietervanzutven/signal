@@ -18,7 +18,6 @@ const packageJson = {
   productName: 'Signal',
 };
 const GlobalErrors = require('./app/global_errors');
-const { isBeta } = require('./app/version');
 const { setup: setupSpellChecker } = require('./app/spell_check');
 
 GlobalErrors.addHandler();
@@ -93,6 +92,12 @@ const sql = require('./ts/sql/Server').default;
 const sqlChannels = require('./app/sql_channel');
 const windowState = require('./app/window_state');
 const { createTemplate } = require('./app/menu');
+const {
+  installFileHandler,
+  installWebHandler,
+} = require('./app/protocol_filter');
+const { installPermissionsHandler } = require('./app/permissions');
+const { isBeta } = require('./ts/util/version');
 const { isSgnlHref, parseSgnlHref } = require('./ts/util/sgnlHref');
 
 let appStartInitialSpellcheckSetting = true;

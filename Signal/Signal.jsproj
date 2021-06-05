@@ -76,10 +76,11 @@
     <Content Include="app\logging.js" />
     <Content Include="app\config.js" />
     <Content Include="app\menu.js" />
+    <Content Include="app\permissions.js" />
+    <Content Include="app\protocol_filter.js" />
     <Content Include="app\spell_check.js" />
     <Content Include="app\sql_channel.js" />
     <Content Include="app\user_config.js" />
-    <Content Include="app\version.js" />
     <Content Include="background.html" />
     <Content Include="cdnsignalorg.cer" />
     <Content Include="config\default.json" />
@@ -4104,6 +4105,7 @@
     <Content Include="typescript\util\imageToBlurHash.js" />
     <Content Include="typescript\util\index.js" />
     <Content Include="typescript\util\isFileDangerous.js" />
+    <Content Include="typescript\util\isGroupCallingEnabled.js" />
     <Content Include="typescript\util\isMuted.js" />
     <Content Include="typescript\util\isPathInside.js" />
     <Content Include="typescript\util\JobQueue.js" />
@@ -4126,6 +4128,7 @@
     <Content Include="typescript\util\storageService.js" />
     <Content Include="typescript\util\theme.js" />
     <Content Include="typescript\util\timer.js" />
+    <Content Include="typescript\util\version.js" />
     <Content Include="typescript\util\waitBatcher.js" />
     <Content Include="typescript\util\windowsZoneIdentifier.js" />
     <Content Include="typescript\util\zkgroup.js" />

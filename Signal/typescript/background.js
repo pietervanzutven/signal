@@ -1922,7 +1922,7 @@
         }
         if (data.message.groupCallUpdate) {
             if (data.message.groupV2 && messageDescriptor.type === Message.GROUP) {
-                if (window.GROUP_CALLING) {
+                if (window.isGroupCallingEnabled()) {
                     window.reduxActions.calling.peekNotConnectedGroupCall({
                         conversationId: messageDescriptor.id,
                     });
