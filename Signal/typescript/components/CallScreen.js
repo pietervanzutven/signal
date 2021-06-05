@@ -25,7 +25,7 @@ require(exports => {
     const DirectCallRemoteParticipant_1 = require("./DirectCallRemoteParticipant");
     const GroupCallRemoteParticipants_1 = require("./GroupCallRemoteParticipants");
     const GroupCallToastManager_1 = require("./GroupCallToastManager");
-    exports.CallScreen = ({ activeCall, getGroupCallVideoFrameSource, hangUp, hasLocalAudio, hasLocalVideo, i18n, joinedAt, me, setLocalAudio, setLocalVideo, setLocalPreview, setRendererCanvas, stickyControls, toggleParticipants, togglePip, toggleSettings, }) => {
+    exports.CallScreen = ({ activeCall, getGroupCallVideoFrameSource, hangUp, hasLocalAudio, hasLocalVideo, i18n, joinedAt, me, setGroupCallVideoRequest, setLocalAudio, setLocalVideo, setLocalPreview, setRendererCanvas, stickyControls, toggleParticipants, togglePip, toggleSettings, }) => {
         const { call, conversation, groupCallParticipants } = activeCall;
         const toggleAudio = react_1.useCallback(() => {
             setLocalAudio({
@@ -110,7 +110,7 @@ require(exports => {
                     ? undefined
                     : i18n('calling__in-this-call--zero');
                 isConnected = call.connectionState === Calling_1.GroupCallConnectionState.Connected;
-                remoteParticipantsElement = (react_1.default.createElement(GroupCallRemoteParticipants_1.GroupCallRemoteParticipants, { getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, i18n: i18n, remoteParticipants: groupCallParticipants }));
+                remoteParticipantsElement = (react_1.default.createElement(GroupCallRemoteParticipants_1.GroupCallRemoteParticipants, { getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, i18n: i18n, remoteParticipants: groupCallParticipants, setGroupCallVideoRequest: setGroupCallVideoRequest }));
                 break;
             default:
                 throw missingCaseError_1.missingCaseError(call);

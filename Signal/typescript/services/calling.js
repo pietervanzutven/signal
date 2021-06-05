@@ -339,6 +339,10 @@ require(exports => {
             var _a;
             return (_a = this.getDirectCall(conversationId)) === null || _a === void 0 ? void 0 : _a.callId;
         }
+        setGroupCallVideoRequest(conversationId, resolutions) {
+            var _a;
+            (_a = this.getGroupCall(conversationId)) === null || _a === void 0 ? void 0 : _a.requestVideo(resolutions);
+        }
         // See the comment in types/Calling.ts to explain why we have to do this conversion.
         convertRingRtcConnectionState(connectionState) {
             switch (connectionState) {

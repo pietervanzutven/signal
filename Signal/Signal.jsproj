@@ -4113,6 +4113,7 @@
     <Content Include="typescript\util\missingCaseError.js" />
     <Content Include="typescript\util\parseRemoteClientExpiration.js" />
     <Content Include="typescript\util\registration.js" />
+    <Content Include="typescript\util\ringrtc\nonRenderedRemoteParticipant.js" />
     <Content Include="typescript\util\ringrtc\normalizeGroupCallTimestamp.js" />
     <Content Include="typescript\util\safetyNumber.js" />
     <Content Include="typescript\util\saveURLAsFile.js" />

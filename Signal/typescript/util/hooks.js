@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
@@ -41,5 +43,18 @@ require(exports => {
         return React.useMemo(() => {
             return redux_1.bindActionCreators(actions, dispatch);
         }, [actions, dispatch]);
+    };
+    exports.usePageVisibility = () => {
+        const [result, setResult] = React.useState(!document.hidden);
+        React.useEffect(() => {
+            const onVisibilityChange = () => {
+                setResult(!document.hidden);
+            };
+            document.addEventListener('visibilitychange', onVisibilityChange, false);
+            return () => {
+                document.removeEventListener('visibilitychange', onVisibilityChange, false);
+            };
+        }, []);
+        return result;
     };
 });

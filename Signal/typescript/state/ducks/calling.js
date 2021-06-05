@@ -278,6 +278,15 @@ require(exports => {
             });
         };
     }
+    function setGroupCallVideoRequest(payload) {
+        return () => {
+            calling_1.calling.setGroupCallVideoRequest(payload.conversationId, payload.resolutions.map(resolution => (Object.assign(Object.assign({}, resolution), {
+                // The `framerate` property in RingRTC has to be set, even if it's set to
+                //   `undefined`.
+                framerate: undefined
+            }))));
+        };
+    }
     function showCallLobby(payload) {
         return {
             type: SHOW_CALL_LOBBY,
@@ -337,6 +346,7 @@ require(exports => {
         setRendererCanvas,
         setLocalAudio,
         setLocalVideo,
+        setGroupCallVideoRequest,
         showCallLobby,
         startCall,
         toggleParticipants,

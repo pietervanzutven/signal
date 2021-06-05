@@ -17,8 +17,12 @@ require(exports => {
     const react_measure_1 = __importDefault(require("react-measure"));
     const lodash_1 = require("lodash");
     const GroupCallRemoteParticipant_1 = require("./GroupCallRemoteParticipant");
+    const hooks_1 = require("../util/hooks");
+    const nonRenderedRemoteParticipant_1 = require("../util/ringrtc/nonRenderedRemoteParticipant");
     const MIN_RENDERED_HEIGHT = 10;
     const PARTICIPANT_MARGIN = 10;
+    // We scale our video requests down for performance. This number is somewhat arbitrary.
+    const VIDEO_REQUEST_SCALAR = 0.75;
     // This component lays out group call remote participants. It uses a custom layout
     //   algorithm (in other words, nothing that the browser provides, like flexbox) in
     //   order to animate the boxes as they move around, and to figure out the right fits.
@@ -43,11 +47,12 @@ require(exports => {
     //    "scalar": how much can we scale these boxes up while still fitting them on the
     //    screen? The biggest scalar wins as the "best arrangement".
     // 4. Lay out this arrangement on the screen.
-    exports.GroupCallRemoteParticipants = ({ getGroupCallVideoFrameSource, i18n, remoteParticipants, }) => {
+    exports.GroupCallRemoteParticipants = ({ getGroupCallVideoFrameSource, i18n, remoteParticipants, setGroupCallVideoRequest, }) => {
         const [containerDimensions, setContainerDimensions] = react_1.useState({
             width: 0,
             height: 0,
         });
+        const isPageVisible = hooks_1.usePageVisibility();
         // 1. Figure out the maximum number of possible rows that could fit on the screen.
         //
         // We choose the smaller of these two options:
@@ -78,6 +83,7 @@ require(exports => {
                 return totalWidth < maxTotalWidth;
             });
         }, [maxRowCount, containerDimensions.width, remoteParticipants]);
+        const overflowedParticipants = remoteParticipants.slice(visibleParticipants.length);
         // 3. For each possible number of rows (starting at 0 and ending at `maxRowCount`),
         //   distribute participants across the rows at the minimum height. Then find the
         //   "scalar": how much can we scale these boxes up while still fitting them on the
@@ -150,7 +156,35 @@ require(exports => {
                 return (react_1.default.createElement(GroupCallRemoteParticipant_1.GroupCallRemoteParticipant, { key: remoteParticipant.demuxId, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, height: gridParticipantHeight, i18n: i18n, left: left, remoteParticipant: remoteParticipant, top: top, width: renderedWidth }));
             });
         });
-        const remoteParticipantElements = lodash_1.flatten(rowElements);
+        react_1.useEffect(() => {
+            if (isPageVisible) {
+                setGroupCallVideoRequest([
+                    ...visibleParticipants.map(participant => {
+                        if (participant.hasRemoteVideo) {
+                            return {
+                                demuxId: participant.demuxId,
+                                width: Math.floor(gridParticipantHeight *
+                                    participant.videoAspectRatio *
+                                    VIDEO_REQUEST_SCALAR),
+                                height: Math.floor(gridParticipantHeight * VIDEO_REQUEST_SCALAR),
+                            };
+                        }
+                        return nonRenderedRemoteParticipant_1.nonRenderedRemoteParticipant(participant);
+                    }),
+                    ...overflowedParticipants.map(nonRenderedRemoteParticipant_1.nonRenderedRemoteParticipant),
+                ]);
+            }
+            else {
+                setGroupCallVideoRequest(remoteParticipants.map(nonRenderedRemoteParticipant_1.nonRenderedRemoteParticipant));
+            }
+        }, [
+            gridParticipantHeight,
+            isPageVisible,
+            overflowedParticipants,
+            remoteParticipants,
+            setGroupCallVideoRequest,
+            visibleParticipants,
+        ]);
         return (react_1.default.createElement(react_measure_1.default, {
             bounds: true, onResize: ({ bounds }) => {
                 if (!bounds) {
@@ -159,7 +193,7 @@ require(exports => {
                 }
                 setContainerDimensions(bounds);
             }
-        }, ({ measureRef }) => (react_1.default.createElement("div", { className: "module-ongoing-call__grid", ref: measureRef }, remoteParticipantElements))));
+        }, ({ measureRef }) => (react_1.default.createElement("div", { className: "module-ongoing-call__grid", ref: measureRef }, lodash_1.flatten(rowElements)))));
     };
     function totalRemoteParticipantWidthAtMinHeight(remoteParticipants) {
         return remoteParticipants.reduce((result, { videoAspectRatio }) => result + videoAspectRatio * MIN_RENDERED_HEIGHT, 0);

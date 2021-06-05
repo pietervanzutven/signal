@@ -22,7 +22,7 @@ require(exports => {
     const PIP_WIDTH = 120;
     const PIP_TOP_MARGIN = 56;
     const PIP_PADDING = 8;
-    exports.CallingPip = ({ activeCall, getGroupCallVideoFrameSource, hangUp, hasLocalVideo, i18n, setLocalPreview, setRendererCanvas, togglePip, }) => {
+    exports.CallingPip = ({ activeCall, getGroupCallVideoFrameSource, hangUp, hasLocalVideo, i18n, setGroupCallVideoRequest, setLocalPreview, setRendererCanvas, togglePip, }) => {
         const videoContainerRef = react_1.default.useRef(null);
         const localVideoRef = react_1.default.useRef(null);
         const [windowWidth, setWindowWidth] = react_1.default.useState(window.innerWidth);
@@ -169,7 +169,7 @@ require(exports => {
                         : 'transform ease-out 300ms',
                 }
             },
-                react_1.default.createElement(CallingPipRemoteVideo_1.CallingPipRemoteVideo, { activeCall: activeCall, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, i18n: i18n, setRendererCanvas: setRendererCanvas }),
+                react_1.default.createElement(CallingPipRemoteVideo_1.CallingPipRemoteVideo, { activeCall: activeCall, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, i18n: i18n, setRendererCanvas: setRendererCanvas, setGroupCallVideoRequest: setGroupCallVideoRequest }),
                 hasLocalVideo ? (react_1.default.createElement("video", { className: "module-calling-pip__video--local", ref: localVideoRef, autoPlay: true })) : null,
                 react_1.default.createElement("div", { className: "module-calling-pip__actions" },
                     react_1.default.createElement("button", {
