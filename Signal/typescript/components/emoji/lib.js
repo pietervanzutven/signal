@@ -121,7 +121,8 @@ require(exports => {
         keys: ['name', 'short_name', 'short_names'],
     });
     function search(query, count = 0) {
-        const results = fuse.search(query.substr(0, 32));
+        // We reverse it because fuse returns low-score results first!
+        const results = fuse.search(query.substr(0, 32)).reverse();
         if (count) {
             return lodash_1.take(results, count);
         }
