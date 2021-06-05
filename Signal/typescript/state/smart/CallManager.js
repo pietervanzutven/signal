@@ -94,7 +94,7 @@ require(exports => {
         };
     };
     const mapStateToIncomingCallProp = (state) => {
-        const call = calling_3.getIncomingCall(state.calling);
+        const call = calling_3.getIncomingCall(state);
         if (!call) {
             return undefined;
         }
