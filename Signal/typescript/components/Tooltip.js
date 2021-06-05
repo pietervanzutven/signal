@@ -8,6 +8,7 @@ require(exports => {
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
     const react_popper_1 = require("react-popper");
+    const theme_1 = require("../util/theme");
     var TooltipPlacement;
     (function (TooltipPlacement) {
         TooltipPlacement["Top"] = "top";
@@ -15,25 +16,10 @@ require(exports => {
         TooltipPlacement["Bottom"] = "bottom";
         TooltipPlacement["Left"] = "left";
     })(TooltipPlacement = exports.TooltipPlacement || (exports.TooltipPlacement = {}));
-    var TooltipTheme;
-    (function (TooltipTheme) {
-        TooltipTheme["System"] = "system";
-        TooltipTheme["Light"] = "light";
-        TooltipTheme["Dark"] = "dark";
-    })(TooltipTheme = exports.TooltipTheme || (exports.TooltipTheme = {}));
-    exports.Tooltip = ({ children, content, direction, sticky, theme = TooltipTheme.System, }) => {
+    exports.Tooltip = ({ children, content, direction, sticky, theme, }) => {
         const isSticky = Boolean(sticky);
         const [showTooltip, setShowTooltip] = react_1.default.useState(isSticky);
-        let tooltipTheme;
-        if (theme === TooltipTheme.Light) {
-            tooltipTheme = 'light-theme';
-        }
-        else if (theme === TooltipTheme.Dark) {
-            tooltipTheme = 'dark-theme';
-        }
-        else {
-            tooltipTheme = '';
-        }
+        const tooltipTheme = theme ? theme_1.themeClassName(theme) : undefined;
         return (react_1.default.createElement(react_popper_1.Manager, null,
             react_1.default.createElement(react_popper_1.Reference, null, ({ ref }) => (react_1.default.createElement("span", {
                 onBlur: () => {

@@ -9,6 +9,7 @@ require(exports => {
     const react_1 = __importDefault(require("react"));
     const classnames_1 = __importDefault(require("classnames"));
     const Tooltip_1 = require("./Tooltip");
+    const theme_1 = require("../util/theme");
     var CallingButtonType;
     (function (CallingButtonType) {
         CallingButtonType["AUDIO_DISABLED"] = "AUDIO_DISABLED";
@@ -51,7 +52,7 @@ require(exports => {
             tooltipContent = i18n('calling__hangup');
         }
         const className = classnames_1.default('module-calling-button__icon', `module-calling-button__icon--${classNameSuffix}`);
-        return (react_1.default.createElement(Tooltip_1.Tooltip, { content: tooltipContent, direction: tooltipDirection, theme: Tooltip_1.TooltipTheme.Dark },
+        return (react_1.default.createElement(Tooltip_1.Tooltip, { content: tooltipContent, direction: tooltipDirection, theme: theme_1.Theme.Dark },
             react_1.default.createElement("button", { "aria-label": tooltipContent, type: "button", className: className, onClick: onClick },
                 react_1.default.createElement("div", null))));
     };

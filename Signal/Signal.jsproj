@@ -4124,6 +4124,7 @@
     <Content Include="typescript\util\sortByTitle.js" />
     <Content Include="typescript\util\Sound.js" />
     <Content Include="typescript\util\storageService.js" />
+    <Content Include="typescript\util\theme.js" />
     <Content Include="typescript\util\timer.js" />
     <Content Include="typescript\util\waitBatcher.js" />
     <Content Include="typescript\util\windowsZoneIdentifier.js" />
