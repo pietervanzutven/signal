@@ -4094,6 +4094,7 @@
     <Content Include="typescript\util\ExpirationTimerOptions.js" />
     <Content Include="typescript\util\formatDuration.js" />
     <Content Include="typescript\util\formatRelativeTime.js" />
+    <Content Include="typescript\util\getDefaultConversation.js" />
     <Content Include="typescript\util\getInitials.js" />
     <Content Include="typescript\util\getMuteOptions.js" />
     <Content Include="typescript\util\getOwn.js" />

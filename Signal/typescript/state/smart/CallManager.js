@@ -19,8 +19,12 @@ require(exports => {
     const Calling_1 = require("../../types/Calling");
     const missingCaseError_1 = require("../../util/missingCaseError");
     const CallingDeviceSelection_1 = require("./CallingDeviceSelection");
+    const SafetyNumberViewer_1 = require("./SafetyNumberViewer");
     function renderDeviceSelection() {
         return react_1.default.createElement(CallingDeviceSelection_1.SmartCallingDeviceSelection, null);
+    }
+    function renderSafetyNumberViewer(props) {
+        return react_1.default.createElement(SafetyNumberViewer_1.SmartSafetyNumberViewer, Object.assign({}, props));
     }
     const getGroupCallVideoFrameSource = calling_1.calling.getGroupCallVideoFrameSource.bind(calling_1.calling);
     const mapStateToActiveCallProp = (state) => {
@@ -65,7 +69,7 @@ require(exports => {
                     ]
                 });
             case Calling_1.CallMode.Group: {
-                const ourUuid = user_1.getUserUuid(state);
+                const conversationsWithSafetyNumberChanges = [];
                 const remoteParticipants = [];
                 const peekedParticipants = [];
                 for (let i = 0; i < call.remoteParticipants.length; i += 1) {
@@ -75,22 +79,16 @@ require(exports => {
                         window.log.error('Remote participant has no corresponding conversation');
                         continue;
                     }
-                    remoteParticipants.push({
-                        avatarPath: remoteConversation.avatarPath,
-                        color: remoteConversation.color,
-                        demuxId: remoteParticipant.demuxId,
-                        firstName: remoteConversation.firstName,
-                        hasRemoteAudio: remoteParticipant.hasRemoteAudio,
-                        hasRemoteVideo: remoteParticipant.hasRemoteVideo,
-                        isBlocked: Boolean(remoteConversation.isBlocked),
-                        isSelf: remoteParticipant.uuid === ourUuid,
-                        name: remoteConversation.name,
-                        profileName: remoteConversation.profileName,
-                        speakerTime: remoteParticipant.speakerTime,
-                        title: remoteConversation.title,
-                        uuid: remoteParticipant.uuid,
-                        videoAspectRatio: remoteParticipant.videoAspectRatio,
-                    });
+                    remoteParticipants.push(Object.assign(Object.assign({}, remoteConversation), { demuxId: remoteParticipant.demuxId, hasRemoteAudio: remoteParticipant.hasRemoteAudio, hasRemoteVideo: remoteParticipant.hasRemoteVideo, speakerTime: remoteParticipant.speakerTime, videoAspectRatio: remoteParticipant.videoAspectRatio }));
+                }
+                for (let i = 0; i < activeCallState.safetyNumberChangedUuids.length; i += 1) {
+                    const uuid = activeCallState.safetyNumberChangedUuids[i];
+                    const remoteConversation = conversationSelectorByUuid(uuid);
+                    if (!remoteConversation) {
+                        window.log.error('Remote participant has no corresponding conversation');
+                        continue;
+                    }
+                    conversationsWithSafetyNumberChanges.push(remoteConversation);
                 }
                 for (let i = 0; i < call.peekInfo.uuids.length; i += 1) {
                     const peekedParticipantUuid = call.peekInfo.uuids[i];
@@ -99,19 +97,10 @@ require(exports => {
                         window.log.error('Remote participant has no corresponding conversation');
                         continue;
                     }
-                    peekedParticipants.push({
-                        avatarPath: peekedConversation.avatarPath,
-                        color: peekedConversation.color,
-                        firstName: peekedConversation.firstName,
-                        isSelf: peekedParticipantUuid === ourUuid,
-                        name: peekedConversation.name,
-                        profileName: peekedConversation.profileName,
-                        title: peekedConversation.title,
-                        uuid: peekedParticipantUuid,
-                    });
+                    peekedParticipants.push(peekedConversation);
                 }
                 return Object.assign(Object.assign({}, baseResult), {
-                    callMode: Calling_1.CallMode.Group, connectionState: call.connectionState, deviceCount: call.peekInfo.deviceCount, joinState: call.joinState, maxDevices: call.peekInfo.maxDevices, peekedParticipants,
+                    callMode: Calling_1.CallMode.Group, connectionState: call.connectionState, conversationsWithSafetyNumberChanges, deviceCount: call.peekInfo.deviceCount, joinState: call.joinState, maxDevices: call.peekInfo.maxDevices, peekedParticipants,
                     remoteParticipants
                 });
             }
@@ -146,6 +135,7 @@ require(exports => {
             uuid: user_1.getUserUuid(state)
         }),
         renderDeviceSelection,
+        renderSafetyNumberViewer,
     });
     const smart = react_redux_1.connect(mapStateToProps, actions_1.mapDispatchToProps);
     exports.SmartCallManager = smart(CallManager_1.CallManager);

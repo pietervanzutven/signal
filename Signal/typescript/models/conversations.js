@@ -813,6 +813,7 @@ require(exports => {
                 isGroupV1AndDisabled: this.isGroupV1AndDisabled(),
                 isPinned: this.get('isPinned'),
                 isMissingMandatoryProfileSharing: this.isMissingRequiredProfileSharing(),
+                isUntrusted: this.isUntrusted(),
                 isVerified: this.isVerified(),
                 lastMessage: {
                     status: this.get('lastMessageStatus'),
@@ -1297,56 +1298,44 @@ require(exports => {
             }
             return window.textsecure.storage.protocol.setApproval(this.id, true);
         }
-        async safeIsUntrusted() {
-            return window.textsecure.storage.protocol
-                .isUntrusted(this.id)
-                .catch(() => false);
+        safeIsUntrusted() {
+            try {
+                return window.textsecure.storage.protocol.isUntrusted(this.id);
+            }
+            catch (err) {
+                return false;
+            }
         }
-        async isUntrusted() {
+        isUntrusted() {
             if (this.isPrivate()) {
                 return this.safeIsUntrusted();
             }
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (!this.contactCollection.length) {
-                return Promise.resolve(false);
+                return false;
             }
-            return Promise.all(
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                this.contactCollection.map(contact => {
-                    if (contact.isMe()) {
-                        return false;
-                    }
-                    return contact.safeIsUntrusted();
-                })).then(results => window._.any(results, result => result));
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return this.contactCollection.any(contact => {
+                if (contact.isMe()) {
+                    return false;
+                }
+                return contact.safeIsUntrusted();
+            });
         }
-        async getUntrusted() {
-            // This is a bit ugly because isUntrusted() is async. Could do the work to cache
-            //   it locally, but we really only need it for this call.
+        getUntrusted() {
             if (this.isPrivate()) {
-                return this.isUntrusted().then(untrusted => {
-                    if (untrusted) {
-                        return new window.Backbone.Collection([this]);
-                    }
-                    return new window.Backbone.Collection();
-                });
+                if (this.isUntrusted()) {
+                    return new window.Backbone.Collection([this]);
+                }
+                return new window.Backbone.Collection();
             }
-            return Promise.all(
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                this.contactCollection.map(contact => {
-                    if (contact.isMe()) {
-                        return [false, contact];
-                    }
-                    return Promise.all([contact.isUntrusted(), contact]);
-                })).then(results => {
-                    const filtered = window._.filter(results, result => {
-                        const untrusted = result[0];
-                        return untrusted;
-                    });
-                    return new window.Backbone.Collection(window._.map(filtered, result => {
-                        const contact = result[1];
-                        return contact;
-                    }));
-                });
+            const results = this.contactCollection.map(contact => {
+                if (contact.isMe()) {
+                    return [false, contact];
+                }
+                return [contact.isUntrusted(), contact];
+            });
+            return new window.Backbone.Collection(results.filter(result => result[0]).map(result => result[1]));
         }
         getSentMessageCount() {
             return this.get('sentMessageCount') || 0;
@@ -1422,7 +1411,13 @@ require(exports => {
                 Message: window.Whisper.Message,
             });
             const model = window.MessageController.register(id, new window.Whisper.Message(Object.assign(Object.assign({}, message), { id })));
+            const isUntrusted = await this.isUntrusted();
             this.trigger('newmessage', model);
+            const uuid = this.get('uuid');
+            // Group calls are always with folks that have a UUID
+            if (isUntrusted && uuid) {
+                window.reduxActions.calling.keyChanged({ uuid });
+            }
         }
         async addVerifiedChange(verifiedChangeId, verified, providedOptions) {
             const options = providedOptions || {};

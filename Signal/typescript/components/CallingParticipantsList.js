@@ -13,7 +13,7 @@ require(exports => {
     const ContactName_1 = require("./conversation/ContactName");
     const InContactsIcon_1 = require("./InContactsIcon");
     const sortByTitle_1 = require("../util/sortByTitle");
-    exports.CallingParticipantsList = react_1.default.memo(({ i18n, onClose, participants }) => {
+    exports.CallingParticipantsList = react_1.default.memo(({ i18n, onClose, ourUuid, participants }) => {
         const [root, setRoot] = react_1.default.useState(null);
         const sortedParticipants = react_1.default.useMemo(() => sortByTitle_1.sortByTitle(participants), [participants]);
         react_1.default.useEffect(() => {
@@ -53,7 +53,7 @@ require(exports => {
                 },
                     react_1.default.createElement("div", null,
                         react_1.default.createElement(Avatar_1.Avatar, { avatarPath: participant.avatarPath, color: participant.color, conversationType: "direct", i18n: i18n, profileName: participant.profileName, title: participant.title, size: 32 }),
-                        participant.isSelf ? (react_1.default.createElement("span", { className: "module-calling-participants-list__name" }, i18n('you'))) : (react_1.default.createElement(react_1.default.Fragment, null,
+                        participant.uuid === ourUuid ? (react_1.default.createElement("span", { className: "module-calling-participants-list__name" }, i18n('you'))) : (react_1.default.createElement(react_1.default.Fragment, null,
                             react_1.default.createElement(ContactName_1.ContactName, { i18n: i18n, module: "module-calling-participants-list__name", title: participant.title }),
                             participant.name ? (react_1.default.createElement("span", null,
                                 ' ',

@@ -446,6 +446,13 @@ require(exports => {
             }
             return groupCall.getVideoSource(demuxId);
         }
+        resendGroupCallMediaKeys(conversationId) {
+            const groupCall = this.getGroupCall(conversationId);
+            if (!groupCall) {
+                throw new Error('Could not find matching call');
+            }
+            groupCall.resendMediaKeys();
+        }
         syncGroupCallToRedux(conversationId, groupCall) {
             var _a;
             (_a = this.uxActions) === null || _a === void 0 ? void 0 : _a.groupCallStateChange(Object.assign({ conversationId }, this.formatGroupCallForRedux(groupCall)));

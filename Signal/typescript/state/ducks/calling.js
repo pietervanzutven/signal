@@ -30,6 +30,8 @@ require(exports => {
     const GROUP_CALL_STATE_CHANGE = 'calling/GROUP_CALL_STATE_CHANGE';
     const HANG_UP = 'calling/HANG_UP';
     const INCOMING_CALL = 'calling/INCOMING_CALL';
+    const MARK_CALL_TRUSTED = 'calling/MARK_CALL_TRUSTED';
+    const MARK_CALL_UNTRUSTED = 'calling/MARK_CALL_UNTRUSTED';
     const OUTGOING_CALL = 'calling/OUTGOING_CALL';
     const PEEK_NOT_CONNECTED_GROUP_CALL_FULFILLED = 'calling/PEEK_NOT_CONNECTED_GROUP_CALL_FULFILLED';
     const REFRESH_IO_DEVICES = 'calling/REFRESH_IO_DEVICES';
@@ -144,6 +146,44 @@ require(exports => {
         return {
             type: HANG_UP,
             payload,
+        };
+    }
+    function keyChanged(payload) {
+        return (dispatch, getState) => {
+            const state = getState();
+            const { activeCallState } = state.calling;
+            const activeCall = exports.getActiveCall(state.calling);
+            if (!activeCall || !activeCallState) {
+                return;
+            }
+            if (activeCall.callMode === Calling_1.CallMode.Group) {
+                const uuidsChanged = new Set(activeCallState.safetyNumberChangedUuids);
+                // Iterate over each participant to ensure that the uuid passed in
+                // matches one of the participants in the group call.
+                activeCall.remoteParticipants.forEach(participant => {
+                    if (participant.uuid === payload.uuid) {
+                        uuidsChanged.add(participant.uuid);
+                    }
+                });
+                const safetyNumberChangedUuids = Array.from(uuidsChanged);
+                if (safetyNumberChangedUuids.length) {
+                    dispatch({
+                        type: MARK_CALL_UNTRUSTED,
+                        payload: {
+                            safetyNumberChangedUuids,
+                        },
+                    });
+                }
+            }
+        };
+    }
+    function keyChangeOk(payload) {
+        return dispatch => {
+            calling_1.calling.resendGroupCallMediaKeys(payload.conversationId);
+            dispatch({
+                type: MARK_CALL_TRUSTED,
+                payload: null,
+            });
         };
     }
     function receiveIncomingCall(payload) {
@@ -351,6 +391,8 @@ require(exports => {
         declineCall,
         groupCallStateChange,
         hangUp,
+        keyChanged,
+        keyChangeOk,
         receiveIncomingCall,
         outgoingCall,
         peekNotConnectedGroupCall,
@@ -434,9 +476,10 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: action.payload.hasLocalAudio,
                     hasLocalVideo: action.payload.hasLocalVideo,
-                    showParticipantsList: false,
                     pip: false,
+                    safetyNumberChangedUuids: [],
                     settingsDialogOpen: false,
+                    showParticipantsList: false,
                 }
             });
         }
@@ -454,9 +497,10 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: action.payload.hasLocalAudio,
                     hasLocalVideo: action.payload.hasLocalVideo,
-                    showParticipantsList: false,
                     pip: false,
+                    safetyNumberChangedUuids: [],
                     settingsDialogOpen: false,
+                    showParticipantsList: false,
                 }
             });
         }
@@ -470,9 +514,10 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: true,
                     hasLocalVideo: action.payload.asVideoCall,
-                    showParticipantsList: false,
                     pip: false,
+                    safetyNumberChangedUuids: [],
                     settingsDialogOpen: false,
+                    showParticipantsList: false,
                 }
             });
         }
@@ -523,9 +568,10 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: action.payload.hasLocalAudio,
                     hasLocalVideo: action.payload.hasLocalVideo,
-                    showParticipantsList: false,
                     pip: false,
+                    safetyNumberChangedUuids: [],
                     settingsDialogOpen: false,
+                    showParticipantsList: false,
                 }
             });
         }
@@ -702,6 +748,23 @@ require(exports => {
                 return state;
             }
             return Object.assign(Object.assign({}, state), { activeCallState: Object.assign(Object.assign({}, activeCallState), { pip: !activeCallState.pip }) });
+        }
+        if (action.type === MARK_CALL_UNTRUSTED) {
+            const { activeCallState } = state;
+            if (!activeCallState) {
+                window.log.warn('Cannot mark call as untrusted when there is no active call');
+                return state;
+            }
+            const { safetyNumberChangedUuids } = action.payload;
+            return Object.assign(Object.assign({}, state), { activeCallState: Object.assign(Object.assign({}, activeCallState), { pip: false, safetyNumberChangedUuids, settingsDialogOpen: false, showParticipantsList: false }) });
+        }
+        if (action.type === MARK_CALL_TRUSTED) {
+            const { activeCallState } = state;
+            if (!activeCallState) {
+                window.log.warn('Cannot mark call as trusted when there is no active call');
+                return state;
+            }
+            return Object.assign(Object.assign({}, state), { activeCallState: Object.assign(Object.assign({}, activeCallState), { safetyNumberChangedUuids: [] }) });
         }
         return state;
     }
