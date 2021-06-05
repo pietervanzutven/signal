@@ -1,10 +1,11 @@
-(function () {
-  'use strict';
+require((exports, module) => {
+  // Copyright 2019-2020 Signal Messenger, LLC
+  // SPDX-License-Identifier: AGPL-3.0-only
 
-  const { take } = window.lodash;
-  const { getRecentEmojis } = window.ts.sql.Client.default;
+  const { take } = require('lodash');
+  const { getRecentEmojis } = require('../../ts/sql/Client').default;
 
-  window.emojis = {
+  module.exports = {
     getInitialState,
     load,
   };
@@ -27,4 +28,4 @@
   function getInitialState() {
     return initialState;
   }
-})();
+});

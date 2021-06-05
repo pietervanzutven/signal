@@ -52,8 +52,13 @@ require(exports => {
             ringrtc_1.RingRTC.handleSendHttpRequest = this.handleSendHttpRequest.bind(this);
             ringrtc_1.RingRTC.handleSendCallMessage = this.handleSendCallMessage.bind(this);
         }
-        async startCallingLobby(conversation, isVideoCall) {
+        async startCallingLobby(conversationId, isVideoCall) {
             window.log.info('CallingClass.startCallingLobby()');
+            const conversation = window.ConversationController.get(conversationId);
+            if (!conversation) {
+                window.log.error('Could not find conversation, cannot start call lobby');
+                return;
+            }
             const conversationProps = conversation.format();
             const callMode = conversations_1.getConversationCallMode(conversationProps);
             switch (callMode) {
@@ -280,6 +285,7 @@ require(exports => {
                     this.syncGroupCallToRedux(conversationId, groupCall);
                 },
                 onPeekChanged: groupCall => {
+                    this.updateCallHistoryForGroupCall(conversationId, groupCall.getPeekInfo());
                     this.syncGroupCallToRedux(conversationId, groupCall);
                 },
                 async requestMembershipProof(groupCall) {
@@ -1008,6 +1014,7 @@ require(exports => {
                 acceptedTime = Date.now();
             }
             conversation.addCallHistory({
+                callMode: Calling_1.CallMode.Direct,
                 wasIncoming: call.isIncoming,
                 wasVideoCall: call.isVideoCall,
                 wasDeclined,
@@ -1017,6 +1024,7 @@ require(exports => {
         }
         addCallHistoryForFailedIncomingCall(conversation, wasVideoCall) {
             conversation.addCallHistory({
+                callMode: Calling_1.CallMode.Direct,
                 wasIncoming: true,
                 wasVideoCall,
                 // Since the user didn't decline, make sure it shows up as a missed call instead
@@ -1027,6 +1035,7 @@ require(exports => {
         }
         addCallHistoryForAutoEndedIncomingCall(conversation, _reason) {
             conversation.addCallHistory({
+                callMode: Calling_1.CallMode.Direct,
                 wasIncoming: true,
                 // We don't actually know, but it doesn't seem that important in this case,
                 // but we could maybe plumb this info through RingRTC
@@ -1036,6 +1045,23 @@ require(exports => {
                 acceptedTime: undefined,
                 endedTime: Date.now(),
             });
+        }
+        updateCallHistoryForGroupCall(conversationId, peekInfo) {
+            // If we don't have the necessary pieces to peek, bail. (It's okay if we don't.)
+            if (!peekInfo || !peekInfo.eraId || !peekInfo.creator) {
+                return;
+            }
+            const creatorUuid = Crypto_1.arrayBufferToUuid(peekInfo.creator);
+            if (!creatorUuid) {
+                window.log.error('updateCallHistoryForGroupCall(): bad creator UUID');
+                return;
+            }
+            const conversation = window.ConversationController.get(conversationId);
+            if (!conversation) {
+                window.log.error('updateCallHistoryForGroupCall(): could not find conversation');
+                return;
+            }
+            conversation.updateCallHistoryForGroupCall(peekInfo.eraId, creatorUuid);
         }
     }
     exports.CallingClass = CallingClass;

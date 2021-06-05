@@ -3,7 +3,12 @@ require(exports => {
     // Copyright 2020 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
+    const calling_1 = require("../state/ducks/calling");
+    const calling_2 = require("../state/selectors/calling");
     const ExpirationTimerOptions_1 = require("../util/ExpirationTimerOptions");
+    const missingCaseError_1 = require("../util/missingCaseError");
+    const Calling_1 = require("../types/Calling");
+    const callingNotification_1 = require("../util/callingNotification");
     window.Whisper = window.Whisper || {};
     const { Message: TypedMessage, Attachment, MIME, Contact, PhoneNumber, Errors, } = window.Signal.Types;
     const { deleteExternalMessageFiles, getAbsoluteAttachmentPath, loadAttachmentData, loadQuoteData, loadPreviewData, loadStickerData, upgradeMessageSchema, } = window.Signal.Migrations;
@@ -464,9 +469,50 @@ require(exports => {
             };
         }
         getPropsForCallHistory() {
-            return {
-                callHistoryDetails: this.get('callHistoryDetails'),
-            };
+            var _a, _b, _c;
+            const callHistoryDetails = this.get('callHistoryDetails');
+            if (!callHistoryDetails) {
+                return undefined;
+            }
+            switch (callHistoryDetails.callMode) {
+                // Old messages weren't saved with a call mode.
+                case undefined:
+                case Calling_1.CallMode.Direct:
+                    return Object.assign(Object.assign({}, callHistoryDetails), { callMode: Calling_1.CallMode.Direct });
+                case Calling_1.CallMode.Group: {
+                    const conversationId = this.get('conversationId');
+                    if (!conversationId) {
+                        window.log.error('Message.prototype.getPropsForCallHistory: missing conversation ID; assuming there is no call');
+                        return undefined;
+                    }
+                    const creatorConversation = this.findContact(window.ConversationController.ensureContactIds({
+                        uuid: callHistoryDetails.creatorUuid,
+                    }));
+                    if (!creatorConversation) {
+                        window.log.error('Message.prototype.getPropsForCallHistory: could not find creator by UUID; bailing');
+                        return undefined;
+                    }
+                    const reduxState = window.reduxStore.getState();
+                    let call = calling_2.getCallSelector(reduxState)(conversationId);
+                    if (call && call.callMode !== Calling_1.CallMode.Group) {
+                        window.log.error('Message.prototype.getPropsForCallHistory: there is an unexpected non-group call; pretending it does not exist');
+                        call = undefined;
+                    }
+                    return {
+                        activeCallConversationId: (_a = calling_1.getActiveCall(reduxState.calling)) === null || _a === void 0 ? void 0 : _a.conversationId,
+                        callMode: Calling_1.CallMode.Group,
+                        conversationId,
+                        creator: creatorConversation.format(),
+                        deviceCount: (_b = call === null || call === void 0 ? void 0 : call.peekInfo.deviceCount) !== null && _b !== void 0 ? _b : 0,
+                        ended: callHistoryDetails.eraId !== (call === null || call === void 0 ? void 0 : call.peekInfo.eraId),
+                        maxDevices: (_c = call === null || call === void 0 ? void 0 : call.peekInfo.maxDevices) !== null && _c !== void 0 ? _c : Infinity,
+                        startedTime: callHistoryDetails.startedTime,
+                    };
+                }
+                default:
+                    window.log.error(missingCaseError_1.missingCaseError(callHistoryDetails));
+                    return undefined;
+            }
         }
         getPropsForProfileChange() {
             const change = this.get('profileChange');
@@ -943,9 +989,13 @@ require(exports => {
                 };
             }
             if (this.isCallHistory()) {
-                return {
-                    text: window.Signal.Components.getCallingNotificationText(this.get('callHistoryDetails'), window.i18n),
-                };
+                const callingNotification = this.getPropsForCallHistory();
+                if (callingNotification) {
+                    return {
+                        text: callingNotification_1.getCallingNotificationText(callingNotification, window.i18n),
+                    };
+                }
+                window.log.error("This call history message doesn't have valid call history");
             }
             if (this.isExpirationTimerUpdate()) {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

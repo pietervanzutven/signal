@@ -34,6 +34,7 @@ require(exports => {
         selectMessage,
         messageDeleted,
         messageChanged,
+        messageSizeChanged,
         messagesAdded,
         messagesReset,
         setMessagesLoading,
@@ -113,6 +114,15 @@ require(exports => {
     function messageDeleted(id, conversationId) {
         return {
             type: 'MESSAGE_DELETED',
+            payload: {
+                id,
+                conversationId,
+            },
+        };
+    }
+    function messageSizeChanged(id, conversationId) {
+        return {
+            type: 'MESSAGE_SIZE_CHANGED',
             payload: {
                 id,
                 conversationId,
@@ -265,6 +275,7 @@ require(exports => {
             selectedConversationPanelDepth: 0,
         };
     }
+    exports.getEmptyState = getEmptyState;
     function hasMessageHeightChanged(message, previous) {
         const messageAttachments = message.attachments || [];
         const previousAttachments = previous.attachments || [];
@@ -405,6 +416,23 @@ require(exports => {
                 ? lodash_1.uniq([...heightChangeMessageIds, id])
                 : heightChangeMessageIds;
             return Object.assign(Object.assign({}, state), { messagesLookup: Object.assign(Object.assign({}, state.messagesLookup), { [id]: data }), messagesByConversation: Object.assign(Object.assign({}, state.messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { heightChangeMessageIds: updatedChanges }) }) });
+        }
+        if (action.type === 'MESSAGE_SIZE_CHANGED') {
+            const { id, conversationId } = action.payload;
+            const existingConversation = getOwn_1.getOwn(state.messagesByConversation, conversationId);
+            if (!existingConversation) {
+                return state;
+            }
+            return Object.assign(Object.assign({}, state), {
+                messagesByConversation: Object.assign(Object.assign({}, state.messagesByConversation), {
+                    [conversationId]: Object.assign(Object.assign({}, existingConversation), {
+                        heightChangeMessageIds: lodash_1.uniq([
+                            ...existingConversation.heightChangeMessageIds,
+                            id,
+                        ])
+                    })
+                })
+            });
         }
         if (action.type === 'MESSAGES_RESET') {
             const { conversationId, messages, metrics, scrollToMessageId, unboundedFetch, } = action.payload;

@@ -21,7 +21,7 @@ require(exports => {
     const ProfileChangeNotification_1 = require("./ProfileChangeNotification");
     class TimelineItem extends react_1.default.PureComponent {
         render() {
-            const { conversationId, id, isSelected, item, i18n, renderContact, selectMessage, } = this.props;
+            const { conversationId, id, isSelected, item, i18n, messageSizeChanged, renderContact, returnToActiveCall, selectMessage, startCallingLobby, } = this.props;
             if (!item) {
                 window.log.warn(`TimelineItem: item ${id} provided was falsey`);
                 return null;
@@ -34,7 +34,7 @@ require(exports => {
                 notification = (react_1.default.createElement(UnsupportedMessage_1.UnsupportedMessage, Object.assign({}, this.props, item.data, { i18n: i18n })));
             }
             else if (item.type === 'callHistory') {
-                notification = react_1.default.createElement(CallingNotification_1.CallingNotification, Object.assign({ i18n: i18n }, item.data));
+                notification = (react_1.default.createElement(CallingNotification_1.CallingNotification, Object.assign({ conversationId: conversationId, i18n: i18n, messageId: id, messageSizeChanged: messageSizeChanged, returnToActiveCall: returnToActiveCall, startCallingLobby: startCallingLobby }, item.data)));
             }
             else if (item.type === 'linkNotification') {
                 notification = (react_1.default.createElement("div", { className: "module-message-unsynced" },

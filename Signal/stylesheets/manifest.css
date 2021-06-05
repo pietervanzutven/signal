@@ -3356,6 +3356,42 @@ img.emoji.jumbo {
   .dark-theme .module-message-calling--notification .module-message__metadata__date {
     color: #e9e9e9; }
 
+.module-message-calling--notification__button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  text-align: inherit;
+  border-radius: 9999px;
+  padding: 7px 14px;
+  background-color: #4caf50;
+  color: #ffffff;
+  font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 21px;
+  letter-spacing: -0.14px;
+  font-weight: bold;
+  display: block;
+  margin: 0.5rem auto 0 auto; }
+  .mouse-mode .module-message-calling--notification__button:active {
+    background-color: #39833c; }
+  .dark-theme.mouse-mode .module-message-calling--notification__button:active {
+    background-color: #79c37c; }
+  .keyboard-mode .module-message-calling--notification__button:active {
+    background-color: #39833c; }
+  .dark-theme.keyboard-mode .module-message-calling--notification__button:active {
+    background-color: #79c37c; }
+  .module-message-calling--notification__button[disabled] {
+    opacity: 0.6; }
+  .keyboard-mode .module-message-calling--notification__button:focus {
+    box-shadow: 0px 0px 0px 3px #2c6bed; }
+  .dark-theme.keyboard-mode .module-message-calling--notification__button:focus {
+    box-shadow: 0px 0px 0px 3px #6191f3; }
+
 .module-safety-number__bold-name {
   font-weight: bold; }
 
@@ -8815,7 +8851,7 @@ span.module-in-contacts-icon__tooltip {
   cursor: pointer;
   outline: inherit;
   text-align: inherit;
-  background: url("data:image/svg+xml;utf8,<svg id='Shape' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 12 12'><defs><style>.cls-1{opacity:0.5;filter:url(%23shadow_blur_2);}.cls-2{fill:%23fff;}</style><filter id='shadow_blur_2' name='shadow_blur_2'><feGaussianBlur stdDeviation='0.5' in='SourceGraphic'/></filter></defs><title>x-shadow-12</title><g class='cls-1'><polygon points='10.6 2.6 9.9 1.9 6 5.79 2.1 1.9 1.4 2.6 5.29 6.5 1.4 10.4 2.1 11.1 6 7.21 9.9 11.1 10.6 10.4 6.71 6.5 10.6 2.6' fill='%233B3B3B'/></g><polygon class='cls-2' points='10.6 2.1 9.9 1.4 6 5.29 2.1 1.4 1.4 2.1 5.29 6 1.4 9.9 2.1 10.6 6 6.71 9.9 10.6 10.6 9.9 6.71 6 10.6 2.1' fill='%233B3B3B'/></svg>") no-repeat center;
+  background: url("data:image/svg+xml;utf8,<svg id='Shape' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 12 12'><defs><style>.cls-1{opacity:0.5;filter:url(%23shadow_blur_2);}.cls-2{fill:%23fff;}</style><filter id='shadow_blur_2' name='shadow_blur_2'><feGaussianBlur stdDeviation='0.5' in='SourceGraphic'/></filter></defs><title>x-shadow-12</title><g class='cls-1'><polygon points='10.6 2.6 9.9 1.9 6 5.79 2.1 1.9 1.4 2.6 5.29 6.5 1.4 10.4 2.1 11.1 6 7.21 9.9 11.1 10.6 10.4 6.71 6.5 10.6 2.6' fill='%23FFFFFF'/></g><polygon class='cls-2' points='10.6 2.1 9.9 1.4 6 5.29 2.1 1.4 1.4 2.1 5.29 6 1.4 9.9 2.1 10.6 6 6.71 9.9 10.6 10.6 9.9 6.71 6 10.6 2.1' fill='%23FFFFFF'/></svg>") no-repeat center;
   background-size: 100%;
   height: 16px;
   position: absolute;
@@ -8823,9 +8859,6 @@ span.module-in-contacts-icon__tooltip {
   top: 0;
   width: 16px;
   z-index: 2; }
-  .dark-theme .module-calling-device-selection__close-button {
-    background: url("data:image/svg+xml;utf8,<svg id='Shape' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 12 12'><defs><style>.cls-1{opacity:0.5;filter:url(%23shadow_blur_2);}.cls-2{fill:%23fff;}</style><filter id='shadow_blur_2' name='shadow_blur_2'><feGaussianBlur stdDeviation='0.5' in='SourceGraphic'/></filter></defs><title>x-shadow-12</title><g class='cls-1'><polygon points='10.6 2.6 9.9 1.9 6 5.79 2.1 1.9 1.4 2.6 5.29 6.5 1.4 10.4 2.1 11.1 6 7.21 9.9 11.1 10.6 10.4 6.71 6.5 10.6 2.6' fill='%23FFFFFF'/></g><polygon class='cls-2' points='10.6 2.1 9.9 1.4 6 5.29 2.1 1.4 1.4 2.1 5.29 6 1.4 9.9 2.1 10.6 6 6.71 9.9 10.6 10.6 9.9 6.71 6 10.6 2.1' fill='%23FFFFFF'/></svg>") no-repeat center;
-    background-size: 100%; }
   .keyboard-mode .module-calling-device-selection__close-button:focus {
     outline: 2px solid #2c6bed; }
 

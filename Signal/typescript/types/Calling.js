@@ -3,6 +3,7 @@ require(exports => {
     // Copyright 2020 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
+    // These are strings (1) for the database (2) for Storybook.
     var CallMode;
     (function (CallMode) {
         CallMode["None"] = "None";

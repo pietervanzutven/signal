@@ -4084,6 +4084,7 @@
     <Content Include="typescript\updater\index.js" />
     <Content Include="typescript\util\arrayBufferToObjectURL.js" />
     <Content Include="typescript\util\batcher.js" />
+    <Content Include="typescript\util\callingNotification.js" />
     <Content Include="typescript\util\callingPermissions.js" />
     <Content Include="typescript\util\callingTones.js" />
     <Content Include="typescript\util\cleanSearchTerm.js" />

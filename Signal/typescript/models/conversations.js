@@ -3,7 +3,9 @@ require(exports => {
     // Copyright 2020 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
+    const Calling_1 = require("../types/Calling");
     const isMuted_1 = require("../util/isMuted");
+    const missingCaseError_1 = require("../util/missingCaseError");
     const sniffImageMimeType_1 = require("../util/sniffImageMimeType");
     const MIME_1 = require("../types/MIME");
     const Crypto_1 = require("../Crypto");
@@ -1456,20 +1458,51 @@ require(exports => {
             }
         }
         async addCallHistory(callHistoryDetails) {
-            const { acceptedTime, endedTime, wasDeclined } = callHistoryDetails;
+            let timestamp;
+            let unread;
+            let detailsToSave;
+            switch (callHistoryDetails.callMode) {
+                case Calling_1.CallMode.Direct:
+                    timestamp = callHistoryDetails.endedTime;
+                    unread =
+                        !callHistoryDetails.wasDeclined && !callHistoryDetails.acceptedTime;
+                    detailsToSave = Object.assign(Object.assign({}, callHistoryDetails), { callMode: Calling_1.CallMode.Direct });
+                    break;
+                case Calling_1.CallMode.Group:
+                    timestamp = callHistoryDetails.startedTime;
+                    unread = false;
+                    detailsToSave = callHistoryDetails;
+                    break;
+                default:
+                    throw missingCaseError_1.missingCaseError(callHistoryDetails);
+            }
             const message = {
                 conversationId: this.id,
                 type: 'call-history',
-                sent_at: endedTime,
-                received_at: endedTime,
-                unread: !wasDeclined && !acceptedTime,
-                callHistoryDetails,
+                sent_at: timestamp,
+                received_at: timestamp,
+                unread,
+                callHistoryDetails: detailsToSave,
             };
             const id = await window.Signal.Data.saveMessage(message, {
                 Message: window.Whisper.Message,
             });
             const model = window.MessageController.register(id, new window.Whisper.Message(Object.assign(Object.assign({}, message), { id })));
             this.trigger('newmessage', model);
+        }
+        async updateCallHistoryForGroupCall(eraId, creatorUuid) {
+            const alreadyHasMessage = (this.cachedLatestGroupCallEraId &&
+                this.cachedLatestGroupCallEraId === eraId) ||
+                (await window.Signal.Data.hasGroupCallHistoryMessage(this.id, eraId));
+            if (!alreadyHasMessage) {
+                this.addCallHistory({
+                    callMode: Calling_1.CallMode.Group,
+                    creatorUuid,
+                    eraId,
+                    startedTime: Date.now(),
+                });
+            }
+            this.cachedLatestGroupCallEraId = eraId;
         }
         async addProfileChange(profileChange, conversationId) {
             const message = {

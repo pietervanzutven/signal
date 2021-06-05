@@ -101,6 +101,7 @@ require(exports => {
         getMessageMetricsForConversation,
         getLastConversationActivity,
         getLastConversationPreview,
+        hasGroupCallHistoryMessage,
         migrateConversationMessages,
         getUnprocessedCount,
         getAllUnprocessed,
@@ -2140,6 +2141,25 @@ require(exports => {
         };
     }
     getMessageMetricsForConversation.needsSerial = true;
+    async function hasGroupCallHistoryMessage(conversationId, eraId) {
+        const db = getInstance();
+        const row = await db.get(`
+    SELECT count(*) FROM messages
+    WHERE conversationId = $conversationId
+    AND type = 'call-history'
+    AND json_extract(json, '$.callHistoryDetails.callMode') = 'Group'
+    AND json_extract(json, '$.callHistoryDetails.eraId') = $eraId
+    LIMIT 1;
+    `, {
+            $conversationId: conversationId,
+            $eraId: eraId,
+        });
+        if (typeof row === 'object' && row && !Array.isArray(row)) {
+            const count = Number(row['count(*)']);
+            return Boolean(count);
+        }
+        return false;
+    }
     async function migrateConversationMessages(obsoleteId, currentId) {
         const db = getInstance();
         await db.run(`UPDATE messages SET

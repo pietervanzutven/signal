@@ -34,6 +34,7 @@ require(exports => {
     const PEEK_NOT_CONNECTED_GROUP_CALL_FULFILLED = 'calling/PEEK_NOT_CONNECTED_GROUP_CALL_FULFILLED';
     const REFRESH_IO_DEVICES = 'calling/REFRESH_IO_DEVICES';
     const REMOTE_VIDEO_CHANGE = 'calling/REMOTE_VIDEO_CHANGE';
+    const RETURN_TO_ACTIVE_CALL = 'calling/RETURN_TO_ACTIVE_CALL';
     const SET_LOCAL_AUDIO_FULFILLED = 'calling/SET_LOCAL_AUDIO_FULFILLED';
     const SET_LOCAL_VIDEO_FULFILLED = 'calling/SET_LOCAL_VIDEO_FULFILLED';
     const START_DIRECT_CALL = 'calling/START_DIRECT_CALL';
@@ -201,6 +202,7 @@ require(exports => {
                 if (!peekInfo) {
                     return;
                 }
+                calling_1.calling.updateCallHistoryForGroupCall(conversationId, peekInfo);
                 dispatch({
                     type: PEEK_NOT_CONNECTED_GROUP_CALL_FULFILLED,
                     payload: {
@@ -222,6 +224,11 @@ require(exports => {
         return {
             type: REMOTE_VIDEO_CHANGE,
             payload,
+        };
+    }
+    function returnToActiveCall() {
+        return {
+            type: RETURN_TO_ACTIVE_CALL,
         };
     }
     function setLocalPreview(payload) {
@@ -287,6 +294,13 @@ require(exports => {
             }))));
         };
     }
+    function startCallingLobby(payload) {
+        return () => {
+            calling_1.calling.startCallingLobby(payload.conversationId, payload.isVideoCall);
+        };
+    }
+    // TODO: This action should be replaced with an action dispatched in the
+    //   `startCallingLobby` thunk.
     function showCallLobby(payload) {
         return {
             type: SHOW_CALL_LOBBY,
@@ -342,11 +356,13 @@ require(exports => {
         peekNotConnectedGroupCall,
         refreshIODevices,
         remoteVideoChange,
+        returnToActiveCall,
         setLocalPreview,
         setRendererCanvas,
         setLocalAudio,
         setLocalVideo,
         setGroupCallVideoRequest,
+        startCallingLobby,
         showCallLobby,
         startCall,
         toggleParticipants,
@@ -615,6 +631,14 @@ require(exports => {
                 return state;
             }
             return Object.assign(Object.assign({}, state), { callsByConversation: Object.assign(Object.assign({}, callsByConversation), { [conversationId]: Object.assign(Object.assign({}, call), { hasRemoteVideo: hasVideo }) }) });
+        }
+        if (action.type === RETURN_TO_ACTIVE_CALL) {
+            const { activeCallState } = state;
+            if (!activeCallState) {
+                window.log.warn('Cannot return to active call if there is no active call');
+                return state;
+            }
+            return Object.assign(Object.assign({}, state), { activeCallState: Object.assign(Object.assign({}, activeCallState), { pip: false }) });
         }
         if (action.type === SET_LOCAL_AUDIO_FULFILLED) {
             if (!state.activeCallState) {
