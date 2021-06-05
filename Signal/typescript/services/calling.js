@@ -12,6 +12,7 @@ require(exports => {
     const getOwn_1 = require("../util/getOwn");
     const groups_1 = require("../groups");
     const missingCaseError_1 = require("../util/missingCaseError");
+    const normalizeGroupCallTimestamp_1 = require("../util/ringrtc/normalizeGroupCallTimestamp");
     const RINGRTC_SFU_URL = 'https://sfu.voip.signal.org/';
     const RINGRTC_HTTP_METHOD_TO_OUR_HTTP_METHOD = new Map([
         [ringrtc_1.HttpMethod.Get, 'GET'],
@@ -395,6 +396,7 @@ require(exports => {
                         hasRemoteAudio: !remoteDeviceState.audioMuted,
                         hasRemoteVideo: !remoteDeviceState.videoMuted,
                         isSelf: conversationId === ourConversationId,
+                        speakerTime: normalizeGroupCallTimestamp_1.normalizeGroupCallTimestamp(remoteDeviceState.speakerTime),
                         // If RingRTC doesn't send us an aspect ratio, we make a guess.
                         videoAspectRatio: remoteDeviceState.videoAspectRatio ||
                             (remoteDeviceState.videoMuted ? 1 : 4 / 3),

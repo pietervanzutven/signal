@@ -3938,6 +3938,7 @@
     <Content Include="typescript\components\stickers\StickerPicker.js" />
     <Content Include="typescript\components\stickers\StickerPreviewModal.js" />
     <Content Include="typescript\components\styles\Colors.js" />
+    <Content Include="typescript\components\Tooltip.js" />
     <Content Include="typescript\components\UpdateDialog.js" />
     <Content Include="typescript\components\_util.js" />
     <Content Include="typescript\ConversationController.js" />
@@ -4112,6 +4113,7 @@
     <Content Include="typescript\util\missingCaseError.js" />
     <Content Include="typescript\util\parseRemoteClientExpiration.js" />
     <Content Include="typescript\util\registration.js" />
+    <Content Include="typescript\util\ringrtc\normalizeGroupCallTimestamp.js" />
     <Content Include="typescript\util\safetyNumber.js" />
     <Content Include="typescript\util\saveURLAsFile.js" />
     <Content Include="typescript\util\sgnlHref.js" />
