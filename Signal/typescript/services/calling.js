@@ -20,6 +20,16 @@ require(exports => {
         [ringrtc_1.HttpMethod.Post, 'POST'],
         [ringrtc_1.HttpMethod.Delete, 'DELETE'],
     ]);
+    // We send group call update messages to tell other clients to peek, which triggers
+    //   notifications, timeline messages, big green "Join" buttons, and so on. This enum
+    //   represents the three possible states we can be in. This helps ensure that we don't
+    //   send an update on disconnect if we never sent one when we joined.
+    var GroupCallUpdateMessageState;
+    (function (GroupCallUpdateMessageState) {
+        GroupCallUpdateMessageState[GroupCallUpdateMessageState["SentNothing"] = 0] = "SentNothing";
+        GroupCallUpdateMessageState[GroupCallUpdateMessageState["SentJoin"] = 1] = "SentJoin";
+        GroupCallUpdateMessageState[GroupCallUpdateMessageState["SentLeft"] = 2] = "SentLeft";
+    })(GroupCallUpdateMessageState || (GroupCallUpdateMessageState = {}));
     var ringrtc_2 = require("ringrtc");
     exports.CallState = ringrtc_2.CallState;
     exports.CanvasVideoRenderer = ringrtc_2.CanvasVideoRenderer;
@@ -224,16 +234,23 @@ require(exports => {
                 return existing;
             }
             const groupIdBuffer = Crypto_1.base64ToArrayBuffer(groupId);
+            let updateMessageState = GroupCallUpdateMessageState.SentNothing;
             let isRequestingMembershipProof = false;
             const outerGroupCall = ringrtc_1.RingRTC.getGroupCall(groupIdBuffer, RINGRTC_SFU_URL, {
                 onLocalDeviceStateChanged: groupCall => {
                     const localDeviceState = groupCall.getLocalDeviceState();
+                    const { eraId } = groupCall.getPeekInfo() || {};
                     if (localDeviceState.connectionState === ringrtc_1.ConnectionState.NotConnected) {
                         // NOTE: This assumes that only one call is active at a time. For example, if
                         //   there are two calls using the camera, this will disable both of them.
                         //   That's fine for now, but this will break if that assumption changes.
                         this.disableLocalCamera();
                         delete this.callsByConversation[conversationId];
+                        if (updateMessageState === GroupCallUpdateMessageState.SentJoin &&
+                            eraId) {
+                            updateMessageState = GroupCallUpdateMessageState.SentLeft;
+                            this.sendGroupCallUpdateMessage(conversationId, eraId);
+                        }
                     }
                     else {
                         this.callsByConversation[conversationId] = groupCall;
@@ -243,6 +260,12 @@ require(exports => {
                         }
                         else {
                             this.videoCapturer.enableCaptureAndSend(groupCall);
+                        }
+                        if (updateMessageState === GroupCallUpdateMessageState.SentNothing &&
+                            localDeviceState.joinState === ringrtc_1.JoinState.Joined &&
+                            eraId) {
+                            updateMessageState = GroupCallUpdateMessageState.SentJoin;
+                            this.sendGroupCallUpdateMessage(conversationId, eraId);
                         }
                     }
                     this.syncGroupCallToRedux(conversationId, groupCall);
@@ -414,6 +437,25 @@ require(exports => {
         syncGroupCallToRedux(conversationId, groupCall) {
             var _a;
             (_a = this.uxActions) === null || _a === void 0 ? void 0 : _a.groupCallStateChange(Object.assign({ conversationId }, this.formatGroupCallForRedux(groupCall)));
+        }
+        sendGroupCallUpdateMessage(conversationId, eraId) {
+            const conversation = window.ConversationController.get(conversationId);
+            if (!conversation) {
+                window.log.error('Unable to send group call update message for non-existent conversation');
+                return;
+            }
+            const groupV2 = conversation.getGroupV2Info();
+            const sendOptions = conversation.getSendOptions();
+            if (!groupV2) {
+                window.log.error('Unable to send group call update message for conversation that lacks groupV2 info');
+                return;
+            }
+            // We "fire and forget" because sending this message is non-essential.
+            window.textsecure.messaging
+                .sendGroupCallUpdate({ eraId, groupV2 }, sendOptions)
+                .catch(err => {
+                    window.log.error('Failed to send group call update', err);
+                });
         }
         async accept(conversationId, asVideoCall) {
             window.log.info('CallingClass.accept()');

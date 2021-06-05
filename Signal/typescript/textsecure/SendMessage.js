@@ -48,6 +48,7 @@ require(exports => {
             this.timestamp = options.timestamp;
             this.deletedForEveryoneTimestamp = options.deletedForEveryoneTimestamp;
             this.mentions = options.mentions;
+            this.groupCallUpdate = options.groupCallUpdate;
             if (!(this.recipients instanceof Array)) {
                 throw new Error('Invalid recipient list');
             }
@@ -205,6 +206,12 @@ require(exports => {
                     length,
                     mentionUuid,
                 }));
+            }
+            if (this.groupCallUpdate) {
+                const { GroupCallUpdate } = window.textsecure.protobuf.DataMessage;
+                const groupCallUpdate = new GroupCallUpdate();
+                groupCallUpdate.eraId = this.groupCallUpdate.eraId;
+                proto.groupCallUpdate = groupCallUpdate;
             }
             this.dataMessage = proto;
             return proto;
@@ -629,6 +636,13 @@ require(exports => {
             const silent = true;
             await this.sendMessageProtoAndWait(finalTimestamp, recipients, contentMessage, silent, sendOptions);
         }
+        async sendGroupCallUpdate({ groupV2, eraId }, options) {
+            await this.sendMessageToGroup({
+                groupV2,
+                groupCallUpdate: { eraId },
+                timestamp: Date.now(),
+            }, options);
+        }
         async sendDeliveryReceipt(recipientE164, recipientUuid, timestamps, options) {
             const myNumber = window.textsecure.storage.user.getNumber();
             const myUuid = window.textsecure.storage.user.getUuid();
@@ -883,7 +897,7 @@ require(exports => {
             const sendSyncPromise = this.sendSyncMessage(buffer, timestamp, e164, uuid, null, [], [], false, options).catch(logError('resetSession/sendSync error:'));
             return Promise.all([sendToContactPromise, sendSyncPromise]);
         }
-        async sendMessageToGroup({ attachments, expireTimer, groupV2, groupV1, messageText, preview, profileKey, quote, reaction, sticker, deletedForEveryoneTimestamp, timestamp, mentions, }, options) {
+        async sendMessageToGroup({ attachments, expireTimer, groupV2, groupV1, messageText, preview, profileKey, quote, reaction, sticker, deletedForEveryoneTimestamp, timestamp, mentions, groupCallUpdate, }, options) {
             if (!groupV1 && !groupV2) {
                 throw new Error('sendMessageToGroup: Neither group1 nor groupv2 information provided!');
             }
@@ -923,6 +937,7 @@ require(exports => {
                     }
                     : undefined,
                 mentions,
+                groupCallUpdate,
             };
             if (recipients.length === 0) {
                 return Promise.resolve({
