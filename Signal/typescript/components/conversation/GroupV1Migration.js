@@ -16,7 +16,7 @@ require(exports => {
     const ModalHost_1 = require("../ModalHost");
     const GroupV1MigrationDialog_1 = require("../GroupV1MigrationDialog");
     function GroupV1Migration(props) {
-        const { droppedMembers, i18n, invitedMembers } = props;
+        const { areWeInvited, droppedMembers, i18n, invitedMembers } = props;
         const [showingDialog, setShowingDialog] = React.useState(false);
         const showDialog = React.useCallback(() => {
             setShowingDialog(true);
@@ -27,11 +27,12 @@ require(exports => {
         return (React.createElement("div", { className: "module-group-v1-migration" },
             React.createElement("div", { className: "module-group-v1-migration--icon" }),
             React.createElement("div", { className: "module-group-v1-migration--text" }, i18n('GroupV1--Migration--was-upgraded')),
-            renderUsers(invitedMembers, i18n, 'GroupV1--Migration--invited'),
-            renderUsers(droppedMembers, i18n, 'GroupV1--Migration--removed'),
+            areWeInvited ? (React.createElement("div", { className: "module-group-v1-migration--text" }, i18n('GroupV1--Migration--invited--you'))) : (React.createElement(React.Fragment, null,
+                renderUsers(invitedMembers, i18n, 'GroupV1--Migration--invited'),
+                renderUsers(droppedMembers, i18n, 'GroupV1--Migration--removed'))),
             React.createElement("button", { type: "button", className: "module-group-v1-migration--button", onClick: showDialog }, i18n('GroupV1--Migration--learn-more')),
             showingDialog ? (React.createElement(ModalHost_1.ModalHost, { onClose: dismissDialog },
-                React.createElement(GroupV1MigrationDialog_1.GroupV1MigrationDialog, { droppedMembers: droppedMembers, hasMigrated: true, i18n: i18n, invitedMembers: invitedMembers, migrate: () => window.log.warn('GroupV1Migration: Modal called migrate()'), onClose: dismissDialog }))) : null));
+                React.createElement(GroupV1MigrationDialog_1.GroupV1MigrationDialog, { areWeInvited: true, droppedMembers: droppedMembers, hasMigrated: true, i18n: i18n, invitedMembers: invitedMembers, migrate: () => window.log.warn('GroupV1Migration: Modal called migrate()'), onClose: dismissDialog }))) : null));
     }
     exports.GroupV1Migration = GroupV1Migration;
     function renderUsers(members, i18n, keyPrefix) {

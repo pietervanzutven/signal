@@ -22,7 +22,7 @@ require(exports => {
         }
     }
     exports.GroupV1MigrationDialog = React.memo((props) => {
-        const { droppedMembers, hasMigrated, i18n, invitedMembers, migrate, onClose, } = props;
+        const { areWeInvited, droppedMembers, hasMigrated, i18n, invitedMembers, migrate, onClose, } = props;
         const title = hasMigrated
             ? i18n('GroupV1--Migration--info--title')
             : i18n('GroupV1--Migration--migrate--title');
@@ -41,8 +41,11 @@ require(exports => {
                 React.createElement("div", { className: "module-group-v2-migration-dialog__item" },
                     React.createElement("div", { className: "module-group-v2-migration-dialog__item__bullet" }),
                     React.createElement("div", { className: "module-group-v2-migration-dialog__item__content" }, keepHistory)),
-                renderMembers(invitedMembers, 'GroupV1--Migration--info--invited', i18n),
-                renderMembers(droppedMembers, droppedMembersKey, i18n)),
+                areWeInvited ? (React.createElement("div", { className: "module-group-v2-migration-dialog__item" },
+                    React.createElement("div", { className: "module-group-v2-migration-dialog__item__bullet" }),
+                    React.createElement("div", { className: "module-group-v2-migration-dialog__item__content" }, i18n('GroupV1--Migration--info--invited--you')))) : (React.createElement(React.Fragment, null,
+                        renderMembers(invitedMembers, 'GroupV1--Migration--info--invited', i18n),
+                        renderMembers(droppedMembers, droppedMembersKey, i18n)))),
             renderButtons(hasMigrated, onClose, migrate, i18n)));
     });
     function renderButtons(hasMigrated, onClose, migrate, i18n) {

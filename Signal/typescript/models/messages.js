@@ -332,11 +332,24 @@ require(exports => {
             };
         }
         getPropsForGroupV1Migration() {
-            const invitedGV2Members = this.get('invitedGV2Members') || [];
-            const droppedGV2MemberIds = this.get('droppedGV2MemberIds') || [];
-            const invitedMembers = invitedGV2Members.map(item => this.findAndFormatContact(item.conversationId));
-            const droppedMembers = droppedGV2MemberIds.map(conversationId => this.findAndFormatContact(conversationId));
+            const migration = this.get('groupMigration');
+            if (!migration) {
+                // Backwards-compatibility with data schema in early betas
+                const invitedGV2Members = this.get('invitedGV2Members') || [];
+                const droppedGV2MemberIds = this.get('droppedGV2MemberIds') || [];
+                const invitedMembers = invitedGV2Members.map(item => this.findAndFormatContact(item.conversationId));
+                const droppedMembers = droppedGV2MemberIds.map(conversationId => this.findAndFormatContact(conversationId));
+                return {
+                    areWeInvited: false,
+                    droppedMembers,
+                    invitedMembers,
+                };
+            }
+            const { areWeInvited, droppedMemberIds, invitedMembers: rawInvitedMembers, } = migration;
+            const invitedMembers = rawInvitedMembers.map(item => this.findAndFormatContact(item.conversationId));
+            const droppedMembers = droppedMemberIds.map(conversationId => this.findAndFormatContact(conversationId));
             return {
+                areWeInvited,
                 droppedMembers,
                 invitedMembers,
             };

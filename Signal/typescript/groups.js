@@ -145,7 +145,7 @@ require(exports => {
             }
             const uuidCipherTextBuffer = zkgroup_1.encryptUuid(clientZkGroupCipher, uuid);
             member.userId = uuidCipherTextBuffer;
-            member.role = MEMBER_ROLE_ENUM.DEFAULT;
+            member.role = item.role || MEMBER_ROLE_ENUM.DEFAULT;
             pendingMember.member = member;
             pendingMember.timestamp = item.timestamp;
             pendingMember.addedByUserId = ourUuidCipherTextBuffer;
@@ -461,11 +461,16 @@ require(exports => {
                 conversationId,
                 timestamp: now,
                 addedByUserId: ourConversationId,
+                role: MEMBER_ROLE_ENUM.ADMINISTRATOR,
             };
         }));
+        if (!areWeMember) {
+            throw new Error(`getGroupMigrationMembers/${logId}: We are not a member!`);
+        }
+        if (areWeInvited) {
+            throw new Error(`getGroupMigrationMembers/${logId}: We are invited!`);
+        }
         return {
-            areWeInvited,
-            areWeMember,
             droppedGV2MemberIds,
             membersV2,
             pendingMembersV2,
@@ -499,13 +504,7 @@ require(exports => {
                 if (!ourConversationId) {
                     throw new Error(`initiateMigrationToGroupV2/${logId}: Couldn't fetch our own conversationId!`);
                 }
-                const { areWeMember, areWeInvited, membersV2, pendingMembersV2, droppedGV2MemberIds, previousGroupV1Members, } = await getGroupMigrationMembers(conversation);
-                if (!areWeMember) {
-                    throw new Error(`initiateMigrationToGroupV2/${logId}: After members migration, we are not a member!`);
-                }
-                if (areWeInvited) {
-                    throw new Error(`initiateMigrationToGroupV2/${logId}: After members migration, we are invited!`);
-                }
+                const { membersV2, pendingMembersV2, droppedGV2MemberIds, previousGroupV1Members, } = await getGroupMigrationMembers(conversation);
                 const rawSizeLimit = window.Signal.RemoteConfig.getValue('global.groupsv2.groupSizeHardLimit');
                 if (!rawSizeLimit) {
                     throw new Error(`initiateMigrationToGroupV2/${logId}: Failed to fetch group size limit`);
@@ -747,36 +746,26 @@ require(exports => {
             ...(newAttributes.membersV2 || []).map(item => item.conversationId),
             ...(newAttributes.pendingMembersV2 || []).map(item => item.conversationId),
         ];
-        const droppedGV2MemberIds = lodash_1.difference(previousGroupV1MembersIds, combinedConversationIds).filter(id => id && id !== ourConversationId);
-        const invitedGV2Members = (newAttributes.pendingMembersV2 || []).filter(item => item.conversationId !== ourConversationId);
+        const droppedMemberIds = lodash_1.difference(previousGroupV1MembersIds, combinedConversationIds).filter(id => id && id !== ourConversationId);
+        const invitedMembers = (newAttributes.pendingMembersV2 || []).filter(item => item.conversationId !== ourConversationId);
+        const areWeInvited = (newAttributes.pendingMembersV2 || []).some(item => item.conversationId === ourConversationId);
+        const areWeMember = (newAttributes.membersV2 || []).some(item => item.conversationId === ourConversationId);
         // Generate notifications into the timeline
         const groupChangeMessages = [];
         groupChangeMessages.push(Object.assign(Object.assign({}, generateBasicMessage()), {
-            type: 'group-v1-migration', invitedGV2Members,
-            droppedGV2MemberIds
+            type: 'group-v1-migration', groupMigration: {
+                areWeInvited,
+                invitedMembers,
+                droppedMemberIds,
+            }
         }));
-        const areWeInvited = (newAttributes.pendingMembersV2 || []).some(item => item.conversationId === ourConversationId);
-        const areWeMember = (newAttributes.membersV2 || []).some(item => item.conversationId === ourConversationId);
         if (!areWeInvited && !areWeMember) {
-            // Add a message to the timeline saying the user was removed
+            // Add a message to the timeline saying the user was removed. This shouldn't happen.
             groupChangeMessages.push(Object.assign(Object.assign({}, generateBasicMessage()), {
                 type: 'group-v2-change', groupV2Change: {
                     details: [
                         {
                             type: 'member-remove',
-                            conversationId: ourConversationId,
-                        },
-                    ],
-                }
-            }));
-        }
-        else if (areWeInvited && !areWeMember && ourConversationId) {
-            // Add a message to the timeline saying we were invited to the group
-            groupChangeMessages.push(Object.assign(Object.assign({}, generateBasicMessage()), {
-                type: 'group-v2-change', groupV2Change: {
-                    details: [
-                        {
-                            type: 'pending-add-one',
                             conversationId: ourConversationId,
                         },
                     ],
@@ -1608,6 +1597,7 @@ require(exports => {
                 conversationId: conversation.id,
                 addedByUserId: added.addedByUserId,
                 timestamp: added.timestamp,
+                role: added.member.role || MEMBER_ROLE_ENUM.DEFAULT,
             };
             if (added.member && added.member.profileKey) {
                 newProfileKeys.push({
@@ -1639,6 +1629,7 @@ require(exports => {
             const conversation = window.ConversationController.getOrCreate(uuid, 'private', {
                 profileKey: profileKey ? Crypto_1.arrayBufferToBase64(profileKey) : undefined,
             });
+            const previousRecord = pendingMembers[conversation.id];
             if (pendingMembers[conversation.id]) {
                 delete pendingMembers[conversation.id];
             }
@@ -1652,7 +1643,7 @@ require(exports => {
             members[conversation.id] = {
                 conversationId: conversation.id,
                 joinedAtVersion: version,
-                role: MEMBER_ROLE_ENUM.DEFAULT,
+                role: previousRecord.role || MEMBER_ROLE_ENUM.DEFAULT,
             };
             newProfileKeys.push({
                 profileKey,
@@ -1766,6 +1757,7 @@ require(exports => {
     async function applyGroupState({ group, groupState, sourceConversationId, }) {
         const logId = idForLogging(group);
         const ACCESS_ENUM = window.textsecure.protobuf.AccessControl.AccessRequired;
+        const MEMBER_ROLE_ENUM = window.textsecure.protobuf.Member.Role;
         const version = groupState.version || 0;
         const result = Object.assign({}, group);
         // version
@@ -1816,12 +1808,11 @@ require(exports => {
                         result.addedBy = sourceConversationId;
                     }
                 }
-                if (!member.role ||
-                    member.role === window.textsecure.protobuf.Member.Role.UNKNOWN) {
-                    throw new Error('applyGroupState: Received false or UNKNOWN member.role');
+                if (!isValidRole(member.role)) {
+                    throw new Error('applyGroupState: Member had invalid role');
                 }
                 return {
-                    role: member.role,
+                    role: member.role || MEMBER_ROLE_ENUM.DEFAULT,
                     joinedAtVersion: member.joinedAtVersion || version,
                     conversationId: conversation.id,
                 };
@@ -1840,18 +1831,22 @@ require(exports => {
                     });
                 }
                 else {
-                    throw new Error('Pending member did not have an associated userId');
+                    throw new Error('applyGroupState: Pending member did not have an associated userId');
                 }
                 if (member.addedByUserId) {
                     invitedBy = window.ConversationController.getOrCreate(member.addedByUserId, 'private');
                 }
                 else {
-                    throw new Error('Pending member did not have an addedByUserID');
+                    throw new Error('applyGroupState: Pending member did not have an addedByUserID');
+                }
+                if (!isValidRole(member.member.role)) {
+                    throw new Error('applyGroupState: Pending member had invalid role');
                 }
                 return {
                     addedByUserId: invitedBy.id,
                     conversationId: pending.id,
                     timestamp: member.timestamp,
+                    role: member.member.role || MEMBER_ROLE_ENUM.DEFAULT,
                 };
             });
         }
