@@ -478,7 +478,7 @@
             start();
             window.Signal.Services.initializeNetworkObserver(window.reduxActions.network);
             window.Signal.Services.initializeUpdateListener(window.reduxActions.updates, window.Whisper.events);
-            window.Signal.Services.calling.initialize(window.reduxActions.calling);
+            window.Signal.Services.calling.initialize(window.reduxActions.calling, window.getSfuUrl());
             window.reduxActions.expiration.hydrateExpirationStatus(window.Signal.Util.hasExpired());
         }
     });

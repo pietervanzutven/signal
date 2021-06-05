@@ -13,7 +13,6 @@ require(exports => {
     const groups_1 = require("../groups");
     const missingCaseError_1 = require("../util/missingCaseError");
     const normalizeGroupCallTimestamp_1 = require("../util/ringrtc/normalizeGroupCallTimestamp");
-    const RINGRTC_SFU_URL = 'https://sfu.voip.signal.org/';
     const RINGRTC_HTTP_METHOD_TO_OUR_HTTP_METHOD = new Map([
         [ringrtc_1.HttpMethod.Get, 'GET'],
         [ringrtc_1.HttpMethod.Put, 'PUT'],
@@ -40,11 +39,12 @@ require(exports => {
             this.videoRenderer = new ringrtc_1.CanvasVideoRenderer();
             this.callsByConversation = {};
         }
-        initialize(uxActions) {
+        initialize(uxActions, sfuUrl) {
             this.uxActions = uxActions;
             if (!uxActions) {
                 throw new Error('CallingClass.initialize: Invalid uxActions.');
             }
+            this.sfuUrl = sfuUrl;
             ringrtc_1.RingRTC.handleOutgoingSignaling = this.handleOutgoingSignaling.bind(this);
             ringrtc_1.RingRTC.handleIncomingCall = this.handleIncomingCall.bind(this);
             ringrtc_1.RingRTC.handleAutoEndedIncomingCallRequest = this.handleAutoEndedIncomingCallRequest.bind(this);
@@ -200,6 +200,9 @@ require(exports => {
             if (statefulPeekInfo) {
                 return statefulPeekInfo;
             }
+            if (!this.sfuUrl) {
+                throw new Error('Missing SFU URL; not peeking group call');
+            }
             const conversation = window.ConversationController.get(conversationId);
             if (!conversation) {
                 throw new Error('Missing conversation; not peeking group call');
@@ -214,7 +217,7 @@ require(exports => {
                 throw new Error('No membership proof. Cannot peek group call');
             }
             const membershipProof = new TextEncoder().encode(proof).buffer;
-            return ringrtc_1.RingRTC.peekGroupCall(RINGRTC_SFU_URL, membershipProof, this.getGroupCallMembers(conversationId));
+            return ringrtc_1.RingRTC.peekGroupCall(this.sfuUrl, membershipProof, this.getGroupCallMembers(conversationId));
         }
         /**
          * Connect to a conversation's group call and connect it to Redux.
@@ -233,10 +236,13 @@ require(exports => {
                 }
                 return existing;
             }
+            if (!this.sfuUrl) {
+                throw new Error('Missing SFU URL; not connecting group call');
+            }
             const groupIdBuffer = Crypto_1.base64ToArrayBuffer(groupId);
             let updateMessageState = GroupCallUpdateMessageState.SentNothing;
             let isRequestingMembershipProof = false;
-            const outerGroupCall = ringrtc_1.RingRTC.getGroupCall(groupIdBuffer, RINGRTC_SFU_URL, {
+            const outerGroupCall = ringrtc_1.RingRTC.getGroupCall(groupIdBuffer, this.sfuUrl, {
                 onLocalDeviceStateChanged: groupCall => {
                     const localDeviceState = groupCall.getLocalDeviceState();
                     const { eraId } = groupCall.getPeekInfo() || {};
