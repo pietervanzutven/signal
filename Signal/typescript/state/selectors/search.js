@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -9,6 +11,7 @@ require(exports => {
     const Whisper_1 = require("../../shims/Whisper");
     const libphonenumberInstance_1 = require("../../util/libphonenumberInstance");
     const user_1 = require("./user");
+    const items_1 = require("./items");
     const conversations_1 = require("./conversations");
     exports.getSearch = (state) => state.search;
     exports.getQuery = reselect_1.createSelector(exports.getSearch, (state) => state.query);
@@ -24,7 +27,7 @@ require(exports => {
     exports.getSearchResults = reselect_1.createSelector([
         exports.getSearch,
         user_1.getRegionCode,
-        user_1.getUserAgent,
+        items_1.getUserAgent,
         conversations_1.getConversationLookup,
         conversations_1.getSelectedConversation,
         exports.getSelectedMessage,

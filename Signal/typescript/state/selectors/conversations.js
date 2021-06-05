@@ -1,7 +1,7 @@
 require(exports => {
     "use strict";
-// Copyright 2019-2020 Signal Messenger, LLC
-// SPDX-License-Identifier: AGPL-3.0-only
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -11,6 +11,7 @@ require(exports => {
     const reselect_1 = require("reselect");
     const Whisper_1 = require("../../shims/Whisper");
     const user_1 = require("./user");
+    const items_1 = require("./items");
     exports.getConversations = (state) => state.conversations;
     exports.getConversationLookup = reselect_1.createSelector(exports.getConversations, (state) => {
         return state.conversationLookup;
@@ -66,7 +67,7 @@ require(exports => {
         };
     };
     exports.getConversationComparator = reselect_1.createSelector(user_1.getIntl, user_1.getRegionCode, exports._getConversationComparator);
-    exports._getLeftPaneLists = (lookup, comparator, selectedConversation) => {
+    exports._getLeftPaneLists = (lookup, comparator, selectedConversation, pinnedConversationIds) => {
         const conversations = [];
         const archivedConversations = [];
         const pinnedConversations = [];
@@ -91,11 +92,11 @@ require(exports => {
         }
         conversations.sort(comparator);
         archivedConversations.sort(comparator);
-    const pinnedConversationIds = window.storage.get('pinnedConversationIds', []);
-        pinnedConversations.sort((a, b) => pinnedConversationIds.indexOf(a.id) - pinnedConversationIds.indexOf(b.id));
+        pinnedConversations.sort((a, b) => (pinnedConversationIds || []).indexOf(a.id) -
+            (pinnedConversationIds || []).indexOf(b.id));
         return { conversations, archivedConversations, pinnedConversations };
     };
-    exports.getLeftPaneLists = reselect_1.createSelector(exports.getConversationLookup, exports.getConversationComparator, exports.getSelectedConversation, exports._getLeftPaneLists);
+    exports.getLeftPaneLists = reselect_1.createSelector(exports.getConversationLookup, exports.getConversationComparator, exports.getSelectedConversation, items_1.getPinnedConversationIds, exports._getLeftPaneLists);
     exports.getMe = reselect_1.createSelector([exports.getConversationLookup, user_1.getUserConversationId], (lookup, ourConversationId) => {
         return lookup[ourConversationId];
     });

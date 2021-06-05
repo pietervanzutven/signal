@@ -5,6 +5,7 @@ require(exports => {
     Object.defineProperty(exports, "__esModule", { value: true });
     /* eslint-disable camelcase */
     const lodash_1 = require("lodash");
+    const getOwn_1 = require("../../util/getOwn");
     const events_1 = require("../../shims/events");
     const Calling_1 = require("../../types/Calling");
     // Helpers
@@ -47,6 +48,8 @@ require(exports => {
         openConversationExternal,
         showInbox,
         showArchivedConversations,
+        repairNewestMessage,
+        repairOldestMessage,
     };
     function conversationAdded(id, data) {
         return {
@@ -124,6 +127,22 @@ require(exports => {
                 messages,
                 isNewMessage,
                 isActive,
+            },
+        };
+    }
+    function repairNewestMessage(conversationId) {
+        return {
+            type: 'REPAIR_NEWEST_MESSAGE',
+            payload: {
+                conversationId,
+            },
+        };
+    }
+    function repairOldestMessage(conversationId) {
+        return {
+            type: 'REPAIR_OLDEST_MESSAGE',
+            payload: {
+                conversationId,
             },
         };
     }
@@ -525,6 +544,34 @@ require(exports => {
                     }),
                 }
             });
+        }
+        if (action.type === 'REPAIR_NEWEST_MESSAGE') {
+            const { conversationId } = action.payload;
+            const { messagesByConversation, messagesLookup } = state;
+            const existingConversation = getOwn_1.getOwn(messagesByConversation, conversationId);
+            if (!existingConversation) {
+                return state;
+            }
+            const { messageIds } = existingConversation;
+            const lastId = messageIds && messageIds.length
+                ? messageIds[messageIds.length - 1]
+                : undefined;
+            const last = lastId ? getOwn_1.getOwn(messagesLookup, lastId) : undefined;
+            const newest = last ? lodash_1.pick(last, ['id', 'received_at']) : undefined;
+            return Object.assign(Object.assign({}, state), { messagesByConversation: Object.assign(Object.assign({}, messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { metrics: Object.assign(Object.assign({}, existingConversation.metrics), { newest }) }) }) });
+        }
+        if (action.type === 'REPAIR_OLDEST_MESSAGE') {
+            const { conversationId } = action.payload;
+            const { messagesByConversation, messagesLookup } = state;
+            const existingConversation = getOwn_1.getOwn(messagesByConversation, conversationId);
+            if (!existingConversation) {
+                return state;
+            }
+            const { messageIds } = existingConversation;
+            const firstId = messageIds && messageIds.length ? messageIds[0] : undefined;
+            const first = firstId ? getOwn_1.getOwn(messagesLookup, firstId) : undefined;
+            const oldest = first ? lodash_1.pick(first, ['id', 'received_at']) : undefined;
+            return Object.assign(Object.assign({}, state), { messagesByConversation: Object.assign(Object.assign({}, messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { metrics: Object.assign(Object.assign({}, existingConversation.metrics), { oldest }) }) }) });
         }
         if (action.type === 'MESSAGES_ADDED') {
             const { conversationId, isActive, isNewMessage, messages } = action.payload;

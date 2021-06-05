@@ -568,7 +568,7 @@ Whisper.ConversationView = Whisper.View.extend({
             this.scrollToMessage(message.id);
         };
         const loadOlderMessages = async (oldestMessageId) => {
-            const { messagesAdded, setMessagesLoading, } = window.reduxActions.conversations;
+            const { messagesAdded, setMessagesLoading, repairOldestMessage, } = window.reduxActions.conversations;
             const conversationId = this.model.id;
             setMessagesLoading(conversationId, true);
             const finish = this.setInProgressFetch();
@@ -588,6 +588,7 @@ Whisper.ConversationView = Whisper.View.extend({
                 });
                 if (models.length < 1) {
                     window.log.warn('loadOlderMessages: requested, but loaded no messages');
+                    repairOldestMessage(conversationId);
                     return;
                 }
                 const cleaned = await this.cleanModels(models);
@@ -604,7 +605,7 @@ Whisper.ConversationView = Whisper.View.extend({
             }
         };
         const loadNewerMessages = async (newestMessageId) => {
-            const { messagesAdded, setMessagesLoading, } = window.reduxActions.conversations;
+            const { messagesAdded, setMessagesLoading, repairNewestMessage, } = window.reduxActions.conversations;
             const conversationId = this.model.id;
             setMessagesLoading(conversationId, true);
             const finish = this.setInProgressFetch();
@@ -623,6 +624,7 @@ Whisper.ConversationView = Whisper.View.extend({
                 });
                 if (models.length < 1) {
                     window.log.warn('loadNewerMessages: requested, but loaded no messages');
+                    repairNewestMessage(conversationId);
                     return;
                 }
                 const cleaned = await this.cleanModels(models);
