@@ -90,6 +90,23 @@ require(exports => {
                 return;
             }
             window.log.info('CallingClass.startCallingLobby(): Starting lobby');
+            // It's important that this function comes before any calls to
+            //   `videoCapturer.enableCapture` or `videoCapturer.enableCaptureAndSend` because of
+            //   a small RingRTC bug.
+            //
+            // If we tell RingRTC to start capturing video (with those methods or with
+            //   `RingRTC.setPreferredDevice`, which also captures video) multiple times in quick
+            //   succession, it will call the asynchronous `getUserMedia` twice. It'll save the
+            //   results in the same variable, which means the first call can be overridden.
+            //   Later, when we try to turn the camera off, we'll only disable the *second* result
+            //   of `getUserMedia` and the camera will stay on.
+            //
+            // We get around this by `await`ing, making sure we're all done with `getUserMedia`,
+            //   and then continuing.
+            //
+            // We should be able to move this below `this.connectGroupCall` once that RingRTC bug
+            //   is fixed. See DESKTOP-1032.
+            await this.startDeviceReselectionTimer();
             switch (callMode) {
                 case Calling_1.CallMode.Direct:
                     this.uxActions.showCallLobby({
@@ -119,7 +136,6 @@ require(exports => {
                 default:
                     throw missingCaseError_1.missingCaseError(callMode);
             }
-            await this.startDeviceReselectionTimer();
             if (isVideoCall) {
                 this.enableLocalCamera();
             }
