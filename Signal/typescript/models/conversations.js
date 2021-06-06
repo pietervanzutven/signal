@@ -2910,8 +2910,8 @@ require(exports => {
         // [X] archived
         // [X] markedUnread
         captureChange(property) {
-            if (!window.Signal.RemoteConfig.isEnabled('desktop.storageWrite')) {
-                window.log.info('conversation.captureChange: Returning early; desktop.storageWrite is falsey');
+            if (!window.Signal.RemoteConfig.isEnabled('desktop.storageWrite2')) {
+                window.log.info('conversation.captureChange: Returning early; desktop.storageWrite2 is falsey');
                 return;
             }
             window.log.info('storageService[captureChange]', property, this.idForLogging());
