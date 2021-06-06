@@ -861,7 +861,7 @@ require(exports => {
             }, options);
         }
         async resetSession(uuid, e164, timestamp, options) {
-            window.log.info('resetting secure session');
+            window.log.info('resetSession: start');
             const silent = false;
             const proto = new window.textsecure.protobuf.DataMessage();
             proto.body = 'TERMINATE';
@@ -872,21 +872,21 @@ require(exports => {
                 window.log.error(prefix, error && error.stack ? error.stack : error);
                 throw error;
             };
-            const deleteAllSessions = async (targetIdentifier) => window.textsecure.storage.protocol
+            const closeAllSessions = async (targetIdentifier) => window.textsecure.storage.protocol
                 .getDeviceIds(targetIdentifier)
                 .then(async (deviceIds) => Promise.all(deviceIds.map(async (deviceId) => {
                     const address = new window.libsignal.SignalProtocolAddress(targetIdentifier, deviceId);
-                    window.log.info('deleting sessions for', address.toString());
+                    window.log.info('resetSession: closing sessions for', address.toString());
                     const sessionCipher = new window.libsignal.SessionCipher(window.textsecure.storage.protocol, address);
-                    return sessionCipher.deleteAllSessionsForDevice();
+                    return sessionCipher.closeOpenSessionForDevice();
                 })));
-            const sendToContactPromise = deleteAllSessions(identifier)
-                .catch(logError('resetSession/deleteAllSessions1 error:'))
+            const sendToContactPromise = closeAllSessions(identifier)
+                .catch(logError('resetSession/closeAllSessions1 error:'))
                 .then(async () => {
-                    window.log.info('finished closing local sessions, now sending to contact');
+                    window.log.info('resetSession: finished closing local sessions, now sending to contact');
                     return this.sendIndividualProto(identifier, proto, timestamp, silent, options).catch(logError('resetSession/sendToContact error:'));
                 })
-                .then(async () => deleteAllSessions(identifier).catch(logError('resetSession/deleteAllSessions2 error:')));
+                .then(async () => closeAllSessions(identifier).catch(logError('resetSession/closeAllSessions2 error:')));
             const myNumber = window.textsecure.storage.user.getNumber();
             const myUuid = window.textsecure.storage.user.getUuid();
             // We already sent the reset session to our other devices in the code above!

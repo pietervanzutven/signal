@@ -473,7 +473,7 @@ require(exports => {
             const taskWithTimeout = window.textsecure.createTaskWithTimeout(task, `queueEncryptedEnvelope ${id}`);
             const promise = this.addToQueue(taskWithTimeout);
             return promise.catch(error => {
-                window.log.error(`queueDecryptedEnvelope error handling envelope ${id}:`, error && error.stack ? error.stack : error);
+                window.log.error(`queueDecryptedEnvelope error handling envelope ${id}:`, error && error.extra ? JSON.stringify(error.extra) : '', error && error.stack ? error.stack : error);
             });
         }
         async queueEnvelope(envelope) {
@@ -487,6 +487,7 @@ require(exports => {
                     'queueEnvelope error handling envelope',
                     this.getEnvelopeId(envelope),
                     ':',
+                    error && error.extra ? JSON.stringify(error.extra) : '',
                     error && error.stack ? error.stack : error,
                 ];
                 if (error.warn) {
@@ -1346,8 +1347,8 @@ require(exports => {
             return Promise.all(deviceIds.map(async (deviceId) => {
                 const address = new window.libsignal.SignalProtocolAddress(identifier, deviceId);
                 const sessionCipher = new window.libsignal.SessionCipher(window.textsecure.storage.protocol, address);
-                window.log.info('deleting sessions for', address.toString());
-                return sessionCipher.deleteAllSessionsForDevice();
+                window.log.info('handleEndSession: closing sessions for', address.toString());
+                return sessionCipher.closeOpenSessionForDevice();
             }));
         }
         async processDecrypted(envelope, decrypted) {
