@@ -448,6 +448,7 @@ require(exports => {
     const ITEM_KEYS = {
         identityKey: ['value.pubKey', 'value.privKey'],
         senderCertificate: ['value.serialized'],
+        senderCertificateNoE164: ['value.serialized'],
         signaling_key: ['value'],
         profileKey: ['value'],
     };

@@ -1709,7 +1709,6 @@ require(exports => {
                 ? getName(embeddedContact[0])
                 : '';
             return {
-                author: contact.get('e164'),
                 authorUuid: contact.get('uuid'),
                 bodyRanges: quotedMessage.get('bodyRanges'),
                 id: quotedMessage.get('sent_at'),

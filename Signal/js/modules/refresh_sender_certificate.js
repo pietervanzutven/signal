@@ -1,9 +1,10 @@
-/* global window, setTimeout, clearTimeout, textsecure, WebAPI, ConversationController */
+require((exports, module) => {
+  // Copyright 2018-2020 Signal Messenger, LLC
+  // SPDX-License-Identifier: AGPL-3.0-only
 
-(function () {
-  'use strict';
+  /* global window, setTimeout, clearTimeout, textsecure, WebAPI, ConversationController */
 
-  window.refresh_sender_certificate = {
+  module.exports = {
     initialize,
   };
 
@@ -65,6 +66,32 @@
     // Keeping this entrypoint around so more inialize() calls just kick the timing
     scheduleNext = scheduleNextRotation;
 
+    async function saveCert({ certificate, key }) {
+      const arrayBuffer = window.Signal.Crypto.base64ToArrayBuffer(certificate);
+      const decodedContainer = textsecure.protobuf.SenderCertificate.decode(
+        arrayBuffer
+      );
+      const decodedCert = textsecure.protobuf.SenderCertificate.Certificate.decode(
+        decodedContainer.certificate
+      );
+
+      // We don't want to send a protobuf-generated object across IPC, so we make
+      //   our own object.
+      const toSave = {
+        expires: decodedCert.expires.toNumber(),
+        serialized: arrayBuffer,
+      };
+      await storage.put(key, toSave);
+    }
+
+    async function removeOldKey() {
+      const oldCertKey = 'senderCertificateWithUuid';
+      const oldUuidCert = storage.get(oldCertKey);
+      if (oldUuidCert) {
+        await storage.remove(oldCertKey);
+      }
+    }
+
     async function run() {
       logger.info('refreshSenderCertificate: Getting new certificate...');
       try {
@@ -76,29 +103,23 @@
           password: PASSWORD,
         });
 
-        const { certificate } = await server.getSenderCertificate();
-        const arrayBuffer = window.Signal.Crypto.base64ToArrayBuffer(certificate);
-        const decodedContainer = textsecure.protobuf.SenderCertificate.decode(
-          arrayBuffer
-        );
-        const decodedCert = textsecure.protobuf.SenderCertificate.Certificate.decode(
-          decodedContainer.certificate
-        );
+        const omitE164 = true;
+        const [
+          { certificate },
+          { certificate: certificateWithNoE164 },
+        ] = await Promise.all([
+          server.getSenderCertificate(),
+          server.getSenderCertificate(omitE164),
+        ]);
 
-        // We don't want to send a protobuf-generated object across IPC, so we make
-        //   our own object.
-        const toSave = {
-          expires: decodedCert.expires.toNumber(),
-          serialized: arrayBuffer,
-        };
-
-        storage.put('senderCertificate', toSave);
-
-        const oldCertKey = 'senderCertificateWithUuid';
-        const oldUuidCert = storage.get(oldCertKey);
-        if (oldUuidCert) {
-          await storage.remove(oldCertKey);
-        }
+        await Promise.all([
+          saveCert({ certificate, key: 'senderCertificate' }),
+          saveCert({
+            certificate: certificateWithNoE164,
+            key: 'senderCertificateNoE164',
+          }),
+          removeOldKey(),
+        ]);
 
         scheduledTime = null;
         scheduleNextRotation();
@@ -151,4 +172,4 @@
       timeout = setTimeout(runWhenOnline, waitTime);
     }
   }
-})();
+});

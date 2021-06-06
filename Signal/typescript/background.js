@@ -1293,7 +1293,8 @@
                             c.get('e164') &&
                             !c.get('uuid') &&
                             !c.isEverUnregistered()))
-                            .map(c => c.get('e164'));
+                            .map(c => c.get('e164'))
+                            .filter(Boolean);
                         if (lonelyE164s.length > 0) {
                             const lookup = await window.textsecure.messaging.getUuidsForE164s(lonelyE164s);
                             const e164s = Object.keys(lookup);

@@ -599,13 +599,15 @@ require(exports => {
                 });
                 return res.config.filter(({ name }) => name.startsWith('desktop.') || name.startsWith('global.'));
             }
-            async function getSenderCertificate() {
+            async function getSenderCertificate(omitE164) {
+                const baseParameters = '?includeUuid=true';
+                const urlParameters = `${baseParameters}${omitE164 ? '&includeE164=false' : ''}`;
                 return _ajax({
                     call: 'deliveryCert',
                     httpType: 'GET',
                     responseType: 'json',
                     validateResponse: { certificate: 'string' },
-                    urlParameters: '?includeUuid=true',
+                    urlParameters,
                 });
             }
             async function getStorageCredentials() {

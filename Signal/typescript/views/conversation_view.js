@@ -2210,7 +2210,6 @@ Whisper.ConversationView = Whisper.View.extend({
             : null;
         try {
             await this.model.sendReactionMessage(reaction, {
-                targetAuthorE164: messageModel.getSource(),
                 targetAuthorUuid: messageModel.getSourceUuid(),
                 targetTimestamp: messageModel.get('sent_at'),
             });
