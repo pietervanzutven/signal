@@ -64,21 +64,19 @@ require(exports => {
         const participantNames = peekedParticipants.map(participant => participant.uuid === me.uuid
             ? i18n('you')
             : participant.firstName || participant.title);
-        let joinButton;
+        const canJoin = !isCallFull && !isCallConnecting;
+        let joinButtonChildren;
         if (isCallFull) {
-            joinButton = (react_1.default.createElement("button", { className: "module-button__green module-calling-lobby__button", disabled: true, tabIndex: 0, type: "button" }, i18n('calling__call-is-full')));
+            joinButtonChildren = i18n('calling__call-is-full');
         }
         else if (isCallConnecting) {
-            joinButton = (react_1.default.createElement("button", { className: "module-button__green module-calling-lobby__button", disabled: true, tabIndex: 0, type: "button" },
-                react_1.default.createElement(Spinner_1.Spinner, { svgSize: "small" })));
+            joinButtonChildren = react_1.default.createElement(Spinner_1.Spinner, { svgSize: "small" });
+        }
+        else if (peekedParticipants.length) {
+            joinButtonChildren = i18n('calling__join');
         }
         else {
-            joinButton = (react_1.default.createElement("button", {
-                className: "module-button__green module-calling-lobby__button", onClick: () => {
-                    setIsCallConnecting(true);
-                    onJoinCall();
-                }, tabIndex: 0, type: "button"
-            }, isGroupCall ? i18n('calling__join') : i18n('calling__start')));
+            joinButtonChildren = i18n('calling__start');
         }
         return (react_1.default.createElement("div", { className: "module-calling__container" },
             react_1.default.createElement(CallingHeader_1.CallingHeader, { title: conversation.title, i18n: i18n, isGroupCall: isGroupCall, participantCount: peekedParticipants.length, showParticipantsList: showParticipantsList, toggleParticipants: toggleParticipants, toggleSettings: toggleSettings }),
@@ -113,6 +111,13 @@ require(exports => {
                 }))) : null,
             react_1.default.createElement("div", { className: "module-calling-lobby__actions" },
                 react_1.default.createElement("button", { className: "module-button__gray module-calling-lobby__button", onClick: onCallCanceled, tabIndex: 0, type: "button" }, i18n('cancel')),
-                joinButton)));
+                react_1.default.createElement("button", {
+                    className: "module-button__green module-calling-lobby__button", disabled: !canJoin, onClick: canJoin
+                        ? () => {
+                            setIsCallConnecting(true);
+                            onJoinCall();
+                        }
+                        : undefined, tabIndex: 0, type: "button"
+                }, joinButtonChildren))));
     };
 });
