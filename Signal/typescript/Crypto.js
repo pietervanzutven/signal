@@ -275,7 +275,7 @@ require(exports => {
         const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
         const ivBits = window.sjcl.codec.arrayBuffer.toBits(iv);
         const ptBits = window.sjcl.codec.arrayBuffer.toBits(plaintext);
-        const adataBits = additionalData ? window.sjcl.codec.arrayBuffer.toBits(additionalData) : [];
+        const adataBits = additionalData ? window.sjcl.codec.arrayBuffer.toBits(additionalData.buffer) : [];
 
         const aes = new window.sjcl.cipher.aes(keyBits);
         const ctBits = window.sjcl.mode.gcm.encrypt(aes, ptBits, ivBits, adataBits);
@@ -288,7 +288,7 @@ require(exports => {
         const keyBits = window.sjcl.codec.arrayBuffer.toBits(key)
         const ivBits = window.sjcl.codec.arrayBuffer.toBits(iv);
         const ctBits = window.sjcl.codec.arrayBuffer.toBits(ciphertext);
-        const adataBits = additionalData ? window.sjcl.codec.arrayBuffer.toBits(additionalData) : [];
+        const adataBits = additionalData ? window.sjcl.codec.arrayBuffer.toBits(additionalData.buffer) : [];
 
         const aes = new window.sjcl.cipher.aes(keyBits);
         const ptBits = window.sjcl.mode.gcm.decrypt(aes, ctBits, ivBits, adataBits);
