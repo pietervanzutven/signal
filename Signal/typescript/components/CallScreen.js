@@ -114,6 +114,8 @@ require(exports => {
             default:
                 throw missingCaseError_1.missingCaseError(activeCall);
         }
+        const isLonelyInGroup = activeCall.callMode === Calling_1.CallMode.Group &&
+            !activeCall.remoteParticipants.length;
         const videoButtonType = hasLocalVideo
             ? CallingButton_1.CallingButtonType.VIDEO_ON
             : CallingButton_1.CallingButtonType.VIDEO_OFF;
@@ -134,6 +136,14 @@ require(exports => {
             react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__header', controlsFadeClass) },
                 react_1.default.createElement(CallingHeader_1.CallingHeader, { canPip: true, i18n: i18n, isGroupCall: activeCall.callMode === Calling_1.CallMode.Group, message: headerMessage, participantCount: participantCount, showParticipantsList: showParticipantsList, title: headerTitle, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings })),
             remoteParticipantsElement,
+            hasLocalVideo && isLonelyInGroup ? (react_1.default.createElement("div", { className: "module-ongoing-call__local-preview-fullsize" },
+                react_1.default.createElement("video", { className: "module-ongoing-call__footer__local-preview__video", ref: localVideoRef, autoPlay: true }))) : null,
+            !hasLocalVideo && isLonelyInGroup ? (react_1.default.createElement("div", { className: "module-ongoing-call__local-preview-fullsize" },
+                react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: me.avatarPath, color: me.color },
+                    react_1.default.createElement(Avatar_1.Avatar, { avatarPath: me.avatarPath, color: me.color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: me.name, phoneNumber: me.phoneNumber, profileName: me.profileName, title: me.title, size: 80 }),
+                    react_1.default.createElement("div", { className: "module-calling__video-off--container" },
+                        react_1.default.createElement("div", { className: "module-calling__video-off--icon" }),
+                        react_1.default.createElement("span", { className: "module-calling__video-off--text" }, i18n('calling__your-video-is-off')))))) : null,
             react_1.default.createElement("div", { className: "module-ongoing-call__footer" },
                 react_1.default.createElement("div", { className: "module-ongoing-call__footer__local-preview-offset" }),
                 react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__footer__actions', controlsFadeClass) },
@@ -148,8 +158,10 @@ require(exports => {
                     className: classnames_1.default('module-ongoing-call__footer__local-preview', {
                         'module-ongoing-call__footer__local-preview--audio-muted': !hasLocalAudio,
                     })
-                }, hasLocalVideo ? (react_1.default.createElement("video", { className: "module-ongoing-call__footer__local-preview__video", ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: me.avatarPath, color: me.color },
-                    react_1.default.createElement(Avatar_1.Avatar, { avatarPath: me.avatarPath, color: me.color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: me.name, phoneNumber: me.phoneNumber, profileName: me.profileName, title: me.title, size: 80 })))))));
+                },
+                    hasLocalVideo && !isLonelyInGroup ? (react_1.default.createElement("video", { className: "module-ongoing-call__footer__local-preview__video", ref: localVideoRef, autoPlay: true })) : null,
+                    !hasLocalVideo && !isLonelyInGroup ? (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: me.avatarPath, color: me.color },
+                        react_1.default.createElement(Avatar_1.Avatar, { avatarPath: me.avatarPath, color: me.color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: me.name, phoneNumber: me.phoneNumber, profileName: me.profileName, title: me.title, size: 80 }))) : null))));
     };
     function getCallModeClassSuffix(callMode) {
         switch (callMode) {
