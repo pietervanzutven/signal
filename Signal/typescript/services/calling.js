@@ -355,6 +355,15 @@ require(exports => {
             var _a;
             (_a = this.getGroupCall(conversationId)) === null || _a === void 0 ? void 0 : _a.requestVideo(resolutions);
         }
+        groupMembersChanged(conversationId) {
+            // This will be called for any conversation change, so it's likely that there won't
+            //   be a group call available; that's fine.
+            const groupCall = this.getGroupCall(conversationId);
+            if (!groupCall) {
+                return;
+            }
+            groupCall.setGroupMembers(this.getGroupCallMembers(conversationId));
+        }
         // See the comment in types/Calling.ts to explain why we have to do this conversion.
         convertRingRtcConnectionState(connectionState) {
             switch (connectionState) {

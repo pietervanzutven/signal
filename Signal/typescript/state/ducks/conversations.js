@@ -3,8 +3,8 @@ require(exports => {
     // Copyright 2019-2020 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
-    /* eslint-disable camelcase */
     const lodash_1 = require("lodash");
+    const calling_1 = require("../../services/calling");
     const getOwn_1 = require("../../util/getOwn");
     const events_1 = require("../../shims/events");
     const Calling_1 = require("../../types/Calling");
@@ -62,12 +62,15 @@ require(exports => {
         };
     }
     function conversationChanged(id, data) {
-        return {
-            type: 'CONVERSATION_CHANGED',
-            payload: {
-                id,
-                data,
-            },
+        return dispatch => {
+            calling_1.calling.groupMembersChanged(id);
+            dispatch({
+                type: 'CONVERSATION_CHANGED',
+                payload: {
+                    id,
+                    data,
+                },
+            });
         };
     }
     function conversationRemoved(id) {
