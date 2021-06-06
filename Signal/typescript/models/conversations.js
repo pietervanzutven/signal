@@ -1487,8 +1487,10 @@ require(exports => {
             this.trigger('newmessage', model);
         }
         async updateCallHistoryForGroupCall(eraId, creatorUuid) {
-            const alreadyHasMessage = (this.cachedLatestGroupCallEraId &&
-                this.cachedLatestGroupCallEraId === eraId) ||
+            // We want to update the cache quickly in case this function is called multiple times.
+            const oldCachedEraId = this.cachedLatestGroupCallEraId;
+            this.cachedLatestGroupCallEraId = eraId;
+            const alreadyHasMessage = (oldCachedEraId && oldCachedEraId === eraId) ||
                 (await window.Signal.Data.hasGroupCallHistoryMessage(this.id, eraId));
             if (!alreadyHasMessage) {
                 this.addCallHistory({
@@ -1498,7 +1500,6 @@ require(exports => {
                     startedTime: Date.now(),
                 });
             }
-            this.cachedLatestGroupCallEraId = eraId;
         }
         async addProfileChange(profileChange, conversationId) {
             const message = {
