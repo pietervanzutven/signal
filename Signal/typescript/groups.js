@@ -645,6 +645,7 @@ require(exports => {
             undefined // options
         );
     }
+    exports.wrapWithSyncMessageSend = wrapWithSyncMessageSend;
     async function waitThenRespondToGroupV2Migration(options) {
         // First wait to process all incoming messages on the websocket
         await window.waitForEmptyEventQueue();

@@ -469,12 +469,16 @@ require(exports => {
                 window.log.error('Unable to send group call update message for conversation that lacks groupV2 info');
                 return;
             }
+            const timestamp = Date.now();
             // We "fire and forget" because sending this message is non-essential.
-            window.textsecure.messaging
-                .sendGroupCallUpdate({ eraId, groupV2 }, sendOptions)
-                .catch(err => {
-                    window.log.error('Failed to send group call update', err);
-                });
+            groups_1.wrapWithSyncMessageSend({
+                conversation,
+                logId: `sendGroupCallUpdateMessage/${conversationId}-${eraId}`,
+                send: sender => sender.sendGroupCallUpdate({ eraId, groupV2, timestamp }, sendOptions),
+                timestamp,
+            }).catch(err => {
+                window.log.error('Failed to send group call update', err);
+            });
         }
         async accept(conversationId, asVideoCall) {
             window.log.info('CallingClass.accept()');

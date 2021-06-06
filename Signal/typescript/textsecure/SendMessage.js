@@ -636,11 +636,11 @@ require(exports => {
             const silent = true;
             await this.sendMessageProtoAndWait(finalTimestamp, recipients, contentMessage, silent, sendOptions);
         }
-        async sendGroupCallUpdate({ groupV2, eraId }, options) {
-            await this.sendMessageToGroup({
+        sendGroupCallUpdate({ groupV2, eraId, timestamp, }, options) {
+            return this.sendMessageToGroup({
                 groupV2,
                 groupCallUpdate: { eraId },
-                timestamp: Date.now(),
+                timestamp,
             }, options);
         }
         async sendDeliveryReceipt(recipientE164, recipientUuid, timestamps, options) {
