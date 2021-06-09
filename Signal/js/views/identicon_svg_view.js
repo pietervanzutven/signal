@@ -1,7 +1,7 @@
 /* global Whisper, loadImage */
 
 // eslint-disable-next-line func-names
-(function() {
+(function () {
   window.Whisper = window.Whisper || {};
 
   /*

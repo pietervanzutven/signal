@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
     }
@@ -70,10 +72,7 @@ require(exports => {
     exports.deriveGroupPublicParams = deriveGroupPublicParams;
     function deriveGroupID(groupSecretParamsBuffer) {
         const groupSecretParams = new zkgroup_1.GroupSecretParams(arrayBufferToCompatArray(groupSecretParamsBuffer));
-        return compatArrayToArrayBuffer(groupSecretParams
-            .getPublicParams()
-            .getGroupIdentifier()
-            .serialize());
+        return compatArrayToArrayBuffer(groupSecretParams.getPublicParams().getGroupIdentifier().serialize());
     }
     exports.deriveGroupID = deriveGroupID;
     function deriveGroupSecretParams(masterKeyBuffer) {

@@ -1,10 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    const exports = window.ts.components.ConfirmationModal = {};
-
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __rest = (this && this.__rest) || function (s, e) {
         var t = {};
         for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
@@ -23,12 +20,17 @@
         result["default"] = mod;
         return result;
     };
+    var __importDefault = (this && this.__importDefault) || function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
     Object.defineProperty(exports, "__esModule", { value: true });
     const React = __importStar(require("react"));
+    const classnames_1 = __importDefault(require("classnames"));
     const react_dom_1 = require("react-dom");
     const ConfirmationDialog_1 = require("./ConfirmationDialog");
+    const theme_1 = require("../util/theme");
     exports.ConfirmationModal = React.memo((_a) => {
-        var { i18n, onClose, children } = _a, rest = __rest(_a, ["i18n", "onClose", "children"]);
+        var { i18n, onClose, theme, children } = _a, rest = __rest(_a, ["i18n", "onClose", "theme", "children"]);
         const [root, setRoot] = React.useState(null);
         React.useEffect(() => {
             const div = document.createElement('div');
@@ -63,8 +65,8 @@
             }
         }, [onClose]);
         return root
-            ? react_dom_1.createPortal(React.createElement("div", { role: "presentation", className: "module-confirmation-dialog__overlay", onClick: handleCancel, onKeyUp: handleKeyCancel },
+            ? react_dom_1.createPortal(React.createElement("div", { role: "presentation", className: classnames_1.default('module-confirmation-dialog__overlay', theme ? theme_1.themeClassName(theme) : undefined), onClick: handleCancel, onKeyUp: handleKeyCancel },
                 React.createElement(ConfirmationDialog_1.ConfirmationDialog, Object.assign({ i18n: i18n }, rest, { onClose: onClose }), children)), root)
             : null;
     });
-})();
+});

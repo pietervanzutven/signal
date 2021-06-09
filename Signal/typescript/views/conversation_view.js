@@ -251,6 +251,9 @@ Whisper.ConversationView = Whisper.View.extend({
         this.model.throttledFetchLatestGroupV2Data =
             this.model.throttledFetchLatestGroupV2Data ||
                 _.throttle(this.model.fetchLatestGroupV2Data.bind(this.model), FIVE_MINUTES);
+        this.model.throttledMaybeMigrateV1Group =
+            this.model.throttledMaybeMigrateV1Group ||
+                _.throttle(this.model.maybeMigrateV1Group.bind(this.model), FIVE_MINUTES);
         this.debouncedMaybeGrabLinkPreview = _.debounce(this.maybeGrabLinkPreview.bind(this), 200);
         this.debouncedSaveDraft = _.debounce(this.saveDraft.bind(this), 200);
         this.render();
@@ -270,8 +273,6 @@ Whisper.ConversationView = Whisper.View.extend({
         this.linkPreviewAbortController = null;
     },
     events: {
-        'click .composition-area-placeholder': 'onClickPlaceholder',
-        'click .bottom-bar': 'focusMessageField',
         'click .capture-audio .microphone': 'captureAudio',
         'change input.file-input': 'onChoseAttachment',
         dragover: 'onDragOver',
@@ -327,11 +328,10 @@ Whisper.ConversationView = Whisper.View.extend({
                 //   need a manual update call.
                 onOutgoingAudioCallInConversation: async () => {
                     window.log.info('onOutgoingAudioCallInConversation: about to start an audio call');
-                    const conversation = this.model;
                     const isVideoCall = false;
                     if (await this.isCallSafe()) {
                         window.log.info('onOutgoingAudioCallInConversation: call is deemed "safe". Making call');
-                        await window.Signal.Services.calling.startCallingLobby(conversation, isVideoCall);
+                        await window.Signal.Services.calling.startCallingLobby(this.model.id, isVideoCall);
                         window.log.info('onOutgoingAudioCallInConversation: started the call');
                     }
                     else {
@@ -340,11 +340,10 @@ Whisper.ConversationView = Whisper.View.extend({
                 },
                 onOutgoingVideoCallInConversation: async () => {
                     window.log.info('onOutgoingVideoCallInConversation: about to start a video call');
-                    const conversation = this.model;
                     const isVideoCall = true;
                     if (await this.isCallSafe()) {
                         window.log.info('onOutgoingVideoCallInConversation: call is deemed "safe". Making call');
-                        await window.Signal.Services.calling.startCallingLobby(conversation, isVideoCall);
+                        await window.Signal.Services.calling.startCallingLobby(this.model.id, isVideoCall);
                         window.log.info('onOutgoingVideoCallInConversation: started the call');
                     }
                     else {
@@ -432,6 +431,7 @@ Whisper.ConversationView = Whisper.View.extend({
                     task: this.model.syncMessageRequestResponse.bind(this.model, messageRequestEnum.BLOCK_AND_DELETE),
                 });
             },
+            onStartGroupMigration: () => this.startMigrationToGV2(),
         };
         this.compositionAreaView = new Whisper.ReactWrapperView({
             className: 'composition-area-wrapper',
@@ -460,7 +460,7 @@ Whisper.ConversationView = Whisper.View.extend({
         //   show a spinner until it's done
         try {
             window.log.info(`longRunningTaskWrapper/${idLog}: Starting task`);
-            await task();
+            const result = await task();
             window.log.info(`longRunningTaskWrapper/${idLog}: Task completed successfully`);
             if (progressTimeout) {
                 clearTimeout(progressTimeout);
@@ -475,6 +475,7 @@ Whisper.ConversationView = Whisper.View.extend({
                 progressView.remove();
                 progressView = undefined;
             }
+            return result;
         }
         catch (error) {
             window.log.error(`longRunningTaskWrapper/${idLog}: Error!`, error && error.stack ? error.stack : error);
@@ -496,6 +497,7 @@ Whisper.ConversationView = Whisper.View.extend({
                     onClose: () => errorView.remove(),
                 },
             });
+            throw error;
         }
     },
     setupTimeline() {
@@ -564,7 +566,7 @@ Whisper.ConversationView = Whisper.View.extend({
             this.scrollToMessage(message.id);
         };
         const loadOlderMessages = async (oldestMessageId) => {
-            const { messagesAdded, setMessagesLoading, } = window.reduxActions.conversations;
+            const { messagesAdded, setMessagesLoading, repairOldestMessage, } = window.reduxActions.conversations;
             const conversationId = this.model.id;
             setMessagesLoading(conversationId, true);
             const finish = this.setInProgressFetch();
@@ -584,6 +586,7 @@ Whisper.ConversationView = Whisper.View.extend({
                 });
                 if (models.length < 1) {
                     window.log.warn('loadOlderMessages: requested, but loaded no messages');
+                    repairOldestMessage(conversationId);
                     return;
                 }
                 const cleaned = await this.cleanModels(models);
@@ -600,7 +603,7 @@ Whisper.ConversationView = Whisper.View.extend({
             }
         };
         const loadNewerMessages = async (newestMessageId) => {
-            const { messagesAdded, setMessagesLoading, } = window.reduxActions.conversations;
+            const { messagesAdded, setMessagesLoading, repairNewestMessage, } = window.reduxActions.conversations;
             const conversationId = this.model.id;
             setMessagesLoading(conversationId, true);
             const finish = this.setInProgressFetch();
@@ -619,6 +622,7 @@ Whisper.ConversationView = Whisper.View.extend({
                 });
                 if (models.length < 1) {
                     window.log.warn('loadNewerMessages: requested, but loaded no messages');
+                    repairNewestMessage(conversationId);
                     return;
                 }
                 const cleaned = await this.cleanModels(models);
@@ -829,10 +833,43 @@ Whisper.ConversationView = Whisper.View.extend({
             finish();
         }
     },
-    // We need this, or clicking the reactified buttons will submit the form and send any
-    //   mid-composition message content.
-    onClickPlaceholder(e) {
-        e.preventDefault();
+    async startMigrationToGV2() {
+        const logId = this.model.idForLogging();
+        if (!this.model.isGroupV1()) {
+            throw new Error(`startMigrationToGV2/${logId}: Cannot start, not a GroupV1 group`);
+        }
+        const onClose = () => {
+            if (this.migrationDialog) {
+                this.migrationDialog.remove();
+                this.migrationDialog = undefined;
+            }
+        };
+        onClose();
+        const migrate = () => {
+            onClose();
+            this.longRunningTaskWrapper({
+                name: 'initiateMigrationToGroupV2',
+                task: () => window.Signal.Groups.initiateMigrationToGroupV2(this.model),
+            });
+        };
+        // Note: this call will throw if, after generating member lists, we are no longer a
+        //   member or are in the pending member list.
+        const { droppedGV2MemberIds, pendingMembersV2, } = await this.longRunningTaskWrapper({
+            name: 'getGroupMigrationMembers',
+            task: () => window.Signal.Groups.getGroupMigrationMembers(this.model),
+        });
+        const invitedMemberIds = pendingMembersV2.map((item) => item.conversationId);
+        this.migrationDialog = new Whisper.ReactWrapperView({
+            className: 'group-v1-migration-wrapper',
+            JSX: window.Signal.State.Roots.createGroupV1MigrationModal(window.reduxStore, {
+                areWeInvited: false,
+                droppedMemberIds: droppedGV2MemberIds,
+                hasMigrated: false,
+                invitedMemberIds,
+                migrate,
+                onClose,
+            }),
+        });
     },
     onChooseAttachment() {
         this.$('input.file-input').click();
@@ -1360,10 +1397,7 @@ Whisper.ConversationView = Whisper.View.extend({
         if (!fileName.includes('.')) {
             return fileName;
         }
-        return fileName
-            .split('.')
-            .slice(0, -1)
-            .join('.');
+        return fileName.split('.').slice(0, -1).join('.');
     },
     getType(contentType) {
         if (!contentType) {
@@ -1523,6 +1557,7 @@ Whisper.ConversationView = Whisper.View.extend({
             this.setQuoteMessage(quotedMessageId);
         }
         this.model.throttledFetchLatestGroupV2Data();
+        this.model.throttledMaybeMigrateV1Group();
         const statusPromise = this.model.throttledGetProfiles();
         // eslint-disable-next-line more/no-then
         this.statusFetch = statusPromise.then(() => 
@@ -2175,7 +2210,6 @@ Whisper.ConversationView = Whisper.View.extend({
             : null;
         try {
             await this.model.sendReactionMessage(reaction, {
-                targetAuthorE164: messageModel.getSource(),
                 targetAuthorUuid: messageModel.getSourceUuid(),
                 targetTimestamp: messageModel.get('sent_at'),
             });
@@ -2225,7 +2259,7 @@ Whisper.ConversationView = Whisper.View.extend({
         else if (unverifiedContacts.length) {
             return unverifiedContacts;
         }
-        const untrustedContacts = await this.model.getUntrusted();
+        const untrustedContacts = this.model.getUntrusted();
         if (options.force) {
             if (untrustedContacts.length) {
                 await this.markAllAsApproved(untrustedContacts);

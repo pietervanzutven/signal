@@ -3,9 +3,27 @@ require(exports => {
     // Copyright 2019-2020 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
-    /* eslint-disable camelcase */
     const lodash_1 = require("lodash");
+    const calling_1 = require("../../services/calling");
+    const getOwn_1 = require("../../util/getOwn");
     const events_1 = require("../../shims/events");
+    const Calling_1 = require("../../types/Calling");
+    // Helpers
+    exports.getConversationCallMode = (conversation) => {
+        if (conversation.left ||
+            conversation.isBlocked ||
+            conversation.isMe ||
+            !conversation.acceptedMessageRequest) {
+            return Calling_1.CallMode.None;
+        }
+        if (conversation.type === 'direct') {
+            return Calling_1.CallMode.Direct;
+        }
+        if (conversation.type === 'group' && conversation.groupVersion === 2) {
+            return Calling_1.CallMode.Group;
+        }
+        return Calling_1.CallMode.None;
+    };
     // Action Creators
     exports.actions = {
         conversationAdded,
@@ -16,6 +34,7 @@ require(exports => {
         selectMessage,
         messageDeleted,
         messageChanged,
+        messageSizeChanged,
         messagesAdded,
         messagesReset,
         setMessagesLoading,
@@ -30,6 +49,8 @@ require(exports => {
         openConversationExternal,
         showInbox,
         showArchivedConversations,
+        repairNewestMessage,
+        repairOldestMessage,
     };
     function conversationAdded(id, data) {
         return {
@@ -41,12 +62,15 @@ require(exports => {
         };
     }
     function conversationChanged(id, data) {
-        return {
-            type: 'CONVERSATION_CHANGED',
-            payload: {
-                id,
-                data,
-            },
+        return dispatch => {
+            calling_1.calling.groupMembersChanged(id);
+            dispatch({
+                type: 'CONVERSATION_CHANGED',
+                payload: {
+                    id,
+                    data,
+                },
+            });
         };
     }
     function conversationRemoved(id) {
@@ -99,6 +123,15 @@ require(exports => {
             },
         };
     }
+    function messageSizeChanged(id, conversationId) {
+        return {
+            type: 'MESSAGE_SIZE_CHANGED',
+            payload: {
+                id,
+                conversationId,
+            },
+        };
+    }
     function messagesAdded(conversationId, messages, isNewMessage, isActive) {
         return {
             type: 'MESSAGES_ADDED',
@@ -107,6 +140,22 @@ require(exports => {
                 messages,
                 isNewMessage,
                 isActive,
+            },
+        };
+    }
+    function repairNewestMessage(conversationId) {
+        return {
+            type: 'REPAIR_NEWEST_MESSAGE',
+            payload: {
+                conversationId,
+            },
+        };
+    }
+    function repairOldestMessage(conversationId) {
+        return {
+            type: 'REPAIR_OLDEST_MESSAGE',
+            payload: {
+                conversationId,
             },
         };
     }
@@ -229,6 +278,7 @@ require(exports => {
             selectedConversationPanelDepth: 0,
         };
     }
+    exports.getEmptyState = getEmptyState;
     function hasMessageHeightChanged(message, previous) {
         const messageAttachments = message.attachments || [];
         const previousAttachments = previous.attachments || [];
@@ -370,6 +420,23 @@ require(exports => {
                 : heightChangeMessageIds;
             return Object.assign(Object.assign({}, state), { messagesLookup: Object.assign(Object.assign({}, state.messagesLookup), { [id]: data }), messagesByConversation: Object.assign(Object.assign({}, state.messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { heightChangeMessageIds: updatedChanges }) }) });
         }
+        if (action.type === 'MESSAGE_SIZE_CHANGED') {
+            const { id, conversationId } = action.payload;
+            const existingConversation = getOwn_1.getOwn(state.messagesByConversation, conversationId);
+            if (!existingConversation) {
+                return state;
+            }
+            return Object.assign(Object.assign({}, state), {
+                messagesByConversation: Object.assign(Object.assign({}, state.messagesByConversation), {
+                    [conversationId]: Object.assign(Object.assign({}, existingConversation), {
+                        heightChangeMessageIds: lodash_1.uniq([
+                            ...existingConversation.heightChangeMessageIds,
+                            id,
+                        ])
+                    })
+                })
+            });
+        }
         if (action.type === 'MESSAGES_RESET') {
             const { conversationId, messages, metrics, scrollToMessageId, unboundedFetch, } = action.payload;
             const { messagesByConversation, messagesLookup } = state;
@@ -508,6 +575,34 @@ require(exports => {
                     }),
                 }
             });
+        }
+        if (action.type === 'REPAIR_NEWEST_MESSAGE') {
+            const { conversationId } = action.payload;
+            const { messagesByConversation, messagesLookup } = state;
+            const existingConversation = getOwn_1.getOwn(messagesByConversation, conversationId);
+            if (!existingConversation) {
+                return state;
+            }
+            const { messageIds } = existingConversation;
+            const lastId = messageIds && messageIds.length
+                ? messageIds[messageIds.length - 1]
+                : undefined;
+            const last = lastId ? getOwn_1.getOwn(messagesLookup, lastId) : undefined;
+            const newest = last ? lodash_1.pick(last, ['id', 'received_at']) : undefined;
+            return Object.assign(Object.assign({}, state), { messagesByConversation: Object.assign(Object.assign({}, messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { metrics: Object.assign(Object.assign({}, existingConversation.metrics), { newest }) }) }) });
+        }
+        if (action.type === 'REPAIR_OLDEST_MESSAGE') {
+            const { conversationId } = action.payload;
+            const { messagesByConversation, messagesLookup } = state;
+            const existingConversation = getOwn_1.getOwn(messagesByConversation, conversationId);
+            if (!existingConversation) {
+                return state;
+            }
+            const { messageIds } = existingConversation;
+            const firstId = messageIds && messageIds.length ? messageIds[0] : undefined;
+            const first = firstId ? getOwn_1.getOwn(messagesLookup, firstId) : undefined;
+            const oldest = first ? lodash_1.pick(first, ['id', 'received_at']) : undefined;
+            return Object.assign(Object.assign({}, state), { messagesByConversation: Object.assign(Object.assign({}, messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { metrics: Object.assign(Object.assign({}, existingConversation.metrics), { oldest }) }) }) });
         }
         if (action.type === 'MESSAGES_ADDED') {
             const { conversationId, isActive, isNewMessage, messages } = action.payload;

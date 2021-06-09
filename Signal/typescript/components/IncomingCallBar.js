@@ -7,12 +7,13 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
-    const react_tooltip_lite_1 = __importDefault(require("react-tooltip-lite"));
     const Avatar_1 = require("./Avatar");
+    const Tooltip_1 = require("./Tooltip");
+    const theme_1 = require("../util/theme");
     const ContactName_1 = require("./conversation/ContactName");
     const CallButton = ({ classSuffix, onClick, tabIndex, tooltipContent, }) => {
-        return (react_1.default.createElement("button", { className: `module-incoming-call__button module-incoming-call__button--${classSuffix}`, onClick: onClick, tabIndex: tabIndex, type: "button" },
-            react_1.default.createElement(react_tooltip_lite_1.default, { arrowSize: 6, content: tooltipContent, direction: "bottom", distance: 16, hoverDelay: 0 },
+        return (react_1.default.createElement(Tooltip_1.Tooltip, { content: tooltipContent, theme: theme_1.Theme.Dark },
+            react_1.default.createElement("button", { className: `module-incoming-call__button module-incoming-call__button--${classSuffix}`, onClick: onClick, tabIndex: tabIndex, type: "button" },
                 react_1.default.createElement("div", null))));
     };
     exports.IncomingCallBar = ({ acceptCall, declineCall, i18n, call, conversation, }) => {

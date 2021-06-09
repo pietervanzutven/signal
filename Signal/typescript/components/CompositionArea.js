@@ -20,6 +20,7 @@ require(exports => {
     const StickerButton_1 = require("./stickers/StickerButton");
     const CompositionInput_1 = require("./CompositionInput");
     const MessageRequestActions_1 = require("./conversation/MessageRequestActions");
+    const GroupV1DisabledActions_1 = require("./conversation/GroupV1DisabledActions");
     const MandatoryProfileSharingActions_1 = require("./conversation/MandatoryProfileSharingActions");
     const lib_1 = require("./stickers/lib");
     const emptyElement = (el) => {
@@ -35,7 +36,9 @@ require(exports => {
         // StickerButton
         knownPacks, receivedPacks, installedPack, installedPacks, blessedPacks, recentStickers, clearInstalledStickerPack, onClickAddPack, onPickSticker, clearShowIntroduction, showPickerHint, clearShowPickerHint,
         // Message Requests
-        acceptedMessageRequest, areWePending, conversationType, groupVersion, isBlocked, isMissingMandatoryProfileSharing, messageRequestsEnabled, name, onAccept, onBlock, onBlockAndDelete, onDelete, onUnblock, phoneNumber, profileName, title, }) => {
+        acceptedMessageRequest, areWePending, conversationType, groupVersion, isBlocked, isMissingMandatoryProfileSharing, messageRequestsEnabled, name, onAccept, onBlock, onBlockAndDelete, onDelete, onUnblock, phoneNumber, profileName, title,
+        // GroupV1 Disabled Actions
+        isGroupV1AndDisabled, onStartGroupMigration, }) => {
         const [disabled, setDisabled] = React.useState(false);
         const [showMic, setShowMic] = React.useState(!draftText);
         const [micActive, setMicActive] = React.useState(false);
@@ -149,8 +152,9 @@ require(exports => {
                 document.removeEventListener('keydown', handler);
             };
         }, [setLarge]);
-        if (messageRequestsEnabled &&
-            (!acceptedMessageRequest || isBlocked || areWePending)) {
+        if (isBlocked ||
+            areWePending ||
+            (messageRequestsEnabled && !acceptedMessageRequest)) {
             return (React.createElement(MessageRequestActions_1.MessageRequestActions, { i18n: i18n, conversationType: conversationType, isBlocked: isBlocked, onBlock: onBlock, onBlockAndDelete: onBlockAndDelete, onUnblock: onUnblock, onDelete: onDelete, onAccept: onAccept, name: name, profileName: profileName, phoneNumber: phoneNumber, title: title }));
         }
         // If no message request, but we haven't shared profile yet, we show profile-sharing UI
@@ -158,6 +162,10 @@ require(exports => {
             (conversationType === 'group' && groupVersion === 1)) &&
             isMissingMandatoryProfileSharing) {
             return (React.createElement(MandatoryProfileSharingActions_1.MandatoryProfileSharingActions, { i18n: i18n, conversationType: conversationType, onBlock: onBlock, onBlockAndDelete: onBlockAndDelete, onDelete: onDelete, onAccept: onAccept, name: name, profileName: profileName, phoneNumber: phoneNumber, title: title }));
+        }
+        // If this is a V1 group, now disabled entirely, we show UI to help them upgrade
+        if (isGroupV1AndDisabled) {
+            return (React.createElement(GroupV1DisabledActions_1.GroupV1DisabledActions, { i18n: i18n, onStartGroupMigration: onStartGroupMigration }));
         }
         return (React.createElement("div", { className: "module-composition-area" },
             React.createElement("div", { className: "module-composition-area__toggle-large" },

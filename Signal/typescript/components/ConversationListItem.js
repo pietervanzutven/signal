@@ -1,10 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    const exports = window.ts.components.ConversationListItem = {};
-
+    // Copyright 2018-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -35,7 +32,7 @@
         }
         isUnread() {
             const { markedUnread, unreadCount } = this.props;
-            return (lodash_1.isNumber(unreadCount) && unreadCount > 0) || markedUnread;
+            return Boolean((lodash_1.isNumber(unreadCount) && unreadCount > 0) || markedUnread);
         }
         renderUnread() {
             const { unreadCount } = this.props;
@@ -97,4 +94,4 @@
         }
     }
     exports.ConversationListItem = ConversationListItem;
-})();
+});

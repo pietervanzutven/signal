@@ -1,10 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.sql = window.ts.sql || {};
-    const exports = window.ts.sql.Client = {};
-
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
     /* eslint-disable no-await-in-loop */
     /* eslint-disable camelcase */
@@ -110,6 +107,7 @@
         getLastConversationActivity,
         getLastConversationPreview,
         getMessageMetricsForConversation,
+        hasGroupCallHistoryMessage,
         migrateConversationMessages,
         getUnprocessedCount,
         getAllUnprocessed,
@@ -450,6 +448,7 @@
     const ITEM_KEYS = {
         identityKey: ['value.pubKey', 'value.privKey'],
         senderCertificate: ['value.serialized'],
+        senderCertificateNoE164: ['value.serialized'],
         signaling_key: ['value'],
         profileKey: ['value'],
     };
@@ -699,6 +698,9 @@
         const result = await channels.getMessageMetricsForConversation(conversationId);
         return result;
     }
+    function hasGroupCallHistoryMessage(conversationId, eraId) {
+        return channels.hasGroupCallHistoryMessage(conversationId, eraId);
+    }
     async function migrateConversationMessages(obsoleteId, currentId) {
         await channels.migrateConversationMessages(obsoleteId, currentId);
     }
@@ -904,4 +906,4 @@
             limit,
         });
     }
-})();
+});

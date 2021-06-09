@@ -3,7 +3,12 @@ require(exports => {
     // Copyright 2020 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
+    const calling_1 = require("../state/ducks/calling");
+    const calling_2 = require("../state/selectors/calling");
     const ExpirationTimerOptions_1 = require("../util/ExpirationTimerOptions");
+    const missingCaseError_1 = require("../util/missingCaseError");
+    const Calling_1 = require("../types/Calling");
+    const callingNotification_1 = require("../util/callingNotification");
     window.Whisper = window.Whisper || {};
     const { Message: TypedMessage, Attachment, MIME, Contact, PhoneNumber, Errors, } = window.Signal.Types;
     const { deleteExternalMessageFiles, getAbsoluteAttachmentPath, loadAttachmentData, loadQuoteData, loadPreviewData, loadStickerData, upgradeMessageSchema, } = window.Signal.Migrations;
@@ -91,6 +96,7 @@ require(exports => {
                 !this.isExpirationTimerUpdate() &&
                 !this.isGroupUpdate() &&
                 !this.isGroupV2Change() &&
+                !this.isGroupV1Migration() &&
                 !this.isKeyChange() &&
                 !this.isMessageHistoryUnsynced() &&
                 !this.isProfileChange() &&
@@ -109,6 +115,12 @@ require(exports => {
                 return {
                     type: 'groupV2Change',
                     data: this.getPropsForGroupV2Change(),
+                };
+            }
+            if (this.isGroupV1Migration()) {
+                return {
+                    type: 'groupV1Migration',
+                    data: this.getPropsForGroupV1Migration(),
                 };
             }
             if (this.isMessageHistoryUnsynced()) {
@@ -264,6 +276,9 @@ require(exports => {
         isGroupV2Change() {
             return Boolean(this.get('groupV2Change'));
         }
+        isGroupV1Migration() {
+            return this.get('type') === 'group-v1-migration';
+        }
         isExpirationTimerUpdate() {
             const flag = window.textsecure.protobuf.DataMessage.Flags.EXPIRATION_TIMER_UPDATE;
             // eslint-disable-next-line no-bitwise, @typescript-eslint/no-non-null-assertion
@@ -319,6 +334,29 @@ require(exports => {
                 RoleEnum: protobuf.Member.Role,
                 ourConversationId,
                 change,
+            };
+        }
+        getPropsForGroupV1Migration() {
+            const migration = this.get('groupMigration');
+            if (!migration) {
+                // Backwards-compatibility with data schema in early betas
+                const invitedGV2Members = this.get('invitedGV2Members') || [];
+                const droppedGV2MemberIds = this.get('droppedGV2MemberIds') || [];
+                const invitedMembers = invitedGV2Members.map(item => this.findAndFormatContact(item.conversationId));
+                const droppedMembers = droppedGV2MemberIds.map(conversationId => this.findAndFormatContact(conversationId));
+                return {
+                    areWeInvited: false,
+                    droppedMembers,
+                    invitedMembers,
+                };
+            }
+            const { areWeInvited, droppedMemberIds, invitedMembers: rawInvitedMembers, } = migration;
+            const invitedMembers = rawInvitedMembers.map(item => this.findAndFormatContact(item.conversationId));
+            const droppedMembers = droppedMemberIds.map(conversationId => this.findAndFormatContact(conversationId));
+            return {
+                areWeInvited,
+                droppedMembers,
+                invitedMembers,
             };
         }
         getPropsForTimerNotification() {
@@ -431,9 +469,50 @@ require(exports => {
             };
         }
         getPropsForCallHistory() {
-            return {
-                callHistoryDetails: this.get('callHistoryDetails'),
-            };
+            var _a, _b, _c;
+            const callHistoryDetails = this.get('callHistoryDetails');
+            if (!callHistoryDetails) {
+                return undefined;
+            }
+            switch (callHistoryDetails.callMode) {
+                // Old messages weren't saved with a call mode.
+                case undefined:
+                case Calling_1.CallMode.Direct:
+                    return Object.assign(Object.assign({}, callHistoryDetails), { callMode: Calling_1.CallMode.Direct });
+                case Calling_1.CallMode.Group: {
+                    const conversationId = this.get('conversationId');
+                    if (!conversationId) {
+                        window.log.error('Message.prototype.getPropsForCallHistory: missing conversation ID; assuming there is no call');
+                        return undefined;
+                    }
+                    const creatorConversation = this.findContact(window.ConversationController.ensureContactIds({
+                        uuid: callHistoryDetails.creatorUuid,
+                    }));
+                    if (!creatorConversation) {
+                        window.log.error('Message.prototype.getPropsForCallHistory: could not find creator by UUID; bailing');
+                        return undefined;
+                    }
+                    const reduxState = window.reduxStore.getState();
+                    let call = calling_2.getCallSelector(reduxState)(conversationId);
+                    if (call && call.callMode !== Calling_1.CallMode.Group) {
+                        window.log.error('Message.prototype.getPropsForCallHistory: there is an unexpected non-group call; pretending it does not exist');
+                        call = undefined;
+                    }
+                    return {
+                        activeCallConversationId: (_a = calling_1.getActiveCall(reduxState.calling)) === null || _a === void 0 ? void 0 : _a.conversationId,
+                        callMode: Calling_1.CallMode.Group,
+                        conversationId,
+                        creator: creatorConversation.format(),
+                        deviceCount: (_b = call === null || call === void 0 ? void 0 : call.peekInfo.deviceCount) !== null && _b !== void 0 ? _b : 0,
+                        ended: callHistoryDetails.eraId !== (call === null || call === void 0 ? void 0 : call.peekInfo.eraId),
+                        maxDevices: (_c = call === null || call === void 0 ? void 0 : call.peekInfo.maxDevices) !== null && _c !== void 0 ? _c : Infinity,
+                        startedTime: callHistoryDetails.startedTime,
+                    };
+                }
+                default:
+                    window.log.error(missingCaseError_1.missingCaseError(callHistoryDetails));
+                    return undefined;
+            }
         }
         getPropsForProfileChange() {
             const change = this.get('profileChange');
@@ -745,9 +824,9 @@ require(exports => {
                     text: window.i18n('message--getDescription--unsupported-message'),
                 };
             }
-            if (this.get('deletedForEveryone')) {
+            if (this.isGroupV1Migration()) {
                 return {
-                    text: window.i18n('message--deletedForEveryone'),
+                    text: window.i18n('GroupV1--Migration--was-upgraded'),
                 };
             }
             if (this.isProfileChange()) {
@@ -910,9 +989,13 @@ require(exports => {
                 };
             }
             if (this.isCallHistory()) {
-                return {
-                    text: window.Signal.Components.getCallingNotificationText(this.get('callHistoryDetails'), window.i18n),
-                };
+                const callingNotification = this.getPropsForCallHistory();
+                if (callingNotification) {
+                    return {
+                        text: callingNotification_1.getCallingNotificationText(callingNotification, window.i18n),
+                    };
+                }
+                window.log.error("This call history message doesn't have valid call history");
             }
             if (this.isExpirationTimerUpdate()) {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -1436,33 +1519,39 @@ require(exports => {
             return isAccepted;
         }
         canReply() {
-            var _a, _b;
             const conversation = this.getConversation();
             const errors = this.get('errors');
             const isOutgoing = this.get('type') === 'outgoing';
             const numDelivered = this.get('delivered');
-            // Case 1: If mandatory profile sharing is enabled, and we haven't shared yet, then
+            if (!conversation) {
+                return false;
+            }
+            // If GroupV1 groups have been disabled, we can't reply.
+            if (conversation.isGroupV1AndDisabled()) {
+                return false;
+            }
+            // If mandatory profile sharing is enabled, and we haven't shared yet, then
             //   we can't reply.
-            if ((_a = conversation) === null || _a === void 0 ? void 0 : _a.isMissingRequiredProfileSharing()) {
+            if (conversation.isMissingRequiredProfileSharing()) {
                 return false;
             }
-            // Case 2: We cannot reply if we have accepted the message request
-            if (!((_b = conversation) === null || _b === void 0 ? void 0 : _b.getAccepted())) {
+            // We cannot reply if we haven't accepted the message request
+            if (!conversation.getAccepted()) {
                 return false;
             }
-            // Case 3: We cannot reply if this message is deleted for everyone
+            // We cannot reply if this message is deleted for everyone
             if (this.get('deletedForEveryone')) {
                 return false;
             }
-            // Case 4: We can reply if this is outgoing and delievered to at least one recipient
+            // We can reply if this is outgoing and delievered to at least one recipient
             if (isOutgoing && numDelivered > 0) {
                 return true;
             }
-            // Case 5: We can reply if there are no errors
+            // We can reply if there are no errors
             if (!errors || (errors && errors.length === 0)) {
                 return true;
             }
-            // Case 6: default
+            // Fail safe.
             return false;
         }
         // Called when the user ran into an error with a specific user, wants to send to them
@@ -1990,23 +2079,12 @@ require(exports => {
                         return;
                     }
                 }
-                const existingRevision = conversation.get('revision');
-                const isGroupV2 = Boolean(initialMessage.groupV2);
-                const isV2GroupUpdate = initialMessage.groupV2 &&
-                    (!existingRevision ||
-                        initialMessage.groupV2.revision > existingRevision);
                 // GroupV2
-                if (isGroupV2) {
-                    conversation.maybeRepairGroupV2(_.pick(initialMessage.groupV2, [
-                        'masterKey',
-                        'secretParams',
-                        'publicParams',
-                    ]));
-                }
-                if (isV2GroupUpdate) {
-                    const { revision, groupChange } = initialMessage.groupV2;
-                    try {
-                        await window.Signal.Groups.maybeUpdateGroup({
+                if (initialMessage.groupV2) {
+                    if (conversation.isGroupV1()) {
+                        // If we received a GroupV2 message in a GroupV1 group, we migrate!
+                        const { revision, groupChange } = initialMessage.groupV2;
+                        await window.Signal.Groups.respondToGroupV2Migration({
                             conversation,
                             groupChangeBase64: groupChange,
                             newRevision: revision,
@@ -2014,10 +2092,38 @@ require(exports => {
                             sentAt: message.get('sent_at'),
                         });
                     }
-                    catch (error) {
-                        const errorText = error && error.stack ? error.stack : error;
-                        window.log.error(`handleDataMessage: Failed to process group update for ${conversation.idForLogging()} as part of message ${message.idForLogging()}: ${errorText}`);
-                        throw error;
+                    else if (initialMessage.groupV2.masterKey &&
+                        initialMessage.groupV2.secretParams &&
+                        initialMessage.groupV2.publicParams) {
+                        // Repair core GroupV2 data if needed
+                        await conversation.maybeRepairGroupV2({
+                            masterKey: initialMessage.groupV2.masterKey,
+                            secretParams: initialMessage.groupV2.secretParams,
+                            publicParams: initialMessage.groupV2.publicParams,
+                        });
+                        // Standard GroupV2 modification codepath
+                        const existingRevision = conversation.get('revision');
+                        const isV2GroupUpdate = initialMessage.groupV2 &&
+                            _.isNumber(initialMessage.groupV2.revision) &&
+                            (!existingRevision ||
+                                initialMessage.groupV2.revision > existingRevision);
+                        if (isV2GroupUpdate && initialMessage.groupV2) {
+                            const { revision, groupChange } = initialMessage.groupV2;
+                            try {
+                                await window.Signal.Groups.maybeUpdateGroup({
+                                    conversation,
+                                    groupChangeBase64: groupChange,
+                                    newRevision: revision,
+                                    receivedAt: message.get('received_at'),
+                                    sentAt: message.get('sent_at'),
+                                });
+                            }
+                            catch (error) {
+                                const errorText = error && error.stack ? error.stack : error;
+                                window.log.error(`handleDataMessage: Failed to process group update for ${conversation.idForLogging()} as part of message ${message.idForLogging()}: ${errorText}`);
+                                throw error;
+                            }
+                        }
                     }
                 }
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -2027,6 +2133,7 @@ require(exports => {
                     e164: source,
                     uuid: sourceUuid,
                 });
+                const isGroupV2 = Boolean(initialMessage.groupV2);
                 const isV1GroupUpdate = initialMessage.group &&
                     initialMessage.group.type !==
                     window.textsecure.protobuf.GroupContext.Type.DELIVER;
@@ -2057,6 +2164,13 @@ require(exports => {
                     confirm();
                     return;
                 }
+                // Because GroupV1 messages can now be multiplexed into GroupV2 conversations, we
+                //   drop GroupV1 updates in GroupV2 groups.
+                if (isV1GroupUpdate && conversation.isGroupV2()) {
+                    window.log.warn(`Received GroupV1 update in GroupV2 conversation ${conversation.idForLogging()}. Dropping.`);
+                    confirm();
+                    return;
+                }
                 // Send delivery receipts, but only for incoming sealed sender messages
                 // and not for messages from unaccepted conversations
                 if (type === 'incoming' &&
@@ -2084,8 +2198,7 @@ require(exports => {
                         urls.includes(item.url) &&
                         window.Signal.LinkPreviews.isLinkSafeToPreview(item.url));
                     if (preview.length < incomingPreview.length) {
-                        window.log.info(`${message.idForLogging()}: Eliminated ${preview.length -
-                            incomingPreview.length} previews with invalid urls'`);
+                        window.log.info(`${message.idForLogging()}: Eliminated ${preview.length - incomingPreview.length} previews with invalid urls'`);
                     }
                     message.set({
                         id: window.getGuid(),

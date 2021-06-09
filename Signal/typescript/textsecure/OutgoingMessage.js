@@ -1,17 +1,14 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.textsecure = window.ts.textsecure || {};
-    const exports = window.ts.textsecure.OutgoingMessage = {};
-
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
+    Object.defineProperty(exports, "__esModule", { value: true });
     /* eslint-disable guard-for-in */
     /* eslint-disable no-restricted-syntax */
     /* eslint-disable class-methods-use-this */
     /* eslint-disable @typescript-eslint/no-explicit-any */
     /* eslint-disable more/no-then */
     /* eslint-disable no-param-reassign */
-    Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = require("lodash");
     const RemoteConfig_1 = require("../RemoteConfig");
     const Errors_1 = require("./Errors");
@@ -344,14 +341,11 @@
                 });
         }
         async removeDeviceIdsForIdentifier(identifier, deviceIdsToRemove) {
-            let promise = Promise.resolve();
-            for (const j in deviceIdsToRemove) {
-                promise = promise.then(async () => {
-                    const encodedAddress = `${identifier}.${deviceIdsToRemove[j]}`;
-                    return window.textsecure.storage.protocol.removeSession(encodedAddress);
-                });
-            }
-            return promise;
+            await Promise.all(deviceIdsToRemove.map(async (deviceId) => {
+                const address = new window.libsignal.SignalProtocolAddress(identifier, deviceId);
+                const sessionCipher = new window.libsignal.SessionCipher(window.textsecure.storage.protocol, address);
+                await sessionCipher.closeOpenSessionForDevice();
+            }));
         }
         async sendToIdentifier(providedIdentifier) {
             let identifier = providedIdentifier;
@@ -405,4 +399,4 @@
         }
     }
     exports.default = OutgoingMessage;
-})();
+});

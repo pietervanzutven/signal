@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
@@ -11,6 +13,7 @@ require(exports => {
     const React = __importStar(require("react"));
     const ConfirmationModal_1 = require("./ConfirmationModal");
     const Calling_1 = require("../types/Calling");
+    const theme_1 = require("../util/theme");
     function localizeDefault(i18n, deviceLabel) {
         return deviceLabel.toLowerCase().startsWith('default')
             ? deviceLabel.replace(/default/i, i18n('callingDeviceSelection__select--default'))
@@ -57,30 +60,18 @@ require(exports => {
         const selectedSpeakerIndex = selectedSpeaker
             ? selectedSpeaker.index
             : undefined;
-        return (React.createElement(ConfirmationModal_1.ConfirmationModal, { actions: [], i18n: i18n, onClose: toggleSettings },
+        return (React.createElement(ConfirmationModal_1.ConfirmationModal, { actions: [], i18n: i18n, theme: theme_1.Theme.Dark, onClose: toggleSettings },
             React.createElement("div", { className: "module-calling-device-selection" },
-                React.createElement("button", { className: "module-calling-device-selection__close-button", onClick: toggleSettings, tabIndex: 0 })),
+                React.createElement("button", { type: "button", className: "module-calling-device-selection__close-button", onClick: toggleSettings, tabIndex: 0, "aria-label": i18n('close') })),
             React.createElement("h1", { className: "module-calling-device-selection__title" }, i18n('callingDeviceSelection__settings')),
-            React.createElement("label", { className: "module-calling-device-selection__label" }, i18n('callingDeviceSelection__label--video')),
+            React.createElement("label", { htmlFor: "video", className: "module-calling-device-selection__label" }, i18n('callingDeviceSelection__label--video')),
             React.createElement("div", { className: "module-calling-device-selection__select" },
-                React.createElement("select", {
-                    disabled: !availableCameras.length, name: "video",
-                    // tslint:disable-next-line react-a11y-no-onchange
-                    onChange: createCameraChangeHandler(changeIODevice), value: selectedCamera
-                }, renderVideoOptions(availableCameras, i18n, selectedCamera))),
-            React.createElement("label", { className: "module-calling-device-selection__label" }, i18n('callingDeviceSelection__label--audio-input')),
+                React.createElement("select", { disabled: !availableCameras.length, name: "video", onChange: createCameraChangeHandler(changeIODevice), value: selectedCamera }, renderVideoOptions(availableCameras, i18n, selectedCamera))),
+            React.createElement("label", { htmlFor: "audio-input", className: "module-calling-device-selection__label" }, i18n('callingDeviceSelection__label--audio-input')),
             React.createElement("div", { className: "module-calling-device-selection__select" },
-                React.createElement("select", {
-                    disabled: !availableMicrophones.length, name: "audio-input",
-                    // tslint:disable-next-line react-a11y-no-onchange
-                    onChange: createAudioChangeHandler(availableMicrophones, changeIODevice, Calling_1.CallingDeviceType.MICROPHONE), value: selectedMicrophoneIndex
-                }, renderAudioOptions(availableMicrophones, i18n, selectedMicrophone))),
-            React.createElement("label", { className: "module-calling-device-selection__label" }, i18n('callingDeviceSelection__label--audio-output')),
+                React.createElement("select", { disabled: !availableMicrophones.length, name: "audio-input", onChange: createAudioChangeHandler(availableMicrophones, changeIODevice, Calling_1.CallingDeviceType.MICROPHONE), value: selectedMicrophoneIndex }, renderAudioOptions(availableMicrophones, i18n, selectedMicrophone))),
+            React.createElement("label", { htmlFor: "audio-output", className: "module-calling-device-selection__label" }, i18n('callingDeviceSelection__label--audio-output')),
             React.createElement("div", { className: "module-calling-device-selection__select" },
-                React.createElement("select", {
-                    disabled: !availableSpeakers.length, name: "audio-output",
-                    // tslint:disable-next-line react-a11y-no-onchange
-                    onChange: createAudioChangeHandler(availableSpeakers, changeIODevice, Calling_1.CallingDeviceType.SPEAKER), value: selectedSpeakerIndex
-                }, renderAudioOptions(availableSpeakers, i18n, selectedSpeaker)))));
+                React.createElement("select", { disabled: !availableSpeakers.length, name: "audio-output", onChange: createAudioChangeHandler(availableSpeakers, changeIODevice, Calling_1.CallingDeviceType.SPEAKER), value: selectedSpeakerIndex }, renderAudioOptions(availableSpeakers, i18n, selectedSpeaker)))));
     };
 });

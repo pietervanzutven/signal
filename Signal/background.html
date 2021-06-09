@@ -563,7 +563,6 @@
   <script type='text/javascript' src='node_modules/blurhash/index.js'></script>
   <script type='text/javascript' src='node_modules/blurhash/utils.js'></script>
   <script type='text/javascript' src='node_modules/ringrtc/index.js'></script>
-  <script type='text/javascript' src='node_modules/react-tooltip-lite/react-tooltip-lite.min.js'></script>
   <script type='text/javascript' src='node_modules/stacktrace/stacktrace.js'></script>
   <script type='text/javascript' src='node_modules/curve25519-n/index.js'></script>
   <script type='text/javascript' src='node_modules/node-forge/forge.all.min.js'></script>
@@ -589,12 +588,13 @@
   <script type='text/javascript' src='typescript/state/types.js'></script>
   <script type='text/javascript' src='typescript/state/createStore.js'></script>
   <script type='text/javascript' src='typescript/state/selectors/calling.js'></script>
-  <script type='text/javascript' src='typescript/state/selectors/user.js'></script>
   <script type='text/javascript' src='typescript/state/selectors/conversations.js'></script>
+  <script type='text/javascript' src='typescript/state/selectors/items.js'></script>
   <script type='text/javascript' src='typescript/state/selectors/network.js'></script>
   <script type='text/javascript' src='typescript/state/selectors/safetyNumber.js'></script>
   <script type='text/javascript' src='typescript/state/selectors/search.js'></script>
   <script type='text/javascript' src='typescript/state/selectors/stickers.js'></script>
+  <script type='text/javascript' src='typescript/state/selectors/user.js'></script>
   <script type='text/javascript' src='typescript/state/smart/CallingDeviceSelection.js'></script>
   <script type='text/javascript' src='typescript/state/smart/CallManager.js'></script>
   <script type='text/javascript' src='typescript/state/smart/ContactModal.js'></script>
@@ -602,6 +602,7 @@
   <script type='text/javascript' src='typescript/state/smart/ConversationHeader.js'></script>
   <script type='text/javascript' src='typescript/state/smart/CompositionArea.js'></script>
   <script type='text/javascript' src='typescript/state/smart/ExpiredBuildDialog.js'></script>
+  <script type='text/javascript' src='typescript/state/smart/GroupV1MigrationDialog.js'></script>
   <script type='text/javascript' src='typescript/state/smart/HeroRow.js'></script>
   <script type='text/javascript' src='typescript/state/smart/MainHeader.js'></script>
   <script type='text/javascript' src='typescript/state/smart/MessageSearchResult.js'></script>
@@ -624,6 +625,7 @@
   <script type='text/javascript' src='typescript/state/roots/createCompositionArea.js'></script>
   <script type='text/javascript' src='typescript/state/roots/createConversationHeader.js'></script>
   <script type='text/javascript' src='typescript/state/roots/createContactModal.js'></script>
+  <script type='text/javascript' src='typescript/state/roots/createGroupV1MigrationModal.js'></script>
   <script type='text/javascript' src='typescript/state/roots/createLeftPane.js'></script>
   <script type='text/javascript' src='typescript/state/roots/createSafetyNumberViewer.js'></script>
   <script type='text/javascript' src='typescript/state/roots/createShortcutGuideModal.js'></script>
@@ -640,6 +642,7 @@
   <script type='text/javascript' src='typescript/ConversationController.js'></script>
   <script type='text/javascript' src='typescript/util/arrayBufferToObjectURL.js'></script>
   <script type='text/javascript' src='typescript/util/batcher.js'></script>
+  <script type='text/javascript' src='typescript/util/callingNotification.js'></script>
   <script type='text/javascript' src='typescript/util/callingPermissions.js'></script>
   <script type='text/javascript' src='typescript/util/callingTones.js'></script>
   <script type='text/javascript' src='typescript/util/cleanSearchTerm.js'></script>
@@ -649,6 +652,7 @@
   <script type='text/javascript' src='typescript/util/ExpirationTimerOptions.js'></script>
   <script type='text/javascript' src='typescript/util/formatDuration.js'></script>
   <script type='text/javascript' src='typescript/util/formatRelativeTime.js'></script>
+  <script type='text/javascript' src='typescript/util/getDefaultConversation.js'></script>
   <script type='text/javascript' src='typescript/util/getInitials.js'></script>
   <script type='text/javascript' src='typescript/util/getMuteOptions.js'></script>
   <script type='text/javascript' src='typescript/util/getOwn.js'></script>
@@ -660,9 +664,11 @@
   <script type='text/javascript' src='typescript/util/hooks.js'></script>
   <script type='text/javascript' src='typescript/util/imageToBlurHash.js'></script>
   <script type='text/javascript' src='typescript/util/isFileDangerous.js'></script>
+  <script type='text/javascript' src='typescript/util/isGroupCallingEnabled.js'></script>
   <script type='text/javascript' src='typescript/util/isMuted.js'></script>
   <script type='text/javascript' src='typescript/util/isPathInside.js'></script>
   <script type='text/javascript' src='typescript/util/JobQueue.js'></script>
+  <script type='text/javascript' src='typescript/util/LatestQueue.js'></script>
   <script type='text/javascript' src='typescript/util/libphonenumberInstance.js'></script>
   <script type='text/javascript' src='typescript/util/makeLookup.js'></script>
   <script type='text/javascript' src='typescript/util/migrateColor.js'></script>
@@ -674,13 +680,18 @@
   <script type='text/javascript' src='typescript/util/sgnlHref.js'></script>
   <script type='text/javascript' src='typescript/util/sleep.js'></script>
   <script type='text/javascript' src='typescript/util/sniffImageMimeType.js'></script>
+  <script type='text/javascript' src='typescript/util/sortByTitle.js'></script>
   <script type='text/javascript' src='typescript/util/Sound.js'></script>
   <script type='text/javascript' src='typescript/util/storageService.js'></script>
+  <script type='text/javascript' src='typescript/util/theme.js'></script>
   <script type='text/javascript' src='typescript/util/timer.js'></script>
+  <script type='text/javascript' src='typescript/util/version.js'></script>
   <script type='text/javascript' src='typescript/util/waitBatcher.js'></script>
   <script type='text/javascript' src='typescript/util/windowsZoneIdentifier.js'></script>
   <script type='text/javascript' src='typescript/util/zkgroup.js'></script>
   <script type='text/javascript' src='typescript/util/index.js'></script>
+  <script type='text/javascript' src='typescript/util/ringrtc/nonRenderedRemoteParticipant.js'></script>
+  <script type='text/javascript' src='typescript/util/ringrtc/normalizeGroupCallTimestamp.js'></script>
   <script type='text/javascript' src='typescript/shims/events.js'></script>
   <script type='text/javascript' src='typescript/shims/storage.js'></script>
   <script type='text/javascript' src='typescript/shims/textsecure.js'></script>
@@ -753,10 +764,15 @@
   <script type='text/javascript' src='typescript/components/CallBackgroundBlur.js'></script>
   <script type='text/javascript' src='typescript/components/CallingButton.js'></script>
   <script type='text/javascript' src='typescript/components/CallingDeviceSelection.js'></script>
+  <script type='text/javascript' src='typescript/components/CallingHeader.js'></script>
   <script type='text/javascript' src='typescript/components/CallingLobby.js'></script>
   <script type='text/javascript' src='typescript/components/CallingParticipantsList.js'></script>
+  <script type='text/javascript' src='typescript/components/DirectCallRemoteParticipant.js'></script>
   <script type='text/javascript' src='typescript/components/ErrorModal.js'></script>
   <script type='text/javascript' src='typescript/components/ExpiredBuildDialog.js'></script>
+  <script type='text/javascript' src='typescript/components/GroupCallRemoteParticipant.js'></script>
+  <script type='text/javascript' src='typescript/components/GroupCallRemoteParticipants.js'></script>
+  <script type='text/javascript' src='typescript/components/GroupCallToastManager.js'></script>
   <script type='text/javascript' src='typescript/components/InContactsIcon.js'></script>
   <script type='text/javascript' src='typescript/components/Lightbox.js'></script>
   <script type='text/javascript' src='typescript/components/LightboxGallery.js'></script>
@@ -776,6 +792,7 @@
   <script type='text/javascript' src='typescript/components/ShortcutGuideModal.js'></script>
   <script type='text/javascript' src='typescript/components/SafetyNumberChangeDialog.js'></script>
   <script type='text/javascript' src='typescript/components/SafetyNumberViewer.js'></script>
+  <script type='text/javascript' src='typescript/components/Tooltip.js'></script>
   <script type='text/javascript' src='typescript/components/emoji/lib.js'></script>
   <script type='text/javascript' src='typescript/components/emoji/Emoji.js'></script>
   <script type='text/javascript' src='typescript/components/emoji/EmojiPicker.js'></script>
@@ -800,6 +817,8 @@
   <script type='text/javascript' src='typescript/components/conversation/ContactModal.js'></script>
   <script type='text/javascript' src='typescript/components/conversation/Emojify.js'></script>
   <script type='text/javascript' src='typescript/components/conversation/ExpireTimer.js'></script>
+  <script type='text/javascript' src='typescript/components/conversation/GroupV1DisabledActions.js'></script>
+  <script type='text/javascript' src='typescript/components/conversation/GroupV1Migration.js'></script>
   <script type='text/javascript' src='typescript/components/conversation/Linkify.js'></script>
   <script type='text/javascript' src='typescript/components/conversation/LinkPreviewDate.js'></script>
   <script type='text/javascript' src='typescript/components/conversation/MandatoryProfileSharingActions.js'></script>
@@ -844,12 +863,15 @@
   <script type='text/javascript' src='typescript/components/CallManager.js'></script>
   <script type='text/javascript' src='typescript/components/CallNeedPermissionScreen.js'></script>
   <script type='text/javascript' src='typescript/components/CallingPip.js'></script>
+  <script type='text/javascript' src='typescript/components/CallingPipRemoteVideo.js'></script>
   <script type='text/javascript' src='typescript/components/CallScreen.js'></script>
   <script type='text/javascript' src='typescript/components/IncomingCallBar.js'></script>
   <script type='text/javascript' src='typescript/components/ContactListItem.js'></script>
   <script type='text/javascript' src='typescript/components/ConversationListItem.js'></script>
+  <script type='text/javascript' src='typescript/components/GroupV1MigrationDialog.js'></script>
   <script type='text/javascript' src='typescript/components/MessageBodyHighlight.js'></script>
   <script type='text/javascript' src='typescript/components/MessageSearchResult.js'></script>
+  <script type='text/javascript' src='typescript/components/ModalHost.js'></script>
   <script type='text/javascript' src='typescript/components/StartNewConversation.js'></script>
   <script type='text/javascript' src='typescript/components/SearchResults.js'></script>
   <script type='text/javascript' src='typescript/components/LeftPane.js'></script>
@@ -879,6 +901,8 @@
   <script type='text/javascript' src='typescript/sql/Interface.js'></script>
   <script type='text/javascript' src='app/sql_channel.js'></script>
   <script type='text/javascript' src='app/attachment_channel.js'></script>
+  <script type='text/javascript' src='app/permissions.js'></script>
+  <script type='text/javascript' src='app/protocol_filter.js'></script>
 
   <script type='text/javascript' src='typescript/updater/index.js'></script>
   

@@ -1,17 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.textsecure = window.ts.textsecure || {};
-    const exports = window.ts.textsecure.WebAPI = {};
-
-    /* eslint-disable no-param-reassign */
-    /* eslint-disable more/no-then */
-    /* eslint-disable no-bitwise */
-    /* eslint-disable guard-for-in */
-    /* eslint-disable no-restricted-syntax */
-    /* eslint-disable no-nested-ternary */
-    /* eslint-disable @typescript-eslint/no-explicit-any */
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -23,6 +13,13 @@
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    /* eslint-disable no-param-reassign */
+    /* eslint-disable more/no-then */
+    /* eslint-disable no-bitwise */
+    /* eslint-disable guard-for-in */
+    /* eslint-disable no-restricted-syntax */
+    /* eslint-disable no-nested-ternary */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const node_fetch_1 = __importDefault(require("node-fetch"));
     const proxy_agent_1 = __importDefault(require("proxy-agent"));
     const https_1 = require("https");
@@ -266,7 +263,7 @@
             }
             else if (unauthenticated) {
                 if (!accessKey) {
-                    throw new Error('_promiseAjax: mode is aunathenticated, but accessKey was not provided');
+                    throw new Error('_promiseAjax: mode is unauthenticated, but accessKey was not provided');
                 }
                 // Access key is already a Base64 string
                 fetchOptions.headers['Unidentified-Access-Key'] = accessKey;
@@ -408,12 +405,13 @@
         devices: 'v1/devices',
         directoryAuth: 'v1/directory/auth',
         discovery: 'v1/discovery',
-        getGroupAvatarUpload: '/v1/groups/avatar/form',
+        getGroupAvatarUpload: 'v1/groups/avatar/form',
         getGroupCredentials: 'v1/certificate/group',
         getIceServers: 'v1/accounts/turn',
         getStickerPackUpload: 'v1/sticker/pack/form',
         groupLog: 'v1/groups/logs',
         groups: 'v1/groups',
+        groupToken: 'v1/groups/token',
         keys: 'v2/keys',
         messages: 'v1/messages',
         profile: 'v1/profile',
@@ -490,6 +488,7 @@
                 getGroup,
                 getGroupAvatar,
                 getGroupCredentials,
+                getGroupExternalCredential,
                 getGroupLog,
                 getIceServers,
                 getKeysForIdentifier,
@@ -509,6 +508,7 @@
                 fetchLinkPreviewMetadata,
                 fetchLinkPreviewImage,
                 makeProxiedRequest,
+                makeSfuRequest,
                 modifyGroup,
                 modifyStorageRecords,
                 putAttachment,
@@ -597,15 +597,17 @@
                     httpType: 'GET',
                     responseType: 'json',
                 });
-                return res.config.filter(({ name }) => name.startsWith('desktop.'));
+                return res.config.filter(({ name }) => name.startsWith('desktop.') || name.startsWith('global.'));
             }
-            async function getSenderCertificate() {
+            async function getSenderCertificate(omitE164) {
+                const baseParameters = '?includeUuid=true';
+                const urlParameters = `${baseParameters}${omitE164 ? '&includeE164=false' : ''}`;
                 return _ajax({
                     call: 'deliveryCert',
                     httpType: 'GET',
                     responseType: 'json',
                     validateResponse: { certificate: 'string' },
-                    urlParameters: '?includeUuid=true',
+                    urlParameters,
                 });
             }
             async function getStorageCredentials() {
@@ -715,11 +717,13 @@
                 });
             }
             async function confirmCode(number, code, newPassword, registrationId, deviceName, options = {}) {
+                const capabilities = {
+                    'gv2-3': true,
+                    'gv1-migration': true,
+                };
                 const { accessKey } = options;
                 const jsonData = {
-                    capabilities: {
-                        'gv2-3': true,
-                    },
+                    capabilities,
                     fetchesMessages: true,
                     name: deviceName || undefined,
                     registrationId,
@@ -1084,6 +1088,18 @@
                     result,
                 };
             }
+            async function makeSfuRequest(targetUrl, type, headers, body) {
+                return _outerAjax(targetUrl, {
+                    certificateAuthority,
+                    data: body,
+                    headers,
+                    proxyUrl,
+                    responseType: 'arraybufferwithdetails',
+                    timeout: 0,
+                    type,
+                    version,
+                });
+            }
             // Groups
             function generateGroupAuth(groupPublicParamsHex, authCredentialPresentationHex) {
                 return _btoa(`${groupPublicParamsHex}:${authCredentialPresentationHex}`);
@@ -1096,6 +1112,18 @@
                     responseType: 'json',
                 });
                 return response.credentials;
+            }
+            async function getGroupExternalCredential(options) {
+                const basicAuth = generateGroupAuth(options.groupPublicParamsHex, options.authCredentialPresentationHex);
+                const response = await _ajax({
+                    basicAuth,
+                    call: 'groupToken',
+                    httpType: 'GET',
+                    contentType: 'application/x-protobuf',
+                    responseType: 'arraybuffer',
+                    host: storageUrl,
+                });
+                return window.textsecure.protobuf.GroupExternalCredential.decode(response);
             }
             function verifyAttributes(attributes) {
                 const { key, credential, acl, algorithm, date, policy, signature, } = attributes;
@@ -1153,9 +1181,10 @@
                 await _ajax({
                     basicAuth,
                     call: 'groups',
-                    httpType: 'PUT',
+                    contentType: 'application/x-protobuf',
                     data,
                     host: storageUrl,
+                    httpType: 'PUT',
                 });
             }
             async function getGroup(options) {
@@ -1163,10 +1192,10 @@
                 const response = await _ajax({
                     basicAuth,
                     call: 'groups',
-                    httpType: 'GET',
                     contentType: 'application/x-protobuf',
-                    responseType: 'arraybuffer',
                     host: storageUrl,
+                    httpType: 'GET',
+                    responseType: 'arraybuffer',
                 });
                 return window.textsecure.protobuf.Group.decode(response);
             }
@@ -1176,11 +1205,11 @@
                 const response = await _ajax({
                     basicAuth,
                     call: 'groups',
-                    httpType: 'PATCH',
-                    data,
                     contentType: 'application/x-protobuf',
-                    responseType: 'arraybuffer',
+                    data,
                     host: storageUrl,
+                    httpType: 'PATCH',
+                    responseType: 'arraybuffer',
                 });
                 return window.textsecure.protobuf.GroupChange.decode(response);
             }
@@ -1189,11 +1218,11 @@
                 const withDetails = await _ajax({
                     basicAuth,
                     call: 'groupLog',
-                    urlParameters: `/${startVersion}`,
-                    httpType: 'GET',
                     contentType: 'application/x-protobuf',
-                    responseType: 'arraybufferwithdetails',
                     host: storageUrl,
+                    httpType: 'GET',
+                    responseType: 'arraybufferwithdetails',
+                    urlParameters: `/${startVersion}`,
                 });
                 const { data, response } = withDetails;
                 const changes = window.textsecure.protobuf.GroupChanges.decode(data);
@@ -1474,4 +1503,4 @@
         }
     }
     exports.initialize = initialize;
-})();
+});

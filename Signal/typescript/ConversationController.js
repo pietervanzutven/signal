@@ -8,6 +8,7 @@ require(exports => {
     Object.defineProperty(exports, "__esModule", { value: true });
     const lodash_1 = require("lodash");
     const Client_1 = __importDefault(require("./sql/Client"));
+    const groups_1 = require("./groups");
     const MAX_MESSAGE_BODY_LENGTH = 64 * 1024;
     const { getAllConversations, getAllGroupsInvolvingId, getMessagesBySentAt, migrateConversationMessages, removeConversation, saveConversation, updateConversation, } = Client_1.default;
     // We have to run this in background.js, after all backbone models and collections on
@@ -129,6 +130,9 @@ require(exports => {
                     return conversation;
                 }
                 try {
+                    if (conversation.isGroupV1()) {
+                        await groups_1.maybeDeriveGroupV2Id(conversation);
+                    }
                     await saveConversation(conversation.attributes);
                 }
                 catch (error) {
@@ -444,6 +448,9 @@ require(exports => {
                 return this._conversations.add(group);
             });
         }
+        getByDerivedGroupV2Id(groupId) {
+            return this._conversations.find(item => item.get('derivedGroupV2Id') === groupId);
+        }
         async loadPromise() {
             return this._initialPromise;
         }
@@ -469,6 +476,10 @@ require(exports => {
                     this._initialFetchComplete = true;
                     await Promise.all(this._conversations.map(async (conversation) => {
                         try {
+                            const isChanged = await groups_1.maybeDeriveGroupV2Id(conversation);
+                            if (isChanged) {
+                                updateConversation(conversation.attributes);
+                            }
                             if (!conversation.get('lastMessage')) {
                                 await conversation.updateLastMessage();
                             }

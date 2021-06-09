@@ -48,6 +48,7 @@ require(exports => {
             this.timestamp = options.timestamp;
             this.deletedForEveryoneTimestamp = options.deletedForEveryoneTimestamp;
             this.mentions = options.mentions;
+            this.groupCallUpdate = options.groupCallUpdate;
             if (!(this.recipients instanceof Array)) {
                 throw new Error('Invalid recipient list');
             }
@@ -205,6 +206,12 @@ require(exports => {
                     length,
                     mentionUuid,
                 }));
+            }
+            if (this.groupCallUpdate) {
+                const { GroupCallUpdate } = window.textsecure.protobuf.DataMessage;
+                const groupCallUpdate = new GroupCallUpdate();
+                groupCallUpdate.eraId = this.groupCallUpdate.eraId;
+                proto.groupCallUpdate = groupCallUpdate;
             }
             this.dataMessage = proto;
             return proto;
@@ -629,6 +636,13 @@ require(exports => {
             const silent = true;
             await this.sendMessageProtoAndWait(finalTimestamp, recipients, contentMessage, silent, sendOptions);
         }
+        sendGroupCallUpdate({ groupV2, eraId, timestamp, }, options) {
+            return this.sendMessageToGroup({
+                groupV2,
+                groupCallUpdate: { eraId },
+                timestamp,
+            }, options);
+        }
         async sendDeliveryReceipt(recipientE164, recipientUuid, timestamps, options) {
             const myNumber = window.textsecure.storage.user.getNumber();
             const myUuid = window.textsecure.storage.user.getUuid();
@@ -847,7 +861,7 @@ require(exports => {
             }, options);
         }
         async resetSession(uuid, e164, timestamp, options) {
-            window.log.info('resetting secure session');
+            window.log.info('resetSession: start');
             const silent = false;
             const proto = new window.textsecure.protobuf.DataMessage();
             proto.body = 'TERMINATE';
@@ -858,21 +872,21 @@ require(exports => {
                 window.log.error(prefix, error && error.stack ? error.stack : error);
                 throw error;
             };
-            const deleteAllSessions = async (targetIdentifier) => window.textsecure.storage.protocol
+            const closeAllSessions = async (targetIdentifier) => window.textsecure.storage.protocol
                 .getDeviceIds(targetIdentifier)
                 .then(async (deviceIds) => Promise.all(deviceIds.map(async (deviceId) => {
                     const address = new window.libsignal.SignalProtocolAddress(targetIdentifier, deviceId);
-                    window.log.info('deleting sessions for', address.toString());
+                    window.log.info('resetSession: closing sessions for', address.toString());
                     const sessionCipher = new window.libsignal.SessionCipher(window.textsecure.storage.protocol, address);
-                    return sessionCipher.deleteAllSessionsForDevice();
+                    return sessionCipher.closeOpenSessionForDevice();
                 })));
-            const sendToContactPromise = deleteAllSessions(identifier)
-                .catch(logError('resetSession/deleteAllSessions1 error:'))
+            const sendToContactPromise = closeAllSessions(identifier)
+                .catch(logError('resetSession/closeAllSessions1 error:'))
                 .then(async () => {
-                    window.log.info('finished closing local sessions, now sending to contact');
+                    window.log.info('resetSession: finished closing local sessions, now sending to contact');
                     return this.sendIndividualProto(identifier, proto, timestamp, silent, options).catch(logError('resetSession/sendToContact error:'));
                 })
-                .then(async () => deleteAllSessions(identifier).catch(logError('resetSession/deleteAllSessions2 error:')));
+                .then(async () => closeAllSessions(identifier).catch(logError('resetSession/closeAllSessions2 error:')));
             const myNumber = window.textsecure.storage.user.getNumber();
             const myUuid = window.textsecure.storage.user.getUuid();
             // We already sent the reset session to our other devices in the code above!
@@ -883,18 +897,13 @@ require(exports => {
             const sendSyncPromise = this.sendSyncMessage(buffer, timestamp, e164, uuid, null, [], [], false, options).catch(logError('resetSession/sendSync error:'));
             return Promise.all([sendToContactPromise, sendSyncPromise]);
         }
-        async sendMessageToGroup({ attachments, expireTimer, groupV2, groupV1, messageText, preview, profileKey, quote, reaction, sticker, deletedForEveryoneTimestamp, timestamp, mentions, }, options) {
+        async sendMessageToGroup({ attachments, expireTimer, groupV2, groupV1, messageText, preview, profileKey, quote, reaction, sticker, deletedForEveryoneTimestamp, timestamp, mentions, groupCallUpdate, }, options) {
             if (!groupV1 && !groupV2) {
                 throw new Error('sendMessageToGroup: Neither group1 nor groupv2 information provided!');
             }
             const myE164 = window.textsecure.storage.user.getNumber();
             const myUuid = window.textsecure.storage.user.getUuid();
-            // prettier-ignore
-            const recipients = groupV2
-                ? groupV2.members
-                : groupV1
-                    ? groupV1.members
-                    : [];
+            const groupMembers = (groupV2 === null || groupV2 === void 0 ? void 0 : groupV2.members) || (groupV1 === null || groupV1 === void 0 ? void 0 : groupV1.members) || [];
             // We should always have a UUID but have this check just in case we don't.
             let isNotMe;
             if (myUuid) {
@@ -903,8 +912,13 @@ require(exports => {
             else {
                 isNotMe = r => r !== myE164;
             }
+            const blockedIdentifiers = new Set([
+                ...window.storage.getBlockedUuids(),
+                ...window.storage.getBlockedNumbers(),
+            ]);
+            const recipients = groupMembers.filter(recipient => isNotMe(recipient) && !blockedIdentifiers.has(recipient));
             const attrs = {
-                recipients: recipients.filter(isNotMe),
+                recipients,
                 body: messageText,
                 timestamp,
                 attachments,
@@ -923,6 +937,7 @@ require(exports => {
                     }
                     : undefined,
                 mentions,
+                groupCallUpdate,
             };
             if (recipients.length === 0) {
                 return Promise.resolve({
@@ -934,6 +949,12 @@ require(exports => {
                 });
             }
             return this.sendMessage(attrs, options);
+        }
+        async createGroup(group, options) {
+            return this.server.createGroup(group, options);
+        }
+        async uploadGroupAvatar(avatar, options) {
+            return this.server.uploadGroupAvatar(avatar, options);
         }
         async getGroup(options) {
             return this.server.getGroup(options);
@@ -1009,6 +1030,9 @@ require(exports => {
         }
         async modifyStorageRecords(data, options) {
             return this.server.modifyStorageRecords(data, options);
+        }
+        async getGroupMembershipToken(options) {
+            return this.server.getGroupExternalCredential(options);
         }
     }
     exports.default = MessageSender;

@@ -2,48 +2,108 @@ require(exports => {
     "use strict";
     // Copyright 2020 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
-    var __importDefault = (this && this.__importDefault) || function (mod) {
-        return (mod && mod.__esModule) ? mod : { "default": mod };
+    var __importStar = (this && this.__importStar) || function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+        result["default"] = mod;
+        return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(require("react"));
-    const CallingPip_1 = require("./CallingPip");
+    const react_1 = __importStar(require("react"));
     const CallNeedPermissionScreen_1 = require("./CallNeedPermissionScreen");
-    const CallingLobby_1 = require("./CallingLobby");
     const CallScreen_1 = require("./CallScreen");
+    const CallingLobby_1 = require("./CallingLobby");
+    const CallingParticipantsList_1 = require("./CallingParticipantsList");
+    const CallingPip_1 = require("./CallingPip");
     const IncomingCallBar_1 = require("./IncomingCallBar");
+    const SafetyNumberChangeDialog_1 = require("./SafetyNumberChangeDialog");
     const Calling_1 = require("../types/Calling");
-    exports.CallManager = ({ acceptCall, activeCall, availableCameras, cancelCall, closeNeedPermissionScreen, declineCall, hangUp, i18n, incomingCall, me, renderDeviceSelection, setLocalAudio, setLocalPreview, setLocalVideo, setRendererCanvas, startCall, toggleParticipants, togglePip, toggleSettings, }) => {
-        if (activeCall) {
-            const { call, activeCallState, conversation } = activeCall;
-            const { callState, callEndedReason } = call;
-            const { joinedAt, hasLocalAudio, hasLocalVideo, settingsDialogOpen, pip, } = activeCallState;
-            const ended = callState === Calling_1.CallState.Ended;
-            if (ended) {
-                if (callEndedReason === Calling_1.CallEndedReason.RemoteHangupNeedPermission) {
+    const missingCaseError_1 = require("../util/missingCaseError");
+    const ActiveCallManager = ({ activeCall, availableCameras, cancelCall, closeNeedPermissionScreen, hangUp, i18n, keyChangeOk, getGroupCallVideoFrameSource, me, renderDeviceSelection, renderSafetyNumberViewer, setGroupCallVideoRequest, setLocalAudio, setLocalPreview, setLocalVideo, setRendererCanvas, startCall, toggleParticipants, togglePip, toggleSettings, }) => {
+        const { conversation, hasLocalAudio, hasLocalVideo, joinedAt, peekedParticipants, pip, settingsDialogOpen, showParticipantsList, } = activeCall;
+        const cancelActiveCall = react_1.useCallback(() => {
+            cancelCall({ conversationId: conversation.id });
+        }, [cancelCall, conversation.id]);
+        const joinActiveCall = react_1.useCallback(() => {
+            startCall({
+                callMode: activeCall.callMode,
+                conversationId: conversation.id,
+                hasLocalAudio,
+                hasLocalVideo,
+            });
+        }, [
+            startCall,
+            activeCall.callMode,
+            conversation.id,
+            hasLocalAudio,
+            hasLocalVideo,
+        ]);
+        const getGroupCallVideoFrameSourceForActiveCall = react_1.useCallback((demuxId) => {
+            return getGroupCallVideoFrameSource(conversation.id, demuxId);
+        }, [getGroupCallVideoFrameSource, conversation.id]);
+        const setGroupCallVideoRequestForConversation = react_1.useCallback((resolutions) => {
+            setGroupCallVideoRequest({
+                conversationId: conversation.id,
+                resolutions,
+            });
+        }, [setGroupCallVideoRequest, conversation.id]);
+        let isCallFull;
+        let showCallLobby;
+        switch (activeCall.callMode) {
+            case Calling_1.CallMode.Direct: {
+                const { callState, callEndedReason } = activeCall;
+                const ended = callState === Calling_1.CallState.Ended;
+                if (ended &&
+                    callEndedReason === Calling_1.CallEndedReason.RemoteHangupNeedPermission) {
                     return (react_1.default.createElement(CallNeedPermissionScreen_1.CallNeedPermissionScreen, { close: closeNeedPermissionScreen, conversation: conversation, i18n: i18n }));
                 }
+                showCallLobby = !callState;
+                isCallFull = false;
+                break;
             }
-            if (!callState) {
-                return (react_1.default.createElement(react_1.default.Fragment, null,
-                    react_1.default.createElement(CallingLobby_1.CallingLobby, {
-                        availableCameras: availableCameras, conversation: conversation, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, isGroupCall: false, me: me, onCallCanceled: cancelCall, onJoinCall: () => {
-                            startCall({
-                                conversationId: conversation.id,
-                                hasLocalAudio,
-                                hasLocalVideo,
-                            });
-                        }, setLocalPreview: setLocalPreview, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, toggleParticipants: toggleParticipants, toggleSettings: toggleSettings
-                    }),
-                    settingsDialogOpen && renderDeviceSelection()));
+            case Calling_1.CallMode.Group: {
+                showCallLobby = activeCall.joinState === Calling_1.GroupCallJoinState.NotJoined;
+                isCallFull = activeCall.deviceCount >= activeCall.maxDevices;
+                break;
             }
-            const hasRemoteVideo = Boolean(call.hasRemoteVideo);
-            if (pip) {
-                return (react_1.default.createElement(CallingPip_1.CallingPip, { conversation: conversation, hangUp: hangUp, hasLocalVideo: hasLocalVideo, hasRemoteVideo: hasRemoteVideo, i18n: i18n, setLocalPreview: setLocalPreview, setRendererCanvas: setRendererCanvas, togglePip: togglePip }));
-            }
+            default:
+                throw missingCaseError_1.missingCaseError(activeCall);
+        }
+        if (showCallLobby) {
             return (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement(CallScreen_1.CallScreen, { conversation: conversation, callState: callState, hangUp: hangUp, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, joinedAt: joinedAt, me: me, hasRemoteVideo: hasRemoteVideo, setLocalPreview: setLocalPreview, setRendererCanvas: setRendererCanvas, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, togglePip: togglePip, toggleSettings: toggleSettings }),
-                settingsDialogOpen && renderDeviceSelection()));
+                react_1.default.createElement(CallingLobby_1.CallingLobby, { availableCameras: availableCameras, conversation: conversation, hasLocalAudio: hasLocalAudio, hasLocalVideo: hasLocalVideo, i18n: i18n, isGroupCall: activeCall.callMode === Calling_1.CallMode.Group, isCallFull: isCallFull, me: me, onCallCanceled: cancelActiveCall, onJoinCall: joinActiveCall, peekedParticipants: peekedParticipants, setLocalPreview: setLocalPreview, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, showParticipantsList: showParticipantsList, toggleParticipants: toggleParticipants, toggleSettings: toggleSettings }),
+                settingsDialogOpen && renderDeviceSelection(),
+                showParticipantsList && activeCall.callMode === Calling_1.CallMode.Group ? (react_1.default.createElement(CallingParticipantsList_1.CallingParticipantsList, { i18n: i18n, onClose: toggleParticipants, ourUuid: me.uuid, participants: peekedParticipants })) : null));
+        }
+        if (pip) {
+            return (react_1.default.createElement(CallingPip_1.CallingPip, { activeCall: activeCall, getGroupCallVideoFrameSource: getGroupCallVideoFrameSourceForActiveCall, hangUp: hangUp, hasLocalVideo: hasLocalVideo, i18n: i18n, setGroupCallVideoRequest: setGroupCallVideoRequestForConversation, setLocalPreview: setLocalPreview, setRendererCanvas: setRendererCanvas, togglePip: togglePip }));
+        }
+        const groupCallParticipantsForParticipantsList = activeCall.callMode === Calling_1.CallMode.Group
+            ? [
+                ...activeCall.remoteParticipants.map(participant => (Object.assign(Object.assign({}, participant), { hasAudio: participant.hasRemoteAudio, hasVideo: participant.hasRemoteVideo }))),
+                Object.assign(Object.assign({}, me), { hasAudio: hasLocalAudio, hasVideo: hasLocalVideo }),
+            ]
+            : [];
+        return (react_1.default.createElement(react_1.default.Fragment, null,
+            react_1.default.createElement(CallScreen_1.CallScreen, { activeCall: activeCall, getGroupCallVideoFrameSource: getGroupCallVideoFrameSourceForActiveCall, hangUp: hangUp, i18n: i18n, joinedAt: joinedAt, me: me, setGroupCallVideoRequest: setGroupCallVideoRequestForConversation, setLocalPreview: setLocalPreview, setRendererCanvas: setRendererCanvas, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, stickyControls: showParticipantsList, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings }),
+            settingsDialogOpen && renderDeviceSelection(),
+            showParticipantsList && activeCall.callMode === Calling_1.CallMode.Group ? (react_1.default.createElement(CallingParticipantsList_1.CallingParticipantsList, { i18n: i18n, onClose: toggleParticipants, ourUuid: me.uuid, participants: groupCallParticipantsForParticipantsList })) : null,
+            activeCall.callMode === Calling_1.CallMode.Group &&
+                activeCall.conversationsWithSafetyNumberChanges.length ? (react_1.default.createElement(SafetyNumberChangeDialog_1.SafetyNumberChangeDialog, {
+                    confirmText: i18n('continueCall'), contacts: activeCall.conversationsWithSafetyNumberChanges, i18n: i18n, onCancel: () => {
+                        hangUp({ conversationId: activeCall.conversation.id });
+                    }, onConfirm: () => {
+                        keyChangeOk({ conversationId: activeCall.conversation.id });
+                    }, renderSafetyNumber: renderSafetyNumberViewer
+                })) : null));
+    };
+    exports.CallManager = props => {
+        const { activeCall, incomingCall, acceptCall, declineCall, i18n } = props;
+        if (activeCall) {
+            // `props` should logically have an `activeCall` at this point, but TypeScript can't
+            //   figure that out, so we pass it in again.
+            return react_1.default.createElement(ActiveCallManager, Object.assign({}, props, { activeCall: activeCall }));
         }
         // In the future, we may want to show the incoming call bar when a call is active.
         if (incomingCall) {

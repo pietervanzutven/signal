@@ -1,10 +1,11 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.sql = window.ts.sql || {};
-    const exports = window.ts.sql.Server = {};
-
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
+    var __importDefault = (this && this.__importDefault) || function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports, "__esModule", { value: true });
     /* eslint-disable no-nested-ternary */
     /* eslint-disable camelcase */
     /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -12,10 +13,6 @@
     /* eslint-disable no-restricted-syntax */
     /* eslint-disable no-console */
     /* eslint-disable @typescript-eslint/no-explicit-any */
-    var __importDefault = (this && this.__importDefault) || function (mod) {
-        return (mod && mod.__esModule) ? mod : { "default": mod };
-    };
-    Object.defineProperty(exports, "__esModule", { value: true });
     const path_1 = require("path");
     const mkdirp_1 = __importDefault(require("mkdirp"));
     const rimraf_1 = __importDefault(require("rimraf"));
@@ -104,6 +101,7 @@
         getMessageMetricsForConversation,
         getLastConversationActivity,
         getLastConversationPreview,
+        hasGroupCallHistoryMessage,
         migrateConversationMessages,
         getUnprocessedCount,
         getAllUnprocessed,
@@ -2073,7 +2071,7 @@
         const db = getInstance();
         const row = await db.get(`SELECT * FROM messages WHERE
        conversationId = $conversationId AND
-       (type IS NULL OR type NOT IN ('profile-change', 'verified-change', 'message-history-unsynced', 'keychange')) AND
+       (type IS NULL OR type NOT IN ('profile-change', 'verified-change', 'message-history-unsynced', 'keychange', 'group-v1-migration')) AND
        (json_extract(json, '$.expirationTimerUpdate.fromSync') IS NULL OR json_extract(json, '$.expirationTimerUpdate.fromSync') != 1)
      ORDER BY received_at DESC
      LIMIT 1;`, {
@@ -2088,7 +2086,7 @@
         const db = getInstance();
         const row = await db.get(`SELECT * FROM messages WHERE
        conversationId = $conversationId AND
-       (type IS NULL OR type NOT IN ('profile-change', 'verified-change', 'message-history-unsynced'))
+       (type IS NULL OR type NOT IN ('profile-change', 'verified-change', 'message-history-unsynced', 'group-v1-migration'))
      ORDER BY received_at DESC
      LIMIT 1;`, {
             $conversationId: conversationId,
@@ -2143,6 +2141,25 @@
         };
     }
     getMessageMetricsForConversation.needsSerial = true;
+    async function hasGroupCallHistoryMessage(conversationId, eraId) {
+        const db = getInstance();
+        const row = await db.get(`
+    SELECT count(*) FROM messages
+    WHERE conversationId = $conversationId
+    AND type = 'call-history'
+    AND json_extract(json, '$.callHistoryDetails.callMode') = 'Group'
+    AND json_extract(json, '$.callHistoryDetails.eraId') = $eraId
+    LIMIT 1;
+    `, {
+            $conversationId: conversationId,
+            $eraId: eraId,
+        });
+        if (typeof row === 'object' && row && !Array.isArray(row)) {
+            const count = Number(row['count(*)']);
+            return Boolean(count);
+        }
+        return false;
+    }
     async function migrateConversationMessages(obsoleteId, currentId) {
         const db = getInstance();
         await db.run(`UPDATE messages SET
@@ -3005,4 +3022,4 @@
         console.log(`removeKnownDraftAttachments: Done processing ${count} conversations`);
         return Object.keys(lookup);
     }
-})();
+});

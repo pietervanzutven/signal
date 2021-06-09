@@ -134,10 +134,7 @@ require(exports => {
         }
         insertEmoji(emojiData, index, range, withTrailingSpace = false) {
             const emoji = lib_1.convertShortName(emojiData.short_name, this.options.skinTone);
-            const delta = new quill_delta_1.default()
-                .retain(index)
-                .delete(range)
-                .insert({ emoji });
+            const delta = new quill_delta_1.default().retain(index).delete(range).insert({ emoji });
             if (withTrailingSpace) {
                 this.quill.updateContents(delta.insert(' '), 'user');
                 this.quill.setSelection(index + 2, 0, 'user');

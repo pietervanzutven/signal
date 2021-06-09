@@ -16,6 +16,15 @@ require(exports => {
     const React = __importStar(require("react"));
     const classnames_1 = __importDefault(require("classnames"));
     const getInitials_1 = require("../util/getInitials");
+    var AvatarSize;
+    (function (AvatarSize) {
+        AvatarSize[AvatarSize["TWENTY_EIGHT"] = 28] = "TWENTY_EIGHT";
+        AvatarSize[AvatarSize["THIRTY_TWO"] = 32] = "THIRTY_TWO";
+        AvatarSize[AvatarSize["FIFTY_TWO"] = 52] = "FIFTY_TWO";
+        AvatarSize[AvatarSize["EIGHTY"] = 80] = "EIGHTY";
+        AvatarSize[AvatarSize["NINETY_SIX"] = 96] = "NINETY_SIX";
+        AvatarSize[AvatarSize["ONE_HUNDRED_TWELVE"] = 112] = "ONE_HUNDRED_TWELVE";
+    })(AvatarSize = exports.AvatarSize || (exports.AvatarSize = {}));
     class Avatar extends React.Component {
         constructor(props) {
             super(props);
@@ -46,8 +55,8 @@ require(exports => {
             return (React.createElement("img", { onError: this.handleImageErrorBound, alt: i18n('contactAvatarAlt', [title]), src: avatarPath }));
         }
         renderNoImage() {
-            const { conversationType, name, noteToSelf, profileName, size, } = this.props;
-            const initials = getInitials_1.getInitials(name || profileName);
+            const { conversationType, noteToSelf, size, title } = this.props;
+            const initials = getInitials_1.getInitials(title);
             const isGroup = conversationType === 'group';
             if (noteToSelf) {
                 return (React.createElement("div", { className: classnames_1.default('module-avatar__icon', 'module-avatar__icon--note-to-self', `module-avatar__icon--${size}`) }));

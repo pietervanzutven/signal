@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -575,8 +577,8 @@ require(exports => {
             window.log.info('storageService.upload: Not starting desktop.storage is falsey');
             return;
         }
-        if (!RemoteConfig_1.isEnabled('desktop.storageWrite')) {
-            window.log.info('storageService.upload: Not starting desktop.storageWrite is falsey');
+        if (!RemoteConfig_1.isEnabled('desktop.storageWrite2')) {
+            window.log.info('storageService.upload: Not starting desktop.storageWrite2 is falsey');
             return;
         }
         if (!window.textsecure.messaging) {

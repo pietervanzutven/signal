@@ -254,23 +254,31 @@ require(exports => {
         return hasPendingChanges;
     }
     exports.mergeGroupV1Record = mergeGroupV1Record;
-    async function mergeGroupV2Record(storageID, groupV2Record) {
-        if (!groupV2Record.masterKey) {
-            throw new Error(`No master key for ${storageID}`);
-        }
-        const masterKeyBuffer = groupV2Record.masterKey.toArrayBuffer();
+    async function getGroupV2Conversation(masterKeyBuffer) {
         const groupFields = groups_1.deriveGroupFields(masterKeyBuffer);
         const groupId = Crypto_1.arrayBufferToBase64(groupFields.id);
         const masterKey = Crypto_1.arrayBufferToBase64(masterKeyBuffer);
         const secretParams = Crypto_1.arrayBufferToBase64(groupFields.secretParams);
         const publicParams = Crypto_1.arrayBufferToBase64(groupFields.publicParams);
-        const now = Date.now();
+        // First we check for an existing GroupV2 group
+        const groupV2 = window.ConversationController.get(groupId);
+        if (groupV2) {
+            await groupV2.maybeRepairGroupV2({
+                masterKey,
+                secretParams,
+                publicParams,
+            });
+            return groupV2;
+        }
+        // Then check for V1 group with matching derived GV2 id
+        const groupV1 = window.ConversationController.getByDerivedGroupV2Id(groupId);
+        if (groupV1) {
+            return groupV1;
+        }
         const conversationId = window.ConversationController.ensureGroup(groupId, {
             // Note: We don't set active_at, because we don't want the group to show until
             //   we have information about it beyond these initial details.
             //   see maybeUpdateGroup().
-            timestamp: now,
-            // Basic GroupV2 data
             groupVersion: 2,
             masterKey,
             secretParams,
@@ -278,13 +286,16 @@ require(exports => {
         });
         const conversation = window.ConversationController.get(conversationId);
         if (!conversation) {
-            throw new Error(`No conversation for groupv2(${groupId})`);
+            throw new Error(`getGroupV2Conversation: Failed to create conversation for groupv2(${groupId})`);
         }
-        conversation.maybeRepairGroupV2({
-            masterKey,
-            secretParams,
-            publicParams,
-        });
+        return conversation;
+    }
+    async function mergeGroupV2Record(storageID, groupV2Record) {
+        if (!groupV2Record.masterKey) {
+            throw new Error(`No master key for ${storageID}`);
+        }
+        const masterKeyBuffer = groupV2Record.masterKey.toArrayBuffer();
+        const conversation = await getGroupV2Conversation(masterKeyBuffer);
         conversation.set({
             isArchived: Boolean(groupV2Record.archived),
             markedUnread: Boolean(groupV2Record.markedUnread),
@@ -297,10 +308,21 @@ require(exports => {
         const isGroupNewToUs = !lodash_1.isNumber(conversation.get('revision'));
         const isFirstSync = !window.storage.get('storageFetchComplete');
         const dropInitialJoinMessage = isFirstSync;
-        // We don't need to update GroupV2 groups all the time. We fetch group state the first
-        //   time we hear about these groups, from then on we rely on incoming messages or
-        //   the user opening that conversation.
-        if (isGroupNewToUs) {
+        if (conversation.isGroupV1()) {
+            // If we found a GroupV1 conversation from this incoming GroupV2 record, we need to
+            //   migrate it!
+            // We don't await this because this could take a very long time, waiting for queues to
+            //   empty, etc.
+            groups_1.waitThenRespondToGroupV2Migration({
+                conversation,
+            });
+        }
+        else if (isGroupNewToUs) {
+            // We don't need to update GroupV2 groups all the time. We fetch group state the first
+            //   time we hear about these groups, from then on we rely on incoming messages or
+            //   the user opening that conversation.
+            // We don't await this because this could take a very long time, waiting for queues to
+            //   empty, etc.
             groups_1.waitThenMaybeUpdateGroup({
                 conversation,
                 dropInitialJoinMessage,

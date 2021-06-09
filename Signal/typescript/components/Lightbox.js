@@ -1,10 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    const exports = window.ts.components.Lightbox = {};
-
+    // Copyright 2018-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -191,9 +188,11 @@
                 return (react_1.default.createElement(Icon, { i18n: i18n, onClick: this.onObjectClick, url: "images/file.svg" }));
             };
             this.onContextMenu = (event) => {
-                const { contentType } = this.props;
+                const { contentType = '' } = this.props;
                 // These are the only image types supported by Electron's NativeImage
-                if (event && contentType !== 'image/png' && contentType !== 'image/jpg') {
+                if (event &&
+                    contentType !== 'image/png' &&
+                    !/image\/jpe?g/g.test(contentType)) {
                     event.preventDefault();
                 }
             };
@@ -330,4 +329,4 @@
         }
     }
     exports.Lightbox = Lightbox;
-})();
+});

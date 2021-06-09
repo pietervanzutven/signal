@@ -1,12 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    window.ts.components.conversation = window.ts.components.conversation || {};
-    window.ts.components.conversation.media_gallery = window.ts.components.conversation.media_gallery || {};
-    const exports = window.ts.components.conversation.media_gallery.groupMediaItemsByDate = {};
-
+    // Copyright 2018-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -68,9 +63,7 @@
     };
     const withSection = (referenceDateTime) => (mediaItem) => {
         const today = moment_1.default(referenceDateTime).startOf('day');
-        const yesterday = moment_1.default(referenceDateTime)
-            .subtract(1, 'day')
-            .startOf('day');
+        const yesterday = moment_1.default(referenceDateTime).subtract(1, 'day').startOf('day');
         const thisWeek = moment_1.default(referenceDateTime).startOf('isoWeek');
         const thisMonth = moment_1.default(referenceDateTime).startOf('month');
         const { message } = mediaItem;
@@ -113,4 +106,4 @@
             mediaItem,
         };
     };
-})();
+});

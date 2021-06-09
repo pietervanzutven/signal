@@ -1,11 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    window.ts.components.conversation = window.ts.components.conversation || {};
-    const exports = window.ts.components.conversation.ConversationHeader = {};
-
+    // Copyright 2018-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -20,6 +16,14 @@
     const getMuteOptions_1 = require("../../util/getMuteOptions");
     const ExpirationTimerOptions_1 = require("../../util/ExpirationTimerOptions");
     const isMuted_1 = require("../../util/isMuted");
+    const missingCaseError_1 = require("../../util/missingCaseError");
+    var OutgoingCallButtonStyle;
+    (function (OutgoingCallButtonStyle) {
+        OutgoingCallButtonStyle[OutgoingCallButtonStyle["None"] = 0] = "None";
+        OutgoingCallButtonStyle[OutgoingCallButtonStyle["JustVideo"] = 1] = "JustVideo";
+        OutgoingCallButtonStyle[OutgoingCallButtonStyle["Both"] = 2] = "Both";
+        OutgoingCallButtonStyle[OutgoingCallButtonStyle["Join"] = 3] = "Join";
+    })(OutgoingCallButtonStyle = exports.OutgoingCallButtonStyle || (exports.OutgoingCallButtonStyle = {}));
     class ConversationHeader extends react_1.default.Component {
         constructor(props) {
             super(props);
@@ -92,21 +96,34 @@
             }));
         }
         renderOutgoingCallButtons() {
-            const { i18n, onOutgoingAudioCallInConversation, onOutgoingVideoCallInConversation, showCallButtons, showBackButton, } = this.props;
-            if (!showCallButtons) {
-                return null;
+            const { i18n, onOutgoingAudioCallInConversation, onOutgoingVideoCallInConversation, outgoingCallButtonStyle, showBackButton, } = this.props;
+            const videoButton = (react_1.default.createElement("button", {
+                type: "button", onClick: onOutgoingVideoCallInConversation, className: classnames_1.default('module-conversation-header__calling-button', 'module-conversation-header__calling-button--video', showBackButton
+                    ? null
+                    : 'module-conversation-header__calling-button--show'), disabled: showBackButton, "aria-label": i18n('makeOutgoingVideoCall')
+            }));
+            switch (outgoingCallButtonStyle) {
+                case OutgoingCallButtonStyle.None:
+                    return null;
+                case OutgoingCallButtonStyle.JustVideo:
+                    return videoButton;
+                case OutgoingCallButtonStyle.Both:
+                    return (react_1.default.createElement(react_1.default.Fragment, null,
+                        videoButton,
+                        react_1.default.createElement("button", {
+                            type: "button", onClick: onOutgoingAudioCallInConversation, className: classnames_1.default('module-conversation-header__calling-button', 'module-conversation-header__calling-button--audio', showBackButton
+                                ? null
+                                : 'module-conversation-header__calling-button--show'), disabled: showBackButton, "aria-label": i18n('makeOutgoingCall')
+                        })));
+                case OutgoingCallButtonStyle.Join:
+                    return (react_1.default.createElement("button", {
+                        type: "button", onClick: onOutgoingVideoCallInConversation, className: classnames_1.default('module-conversation-header__calling-button', 'module-conversation-header__calling-button--join', showBackButton
+                            ? null
+                            : 'module-conversation-header__calling-button--show'), disabled: showBackButton
+                    }, i18n('joinOngoingCall')));
+                default:
+                    throw missingCaseError_1.missingCaseError(outgoingCallButtonStyle);
             }
-            return (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement("button", {
-                    type: "button", onClick: onOutgoingVideoCallInConversation, className: classnames_1.default('module-conversation-header__video-calling-button', showBackButton
-                        ? null
-                        : 'module-conversation-header__video-calling-button--show'), disabled: showBackButton, "aria-label": i18n('makeOutgoingVideoCall')
-                }),
-                react_1.default.createElement("button", {
-                    type: "button", onClick: onOutgoingAudioCallInConversation, className: classnames_1.default('module-conversation-header__audio-calling-button', showBackButton
-                        ? null
-                        : 'module-conversation-header__audio-calling-button--show'), disabled: showBackButton, "aria-label": i18n('makeOutgoingCall')
-                })));
         }
         renderMenu(triggerId) {
             const { i18n, acceptedMessageRequest, canChangeTimer, isArchived, isMe, isPinned, type, markedUnread, muteExpiresAt, isMissingMandatoryProfileSharing, left, onDeleteMessages, onResetSession, onSetDisappearingMessages, onSetMuteNotifications, onShowAllMedia, onShowGroupMembers, onShowSafetyNumber, onArchive, onMarkUnread, onSetPin, onMoveToInbox, } = this.props;
@@ -176,4 +193,4 @@
         }
     }
     exports.ConversationHeader = ConversationHeader;
-})();
+});

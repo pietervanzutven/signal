@@ -3,7 +3,9 @@ require(exports => {
     // Copyright 2020 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
+    const Calling_1 = require("../types/Calling");
     const isMuted_1 = require("../util/isMuted");
+    const missingCaseError_1 = require("../util/missingCaseError");
     const sniffImageMimeType_1 = require("../util/sniffImageMimeType");
     const MIME_1 = require("../types/MIME");
     const Crypto_1 = require("../Crypto");
@@ -153,8 +155,15 @@ require(exports => {
                 return false;
             }
             const groupVersion = this.get('groupVersion') || 0;
-            return (groupVersion === 2 &&
-                Crypto_1.base64ToArrayBuffer(groupId).byteLength === window.Signal.Groups.ID_LENGTH);
+            try {
+                return (groupVersion === 2 &&
+                    Crypto_1.base64ToArrayBuffer(groupId).byteLength ===
+                    window.Signal.Groups.ID_LENGTH);
+            }
+            catch (error) {
+                window.log.error('isGroupV2: Failed to process groupId in base64!');
+                return false;
+            }
         }
         isMemberPending(conversationId) {
             if (!this.isGroupV2()) {
@@ -297,7 +306,6 @@ require(exports => {
                         const groupChange = await window.Signal.Groups.uploadGroupChange({
                             actions,
                             group: this.attributes,
-                            serverPublicParamsBase64: window.getServerPublicParams(),
                         });
                         const groupChangeBuffer = groupChange.toArrayBuffer();
                         const groupChangeBase64 = Crypto_1.arrayBufferToBase64(groupChangeBuffer);
@@ -384,6 +392,10 @@ require(exports => {
                 discoveredUnregisteredAt: undefined,
             });
             window.Signal.Data.updateConversation(this.attributes);
+        }
+        isGroupV1AndDisabled() {
+            return (this.isGroupV1() &&
+                window.Signal.RemoteConfig.isEnabled('desktop.disableGV1'));
         }
         isBlocked() {
             const uuid = this.get('uuid');
@@ -538,6 +550,18 @@ require(exports => {
         }
         isValid() {
             return this.isPrivate() || this.isGroupV1() || this.isGroupV2();
+        }
+        async maybeMigrateV1Group() {
+            if (!this.isGroupV1()) {
+                return;
+            }
+            const isMigrated = await window.Signal.Groups.hasV1GroupBeenMigrated(this);
+            if (!isMigrated) {
+                return;
+            }
+            await window.Signal.Groups.waitThenRespondToGroupV2Migration({
+                conversation: this,
+            });
         }
         maybeRepairGroupV2(data) {
             if (this.get('groupVersion') &&
@@ -781,12 +805,15 @@ require(exports => {
                 draftText,
                 firstName: this.get('profileName'),
                 groupVersion,
+                groupId: this.get('groupId'),
                 inboxPosition,
                 isArchived: this.get('isArchived'),
                 isBlocked: this.isBlocked(),
                 isMe: this.isMe(),
+                isGroupV1AndDisabled: this.isGroupV1AndDisabled(),
                 isPinned: this.get('isPinned'),
                 isMissingMandatoryProfileSharing: this.isMissingRequiredProfileSharing(),
+                isUntrusted: this.isUntrusted(),
                 isVerified: this.isVerified(),
                 lastMessage: {
                     status: this.get('lastMessageStatus'),
@@ -806,6 +833,8 @@ require(exports => {
                 name: this.get('name'),
                 phoneNumber: this.getNumber(),
                 profileName: this.getProfileName(),
+                publicParams: this.get('publicParams'),
+                secretParams: this.get('secretParams'),
                 sharedGroupNames: this.get('sharedGroupNames'),
                 shouldShowDraft,
                 timestamp,
@@ -1074,17 +1103,24 @@ require(exports => {
                 }, sendOptions));
             }
             catch (result) {
-                if (result instanceof Error) {
+                this.processSendResponse(result);
+            }
+        }
+        // We only want to throw if there's a 'real' error contained with this information
+        //   coming back from our low-level send infrastructure.
+        processSendResponse(result) {
+            if (result instanceof Error) {
+                throw result;
+            }
+            else if (result && result.errors) {
+                // We filter out unregistered user errors, because we ignore those in groups
+                const wasThereARealError = window._.some(result.errors, error => error.name !== 'UnregisteredUserError');
+                if (wasThereARealError) {
                     throw result;
                 }
-                else if (result && result.errors) {
-                    // We filter out unregistered user errors, because we ignore those in groups
-                    const wasThereARealError = window._.some(result.errors, error => error.name !== 'UnregisteredUserError');
-                    if (wasThereARealError) {
-                        throw result;
-                    }
-                }
+                return true;
             }
+            return true;
         }
         onMessageError() {
             this.updateVerified();
@@ -1262,56 +1298,45 @@ require(exports => {
             }
             return window.textsecure.storage.protocol.setApproval(this.id, true);
         }
-        async safeIsUntrusted() {
-            return window.textsecure.storage.protocol
-                .isUntrusted(this.id)
-                .catch(() => false);
+        safeIsUntrusted() {
+            try {
+                return window.textsecure.storage.protocol.isUntrusted(this.id);
+            }
+            catch (err) {
+                return false;
+            }
         }
-        async isUntrusted() {
+        isUntrusted() {
             if (this.isPrivate()) {
                 return this.safeIsUntrusted();
             }
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (!this.contactCollection.length) {
-                return Promise.resolve(false);
+                return false;
             }
-            return Promise.all(
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                this.contactCollection.map(contact => {
-                    if (contact.isMe()) {
-                        return false;
-                    }
-                    return contact.safeIsUntrusted();
-                })).then(results => window._.any(results, result => result));
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            return this.contactCollection.any(contact => {
+                if (contact.isMe()) {
+                    return false;
+                }
+                return contact.safeIsUntrusted();
+            });
         }
-        async getUntrusted() {
-            // This is a bit ugly because isUntrusted() is async. Could do the work to cache
-            //   it locally, but we really only need it for this call.
+        getUntrusted() {
             if (this.isPrivate()) {
-                return this.isUntrusted().then(untrusted => {
-                    if (untrusted) {
-                        return new window.Backbone.Collection([this]);
-                    }
-                    return new window.Backbone.Collection();
-                });
+                if (this.isUntrusted()) {
+                    return new window.Backbone.Collection([this]);
+                }
+                return new window.Backbone.Collection();
             }
-            return Promise.all(
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                this.contactCollection.map(contact => {
-                    if (contact.isMe()) {
-                        return [false, contact];
-                    }
-                    return Promise.all([contact.isUntrusted(), contact]);
-                })).then(results => {
-                    const filtered = window._.filter(results, result => {
-                        const untrusted = result[0];
-                        return untrusted;
-                    });
-                    return new window.Backbone.Collection(window._.map(filtered, result => {
-                        const contact = result[1];
-                        return contact;
-                    }));
-                });
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const results = this.contactCollection.map(contact => {
+                if (contact.isMe()) {
+                    return [false, contact];
+                }
+                return [contact.isUntrusted(), contact];
+            });
+            return new window.Backbone.Collection(results.filter(result => result[0]).map(result => result[1]));
         }
         getSentMessageCount() {
             return this.get('sentMessageCount') || 0;
@@ -1387,7 +1412,13 @@ require(exports => {
                 Message: window.Whisper.Message,
             });
             const model = window.MessageController.register(id, new window.Whisper.Message(Object.assign(Object.assign({}, message), { id })));
+            const isUntrusted = await this.isUntrusted();
             this.trigger('newmessage', model);
+            const uuid = this.get('uuid');
+            // Group calls are always with folks that have a UUID
+            if (isUntrusted && uuid) {
+                window.reduxActions.calling.keyChanged({ uuid });
+            }
         }
         async addVerifiedChange(verifiedChangeId, verified, providedOptions) {
             const options = providedOptions || {};
@@ -1423,20 +1454,52 @@ require(exports => {
             }
         }
         async addCallHistory(callHistoryDetails) {
-            const { acceptedTime, endedTime, wasDeclined } = callHistoryDetails;
+            let timestamp;
+            let unread;
+            let detailsToSave;
+            switch (callHistoryDetails.callMode) {
+                case Calling_1.CallMode.Direct:
+                    timestamp = callHistoryDetails.endedTime;
+                    unread =
+                        !callHistoryDetails.wasDeclined && !callHistoryDetails.acceptedTime;
+                    detailsToSave = Object.assign(Object.assign({}, callHistoryDetails), { callMode: Calling_1.CallMode.Direct });
+                    break;
+                case Calling_1.CallMode.Group:
+                    timestamp = callHistoryDetails.startedTime;
+                    unread = false;
+                    detailsToSave = callHistoryDetails;
+                    break;
+                default:
+                    throw missingCaseError_1.missingCaseError(callHistoryDetails);
+            }
             const message = {
                 conversationId: this.id,
                 type: 'call-history',
-                sent_at: endedTime,
-                received_at: endedTime,
-                unread: !wasDeclined && !acceptedTime,
-                callHistoryDetails,
+                sent_at: timestamp,
+                received_at: timestamp,
+                unread,
+                callHistoryDetails: detailsToSave,
             };
             const id = await window.Signal.Data.saveMessage(message, {
                 Message: window.Whisper.Message,
             });
             const model = window.MessageController.register(id, new window.Whisper.Message(Object.assign(Object.assign({}, message), { id })));
             this.trigger('newmessage', model);
+        }
+        async updateCallHistoryForGroupCall(eraId, creatorUuid) {
+            // We want to update the cache quickly in case this function is called multiple times.
+            const oldCachedEraId = this.cachedLatestGroupCallEraId;
+            this.cachedLatestGroupCallEraId = eraId;
+            const alreadyHasMessage = (oldCachedEraId && oldCachedEraId === eraId) ||
+                (await window.Signal.Data.hasGroupCallHistoryMessage(this.id, eraId));
+            if (!alreadyHasMessage) {
+                this.addCallHistory({
+                    callMode: Calling_1.CallMode.Group,
+                    creatorUuid,
+                    eraId,
+                    startedTime: Date.now(),
+                });
+            }
         }
         async addProfileChange(profileChange, conversationId) {
             const message = {
@@ -1646,7 +1709,6 @@ require(exports => {
                 ? getName(embeddedContact[0])
                 : '';
             return {
-                author: contact.get('e164'),
                 authorUuid: contact.get('uuid'),
                 bodyRanges: quotedMessage.get('bodyRanges'),
                 id: quotedMessage.get('sent_at'),
@@ -2016,9 +2078,6 @@ require(exports => {
                 sendMetadata,
             };
         }
-        getUuidCapable() {
-            return Boolean(window._.property('uuid')(this.get('capabilities')));
-        }
         getSendMetadata(options = {}) {
             const { syncMessage, disableMeCheck } = options;
             // START: this code has an Expiration date of ~2018/11/21
@@ -2038,7 +2097,6 @@ require(exports => {
             }
             const accessKey = this.get('accessKey');
             const sealedSender = this.get('sealedSender');
-            const uuidCapable = this.getUuidCapable();
             // We never send sync messages as sealed sender
             if (syncMessage && this.isMe()) {
                 return null;
@@ -2049,9 +2107,6 @@ require(exports => {
             if (sealedSender === SEALED_SENDER.UNKNOWN) {
                 const info = {
                     accessKey: accessKey || Crypto_1.arrayBufferToBase64(Crypto_1.getRandomBytes(16)),
-                    // Indicates that a client is capable of receiving uuid-only messages.
-                    // Not used yet.
-                    uuidCapable,
                 };
                 return Object.assign(Object.assign({}, (e164 ? { [e164]: info } : {})), (uuid ? { [uuid]: info } : {}));
             }
@@ -2062,9 +2117,6 @@ require(exports => {
                 accessKey: accessKey && sealedSender === SEALED_SENDER.ENABLED
                     ? accessKey
                     : Crypto_1.arrayBufferToBase64(Crypto_1.getRandomBytes(16)),
-                // Indicates that a client is capable of receiving uuid-only messages.
-                // Not used yet.
-                uuidCapable,
             };
             return Object.assign(Object.assign({}, (e164 ? { [e164]: info } : {})), (uuid ? { [uuid]: info } : {}));
         }
@@ -2762,7 +2814,7 @@ require(exports => {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     this.get('profileName'), this.get('profileFamilyName'));
             }
-            return null;
+            return undefined;
         }
         getNumber() {
             if (!this.isPrivate()) {
@@ -2817,6 +2869,9 @@ require(exports => {
             if (this.isPrivate()) {
                 return true;
             }
+            if (this.isGroupV1AndDisabled()) {
+                return false;
+            }
             if (!this.isGroupV2()) {
                 return true;
             }
@@ -2856,8 +2911,8 @@ require(exports => {
         // [X] archived
         // [X] markedUnread
         captureChange(property) {
-            if (!window.Signal.RemoteConfig.isEnabled('desktop.storageWrite')) {
-                window.log.info('conversation.captureChange: Returning early; desktop.storageWrite is falsey');
+            if (!window.Signal.RemoteConfig.isEnabled('desktop.storageWrite2')) {
+                window.log.info('conversation.captureChange: Returning early; desktop.storageWrite2 is falsey');
                 return;
             }
             window.log.info('storageService[captureChange]', property, this.idForLogging());
@@ -2922,10 +2977,10 @@ require(exports => {
                 reaction: reaction ? reaction.toJSON() : null,
             });
         }
-        notifyTyping(options = {}) {
-            const { isTyping, senderId, isMe, senderDevice } = options;
+        notifyTyping(options) {
+            const { isTyping, senderId, fromMe, senderDevice } = options;
             // We don't do anything with typing messages from our other devices
-            if (isMe) {
+            if (fromMe) {
                 return;
             }
             const typingToken = `${senderId}.${senderDevice}`;
@@ -3016,7 +3071,7 @@ require(exports => {
                         delete this._byUuid[oldValue];
                     }
                     if (idProp === 'groupId') {
-                        delete this._byGroupid[oldValue];
+                        delete this._byGroupId[oldValue];
                     }
                 }
                 if (model.get('e164')) {
@@ -3026,7 +3081,7 @@ require(exports => {
                     this._byUuid[model.get('uuid')] = model;
                 }
                 if (model.get('groupId')) {
-                    this._byGroupid[model.get('groupId')] = model;
+                    this._byGroupId[model.get('groupId')] = model;
                 }
             });
         },

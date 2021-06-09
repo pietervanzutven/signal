@@ -6,14 +6,19 @@ require(exports => {
     const ringrtc_1 = require("ringrtc");
     const lodash_1 = require("lodash");
     const getOwn_1 = require("../../util/getOwn");
+    const missingCaseError_1 = require("../../util/missingCaseError");
     const notify_1 = require("../../services/notify");
     const calling_1 = require("../../services/calling");
-    const calling_2 = require("../selectors/calling");
     const Calling_1 = require("../../types/Calling");
     const callingTones_1 = require("../../util/callingTones");
     const callingPermissions_1 = require("../../util/callingPermissions");
     const bounceAppIcon_1 = require("../../shims/bounceAppIcon");
+    const sleep_1 = require("../../util/sleep");
+    const LatestQueue_1 = require("../../util/LatestQueue");
     // Helpers
+    exports.getActiveCall = ({ activeCallState, callsByConversation, }) => activeCallState &&
+        getOwn_1.getOwn(callsByConversation, activeCallState.conversationId);
+    exports.isAnybodyElseInGroupCall = ({ uuids }, ourUuid) => uuids.some(id => id !== ourUuid);
     // Actions
     const ACCEPT_CALL_PENDING = 'calling/ACCEPT_CALL_PENDING';
     const CANCEL_CALL = 'calling/CANCEL_CALL';
@@ -22,14 +27,19 @@ require(exports => {
     const CHANGE_IO_DEVICE_FULFILLED = 'calling/CHANGE_IO_DEVICE_FULFILLED';
     const CLOSE_NEED_PERMISSION_SCREEN = 'calling/CLOSE_NEED_PERMISSION_SCREEN';
     const DECLINE_CALL = 'calling/DECLINE_CALL';
+    const GROUP_CALL_STATE_CHANGE = 'calling/GROUP_CALL_STATE_CHANGE';
     const HANG_UP = 'calling/HANG_UP';
     const INCOMING_CALL = 'calling/INCOMING_CALL';
+    const MARK_CALL_TRUSTED = 'calling/MARK_CALL_TRUSTED';
+    const MARK_CALL_UNTRUSTED = 'calling/MARK_CALL_UNTRUSTED';
     const OUTGOING_CALL = 'calling/OUTGOING_CALL';
+    const PEEK_NOT_CONNECTED_GROUP_CALL_FULFILLED = 'calling/PEEK_NOT_CONNECTED_GROUP_CALL_FULFILLED';
     const REFRESH_IO_DEVICES = 'calling/REFRESH_IO_DEVICES';
     const REMOTE_VIDEO_CHANGE = 'calling/REMOTE_VIDEO_CHANGE';
+    const RETURN_TO_ACTIVE_CALL = 'calling/RETURN_TO_ACTIVE_CALL';
     const SET_LOCAL_AUDIO_FULFILLED = 'calling/SET_LOCAL_AUDIO_FULFILLED';
     const SET_LOCAL_VIDEO_FULFILLED = 'calling/SET_LOCAL_VIDEO_FULFILLED';
-    const START_CALL = 'calling/START_CALL';
+    const START_DIRECT_CALL = 'calling/START_DIRECT_CALL';
     const TOGGLE_PARTICIPANTS = 'calling/TOGGLE_PARTICIPANTS';
     const TOGGLE_PIP = 'calling/TOGGLE_PIP';
     const TOGGLE_SETTINGS = 'calling/TOGGLE_SETTINGS';
@@ -110,8 +120,8 @@ require(exports => {
             payload: null,
         };
     }
-    function cancelCall() {
-        window.Signal.Services.calling.stopCallingLobby();
+    function cancelCall(payload) {
+        calling_1.calling.stopCallingLobby(payload.conversationId);
         return {
             type: CANCEL_CALL,
         };
@@ -123,11 +133,57 @@ require(exports => {
             payload,
         };
     }
+    function groupCallStateChange(payload) {
+        return (dispatch, getState) => {
+            dispatch({
+                type: GROUP_CALL_STATE_CHANGE,
+                payload: Object.assign(Object.assign({}, payload), { ourUuid: getState().user.ourUuid }),
+            });
+        };
+    }
     function hangUp(payload) {
         calling_1.calling.hangup(payload.conversationId);
         return {
             type: HANG_UP,
             payload,
+        };
+    }
+    function keyChanged(payload) {
+        return (dispatch, getState) => {
+            const state = getState();
+            const { activeCallState } = state.calling;
+            const activeCall = exports.getActiveCall(state.calling);
+            if (!activeCall || !activeCallState) {
+                return;
+            }
+            if (activeCall.callMode === Calling_1.CallMode.Group) {
+                const uuidsChanged = new Set(activeCallState.safetyNumberChangedUuids);
+                // Iterate over each participant to ensure that the uuid passed in
+                // matches one of the participants in the group call.
+                activeCall.remoteParticipants.forEach(participant => {
+                    if (participant.uuid === payload.uuid) {
+                        uuidsChanged.add(participant.uuid);
+                    }
+                });
+                const safetyNumberChangedUuids = Array.from(uuidsChanged);
+                if (safetyNumberChangedUuids.length) {
+                    dispatch({
+                        type: MARK_CALL_UNTRUSTED,
+                        payload: {
+                            safetyNumberChangedUuids,
+                        },
+                    });
+                }
+            }
+        };
+    }
+    function keyChangeOk(payload) {
+        return dispatch => {
+            calling_1.calling.resendGroupCallMediaKeys(payload.conversationId);
+            dispatch({
+                type: MARK_CALL_TRUSTED,
+                payload: null,
+            });
         };
     }
     function receiveIncomingCall(payload) {
@@ -143,6 +199,61 @@ require(exports => {
             payload,
         };
     }
+    // We might call this function many times in rapid succession (for example, if lots of
+    //   people are joining and leaving at once). We want to make sure to update eventually
+    //   (if people join and leave for an hour, we don't want you to have to wait an hour to
+    //   get an update), and we also don't want to update too often. That's why we use a
+    //   "latest queue".
+    const peekQueueByConversation = new Map();
+    function peekNotConnectedGroupCall(payload) {
+        return (dispatch, getState) => {
+            const { conversationId } = payload;
+            let queue = peekQueueByConversation.get(conversationId);
+            if (!queue) {
+                queue = new LatestQueue_1.LatestQueue();
+                queue.onceEmpty(() => {
+                    peekQueueByConversation.delete(conversationId);
+                });
+                peekQueueByConversation.set(conversationId, queue);
+            }
+            queue.add(async () => {
+                const state = getState();
+                // We make sure we're not trying to peek at a connected (or connecting, or
+                //   reconnecting) call. Because this is asynchronous, it's possible that the call
+                //   will connect by the time we dispatch, so we also need to do a similar check in
+                //   the reducer.
+                const existingCall = getOwn_1.getOwn(state.calling.callsByConversation, conversationId);
+                if ((existingCall === null || existingCall === void 0 ? void 0 : existingCall.callMode) === Calling_1.CallMode.Group &&
+                    existingCall.connectionState !== Calling_1.GroupCallConnectionState.NotConnected) {
+                    return;
+                }
+                // If we peek right after receiving the message, we may get outdated information.
+                //   This is most noticeable when someone leaves. We add a delay and then make sure
+                //   to only be peeking once.
+                await sleep_1.sleep(1000);
+                let peekInfo;
+                try {
+                    peekInfo = await calling_1.calling.peekGroupCall(conversationId);
+                }
+                catch (err) {
+                    window.log.error('Group call peeking failed', err);
+                    return;
+                }
+                if (!peekInfo) {
+                    return;
+                }
+                calling_1.calling.updateCallHistoryForGroupCall(conversationId, peekInfo);
+                dispatch({
+                    type: PEEK_NOT_CONNECTED_GROUP_CALL_FULFILLED,
+                    payload: {
+                        conversationId,
+                        peekInfo: calling_1.calling.formatGroupCallPeekInfoForRedux(peekInfo),
+                        ourConversationId: state.user.ourConversationId,
+                    },
+                });
+            });
+        };
+    }
     function refreshIODevices(payload) {
         return {
             type: REFRESH_IO_DEVICES,
@@ -153,6 +264,11 @@ require(exports => {
         return {
             type: REMOTE_VIDEO_CHANGE,
             payload,
+        };
+    }
+    function returnToActiveCall() {
+        return {
+            type: RETURN_TO_ACTIVE_CALL,
         };
     }
     function setLocalPreview(payload) {
@@ -167,10 +283,12 @@ require(exports => {
     }
     function setLocalAudio(payload) {
         return (dispatch, getState) => {
-            const { conversationId } = calling_2.getActiveCall(getState().calling) || {};
-            if (conversationId) {
-                calling_1.calling.setOutgoingAudio(conversationId, payload.enabled);
+            const activeCall = exports.getActiveCall(getState().calling);
+            if (!activeCall) {
+                window.log.warn('Trying to set local audio when no call is active');
+                return;
             }
+            calling_1.calling.setOutgoingAudio(activeCall.conversationId, payload.enabled);
             dispatch({
                 type: SET_LOCAL_AUDIO_FULFILLED,
                 payload,
@@ -179,11 +297,16 @@ require(exports => {
     }
     function setLocalVideo(payload) {
         return async (dispatch, getState) => {
+            const activeCall = exports.getActiveCall(getState().calling);
+            if (!activeCall) {
+                window.log.warn('Trying to set local video when no call is active');
+                return;
+            }
             let enabled;
             if (await callingPermissions_1.requestCameraPermissions()) {
-                const { conversationId, callState } = calling_2.getActiveCall(getState().calling) || {};
-                if (conversationId && callState) {
-                    calling_1.calling.setOutgoingVideo(conversationId, payload.enabled);
+                if (activeCall.callMode === Calling_1.CallMode.Group ||
+                    (activeCall.callMode === Calling_1.CallMode.Direct && activeCall.callState)) {
+                    calling_1.calling.setOutgoingVideo(activeCall.conversationId, payload.enabled);
                 }
                 else if (payload.enabled) {
                     calling_1.calling.enableLocalCamera();
@@ -202,6 +325,22 @@ require(exports => {
             });
         };
     }
+    function setGroupCallVideoRequest(payload) {
+        return () => {
+            calling_1.calling.setGroupCallVideoRequest(payload.conversationId, payload.resolutions.map(resolution => (Object.assign(Object.assign({}, resolution), {
+                // The `framerate` property in RingRTC has to be set, even if it's set to
+                //   `undefined`.
+                framerate: undefined
+            }))));
+        };
+    }
+    function startCallingLobby(payload) {
+        return () => {
+            calling_1.calling.startCallingLobby(payload.conversationId, payload.isVideoCall);
+        };
+    }
+    // TODO: This action should be replaced with an action dispatched in the
+    //   `startCallingLobby` thunk.
     function showCallLobby(payload) {
         return {
             type: SHOW_CALL_LOBBY,
@@ -209,10 +348,23 @@ require(exports => {
         };
     }
     function startCall(payload) {
-        calling_1.calling.startOutgoingCall(payload.conversationId, payload.hasLocalAudio, payload.hasLocalVideo);
-        return {
-            type: START_CALL,
-            payload,
+        return dispatch => {
+            switch (payload.callMode) {
+                case Calling_1.CallMode.Direct:
+                    calling_1.calling.startOutgoingDirectCall(payload.conversationId, payload.hasLocalAudio, payload.hasLocalVideo);
+                    dispatch({
+                        type: START_DIRECT_CALL,
+                        payload,
+                    });
+                    break;
+                case Calling_1.CallMode.Group:
+                    calling_1.calling.joinGroupCall(payload.conversationId, payload.hasLocalAudio, payload.hasLocalVideo);
+                    // The calling service should already be wired up to Redux so we don't need to
+                    //   dispatch anything here.
+                    break;
+                default:
+                    throw missingCaseError_1.missingCaseError(payload.callMode);
+            }
         };
     }
     function toggleParticipants() {
@@ -237,15 +389,22 @@ require(exports => {
         changeIODevice,
         closeNeedPermissionScreen,
         declineCall,
+        groupCallStateChange,
         hangUp,
+        keyChanged,
+        keyChangeOk,
         receiveIncomingCall,
         outgoingCall,
+        peekNotConnectedGroupCall,
         refreshIODevices,
         remoteVideoChange,
+        returnToActiveCall,
         setLocalPreview,
         setRendererCanvas,
         setLocalAudio,
         setLocalVideo,
+        setGroupCallVideoRequest,
+        startCallingLobby,
         showCallLobby,
         startCall,
         toggleParticipants,
@@ -266,6 +425,12 @@ require(exports => {
         };
     }
     exports.getEmptyState = getEmptyState;
+    function getExistingPeekInfo(conversationId, state) {
+        const existingCall = getOwn_1.getOwn(state.callsByConversation, conversationId);
+        return (existingCall === null || existingCall === void 0 ? void 0 : existingCall.callMode) === Calling_1.CallMode.Group
+            ? existingCall.peekInfo
+            : undefined;
+    }
     function removeConversationFromState(state, conversationId) {
         var _a;
         return Object.assign(Object.assign({}, (conversationId === ((_a = state.activeCallState) === null || _a === void 0 ? void 0 : _a.conversationId)
@@ -273,30 +438,56 @@ require(exports => {
             : state)), { callsByConversation: lodash_1.omit(state.callsByConversation, conversationId) });
     }
     function reducer(state = getEmptyState(), action) {
-        var _a;
+        var _a, _b, _c;
         const { callsByConversation } = state;
         if (action.type === SHOW_CALL_LOBBY) {
-            return Object.assign(Object.assign({}, state), {
-                callsByConversation: Object.assign(Object.assign({}, callsByConversation), {
-                    [action.payload.conversationId]: {
+            let call;
+            switch (action.payload.callMode) {
+                case Calling_1.CallMode.Direct:
+                    call = {
+                        callMode: Calling_1.CallMode.Direct,
                         conversationId: action.payload.conversationId,
                         isIncoming: false,
-                        isVideoCall: action.payload.isVideoCall,
-                    }
-                }), activeCallState: {
+                        isVideoCall: action.payload.hasLocalVideo,
+                    };
+                    break;
+                case Calling_1.CallMode.Group:
+                    // We expect to be in this state briefly. The Calling service should update the
+                    //   call state shortly.
+                    call = {
+                        callMode: Calling_1.CallMode.Group,
+                        conversationId: action.payload.conversationId,
+                        connectionState: action.payload.connectionState,
+                        joinState: action.payload.joinState,
+                        peekInfo: action.payload.peekInfo ||
+                            getExistingPeekInfo(action.payload.conversationId, state) || {
+                            uuids: action.payload.remoteParticipants.map(({ uuid }) => uuid),
+                            maxDevices: Infinity,
+                            deviceCount: action.payload.remoteParticipants.length,
+                        },
+                        remoteParticipants: action.payload.remoteParticipants,
+                    };
+                    break;
+                default:
+                    throw missingCaseError_1.missingCaseError(action.payload);
+            }
+            return Object.assign(Object.assign({}, state), {
+                callsByConversation: Object.assign(Object.assign({}, callsByConversation), { [action.payload.conversationId]: call }), activeCallState: {
                     conversationId: action.payload.conversationId,
-                    hasLocalAudio: true,
-                    hasLocalVideo: action.payload.isVideoCall,
-                    participantsList: false,
+                    hasLocalAudio: action.payload.hasLocalAudio,
+                    hasLocalVideo: action.payload.hasLocalVideo,
                     pip: false,
+                    safetyNumberChangedUuids: [],
                     settingsDialogOpen: false,
+                    showParticipantsList: false,
                 }
             });
         }
-        if (action.type === START_CALL) {
+        if (action.type === START_DIRECT_CALL) {
             return Object.assign(Object.assign({}, state), {
                 callsByConversation: Object.assign(Object.assign({}, callsByConversation), {
                     [action.payload.conversationId]: {
+                        callMode: Calling_1.CallMode.Direct,
                         conversationId: action.payload.conversationId,
                         callState: Calling_1.CallState.Prering,
                         isIncoming: false,
@@ -306,9 +497,10 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: action.payload.hasLocalAudio,
                     hasLocalVideo: action.payload.hasLocalVideo,
-                    participantsList: false,
                     pip: false,
+                    safetyNumberChangedUuids: [],
                     settingsDialogOpen: false,
+                    showParticipantsList: false,
                 }
             });
         }
@@ -322,20 +514,29 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: true,
                     hasLocalVideo: action.payload.asVideoCall,
-                    participantsList: false,
                     pip: false,
+                    safetyNumberChangedUuids: [],
                     settingsDialogOpen: false,
+                    showParticipantsList: false,
                 }
             });
         }
         if (action.type === CANCEL_CALL ||
             action.type === HANG_UP ||
             action.type === CLOSE_NEED_PERMISSION_SCREEN) {
-            if (!state.activeCallState) {
+            const activeCall = exports.getActiveCall(state);
+            if (!activeCall) {
                 window.log.warn('No active call to remove');
                 return state;
             }
-            return removeConversationFromState(state, state.activeCallState.conversationId);
+            switch (activeCall.callMode) {
+                case Calling_1.CallMode.Direct:
+                    return removeConversationFromState(state, activeCall.conversationId);
+                case Calling_1.CallMode.Group:
+                    return lodash_1.omit(state, 'activeCallState');
+                default:
+                    throw missingCaseError_1.missingCaseError(activeCall);
+            }
         }
         if (action.type === DECLINE_CALL) {
             return removeConversationFromState(state, action.payload.conversationId);
@@ -344,6 +545,7 @@ require(exports => {
             return Object.assign(Object.assign({}, state), {
                 callsByConversation: Object.assign(Object.assign({}, callsByConversation), {
                     [action.payload.conversationId]: {
+                        callMode: Calling_1.CallMode.Direct,
                         conversationId: action.payload.conversationId,
                         callState: Calling_1.CallState.Prering,
                         isIncoming: true,
@@ -356,6 +558,7 @@ require(exports => {
             return Object.assign(Object.assign({}, state), {
                 callsByConversation: Object.assign(Object.assign({}, callsByConversation), {
                     [action.payload.conversationId]: {
+                        callMode: Calling_1.CallMode.Direct,
                         conversationId: action.payload.conversationId,
                         callState: Calling_1.CallState.Prering,
                         isIncoming: false,
@@ -365,9 +568,10 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: action.payload.hasLocalAudio,
                     hasLocalVideo: action.payload.hasLocalVideo,
-                    participantsList: false,
                     pip: false,
+                    safetyNumberChangedUuids: [],
                     settingsDialogOpen: false,
+                    showParticipantsList: false,
                 }
             });
         }
@@ -380,8 +584,8 @@ require(exports => {
                 return removeConversationFromState(state, action.payload.conversationId);
             }
             const call = getOwn_1.getOwn(state.callsByConversation, action.payload.conversationId);
-            if (!call) {
-                window.log.warn('Cannot update state for non-existent call');
+            if ((call === null || call === void 0 ? void 0 : call.callMode) !== Calling_1.CallMode.Direct) {
+                window.log.warn('Cannot update state for a non-direct call');
                 return state;
             }
             let activeCallState;
@@ -393,14 +597,94 @@ require(exports => {
             }
             return Object.assign(Object.assign({}, state), { callsByConversation: Object.assign(Object.assign({}, callsByConversation), { [action.payload.conversationId]: Object.assign(Object.assign({}, call), { callState: action.payload.callState, callEndedReason: action.payload.callEndedReason }) }), activeCallState });
         }
+        if (action.type === GROUP_CALL_STATE_CHANGE) {
+            const { connectionState, conversationId, hasLocalAudio, hasLocalVideo, joinState, ourUuid, peekInfo, remoteParticipants, } = action.payload;
+            const newPeekInfo = peekInfo ||
+                getExistingPeekInfo(conversationId, state) || {
+                uuids: remoteParticipants.map(({ uuid }) => uuid),
+                maxDevices: Infinity,
+                deviceCount: remoteParticipants.length,
+            };
+            let newActiveCallState;
+            if (connectionState === Calling_1.GroupCallConnectionState.NotConnected) {
+                newActiveCallState =
+                    ((_b = state.activeCallState) === null || _b === void 0 ? void 0 : _b.conversationId) === conversationId
+                        ? undefined
+                        : state.activeCallState;
+                if (!exports.isAnybodyElseInGroupCall(newPeekInfo, ourUuid)) {
+                    return Object.assign(Object.assign({}, state), { callsByConversation: lodash_1.omit(callsByConversation, conversationId), activeCallState: newActiveCallState });
+                }
+            }
+            else {
+                newActiveCallState =
+                    ((_c = state.activeCallState) === null || _c === void 0 ? void 0 : _c.conversationId) === conversationId
+                        ? Object.assign(Object.assign({}, state.activeCallState), {
+                            hasLocalAudio,
+                            hasLocalVideo
+                        }) : state.activeCallState;
+            }
+            return Object.assign(Object.assign({}, state), {
+                callsByConversation: Object.assign(Object.assign({}, callsByConversation), {
+                    [conversationId]: {
+                        callMode: Calling_1.CallMode.Group,
+                        conversationId,
+                        connectionState,
+                        joinState,
+                        peekInfo: newPeekInfo,
+                        remoteParticipants,
+                    }
+                }), activeCallState: newActiveCallState
+            });
+        }
+        if (action.type === PEEK_NOT_CONNECTED_GROUP_CALL_FULFILLED) {
+            const { conversationId, peekInfo, ourConversationId } = action.payload;
+            const existingCall = getOwn_1.getOwn(state.callsByConversation, conversationId) || {
+                callMode: Calling_1.CallMode.Group,
+                conversationId,
+                connectionState: Calling_1.GroupCallConnectionState.NotConnected,
+                joinState: Calling_1.GroupCallJoinState.NotJoined,
+                peekInfo: {
+                    conversationIds: [],
+                    maxDevices: Infinity,
+                    deviceCount: 0,
+                },
+                remoteParticipants: [],
+            };
+            if (existingCall.callMode !== Calling_1.CallMode.Group) {
+                window.log.error('Unexpected state: trying to update a non-group call. Doing nothing');
+                return state;
+            }
+            // This action should only update non-connected group calls. It's not necessarily a
+            //   mistake if this action is dispatched "over" a connected call. Here's a valid
+            //   sequence of events:
+            //
+            // 1. We ask RingRTC to peek, kicking off an asynchronous operation.
+            // 2. The associated group call is joined.
+            // 3. The peek promise from step 1 resolves.
+            if (existingCall.connectionState !== Calling_1.GroupCallConnectionState.NotConnected) {
+                return state;
+            }
+            if (!exports.isAnybodyElseInGroupCall(peekInfo, ourConversationId)) {
+                return removeConversationFromState(state, conversationId);
+            }
+            return Object.assign(Object.assign({}, state), { callsByConversation: Object.assign(Object.assign({}, callsByConversation), { [conversationId]: Object.assign(Object.assign({}, existingCall), { peekInfo }) }) });
+        }
         if (action.type === REMOTE_VIDEO_CHANGE) {
             const { conversationId, hasVideo } = action.payload;
             const call = getOwn_1.getOwn(state.callsByConversation, conversationId);
-            if (!call) {
-                window.log.warn('Cannot update remote video for a non-existent call');
+            if ((call === null || call === void 0 ? void 0 : call.callMode) !== Calling_1.CallMode.Direct) {
+                window.log.warn('Cannot update remote video for a non-direct call');
                 return state;
             }
             return Object.assign(Object.assign({}, state), { callsByConversation: Object.assign(Object.assign({}, callsByConversation), { [conversationId]: Object.assign(Object.assign({}, call), { hasRemoteVideo: hasVideo }) }) });
+        }
+        if (action.type === RETURN_TO_ACTIVE_CALL) {
+            const { activeCallState } = state;
+            if (!activeCallState) {
+                window.log.warn('Cannot return to active call if there is no active call');
+                return state;
+            }
+            return Object.assign(Object.assign({}, state), { activeCallState: Object.assign(Object.assign({}, activeCallState), { pip: false }) });
         }
         if (action.type === SET_LOCAL_AUDIO_FULFILLED) {
             if (!state.activeCallState) {
@@ -455,7 +739,7 @@ require(exports => {
                 window.log.warn('Cannot toggle participants list when there is no active call');
                 return state;
             }
-            return Object.assign(Object.assign({}, state), { activeCallState: Object.assign(Object.assign({}, activeCallState), { participantsList: !activeCallState.participantsList }) });
+            return Object.assign(Object.assign({}, state), { activeCallState: Object.assign(Object.assign({}, activeCallState), { showParticipantsList: !activeCallState.showParticipantsList }) });
         }
         if (action.type === TOGGLE_PIP) {
             const { activeCallState } = state;
@@ -464,6 +748,23 @@ require(exports => {
                 return state;
             }
             return Object.assign(Object.assign({}, state), { activeCallState: Object.assign(Object.assign({}, activeCallState), { pip: !activeCallState.pip }) });
+        }
+        if (action.type === MARK_CALL_UNTRUSTED) {
+            const { activeCallState } = state;
+            if (!activeCallState) {
+                window.log.warn('Cannot mark call as untrusted when there is no active call');
+                return state;
+            }
+            const { safetyNumberChangedUuids } = action.payload;
+            return Object.assign(Object.assign({}, state), { activeCallState: Object.assign(Object.assign({}, activeCallState), { pip: false, safetyNumberChangedUuids, settingsDialogOpen: false, showParticipantsList: false }) });
+        }
+        if (action.type === MARK_CALL_TRUSTED) {
+            const { activeCallState } = state;
+            if (!activeCallState) {
+                window.log.warn('Cannot mark call as trusted when there is no active call');
+                return state;
+            }
+            return Object.assign(Object.assign({}, state), { activeCallState: Object.assign(Object.assign({}, activeCallState), { safetyNumberChangedUuids: [] }) });
         }
         return state;
     }

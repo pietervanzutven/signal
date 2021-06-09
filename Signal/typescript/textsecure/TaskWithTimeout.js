@@ -1,11 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.textsecure = window.ts.textsecure || {};
-    const exports = window.ts.textsecure.TaskWithTimeout = {};
-
-    // tslint:disable no-default-export
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
     function createTaskWithTimeout(task, id, options = {}) {
         const timeout = options.timeout || 1000 * 60 * 2; // two minutes
@@ -14,8 +10,7 @@
             let complete = false;
             let timer = setTimeout(() => {
                 if (!complete) {
-                    const message = `${id ||
-                        ''} task did not complete in time. Calling stack: ${errorForStack.stack}`;
+                    const message = `${id || ''} task did not complete in time. Calling stack: ${errorForStack.stack}`;
                     window.log.error(message);
                     reject(new Error(message));
                     return undefined;
@@ -63,4 +58,4 @@
         });
     }
     exports.default = createTaskWithTimeout;
-})();
+});

@@ -3,11 +3,7 @@
 
 // The idea with this file is to make it webpackable for the style guide
 
-(function () {
-  'use strict';
-
-  const exports = window.signal = {};
-
+require(exports => {
   const { bindActionCreators } = require('redux');
   const Backbone = require('../../ts/backbone');
   const Crypto = require('../../ts/Crypto');
@@ -62,9 +58,6 @@
   const {
     StagedLinkPreview,
   } = require('../../ts/components/conversation/StagedLinkPreview');
-  const {
-    getCallingNotificationText,
-  } = require('../../ts/components/conversation/CallingNotification');
 
   // State
   const { createTimeline } = require('../../ts/state/roots/createTimeline');
@@ -78,6 +71,9 @@
     createConversationHeader,
   } = require('../../ts/state/roots/createConversationHeader');
   const { createCallManager } = require('../../ts/state/roots/createCallManager');
+  const {
+    createGroupV1MigrationModal,
+  } = require('../../ts/state/roots/createGroupV1MigrationModal');
   const { createLeftPane } = require('../../ts/state/roots/createLeftPane');
   const {
     createSafetyNumberViewer,
@@ -312,7 +308,6 @@
       ContactModal,
       Emojify,
       ErrorModal,
-      getCallingNotificationText,
       Lightbox,
       LightboxGallery,
       MediaGallery,
@@ -331,6 +326,7 @@
       createCompositionArea,
       createContactModal,
       createConversationHeader,
+      createGroupV1MigrationModal,
       createLeftPane,
       createSafetyNumberViewer,
       createShortcutGuideModal,
@@ -429,4 +425,4 @@
       Workflow,
     };
   };
-})();
+});
