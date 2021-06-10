@@ -552,13 +552,14 @@ Whisper.ConversationView = Whisper.View.extend({
             this.showToast(Whisper.TapToViewExpiredOutgoingToast);
         };
         const scrollToQuotedMessage = async (options) => {
-            const { author, sentAt } = options;
+            const { authorId, sentAt } = options;
             const conversationId = this.model.id;
             const messages = await getMessagesBySentAt(sentAt, {
                 MessageCollection: Whisper.MessageCollection,
             });
             const message = messages.find(item => item.get('conversationId') === conversationId &&
-                item.getSource() === author);
+                authorId &&
+                item.getContactId() === authorId);
             if (!message) {
                 this.showToast(Whisper.OriginalNotFoundToast);
                 return;

@@ -118,11 +118,10 @@ require(exports => {
         minMatchCharLength: 1,
         tokenize: true,
         tokenSeparator: /[-_\s]+/,
-        keys: ['name', 'short_name', 'short_names'],
+        keys: ['short_name', 'name'],
     });
     function search(query, count = 0) {
-        // We reverse it because fuse returns low-score results first!
-        const results = fuse.search(query.substr(0, 32)).reverse();
+        const results = fuse.search(query.substr(0, 32));
         if (count) {
             return lodash_1.take(results, count);
         }

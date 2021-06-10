@@ -7,12 +7,21 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const react_1 = __importDefault(require("react"));
+    const react_measure_1 = __importDefault(require("react-measure"));
+    const lodash_1 = require("lodash");
     const CallingButton_1 = require("./CallingButton");
     const Tooltip_1 = require("./Tooltip");
     const CallBackgroundBlur_1 = require("./CallBackgroundBlur");
     const CallingHeader_1 = require("./CallingHeader");
     const Spinner_1 = require("./Spinner");
+    const constants_1 = require("../calling/constants");
+    // We request dimensions but may not get them depending on the user's webcam. This is our
+    //   fallback while we don't know.
+    const VIDEO_ASPECT_RATIO_FALLBACK = constants_1.REQUESTED_VIDEO_WIDTH / constants_1.REQUESTED_VIDEO_HEIGHT;
     exports.CallingLobby = ({ availableCameras, conversation, hasLocalAudio, hasLocalVideo, i18n, isGroupCall = false, isCallFull = false, me, onCallCanceled, onJoinCall, peekedParticipants, setLocalAudio, setLocalPreview, setLocalVideo, showParticipantsList, toggleParticipants, toggleSettings, }) => {
+        const [localPreviewContainerWidth, setLocalPreviewContainerWidth,] = react_1.default.useState(null);
+        const [localPreviewContainerHeight, setLocalPreviewContainerHeight,] = react_1.default.useState(null);
+        const [localVideoAspectRatio, setLocalVideoAspectRatio] = react_1.default.useState(VIDEO_ASPECT_RATIO_FALLBACK);
         const localVideoRef = react_1.default.useRef(null);
         const toggleAudio = react_1.default.useCallback(() => {
             setLocalAudio({ enabled: !hasLocalAudio });
@@ -20,12 +29,41 @@ require(exports => {
         const toggleVideo = react_1.default.useCallback(() => {
             setLocalVideo({ enabled: !hasLocalVideo });
         }, [hasLocalVideo, setLocalVideo]);
+        const hasEverMeasured = localPreviewContainerWidth !== null && localPreviewContainerHeight !== null;
+        const setLocalPreviewContainerDimensions = react_1.default.useMemo(() => {
+            const set = (bounds) => {
+                setLocalPreviewContainerWidth(bounds.width);
+                setLocalPreviewContainerHeight(bounds.height);
+            };
+            if (hasEverMeasured) {
+                return lodash_1.debounce(set, 100, { maxWait: 3000 });
+            }
+            return set;
+        }, [
+            hasEverMeasured,
+            setLocalPreviewContainerWidth,
+            setLocalPreviewContainerHeight,
+        ]);
         react_1.default.useEffect(() => {
             setLocalPreview({ element: localVideoRef });
             return () => {
                 setLocalPreview({ element: undefined });
             };
         }, [setLocalPreview]);
+        // This isn't perfect because it doesn't react to changes in the webcam's aspect ratio.
+        //   For example, if you changed from Webcam A to Webcam B and Webcam B had a different
+        //   aspect ratio, we wouldn't update.
+        //
+        // Unfortunately, RingRTC (1) doesn't update these dimensions with the "real" camera
+        //   dimensions (2) doesn't give us any hooks or callbacks. For now, this works okay.
+        //   We have `object-fit: contain` in the CSS in case we're wrong; not ideal, but
+        //   usable.
+        react_1.default.useEffect(() => {
+            const videoEl = localVideoRef.current;
+            if (hasLocalVideo && videoEl && videoEl.width && videoEl.height) {
+                setLocalVideoAspectRatio(videoEl.width / videoEl.height);
+            }
+        }, [hasLocalVideo, setLocalVideoAspectRatio]);
         react_1.default.useEffect(() => {
             function handleKeyDown(event) {
                 let eventHandled = false;
@@ -78,15 +116,44 @@ require(exports => {
         else {
             joinButtonChildren = i18n('calling__start');
         }
+        let localPreviewStyles;
+        // It'd be nice to use `hasEverMeasured` here, too, but TypeScript isn't smart enough
+        //   to understand the logic here.
+        if (localPreviewContainerWidth !== null &&
+            localPreviewContainerHeight !== null) {
+            const containerAspectRatio = localPreviewContainerWidth / localPreviewContainerHeight;
+            localPreviewStyles =
+                containerAspectRatio < localVideoAspectRatio
+                    ? {
+                        width: '100%',
+                        height: Math.floor(localPreviewContainerWidth / localVideoAspectRatio),
+                    }
+                    : {
+                        width: Math.floor(localPreviewContainerHeight * localVideoAspectRatio),
+                        height: '100%',
+                    };
+        }
+        else {
+            localPreviewStyles = { display: 'none' };
+        }
         return (react_1.default.createElement("div", { className: "module-calling__container" },
             react_1.default.createElement(CallingHeader_1.CallingHeader, { title: conversation.title, i18n: i18n, isGroupCall: isGroupCall, participantCount: peekedParticipants.length, showParticipantsList: showParticipantsList, toggleParticipants: toggleParticipants, toggleSettings: toggleSettings }),
-            react_1.default.createElement("div", { className: "module-calling-lobby__video" },
-                hasLocalVideo && availableCameras.length > 0 ? (react_1.default.createElement("video", { className: "module-calling-lobby__video-on__video", ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: me.avatarPath, color: me.color },
-                    react_1.default.createElement("div", { className: "module-calling__video-off--icon" }),
-                    react_1.default.createElement("span", { className: "module-calling__video-off--text" }, i18n('calling__your-video-is-off')))),
-                react_1.default.createElement("div", { className: "module-calling__buttons" },
-                    react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: videoButtonType, i18n: i18n, onClick: toggleVideo, tooltipDirection: Tooltip_1.TooltipPlacement.Top }),
-                    react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: audioButtonType, i18n: i18n, onClick: toggleAudio, tooltipDirection: Tooltip_1.TooltipPlacement.Top }))),
+            react_1.default.createElement(react_measure_1.default, {
+                bounds: true, onResize: ({ bounds }) => {
+                    if (!bounds) {
+                        window.log.error('We should be measuring bounds');
+                        return;
+                    }
+                    setLocalPreviewContainerDimensions(bounds);
+                }
+            }, ({ measureRef }) => (react_1.default.createElement("div", { ref: measureRef, className: "module-calling-lobby__local-preview-container" },
+                react_1.default.createElement("div", { className: "module-calling-lobby__local-preview", style: localPreviewStyles },
+                    hasLocalVideo && availableCameras.length > 0 ? (react_1.default.createElement("video", { className: "module-calling-lobby__local-preview__video-on", ref: localVideoRef, autoPlay: true })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: me.avatarPath, color: me.color },
+                        react_1.default.createElement("div", { className: "module-calling-lobby__local-preview__video-off__icon" }),
+                        react_1.default.createElement("span", { className: "module-calling-lobby__local-preview__video-off__text" }, i18n('calling__your-video-is-off')))),
+                    react_1.default.createElement("div", { className: "module-calling__buttons" },
+                        react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: videoButtonType, i18n: i18n, onClick: toggleVideo, tooltipDirection: Tooltip_1.TooltipPlacement.Top }),
+                        react_1.default.createElement(CallingButton_1.CallingButton, { buttonType: audioButtonType, i18n: i18n, onClick: toggleAudio, tooltipDirection: Tooltip_1.TooltipPlacement.Top })))))),
             isGroupCall ? (react_1.default.createElement("div", { className: "module-calling-lobby__info" },
                 participantNames.length === 0 &&
                 i18n('calling__lobby-summary--zero'),
