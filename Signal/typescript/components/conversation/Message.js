@@ -612,7 +612,7 @@ require(exports => {
                 ? undefined
                 : () => {
                     scrollToQuotedMessage({
-                        author: quote.authorId,
+                        authorId: quote.authorId,
                         sentAt: quote.sentAt,
                     });
                 };

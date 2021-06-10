@@ -776,7 +776,7 @@ require(exports => {
                 bodyRanges: this.processBodyRanges(bodyRanges),
                 isFromMe,
                 sentAt,
-                authorId: author,
+                authorId: contact ? contact.id : undefined,
                 authorPhoneNumber,
                 authorProfileName,
                 authorTitle,
