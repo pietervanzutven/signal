@@ -6616,6 +6616,9 @@ span.module-in-contacts-icon__tooltip {
     width: 100%; }
     .module-calling-pip__video--remote .module-ongoing-call__group-call-remote-participant--audio-muted::after {
       display: none; }
+    .module-calling-pip__video--remote .module-avatar img {
+      -webkit-user-drag: none;
+      -webkit-user-select: none; }
   .module-calling-pip__video--local {
     bottom: 38px;
     height: 32px;
@@ -6623,9 +6626,6 @@ span.module-in-contacts-icon__tooltip {
     right: 4px;
     transform: rotateY(180deg);
     width: 32px; }
-  .module-calling-pip__video--avatar img {
-    -webkit-user-drag: none;
-    -webkit-user-select: none; }
   .module-calling-pip__actions {
     align-items: center;
     background-color: #f6f6f6;
