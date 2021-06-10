@@ -13,6 +13,7 @@ require(exports => {
     const groups_1 = require("../groups");
     const missingCaseError_1 = require("../util/missingCaseError");
     const normalizeGroupCallTimestamp_1 = require("../util/ringrtc/normalizeGroupCallTimestamp");
+    const constants_1 = require("../calling/constants");
     const RINGRTC_HTTP_METHOD_TO_OUR_HTTP_METHOD = new Map([
         [ringrtc_1.HttpMethod.Get, 'GET'],
         [ringrtc_1.HttpMethod.Put, 'PUT'],
@@ -35,7 +36,7 @@ require(exports => {
     exports.GumVideoCapturer = ringrtc_2.GumVideoCapturer;
     class CallingClass {
         constructor() {
-            this.videoCapturer = new ringrtc_1.GumVideoCapturer(640, 480, 30);
+            this.videoCapturer = new ringrtc_1.GumVideoCapturer(constants_1.REQUESTED_VIDEO_WIDTH, constants_1.REQUESTED_VIDEO_HEIGHT, constants_1.REQUESTED_VIDEO_FRAMERATE);
             this.videoRenderer = new ringrtc_1.CanvasVideoRenderer();
             this.callsByConversation = {};
         }
