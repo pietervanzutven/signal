@@ -60,7 +60,7 @@ require(exports => {
         renderAvatar() {
             const { avatarPath, color, i18n, type, isMe, name, phoneNumber, profileName, title, } = this.props;
             return (react_1.default.createElement("span", { className: "module-conversation-header__avatar" },
-                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: type, i18n: i18n, noteToSelf: isMe, title: title, name: name, phoneNumber: phoneNumber, profileName: profileName, size: 28 })));
+                react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color, conversationType: type, i18n: i18n, noteToSelf: isMe, title: title, name: name, phoneNumber: phoneNumber, profileName: profileName, size: Avatar_1.AvatarSize.THIRTY_TWO })));
         }
         renderExpirationLength() {
             const { i18n, expireTimer, showBackButton } = this.props;
@@ -186,8 +186,8 @@ require(exports => {
                         this.renderAvatar(),
                         this.renderTitle())),
                 this.renderExpirationLength(),
-                this.renderSearchButton(),
                 this.renderOutgoingCallButtons(),
+                this.renderSearchButton(),
                 this.renderMoreButton(triggerId),
                 this.renderMenu(triggerId)));
         }
