@@ -1,12 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.textsecure = window.ts.textsecure || {};
-    const exports = window.ts.textsecure.ProvisioningCipher = {};
-
-    /* eslint-disable more/no-then */
-    /* eslint-disable max-classes-per-file */
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
     class ProvisioningCipherInner {
         async decrypt(provisionEnvelope) {
@@ -37,6 +32,7 @@
                             const ret = {
                                 identityKeyPair: keyPair,
                                 number: provisionMessage.number,
+                                uuid: provisionMessage.uuid,
                                 provisioningCode: provisionMessage.provisioningCode,
                                 userAgent: provisionMessage.userAgent,
                                 readReceipts: provisionMessage.readReceipts,
@@ -76,4 +72,4 @@
         }
     }
     exports.default = ProvisioningCipher;
-})();
+});

@@ -1,11 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.textsecure = window.ts.textsecure || {};
-    const exports = window.ts.textsecure.AccountManager = {};
-
-    // tslint:disable no-default-export no-unnecessary-local-variable
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -306,7 +302,7 @@
             });
         }
         async createAccount(number, verificationCode, identityKeyPair, profileKey, deviceName, userAgent, readReceipts, options = {}) {
-            const { accessKey } = options;
+            const { accessKey, uuid } = options;
             let password = btoa(Helpers_1.default.getString(window.libsignal.crypto.getRandomBytes(16)));
             password = password.substring(0, password.length - 2);
             const registrationId = window.libsignal.KeyHelper.generateRegistrationId();
@@ -320,7 +316,7 @@
             window.log.info(`createAccount: Number is ${number}, password has length: ${password ? password.length : 'none'}`);
             const response = await this.server.confirmCode(number, verificationCode, password, registrationId, encryptedDeviceName, { accessKey });
             const numberChanged = previousNumber && previousNumber !== number;
-            const uuidChanged = previousUuid && response.uuid && previousUuid !== response.uuid;
+            const uuidChanged = previousUuid && uuid && previousUuid !== uuid;
             if (numberChanged || uuidChanged) {
                 if (numberChanged) {
                     window.log.warn('New number is different from old number; deleting all previous data');
@@ -354,9 +350,8 @@
             // calls out to the user storage API to get the stored UUID and number
             // information.
             await window.textsecure.storage.user.setNumberAndDeviceId(number, response.deviceId || 1, deviceName);
-            const setUuid = response.uuid;
-            if (setUuid) {
-                await window.textsecure.storage.user.setUuidAndDeviceId(setUuid, response.deviceId || 1);
+            if (uuid) {
+                await window.textsecure.storage.user.setUuidAndDeviceId(uuid, response.deviceId || 1);
             }
             // update our own identity key, which may have changed
             // if we're relinking after a reinstall on the master device
@@ -467,4 +462,4 @@
         }
     }
     exports.default = AccountManager;
-})();
+});

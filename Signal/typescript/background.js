@@ -547,7 +547,11 @@
             if (!conversation) {
                 return;
             }
-            conversationChanged(conversation.id, conversation.format());
+            // This delay ensures that the .format() call isn't synchronous as a
+            //   Backbone property is changed. Important because our _byUuid/_byE164
+            //   lookups aren't up-to-date as the change happens; just a little bit
+            //   after.
+            setTimeout(() => conversationChanged(conversation.id, conversation.format()), 1);
         });
         convoCollection.on('reset', removeAllConversations);
         window.Whisper.events.on('messageExpired', messageExpired);
