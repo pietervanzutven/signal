@@ -212,8 +212,8 @@ require(exports => {
                         return;
                     }
                     // Make non-private envelope IDs dashless so they don't get redacted
-                    // from logs
-                    envelope.id = (envelope.serverGuid || uuid_1.v4()).replace(/-/g, '');
+                    //   from logs
+                    envelope.id = uuid_1.v4().replace(/-/g, '');
                     envelope.serverTimestamp = envelope.serverTimestamp
                         ? envelope.serverTimestamp.toNumber()
                         : null;
@@ -326,7 +326,7 @@ require(exports => {
                     throw new Error('MessageReceiver.queueCached: item.envelope was malformed');
                 }
                 const envelope = window.textsecure.protobuf.Envelope.decode(envelopePlaintext);
-                envelope.id = envelope.serverGuid || item.id;
+                envelope.id = item.id;
                 envelope.source = envelope.source || item.source;
                 envelope.sourceUuid = envelope.sourceUuid || item.sourceUuid;
                 envelope.sourceDevice = envelope.sourceDevice || item.sourceDevice;
