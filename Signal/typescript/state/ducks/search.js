@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };

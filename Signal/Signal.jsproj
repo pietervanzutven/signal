@@ -4084,6 +4084,7 @@
     <Content Include="typescript\types\Util.js" />
     <Content Include="typescript\updater\index.js" />
     <Content Include="typescript\util\arrayBufferToObjectURL.js" />
+    <Content Include="typescript\util\assignWithNoUnnecessaryAllocation.js" />
     <Content Include="typescript\util\batcher.js" />
     <Content Include="typescript\util\callingNotification.js" />
     <Content Include="typescript\util\callingPermissions.js" />

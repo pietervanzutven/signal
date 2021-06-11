@@ -715,7 +715,7 @@ async function showStickerCreator() {
     width: 800,
     minWidth: 800,
     height: 650,
-    title: locale.messages.signalDesktopStickerCreator,
+    title: locale.messages.signalDesktopStickerCreator.message,
     autoHideMenuBar: true,
     backgroundColor: '#3a76f0',
     show: false,

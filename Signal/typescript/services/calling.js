@@ -30,10 +30,6 @@ require(exports => {
         GroupCallUpdateMessageState[GroupCallUpdateMessageState["SentJoin"] = 1] = "SentJoin";
         GroupCallUpdateMessageState[GroupCallUpdateMessageState["SentLeft"] = 2] = "SentLeft";
     })(GroupCallUpdateMessageState || (GroupCallUpdateMessageState = {}));
-    var ringrtc_2 = require("ringrtc");
-    exports.CallState = ringrtc_2.CallState;
-    exports.CanvasVideoRenderer = ringrtc_2.CanvasVideoRenderer;
-    exports.GumVideoCapturer = ringrtc_2.GumVideoCapturer;
     class CallingClass {
         constructor() {
             this.videoCapturer = new ringrtc_1.GumVideoCapturer(constants_1.REQUESTED_VIDEO_WIDTH, constants_1.REQUESTED_VIDEO_HEIGHT, constants_1.REQUESTED_VIDEO_FRAMERATE);

@@ -1,7 +1,10 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
     const events_1 = require("../../shims/events");
+    const assignWithNoUnnecessaryAllocation_1 = require("../../util/assignWithNoUnnecessaryAllocation");
     // Actions
     const CHECK_NETWORK_STATUS = 'network/CHECK_NETWORK_STATUS';
     const CLOSE_CONNECTING_GRACE_PERIOD = 'network/CLOSE_CONNECTING_GRACE_PERIOD';
@@ -40,9 +43,11 @@ require(exports => {
     function reducer(state = getEmptyState(), action) {
         if (action.type === CHECK_NETWORK_STATUS) {
             const { isOnline, socketStatus } = action.payload;
-            return Object.assign(Object.assign({}, state), {
+            // This action is dispatched frequently. We avoid allocating a new object if nothing
+            //   has changed to avoid an unnecessary re-render.
+            return assignWithNoUnnecessaryAllocation_1.assignWithNoUnnecessaryAllocation(state, {
                 isOnline,
-                socketStatus
+                socketStatus,
             });
         }
         if (action.type === CLOSE_CONNECTING_GRACE_PERIOD) {
