@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020-2021 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __asyncValues = (this && this.__asyncValues) || function (o) {
         if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
         var m = o[Symbol.asyncIterator], i;
@@ -9,6 +11,7 @@ require(exports => {
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     const MIME_1 = require("../types/MIME");
+    const USER_AGENT = 'WhatsApp/2';
     const MAX_REQUEST_COUNT_WITH_REDIRECTS = 20;
     // Lifted from the `fetch` spec [here][0].
     // [0]: https://fetch.spec.whatwg.org/#redirect-status
@@ -40,7 +43,6 @@ require(exports => {
     const emptyContentType = { type: null, charset: null };
     // This throws non-helpful errors because (1) it logs (2) it will be immediately caught.
     async function fetchWithRedirects(fetchFn, href, options) {
-        var _a;
         const urlsSeen = new Set();
         let nextHrefToLoad = href;
         for (let i = 0; i < MAX_REQUEST_COUNT_WITH_REDIRECTS; i += 1) {
@@ -61,7 +63,7 @@ require(exports => {
                 throw new Error('no location with redirect');
             }
             const newUrl = maybeParseUrl(location, nextHrefToLoad);
-            if (((_a = newUrl) === null || _a === void 0 ? void 0 : _a.protocol) !== 'https:') {
+            if ((newUrl === null || newUrl === void 0 ? void 0 : newUrl.protocol) !== 'https:') {
                 window.log.warn('fetchWithRedirects: got a redirect status code and an invalid Location header');
                 throw new Error('invalid location');
             }
@@ -311,7 +313,7 @@ require(exports => {
             response = await fetchWithRedirects(fetchFn, href, {
                 headers: {
                     Accept: 'text/html,application/xhtml+xml',
-                    'User-Agent': 'WhatsApp',
+                    'User-Agent': USER_AGENT,
                 },
                 signal: abortSignal,
             });
@@ -376,7 +378,7 @@ require(exports => {
         try {
             response = await fetchWithRedirects(fetchFn, href, {
                 headers: {
-                    'User-Agent': 'WhatsApp',
+                    'User-Agent': USER_AGENT,
                 },
                 size: MAX_IMAGE_CONTENT_LENGTH,
                 signal: abortSignal,
