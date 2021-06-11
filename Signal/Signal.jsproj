@@ -4139,10 +4139,13 @@
     <Content Include="typescript\util\windowsZoneIdentifier.js" />
     <Content Include="typescript\util\zkgroup.js" />
     <Content Include="typescript\views\conversation_view.js" />
+    <Content Include="_locales\af\messages.json" />
     <Content Include="_locales\ar\messages.json" />
     <Content Include="_locales\bg\messages.json" />
+    <Content Include="_locales\bn\messages.json" />
     <Content Include="_locales\ca\messages.json" />
     <Content Include="_locales\cs\messages.json" />
+    <Content Include="_locales\cy\messages.json" />
     <Content Include="_locales\da\messages.json" />
     <Content Include="_locales\de\messages.json" />
     <Content Include="_locales\el\messages.json" />
@@ -4151,6 +4154,7 @@
     <Content Include="_locales\es\messages.json" />
     <Content Include="_locales\es_419\messages.json" />
     <Content Include="_locales\et\messages.json" />
+    <Content Include="_locales\eu\messages.json" />
     <Content Include="_locales\fa\messages.json" />
     <Content Include="_locales\fi\messages.json" />
     <Content Include="_locales\fr\messages.json" />
@@ -4166,6 +4170,8 @@
     <Content Include="_locales\ko\messages.json" />
     <Content Include="_locales\lt\messages.json" />
     <Content Include="_locales\mk\messages.json" />
+    <Content Include="_locales\mr\messages.json" />
+    <Content Include="_locales\ms\messages.json" />
     <Content Include="_locales\nb\messages.json" />
     <Content Include="_locales\nl\messages.json" />
     <Content Include="_locales\nn\messages.json" />
@@ -4180,9 +4186,13 @@
     <Content Include="_locales\sq\messages.json" />
     <Content Include="_locales\sr\messages.json" />
     <Content Include="_locales\sv\messages.json" />
+    <Content Include="_locales\sw\messages.json" />
+    <Content Include="_locales\ta\messages.json" />
+    <Content Include="_locales\te\messages.json" />
     <Content Include="_locales\th\messages.json" />
     <Content Include="_locales\tr\messages.json" />
     <Content Include="_locales\uk\messages.json" />
+    <Content Include="_locales\ur\messages.json" />
     <Content Include="_locales\vi\messages.json" />
     <Content Include="_locales\zh_CN\messages.json" />
     <Content Include="_locales\zh_TW\messages.json" />
