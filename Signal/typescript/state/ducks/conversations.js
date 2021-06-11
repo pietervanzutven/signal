@@ -452,12 +452,12 @@ require(exports => {
             if (messages.length > 0) {
                 const first = messages[0];
                 if (first && (!oldest || first.received_at <= oldest.received_at)) {
-                    oldest = lodash_1.pick(first, ['id', 'received_at']);
+                    oldest = lodash_1.pick(first, ['id', 'received_at', 'sent_at']);
                 }
                 const last = messages[messages.length - 1];
                 if (last &&
                     (!newest || unboundedFetch || last.received_at >= newest.received_at)) {
-                    newest = lodash_1.pick(last, ['id', 'received_at']);
+                    newest = lodash_1.pick(last, ['id', 'received_at', 'sent_at']);
                 }
             }
             return Object.assign(Object.assign({}, state), {
@@ -542,12 +542,14 @@ require(exports => {
                 const lastId = oldIds[oldIds.length - 1];
                 if (oldest && oldest.id === firstId && firstId === id) {
                     const second = messagesLookup[oldIds[1]];
-                    oldest = second ? lodash_1.pick(second, ['id', 'received_at']) : undefined;
+                    oldest = second
+                        ? lodash_1.pick(second, ['id', 'received_at', 'sent_at'])
+                        : undefined;
                 }
                 if (newest && newest.id === lastId && lastId === id) {
                     const penultimate = messagesLookup[oldIds[oldIds.length - 2]];
                     newest = penultimate
-                        ? lodash_1.pick(penultimate, ['id', 'received_at'])
+                        ? lodash_1.pick(penultimate, ['id', 'received_at', 'sent_at'])
                         : undefined;
                 }
             }
@@ -588,7 +590,9 @@ require(exports => {
                 ? messageIds[messageIds.length - 1]
                 : undefined;
             const last = lastId ? getOwn_1.getOwn(messagesLookup, lastId) : undefined;
-            const newest = last ? lodash_1.pick(last, ['id', 'received_at']) : undefined;
+            const newest = last
+                ? lodash_1.pick(last, ['id', 'received_at', 'sent_at'])
+                : undefined;
             return Object.assign(Object.assign({}, state), { messagesByConversation: Object.assign(Object.assign({}, messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { metrics: Object.assign(Object.assign({}, existingConversation.metrics), { newest }) }) }) });
         }
         if (action.type === 'REPAIR_OLDEST_MESSAGE') {
@@ -601,7 +605,9 @@ require(exports => {
             const { messageIds } = existingConversation;
             const firstId = messageIds && messageIds.length ? messageIds[0] : undefined;
             const first = firstId ? getOwn_1.getOwn(messagesLookup, firstId) : undefined;
-            const oldest = first ? lodash_1.pick(first, ['id', 'received_at']) : undefined;
+            const oldest = first
+                ? lodash_1.pick(first, ['id', 'received_at', 'sent_at'])
+                : undefined;
             return Object.assign(Object.assign({}, state), { messagesByConversation: Object.assign(Object.assign({}, messagesByConversation), { [conversationId]: Object.assign(Object.assign({}, existingConversation), { metrics: Object.assign(Object.assign({}, existingConversation.metrics), { oldest }) }) }) });
         }
         if (action.type === 'MESSAGES_ADDED') {
@@ -624,10 +630,10 @@ require(exports => {
             const first = sorted[0];
             const last = sorted[sorted.length - 1];
             if (!newest) {
-                newest = lodash_1.pick(first, ['id', 'received_at']);
+                newest = lodash_1.pick(first, ['id', 'received_at', 'sent_at']);
             }
             if (!oldest) {
-                oldest = lodash_1.pick(last, ['id', 'received_at']);
+                oldest = lodash_1.pick(last, ['id', 'received_at', 'sent_at']);
             }
             const existingTotal = existingConversation.messageIds.length;
             if (isNewMessage && existingTotal > 0) {
@@ -642,10 +648,10 @@ require(exports => {
             // Update oldest and newest if we receive older/newer
             // messages (or duplicated timestamps!)
             if (first && oldest && first.received_at <= oldest.received_at) {
-                oldest = lodash_1.pick(first, ['id', 'received_at']);
+                oldest = lodash_1.pick(first, ['id', 'received_at', 'sent_at']);
             }
             if (last && newest && last.received_at >= newest.received_at) {
-                newest = lodash_1.pick(last, ['id', 'received_at']);
+                newest = lodash_1.pick(last, ['id', 'received_at', 'sent_at']);
             }
             const newIds = messages.map(message => message.id);
             const newMessageIds = lodash_1.difference(newIds, existingConversation.messageIds);
@@ -659,6 +665,7 @@ require(exports => {
                     oldestUnread = lodash_1.pick(lookup[oldestId], [
                         'id',
                         'received_at',
+                        'sent_at',
                     ]);
                 }
             }

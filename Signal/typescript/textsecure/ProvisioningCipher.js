@@ -29,6 +29,7 @@ require(exports => {
                     return window.libsignal.Curve.async
                         .createKeyPair(privKey)
                         .then(keyPair => {
+                            window.normalizeUuids(provisionMessage, ['uuid'], 'ProvisioningCipher.decrypt');
                             const ret = {
                                 identityKeyPair: keyPair,
                                 number: provisionMessage.number,

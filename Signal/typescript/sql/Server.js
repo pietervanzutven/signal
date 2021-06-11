@@ -1792,7 +1792,7 @@ require(exports => {
     INNER JOIN messages on messages_fts.id = messages.id
     WHERE
       messages_fts match $query
-    ORDER BY messages.received_at DESC
+    ORDER BY messages.received_at DESC, messages.sent_at DESC
     LIMIT $limit;`, {
             $query: query,
             $limit: limit || 500,
@@ -1812,7 +1812,7 @@ require(exports => {
     WHERE
       messages_fts match $query AND
       messages.conversationId = $conversationId
-    ORDER BY messages.received_at DESC
+    ORDER BY messages.received_at DESC, messages.sent_at DESC
     LIMIT $limit;`, {
             $query: query,
             $conversationId: conversationId,
@@ -1993,24 +1993,28 @@ require(exports => {
         const rows = await db.all(`SELECT json FROM messages WHERE
       unread = $unread AND
       conversationId = $conversationId
-     ORDER BY received_at DESC;`, {
+     ORDER BY received_at DESC, sent_at DESC;`, {
             $unread: 1,
             $conversationId: conversationId,
         });
         return lodash_1.map(rows, row => jsonToObject(row.json));
     }
-    async function getOlderMessagesByConversation(conversationId, { limit = 100, receivedAt = Number.MAX_VALUE, messageId, } = {}) {
+    async function getOlderMessagesByConversation(conversationId, { limit = 100, receivedAt = Number.MAX_VALUE, sentAt = Number.MAX_VALUE, messageId, } = {}) {
         const db = getInstance();
         let rows;
         if (messageId) {
             rows = await db.all(`SELECT json FROM messages WHERE
        conversationId = $conversationId AND
-       received_at <= $received_at AND
-       id != $messageId
-     ORDER BY received_at DESC
+       id != $messageId AND
+       (
+         (received_at = $received_at AND sent_at < $sent_at) OR
+         received_at < $received_at
+       )
+     ORDER BY received_at DESC, sent_at DESC
      LIMIT $limit;`, {
                 $conversationId: conversationId,
                 $received_at: receivedAt,
+                $sent_at: sentAt,
                 $limit: limit,
                 $messageId: messageId,
             });
@@ -2018,25 +2022,33 @@ require(exports => {
         else {
             rows = await db.all(`SELECT json FROM messages WHERE
        conversationId = $conversationId AND
+       (
+         (received_at = $received_at AND sent_at < $sent_at) OR
        received_at < $received_at
-     ORDER BY received_at DESC
+       )
+     ORDER BY received_at DESC, sent_at DESC
      LIMIT $limit;`, {
                 $conversationId: conversationId,
                 $received_at: receivedAt,
+                $sent_at: sentAt,
                 $limit: limit,
             });
         }
         return rows.reverse();
     }
-    async function getNewerMessagesByConversation(conversationId, { limit = 100, receivedAt = 0 } = {}) {
+    async function getNewerMessagesByConversation(conversationId, { limit = 100, receivedAt = 0, sentAt = 0, } = {}) {
         const db = getInstance();
         const rows = await db.all(`SELECT json FROM messages WHERE
        conversationId = $conversationId AND
+       (
+         (received_at = $received_at AND sent_at > $sent_at) OR
        received_at > $received_at
-     ORDER BY received_at ASC
+       )
+     ORDER BY received_at ASC, sent_at ASC
      LIMIT $limit;`, {
             $conversationId: conversationId,
             $received_at: receivedAt,
+            $sent_at: sentAt,
             $limit: limit,
         });
         return rows;
@@ -2045,7 +2057,7 @@ require(exports => {
         const db = getInstance();
         const row = await db.get(`SELECT * FROM messages WHERE
        conversationId = $conversationId
-     ORDER BY received_at ASC
+     ORDER BY received_at ASC, sent_at ASC
      LIMIT 1;`, {
             $conversationId: conversationId,
         });
@@ -2058,7 +2070,7 @@ require(exports => {
         const db = getInstance();
         const row = await db.get(`SELECT * FROM messages WHERE
        conversationId = $conversationId
-     ORDER BY received_at DESC
+     ORDER BY received_at DESC, sent_at DESC
      LIMIT 1;`, {
             $conversationId: conversationId,
         });
@@ -2073,7 +2085,7 @@ require(exports => {
        conversationId = $conversationId AND
        (type IS NULL OR type NOT IN ('profile-change', 'verified-change', 'message-history-unsynced', 'keychange', 'group-v1-migration')) AND
        (json_extract(json, '$.expirationTimerUpdate.fromSync') IS NULL OR json_extract(json, '$.expirationTimerUpdate.fromSync') != 1)
-     ORDER BY received_at DESC
+     ORDER BY received_at DESC, sent_at DESC
      LIMIT 1;`, {
             $conversationId: conversationId,
         });
@@ -2087,7 +2099,7 @@ require(exports => {
         const row = await db.get(`SELECT * FROM messages WHERE
        conversationId = $conversationId AND
        (type IS NULL OR type NOT IN ('profile-change', 'verified-change', 'message-history-unsynced', 'group-v1-migration'))
-     ORDER BY received_at DESC
+     ORDER BY received_at DESC, sent_at DESC
      LIMIT 1;`, {
             $conversationId: conversationId,
         });
@@ -2101,7 +2113,7 @@ require(exports => {
         const row = await db.get(`SELECT * FROM messages WHERE
        conversationId = $conversationId AND
        unread = 1
-     ORDER BY received_at ASC
+     ORDER BY received_at ASC, sent_at ASC
      LIMIT 1;`, {
             $conversationId: conversationId,
         });
@@ -2132,10 +2144,10 @@ require(exports => {
         ]);
         const [oldest, newest, oldestUnread, totalUnread] = results;
         return {
-            oldest: oldest ? lodash_1.pick(oldest, ['received_at', 'id']) : null,
-            newest: newest ? lodash_1.pick(newest, ['received_at', 'id']) : null,
+            oldest: oldest ? lodash_1.pick(oldest, ['received_at', 'sent_at', 'id']) : null,
+            newest: newest ? lodash_1.pick(newest, ['received_at', 'sent_at', 'id']) : null,
             oldestUnread: oldestUnread
-                ? lodash_1.pick(oldestUnread, ['received_at', 'id'])
+                ? lodash_1.pick(oldestUnread, ['received_at', 'sent_at', 'id'])
                 : null,
             totalUnread,
         };
@@ -2175,7 +2187,7 @@ require(exports => {
         const db = getInstance();
         const rows = await db.all(`SELECT * FROM messages
      WHERE sent_at = $sent_at
-     ORDER BY received_at DESC;`, {
+     ORDER BY received_at DESC, sent_at DESC;`, {
             $sent_at: sentAt,
         });
         return lodash_1.map(rows, row => jsonToObject(row.json));
@@ -2225,7 +2237,7 @@ require(exports => {
     WHERE
       isViewOnce = 1
       AND (isErased IS NULL OR isErased != 1)
-    ORDER BY received_at ASC
+    ORDER BY received_at ASC, sent_at ASC
     LIMIT 1;
   `);
         if (!rows || rows.length < 1) {
@@ -2241,7 +2253,7 @@ require(exports => {
       isViewOnce = 1
       AND (isErased IS NULL OR isErased != 1)
       AND received_at <= $THIRTY_DAYS_AGO
-    ORDER BY received_at ASC;`, {
+    ORDER BY received_at ASC, sent_at ASC;`, {
             $THIRTY_DAYS_AGO: THIRTY_DAYS_AGO,
         });
         return lodash_1.map(rows, row => jsonToObject(row.json));
@@ -2800,7 +2812,7 @@ require(exports => {
         const rows = await db.all(`SELECT json FROM messages WHERE
       conversationId = $conversationId AND
       hasVisualMediaAttachments = 1
-     ORDER BY received_at DESC
+     ORDER BY received_at DESC, sent_at DESC
      LIMIT $limit;`, {
             $conversationId: conversationId,
             $limit: limit,
@@ -2812,7 +2824,7 @@ require(exports => {
         const rows = await db.all(`SELECT json FROM messages WHERE
       conversationId = $conversationId AND
       hasFileAttachments = 1
-     ORDER BY received_at DESC
+     ORDER BY received_at DESC, sent_at DESC
      LIMIT $limit;`, {
             $conversationId: conversationId,
             $limit: limit,
