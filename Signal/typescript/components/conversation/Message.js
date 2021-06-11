@@ -315,7 +315,7 @@ require(exports => {
         }
         componentWillUnmount() {
             if (this.selectedTimeout) {
-                clearInterval(this.selectedTimeout);
+                clearTimeout(this.selectedTimeout);
             }
             if (this.expirationCheckInterval) {
                 clearInterval(this.expirationCheckInterval);
