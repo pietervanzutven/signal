@@ -1,10 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.types = window.ts.types || {};
-    const exports = window.ts.types.Attachment = {};
-
+    // Copyright 2018-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -84,7 +81,7 @@
     }
     exports.isImage = isImage;
     function isImageAttachment(attachment) {
-        return (attachment &&
+        return Boolean(attachment &&
             attachment.contentType &&
             GoogleChrome_1.isImageTypeSupported(attachment.contentType));
     }
@@ -257,4 +254,4 @@
                 return attachment.contentType.split('/')[1];
         }
     };
-})()
+});

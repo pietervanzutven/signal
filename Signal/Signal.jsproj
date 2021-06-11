@@ -3949,6 +3949,7 @@
     <Content Include="typescript\groups.js" />
     <Content Include="typescript\linkPreviews\isLinkPreviewDateValid.js" />
     <Content Include="typescript\linkPreviews\linkPreviewFetch.js" />
+    <Content Include="typescript\linkPreviews\shouldUseFullSizeLinkPreviewImage.js" />
     <Content Include="typescript\models\conversations.js" />
     <Content Include="typescript\models\messages.js" />
     <Content Include="typescript\notifications\getStatus.js" />
@@ -4077,6 +4078,7 @@
     <Content Include="typescript\types\Logging.js" />
     <Content Include="typescript\types\Message.js" />
     <Content Include="typescript\types\message\initializeAttachmentMetadata.js" />
+    <Content Include="typescript\types\message\LinkPreviews.js" />
     <Content Include="typescript\types\MIME.js" />
     <Content Include="typescript\types\PhoneNumber.js" />
     <Content Include="typescript\types\Settings.js" />
