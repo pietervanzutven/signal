@@ -1416,6 +1416,7 @@ require(exports => {
                     password: auth.password,
                     responseType: 'jsonwithdetails',
                     data,
+                    timeout: 30000,
                     version,
                 });
                 const { data: responseBody, response } = result;
@@ -1480,6 +1481,7 @@ require(exports => {
                     user: directoryAuth.username,
                     password: directoryAuth.password,
                     responseType: 'json',
+                    timeout: 30000,
                     data: JSON.stringify(data),
                     version,
                 });

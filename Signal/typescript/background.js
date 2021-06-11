@@ -171,7 +171,7 @@
         if (_.isNumber(preMessageReceiverStatus)) {
             return preMessageReceiverStatus;
         }
-        return -1;
+        return WebSocket.CLOSED;
     };
     window.Whisper.events = _.clone(window.Backbone.Events);
     let accountManager;
@@ -547,7 +547,11 @@
             if (!conversation) {
                 return;
             }
-            conversationChanged(conversation.id, conversation.format());
+            // This delay ensures that the .format() call isn't synchronous as a
+            //   Backbone property is changed. Important because our _byUuid/_byE164
+            //   lookups aren't up-to-date as the change happens; just a little bit
+            //   after.
+            setTimeout(() => conversationChanged(conversation.id, conversation.format()), 1);
         });
         convoCollection.on('reset', removeAllConversations);
         window.Whisper.events.on('messageExpired', messageExpired);
@@ -1151,7 +1155,16 @@
         });
         // Maybe refresh remote configuration when we become active
         window.registerForActive(async () => {
-            await window.Signal.RemoteConfig.maybeRefreshRemoteConfig();
+            try {
+                await window.Signal.RemoteConfig.maybeRefreshRemoteConfig();
+            }
+            catch (error) {
+                if (error && window._.isNumber(error.code)) {
+                    window.log.warn(`registerForActive: Failed to to refresh remote config. Code: ${error.code}`);
+                    return;
+                }
+                throw error;
+            }
         });
         // Listen for changes to the `desktop.clientExpiration` remote flag
         window.Signal.RemoteConfig.onChange('desktop.clientExpiration', ({ value }) => {

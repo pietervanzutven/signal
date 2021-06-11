@@ -45,9 +45,14 @@ require(exports => {
                 throw new Error('Server trust root is required!');
             }
             this.serverTrustRoot = MessageReceiverInner.stringToArrayBufferBase64(options.serverTrustRoot);
-            this.number_id = oldUsername ? Helpers_1.default.unencodeNumber(oldUsername)[0] : null;
-            this.uuid_id = username ? Helpers_1.default.unencodeNumber(username)[0] : null;
-            this.deviceId = parseInt(Helpers_1.default.unencodeNumber(username || oldUsername)[1], 10);
+            this.number_id = oldUsername
+                ? Helpers_1.default.unencodeNumber(oldUsername)[0]
+                : undefined;
+            this.uuid_id = username ? Helpers_1.default.unencodeNumber(username)[0] : undefined;
+            this.deviceId =
+                username || oldUsername
+                    ? parseInt(Helpers_1.default.unencodeNumber(username || oldUsername)[1], 10)
+                    : undefined;
             this.incomingQueue = new p_queue_1.default({ concurrency: 1, timeout: 1000 * 60 * 2 });
             this.pendingQueue = new p_queue_1.default({ concurrency: 1, timeout: 1000 * 60 * 2 });
             this.appQueue = new p_queue_1.default({ concurrency: 1, timeout: 1000 * 60 * 2 });
@@ -212,8 +217,8 @@ require(exports => {
                         return;
                     }
                     // Make non-private envelope IDs dashless so they don't get redacted
-                    // from logs
-                    envelope.id = (envelope.serverGuid || uuid_1.v4()).replace(/-/g, '');
+                    //   from logs
+                    envelope.id = uuid_1.v4().replace(/-/g, '');
                     envelope.serverTimestamp = envelope.serverTimestamp
                         ? envelope.serverTimestamp.toNumber()
                         : null;
@@ -326,7 +331,7 @@ require(exports => {
                     throw new Error('MessageReceiver.queueCached: item.envelope was malformed');
                 }
                 const envelope = window.textsecure.protobuf.Envelope.decode(envelopePlaintext);
-                envelope.id = envelope.serverGuid || item.id;
+                envelope.id = item.id;
                 envelope.source = envelope.source || item.source;
                 envelope.sourceUuid = envelope.sourceUuid || item.sourceUuid;
                 envelope.sourceDevice = envelope.sourceDevice || item.sourceDevice;

@@ -33,14 +33,13 @@ require(exports => {
     const ReactionViewer_1 = require("./ReactionViewer");
     const Emoji_1 = require("../emoji/Emoji");
     const LinkPreviewDate_1 = require("./LinkPreviewDate");
+    const shouldUseFullSizeLinkPreviewImage_1 = require("../../linkPreviews/shouldUseFullSizeLinkPreviewImage");
     const Attachment_1 = require("../../types/Attachment");
     const timer_1 = require("../../util/timer");
     const isFileDangerous_1 = require("../../util/isFileDangerous");
     const _util_1 = require("../_util");
     const lib_1 = require("../emoji/lib");
     const ReactionPicker_1 = require("../../state/smart/ReactionPicker");
-    // Same as MIN_WIDTH in ImageGrid.tsx
-    const MINIMUM_LINK_PREVIEW_IMAGE_WIDTH = 200;
     const STICKER_SIZE = 200;
     const SELECTED_TIMEOUT = 1000;
     const THREE_HOURS = 3 * 60 * 60 * 1000;
@@ -560,11 +559,8 @@ require(exports => {
             }
             const withContentAbove = Boolean(quote) ||
                 (conversationType === 'group' && direction === 'incoming');
-            const previewHasImage = first.image && Attachment_1.isImageAttachment(first.image);
-            const width = first.image && first.image.width;
-            const isFullSizeImage = !first.isStickerPack &&
-                width &&
-                width >= MINIMUM_LINK_PREVIEW_IMAGE_WIDTH;
+            const previewHasImage = Attachment_1.isImageAttachment(first.image);
+            const isFullSizeImage = shouldUseFullSizeLinkPreviewImage_1.shouldUseFullSizeLinkPreviewImage(first);
             const linkPreviewDate = first.date || null;
             return (react_1.default.createElement("button", {
                 type: "button", className: classnames_1.default('module-message__link-preview', `module-message__link-preview--${direction}`, withContentAbove
@@ -852,21 +848,14 @@ require(exports => {
                     return dimensions.width + 2;
                 }
             }
-            if (previews && previews.length) {
-                const first = previews[0];
-                if (!first || !first.image) {
-                    return undefined;
-                }
-                const { width } = first.image;
-                if (!first.isStickerPack &&
-                    Attachment_1.isImageAttachment(first.image) &&
-                    width &&
-                    width >= MINIMUM_LINK_PREVIEW_IMAGE_WIDTH) {
-                    const dimensions = Attachment_1.getImageDimensions(first.image);
-                    if (dimensions) {
-                        // Add two for 1px border
-                        return dimensions.width + 2;
-                    }
+            const firstLinkPreview = (previews || [])[0];
+            if (firstLinkPreview &&
+                firstLinkPreview.image &&
+                shouldUseFullSizeLinkPreviewImage_1.shouldUseFullSizeLinkPreviewImage(firstLinkPreview)) {
+                const dimensions = Attachment_1.getImageDimensions(firstLinkPreview.image);
+                if (dimensions) {
+                    // Add two for 1px border
+                    return dimensions.width + 2;
                 }
             }
             return undefined;
@@ -888,9 +877,6 @@ require(exports => {
             if (previews && previews.length) {
                 const first = previews[0];
                 const { image } = first;
-                if (!image) {
-                    return false;
-                }
                 return Attachment_1.isImageAttachment(image);
             }
             return false;

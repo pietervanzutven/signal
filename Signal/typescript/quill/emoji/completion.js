@@ -6,6 +6,7 @@ require(exports => {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    const quill_1 = __importDefault(require("quill"));
     const quill_delta_1 = __importDefault(require("quill-delta"));
     const react_1 = __importDefault(require("react"));
     const lodash_1 = __importDefault(require("lodash"));
@@ -15,6 +16,7 @@ require(exports => {
     const lib_1 = require("../../components/emoji/lib");
     const Emoji_1 = require("../../components/emoji/Emoji");
     const util_1 = require("../util");
+    const Keyboard = quill_1.default.import('modules/keyboard');
     class EmojiCompletion {
         constructor(quill, options) {
             this.results = [];
@@ -35,10 +37,10 @@ require(exports => {
                 }
                 return true;
             };
-            this.quill.keyboard.addBinding({ key: 37 }, clearResults); // 37 = Left
-            this.quill.keyboard.addBinding({ key: 38 }, changeIndex(-1)); // 38 = Up
-            this.quill.keyboard.addBinding({ key: 39 }, clearResults); // 39 = Right
-            this.quill.keyboard.addBinding({ key: 40 }, changeIndex(1)); // 40 = Down
+            this.quill.keyboard.addBinding({ key: Keyboard.keys.UP }, changeIndex(-1));
+            this.quill.keyboard.addBinding({ key: Keyboard.keys.RIGHT }, clearResults);
+            this.quill.keyboard.addBinding({ key: Keyboard.keys.DOWN }, changeIndex(1));
+            this.quill.keyboard.addBinding({ key: Keyboard.keys.LEFT }, clearResults);
             this.quill.keyboard.addBinding({
                 // 186 + Shift = Colon
                 key: 186,
@@ -109,6 +111,7 @@ require(exports => {
                 const showEmojiResults = lib_1.search(leftTokenText, 10);
                 if (showEmojiResults.length > 0) {
                     this.results = showEmojiResults;
+                    this.index = Math.min(this.results.length - 1, this.index);
                     this.render();
                 }
                 else if (this.results.length !== 0) {
