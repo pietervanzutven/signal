@@ -2955,7 +2955,6 @@ img.emoji.jumbo {
   flex: initial;
   min-width: 54px;
   width: 54px;
-  max-height: 54px;
   position: relative; }
   .module-quote__icon-container img {
     width: 100%;
