@@ -103,7 +103,7 @@ require(exports => {
                     .then(clearSessionsAndPreKeys)
                     .then(async () => generateKeys())
                     .then(async (keys) => registerKeys(keys).then(async () => confirmKeys(keys)))
-                    .then(async () => registrationDone({ number }));
+                    .then(async () => registrationDone());
             }));
         }
         async registerSecondDevice(setProvisioningUrl, confirmNumber, progressCallback) {
@@ -166,7 +166,7 @@ require(exports => {
                                         .then(clearSessionsAndPreKeys)
                                         .then(generateKeys)
                                         .then(async (keys) => registerKeys(keys).then(async () => confirmKeys(keys)))
-                                        .then(async () => registrationDone(provisionMessage));
+                                        .then(registrationDone);
                                 }))));
                         }
                         else {
@@ -353,9 +353,20 @@ require(exports => {
             if (uuid) {
                 await window.textsecure.storage.user.setUuidAndDeviceId(uuid, response.deviceId || 1);
             }
+            // This needs to be done very early, because it changes how things are saved in the
+            //   database. Your identity, for example, in the saveIdentityWithAttributes call
+            //   below.
+            const conversationId = window.ConversationController.ensureContactIds({
+                e164: number,
+                uuid,
+                highTrust: true,
+            });
+            if (!conversationId) {
+                throw new Error('registrationDone: no conversationId!');
+            }
             // update our own identity key, which may have changed
             // if we're relinking after a reinstall on the master device
-            await window.textsecure.storage.protocol.saveIdentityWithAttributes(number, {
+            await window.textsecure.storage.protocol.saveIdentityWithAttributes(uuid || number, {
                 publicKey: identityKeyPair.pubKey,
                 firstUse: true,
                 timestamp: Date.now(),
@@ -447,17 +458,8 @@ require(exports => {
                     this.cleanSignedPreKeys().then(() => result));
             });
         }
-        async registrationDone({ uuid, number }) {
+        async registrationDone() {
             window.log.info('registration done');
-            const conversationId = window.ConversationController.ensureContactIds({
-                e164: number,
-                uuid,
-                highTrust: true,
-            });
-            if (!conversationId) {
-                throw new Error('registrationDone: no conversationId!');
-            }
-            window.log.info('dispatching registration event');
             this.dispatchEvent(new Event('registration'));
         }
     }
