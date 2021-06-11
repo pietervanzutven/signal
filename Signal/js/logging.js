@@ -1,4 +1,7 @@
 require(exports => {
+  // Copyright 2017-2020 Signal Messenger, LLC
+  // SPDX-License-Identifier: AGPL-3.0-only
+
   /* eslint-env node */
 
   /* eslint-disable no-console */
@@ -103,7 +106,7 @@ require(exports => {
 
   const ipcBatcher = createBatcher({
     wait: 500,
-    size: 20,
+    maxSize: 20,
     processBatch: items => {
       ipc.send('batch-log', items);
     },
