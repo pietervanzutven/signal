@@ -2796,6 +2796,7 @@ require(exports => {
             });
             window.Signal.Data.updateConversation(this.attributes);
             await window.Signal.Data.removeAllMessagesInConversation(this.id, {
+                logId: this.idForLogging(),
                 MessageCollection: window.Whisper.MessageCollection,
             });
         }

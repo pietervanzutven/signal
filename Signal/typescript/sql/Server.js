@@ -85,6 +85,7 @@ require(exports => {
         saveMessage,
         saveMessages,
         removeMessage,
+        removeMessages,
         getUnreadByConversation,
         getMessageBySender,
         getMessageById,
@@ -173,6 +174,7 @@ require(exports => {
             run: pify_1.default(rawInstance.run.bind(rawInstance)),
             get: pify_1.default(rawInstance.get.bind(rawInstance)),
             all: pify_1.default(rawInstance.all.bind(rawInstance)),
+            on: rawInstance.on.bind(rawInstance),
         };
     }
     async function getSQLiteVersion(instance) {
@@ -1277,22 +1279,24 @@ require(exports => {
         let promisified;
         try {
             promisified = await openAndSetUpSQLCipher(databaseFilePath, { key });
-            // promisified.on('trace', async statement => {
-            //   if (
-            //     !globalInstance ||
-            //     statement.startsWith('--') ||
-            //     statement.includes('COMMIT') ||
-            //     statement.includes('BEGIN') ||
-            //     statement.includes('ROLLBACK')
-            //   ) {
-            //     return;
-            //   }
-            //   // Note that this causes problems when attempting to commit transactions - this
-            //   //   statement is running, and we get at SQLITE_BUSY error. So we delay.
-            //   await new Promise(resolve => setTimeout(resolve, 1000));
-            //   const data = await db.get(`EXPLAIN QUERY PLAN ${statement}`);
-            //   console._log(`EXPLAIN QUERY PLAN ${statement}\n`, data && data.detail);
-            // });
+            // if (promisified) {
+            //   promisified.on('trace', async statement => {
+            //     if (
+            //       !globalInstance ||
+            //       statement.startsWith('--') ||
+            //       statement.includes('COMMIT') ||
+            //       statement.includes('BEGIN') ||
+            //       statement.includes('ROLLBACK')
+            //     ) {
+            //       return;
+            //     }
+            //     // Note that this causes problems when attempting to commit transactions - this
+            //     //   statement is running, and we get at SQLITE_BUSY error. So we delay.
+            //     await new Promise(resolve => setTimeout(resolve, 1000));
+            //     const data = await promisified.get(`EXPLAIN QUERY PLAN ${statement}`);
+            //     console._log(`EXPLAIN QUERY PLAN ${statement}\n`, data && data.detail);
+            //   });
+            // }
             await updateSchema(promisified);
             // test database
             const cipherIntegrityResult = await getSQLCipherIntegrityCheck(promisified);
@@ -1945,15 +1949,11 @@ require(exports => {
     saveMessages.needsSerial = true;
     async function removeMessage(id) {
         const db = getInstance();
-        if (!Array.isArray(id)) {
-            await db.run('DELETE FROM messages WHERE id = $id;', { $id: id });
-            return;
-        }
-        if (!id.length) {
-            throw new Error('removeMessages: No ids to delete!');
-        }
-        // Our node interface doesn't seem to allow you to replace one single ? with an array
-        await db.run(`DELETE FROM messages WHERE id IN ( ${id.map(() => '?').join(', ')} );`, id);
+        await db.run('DELETE FROM messages WHERE id = $id;', { $id: id });
+    }
+    async function removeMessages(ids) {
+        const db = getInstance();
+        await db.run(`DELETE FROM messages WHERE id IN ( ${ids.map(() => '?').join(', ')} );`, ids);
     }
     async function getMessageById(id) {
         const db = getInstance();

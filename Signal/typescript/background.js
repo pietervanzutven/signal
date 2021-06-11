@@ -171,7 +171,7 @@
         if (_.isNumber(preMessageReceiverStatus)) {
             return preMessageReceiverStatus;
         }
-        return -1;
+        return WebSocket.CLOSED;
     };
     window.Whisper.events = _.clone(window.Backbone.Events);
     let accountManager;
@@ -1155,7 +1155,16 @@
         });
         // Maybe refresh remote configuration when we become active
         window.registerForActive(async () => {
-            await window.Signal.RemoteConfig.maybeRefreshRemoteConfig();
+            try {
+                await window.Signal.RemoteConfig.maybeRefreshRemoteConfig();
+            }
+            catch (error) {
+                if (error && window._.isNumber(error.code)) {
+                    window.log.warn(`registerForActive: Failed to to refresh remote config. Code: ${error.code}`);
+                    return;
+                }
+                throw error;
+            }
         });
         // Listen for changes to the `desktop.clientExpiration` remote flag
         window.Signal.RemoteConfig.onChange('desktop.clientExpiration', ({ value }) => {
