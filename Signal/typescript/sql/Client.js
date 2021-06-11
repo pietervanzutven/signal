@@ -663,18 +663,20 @@ require(exports => {
     function handleMessageJSON(messages) {
         return messages.map(message => JSON.parse(message.json));
     }
-    async function getOlderMessagesByConversation(conversationId, { limit = 100, receivedAt = Number.MAX_VALUE, messageId, MessageCollection, }) {
+    async function getOlderMessagesByConversation(conversationId, { limit = 100, receivedAt = Number.MAX_VALUE, sentAt = Number.MAX_VALUE, messageId, MessageCollection, }) {
         const messages = await channels.getOlderMessagesByConversation(conversationId, {
             limit,
             receivedAt,
+            sentAt,
             messageId,
         });
         return new MessageCollection(handleMessageJSON(messages));
     }
-    async function getNewerMessagesByConversation(conversationId, { limit = 100, receivedAt = 0, MessageCollection, }) {
+    async function getNewerMessagesByConversation(conversationId, { limit = 100, receivedAt = 0, sentAt = 0, MessageCollection, }) {
         const messages = await channels.getNewerMessagesByConversation(conversationId, {
             limit,
             receivedAt,
+            sentAt,
         });
         return new MessageCollection(handleMessageJSON(messages));
     }
