@@ -311,10 +311,7 @@
   // This blows up using mocha --watch, so we ensure it is run just once
   if (!console._log) {
     console._log = console.log;
-    console.log = _.partial(logAtLevel, 'info');
     console._error = console.error;
-    console.error = _.partial(logAtLevel, 'error');
-    console._warn = console.warn;
-    console.warn = _.partial(logAtLevel, 'warn');
+    console._warn = console.warn
   }
 })();
