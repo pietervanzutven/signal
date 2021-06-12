@@ -3583,7 +3583,6 @@
     <Content Include="js\views\app_view.js" />
     <Content Include="js\views\banner_view.js" />
     <Content Include="js\views\clear_data_view.js" />
-    <Content Include="js\views\confirmation_dialog_view.js" />
     <Content Include="js\views\contact_list_view.js" />
     <Content Include="js\views\debug_log_view.js" />
     <Content Include="js\views\group_member_list_view.js" />

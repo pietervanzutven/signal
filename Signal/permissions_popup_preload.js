@@ -1,9 +1,16 @@
+// Copyright 2018-2020 Signal Messenger, LLC
+// SPDX-License-Identifier: AGPL-3.0-only
+
 /* global window */
 
 (function () {
+  window.React = window.top.require('react');
+  window.ReactDOM = window.top.require('react-dom');
+
   const { ipcRenderer, remote } = window.top.require('electron');
   const url = window.top.require('url');
   const i18n = window.top.require('./js/modules/i18n');
+  const { ConfirmationModal } = window.top.require('./ts/components/ConfirmationModal');
   const { makeGetter, makeSetter } = window.top.require('./preload_utils');
 
   const { nativeTheme } = remote.require('electron');
@@ -18,6 +25,11 @@
   window.i18n = i18n.setup(locale, localeMessages);
   window.forCalling = config.forCalling === 'true';
   window.forCamera = config.forCamera === 'true';
+  window.Signal = {
+    Components: {
+      ConfirmationModal,
+    },
+  };
 
   function setSystemTheme() {
     window.systemTheme = nativeTheme.shouldUseDarkColors ? 'dark' : 'light';

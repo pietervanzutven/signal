@@ -1133,54 +1133,10 @@ img.emoji.jumbo {
 .toast-clickable {
   cursor: pointer; }
 
-.confirmation-dialog .content {
-  max-width: 350px;
-  margin: 100px auto;
-  padding: 1em;
-  border-radius: 5px;
-  overflow: auto;
-  background: #ffffff;
-  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.2); }
-  .dark-theme .confirmation-dialog .content {
-    background: #000000;
-    color: #f6f6f6;
-    box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.2); }
-  .confirmation-dialog .content .buttons {
-    margin-top: 10px; }
-    .confirmation-dialog .content .buttons button {
-      float: right;
-      margin-left: 10px;
-      padding: 5px 8px;
-      border-radius: 5px;
-      outline: none;
-      background-color: #f6f6f6;
-      border: 1px solid #dedede; }
-      .keyboard-mode .confirmation-dialog .content .buttons button:focus {
-        outline: -webkit-focus-ring-color auto 5px; }
-      .dark-theme .confirmation-dialog .content .buttons button {
-        background-color: #1b1b1b;
-        border: 1px solid #848484;
-        color: #f6f6f6; }
-      .confirmation-dialog .content .buttons button:hover {
-        background-color: #dedede;
-        border-color: #b9b9b9; }
-        .dark-theme .confirmation-dialog .content .buttons button:hover {
-          background-color: #3b3b3b;
-          border-color: #848484; }
-
 .permissions-popup .modal,
 .debug-log-window .modal {
   background-color: transparent;
   padding: 0; }
-
-.permissions-popup .confirmation-dialog .content,
-.debug-log-window .confirmation-dialog .content {
-  box-shadow: 0px 0px 0px 0px;
-  max-width: 1000px;
-  margin: 0;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 15px; }
 
 .module-splash-screen {
   display: flex;
@@ -7798,7 +7754,7 @@ img.emoji.jumbo {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 5; }
+  z-index: 9001; }
 
 .module-confirmation-dialog__container {
   width: 360px;

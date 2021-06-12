@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+<!-- Copyright 2014-2020 Signal Messenger, LLC -->
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset='utf-8'>
@@ -109,18 +112,6 @@
       <button class='close' tabIndex='2'><span class='icon'></span></button>
       <span class='time'>0:00</span>
       <button class='finish' tabIndex='1'><span class='icon'></span></button>
-  </script>
-
-  <script type='text/x-tmpl-mustache' id='confirmation-dialog'>
-    <div class="content">
-      <div class='message'>{{ message }}</div>
-      <div class='buttons'>
-        <button class='ok' tabindex='2'>{{ ok }}</button>
-        {{ #showCancel }}
-          <button class='cancel' tabindex='1'>{{ cancel }}</button>
-        {{ /showCancel }}
-      </div>
-    </div>
   </script>
 
   <script type='text/x-tmpl-mustache' id='safety-number-change-dialog'>
@@ -985,7 +976,7 @@
   <script type='text/javascript' src='js/views/recorder_view.js'></script>
   <script type='text/javascript' src='typescript/views/conversation_view.js'></script>
   <script type='text/javascript' src='js/views/inbox_view.js'></script>
-  <script type='text/javascript' src='js/views/confirmation_dialog_view.js'></script>
+  <script type='text/javascript' src='typescript/shims/showConfirmationDialog.js'></script>
   <script type='text/javascript' src='js/views/identicon_svg_view.js'></script>
   <script type='text/javascript' src='js/views/install_view.js'></script>
   <script type='text/javascript' src='js/views/banner_view.js'></script>

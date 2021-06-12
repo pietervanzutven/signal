@@ -1,10 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    const exports = window.ts.components.ConfirmationDialog = {};
-
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
@@ -23,7 +20,7 @@
             el.focus();
         }
     }
-    exports.ConfirmationDialog = React.memo(({ i18n, onClose, children, title, actions }) => {
+    exports.ConfirmationDialog = React.memo(({ i18n, onClose, cancelText, children, title, actions }) => {
         React.useEffect(() => {
             const handler = ({ key }) => {
                 if (key === 'Escape') {
@@ -52,7 +49,7 @@
             title ? (React.createElement("h1", { className: "module-confirmation-dialog__container__title" }, title)) : null,
             React.createElement("div", { className: "module-confirmation-dialog__container__content" }, children),
             actions.length > 0 && (React.createElement("div", { className: "module-confirmation-dialog__container__buttons" },
-                React.createElement("button", { type: "button", onClick: handleCancel, ref: focusRef, className: "module-confirmation-dialog__container__buttons__button" }, i18n('confirmation-dialog--Cancel')),
+                React.createElement("button", { type: "button", onClick: handleCancel, ref: focusRef, className: "module-confirmation-dialog__container__buttons__button" }, cancelText || i18n('confirmation-dialog--Cancel')),
                 actions.map((action, i) => (React.createElement("button", {
                     type: "button", key: action.text, onClick: handleAction, "data-action": i, className: classnames_1.default('module-confirmation-dialog__container__buttons__button', action.style === 'affirmative'
                         ? 'module-confirmation-dialog__container__buttons__button--affirmative'
@@ -61,4 +58,4 @@
                         : null)
                 }, action.text)))))));
     });
-})();
+});
