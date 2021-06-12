@@ -3539,6 +3539,7 @@
     <Content Include="node_modules\lodash\defaults.js" />
     <Content Include="node_modules\lodash\every.js" />
     <Content Include="node_modules\lodash\extend.js" />
+    <Content Include="node_modules\lodash\find.js" />
     <Content Include="node_modules\lodash\first.js" />
     <Content Include="node_modules\lodash\has.js" />
     <Content Include="node_modules\lodash\include.js" />
