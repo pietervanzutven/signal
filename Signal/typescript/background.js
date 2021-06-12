@@ -52,42 +52,6 @@
         e.preventDefault();
         e.stopPropagation();
     }, false);
-    // Idle timer - you're active for ACTIVE_TIMEOUT after one of these events
-    const ACTIVE_TIMEOUT = 15 * 1000;
-    const ACTIVE_EVENTS = [
-        'click',
-        'keydown',
-        'mousedown',
-        'mousemove',
-        // 'scroll', // this is triggered by Timeline re-renders, can't use
-        'touchstart',
-        'wheel',
-    ];
-    const LISTENER_DEBOUNCE = 5 * 1000;
-    let activeHandlers = [];
-    let activeTimestamp = Date.now();
-    window.addEventListener('blur', () => {
-        // Force inactivity
-        activeTimestamp = Date.now() - ACTIVE_TIMEOUT;
-    });
-    window.resetActiveTimer = _.throttle(() => {
-        const previouslyActive = window.isActive();
-        activeTimestamp = Date.now();
-        if (!previouslyActive) {
-            activeHandlers.forEach(handler => handler());
-        }
-    }, LISTENER_DEBOUNCE);
-    ACTIVE_EVENTS.forEach(name => {
-        document.addEventListener(name, window.resetActiveTimer, true);
-    });
-    window.isActive = () => {
-        const now = Date.now();
-        return now <= activeTimestamp + ACTIVE_TIMEOUT;
-    };
-    window.registerForActive = handler => activeHandlers.push(handler);
-    window.unregisterForActive = handler => {
-        activeHandlers = activeHandlers.filter(item => item !== handler);
-    };
     // Keyboard/mouse mode
     let interactionMode = 'mouse';
     $(document.body).addClass('mouse-mode');

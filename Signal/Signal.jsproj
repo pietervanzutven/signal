@@ -3969,6 +3969,7 @@
     <Content Include="typescript\quill\signal-clipboard\index.js" />
     <Content Include="typescript\quill\util.js" />
     <Content Include="typescript\RemoteConfig.js" />
+    <Content Include="typescript\services\ActiveWindowService.js" />
     <Content Include="typescript\services\bounce.js" />
     <Content Include="typescript\services\calling.js" />
     <Content Include="typescript\services\groupCredentialFetcher.js" />
