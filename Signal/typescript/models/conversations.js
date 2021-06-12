@@ -2142,11 +2142,20 @@ require(exports => {
             if (!this.id) {
                 return;
             }
+            const ourConversationId = window.ConversationController.getOurConversationId();
+            if (!ourConversationId) {
+                throw new Error('updateLastMessage: Failed to fetch ourConversationId');
+            }
+            const conversationId = this.id;
             let [previewMessage, activityMessage] = await Promise.all([
-                window.Signal.Data.getLastConversationPreview(this.id, {
+                window.Signal.Data.getLastConversationPreview({
+                    conversationId,
+                    ourConversationId,
                     Message: window.Whisper.Message,
                 }),
-                window.Signal.Data.getLastConversationActivity(this.id, {
+                window.Signal.Data.getLastConversationActivity({
+                    conversationId,
+                    ourConversationId,
                     Message: window.Whisper.Message,
                 }),
             ]);

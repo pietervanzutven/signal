@@ -680,17 +680,21 @@ require(exports => {
         });
         return new MessageCollection(handleMessageJSON(messages));
     }
-    async function getLastConversationActivity(conversationId, options) {
-        const { Message } = options;
-        const result = await channels.getLastConversationActivity(conversationId);
+    async function getLastConversationActivity({ conversationId, ourConversationId, Message, }) {
+        const result = await channels.getLastConversationActivity({
+            conversationId,
+            ourConversationId,
+        });
         if (result) {
             return new Message(result);
         }
         return undefined;
     }
-    async function getLastConversationPreview(conversationId, options) {
-        const { Message } = options;
-        const result = await channels.getLastConversationPreview(conversationId);
+    async function getLastConversationPreview({ conversationId, ourConversationId, Message, }) {
+        const result = await channels.getLastConversationPreview({
+            conversationId,
+            ourConversationId,
+        });
         if (result) {
             return new Message(result);
         }

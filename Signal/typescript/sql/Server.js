@@ -2079,29 +2079,67 @@ require(exports => {
         }
         return row;
     }
-    async function getLastConversationActivity(conversationId) {
+    async function getLastConversationActivity({ conversationId, ourConversationId, }) {
         const db = getInstance();
         const row = await db.get(`SELECT * FROM messages WHERE
        conversationId = $conversationId AND
-       (type IS NULL OR type NOT IN ('profile-change', 'verified-change', 'message-history-unsynced', 'keychange', 'group-v1-migration')) AND
-       (json_extract(json, '$.expirationTimerUpdate.fromSync') IS NULL OR json_extract(json, '$.expirationTimerUpdate.fromSync') != 1)
+       (type IS NULL 
+        OR
+        type NOT IN (
+          'profile-change',
+          'verified-change',
+          'message-history-unsynced',
+          'keychange',
+          'group-v1-migration'
+        )
+       ) AND
+       (
+         json_extract(json, '$.expirationTimerUpdate.fromSync') IS NULL
+         OR
+         json_extract(json, '$.expirationTimerUpdate.fromSync') != 1
+       ) AND NOT
+       (
+         type = 'group-v2-change' AND
+         json_extract(json, '$.groupV2Change.from') != $ourConversationId AND
+         json_extract(json, '$.groupV2Change.details.length') = 1 AND
+         json_extract(json, '$.groupV2Change.details[0].type') != 'member-remove' AND
+         json_extract(json, '$.groupV2Change.details[0].conversationId') != $ourConversationId
+       )
      ORDER BY received_at DESC, sent_at DESC
      LIMIT 1;`, {
             $conversationId: conversationId,
+            $ourConversationId: ourConversationId,
         });
         if (!row) {
             return null;
         }
         return jsonToObject(row.json);
     }
-    async function getLastConversationPreview(conversationId) {
+    async function getLastConversationPreview({ conversationId, ourConversationId, }) {
         const db = getInstance();
         const row = await db.get(`SELECT * FROM messages WHERE
        conversationId = $conversationId AND
-       (type IS NULL OR type NOT IN ('profile-change', 'verified-change', 'message-history-unsynced', 'group-v1-migration'))
+       (
+        type IS NULL
+        OR
+        type NOT IN (
+          'profile-change',
+          'verified-change',
+          'message-history-unsynced',
+          'group-v1-migration'
+        )
+       ) AND NOT
+       (
+         type = 'group-v2-change' AND
+         json_extract(json, '$.groupV2Change.from') != $ourConversationId AND
+         json_extract(json, '$.groupV2Change.details.length') = 1 AND
+         json_extract(json, '$.groupV2Change.details[0].type') != 'member-remove' AND
+         json_extract(json, '$.groupV2Change.details[0].conversationId') != $ourConversationId
+       )
      ORDER BY received_at DESC, sent_at DESC
      LIMIT 1;`, {
             $conversationId: conversationId,
+            $ourConversationId: ourConversationId,
         });
         if (!row) {
             return null;
