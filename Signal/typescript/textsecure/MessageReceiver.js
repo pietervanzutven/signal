@@ -122,9 +122,9 @@ require(exports => {
         }
         shutdown() {
             if (this.socket) {
-                delete this.socket.onclose;
-                delete this.socket.onerror;
-                delete this.socket.onopen;
+                this.socket.onclose = lodash_1.noop;
+                this.socket.onerror = lodash_1.noop;
+                this.socket.onopen = lodash_1.noop;
                 this.socket = undefined;
             }
             if (this.wsr) {

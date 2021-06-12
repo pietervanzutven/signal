@@ -14,6 +14,7 @@ require(exports => {
     const RemoteConfig_1 = require("../RemoteConfig");
     const storageRecordOps_1 = require("./storageRecordOps");
     const JobQueue_1 = require("../util/JobQueue");
+    const sleep_1 = require("../util/sleep");
     const { eraseStorageServiceStateFromConversations, updateConversation, } = Client_1.default;
     let consecutiveStops = 0;
     let consecutiveConflicts = 0;
@@ -36,11 +37,7 @@ require(exports => {
     };
     function backOff(count) {
         const ms = BACKOFF[count] || BACKOFF.max;
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve();
-            }, ms);
-        });
+        return sleep_1.sleep(ms);
     }
     async function encryptRecord(storageID, storageRecord) {
         const storageItem = new window.textsecure.protobuf.StorageItem();

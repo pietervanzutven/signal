@@ -1,5 +1,7 @@
 require(exports => {
     "use strict";
+    // Copyright 2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -9,19 +11,22 @@ require(exports => {
     const loadImageData = async (input) => {
         return new Promise((resolve, reject) => {
             blueimp_load_image_1.default(input, canvasOrError => {
-                var _a;
                 if (canvasOrError instanceof Event && canvasOrError.type === 'error') {
                     const processError = new Error('imageToBlurHash: Failed to process image');
                     processError.cause = canvasOrError;
                     reject(processError);
                     return;
                 }
-                if (canvasOrError instanceof HTMLCanvasElement) {
-                    const context = canvasOrError.getContext('2d');
-                    resolve((_a = context) === null || _a === void 0 ? void 0 : _a.getImageData(0, 0, canvasOrError.width, canvasOrError.height));
+                if (!(canvasOrError instanceof HTMLCanvasElement)) {
+                    reject(new Error('imageToBlurHash: result is not a canvas'));
+                    return;
                 }
-                const error = new Error('imageToBlurHash: Failed to place image on canvas');
-                reject(error);
+                const context = canvasOrError.getContext('2d');
+                if (!context) {
+                    reject(new Error('imageToBlurHash: cannot get CanvasRenderingContext2D from canvas'));
+                    return;
+                }
+                resolve(context.getImageData(0, 0, canvasOrError.width, canvasOrError.height));
             },
                 // Calculating the blurhash on large images is a long-running and
                 // synchronous operation, so here we ensure the images are a reasonable
