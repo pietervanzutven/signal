@@ -98,8 +98,8 @@ require(exports => {
         };
     }
     async function showCallNotification(title, isVideoCall) {
-        const canNotify = await window.getCallSystemNotification();
-        if (!canNotify) {
+        const shouldNotify = !window.isActive() && (await window.getCallSystemNotification());
+        if (!shouldNotify) {
             return;
         }
         notify_1.notify({
