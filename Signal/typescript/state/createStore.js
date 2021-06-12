@@ -24,6 +24,12 @@ require(exports => {
     };
     const logger = redux_logger_1.createLogger({
         logger: directConsole,
+        predicate: (_getState, action) => {
+            if (action.type === 'network/CHECK_NETWORK_STATUS') {
+                return false;
+            }
+            return true;
+        },
     });
     const middlewareList = [
         redux_promise_middleware_1.default,
