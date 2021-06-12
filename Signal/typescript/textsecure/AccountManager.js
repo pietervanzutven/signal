@@ -17,7 +17,7 @@ require(exports => {
     const Helpers_1 = __importDefault(require("./Helpers"));
     const ProvisioningCipher_1 = __importDefault(require("./ProvisioningCipher"));
     const WebsocketResources_1 = __importDefault(require("./WebsocketResources"));
-    const ARCHIVE_AGE = 7 * 24 * 60 * 60 * 1000;
+    const ARCHIVE_AGE = 30 * 24 * 60 * 60 * 1000;
     function getIdentifier(id) {
         if (!id || !id.length) {
             return id;
