@@ -1,15 +1,28 @@
 require(exports => {
     "use strict";
-    // Copyright 2020 Signal Messenger, LLC
+    // Copyright 2020-2021 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
+    var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, { enumerable: true, get: function () { return m[k]; } });
+    }) : (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+    }));
+    var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function (o, v) {
+        Object.defineProperty(o, "default", { enumerable: true, value: v });
+    }) : function (o, v) {
+        o["default"] = v;
+    });
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
-        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-        result["default"] = mod;
+        if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        __setModuleDefault(result, mod);
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.CallingPipRemoteVideo = void 0;
     const react_1 = __importStar(require("react"));
     const lodash_1 = require("lodash");
     const Avatar_1 = require("./Avatar");
@@ -17,6 +30,7 @@ require(exports => {
     const DirectCallRemoteParticipant_1 = require("./DirectCallRemoteParticipant");
     const GroupCallRemoteParticipant_1 = require("./GroupCallRemoteParticipant");
     const Calling_1 = require("../types/Calling");
+    const useGetCallingFrameBuffer_1 = require("../calling/useGetCallingFrameBuffer");
     const hooks_1 = require("../util/hooks");
     const nonRenderedRemoteParticipant_1 = require("../util/ringrtc/nonRenderedRemoteParticipant");
     // This value should be kept in sync with the hard-coded CSS height.
@@ -28,8 +42,9 @@ require(exports => {
                 react_1.default.createElement("div", { className: "module-calling-pip__video--avatar" },
                     react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, name: name, phoneNumber: phoneNumber, profileName: profileName, title: title, size: 52 })))));
     };
-    exports.CallingPipRemoteVideo = ({ activeCall, getGroupCallVideoFrameSource, i18n, setGroupCallVideoRequest, setRendererCanvas, }) => {
+    const CallingPipRemoteVideo = ({ activeCall, getGroupCallVideoFrameSource, i18n, setGroupCallVideoRequest, setRendererCanvas, }) => {
         const { conversation } = activeCall;
+        const getGroupCallFrameBuffer = useGetCallingFrameBuffer_1.useGetCallingFrameBuffer();
         const isPageVisible = hooks_1.usePageVisibility();
         const activeGroupCallSpeaker = react_1.useMemo(() => {
             if (activeCall.callMode !== Calling_1.CallMode.Group) {
@@ -78,8 +93,9 @@ require(exports => {
                 return react_1.default.createElement(NoVideo, { activeCall: activeCall, i18n: i18n });
             }
             return (react_1.default.createElement("div", { className: "module-calling-pip__video--remote" },
-                react_1.default.createElement(GroupCallRemoteParticipant_1.GroupCallRemoteParticipant, { getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, i18n: i18n, isInPip: true, remoteParticipant: activeGroupCallSpeaker })));
+                react_1.default.createElement(GroupCallRemoteParticipant_1.GroupCallRemoteParticipant, { getFrameBuffer: getGroupCallFrameBuffer, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, i18n: i18n, isInPip: true, remoteParticipant: activeGroupCallSpeaker })));
         }
         throw new Error('CallingRemoteVideo: Unknown Call Mode');
     };
+    exports.CallingPipRemoteVideo = CallingPipRemoteVideo;
 });

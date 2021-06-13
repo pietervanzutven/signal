@@ -3820,6 +3820,7 @@
     <Content Include="typescript\backbone\views\Lightbox.js" />
     <Content Include="typescript\background.js" />
     <Content Include="typescript\calling\constants.js" />
+    <Content Include="typescript\calling\useGetCallingFrameBuffer.js" />
     <Content Include="typescript\components\Avatar.js" />
     <Content Include="typescript\components\AvatarPopup.js" />
     <Content Include="typescript\components\CallBackgroundBlur.js" />

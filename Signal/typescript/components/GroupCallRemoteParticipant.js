@@ -1,18 +1,31 @@
 require(exports => {
     "use strict";
-    // Copyright 2020 Signal Messenger, LLC
+    // Copyright 2020-2021 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
+    var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, { enumerable: true, get: function () { return m[k]; } });
+    }) : (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+    }));
+    var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function (o, v) {
+        Object.defineProperty(o, "default", { enumerable: true, value: v });
+    }) : function (o, v) {
+        o["default"] = v;
+    });
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
-        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-        result["default"] = mod;
+        if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        __setModuleDefault(result, mod);
         return result;
     };
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.GroupCallRemoteParticipant = void 0;
     const react_1 = __importStar(require("react"));
     const classnames_1 = __importDefault(require("classnames"));
     const lodash_1 = require("lodash");
@@ -21,17 +34,15 @@ require(exports => {
     const ConfirmationModal_1 = require("./ConfirmationModal");
     const Intl_1 = require("./Intl");
     const ContactName_1 = require("./conversation/ContactName");
-    // The max size video frame we'll support (in RGBA)
-    const FRAME_BUFFER_SIZE = 1920 * 1080 * 4;
+    const constants_1 = require("../calling/constants");
     exports.GroupCallRemoteParticipant = react_1.default.memo(props => {
-        const { getGroupCallVideoFrameSource, i18n } = props;
+        const { getFrameBuffer, getGroupCallVideoFrameSource, i18n } = props;
         const { avatarPath, color, demuxId, hasRemoteAudio, hasRemoteVideo, isBlocked, profileName, title, } = props.remoteParticipant;
         const [isWide, setIsWide] = react_1.useState(true);
         const [hasHover, setHover] = react_1.useState(false);
         const [showBlockInfo, setShowBlockInfo] = react_1.useState(false);
         const remoteVideoRef = react_1.useRef(null);
         const canvasContextRef = react_1.useRef(null);
-        const frameBufferRef = react_1.useRef(new ArrayBuffer(FRAME_BUFFER_SIZE));
         const videoFrameSource = react_1.useMemo(() => getGroupCallVideoFrameSource(demuxId), [getGroupCallVideoFrameSource, demuxId]);
         const renderVideoFrame = react_1.useCallback(() => {
             const canvasEl = remoteVideoRef.current;
@@ -42,19 +53,25 @@ require(exports => {
             if (!canvasContext) {
                 return;
             }
-            const frameDimensions = videoFrameSource.receiveVideoFrame(frameBufferRef.current);
+            // This frame buffer is shared by all participants, so it may contain pixel data
+            //   for other participants, or pixel data from a previous frame. That's why we
+            //   return early and use the `frameWidth` and `frameHeight`.
+            const frameBuffer = getFrameBuffer();
+            const frameDimensions = videoFrameSource.receiveVideoFrame(frameBuffer);
             if (!frameDimensions) {
                 return;
             }
             const [frameWidth, frameHeight] = frameDimensions;
-            if (frameWidth < 2 || frameHeight < 2) {
+            if (frameWidth < 2 ||
+                frameHeight < 2 ||
+                frameWidth * frameHeight > constants_1.MAX_FRAME_SIZE) {
                 return;
             }
             canvasEl.width = frameWidth;
             canvasEl.height = frameHeight;
-            canvasContext.putImageData(new ImageData(new Uint8ClampedArray(frameBufferRef.current, 0, frameWidth * frameHeight * 4), frameWidth, frameHeight), 0, 0);
+            canvasContext.putImageData(new ImageData(new Uint8ClampedArray(frameBuffer, 0, frameWidth * frameHeight * 4), frameWidth, frameHeight), 0, 0);
             setIsWide(frameWidth > frameHeight);
-        }, [videoFrameSource]);
+        }, [getFrameBuffer, videoFrameSource]);
         react_1.useEffect(() => {
             if (!hasRemoteVideo) {
                 return lodash_1.noop;

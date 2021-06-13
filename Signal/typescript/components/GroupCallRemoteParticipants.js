@@ -1,22 +1,36 @@
 require(exports => {
     "use strict";
-    // Copyright 2020 Signal Messenger, LLC
+    // Copyright 2020-2021 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
+    var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, { enumerable: true, get: function () { return m[k]; } });
+    }) : (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+    }));
+    var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function (o, v) {
+        Object.defineProperty(o, "default", { enumerable: true, value: v });
+    }) : function (o, v) {
+        o["default"] = v;
+    });
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
-        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-        result["default"] = mod;
+        if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        __setModuleDefault(result, mod);
         return result;
     };
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.GroupCallRemoteParticipants = void 0;
     const react_1 = __importStar(require("react"));
     const react_measure_1 = __importDefault(require("react-measure"));
     const lodash_1 = require("lodash");
     const GroupCallRemoteParticipant_1 = require("./GroupCallRemoteParticipant");
+    const useGetCallingFrameBuffer_1 = require("../calling/useGetCallingFrameBuffer");
     const hooks_1 = require("../util/hooks");
     const nonRenderedRemoteParticipant_1 = require("../util/ringrtc/nonRenderedRemoteParticipant");
     const MIN_RENDERED_HEIGHT = 10;
@@ -47,12 +61,13 @@ require(exports => {
     //    "scalar": how much can we scale these boxes up while still fitting them on the
     //    screen? The biggest scalar wins as the "best arrangement".
     // 4. Lay out this arrangement on the screen.
-    exports.GroupCallRemoteParticipants = ({ getGroupCallVideoFrameSource, i18n, remoteParticipants, setGroupCallVideoRequest, }) => {
+    const GroupCallRemoteParticipants = ({ getGroupCallVideoFrameSource, i18n, remoteParticipants, setGroupCallVideoRequest, }) => {
         const [containerDimensions, setContainerDimensions] = react_1.useState({
             width: 0,
             height: 0,
         });
         const isPageVisible = hooks_1.usePageVisibility();
+        const getFrameBuffer = useGetCallingFrameBuffer_1.useGetCallingFrameBuffer();
         // 1. Figure out the maximum number of possible rows that could fit on the screen.
         //
         // We choose the smaller of these two options:
@@ -153,7 +168,7 @@ require(exports => {
                 const renderedWidth = Math.floor(remoteParticipant.videoAspectRatio * gridParticipantHeight);
                 const left = rowWidthSoFar + leftOffset;
                 rowWidthSoFar += renderedWidth + PARTICIPANT_MARGIN;
-                return (react_1.default.createElement(GroupCallRemoteParticipant_1.GroupCallRemoteParticipant, { key: remoteParticipant.demuxId, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, height: gridParticipantHeight, i18n: i18n, left: left, remoteParticipant: remoteParticipant, top: top, width: renderedWidth }));
+                return (react_1.default.createElement(GroupCallRemoteParticipant_1.GroupCallRemoteParticipant, { key: remoteParticipant.demuxId, getFrameBuffer: getFrameBuffer, getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, height: gridParticipantHeight, i18n: i18n, left: left, remoteParticipant: remoteParticipant, top: top, width: renderedWidth }));
             });
         });
         react_1.useEffect(() => {
@@ -195,6 +210,7 @@ require(exports => {
             }
         }, ({ measureRef }) => (react_1.default.createElement("div", { className: "module-ongoing-call__grid", ref: measureRef }, lodash_1.flatten(rowElements)))));
     };
+    exports.GroupCallRemoteParticipants = GroupCallRemoteParticipants;
     function totalRemoteParticipantWidthAtMinHeight(remoteParticipants) {
         return remoteParticipants.reduce((result, { videoAspectRatio }) => result + videoAspectRatio * MIN_RENDERED_HEIGHT, 0);
     }
