@@ -181,7 +181,6 @@
     <Content Include="js\modules\attachment_downloads.js" />
     <Content Include="js\modules\auto_orient_image.js" />
     <Content Include="js\modules\debug.js" />
-    <Content Include="js\modules\debuglogs.js" />
     <Content Include="js\modules\emojis.js" />
     <Content Include="js\modules\i18n.js" />
     <Content Include="js\modules\idle_detector.js" />
@@ -3643,7 +3642,6 @@
     <Content Include="node_modules\fuse.js\fuse.js" />
     <Content Include="node_modules\glob\glob.js" />
     <Content Include="node_modules\google-libphonenumber\libphonenumber.js" />
-    <Content Include="node_modules\got\got.js" />
     <Content Include="node_modules\https\index.js" />
     <Content Include="node_modules\immutable\immutable.js" />
     <Content Include="node_modules\intl-tel-input\build\img\flags.png" />
@@ -3950,6 +3948,7 @@
     <Content Include="typescript\linkPreviews\isLinkPreviewDateValid.js" />
     <Content Include="typescript\linkPreviews\linkPreviewFetch.js" />
     <Content Include="typescript\linkPreviews\shouldUseFullSizeLinkPreviewImage.js" />
+    <Content Include="typescript\logging\debuglogs.js" />
     <Content Include="typescript\models\conversations.js" />
     <Content Include="typescript\models\messages.js" />
     <Content Include="typescript\notifications\getStatus.js" />
