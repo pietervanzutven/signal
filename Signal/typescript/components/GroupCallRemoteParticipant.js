@@ -109,8 +109,8 @@ require(exports => {
         }
         const showHover = hasHover && !props.isInPip;
         const canShowVideo = hasRemoteVideo && !isBlocked;
-        if (showBlockInfo) {
-            return (react_1.default.createElement(ConfirmationModal_1.ConfirmationModal, {
+        return (react_1.default.createElement(react_1.default.Fragment, null,
+            showBlockInfo && (react_1.default.createElement(ConfirmationModal_1.ConfirmationModal, {
                 i18n: i18n, onClose: () => {
                     setShowBlockInfo(false);
                 }, title: react_1.default.createElement("div", { className: "module-ongoing-call__group-call-remote-participant__blocked--modal-title" },
@@ -127,35 +127,34 @@ require(exports => {
                             style: 'affirmative',
                         },
                     ]
-            }, i18n('calling__block-info')));
-        }
-        return (react_1.default.createElement("div", { className: "module-ongoing-call__group-call-remote-participant", onMouseEnter: () => setHover(true), onMouseLeave: () => setHover(false), style: containerStyles },
-            showHover && (react_1.default.createElement("div", {
-                className: classnames_1.default('module-ongoing-call__group-call-remote-participant--title', {
-                    'module-ongoing-call__group-call-remote-participant--audio-muted': !hasRemoteAudio,
-                })
-            },
-                react_1.default.createElement(ContactName_1.ContactName, { module: "module-ongoing-call__group-call-remote-participant--contact-name", profileName: profileName, title: title, i18n: i18n }))),
-            canShowVideo ? (react_1.default.createElement("canvas", {
-                className: "module-ongoing-call__group-call-remote-participant__remote-video", style: canvasStyles, ref: canvasEl => {
-                    remoteVideoRef.current = canvasEl;
-                    if (canvasEl) {
-                        canvasContextRef.current = canvasEl.getContext('2d', {
-                            alpha: false,
-                            desynchronized: true,
-                            storage: 'discardable',
-                        });
+            }, i18n('calling__block-info'))),
+            react_1.default.createElement("div", { className: "module-ongoing-call__group-call-remote-participant", onMouseEnter: () => setHover(true), onMouseLeave: () => setHover(false), style: containerStyles },
+                showHover && (react_1.default.createElement("div", {
+                    className: classnames_1.default('module-ongoing-call__group-call-remote-participant--title', {
+                        'module-ongoing-call__group-call-remote-participant--audio-muted': !hasRemoteAudio,
+                    })
+                },
+                    react_1.default.createElement(ContactName_1.ContactName, { module: "module-ongoing-call__group-call-remote-participant--contact-name", profileName: profileName, title: title, i18n: i18n }))),
+                canShowVideo ? (react_1.default.createElement("canvas", {
+                    className: "module-ongoing-call__group-call-remote-participant__remote-video", style: canvasStyles, ref: canvasEl => {
+                        remoteVideoRef.current = canvasEl;
+                        if (canvasEl) {
+                            canvasContextRef.current = canvasEl.getContext('2d', {
+                                alpha: false,
+                                desynchronized: true,
+                                storage: 'discardable',
+                            });
+                        }
+                        else {
+                            canvasContextRef.current = null;
+                        }
                     }
-                    else {
-                        canvasContextRef.current = null;
-                    }
-                }
-            })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: avatarPath, color: color }, isBlocked ? (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement("i", { className: "module-ongoing-call__group-call-remote-participant__blocked" }),
-                react_1.default.createElement("button", {
-                    type: "button", className: "module-ongoing-call__group-call-remote-participant__blocked--info", onClick: () => {
-                        setShowBlockInfo(true);
-                    }
-                }, i18n('moreInfo')))) : (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, profileName: profileName, title: title, size: avatarSize }))))));
+                })) : (react_1.default.createElement(CallBackgroundBlur_1.CallBackgroundBlur, { avatarPath: avatarPath, color: color }, isBlocked ? (react_1.default.createElement(react_1.default.Fragment, null,
+                    react_1.default.createElement("i", { className: "module-ongoing-call__group-call-remote-participant__blocked" }),
+                    react_1.default.createElement("button", {
+                        type: "button", className: "module-ongoing-call__group-call-remote-participant__blocked--info", onClick: () => {
+                            setShowBlockInfo(true);
+                        }
+                    }, i18n('moreInfo')))) : (react_1.default.createElement(Avatar_1.Avatar, { avatarPath: avatarPath, color: color || 'ultramarine', noteToSelf: false, conversationType: "direct", i18n: i18n, profileName: profileName, title: title, size: avatarSize })))))));
     });
 });
