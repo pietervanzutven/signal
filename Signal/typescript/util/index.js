@@ -1,52 +1,65 @@
 require(exports => {
     "use strict";
+    // Copyright 2018-2021 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
+    var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, { enumerable: true, get: function () { return m[k]; } });
+    }) : (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+    }));
+    var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function (o, v) {
+        Object.defineProperty(o, "default", { enumerable: true, value: v });
+    }) : function (o, v) {
+        o["default"] = v;
+    });
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
-        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-        result["default"] = mod;
+        if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        __setModuleDefault(result, mod);
         return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.zkgroup = exports.sleep = exports.Registration = exports.parseRemoteClientExpiration = exports.missingCaseError = exports.makeLookup = exports.isFileDangerous = exports.hasExpired = exports.GoogleChrome = exports.getUserAgent = exports.getTextWithMentions = exports.getStringForProfileChange = exports.getSafetyNumberPlaceholder = exports.generateSecurityNumber = exports.downloadAttachment = exports.deleteForEveryone = exports.createWaitBatcher = exports.createBatcher = exports.combineNames = exports.arrayBufferToObjectURL = void 0;
     const GoogleChrome = __importStar(require("./GoogleChrome"));
     exports.GoogleChrome = GoogleChrome;
     const Registration = __importStar(require("./registration"));
     exports.Registration = Registration;
     const arrayBufferToObjectURL_1 = require("./arrayBufferToObjectURL");
-    exports.arrayBufferToObjectURL = arrayBufferToObjectURL_1.arrayBufferToObjectURL;
+    Object.defineProperty(exports, "arrayBufferToObjectURL", { enumerable: true, get: function () { return arrayBufferToObjectURL_1.arrayBufferToObjectURL; } });
     const combineNames_1 = require("./combineNames");
-    exports.combineNames = combineNames_1.combineNames;
+    Object.defineProperty(exports, "combineNames", { enumerable: true, get: function () { return combineNames_1.combineNames; } });
     const batcher_1 = require("./batcher");
-    exports.createBatcher = batcher_1.createBatcher;
+    Object.defineProperty(exports, "createBatcher", { enumerable: true, get: function () { return batcher_1.createBatcher; } });
     const waitBatcher_1 = require("./waitBatcher");
-    exports.createWaitBatcher = waitBatcher_1.createWaitBatcher;
+    Object.defineProperty(exports, "createWaitBatcher", { enumerable: true, get: function () { return waitBatcher_1.createWaitBatcher; } });
     const deleteForEveryone_1 = require("./deleteForEveryone");
-    exports.deleteForEveryone = deleteForEveryone_1.deleteForEveryone;
+    Object.defineProperty(exports, "deleteForEveryone", { enumerable: true, get: function () { return deleteForEveryone_1.deleteForEveryone; } });
     const downloadAttachment_1 = require("./downloadAttachment");
-    exports.downloadAttachment = downloadAttachment_1.downloadAttachment;
+    Object.defineProperty(exports, "downloadAttachment", { enumerable: true, get: function () { return downloadAttachment_1.downloadAttachment; } });
     const safetyNumber_1 = require("./safetyNumber");
-    exports.generateSecurityNumber = safetyNumber_1.generateSecurityNumber;
-    exports.getSafetyNumberPlaceholder = safetyNumber_1.getPlaceholder;
+    Object.defineProperty(exports, "generateSecurityNumber", { enumerable: true, get: function () { return safetyNumber_1.generateSecurityNumber; } });
+    Object.defineProperty(exports, "getSafetyNumberPlaceholder", { enumerable: true, get: function () { return safetyNumber_1.getPlaceholder; } });
     const getStringForProfileChange_1 = require("./getStringForProfileChange");
-    exports.getStringForProfileChange = getStringForProfileChange_1.getStringForProfileChange;
+    Object.defineProperty(exports, "getStringForProfileChange", { enumerable: true, get: function () { return getStringForProfileChange_1.getStringForProfileChange; } });
     const getTextWithMentions_1 = require("./getTextWithMentions");
-    exports.getTextWithMentions = getTextWithMentions_1.getTextWithMentions;
+    Object.defineProperty(exports, "getTextWithMentions", { enumerable: true, get: function () { return getTextWithMentions_1.getTextWithMentions; } });
     const getUserAgent_1 = require("./getUserAgent");
-    exports.getUserAgent = getUserAgent_1.getUserAgent;
+    Object.defineProperty(exports, "getUserAgent", { enumerable: true, get: function () { return getUserAgent_1.getUserAgent; } });
     const hasExpired_1 = require("./hasExpired");
-    exports.hasExpired = hasExpired_1.hasExpired;
+    Object.defineProperty(exports, "hasExpired", { enumerable: true, get: function () { return hasExpired_1.hasExpired; } });
     const isFileDangerous_1 = require("./isFileDangerous");
-    exports.isFileDangerous = isFileDangerous_1.isFileDangerous;
+    Object.defineProperty(exports, "isFileDangerous", { enumerable: true, get: function () { return isFileDangerous_1.isFileDangerous; } });
     const makeLookup_1 = require("./makeLookup");
-    exports.makeLookup = makeLookup_1.makeLookup;
-    const migrateColor_1 = require("./migrateColor");
-    exports.migrateColor = migrateColor_1.migrateColor;
+    Object.defineProperty(exports, "makeLookup", { enumerable: true, get: function () { return makeLookup_1.makeLookup; } });
     const missingCaseError_1 = require("./missingCaseError");
-    exports.missingCaseError = missingCaseError_1.missingCaseError;
+    Object.defineProperty(exports, "missingCaseError", { enumerable: true, get: function () { return missingCaseError_1.missingCaseError; } });
     const parseRemoteClientExpiration_1 = require("./parseRemoteClientExpiration");
-    exports.parseRemoteClientExpiration = parseRemoteClientExpiration_1.parseRemoteClientExpiration;
+    Object.defineProperty(exports, "parseRemoteClientExpiration", { enumerable: true, get: function () { return parseRemoteClientExpiration_1.parseRemoteClientExpiration; } });
     const sleep_1 = require("./sleep");
-    exports.sleep = sleep_1.sleep;
+    Object.defineProperty(exports, "sleep", { enumerable: true, get: function () { return sleep_1.sleep; } });
     const zkgroup = __importStar(require("./zkgroup"));
     exports.zkgroup = zkgroup;
 });

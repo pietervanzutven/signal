@@ -1,8 +1,9 @@
 require(exports => {
     "use strict";
-    // Copyright 2020 Signal Messenger, LLC
+    // Copyright 2020-2021 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.ConversationModel = void 0;
     const Calling_1 = require("../types/Calling");
     const isMuted_1 = require("../util/isMuted");
     const missingCaseError_1 = require("../util/missingCaseError");
@@ -10,6 +11,7 @@ require(exports => {
     const MIME_1 = require("../types/MIME");
     const Crypto_1 = require("../Crypto");
     const util_1 = require("../util");
+    const migrateColor_1 = require("../util/migrateColor");
     /* eslint-disable more/no-then */
     window.Whisper = window.Whisper || {};
     const SEALED_SENDER = {
@@ -2864,8 +2866,7 @@ require(exports => {
             if (!this.isPrivate()) {
                 return 'signal-blue';
             }
-            const { migrateColor } = Util;
-            return migrateColor(this.get('color'));
+            return migrateColor_1.migrateColor(this.get('color'));
         }
         getAvatarPath() {
             const avatar = this.isMe()
