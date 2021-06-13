@@ -5632,7 +5632,9 @@ img.emoji.jumbo {
   overflow: hidden;
   flex-grow: 1; }
 
-.module-search-results__conversations-header {
+.module-search-results__conversations-header,
+.module-search-results__contacts-header,
+.module-search-results__messages-header {
   font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
   font-size: 15px;
   line-height: 21px;
@@ -5642,7 +5644,9 @@ img.emoji.jumbo {
   margin-left: 16px;
   padding-bottom: 8px;
   padding-top: 8px; }
-  .dark-theme .module-search-results__conversations-header {
+  .dark-theme .module-search-results__conversations-header, .dark-theme
+  .module-search-results__contacts-header, .dark-theme
+  .module-search-results__messages-header {
     color: #e9e9e9; }
 
 .module-search-results__sms-not-supported {
@@ -5660,30 +5664,6 @@ img.emoji.jumbo {
   width: 100%;
   text-align: center;
   outline: none; }
-
-.module-search-results__contacts-header {
-  font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
-  font-size: 15px;
-  line-height: 21px;
-  letter-spacing: -0.14px;
-  font-weight: bold;
-  height: 52px;
-  margin-left: 16px; }
-  .dark-theme .module-search-results__contacts-header {
-    color: #e9e9e9; }
-
-.module-search-results__messages-header {
-  font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
-  font-size: 15px;
-  line-height: 21px;
-  letter-spacing: -0.14px;
-  font-weight: bold;
-  height: 52px;
-  margin-left: 16px;
-  padding-bottom: 8px;
-  padding-top: 8px; }
-  .dark-theme .module-search-results__messages-header {
-    color: #e9e9e9; }
 
 .module-search-results__spinner-container {
   width: 100%;
