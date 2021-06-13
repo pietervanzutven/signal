@@ -1353,6 +1353,7 @@ img.emoji.jumbo {
   padding-top: 10px;
   padding-bottom: 10px;
   min-width: 0px;
+  overflow: hidden;
   border: 1px solid #ffffff; }
   .dark-theme .module-message__container {
     border: 1px solid #121212; }
@@ -1807,38 +1808,21 @@ img.emoji.jumbo {
   width: calc(100% + 24px);
   margin-top: -10px;
   margin-bottom: 5px;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
   overflow: hidden; }
   .keyboard-mode .module-message__link-preview:focus {
     box-shadow: 0px 0px 0px 2px #2c6bed; }
 
 .module-message__link-preview--with-content-above {
-  margin-top: 4px;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px; }
+  margin-top: 4px; }
 
 .module-message__link-preview__content {
-  padding: 8px;
-  border: 1px solid transparent;
-  /* Color overwritten below. */
-  border-bottom: 0;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  background-color: #ffffff;
+  padding: 8px 12px;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  border-color: rgba(0, 0, 0, 0.2); }
+  background-color: #f6f6f6; }
   .dark-theme .module-message__link-preview__content {
-    background-color: #121212;
-    border-color: #5e5e5e; }
-
-.module-message__link-preview__content--with-content-above {
-  border-top: none;
-  border-bottom: none;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px; }
+    background-color: #2e2e2e; }
 
 .module-message__link-preview__icon_container {
   margin: -2px;
@@ -1883,7 +1867,7 @@ img.emoji.jumbo {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
-  margin-top: 4px;
+  margin-top: 2px;
   color: #5e5e5e; }
   .dark-theme .module-message__link-preview__footer {
     color: #b9b9b9; }

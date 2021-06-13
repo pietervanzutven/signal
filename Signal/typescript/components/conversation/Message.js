@@ -2,17 +2,30 @@ require(exports => {
     "use strict";
     // Copyright 2018-2020 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
-    var __importDefault = (this && this.__importDefault) || function (mod) {
-        return (mod && mod.__esModule) ? mod : { "default": mod };
-    };
+    var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, { enumerable: true, get: function () { return m[k]; } });
+    }) : (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+    }));
+    var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function (o, v) {
+        Object.defineProperty(o, "default", { enumerable: true, value: v });
+    }) : function (o, v) {
+        o["default"] = v;
+    });
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
-        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-        result["default"] = mod;
+        if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        __setModuleDefault(result, mod);
         return result;
     };
+    var __importDefault = (this && this.__importDefault) || function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Message = exports.ConversationTypes = exports.Directions = exports.InteractionModes = exports.MessageStatuses = void 0;
     const react_1 = __importDefault(require("react"));
     const react_dom_1 = __importStar(require("react-dom"));
     const classnames_1 = __importDefault(require("classnames"));
@@ -578,11 +591,7 @@ require(exports => {
                     }
             },
                 first.image && previewHasImage && isFullSizeImage ? (react_1.default.createElement(ImageGrid_1.ImageGrid, { attachments: [first.image], withContentAbove: withContentAbove, withContentBelow: true, onError: this.handleImageError, i18n: i18n })) : null,
-                react_1.default.createElement("div", {
-                    className: classnames_1.default('module-message__link-preview__content', withContentAbove || isFullSizeImage
-                        ? 'module-message__link-preview__content--with-content-above'
-                        : null)
-                },
+                react_1.default.createElement("div", { className: "module-message__link-preview__content" },
                     first.image && previewHasImage && !isFullSizeImage ? (react_1.default.createElement("div", { className: "module-message__link-preview__icon_container" },
                         react_1.default.createElement(Image_1.Image, { smallCurveTopLeft: !withContentAbove, noBorder: true, noBackground: true, softCorners: true, alt: i18n('previewThumbnail', [first.domain]), height: 72, width: 72, url: first.image.url, attachment: first.image, onError: this.handleImageError, i18n: i18n }))) : null,
                     react_1.default.createElement("div", {
