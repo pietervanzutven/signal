@@ -16,7 +16,12 @@ require(exports => {
     const batcher_1 = require("../util/batcher");
     // We listen to a lot of events on ipcRenderer, often on the same channel. This prevents
     //   any warnings that might be sent to the console in that case.
-    electron_1.ipcRenderer.setMaxListeners(0);
+    if (electron_1.ipcRenderer && electron_1.ipcRenderer.setMaxListeners) {
+        electron_1.ipcRenderer.setMaxListeners(0);
+    }
+    else {
+        window.log.warn('sql/Client: ipcRenderer is not available!');
+    }
     const DATABASE_UPDATE_TIMEOUT = 2 * 60 * 1000; // two minutes
     const SQL_CHANNEL_KEY = 'sql-channel';
     const ERASE_SQL_KEY = 'erase-sql-key';
@@ -287,20 +292,25 @@ require(exports => {
     function _getJob(id) {
         return _jobs[id];
     }
-    electron_1.ipcRenderer.on(`${SQL_CHANNEL_KEY}-done`, (_, jobId, errorForDisplay, result) => {
-        const job = _getJob(jobId);
-        if (!job) {
-            throw new Error(`Received SQL channel reply to job ${jobId}, but did not have it in our registry!`);
-        }
-        const { resolve, reject, fnName } = job;
-        if (!resolve || !reject) {
-            throw new Error(`SQL channel job ${jobId} (${fnName}): didn't have a resolve or reject`);
-        }
-        if (errorForDisplay) {
-            return reject(new Error(`Error received from SQL channel job ${jobId} (${fnName}): ${errorForDisplay}`));
-        }
-        return resolve(result);
-    });
+    if (electron_1.ipcRenderer && electron_1.ipcRenderer.on) {
+        electron_1.ipcRenderer.on(`${SQL_CHANNEL_KEY}-done`, (_, jobId, errorForDisplay, result) => {
+            const job = _getJob(jobId);
+            if (!job) {
+                throw new Error(`Received SQL channel reply to job ${jobId}, but did not have it in our registry!`);
+            }
+            const { resolve, reject, fnName } = job;
+            if (!resolve || !reject) {
+                throw new Error(`SQL channel job ${jobId} (${fnName}): didn't have a resolve or reject`);
+            }
+            if (errorForDisplay) {
+                return reject(new Error(`Error received from SQL channel job ${jobId} (${fnName}): ${errorForDisplay}`));
+            }
+            return resolve(result);
+        });
+    }
+    else {
+        window.log.warn('sql/Client: ipcRenderer.on is not available!');
+    }
     function makeChannel(fnName) {
         return async (...args) => {
             const jobId = _makeJob(fnName);

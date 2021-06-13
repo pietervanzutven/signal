@@ -1,6 +1,6 @@
 require(exports => {
     "use strict";
-    // Copyright 2019-2020 Signal Messenger, LLC
+    // Copyright 2019-2021 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -9,13 +9,35 @@ require(exports => {
     const memoizee_1 = __importDefault(require("memoizee"));
     const lodash_1 = require("lodash");
     const reselect_1 = require("reselect");
+    const getOwn_1 = require("../../util/getOwn");
     const calling_1 = require("./calling");
     const Whisper_1 = require("../../shims/Whisper");
     const user_1 = require("./user");
     const items_1 = require("./items");
+    let placeholderContact;
+    exports.getPlaceholderContact = () => {
+        if (placeholderContact) {
+            return placeholderContact;
+        }
+        placeholderContact = {
+            id: 'placeholder-contact',
+            type: 'direct',
+            title: window.i18n('unknownContact'),
+        };
+        return placeholderContact;
+    };
     exports.getConversations = (state) => state.conversations;
     exports.getConversationLookup = reselect_1.createSelector(exports.getConversations, (state) => {
         return state.conversationLookup;
+    });
+    exports.getConversationsByUuid = reselect_1.createSelector(exports.getConversations, (state) => {
+        return state.conversationsByUuid;
+    });
+    exports.getConversationsByE164 = reselect_1.createSelector(exports.getConversations, (state) => {
+        return state.conversationsByE164;
+    });
+    exports.getConversationsByGroupId = reselect_1.createSelector(exports.getConversations, (state) => {
+        return state.conversationsByGroupId;
     });
     exports.getSelectedConversation = reselect_1.createSelector(exports.getConversations, (state) => {
         return state.selectedConversation;
@@ -112,7 +134,10 @@ require(exports => {
         // regionCode: string,
         // userNumber: string
     ) {
-        return conversation;
+        if (conversation) {
+            return conversation;
+        }
+        return exports.getPlaceholderContact();
     }
     exports._conversationSelector = _conversationSelector;
     exports.getCachedSelectorForConversation = reselect_1.createSelector(user_1.getRegionCode, user_1.getUserNumber, () => {
@@ -120,13 +145,32 @@ require(exports => {
         //   if any of them have changed.
         return memoizee_1.default(_conversationSelector, { max: 2000 });
     });
-    exports.getConversationSelector = reselect_1.createSelector(exports.getCachedSelectorForConversation, exports.getConversationLookup, (selector, lookup) => {
+    exports.getConversationSelector = reselect_1.createSelector(exports.getCachedSelectorForConversation, exports.getConversationLookup, exports.getConversationsByUuid, exports.getConversationsByE164, exports.getConversationsByGroupId, (selector, byId, byUuid, byE164, byGroupId) => {
         return (id) => {
-            const conversation = lookup[id];
-            if (!conversation) {
-                return undefined;
+            if (!id) {
+                window.log.warn(`getConversationSelector: Called with a falsey id ${id}`);
+                // This will return a placeholder contact
+                return selector(undefined);
             }
-            return selector(conversation);
+            const onE164 = getOwn_1.getOwn(byE164, id);
+            if (onE164) {
+                return selector(onE164);
+            }
+            const onUuid = getOwn_1.getOwn(byUuid, id);
+            if (onUuid) {
+                return selector(onUuid);
+            }
+            const onGroupId = getOwn_1.getOwn(byGroupId, id);
+            if (onGroupId) {
+                return selector(onGroupId);
+            }
+            const onId = getOwn_1.getOwn(byId, id);
+            if (onId) {
+                return selector(onId);
+            }
+            window.log.warn(`getConversationSelector: No conversation found for id ${id}`);
+            // This will return a placeholder contact
+            return selector(undefined);
         };
     });
     // For now we use a shim, as selector logic is still happening in the Backbone Model.

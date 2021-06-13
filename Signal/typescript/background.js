@@ -455,6 +455,9 @@
         const initialState = {
             conversations: {
                 conversationLookup: window.Signal.Util.makeLookup(conversations, 'id'),
+                conversationsByE164: window.Signal.Util.makeLookup(conversations, 'e164'),
+                conversationsByUuid: window.Signal.Util.makeLookup(conversations, 'uuid'),
+                conversationsByGroupId: window.Signal.Util.makeLookup(conversations, 'groupId'),
                 messagesByConversation: {},
                 messagesLookup: {},
                 selectedConversation: undefined,

@@ -8,7 +8,6 @@ require(exports => {
     Object.defineProperty(exports, "__esModule", { value: true });
     const memoizee_1 = __importDefault(require("memoizee"));
     const reselect_1 = require("reselect");
-    const Whisper_1 = require("../../shims/Whisper");
     const libphonenumberInstance_1 = require("../../util/libphonenumberInstance");
     const user_1 = require("./user");
     const items_1 = require("./items");
@@ -136,35 +135,47 @@ require(exports => {
             selectedMessageId,
         };
     });
-    function _messageSearchResultSelector(message, _ourNumber, _regionCode, _sender, _recipient, searchConversationId, selectedMessageId) {
-        // Note: We don't use all of those parameters here, but the shim we call does.
-        //   We want to call this function again if any of those parameters change.
-        return Object.assign(Object.assign({}, Whisper_1.getSearchResultsProps(message)), { isSelected: message.id === selectedMessageId, isSearchingInConversation: Boolean(searchConversationId) });
+    function _messageSearchResultSelector(message, from, to, searchConversationId, selectedMessageId) {
+        return {
+            from,
+            to,
+            id: message.id,
+            conversationId: message.conversationId,
+            sentAt: message.sent_at,
+            snippet: message.snippet,
+            isSelected: Boolean(selectedMessageId && message.id === selectedMessageId),
+            isSearchingInConversation: Boolean(searchConversationId),
+        };
     }
     exports._messageSearchResultSelector = _messageSearchResultSelector;
-    exports.getCachedSelectorForMessageSearchResult = reselect_1.createSelector(user_1.getRegionCode, user_1.getUserNumber, () => {
+    exports.getCachedSelectorForMessageSearchResult = reselect_1.createSelector(user_1.getUserConversationId, () => {
         // Note: memoizee will check all parameters provided, and only run our selector
         //   if any of them have changed.
         return memoizee_1.default(_messageSearchResultSelector, { max: 500 });
     });
-    exports.getMessageSearchResultSelector = reselect_1.createSelector(exports.getCachedSelectorForMessageSearchResult, exports.getMessageSearchResultLookup, exports.getSelectedMessage, conversations_1.getConversationSelector, exports.getSearchConversationId, user_1.getRegionCode, user_1.getUserNumber, (messageSearchResultSelector, messageSearchResultLookup, selectedMessage, conversationSelector, searchConversationId, regionCode, ourNumber) => {
+    exports.getMessageSearchResultSelector = reselect_1.createSelector(exports.getCachedSelectorForMessageSearchResult, exports.getMessageSearchResultLookup, exports.getSelectedMessage, conversations_1.getConversationSelector, exports.getSearchConversationId, user_1.getUserConversationId, (messageSearchResultSelector, messageSearchResultLookup, selectedMessageId, conversationSelector, searchConversationId, ourConversationId) => {
         return (id) => {
             const message = messageSearchResultLookup[id];
             if (!message) {
+                window.log.warn(`getMessageSearchResultSelector: messageSearchResultLookup was missing id ${id}`);
                 return undefined;
             }
-            const { conversationId, source, type } = message;
-            let sender;
-            let recipient;
+            const { conversationId, source, sourceUuid, type } = message;
+            let from;
+            let to;
             if (type === 'incoming') {
-                sender = conversationSelector(source);
-                recipient = conversationSelector(ourNumber);
+                from = conversationSelector(sourceUuid || source);
+                to = conversationSelector(conversationId);
             }
             else if (type === 'outgoing') {
-                sender = conversationSelector(ourNumber);
-                recipient = conversationSelector(conversationId);
+                from = conversationSelector(ourConversationId);
+                to = conversationSelector(conversationId);
             }
-            return messageSearchResultSelector(message, ourNumber, regionCode, sender, recipient, searchConversationId, selectedMessage);
+            else {
+                window.log.warn(`getMessageSearchResultSelector: Got unexpected type ${type}`);
+                return undefined;
+            }
+            return messageSearchResultSelector(message, from, to, searchConversationId, selectedMessageId);
         };
     });
 });

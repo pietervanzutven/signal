@@ -1,10 +1,7 @@
-(function () {
+require(exports => {
     "use strict";
-
-    window.ts = window.ts || {};
-    window.ts.components = window.ts.components || {};
-    const exports = window.ts.components.MessageSearchResult = {};
-
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
@@ -61,11 +58,11 @@
                 react_1.default.createElement("div", { className: "module-message-search-result__text" },
                     react_1.default.createElement("div", { className: "module-message-search-result__header" },
                         this.renderFrom(),
-                        react_1.default.createElement("div", { className: "module-message-search-result__header__timestamp" },
-                            react_1.default.createElement(Timestamp_1.Timestamp, { timestamp: sentAt, i18n: i18n }))),
+                        sentAt ? (react_1.default.createElement("div", { className: "module-message-search-result__header__timestamp" },
+                            react_1.default.createElement(Timestamp_1.Timestamp, { timestamp: sentAt, i18n: i18n }))) : null),
                     react_1.default.createElement("div", { className: "module-message-search-result__body" },
                         react_1.default.createElement(MessageBodyHighlight_1.MessageBodyHighlight, { text: snippet, i18n: i18n })))));
         }
     }
     exports.MessageSearchResult = MessageSearchResult;
-})();
+});

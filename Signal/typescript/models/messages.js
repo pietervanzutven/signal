@@ -176,23 +176,6 @@ require(exports => {
                 data: this.getPropsForMessage(),
             };
         }
-        // Other top-level prop-generation
-        getPropsForSearchResult() {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const sourceId = this.getContactId();
-            const from = this.findAndFormatContact(sourceId);
-            const conversationId = this.get('conversationId');
-            const to = this.findAndFormatContact(conversationId);
-            return {
-                from,
-                to,
-                isSelected: this.isSelected,
-                id: this.id,
-                conversationId,
-                sentAt: this.get('sent_at'),
-                snippet: this.get('snippet'),
-            };
-        }
         getPropsForMessageDetail() {
             const newIdentity = window.i18n('newIdentity');
             const OUTGOING_KEY_ERROR = 'OutgoingIdentityKeyError';

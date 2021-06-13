@@ -1,10 +1,18 @@
 require(exports => {
     "use strict";
+    // Copyright 2019-2020 Signal Messenger, LLC
+    // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
-    const lodash_1 = require("lodash");
     function makeLookup(items, key) {
-        const pairs = lodash_1.map(items, item => [item[key], item]);
-        return lodash_1.fromPairs(pairs);
+        return (items || []).reduce((lookup, item) => {
+            if (item && item[key]) {
+                // The force cast is necessary if we want the keyof T above, and the flexibility
+                //   to pass anything in. And of course we're modifying a parameter!
+                // eslint-disable-next-line no-param-reassign
+                lookup[String(item[key])] = item;
+            }
+            return lookup;
+        }, {});
     }
     exports.makeLookup = makeLookup;
 });

@@ -37,6 +37,7 @@ require(exports => {
             i18n: () => 'missing',
         };
     }
+    exports.getEmptyState = getEmptyState;
     function reducer(state = getEmptyState(), action) {
         if (!state) {
             return getEmptyState();

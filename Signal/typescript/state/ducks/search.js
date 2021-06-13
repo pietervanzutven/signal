@@ -162,6 +162,7 @@ require(exports => {
             messagesLoading: false,
         };
     }
+    exports.getEmptyState = getEmptyState;
     function reducer(state = getEmptyState(), action) {
         if (action.type === 'SHOW_ARCHIVED_CONVERSATIONS') {
             return getEmptyState();
