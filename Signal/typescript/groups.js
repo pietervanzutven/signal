@@ -6,6 +6,7 @@ require(exports => {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.getMembershipList = exports.maybeUpdateGroup = exports.waitThenMaybeUpdateGroup = exports.respondToGroupV2Migration = exports.waitThenRespondToGroupV2Migration = exports.wrapWithSyncMessageSend = exports.initiateMigrationToGroupV2 = exports.getGroupMigrationMembers = exports.isGroupEligibleToMigrate = exports.maybeDeriveGroupV2Id = exports.hasV1GroupBeenMigrated = exports.fetchMembershipProof = exports.deriveGroupFields = exports.uploadGroupChange = exports.buildPromoteMemberChange = exports.buildDeleteMemberChange = exports.buildDeletePendingMemberChange = exports.buildDisappearingMessagesTimerChange = exports.ID_LENGTH = exports.ID_V1_LENGTH = exports.MASTER_KEY_LENGTH = void 0;
     const lodash_1 = require("lodash");
     const uuid_1 = require("uuid");
     const groupCredentialFetcher_1 = require("./services/groupCredentialFetcher");
@@ -324,7 +325,7 @@ require(exports => {
         }
         catch (error) {
             const { code } = error;
-            return code !== GROUP_NONEXISTENT_CODE && code !== GROUP_ACCESS_DENIED_CODE;
+            return code !== GROUP_NONEXISTENT_CODE;
         }
     }
     exports.hasV1GroupBeenMigrated = hasV1GroupBeenMigrated;
@@ -387,6 +388,10 @@ require(exports => {
             if (!contact) {
                 throw new Error(`getGroupMigrationMembers/${logId}: membersV2 - missing local contact for ${e164}, skipping.`);
             }
+            if (!contact.isMe() && window.GV2_MIGRATION_DISABLE_ADD) {
+                window.log.warn(`getGroupMigrationMembers/${logId}: membersV2 - skipping ${e164} due to GV2_MIGRATION_DISABLE_ADD flag`);
+                return null;
+            }
             if (!contact.get('uuid')) {
                 window.log.warn(`getGroupMigrationMembers/${logId}: membersV2 - missing uuid for ${e164}, skipping.`);
                 return null;
@@ -436,6 +441,11 @@ require(exports => {
             const conversationId = contact.id;
             // If we've already added this contact above, we'll skip here
             if (memberLookup[conversationId]) {
+                return null;
+            }
+            if (!contact.isMe() && window.GV2_MIGRATION_DISABLE_INVITE) {
+                window.log.warn(`getGroupMigrationMembers/${logId}: pendingMembersV2 - skipping ${e164} due to GV2_MIGRATION_DISABLE_INVITE flag`);
+                droppedGV2MemberIds.push(conversationId);
                 return null;
             }
             if (!contact.get('uuid')) {
@@ -679,9 +689,8 @@ require(exports => {
         const wereWePreviouslyAMember = !conversation.get('left') &&
             ourConversationId &&
             conversation.hasMember(ourConversationId);
-        if (!ourConversationId || !wereWePreviouslyAMember) {
-            window.log.info(`respondToGroupV2Migration: Not currently a member of ${conversation.idForLogging()}, returning early.`);
-            return;
+        if (!ourConversationId) {
+            throw new Error(`respondToGroupV2Migration: No conversationId when attempting to migrate ${conversation.idForLogging()}. Returning early.`);
         }
         // Derive GroupV2 fields
         const groupV1IdBuffer = Crypto_1.fromEncodedBinaryToArrayBuffer(previousGroupV1Id);
@@ -723,12 +732,46 @@ require(exports => {
         catch (error) {
             if (error.code === GROUP_ACCESS_DENIED_CODE) {
                 window.log.info(`respondToGroupV2Migration/${logId}: Failed to access log endpoint; fetching full group state`);
-                firstGroupState = await makeRequestWithTemporalRetry({
-                    logId: `getGroup/${logId}`,
-                    publicParams,
-                    secretParams,
-                    request: (sender, options) => sender.getGroup(options),
-                });
+                try {
+                    firstGroupState = await makeRequestWithTemporalRetry({
+                        logId: `getGroup/${logId}`,
+                        publicParams,
+                        secretParams,
+                        request: (sender, options) => sender.getGroup(options),
+                    });
+                }
+                catch (secondError) {
+                    if (secondError.code === GROUP_ACCESS_DENIED_CODE) {
+                        window.log.info(`respondToGroupV2Migration/${logId}: Failed to access state endpoint; user is no longer part of group`);
+                        // We don't want to add another event to the timeline
+                        if (wereWePreviouslyAMember) {
+                            const ourNumber = window.textsecure.storage.user.getNumber();
+                            await updateGroup({
+                                conversation,
+                                receivedAt,
+                                sentAt,
+                                updates: {
+                                    newAttributes: Object.assign(Object.assign({}, conversation.attributes), { left: true, members: (conversation.get('members') || []).filter(item => item !== ourConversationId && item !== ourNumber) }),
+                                    groupChangeMessages: [
+                                        Object.assign(Object.assign({}, generateBasicMessage()), {
+                                            type: 'group-v2-change', groupV2Change: {
+                                                details: [
+                                                    {
+                                                        type: 'member-remove',
+                                                        conversationId: ourConversationId,
+                                                    },
+                                                ],
+                                            }
+                                        }),
+                                    ],
+                                    members: [],
+                                },
+                            });
+                            return;
+                        }
+                    }
+                    throw secondError;
+                }
             }
             else {
                 throw error;

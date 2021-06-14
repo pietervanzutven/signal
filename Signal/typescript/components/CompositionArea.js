@@ -2,17 +2,30 @@ require(exports => {
     "use strict";
     // Copyright 2019-2020 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
+    var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, { enumerable: true, get: function () { return m[k]; } });
+    }) : (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+    }));
+    var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function (o, v) {
+        Object.defineProperty(o, "default", { enumerable: true, value: v });
+    }) : function (o, v) {
+        o["default"] = v;
+    });
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
-        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-        result["default"] = mod;
+        if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        __setModuleDefault(result, mod);
         return result;
     };
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.CompositionArea = void 0;
     const React = __importStar(require("react"));
     const lodash_1 = require("lodash");
     const classnames_1 = __importDefault(require("classnames"));
@@ -28,7 +41,7 @@ require(exports => {
         // eslint-disable-next-line no-param-reassign
         el.innerHTML = '';
     };
-    exports.CompositionArea = ({ i18n, attachmentListEl, micCellEl, onChooseAttachment,
+    const CompositionArea = ({ i18n, attachmentListEl, micCellEl, onChooseAttachment,
         // CompositionInput
         onSubmit, compositionApi, onEditorStateChange, onTextTooLong, draftText, draftBodyRanges, clearQuotedMessage, getQuotedMessage, members,
         // EmojiButton
@@ -36,7 +49,7 @@ require(exports => {
         // StickerButton
         knownPacks, receivedPacks, installedPack, installedPacks, blessedPacks, recentStickers, clearInstalledStickerPack, onClickAddPack, onPickSticker, clearShowIntroduction, showPickerHint, clearShowPickerHint,
         // Message Requests
-        acceptedMessageRequest, areWePending, conversationType, groupVersion, isBlocked, isMissingMandatoryProfileSharing, messageRequestsEnabled, name, onAccept, onBlock, onBlockAndDelete, onDelete, onUnblock, phoneNumber, profileName, title,
+        acceptedMessageRequest, areWePending, conversationType, groupVersion, isBlocked, isMissingMandatoryProfileSharing, left, messageRequestsEnabled, name, onAccept, onBlock, onBlockAndDelete, onDelete, onUnblock, phoneNumber, profileName, title,
         // GroupV1 Disabled Actions
         isGroupV1AndDisabled, onStartGroupMigration, }) => {
         const [disabled, setDisabled] = React.useState(false);
@@ -158,13 +171,14 @@ require(exports => {
             return (React.createElement(MessageRequestActions_1.MessageRequestActions, { i18n: i18n, conversationType: conversationType, isBlocked: isBlocked, onBlock: onBlock, onBlockAndDelete: onBlockAndDelete, onUnblock: onUnblock, onDelete: onDelete, onAccept: onAccept, name: name, profileName: profileName, phoneNumber: phoneNumber, title: title }));
         }
         // If no message request, but we haven't shared profile yet, we show profile-sharing UI
-        if ((conversationType === 'direct' ||
-            (conversationType === 'group' && groupVersion === 1)) &&
+        if (!left &&
+            (conversationType === 'direct' ||
+                (conversationType === 'group' && groupVersion === 1)) &&
             isMissingMandatoryProfileSharing) {
             return (React.createElement(MandatoryProfileSharingActions_1.MandatoryProfileSharingActions, { i18n: i18n, conversationType: conversationType, onBlock: onBlock, onBlockAndDelete: onBlockAndDelete, onDelete: onDelete, onAccept: onAccept, name: name, profileName: profileName, phoneNumber: phoneNumber, title: title }));
         }
         // If this is a V1 group, now disabled entirely, we show UI to help them upgrade
-        if (isGroupV1AndDisabled) {
+        if (!left && isGroupV1AndDisabled) {
             return (React.createElement(GroupV1DisabledActions_1.GroupV1DisabledActions, { i18n: i18n, onStartGroupMigration: onStartGroupMigration }));
         }
         return (React.createElement("div", { className: "module-composition-area" },
@@ -192,4 +206,5 @@ require(exports => {
                 !dirty ? micButtonFragment : null,
                 dirty || !showMic ? sendButtonFragment : null)) : null));
     };
+    exports.CompositionArea = CompositionArea;
 });
