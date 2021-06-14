@@ -1616,7 +1616,7 @@ require(exports => {
                     : this.get('membersV2') || [];
                 return window._.compact(members.map(member => {
                     const c = window.ConversationController.get(member.conversationId);
-                    // In groups we won't sent to contacts we believe are unregistered
+                    // In groups we won't send to contacts we believe are unregistered
                     if (c && c.isUnregistered()) {
                         return null;
                     }
@@ -1628,7 +1628,7 @@ require(exports => {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     this.get('members').map(id => {
                         const c = window.ConversationController.get(id);
-                        // In groups we won't sent to contacts we believe are unregistered
+                        // In groups we won't send to contacts we believe are unregistered
                         if (c && c.isUnregistered()) {
                             return null;
                         }
