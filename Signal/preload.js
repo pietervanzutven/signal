@@ -100,6 +100,8 @@
 
     window.setBadgeCount = count => ipc.send('set-badge-count', count);
 
+    window.logAppLoadedEvent = () => ipc.send('signal-app-loaded');
+
     window.drawAttention = () => {
       window.log.info('draw attention');
       ipc.send('draw-attention');

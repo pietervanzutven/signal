@@ -1528,6 +1528,7 @@
                 clearInterval(interval);
                 interval = null;
                 view.onEmpty();
+                window.logAppLoadedEvent();
             }
         }, 500);
         window.Whisper.deliveryReceiptQueue.start();
