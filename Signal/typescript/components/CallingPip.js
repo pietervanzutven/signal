@@ -6,6 +6,7 @@ require(exports => {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.CallingPip = void 0;
     const react_1 = __importDefault(require("react"));
     const lodash_1 = require("lodash");
     const CallingPipRemoteVideo_1 = require("./CallingPipRemoteVideo");
@@ -22,7 +23,7 @@ require(exports => {
     const PIP_WIDTH = 120;
     const PIP_TOP_MARGIN = 56;
     const PIP_PADDING = 8;
-    exports.CallingPip = ({ activeCall, getGroupCallVideoFrameSource, hangUp, hasLocalVideo, i18n, setGroupCallVideoRequest, setLocalPreview, setRendererCanvas, togglePip, }) => {
+    const CallingPip = ({ activeCall, getGroupCallVideoFrameSource, hangUp, hasLocalVideo, i18n, setGroupCallVideoRequest, setLocalPreview, setRendererCanvas, togglePip, }) => {
         const videoContainerRef = react_1.default.useRef(null);
         const localVideoRef = react_1.default.useRef(null);
         const [windowWidth, setWindowWidth] = react_1.default.useState(window.innerWidth);
@@ -180,4 +181,5 @@ require(exports => {
                     react_1.default.createElement("button", { "aria-label": i18n('calling__pip--off'), className: "module-calling-pip__button--pip", onClick: togglePip, type: "button" },
                         react_1.default.createElement("div", null)))));
     };
+    exports.CallingPip = CallingPip;
 });

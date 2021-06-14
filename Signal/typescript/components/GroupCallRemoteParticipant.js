@@ -34,15 +34,20 @@ require(exports => {
     const ConfirmationModal_1 = require("./ConfirmationModal");
     const Intl_1 = require("./Intl");
     const ContactName_1 = require("./conversation/ContactName");
+    const hooks_1 = require("../util/hooks");
     const constants_1 = require("../calling/constants");
     exports.GroupCallRemoteParticipant = react_1.default.memo(props => {
         const { getFrameBuffer, getGroupCallVideoFrameSource, i18n } = props;
-        const { avatarPath, color, demuxId, hasRemoteAudio, hasRemoteVideo, isBlocked, profileName, title, } = props.remoteParticipant;
-        const [isWide, setIsWide] = react_1.useState(true);
+        const { avatarPath, color, demuxId, hasRemoteAudio, hasRemoteVideo, isBlocked, profileName, title, videoAspectRatio, } = props.remoteParticipant;
+        const [isWide, setIsWide] = react_1.useState(videoAspectRatio ? videoAspectRatio >= 1 : true);
         const [hasHover, setHover] = react_1.useState(false);
         const [showBlockInfo, setShowBlockInfo] = react_1.useState(false);
         const remoteVideoRef = react_1.useRef(null);
         const canvasContextRef = react_1.useRef(null);
+        const [intersectionRef, intersectionObserverEntry,] = hooks_1.useIntersectionObserver();
+        const isVisible = intersectionObserverEntry
+            ? intersectionObserverEntry.isIntersecting
+            : true;
         const videoFrameSource = react_1.useMemo(() => getGroupCallVideoFrameSource(demuxId), [getGroupCallVideoFrameSource, demuxId]);
         const renderVideoFrame = react_1.useCallback(() => {
             const canvasEl = remoteVideoRef.current;
@@ -73,7 +78,7 @@ require(exports => {
             setIsWide(frameWidth > frameHeight);
         }, [getFrameBuffer, videoFrameSource]);
         react_1.useEffect(() => {
-            if (!hasRemoteVideo) {
+            if (!hasRemoteVideo || !isVisible) {
                 return lodash_1.noop;
             }
             let rafId = requestAnimationFrame(tick);
@@ -84,7 +89,7 @@ require(exports => {
             return () => {
                 cancelAnimationFrame(rafId);
             };
-        }, [hasRemoteVideo, renderVideoFrame, videoFrameSource]);
+        }, [hasRemoteVideo, isVisible, renderVideoFrame, videoFrameSource]);
         let canvasStyles;
         let containerStyles;
         // If our `width` and `height` props don't match the canvas's aspect ratio, we want to
@@ -105,7 +110,7 @@ require(exports => {
             avatarSize = Avatar_1.AvatarSize.FIFTY_TWO;
         }
         else {
-            const { top, left, width, height } = props;
+            const { width, height } = props;
             const shorterDimension = Math.min(width, height);
             if (shorterDimension >= 240) {
                 avatarSize = Avatar_1.AvatarSize.ONE_HUNDRED_TWELVE;
@@ -118,14 +123,16 @@ require(exports => {
             }
             containerStyles = {
                 height,
-                left,
-                position: 'absolute',
-                top,
                 width,
             };
+            if ('top' in props) {
+                containerStyles.position = 'absolute';
+                containerStyles.top = props.top;
+                containerStyles.left = props.left;
+            }
         }
         const showHover = hasHover && !props.isInPip;
-        const canShowVideo = hasRemoteVideo && !isBlocked;
+        const canShowVideo = hasRemoteVideo && !isBlocked && isVisible;
         return (react_1.default.createElement(react_1.default.Fragment, null,
             showBlockInfo && (react_1.default.createElement(ConfirmationModal_1.ConfirmationModal, {
                 i18n: i18n, onClose: () => {
@@ -145,7 +152,7 @@ require(exports => {
                         },
                     ]
             }, i18n('calling__block-info'))),
-            react_1.default.createElement("div", { className: "module-ongoing-call__group-call-remote-participant", onMouseEnter: () => setHover(true), onMouseLeave: () => setHover(false), style: containerStyles },
+            react_1.default.createElement("div", { className: "module-ongoing-call__group-call-remote-participant", ref: intersectionRef, onMouseEnter: () => setHover(true), onMouseLeave: () => setHover(false), style: containerStyles },
                 showHover && (react_1.default.createElement("div", {
                     className: classnames_1.default('module-ongoing-call__group-call-remote-participant--title', {
                         'module-ongoing-call__group-call-remote-participant--audio-muted': !hasRemoteAudio,

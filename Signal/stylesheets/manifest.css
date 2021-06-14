@@ -6281,7 +6281,8 @@ img.emoji.jumbo {
   background: linear-gradient(rgba(0, 0, 0, 0.4), transparent);
   top: 0;
   width: 100%;
-  z-index: 2; }
+  z-index: 2;
+  padding-bottom: 1rem; }
 
 .module-ongoing-call__header-message {
   font-weight: normal;
@@ -6289,10 +6290,69 @@ img.emoji.jumbo {
   line-height: 18px;
   letter-spacing: -0.0025em; }
 
-.module-ongoing-call__grid {
-  flex-grow: 1;
-  width: 100%;
-  position: relative; }
+.module-ongoing-call__participants {
+  display: flex;
+  flex: 1 1 0;
+  width: 100%; }
+  .module-ongoing-call__participants__grid {
+    flex-grow: 1;
+    position: relative; }
+  .module-ongoing-call__participants__overflow {
+    flex: 0 0 auto;
+    position: relative; }
+    .module-ongoing-call__participants__overflow__inner {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      max-height: 100%;
+      overflow-y: scroll; }
+      .module-ongoing-call__participants__overflow__inner::-webkit-scrollbar, .module-ongoing-call__participants__overflow__inner::-webkit-scrollbar-thumb {
+        width: 0;
+        background: transparent; }
+    .module-ongoing-call__participants__overflow .module-ongoing-call__group-call-remote-participant {
+      width: 100%;
+      margin-bottom: 1rem; }
+    .module-ongoing-call__participants__overflow__scroll-marker {
+      display: flex;
+      justify-content: center;
+      left: 0;
+      opacity: 1;
+      position: absolute;
+      scroll-behavior: smooth;
+      transition: opacity 200ms ease-out;
+      width: 100%;
+      z-index: 1; }
+      .module-ongoing-call__participants__overflow__scroll-marker--hidden {
+        opacity: 0; }
+      .module-ongoing-call__participants__overflow__scroll-marker__button {
+        background: #5e5e5e;
+        border-radius: 100%;
+        border: 0;
+        box-shadow: 0 0 5px rgba(18, 18, 18, 0.5);
+        height: 28px;
+        margin: 12px 0;
+        opacity: 0;
+        outline: none;
+        transition: opacity 200ms ease-out;
+        width: 28px; }
+        .module-ongoing-call__participants__overflow__scroll-marker__button::before {
+          background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>arrow-down-24</title><polygon points='19.47 11.409 13.999 16.88 12.75 18.439 12.75 4 11.25 4 11.25 18.439 10.001 16.88 4.53 11.409 3.47 12.47 12 21 20.53 12.47 19.47 11.409' fill='%23FFFFFF'/></svg>") no-repeat center;
+          background-size: 100%;
+          content: '';
+          display: block;
+          height: 100%;
+          width: 100%; }
+      .module-ongoing-call__participants__overflow__scroll-marker--top {
+        top: 0;
+        background: linear-gradient(#121212, transparent 20px, transparent); }
+        .module-ongoing-call__participants__overflow__scroll-marker--top .module-ongoing-call__participants__overflow__scroll-marker__button {
+          transform: rotate(180deg); }
+      .module-ongoing-call__participants__overflow__scroll-marker--bottom {
+        bottom: 0;
+        background: linear-gradient(to top, #121212, transparent 20px, transparent); }
+    .module-ongoing-call__participants__overflow:hover .module-ongoing-call__participants__overflow__scroll-marker__button {
+      opacity: 1; }
 
 .module-ongoing-call__group-call-remote-participant {
   display: flex;

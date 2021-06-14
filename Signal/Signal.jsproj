@@ -3906,6 +3906,7 @@
     <Content Include="typescript\components\emoji\lib.js" />
     <Content Include="typescript\components\ErrorModal.js" />
     <Content Include="typescript\components\ExpiredBuildDialog.js" />
+    <Content Include="typescript\components\GroupCallOverflowArea.js" />
     <Content Include="typescript\components\GroupCallRemoteParticipant.js" />
     <Content Include="typescript\components\GroupCallRemoteParticipants.js" />
     <Content Include="typescript\components\GroupCallToastManager.js" />
