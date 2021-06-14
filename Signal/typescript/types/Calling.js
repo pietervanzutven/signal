@@ -1,8 +1,9 @@
 require(exports => {
     "use strict";
-    // Copyright 2020 Signal Messenger, LLC
+    // Copyright 2020-2021 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.CallingDeviceType = exports.GroupCallJoinState = exports.GroupCallConnectionState = exports.CallEndedReason = exports.CallState = exports.CallMode = void 0;
     // These are strings (1) for the database (2) for Storybook.
     var CallMode;
     (function (CallMode) {

@@ -1,11 +1,12 @@
 require(exports => {
     "use strict";
-    // Copyright 2020 Signal Messenger, LLC
+    // Copyright 2020-2021 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.SmartCallManager = void 0;
     const react_1 = __importDefault(require("react"));
     const react_redux_1 = require("react-redux");
     const lodash_1 = require("lodash");
@@ -54,6 +55,7 @@ require(exports => {
             conversation,
             hasLocalAudio: activeCallState.hasLocalAudio,
             hasLocalVideo: activeCallState.hasLocalVideo,
+            isInSpeakerView: activeCallState.isInSpeakerView,
             joinedAt: activeCallState.joinedAt,
             pip: activeCallState.pip,
             settingsDialogOpen: activeCallState.settingsDialogOpen,

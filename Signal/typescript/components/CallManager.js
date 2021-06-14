@@ -1,6 +1,6 @@
 require(exports => {
     "use strict";
-    // Copyright 2020 Signal Messenger, LLC
+    // Copyright 2020-2021 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
         if (k2 === undefined) k2 = k;
@@ -33,7 +33,7 @@ require(exports => {
     const SafetyNumberChangeDialog_1 = require("./SafetyNumberChangeDialog");
     const Calling_1 = require("../types/Calling");
     const missingCaseError_1 = require("../util/missingCaseError");
-    const ActiveCallManager = ({ activeCall, availableCameras, cancelCall, closeNeedPermissionScreen, hangUp, i18n, keyChangeOk, getGroupCallVideoFrameSource, me, renderDeviceSelection, renderSafetyNumberViewer, setGroupCallVideoRequest, setLocalAudio, setLocalPreview, setLocalVideo, setRendererCanvas, startCall, toggleParticipants, togglePip, toggleSettings, }) => {
+    const ActiveCallManager = ({ activeCall, availableCameras, cancelCall, closeNeedPermissionScreen, hangUp, i18n, keyChangeOk, getGroupCallVideoFrameSource, me, renderDeviceSelection, renderSafetyNumberViewer, setGroupCallVideoRequest, setLocalAudio, setLocalPreview, setLocalVideo, setRendererCanvas, startCall, toggleParticipants, togglePip, toggleSettings, toggleSpeakerView, }) => {
         const { conversation, hasLocalAudio, hasLocalVideo, joinedAt, peekedParticipants, pip, settingsDialogOpen, showParticipantsList, } = activeCall;
         const cancelActiveCall = react_1.useCallback(() => {
             cancelCall({ conversationId: conversation.id });
@@ -99,7 +99,7 @@ require(exports => {
             ]
             : [];
         return (react_1.default.createElement(react_1.default.Fragment, null,
-            react_1.default.createElement(CallScreen_1.CallScreen, { activeCall: activeCall, getGroupCallVideoFrameSource: getGroupCallVideoFrameSourceForActiveCall, hangUp: hangUp, i18n: i18n, joinedAt: joinedAt, me: me, setGroupCallVideoRequest: setGroupCallVideoRequestForConversation, setLocalPreview: setLocalPreview, setRendererCanvas: setRendererCanvas, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, stickyControls: showParticipantsList, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings }),
+            react_1.default.createElement(CallScreen_1.CallScreen, { activeCall: activeCall, getGroupCallVideoFrameSource: getGroupCallVideoFrameSourceForActiveCall, hangUp: hangUp, i18n: i18n, joinedAt: joinedAt, me: me, setGroupCallVideoRequest: setGroupCallVideoRequestForConversation, setLocalPreview: setLocalPreview, setRendererCanvas: setRendererCanvas, setLocalAudio: setLocalAudio, setLocalVideo: setLocalVideo, stickyControls: showParticipantsList, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings, toggleSpeakerView: toggleSpeakerView }),
             settingsDialogOpen && renderDeviceSelection(),
             showParticipantsList && activeCall.callMode === Calling_1.CallMode.Group ? (react_1.default.createElement(CallingParticipantsList_1.CallingParticipantsList, { i18n: i18n, onClose: toggleParticipants, ourUuid: me.uuid, participants: groupCallParticipantsForParticipantsList })) : null,
             activeCall.callMode === Calling_1.CallMode.Group &&

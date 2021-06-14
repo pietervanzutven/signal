@@ -61,7 +61,7 @@ require(exports => {
     //    "scalar": how much can we scale these boxes up while still fitting them on the
     //    screen? The biggest scalar wins as the "best arrangement".
     // 4. Lay out this arrangement on the screen.
-    const GroupCallRemoteParticipants = ({ getGroupCallVideoFrameSource, i18n, remoteParticipants, setGroupCallVideoRequest, }) => {
+    const GroupCallRemoteParticipants = ({ getGroupCallVideoFrameSource, i18n, isInSpeakerView, remoteParticipants, setGroupCallVideoRequest, }) => {
         const [containerDimensions, setContainerDimensions] = react_1.useState({
             width: 0,
             height: 0,
@@ -99,6 +99,12 @@ require(exports => {
             .concat()
             .sort((a, b) => (b.speakerTime || -Infinity) - (a.speakerTime || -Infinity)), [remoteParticipants]);
         const gridParticipants = react_1.useMemo(() => {
+            if (!sortedParticipants.length) {
+                return [];
+            }
+            const candidateParticipants = isInSpeakerView
+                ? [sortedParticipants[0]]
+                : sortedParticipants;
             // Imagine that we laid out all of the rows end-to-end. That's the maximum total
             //   width. So if there were 5 rows and the container was 100px wide, then we can't
             //   possibly fit more than 500px of participants.
@@ -106,11 +112,16 @@ require(exports => {
             // We do the same thing for participants, "laying them out end-to-end" until they
             //   exceed the maximum total width.
             let totalWidth = 0;
-            return lodash_1.takeWhile(sortedParticipants, remoteParticipant => {
+            return lodash_1.takeWhile(candidateParticipants, remoteParticipant => {
                 totalWidth += remoteParticipant.videoAspectRatio * MIN_RENDERED_HEIGHT;
                 return totalWidth < maxTotalWidth;
             }).sort(stableParticipantComparator);
-        }, [maxRowCount, containerDimensions.width, sortedParticipants]);
+        }, [
+            containerDimensions.width,
+            isInSpeakerView,
+            maxRowCount,
+            sortedParticipants,
+        ]);
         const overflowedParticipants = react_1.useMemo(() => sortedParticipants
             .slice(gridParticipants.length)
             .sort(stableParticipantComparator), [sortedParticipants, gridParticipants.length]);

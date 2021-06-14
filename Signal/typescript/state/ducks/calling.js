@@ -1,8 +1,9 @@
 require(exports => {
     "use strict";
-    // Copyright 2020 Signal Messenger, LLC
+    // Copyright 2020-2021 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.reducer = exports.getEmptyState = exports.actions = exports.isAnybodyElseInGroupCall = exports.getActiveCall = void 0;
     const ringrtc_1 = require("ringrtc");
     const lodash_1 = require("lodash");
     const getOwn_1 = require("../../util/getOwn");
@@ -16,9 +17,11 @@ require(exports => {
     const sleep_1 = require("../../util/sleep");
     const LatestQueue_1 = require("../../util/LatestQueue");
     // Helpers
-    exports.getActiveCall = ({ activeCallState, callsByConversation, }) => activeCallState &&
+    const getActiveCall = ({ activeCallState, callsByConversation, }) => activeCallState &&
         getOwn_1.getOwn(callsByConversation, activeCallState.conversationId);
-    exports.isAnybodyElseInGroupCall = ({ uuids }, ourUuid) => uuids.some(id => id !== ourUuid);
+    exports.getActiveCall = getActiveCall;
+    const isAnybodyElseInGroupCall = ({ uuids }, ourUuid) => uuids.some(id => id !== ourUuid);
+    exports.isAnybodyElseInGroupCall = isAnybodyElseInGroupCall;
     // Actions
     const ACCEPT_CALL_PENDING = 'calling/ACCEPT_CALL_PENDING';
     const CANCEL_CALL = 'calling/CANCEL_CALL';
@@ -43,6 +46,7 @@ require(exports => {
     const TOGGLE_PARTICIPANTS = 'calling/TOGGLE_PARTICIPANTS';
     const TOGGLE_PIP = 'calling/TOGGLE_PIP';
     const TOGGLE_SETTINGS = 'calling/TOGGLE_SETTINGS';
+    const TOGGLE_SPEAKER_VIEW = 'calling/TOGGLE_SPEAKER_VIEW';
     // Action Creators
     function acceptCall(payload) {
         return async (dispatch) => {
@@ -382,6 +386,11 @@ require(exports => {
             type: TOGGLE_SETTINGS,
         };
     }
+    function toggleSpeakerView() {
+        return {
+            type: TOGGLE_SPEAKER_VIEW,
+        };
+    }
     exports.actions = {
         acceptCall,
         cancelCall,
@@ -410,6 +419,7 @@ require(exports => {
         toggleParticipants,
         togglePip,
         toggleSettings,
+        toggleSpeakerView,
     };
     // Reducer
     function getEmptyState() {
@@ -476,6 +486,7 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: action.payload.hasLocalAudio,
                     hasLocalVideo: action.payload.hasLocalVideo,
+                    isInSpeakerView: false,
                     pip: false,
                     safetyNumberChangedUuids: [],
                     settingsDialogOpen: false,
@@ -497,6 +508,7 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: action.payload.hasLocalAudio,
                     hasLocalVideo: action.payload.hasLocalVideo,
+                    isInSpeakerView: false,
                     pip: false,
                     safetyNumberChangedUuids: [],
                     settingsDialogOpen: false,
@@ -514,6 +526,7 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: true,
                     hasLocalVideo: action.payload.asVideoCall,
+                    isInSpeakerView: false,
                     pip: false,
                     safetyNumberChangedUuids: [],
                     settingsDialogOpen: false,
@@ -568,6 +581,7 @@ require(exports => {
                     conversationId: action.payload.conversationId,
                     hasLocalAudio: action.payload.hasLocalAudio,
                     hasLocalVideo: action.payload.hasLocalVideo,
+                    isInSpeakerView: false,
                     pip: false,
                     safetyNumberChangedUuids: [],
                     settingsDialogOpen: false,
@@ -748,6 +762,14 @@ require(exports => {
                 return state;
             }
             return Object.assign(Object.assign({}, state), { activeCallState: Object.assign(Object.assign({}, activeCallState), { pip: !activeCallState.pip }) });
+        }
+        if (action.type === TOGGLE_SPEAKER_VIEW) {
+            const { activeCallState } = state;
+            if (!activeCallState) {
+                window.log.warn('Cannot toggle speaker view when there is no active call');
+                return state;
+            }
+            return Object.assign(Object.assign({}, state), { activeCallState: Object.assign(Object.assign({}, activeCallState), { isInSpeakerView: !activeCallState.isInSpeakerView }) });
         }
         if (action.type === MARK_CALL_UNTRUSTED) {
             const { activeCallState } = state;

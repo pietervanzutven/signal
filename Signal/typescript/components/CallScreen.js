@@ -1,6 +1,6 @@
 require(exports => {
     "use strict";
-    // Copyright 2020 Signal Messenger, LLC
+    // Copyright 2020-2021 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
         if (k2 === undefined) k2 = k;
@@ -38,7 +38,7 @@ require(exports => {
     const DirectCallRemoteParticipant_1 = require("./DirectCallRemoteParticipant");
     const GroupCallRemoteParticipants_1 = require("./GroupCallRemoteParticipants");
     const GroupCallToastManager_1 = require("./GroupCallToastManager");
-    const CallScreen = ({ activeCall, getGroupCallVideoFrameSource, hangUp, i18n, joinedAt, me, setGroupCallVideoRequest, setLocalAudio, setLocalVideo, setLocalPreview, setRendererCanvas, stickyControls, toggleParticipants, togglePip, toggleSettings, }) => {
+    const CallScreen = ({ activeCall, getGroupCallVideoFrameSource, hangUp, i18n, joinedAt, me, setGroupCallVideoRequest, setLocalAudio, setLocalVideo, setLocalPreview, setRendererCanvas, stickyControls, toggleParticipants, togglePip, toggleSettings, toggleSpeakerView, }) => {
         const { conversation, hasLocalAudio, hasLocalVideo, showParticipantsList, } = activeCall;
         const toggleAudio = react_1.useCallback(() => {
             setLocalAudio({
@@ -122,7 +122,7 @@ require(exports => {
                     : i18n('calling__in-this-call--zero');
                 isConnected =
                     activeCall.connectionState === Calling_1.GroupCallConnectionState.Connected;
-                remoteParticipantsElement = (react_1.default.createElement(GroupCallRemoteParticipants_1.GroupCallRemoteParticipants, { getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, i18n: i18n, remoteParticipants: activeCall.remoteParticipants, setGroupCallVideoRequest: setGroupCallVideoRequest }));
+                remoteParticipantsElement = (react_1.default.createElement(GroupCallRemoteParticipants_1.GroupCallRemoteParticipants, { getGroupCallVideoFrameSource: getGroupCallVideoFrameSource, i18n: i18n, isInSpeakerView: activeCall.isInSpeakerView, remoteParticipants: activeCall.remoteParticipants, setGroupCallVideoRequest: setGroupCallVideoRequest }));
                 break;
             default:
                 throw missingCaseError_1.missingCaseError(activeCall);
@@ -147,7 +147,7 @@ require(exports => {
         },
             activeCall.callMode === Calling_1.CallMode.Group ? (react_1.default.createElement(GroupCallToastManager_1.GroupCallToastManager, { connectionState: activeCall.connectionState, i18n: i18n })) : null,
             react_1.default.createElement("div", { className: classnames_1.default('module-ongoing-call__header', controlsFadeClass) },
-                react_1.default.createElement(CallingHeader_1.CallingHeader, { canPip: true, i18n: i18n, isGroupCall: activeCall.callMode === Calling_1.CallMode.Group, message: headerMessage, participantCount: participantCount, showParticipantsList: showParticipantsList, title: headerTitle, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings })),
+                react_1.default.createElement(CallingHeader_1.CallingHeader, { canPip: true, i18n: i18n, isInSpeakerView: activeCall.isInSpeakerView, isGroupCall: activeCall.callMode === Calling_1.CallMode.Group, message: headerMessage, participantCount: participantCount, showParticipantsList: showParticipantsList, title: headerTitle, toggleParticipants: toggleParticipants, togglePip: togglePip, toggleSettings: toggleSettings, toggleSpeakerView: toggleSpeakerView })),
             remoteParticipantsElement,
             hasLocalVideo && isLonelyInGroup ? (react_1.default.createElement("div", { className: "module-ongoing-call__local-preview-fullsize" },
                 react_1.default.createElement("video", { className: "module-ongoing-call__footer__local-preview__video", ref: localVideoRef, autoPlay: true }))) : null,
