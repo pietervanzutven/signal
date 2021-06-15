@@ -80,6 +80,7 @@
     <Content Include="app\protocol_filter.js" />
     <Content Include="app\spell_check.js" />
     <Content Include="app\sql_channel.js" />
+    <Content Include="app\tray_icon.js" />
     <Content Include="app\user_config.js" />
     <Content Include="background.html" />
     <Content Include="cdnsignalorg.cer" />
@@ -3945,6 +3946,7 @@
     <Content Include="typescript\components\_util.js" />
     <Content Include="typescript\ConversationController.js" />
     <Content Include="typescript\Crypto.js" />
+    <Content Include="typescript\dock_icon.js" />
     <Content Include="typescript\groupChange.js" />
     <Content Include="typescript\groups.js" />
     <Content Include="typescript\linkPreviews\isLinkPreviewDateValid.js" />
