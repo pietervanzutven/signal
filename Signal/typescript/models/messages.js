@@ -3,6 +3,7 @@ require(exports => {
     // Copyright 2020 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.MessageModel = void 0;
     const calling_1 = require("../state/ducks/calling");
     const calling_2 = require("../state/selectors/calling");
     const ExpirationTimerOptions_1 = require("../util/ExpirationTimerOptions");
@@ -1003,7 +1004,10 @@ require(exports => {
             }
             const contacts = this.get('contact');
             if (contacts && contacts.length) {
-                return { text: Contact.getName(contacts[0]), emoji: '👤' };
+                return {
+                    text: Contact.getName(contacts[0]) || window.i18n('unknownContact'),
+                    emoji: '👤',
+                };
             }
             if (body) {
                 return { text: body };
