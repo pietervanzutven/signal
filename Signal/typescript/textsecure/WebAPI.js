@@ -1,18 +1,31 @@
 require(exports => {
     "use strict";
-    // Copyright 2020 Signal Messenger, LLC
+    // Copyright 2020-2021 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
-    var __importDefault = (this && this.__importDefault) || function (mod) {
-        return (mod && mod.__esModule) ? mod : { "default": mod };
-    };
+    var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, { enumerable: true, get: function () { return m[k]; } });
+    }) : (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+    }));
+    var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function (o, v) {
+        Object.defineProperty(o, "default", { enumerable: true, value: v });
+    }) : function (o, v) {
+        o["default"] = v;
+    });
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
-        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-        result["default"] = mod;
+        if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        __setModuleDefault(result, mod);
         return result;
     };
+    var __importDefault = (this && this.__importDefault) || function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.initialize = void 0;
     /* eslint-disable no-param-reassign */
     /* eslint-disable more/no-then */
     /* eslint-disable no-bitwise */
@@ -600,15 +613,7 @@ require(exports => {
                 return res.config.filter(({ name }) => name.startsWith('desktop.') || name.startsWith('global.'));
             }
             async function getSenderCertificate(omitE164) {
-                const baseParameters = '?includeUuid=true';
-                const urlParameters = `${baseParameters}${omitE164 ? '&includeE164=false' : ''}`;
-                return _ajax({
-                    call: 'deliveryCert',
-                    httpType: 'GET',
-                    responseType: 'json',
-                    validateResponse: { certificate: 'string' },
-                    urlParameters,
-                });
+                return _ajax(Object.assign({ call: 'deliveryCert', httpType: 'GET', responseType: 'json', validateResponse: { certificate: 'string' } }, (omitE164 ? { urlParameters: '?includeE164=false' } : {})));
             }
             async function getStorageCredentials() {
                 return _ajax({
