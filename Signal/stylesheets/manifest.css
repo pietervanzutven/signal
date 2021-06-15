@@ -2532,8 +2532,6 @@ img.emoji.jumbo {
   cursor: pointer;
   outline: inherit;
   text-align: inherit;
-  display: block;
-  min-height: 54px;
   width: 100%;
   position: relative;
   border-radius: 4px;
@@ -2781,7 +2779,7 @@ img.emoji.jumbo {
   padding-right: 8px;
   padding-top: 7px;
   padding-bottom: 7px;
-  max-width: 100%; }
+  min-height: 54px; }
 
 .module-quote__primary__author {
   font-family: Inter, "Helvetica Neue", "Source Sans Pro", "Source Han Sans SC", "Source Han Sans CN", "Hiragino Sans GB", "Hiragino Kaku Gothic", "Microsoft Yahei UI", Helvetica, Arial, sans-serif;
@@ -2892,14 +2890,11 @@ img.emoji.jumbo {
   background-size: 100%; }
 
 .module-quote__icon-container {
-  flex: initial;
-  min-width: 54px;
-  width: 54px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  flex: auto auto 54px;
   position: relative; }
-  .module-quote__icon-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; }
 
 .module-quote__icon-container__inner {
   position: absolute;

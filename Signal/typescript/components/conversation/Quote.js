@@ -1,19 +1,33 @@
 require(exports => {
     "use strict";
-    // Copyright 2018-2020 Signal Messenger, LLC
+    // Copyright 2018-2021 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
-    var __importDefault = (this && this.__importDefault) || function (mod) {
-        return (mod && mod.__esModule) ? mod : { "default": mod };
-    };
+    var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, { enumerable: true, get: function () { return m[k]; } });
+    }) : (function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+    }));
+    var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function (o, v) {
+        Object.defineProperty(o, "default", { enumerable: true, value: v });
+    }) : function (o, v) {
+        o["default"] = v;
+    });
     var __importStar = (this && this.__importStar) || function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
-        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-        result["default"] = mod;
+        if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        __setModuleDefault(result, mod);
         return result;
     };
+    var __importDefault = (this && this.__importDefault) || function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
     Object.defineProperty(exports, "__esModule", { value: true });
-    const react_1 = __importDefault(require("react"));
+    exports.Quote = void 0;
+    const react_1 = __importStar(require("react"));
+    const lodash_1 = require("lodash");
     const classnames_1 = __importDefault(require("classnames"));
     const MIME = __importStar(require("../../types/MIME"));
     const GoogleChrome = __importStar(require("../../util/GoogleChrome"));
@@ -78,13 +92,11 @@ require(exports => {
                 imageBroken: false,
             };
         }
-        renderImage(url, i18n, icon) {
+        renderImage(url, icon) {
             const iconElement = icon ? (react_1.default.createElement("div", { className: "module-quote__icon-container__inner" },
                 react_1.default.createElement("div", { className: "module-quote__icon-container__circle-background" },
                     react_1.default.createElement("div", { className: classnames_1.default('module-quote__icon-container__icon', `module-quote__icon-container__icon--${icon}`) })))) : null;
-            return (react_1.default.createElement("div", { className: "module-quote__icon-container" },
-                react_1.default.createElement("img", { src: url, alt: i18n('quoteThumbnailAlt'), onError: this.handleImageError }),
-                iconElement));
+            return (react_1.default.createElement(ThumbnailImage, { src: url, onError: this.handleImageError }, iconElement));
         }
         // eslint-disable-next-line class-methods-use-this
         renderIcon(icon) {
@@ -110,7 +122,7 @@ require(exports => {
                 react_1.default.createElement("div", { className: classnames_1.default('module-quote__generic-file__text', isIncoming ? 'module-quote__generic-file__text--incoming' : null) }, fileName)));
         }
         renderIconContainer() {
-            const { attachment, i18n } = this.props;
+            const { attachment } = this.props;
             const { imageBroken } = this.state;
             if (!attachment) {
                 return null;
@@ -119,12 +131,12 @@ require(exports => {
             const objectUrl = getObjectUrl(thumbnail);
             if (GoogleChrome.isVideoTypeSupported(contentType)) {
                 return objectUrl && !imageBroken
-                    ? this.renderImage(objectUrl, i18n, 'play')
+                    ? this.renderImage(objectUrl, 'play')
                     : this.renderIcon('movie');
             }
             if (GoogleChrome.isImageTypeSupported(contentType)) {
                 return objectUrl && !imageBroken
-                    ? this.renderImage(objectUrl, i18n)
+                    ? this.renderImage(objectUrl)
                     : this.renderIcon('image');
             }
             if (MIME.isAudio(contentType)) {
@@ -220,4 +232,30 @@ require(exports => {
         }
     }
     exports.Quote = Quote;
+    function ThumbnailImage({ src, onError, children, }) {
+        const imageRef = react_1.useRef(new Image());
+        const [loadedSrc, setLoadedSrc] = react_1.useState(null);
+        react_1.useEffect(() => {
+            const image = new Image();
+            image.onload = () => {
+                setLoadedSrc(src);
+            };
+            image.src = src;
+            imageRef.current = image;
+            return () => {
+                image.onload = lodash_1.noop;
+            };
+        }, [src]);
+        react_1.useEffect(() => {
+            setLoadedSrc(null);
+        }, [src]);
+        react_1.useEffect(() => {
+            const image = imageRef.current;
+            image.onerror = onError;
+            return () => {
+                image.onerror = lodash_1.noop;
+            };
+        }, [onError]);
+        return (react_1.default.createElement("div", { className: "module-quote__icon-container", style: loadedSrc ? { backgroundImage: `url('${escape(loadedSrc)}')` } : {} }, children));
+    }
 });
