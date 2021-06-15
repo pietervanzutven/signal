@@ -1,15 +1,16 @@
 require(exports => {
     "use strict";
-    // Copyright 2019-2020 Signal Messenger, LLC
+    // Copyright 2019-2021 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.reducer = exports.updateConversationLookups = exports.getEmptyState = exports.actions = exports.getConversationCallMode = void 0;
     const lodash_1 = require("lodash");
     const calling_1 = require("../../services/calling");
     const getOwn_1 = require("../../util/getOwn");
     const events_1 = require("../../shims/events");
     const Calling_1 = require("../../types/Calling");
     // Helpers
-    exports.getConversationCallMode = (conversation) => {
+    const getConversationCallMode = (conversation) => {
         if (conversation.left ||
             conversation.isBlocked ||
             conversation.isMe ||
@@ -24,6 +25,7 @@ require(exports => {
         }
         return Calling_1.CallMode.None;
     };
+    exports.getConversationCallMode = getConversationCallMode;
     // Action Creators
     exports.actions = {
         conversationAdded,
@@ -271,6 +273,9 @@ require(exports => {
     function getEmptyState() {
         return {
             conversationLookup: {},
+            conversationsByE164: {},
+            conversationsByUuid: {},
+            conversationsByGroupId: {},
             messagesByConversation: {},
             messagesLookup: {},
             selectedMessageCounter: 0,
@@ -332,12 +337,39 @@ require(exports => {
         }
         return false;
     }
+    function updateConversationLookups(added, removed, state) {
+        const result = {
+            conversationsByE164: state.conversationsByE164,
+            conversationsByUuid: state.conversationsByUuid,
+            conversationsByGroupId: state.conversationsByGroupId,
+        };
+        if (removed && removed.e164) {
+            result.conversationsByE164 = lodash_1.omit(result.conversationsByE164, removed.e164);
+        }
+        if (removed && removed.uuid) {
+            result.conversationsByUuid = lodash_1.omit(result.conversationsByUuid, removed.uuid);
+        }
+        if (removed && removed.groupId) {
+            result.conversationsByGroupId = lodash_1.omit(result.conversationsByGroupId, removed.groupId);
+        }
+        if (added && added.e164) {
+            result.conversationsByE164 = Object.assign(Object.assign({}, result.conversationsByE164), { [added.e164]: added });
+        }
+        if (added && added.uuid) {
+            result.conversationsByUuid = Object.assign(Object.assign({}, result.conversationsByUuid), { [added.uuid]: added });
+        }
+        if (added && added.groupId) {
+            result.conversationsByGroupId = Object.assign(Object.assign({}, result.conversationsByGroupId), { [added.groupId]: added });
+        }
+        return result;
+    }
+    exports.updateConversationLookups = updateConversationLookups;
     function reducer(state = getEmptyState(), action) {
         if (action.type === 'CONVERSATION_ADDED') {
             const { payload } = action;
             const { id, data } = payload;
             const { conversationLookup } = state;
-            return Object.assign(Object.assign({}, state), { conversationLookup: Object.assign(Object.assign({}, conversationLookup), { [id]: data }) });
+            return Object.assign(Object.assign(Object.assign({}, state), { conversationLookup: Object.assign(Object.assign({}, conversationLookup), { [id]: data }) }), updateConversationLookups(data, undefined, state));
         }
         if (action.type === 'CONVERSATION_CHANGED') {
             const { payload } = action;
@@ -362,16 +394,21 @@ require(exports => {
                     selectedConversation = undefined;
                 }
             }
-            return Object.assign(Object.assign({}, state), {
+            return Object.assign(Object.assign(Object.assign({}, state), {
                 selectedConversation,
                 showArchived, conversationLookup: Object.assign(Object.assign({}, conversationLookup), { [id]: data })
-            });
+            }), updateConversationLookups(data, existing, state));
         }
         if (action.type === 'CONVERSATION_REMOVED') {
             const { payload } = action;
             const { id } = payload;
             const { conversationLookup } = state;
-            return Object.assign(Object.assign({}, state), { conversationLookup: lodash_1.omit(conversationLookup, [id]) });
+            const existing = getOwn_1.getOwn(conversationLookup, id);
+            // No need to make a change if we didn't have a record of this conversation!
+            if (!existing) {
+                return state;
+            }
+            return Object.assign(Object.assign(Object.assign({}, state), { conversationLookup: lodash_1.omit(conversationLookup, [id]) }), updateConversationLookups(undefined, existing, state));
         }
         if (action.type === 'CONVERSATION_UNLOADED') {
             const { payload } = action;

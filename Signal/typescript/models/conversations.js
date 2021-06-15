@@ -795,6 +795,7 @@ require(exports => {
                 id: this.id,
                 uuid: this.get('uuid'),
                 e164: this.get('e164'),
+                about: this.getAboutText(),
                 acceptedMessageRequest: this.getAccepted(),
                 activeAt: this.get('active_at'),
                 areWePending: Boolean(ourConversationId && this.isMemberPending(ourConversationId)),
@@ -1358,6 +1359,15 @@ require(exports => {
             }
             return !this.get('profileSharing');
         }
+        getAboutText() {
+            if (!this.get('about')) {
+                return undefined;
+            }
+            return window.i18n('message--getNotificationText--text-with-emoji', {
+                text: this.get('about'),
+                emoji: this.get('aboutEmoji'),
+            });
+        }
         /**
          * Determine if this conversation should be considered "accepted" in terms
          * of message requests
@@ -1616,7 +1626,7 @@ require(exports => {
                     : this.get('membersV2') || [];
                 return window._.compact(members.map(member => {
                     const c = window.ConversationController.get(member.conversationId);
-                    // In groups we won't send to contacts we believe are unregistered
+                    // In groups we won't sent to contacts we believe are unregistered
                     if (c && c.isUnregistered()) {
                         return null;
                     }
@@ -2608,6 +2618,22 @@ require(exports => {
                         sealedSender: SEALED_SENDER.DISABLED,
                     });
                 }
+                if (profile.about) {
+                    const key = this.get('profileKey');
+                    if (key) {
+                        const keyBuffer = Crypto_1.base64ToArrayBuffer(key);
+                        const decrypted = await window.textsecure.crypto.decryptProfile(Crypto_1.base64ToArrayBuffer(profile.about), keyBuffer);
+                        this.set('about', Crypto_1.stringFromBytes(decrypted));
+                    }
+                }
+                if (profile.aboutEmoji) {
+                    const key = this.get('profileKey');
+                    if (key) {
+                        const keyBuffer = Crypto_1.base64ToArrayBuffer(key);
+                        const decrypted = await window.textsecure.crypto.decryptProfile(Crypto_1.base64ToArrayBuffer(profile.aboutEmoji), keyBuffer);
+                        this.set('aboutEmoji', Crypto_1.stringFromBytes(decrypted));
+                    }
+                }
                 if (profile.capabilities) {
                     c.set({ capabilities: profile.capabilities });
                 }
@@ -2710,6 +2736,8 @@ require(exports => {
             if (this.get('profileKey') !== profileKey) {
                 window.log.info(`Setting sealedSender to UNKNOWN for conversation ${this.idForLogging()}`);
                 this.set({
+                    about: undefined,
+                    aboutEmoji: undefined,
                     profileAvatar: undefined,
                     profileKey,
                     profileKeyVersion: undefined,
@@ -2743,6 +2771,8 @@ require(exports => {
                     await deleteAttachmentData(profileAvatar.path);
                 }
                 this.set({
+                    about: undefined,
+                    aboutEmoji: undefined,
                     profileKey: undefined,
                     profileKeyVersion: undefined,
                     profileKeyCredential: null,

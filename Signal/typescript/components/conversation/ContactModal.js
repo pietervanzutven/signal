@@ -6,10 +6,12 @@ require(exports => {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.ContactModal = void 0;
     const react_1 = __importDefault(require("react"));
     const react_dom_1 = require("react-dom");
+    const About_1 = require("./About");
     const Avatar_1 = require("../Avatar");
-    exports.ContactModal = ({ areWeAdmin, contact, i18n, isMember, onClose, openConversation, removeMember, showSafetyNumber, }) => {
+    const ContactModal = ({ areWeAdmin, contact, i18n, isMember, onClose, openConversation, removeMember, showSafetyNumber, }) => {
         if (!contact) {
             throw new Error('Contact modal opened without a matching contact');
         }
@@ -64,6 +66,8 @@ require(exports => {
                     }),
                     react_1.default.createElement(Avatar_1.Avatar, { avatarPath: contact.avatarPath, color: contact.color, conversationType: "direct", i18n: i18n, name: contact.name, profileName: contact.profileName, size: 96, title: contact.title }),
                     react_1.default.createElement("div", { className: "module-contact-modal__name" }, contact.title),
+                    react_1.default.createElement("div", { className: "module-about__container" },
+                        react_1.default.createElement(About_1.About, { text: contact.about })),
                     contact.phoneNumber && (react_1.default.createElement("div", { className: "module-contact-modal__profile-and-number" }, contact.phoneNumber)),
                     react_1.default.createElement("div", { className: "module-contact-modal__button-container" },
                         react_1.default.createElement("button", { type: "button", className: "module-contact-modal__button module-contact-modal__send-message", onClick: () => openConversation(contact.id) },
@@ -80,4 +84,5 @@ require(exports => {
                             react_1.default.createElement("span", null, i18n('ContactModal--remove-from-group'))))))), root)
             : null;
     };
+    exports.ContactModal = ContactModal;
 });
