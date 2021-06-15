@@ -1,11 +1,12 @@
 require(exports => {
     "use strict";
-    // Copyright 2019-2020 Signal Messenger, LLC
+    // Copyright 2019-2021 Signal Messenger, LLC
     // SPDX-License-Identifier: AGPL-3.0-only
     var __importDefault = (this && this.__importDefault) || function (mod) {
         return (mod && mod.__esModule) ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.createStore = void 0;
     /* eslint-disable no-console */
     const redux_1 = require("redux");
     const redux_promise_middleware_1 = __importDefault(require("redux-promise-middleware"));
@@ -37,5 +38,6 @@ require(exports => {
         ...(env === 'production' ? [] : [logger]),
     ];
     const enhancer = redux_1.applyMiddleware(...middlewareList);
-    exports.createStore = (initialState) => redux_1.createStore(reducer_1.reducer, initialState, enhancer);
+    const createStore = (initialState) => redux_1.createStore(reducer_1.reducer, initialState, enhancer);
+    exports.createStore = createStore;
 });
