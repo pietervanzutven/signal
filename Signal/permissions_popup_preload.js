@@ -1,4 +1,4 @@
-// Copyright 2018-2020 Signal Messenger, LLC
+// Copyright 2018-2021 Signal Messenger, LLC
 // SPDX-License-Identifier: AGPL-3.0-only
 
 /* global window */
@@ -44,7 +44,7 @@
     });
   };
 
-  window.top.require('./js/logging');
+  window.top.require('./ts/logging/set_up_renderer_logging');
 
   window.closePermissionsPopup = () =>
     ipcRenderer.send('close-permissions-popup');

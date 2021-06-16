@@ -1,3 +1,6 @@
+// Copyright 2018-2021 Signal Messenger, LLC
+// SPDX-License-Identifier: AGPL-3.0-only
+
 /* global window */
 
 (function () {
@@ -18,10 +21,10 @@
     // got.js appears to need this to successfully submit debug logs to the cloud
     window.nodeSetImmediate = setImmediate;
 
-    window.getNodeVersion = () => config.node_version;
+    window.getUWPVersion = () => config.uwp_version;
     window.getEnvironment = () => config.environment;
 
-    window.top.require('./js/logging');
+    window.top.require('./ts/logging/set_up_renderer_logging');
 
     window.closeDebugLog = () => ipcRenderer.send('close-debug-log');
     window.Backbone = window.top.require('backbone');
